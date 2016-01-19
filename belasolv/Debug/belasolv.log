@@ -1,0 +1,38 @@
+﻿Build started 10/9/2015 3:13:13 PM.
+     1>Project "C:\Users\phill\Source\Workspaces\FEMM\FEMMSource\belasolv\belasolv.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D WINVER=0x0A00 /D _WIN32_WINNT=0x0A00 /D _VC80_UPGRADE=0x0600 /D _MBCS /D _AFXDLL /Gm /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"stdafx.h" /Fp".\Debug/belasolv.pch" /Fo".\Debug/" /Fd".\Debug/vc140.pdb" /Gd /TP /analyze- /errorReport:prompt StdAfx.cpp
+         StdAfx.cpp
+     1>c:\program files (x86)\microsoft visual studio 14.0\vc\atlmfc\include\afx.h(38): warning C4996: 'MBCS_Support_Deprecated_In_MFC': MBCS support in MFC is deprecated and may be removed in a future version of MFC.
+         c:\program files (x86)\microsoft visual studio 14.0\vc\atlmfc\include\afx.h(33): note: see declaration of 'MBCS_Support_Deprecated_In_MFC'
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D WINVER=0x0A00 /D _WIN32_WINNT=0x0A00 /D _VC80_UPGRADE=0x0600 /D _MBCS /D _AFXDLL /Gm /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp".\Debug/belasolv.pch" /Fo".\Debug/" /Fd".\Debug/vc140.pdb" /Gd /TP /analyze- /errorReport:prompt belasolv.cpp belasolvDlg.cpp cuthill.cpp femmedoccore.cpp main.cpp prob1big.cpp spars.cpp
+         spars.cpp
+         prob1big.cpp
+         main.cpp
+     1>c:\users\phill\source\workspaces\femm\femmsource\belasolv\main.cpp(24): warning C4101: 'test': unreferenced local variable
+         femmedoccore.cpp
+     1>c:\users\phill\source\workspaces\femm\femmsource\belasolv\femmedoccore.cpp(8): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+         cuthill.cpp
+         belasolvDlg.cpp
+         belasolv.cpp
+         Generating Code...
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _DEBUG /D _VC80_UPGRADE=0x0600 /D _AFXDLL /l"0x0409" /nologo /fo".\Debug\belasolv.res" belasolv.rc 
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1189,5): warning MSB8012: TargetPath(C:\Users\phill\Source\Workspaces\FEMM\FEMMSource\belasolv\.\Debug\belasolv.exe) does not match the Linker's OutputFile property value (C:\Users\phill\Source\Workspaces\FEMM\FEMMSource\Debug\belasolv.exe). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\..\Debug/belasolv.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\Include\Manifest\dpiaware.manifest" /Debug /PDB:".\Debug/belasolv.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE:NO /IMPLIB:".\Debug\belasolv.lib" /MACHINE:X86 /SAFESEH .\Debug\belasolv.res
+         .\Debug/belasolv.obj
+         .\Debug/belasolvDlg.obj
+         .\Debug/cuthill.obj
+         .\Debug/femmedoccore.obj
+         .\Debug/main.obj
+         .\Debug/prob1big.obj
+         .\Debug/spars.obj
+         .\Debug/StdAfx.obj
+     1>belasolv.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+         belasolv.vcxproj -> C:\Users\phill\Source\Workspaces\FEMM\FEMMSource\belasolv\.\Debug\belasolv.exe
+     1>Done Building Project "C:\Users\phill\Source\Workspaces\FEMM\FEMMSource\belasolv\belasolv.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:06.78
