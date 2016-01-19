@@ -1,0 +1,3156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Library">
+      <UniqueIdentifier>{2266714f-8239-41d2-9222-23baab4f523b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\ckt">
+      <UniqueIdentifier>{8105d393-5334-46d7-b707-4ab7c60a6df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\cp">
+      <UniqueIdentifier>{7bf27098-678c-4b57-9822-37344c88b669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev">
+      <UniqueIdentifier>{8d105481-f1a0-4e20-bd55-5f31f51fc0be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\fte">
+      <UniqueIdentifier>{c61764cf-f1d2-47b8-8ce3-c598d9a036e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\hlp">
+      <UniqueIdentifier>{5d62a414-5cd8-4acf-ac5f-321625299bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\inp">
+      <UniqueIdentifier>{90456a61-11c0-4486-bd42-6460060244e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\mac">
+      <UniqueIdentifier>{affabbf7-d4ba-40c5-b060-75408b7d74c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\mfb">
+      <UniqueIdentifier>{63fd3c41-ad3a-4e47-8ac2-140adf1498f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\mfbpc">
+      <UniqueIdentifier>{94d0d7bb-deca-4bf6-a5ce-c423215dc0ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\misc">
+      <UniqueIdentifier>{57a68bd0-a41b-485e-8165-1cf9b16c7ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\ni">
+      <UniqueIdentifier>{e25773f4-5330-4d7e-a8ef-0fb888654062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\sparse">
+      <UniqueIdentifier>{14c03be2-cad8-4e95-87df-fa2d2d932b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\asrc">
+      <UniqueIdentifier>{b4cf698c-0cf4-482d-91b6-cc23077d02ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\bjt">
+      <UniqueIdentifier>{0b8541a0-7415-4d07-8e01-bc94ebf2733d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\bsim1">
+      <UniqueIdentifier>{6cfce370-a3f0-4982-a3ca-e0af1671003c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\bsim2">
+      <UniqueIdentifier>{622d2692-7c7c-473e-be24-6f21e4a4f3d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\cap">
+      <UniqueIdentifier>{ac6a38cd-07eb-491a-8d2f-50c16b2065ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\cccs">
+      <UniqueIdentifier>{d5643b22-5a77-4ed7-8741-d1ea4f9c05d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\ccvs">
+      <UniqueIdentifier>{f7de7e16-3643-474a-846d-1da1ee483c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\dio">
+      <UniqueIdentifier>{16840125-0d2d-4bdc-b82e-e48cc1fb19a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\ind">
+      <UniqueIdentifier>{3f1a1146-ef96-4c56-9138-dbbb5d655e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\isrc">
+      <UniqueIdentifier>{cd435596-53fe-4d9c-a602-f82ca25e79ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\jfet">
+      <UniqueIdentifier>{a5253f64-b7d0-430d-8aee-ee3f2973f205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\ltra">
+      <UniqueIdentifier>{02e1ea14-e5a9-4906-93aa-adef1e8158c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\mes">
+      <UniqueIdentifier>{5b30e15e-bd4c-4e35-ae3e-8ef3988a965d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\mos1">
+      <UniqueIdentifier>{5098b3a4-abf3-435e-9f0a-783541db26ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\mos2">
+      <UniqueIdentifier>{e28f026e-670f-4889-a04a-b641a6038652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\mos3">
+      <UniqueIdentifier>{e694f38b-122d-4e18-ad0a-fd978ea5fb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\mos6">
+      <UniqueIdentifier>{d4fd7919-4b2d-434e-b2da-ced5b8c1a3aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\res">
+      <UniqueIdentifier>{d9fc336b-d4df-487f-ab52-f0f90b3341c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\sw">
+      <UniqueIdentifier>{7118680d-07fb-4ab7-a411-d5fd7d4bcb8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\tra">
+      <UniqueIdentifier>{58110beb-1bfa-4eda-ab28-5a022ec81949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\urc">
+      <UniqueIdentifier>{cda592bf-6fa8-47a1-b705-cd1d1c883504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\vccs">
+      <UniqueIdentifier>{0fbc5a0f-f68f-4707-bd71-c59bd000a67c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\vcvs">
+      <UniqueIdentifier>{df50127d-3865-4eff-8725-98a82c6ea935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\vsrc">
+      <UniqueIdentifier>{7e668f00-f5b8-4e8a-aaae-4d50f9dc0f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\csw">
+      <UniqueIdentifier>{8c89cf33-1c87-42dc-86b2-2d3b0ea202af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Library\dev\disto">
+      <UniqueIdentifier>{5876d48f-9a58-4a4e-ac19-d6f4578b5f86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bin">
+      <UniqueIdentifier>{3cf91d89-ed35-436b-8545-94280d01d331}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\include\acdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\capabil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\cktdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\complex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\const.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\cpdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\cpextern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\cpstd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\devdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\dgen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\distodef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftecmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\fteconst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftedata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftedbgra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftedebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftedefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftedev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\fteext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftegraf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftegraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ftehelp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\fteinp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\fteinput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\fteparse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\gendefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\hlpdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\hw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\hw_ieee.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\hw_vax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\iferrmsg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\ifsim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\inpdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\inpmacs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\inpptree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\jobdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mfb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\misc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\noisedef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\opdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\optdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_aix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_bsd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_dynix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_hpux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_ipsc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_mac.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_msdos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_osf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_sun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_sysv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_ultrx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_unix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\os_vms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\patchlev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\port.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\pzdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\sen2defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\sensdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\sensgen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\smpdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\spconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\sperror.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\spice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\spmatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\strext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\tfdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\trandefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\trcvdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\tskdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\asrc\asrcdefs.h">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\asrc\asrcext.h">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\asrc\asrcitf.h">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bjt\bjtdefs.h">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bjt\bjtext.h">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bjt\bjtitf.h">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bsim1\bsim1def.h">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bsim1\bsim1ext.h">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bsim1\bsim1itf.h">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bsim2\bsim2def.h">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bsim2\bsim2ext.h">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\bsim2\bsim2itf.h">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\cap\capdefs.h">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\cap\capext.h">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\cap\capitf.h">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\cccs\cccsdefs.h">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\cccs\cccsext.h">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\cccs\cccsitf.h">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ccvs\ccvsdefs.h">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ccvs\ccvsext.h">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ccvs\ccvsitf.h">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\dio\diodefs.h">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\dio\dioext.h">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\dio\dioitf.h">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\csw\cswdefs.h">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\csw\cswext.h">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\csw\cswitf.h">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ind\inddefs.h">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ind\indext.h">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ind\inditf.h">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\isrc\isrcdefs.h">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\isrc\isrcext.h">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\isrc\isrcitf.h">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\jfet\jfetdefs.h">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\jfet\jfetext.h">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\jfet\jfetitf.h">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ltra\ltradefs.h">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ltra\ltraext.h">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\ltra\ltraitf.h">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mes\mesdefs.h">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mes\mesext.h">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mes\mesitf.h">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos1\mos1defs.h">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos1\mos1ext.h">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos1\mos1itf.h">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos2\mos2defs.h">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos2\mos2ext.h">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos2\mos2itf.h">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos3\mos3defs.h">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos3\mos3ext.h">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos3\mos3itf.h">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos6\mos6defs.h">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos6\mos6ext.h">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\mos6\mos6itf.h">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vsrc\vsrcdefs.h">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vsrc\vsrcext.h">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vsrc\vsrcitf.h">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vcvs\vcvsdefs.h">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vcvs\vcvsext.h">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vcvs\vcvsitf.h">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vccs\vccsdefs.h">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vccs\vccsext.h">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\vccs\vccsitf.h">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\urc\urcdefs.h">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\urc\urcext.h">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\urc\urcitf.h">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\tra\tradefs.h">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\tra\traext.h">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\tra\traitf.h">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\sw\swdefs.h">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\sw\swext.h">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\sw\switf.h">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\res\resdefs.h">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\res\resext.h">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\dev\res\resitf.h">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\sparse\spdefs.h">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\cdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bin\featuretest.h">
+      <Filter>bin</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bin\binHeader.h">
+      <Filter>bin</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\suffix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\lib\ckt\acan.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\acaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\acsetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktaccpt.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktacct.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktacdum.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktask.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktaskaq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktasknq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktbindn.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktbkdum.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktclrbk.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktcrte.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdelt.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdest.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdisto.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdlti.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdltm.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdltn.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdojob.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktdump.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktfbran.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktfdev.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktfnda.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktfndm.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktfnode.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktftask.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktgrnd.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\ckti2nod.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktic.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktinit.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktlnkeq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktload.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmapn.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmask.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmcrt.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmkcur.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmknod.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmkvol.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktmpar.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktnames.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktnewan.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktneweq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktnewn.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktnodn.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktnoise.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktntask.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktnum2n.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktop.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktparam.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktpmnam.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktpname.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktpzld.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktpzset.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktpzstr.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsens.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsetap.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsetbk.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsetnp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsetup.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsgen.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktsopt.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\ckttemp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\cktterr.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\ckttroub.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\ckttrunc.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\ckttyplk.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\daskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dcoaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dcop.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dcosetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dctaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dctran.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dctrcurv.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dctsetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\distoan.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dkerproc.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dloadfns.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\dsetparm.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\naskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\nevalsrc.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\ninteg.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\noisean.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\nsetparm.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\pzan.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\pzaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\pzsetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\sensaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\senssetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\tfanal.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\tfaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\tfsetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\tranaskq.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\traninit.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ckt\transetp.c">
+      <Filter>Source Files\Library\ckt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\alias.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\backq.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\complete.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\cshpar.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\front.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\glob.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\history.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\input.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\lexical.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\modify.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\numparse.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\output.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\quote.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\spawn.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\std.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\unixcom.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\var2.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\variable.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\cp\wlist.c">
+      <Filter>Source Files\Library\cp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrc.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcacld.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcask.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcconv.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcdel.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcdest.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcfbr.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcload.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcmdel.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcpar.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcpzld.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\asrc\asrcset.c">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjt.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtacld.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtask.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtconv.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtdel.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtdest.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtdisto.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtdset.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtgetic.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtload.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtmask.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtmdel.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtmpar.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtnoise.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtparam.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtpzld.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtsacl.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtsetup.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtsload.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtsprt.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtsset.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjtsupd.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjttemp.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bjt\bjttrunc.c">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1acld.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1ask.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1cvtest.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1del.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1dest.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1disto.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1dset.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1eval.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1getic.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1ld.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1mask.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1mdel.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1moscap.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1mpar.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1par.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1pzld.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1set.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1temp.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim1\b1trunc.c">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2acld.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2ask.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2cvtest.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2del.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2dest.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2eval.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2getic.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2ld.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2mask.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2mdel.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2moscap.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2mpar.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2par.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2pzld.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2set.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2temp.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\bsim2\b2trunc.c">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\cap.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capacld.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capask.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capdel.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capdest.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capgetic.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capload.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capmask.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capmdel.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capmpar.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capparam.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\cappzld.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capsacl.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capsetup.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capsload.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capsprt.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capsset.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\capsupd.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\captemp.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cap\captrunc.c">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccs.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccsask.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccsdel.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccsdest.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccsload.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccsmdel.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccspar.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccspzld.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccssacl.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccsset.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccssld.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccssprt.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\cccs\cccssset.c">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvs.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsask.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsdel.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsdest.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsfbr.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsload.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsmdel.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvspar.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvspzld.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvssacl.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvsset.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvssld.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvssprt.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ccvs\ccvssset.c">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dio.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dioacld.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dioask.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dioconv.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diodel.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diodest.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diodisto.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diodset.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diogetic.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dioload.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diomask.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diomdel.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diompar.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dionoise.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\dioparam.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diopzld.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diosacl.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diosetup.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diosload.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diosprt.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diosset.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diosupd.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diotemp.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\dio\diotrunc.c">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\csw.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswacld.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswask.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswdel.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswdest.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswload.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswmask.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswmdel.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswmpar.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswnoise.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswparam.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswpzld.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\csw\cswsetup.c">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\ind.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indacld.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indask.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\inddel.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\inddest.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indload.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indmdel.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indparam.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indpzld.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indsacl.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indsetup.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indsload.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indsprt.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indsset.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indsupd.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\indtrunc.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutacld.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutask.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutdel.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutdest.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutmdel.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutparam.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutpzld.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutsetup.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutsprt.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ind\mutsset.c">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\atander.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\cosderiv.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\cubeder.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\divderiv.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\equalder.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\expderiv.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\invderiv.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\multder.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\plusder.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\powderiv.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\sqrtder.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\tanderiv.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\disto\timesder.c">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrc.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcacct.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcacld.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcask.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcdel.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcdest.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcload.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcmdel.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrcpar.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\isrc\isrctemp.c">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfet.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetacld.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetask.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetdel.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetdest.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetdist.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetdset.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetic.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetload.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetmask.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetmdel.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetmpar.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetnoi.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetpar.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetpzld.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfetset.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfettemp.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\jfet\jfettrun.c">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltra.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltraacct.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltraacld.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltraask.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltradel.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltradest.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltraload.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltramask.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltramdel.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltramisc.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltrampar.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltrapar.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltraset.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltratemp.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\ltra\ltratrun.c">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mes.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesacl.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesask.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesdel.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesdest.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesdisto.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesdset.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesgetic.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesload.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesmask.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesmdel.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesmpar.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesnoise.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mesparam.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mespzld.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\messetup.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mestemp.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mes\mestrunc.c">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1acld.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1ask.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1conv.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1del.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1dest.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1dist.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1dset.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1ic.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1load.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1mask.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1mdel.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1mpar.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1noi.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1par.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1pzld.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1sacl.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1set.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1sld.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1sprt.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1sset.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1supd.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1temp.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos1\mos1trun.c">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2acld.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2ask.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2conv.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2del.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2dest.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2dist.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2dset.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2ic.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2load.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2mask.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2mdel.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2mpar.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2noi.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2par.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2pzld.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2sacl.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2set.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2sld.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2sprt.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2sset.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2supd.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2temp.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos2\mos2trun.c">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3acld.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3ask.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3conv.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3del.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3dest.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3dist.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3dset.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3ic.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3load.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3mask.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3mdel.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3mpar.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3noi.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3par.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3pzld.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3sacl.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3set.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3sld.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3sprt.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3sset.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3supd.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3temp.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos3\mos3trun.c">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6ask.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6conv.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6dest.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6ic.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6load.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6mask.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6mpar.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6par.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6set.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6temp.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\mos6\mos6trun.c">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrc.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcacct.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcacld.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcask.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcdel.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcdest.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcfbr.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcload.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcmdel.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcpar.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcpzld.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcpzs.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrcset.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vsrc\vsrctemp.c">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvs.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsask.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsdel.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsdest.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsfbr.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsload.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsmdel.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvspar.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvspzld.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvssacl.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvsset.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvssld.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvssprt.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vcvs\vcvssset.c">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccs.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccsask.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccsdel.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccsdest.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccsload.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccsmdel.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccspar.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccspzld.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccssacl.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccsset.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccssld.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccssprt.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\vccs\vccssset.c">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urc.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcask.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcdel.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcdest.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcmask.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcmdel.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcmpar.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcparam.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\urc\urcsetup.c">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\tra.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\traacct.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\traacld.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\traask.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\tradel.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\tradest.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\traload.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\tramdel.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\traparam.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\trasetup.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\tratemp.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\tra\tratrunc.c">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\sw.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swacload.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swask.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swdelete.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swdest.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swload.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swmask.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swmdel.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swmparam.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swnoise.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swparam.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swpzload.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\sw\swsetup.c">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\res.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resask.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resdel.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resdest.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resload.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resmask.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resmdel.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resmpar.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resnoise.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\resparam.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\respzld.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\ressacl.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\ressetup.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\ressload.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\ressprt.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\ressset.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\dev\res\restemp.c">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\agraf.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\arg.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\aspice.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\breakp.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\breakp2.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\circuits.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\clip.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\cmath1.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\cmath2.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\cmath3.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\cmath4.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\compose.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\cpitf.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\debugcom.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\define.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\device.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\diff.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\dimens.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\display.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\doplot.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\dotcards.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\error.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\evaluate.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\fourier.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\gens.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\graf.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\graphdb.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\grid.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\inp.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\inpcom.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\interp.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\linear.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\mfb.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\misccoms.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\miscvars.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\newcoms.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\nutctab.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\nutinp.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\nutmegif.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\options.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\outitf.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\parse.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\plot5.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\plotcurv.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\points.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\postcoms.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\postsc.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\rawfile.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\resource.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\runcoms.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\runcoms2.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\shyu.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\signal.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\spcmdtab.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\spiceif.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\subckt.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\types.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\vectors.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\where.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\x10.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\x11.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\fte\xgraph.c">
+      <Filter>Source Files\Library\fte</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hlp\help.c">
+      <Filter>Source Files\Library\hlp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hlp\provide.c">
+      <Filter>Source Files\Library\hlp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hlp\readhelp.c">
+      <Filter>Source Files\Library\hlp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hlp\textdisp.c">
+      <Filter>Source Files\Library\hlp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hlp\x11disp.c">
+      <Filter>Source Files\Library\hlp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hlp\xdisplay.c">
+      <Filter>Source Files\Library\hlp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\ifeval.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\ifnewuid.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2b.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2c.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2d.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2dot.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2e.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2f.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2g.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2h.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2i.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2j.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2k.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2l.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2m.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2o.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2q.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2r.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2s.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2t.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2u.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2v.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2w.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inp2z.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpaname.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpapnam.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpcfix.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpdomod.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpdoopt.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpdpar.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inperrc.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inperror.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpeval.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpfindl.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpgmod.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpgstr.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpgtitl.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpgtok.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpgval.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpkmods.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inplist.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inplkmod.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpmkmod.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpmktmp.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inppas1.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inppas2.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inppname.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpptree.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inpsymt.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\inptyplk.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\ptfuncs.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\inp\sperror.c">
+      <Filter>Source Files\Library\inp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mac\confmac.c">
+      <Filter>Source Files\Library\mac</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mac\mac.c">
+      <Filter>Source Files\Library\mac</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mac\tunemac.c">
+      <Filter>Source Files\Library\mac</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfb3d.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbbasic.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbcaps.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbclip.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbdec.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbgnc.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbio.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\mfbtext.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\paths.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\mfb\vmsio.c">
+      <Filter>Source Files\Library\mfb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\alloc.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\dos_dirs.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\dup2.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\ivars.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\math.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\mktemp.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\printnum.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\string.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\tilde.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\misc\time.c">
+      <Filter>Source Files\Library\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spalloc.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spbuild.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spextra.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spfactor.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spoutput.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spsmp.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\spsolve.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\sparse\sputils.c">
+      <Filter>Source Files\Library\sparse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niaciter.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\nicomcof.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niconv.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\nidest.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niditer.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niinit.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niinteg.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niiter.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\niniter.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\nipred.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\nipzmeth.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\nireinit.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\ni\nisenre.c">
+      <Filter>Source Files\Library\ni</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\cconf.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\config.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\help.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\main.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\makeidx.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\multidec.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\nconfig.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\nnconf.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\proc2mod.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\sconvert.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\tunepc.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bin\bconf.c">
+      <Filter>bin</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\lib\dev\isrc\makedefs">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </None>
+    <None Include="src\lib\dev\isrc\msc51.bat">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </None>
+    <None Include="src\lib\dev\jfet\makedefs">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </None>
+    <None Include="src\lib\dev\jfet\msc51.bat">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </None>
+    <None Include="src\lib\dev\ltra\makedefs">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </None>
+    <None Include="src\lib\dev\ltra\msc51.bat">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </None>
+    <None Include="src\lib\dev\mes\makedefs">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </None>
+    <None Include="src\lib\dev\mes\msc51.bat">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </None>
+    <None Include="src\lib\dev\mos1\makedefs">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </None>
+    <None Include="src\lib\dev\mos1\msc51.bat">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </None>
+    <None Include="src\lib\dev\mos2\makedefs">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </None>
+    <None Include="src\lib\dev\mos2\msc51.bat">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </None>
+    <None Include="src\lib\dev\mos3\makedefs">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </None>
+    <None Include="src\lib\dev\mos3\msc51.bat">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </None>
+    <None Include="src\lib\dev\mos6\makedefs">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </None>
+    <None Include="src\lib\dev\mos6\msc51.bat">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </None>
+    <None Include="src\lib\dev\vsrc\makedefs">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </None>
+    <None Include="src\lib\dev\vsrc\msc51.bat">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </None>
+    <None Include="src\lib\dev\vcvs\makedefs">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </None>
+    <None Include="src\lib\dev\vcvs\msc51.bat">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </None>
+    <None Include="src\lib\dev\vccs\makedefs">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </None>
+    <None Include="src\lib\dev\vccs\msc51.bat">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </None>
+    <None Include="src\lib\dev\urc\makedefs">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </None>
+    <None Include="src\lib\dev\urc\msc51.bat">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </None>
+    <None Include="src\lib\dev\tra\makedefs">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </None>
+    <None Include="src\lib\dev\tra\msc51.bat">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </None>
+    <None Include="src\lib\dev\sw\makedefs">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </None>
+    <None Include="src\lib\dev\sw\msc51.bat">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </None>
+    <None Include="src\lib\dev\res\makedefs">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </None>
+    <None Include="src\lib\dev\res\msc51.bat">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </None>
+    <None Include="src\lib\dev\bjt\makedefs">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </None>
+    <None Include="src\lib\dev\bjt\msc51.bat">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </None>
+    <None Include="src\lib\dev\asrc\makedefs">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </None>
+    <None Include="src\lib\dev\asrc\msc51.bat">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </None>
+    <None Include="src\lib\dev\bsim1\makedefs">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </None>
+    <None Include="src\lib\dev\bsim1\msc51.bat">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </None>
+    <None Include="src\lib\dev\bsim2\makedefs">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </None>
+    <None Include="src\lib\dev\bsim2\msc51.bat">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </None>
+    <None Include="src\lib\dev\cap\makedefs">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </None>
+    <None Include="src\lib\dev\cap\msc51.bat">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </None>
+    <None Include="src\lib\dev\cccs\makedefs">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </None>
+    <None Include="src\lib\dev\cccs\msc51.bat">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </None>
+    <None Include="src\lib\dev\ccvs\makedefs">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </None>
+    <None Include="src\lib\dev\ccvs\msc51.bat">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </None>
+    <None Include="src\lib\dev\csw\makedefs">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </None>
+    <None Include="src\lib\dev\csw\msc51.bat">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </None>
+    <None Include="src\lib\dev\dio\makedefs">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </None>
+    <None Include="src\lib\dev\dio\msc51.bat">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </None>
+    <None Include="src\lib\dev\disto\exscript">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </None>
+    <None Include="src\lib\dev\disto\makedefs">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </None>
+    <None Include="src\lib\dev\disto\msc51.bat">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </None>
+    <None Include="src\lib\dev\ind\makedefs">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </None>
+    <None Include="src\lib\dev\ind\msc51.bat">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </None>
+    <None Include="src\lib\fte\makedefs">
+      <Filter>Source Files\Library\fte</Filter>
+    </None>
+    <None Include="src\lib\fte\msc51.bat">
+      <Filter>Source Files\Library\fte</Filter>
+    </None>
+    <None Include="src\lib\hlp\help.cur">
+      <Filter>Source Files\Library\hlp</Filter>
+    </None>
+    <None Include="src\lib\hlp\helpmask.cur">
+      <Filter>Source Files\Library\hlp</Filter>
+    </None>
+    <None Include="src\lib\hlp\makedefs">
+      <Filter>Source Files\Library\hlp</Filter>
+    </None>
+    <None Include="src\lib\hlp\msc51.bat">
+      <Filter>Source Files\Library\hlp</Filter>
+    </None>
+    <None Include="src\lib\hlp\wait.cur">
+      <Filter>Source Files\Library\hlp</Filter>
+    </None>
+    <None Include="src\lib\hlp\waitmask.cur">
+      <Filter>Source Files\Library\hlp</Filter>
+    </None>
+    <None Include="src\lib\inp\makedefs">
+      <Filter>Source Files\Library\inp</Filter>
+    </None>
+    <None Include="src\lib\inp\msc51.bat">
+      <Filter>Source Files\Library\inp</Filter>
+    </None>
+    <None Include="src\lib\mfb\makedefs">
+      <Filter>Source Files\Library\mfb</Filter>
+    </None>
+    <None Include="src\lib\mfbpc\makedefs">
+      <Filter>Source Files\Library\mfbpc</Filter>
+    </None>
+    <None Include="src\lib\mfbpc\msc51.bat">
+      <Filter>Source Files\Library\mfbpc</Filter>
+    </None>
+    <None Include="src\lib\misc\makedefs">
+      <Filter>Source Files\Library\misc</Filter>
+    </None>
+    <None Include="src\lib\misc\msc51.bat">
+      <Filter>Source Files\Library\misc</Filter>
+    </None>
+    <None Include="src\lib\sparse\makedefs">
+      <Filter>Source Files\Library\sparse</Filter>
+    </None>
+    <None Include="src\lib\sparse\msc51.bat">
+      <Filter>Source Files\Library\sparse</Filter>
+    </None>
+    <None Include="src\lib\sparse\sprev">
+      <Filter>Source Files\Library\sparse</Filter>
+    </None>
+    <None Include="src\lib\ni\makedefs">
+      <Filter>Source Files\Library\ni</Filter>
+    </None>
+    <None Include="src\lib\ni\msc51.bat">
+      <Filter>Source Files\Library\ni</Filter>
+    </None>
+    <None Include="src\lib\ckt\makedefs">
+      <Filter>Source Files\Library\ckt</Filter>
+    </None>
+    <None Include="src\lib\ckt\msc51.bat">
+      <Filter>Source Files\Library\ckt</Filter>
+    </None>
+    <None Include="src\lib\cp\makedefs">
+      <Filter>Source Files\Library\cp</Filter>
+    </None>
+    <None Include="src\lib\cp\msc51.bat">
+      <Filter>Source Files\Library\cp</Filter>
+    </None>
+    <None Include="src\bin\bspice.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\cspice.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\help.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\makedefs">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\makeidx.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\makeops">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\msc51.bat">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\multidec.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\nutmeg.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\proc2mod.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\bin\sconvert.lnk">
+      <Filter>bin</Filter>
+    </None>
+    <None Include="src\include\makedefs">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\lib\dev\isrc\response.lib">
+      <Filter>Source Files\Library\dev\isrc</Filter>
+    </Library>
+    <Library Include="src\lib\dev\jfet\response.lib">
+      <Filter>Source Files\Library\dev\jfet</Filter>
+    </Library>
+    <Library Include="src\lib\dev\ltra\response.lib">
+      <Filter>Source Files\Library\dev\ltra</Filter>
+    </Library>
+    <Library Include="src\lib\dev\mes\response.lib">
+      <Filter>Source Files\Library\dev\mes</Filter>
+    </Library>
+    <Library Include="src\lib\dev\mos1\response.lib">
+      <Filter>Source Files\Library\dev\mos1</Filter>
+    </Library>
+    <Library Include="src\lib\dev\mos2\response.lib">
+      <Filter>Source Files\Library\dev\mos2</Filter>
+    </Library>
+    <Library Include="src\lib\dev\mos3\response.lib">
+      <Filter>Source Files\Library\dev\mos3</Filter>
+    </Library>
+    <Library Include="src\lib\dev\mos6\response.lib">
+      <Filter>Source Files\Library\dev\mos6</Filter>
+    </Library>
+    <Library Include="src\lib\dev\vsrc\response.lib">
+      <Filter>Source Files\Library\dev\vsrc</Filter>
+    </Library>
+    <Library Include="src\lib\dev\vcvs\response.lib">
+      <Filter>Source Files\Library\dev\vcvs</Filter>
+    </Library>
+    <Library Include="src\lib\dev\vccs\response.lib">
+      <Filter>Source Files\Library\dev\vccs</Filter>
+    </Library>
+    <Library Include="src\lib\dev\urc\response.lib">
+      <Filter>Source Files\Library\dev\urc</Filter>
+    </Library>
+    <Library Include="src\lib\dev\tra\response.lib">
+      <Filter>Source Files\Library\dev\tra</Filter>
+    </Library>
+    <Library Include="src\lib\dev\sw\response.lib">
+      <Filter>Source Files\Library\dev\sw</Filter>
+    </Library>
+    <Library Include="src\lib\dev\res\response.lib">
+      <Filter>Source Files\Library\dev\res</Filter>
+    </Library>
+    <Library Include="src\lib\dev\bjt\response.lib">
+      <Filter>Source Files\Library\dev\bjt</Filter>
+    </Library>
+    <Library Include="src\lib\dev\asrc\response.lib">
+      <Filter>Source Files\Library\dev\asrc</Filter>
+    </Library>
+    <Library Include="src\lib\dev\bsim1\response.lib">
+      <Filter>Source Files\Library\dev\bsim1</Filter>
+    </Library>
+    <Library Include="src\lib\dev\bsim2\response.lib">
+      <Filter>Source Files\Library\dev\bsim2</Filter>
+    </Library>
+    <Library Include="src\lib\dev\cap\response.lib">
+      <Filter>Source Files\Library\dev\cap</Filter>
+    </Library>
+    <Library Include="src\lib\dev\cccs\response.lib">
+      <Filter>Source Files\Library\dev\cccs</Filter>
+    </Library>
+    <Library Include="src\lib\dev\ccvs\response.lib">
+      <Filter>Source Files\Library\dev\ccvs</Filter>
+    </Library>
+    <Library Include="src\lib\dev\csw\response.lib">
+      <Filter>Source Files\Library\dev\csw</Filter>
+    </Library>
+    <Library Include="src\lib\dev\dio\response.lib">
+      <Filter>Source Files\Library\dev\dio</Filter>
+    </Library>
+    <Library Include="src\lib\dev\disto\response.lib">
+      <Filter>Source Files\Library\dev\disto</Filter>
+    </Library>
+    <Library Include="src\lib\dev\ind\response.lib">
+      <Filter>Source Files\Library\dev\ind</Filter>
+    </Library>
+    <Library Include="src\lib\fte\response.lib">
+      <Filter>Source Files\Library\fte</Filter>
+    </Library>
+    <Library Include="src\lib\hlp\response.lib">
+      <Filter>Source Files\Library\hlp</Filter>
+    </Library>
+    <Library Include="src\lib\inp\response.lib">
+      <Filter>Source Files\Library\inp</Filter>
+    </Library>
+    <Library Include="src\lib\mfbpc\response.lib">
+      <Filter>Source Files\Library\mfbpc</Filter>
+    </Library>
+    <Library Include="src\lib\misc\response.lib">
+      <Filter>Source Files\Library\misc</Filter>
+    </Library>
+    <Library Include="src\lib\sparse\response.lib">
+      <Filter>Source Files\Library\sparse</Filter>
+    </Library>
+    <Library Include="src\lib\ni\response.lib">
+      <Filter>Source Files\Library\ni</Filter>
+    </Library>
+    <Library Include="src\lib\ckt\response.lib">
+      <Filter>Source Files\Library\ckt</Filter>
+    </Library>
+    <Library Include="src\lib\cp\response.lib">
+      <Filter>Source Files\Library\cp</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="README.txt">
+      <Filter>Source Files\Library\ni</Filter>
+    </Text>
+    <Text Include="SPARSEReadME.txt">
+      <Filter>Source Files\Library\sparse</Filter>
+    </Text>
+    <Text Include="INP readme.txt">
+      <Filter>Source Files\Library\inp</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
