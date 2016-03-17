@@ -12,18 +12,23 @@ bool OmniFEMApp::OnInit()
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size) : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
     wxMenu *menuFile = new wxMenu;
+    
     menuFile->Append(ID_New, "&New\tCtrl-N");
     menuFile->Append(ID_Save, "&Save\tCtrl-S");
     menuFile->Append(ID_SaveAs, "&Save As");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
+    
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append(wxID_ABOUT);
+    
     wxMenuBar *menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
+    
     SetMenuBar(menuBar);
     CreateStatusBar();
+    
     SetStatusText("Menu test for Omni-FEM");
 }
 
