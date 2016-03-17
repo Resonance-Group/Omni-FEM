@@ -1,0 +1,17 @@
+*.suo
+*.obj
+*.obj
+*.pch
+*.pdb
+*.tlog
+Debug/femm.log
+*.res
+*.log
+*.idb
+*.exe
+*.obj
+*.ilk
+*.tlb
+*.lib
+*.tlog
+*.lastbuildstate
