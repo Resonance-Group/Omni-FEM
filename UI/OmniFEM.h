@@ -23,9 +23,11 @@ class OmniFEMMainFrame : public wxFrame
 public:
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
 private:
-    void OnHello(wxCommandEvent &event);
+    void onNewFile(wxCommandEvent &event);
     void OnExit(wxCommandEvent &event);
     void OnAbout(wxCommandEvent &event);
+    void OnSave(wxCommandEvent &event);
+    void onSaveAs(wxCommandEvent &event);
     wxDECLARE_EVENT_TABLE();
 };
 
@@ -33,13 +35,17 @@ private:
 
 enum
 {
-    ID_Hello = 1
+    ID_New = 1,
+    ID_Save = 2,
+    ID_SaveAs = 3
 };
 
 
 
 wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
-    EVT_MENU(ID_Hello,   OmniFEMMainFrame::OnHello)
+    EVT_MENU(ID_New,   OmniFEMMainFrame::onNewFile)
+    EVT_MENU(ID_Save, OmniFEMMainFrame::OnSave)
+    EVT_MENU(ID_SaveAs, OmniFEMMainFrame::onSaveAs)
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, OmniFEMMainFrame::OnAbout)
 wxEND_EVENT_TABLE()

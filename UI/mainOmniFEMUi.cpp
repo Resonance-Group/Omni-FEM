@@ -12,7 +12,9 @@ bool OmniFEMApp::OnInit()
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size) : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(ID_Hello, "&New\tCtrl-N");
+    menuFile->Append(ID_New, "&New\tCtrl-N");
+    menuFile->Append(ID_Save, "&Save\tCtrl-S");
+    menuFile->Append(ID_SaveAs, "&Save As");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
     wxMenu *menuHelp = new wxMenu;
@@ -30,12 +32,21 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
     Close(true);
 }
 
-void OmniFEMMainFrame::OnHello(wxCommandEvent &event)
+void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
-    wxLogMessage("TEST");
+    wxMessageBox("Created New File", "New File Creation", wxOK | wxICON_INFORMATION);
 }
 void OmniFEMMainFrame::OnAbout(wxCommandEvent &event)
 {
-    wxMessageBox("This is a test", "Test", wxOK | wxICON_INFORMATION);
+    wxMessageBox("This is a test", "New File", wxOK | wxICON_INFORMATION);
 }
 
+void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
+{
+    wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
+}
+
+void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
+{
+    wxMessageBox("Work saved in location", "Saved As", wxOK | wxICON_INFORMATION);
+}
