@@ -10,7 +10,5 @@ Must have wxWidgets v3.0 installed
 
 #Notes
 
-In order to compile the UI, use the command:
-
-gcc filename.cpp -o CompiledFileName `wx-config --cxxflags` `wx-config --libs` -L/usr/lib64 -lstdc++
+In order to compile the UI, use the command gcc filename.cpp -o CompiledFileName `wx-config --cxxflags` `wx-config --libs` -L/usr/lib64 -lstdc++
 
