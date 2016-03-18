@@ -31,7 +31,9 @@ private:
     /* This section is for the Edit menu */
     void onPreferences(wxCommandEvent &event);
     
-    /* This section is for the About menu */
+    /* This section is for the Help menu */
+    void onManual(wxCommandEvent &event);
+    void onLicense(wxCommandEvent &event);
     void OnAbout(wxCommandEvent &event);
     
     void OnExit(wxCommandEvent &event);
@@ -45,7 +47,9 @@ enum
     ID_New = 1,
     ID_Save = 2,
     ID_SaveAs = 3,
-    ID_Preferences = 4
+    ID_Preferences = 4,
+    ID_Manual = 5,
+    ID_License = 6
 };
 
 
@@ -59,14 +63,17 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     /* This section is for the view menu */
     EVT_MENU(ID_Preferences, OmniFEMMainFrame::onPreferences)
     
-    /* This section is for the ABOUT menu */
+    /* This section is for the Help menu */
+    EVT_MENU(ID_Manual, OmniFEMMainFrame::onManual)
+    EVT_MENU(ID_License, OmniFEMMainFrame::onLicense)
     EVT_MENU(wxID_ABOUT, OmniFEMMainFrame::OnAbout)
     
+    /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
     
 wxEND_EVENT_TABLE()
 
-wxIMPLEMENT_APP(OmniFEMApp);
+//wxIMPLEMENT_APP(OmniFEMApp);
 
 
 

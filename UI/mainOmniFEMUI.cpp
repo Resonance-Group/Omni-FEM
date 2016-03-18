@@ -40,6 +40,9 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuEdit->Append(ID_Preferences, "&Preferences\tCtrl-P");
     
     /* Creates the menu listing of the help menu */
+    menuHelp->Append(ID_Manual, "View Manual");
+    menuHelp->AppendSeparator();
+    menuHelp->Append(ID_License, "License");
     menuHelp->Append(wxID_ABOUT);
     
     /* Create and display the menu bar */
@@ -49,31 +52,60 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     SetStatusText("Menu test for Omni-FEM");
 }
 
+
+
 void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 {
     Close(true);
 }
 
+
+
 void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
     wxMessageBox("Created New File", "New File Creation", wxOK | wxICON_INFORMATION);
 }
-void OmniFEMMainFrame::OnAbout(wxCommandEvent &event)
-{
-    wxMessageBox("This is a test", "New File", wxOK | wxICON_INFORMATION);
-}
+
+
 
 void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 {
     wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
 }
 
+
+
 void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
 {
     wxMessageBox("Work saved in location", "Saved As", wxOK | wxICON_INFORMATION);
 }
 
+
+
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
     wxMessageBox("Preferences are located here", "Preferences", wxOK | wxICON_INFORMATION);
+}
+
+
+
+
+
+
+void OmniFEMMainFrame::OnAbout(wxCommandEvent &event)
+{
+    wxMessageBox("This is a test", "New File", wxOK | wxICON_INFORMATION);
+}
+
+
+
+void OmniFEMMainFrame::onManual(wxCommandEvent &event)
+{
+    wxMessageBox("This is the manual", "Manual", wxOK | wxICON_INFORMATION);
+}
+
+
+void OmniFEMMainFrame::onLicense(wxCommandEvent &event)
+{
+    wxMessageBox("This is the license", "License", wxOK | wxICON_INFORMATION);
 }
