@@ -1,7 +1,11 @@
 #ifndef OMNIFEM_H_
 #define OMNIFEM_H_
 
+#pragma once
+
 #include <wx/wx.h>
+#include <wx/aboutdlg.h>
+
 
 class OmniFEMApp : public wxApp
 {
@@ -23,6 +27,17 @@ private:
     
     /* This section is for the Edit menu */
     void onPreferences(wxCommandEvent &event);
+	
+	/* This section is for the View Menu */
+	void onViewResults(wxCommandEvent &event);
+	
+	/* This section is for the Problem Menu */
+	void onPrecision(wxCommandEvent &event);
+	
+	/* This section is for the Mesh menu */
+	void onCreateMesh(wxCommandEvent &event);
+	void onShowMesh(wxCommandEvent &event);
+	void onDeleteMesh(wxCommandEvent &event);
     
     /* This section is for the Help menu */
     void onManual(wxCommandEvent &event);
@@ -34,7 +49,7 @@ private:
 };
 
 
-
+/* Enum for the menus of the menu bar */
 enum
 {
     ID_New = 1,
@@ -42,31 +57,17 @@ enum
     ID_SaveAs = 3,
     ID_Preferences = 4,
     ID_Manual = 5,
-    ID_License = 6
+    ID_License = 6,
+	ID_ViewResults = 7,
+	ID_CreateMesh = 9,
+	ID_ShowMesh = 10,
+	ID_DeleteMesh = 11,
+	ID_Precision = 12
 };
 
 
 
-wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
-    /* This section is for teh file menu */
-    EVT_MENU(ID_New,   OmniFEMMainFrame::onNewFile)
-    EVT_MENU(ID_Save, OmniFEMMainFrame::OnSave)
-    EVT_MENU(ID_SaveAs, OmniFEMMainFrame::onSaveAs)
-    
-    /* This section is for the view menu */
-    EVT_MENU(ID_Preferences, OmniFEMMainFrame::onPreferences)
-    
-    /* This section is for the Help menu */
-    EVT_MENU(ID_Manual, OmniFEMMainFrame::onManual)
-    EVT_MENU(ID_License, OmniFEMMainFrame::onLicense)
-    EVT_MENU(wxID_ABOUT, OmniFEMMainFrame::OnAbout)
-    
-    /* Everything Else */
-    EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
-    
-wxEND_EVENT_TABLE()
 
-wxIMPLEMENT_APP(OmniFEMApp);
 
 
 #endif /* OMNIFEM_H_ */

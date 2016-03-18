@@ -1,8 +1,4 @@
-#ifdef OMNIFEM_H_
-	#include "UI/OmniFEM.h"
-#endif
-
-
+#include "UI/OmniFEM.h"
 
 
 bool OmniFEMApp::OnInit()
@@ -42,18 +38,29 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     
     /* Creating the menu listinging of the Edit Menu */
     menuEdit->Append(ID_Preferences, "&Preferences\tCtrl-P");
+	
+	/* Creting the menu listing of the View Menu */
+	menuView->Append(ID_ViewResults, "&View Results");
+	
+	/* Create the menu listing for the mesh menu */
+	menuMesh->Append(ID_CreateMesh, "&Create Mesh");
+	menuMesh->Append(ID_ShowMesh, "&Show Mesh");
+	menuMesh->Append(ID_DeleteMesh, "&Delete Mesh");
     
     /* Creates the menu listing of the help menu */
     menuHelp->Append(ID_Manual, "View Manual");
     menuHelp->AppendSeparator();
     menuHelp->Append(ID_License, "License");
     menuHelp->Append(wxID_ABOUT);
+	
+	/*Create the menu listing of the Problem Menu */
+	menuProblem->Append(ID_Precision, "&Set Precision");
     
     /* Create and display the menu bar */
     SetMenuBar(menuBar);
     CreateStatusBar();
     
-    SetStatusText("Menu test for Omni-FEM");
+    SetStatusText("Omni-FEM Simulator");
 }
 
 
@@ -65,31 +72,11 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 
 
 
-void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
-{
-    wxMessageBox("Created New File", "New File Creation", wxOK | wxICON_INFORMATION);
-}
 
 
 
-void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
-{
-    wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
-}
 
 
-
-void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
-{
-    wxMessageBox("Work saved in location", "Saved As", wxOK | wxICON_INFORMATION);
-}
-
-
-
-void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
-{
-    wxMessageBox("Preferences are located here", "Preferences", wxOK | wxICON_INFORMATION);
-}
 
 
 

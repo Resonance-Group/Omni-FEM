@@ -22,7 +22,13 @@
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="UI">
       <File Name="src/UI/mainOmniFEMUI.cpp"/>
-      <File Name="src/UI/test.cpp"/>
+      <File Name="src/UI/common.cpp"/>
+      <File Name="src/UI/helpMenu.cpp"/>
+      <File Name="src/UI/fileMenu.cpp"/>
+      <File Name="src/UI/editMenu.cpp"/>
+      <File Name="src/UI/viewMenu.cpp"/>
+      <File Name="src/UI/meshMenu.cpp"/>
+      <File Name="src/UI/problemMenu.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
