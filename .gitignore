@@ -17,6 +17,14 @@ Debug/femm.log
 *.lastbuildstate
 *.txt
 *.mk
+*.o.d
+*.tern-project
+*.tern-port
+*.tags
+*.db
+*.list
+*.supp
+*.d
 
 # Compiled source #
 ###################
