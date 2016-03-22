@@ -33,12 +33,21 @@
           <File Name="src/UI/MainFrame/Presentation/save.png"/>
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
         </VirtualDirectory>
+        <VirtualDirectory Name="resources">
+          <File Name="src/UI/MainFrame/resources/save.png"/>
+          <File Name="src/UI/MainFrame/resources/Open.png"/>
+          <File Name="src/UI/MainFrame/resources/new_file.png"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="Abstraction">
+          <File Name="src/UI/MainFrame/Abstraction/MainDataStructure.cpp"/>
+        </VirtualDirectory>
       </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
     <VirtualDirectory Name="UI">
-      <File Name="Include/UI/OmniFEM.h"/>
+      <File Name="Include/UI/OmniFEMFrame.h"/>
+      <File Name="Include/UI/problemDefinition.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">
@@ -52,7 +61,7 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="GCC ( 4.9 )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="GCC ( 4.8 )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-O;-std=c++14;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
       </Compiler>
