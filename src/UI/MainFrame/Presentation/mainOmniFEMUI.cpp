@@ -56,8 +56,22 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     CreateStatusBar();
     
     SetStatusText("Omni-FEM Simulator");
-	
-	createTopToolBar();
+   
+ 
+	wxStandardPaths path = wxStandardPaths::Get();
+       wxString test1 = path.GetResourcesDir(); // usr/local/share/Omni-FEM
+    wxString test2 = path.GetLocalDataDir();// /etc/Omni-FEM
+    wxString test3 = path.GetConfigDir();// /etc
+    wxString test4 = path.GetDataDir();// /usr/local/lcoal/share/Omni-FEM
+    wxString test5 = path.GetUserDataDir(); // /home/phillip/.Omni-FEM
+    
+    wxMessageBox(test1, "path", wxOK);
+    wxMessageBox(test2, "path", wxOK);
+    wxMessageBox(test3, "path", wxOK);
+    wxMessageBox(test4, "path", wxOK);
+    wxMessageBox(test5, "path", wxOK); 
+    
+//	createTopToolBar();
 	
 //	this->GetClientSize(clientSizeX, clientSizeY);
 	
@@ -77,28 +91,41 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 
 void OmniFEMMainFrame::createTopToolBar()
 {
-	wxToolBar *tempToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
-	mainFrameToolBar = tempToolBar;
-	wxImage::AddHandler(new wxPNGHandler);
+//	wxToolBar *tempToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+//	mainFrameToolBar = tempToolBar;
+    wxStandardPaths *path;
+//    mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+//	wxImage::AddHandler(new wxPNGHandler);
 	
 	/* This section will need to load the images into memory */
-	wxImage saveImage(wxT("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/save.png"), wxBITMAP_TYPE_PNG);
-	wxImage openImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/Open.png", wxBITMAP_TYPE_PNG);
-	wxImage newFileImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/new_file.png", wxBITMAP_TYPE_PNG);
+    wxString test1 = path->GetResourcesDir();
+    wxString test2 = path->GetLocalDataDir();
+    wxString test3 = path->GetConfigDir();
+    wxString test4 = path->GetDataDir();
+    wxString test5 = path->GetUserDataDir();
+    
+    wxMessageBox(test1, "path", wxOK);
+    wxMessageBox(test2, "path", wxOK);
+    wxMessageBox(test3, "path", wxOK);
+    wxMessageBox(test4, "path", wxOK);
+    wxMessageBox(test5, "path", wxOK);
+//	wxImage saveImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/save.png", wxBITMAP_TYPE_PNG);
+//	wxImage openImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/Open.png", wxBITMAP_TYPE_PNG);
+//	wxImage newFileImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/new_file.png", wxBITMAP_TYPE_PNG);
 	
 	/* This section will convert the images into bitmaps */
-	wxBitmap saveBitmap(saveImage);
-	wxBitmap openImageBitmap(openImage);
-	wxBitmap newFileBitmap(newFileImage);
+//	wxBitmap saveBitmap(saveImage);
+//	wxBitmap openImageBitmap(openImage);
+//	wxBitmap newFileBitmap(newFileImage);
 	
 	/* This section will add the tool to the toolbar */
-	mainFrameToolBar->AddTool(ID_New, newFileBitmap, "New File");
+/*	mainFrameToolBar->AddTool(ID_New, newFileBitmap, "New File");
 	mainFrameToolBar->AddTool(ID_Open, openImageBitmap, "Open");
 	mainFrameToolBar->AddTool(ID_SaveAs, saveBitmap, "Save");
 	
 	/* Enable the tooolbar and associate it with the main frame */
-	mainFrameToolBar->Realize();
-	this->SetToolBar(mainFrameToolBar);
+//	mainFrameToolBar->Realize();
+//	this->SetToolBar(mainFrameToolBar);
 	
 //	mainFrameToolBar->EnableTool(ID_SaveAs, false);
 }

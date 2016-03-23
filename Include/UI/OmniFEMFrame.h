@@ -3,6 +3,7 @@
 
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
+#include <wx/stdpaths.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
