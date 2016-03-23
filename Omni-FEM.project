@@ -39,9 +39,15 @@
           <File Name="src/UI/MainFrame/resources/new_file.png"/>
         </VirtualDirectory>
         <VirtualDirectory Name="Abstraction">
-          <File Name="src/UI/MainFrame/Abstraction/MainDataStructure.cpp"/>
+          <File Name="src/UI/MainFrame/Abstraction/OmniFEMMainFrameAbstraction.cpp"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="Controller">
+          <File Name="src/UI/MainFrame/Controller/OmniFEMMainFrameController.cpp"/>
         </VirtualDirectory>
       </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="common">
+      <File Name="src/common/ProblemDefinition.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">

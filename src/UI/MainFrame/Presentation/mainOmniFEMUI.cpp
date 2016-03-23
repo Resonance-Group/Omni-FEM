@@ -1,25 +1,18 @@
-#include "UI/OmniFEM.h"
+#include "UI/OmniFEMFrame.h"
 
 
 bool OmniFEMApp::OnInit()
 {
-   OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50), wxSize(450, 340) );
-   frame->Show( true );
+   OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50), minSize);
+   frame->Show(true);
    return true; 
 }
 
 
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size) : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
-    /* Initilize variables */
-    wxMenuBar *menuBar = new wxMenuBar;
-    wxMenu *menuFile = new wxMenu;
-    wxMenu *menuEdit = new wxMenu;
-    wxMenu *menuView = new wxMenu;
-    wxMenu *menuMesh = new wxMenu;
-    wxMenu *menuProblem = new wxMenu;
-    wxMenu *menuHelp = new wxMenu;
-    
+	minSize = size;
+	
     /* This creates the main menu Bar at the top */
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuEdit, "&Edit");
@@ -33,10 +26,12 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuFile->Append(ID_New, "&New\tCtrl-N");
     menuFile->Append(ID_Save, "&Save\tCtrl-S");
     menuFile->Append(ID_SaveAs, "&Save As");
+	menuFile->Append(ID_Open, "&Open");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
+	menuEdit->Append(ID_LUASCRIPT, "&Lua Script\tCtrl-L");
     menuEdit->Append(ID_Preferences, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
@@ -61,8 +56,52 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     CreateStatusBar();
     
     SetStatusText("Omni-FEM Simulator");
+	
+	createTopToolBar();
+	
+//	this->GetClientSize(clientSizeX, clientSizeY);
+	
+	// This seciton will create a new panel and apply 2 buttons on the panel. 
+	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
+	newOpenClosePanel->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE);
+	
+	wxButton *buttonNewFile = new wxButton(newOpenClosePanel, ID_New, "New", wxPoint(10, 10), wxSize(100, 100));
+	wxButton *buttonOpenFile = new wxButton(newOpenClosePanel, ID_Open, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+	
+	
+	
+//	newOpenClosePanel->Destroy();
 }
 
+
+
+void OmniFEMMainFrame::createTopToolBar()
+{
+	wxToolBar *tempToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+	mainFrameToolBar = tempToolBar;
+	wxImage::AddHandler(new wxPNGHandler);
+	
+	/* This section will need to load the images into memory */
+	wxImage saveImage(wxT("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/save.png"), wxBITMAP_TYPE_PNG);
+	wxImage openImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/Open.png", wxBITMAP_TYPE_PNG);
+	wxImage newFileImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/new_file.png", wxBITMAP_TYPE_PNG);
+	
+	/* This section will convert the images into bitmaps */
+	wxBitmap saveBitmap(saveImage);
+	wxBitmap openImageBitmap(openImage);
+	wxBitmap newFileBitmap(newFileImage);
+	
+	/* This section will add the tool to the toolbar */
+	mainFrameToolBar->AddTool(ID_New, newFileBitmap, "New File");
+	mainFrameToolBar->AddTool(ID_Open, openImageBitmap, "Open");
+	mainFrameToolBar->AddTool(ID_SaveAs, saveBitmap, "Save");
+	
+	/* Enable the tooolbar and associate it with the main frame */
+	mainFrameToolBar->Realize();
+	this->SetToolBar(mainFrameToolBar);
+	
+//	mainFrameToolBar->EnableTool(ID_SaveAs, false);
+}
 
 
 void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
@@ -70,16 +109,25 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
     Close(true);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+void OmniFEMMainFrame::onResize(wxSizeEvent &event)
+{
+	/*
+	wxSize frameSize = event.GetSize();
+	int minXsize = minSize.GetWidth();
+	int minYsize = minSize.GetHeight();
+	
+	int currentXsize = this->GetWindowBorderSize().GetWidth();
+	int currentYsize = this->GetWindowBorderSize().GetHeight();
+	
+	if(currentXsize < minXsize)
+	{
+		this->SetSize(wxSize(minXsize, currentYsize));
+	}
+	else if (currentYsize < minYsize)
+	{
+		this->SetSize(wxSize(currentXsize, minYsize));
+	}
+	*/
+	
+	
+}

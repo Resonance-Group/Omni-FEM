@@ -2,7 +2,7 @@
 	This file will contain all of the class implementation for the problem menu in the menu bar of the main fram
 */
 
-#include "UI/OmniFEM.h"
+#include "UI/OmniFEMFrame.h"
 
 void OmniFEMMainFrame::onPrecision(wxCommandEvent &event)
 {

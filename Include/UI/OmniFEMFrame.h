@@ -1,20 +1,110 @@
-#ifndef OMNIFEM_H_
-#define OMNIFEM_H_
-
-#pragma once
+#ifndef OMNIFEMFrame_H_
+#define OMNIFEMFrame_H_
 
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
 
+// For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
 class OmniFEMApp : public wxApp
 {
+	private:
+	
+		wxSize minSize = wxSize(450, 340);
+	
     public:
         virtual bool OnInit();
 };
 
 
 
+enum class systemState
+{
+	initialStartUp = 0,
+	dimensionChoosing = 1,
+	problemChooseing = 2,
+	problemDefining = 3,
+	simulatingProblem = 4,
+	viewingResults = 5
+};
+
+
+
+/*! \class OmniFEMMainFrameAbstraction
+	\brief The class representing the abstraction layer for OmniFEM's main frame
+	
+	More detailed description
+*/
+class OmniFEMMainFrameAbstraction
+{
+	
+public:
+	//! This is the main constructor for the class
+	OmniFEMMainFrameAbstraction();
+	
+	//! This will return the state of OmniFEM
+	/*!
+		/return The state of OmniFEM
+	*/
+	systemState getOmniFEMState();
+
+	//! This function will set the state of OmniFEM.
+	/*!
+		This function will also call an event in order to update the presentation approiately
+		/param omniFEMState The state that OmniFEM will be going into.
+	*/
+	void setOmniFEMState(systemState omniFEMState);
+	
+	/************
+	* Variables *
+	*************/
+private:
+	
+	//! The state of OmniFEM
+	/*!
+		This variable holds the current state of OmniFEM
+	*/
+	systemState omniFEMSystemState = systemState::initialStartUp;
+	
+
+
+	
+};
+
+
+
+/* This class handles all of the functions for the controller section of OmniFEM */
+class OmniFEMMainFrameController
+{
+/* Constructor */
+public:
+	OmniFEMMainFrameController();
+	
+	/************
+	* Variables *
+	*************/
+private:
+	
+	OmniFEMMainFrameAbstraction abstractionLayer;
+	
+	
+	
+	
+	
+	/**********************
+	* Function Prototypes *
+	***********************/
+public:
+
+	
+	void updateOmniFEMState(systemState omniFEMState);
+	
+	
+};
+
+
+
+/* This class is akin to the global data structure */
 class OmniFEMMainFrame : public wxFrame
 {
 public:
@@ -23,6 +113,7 @@ private:
 	/***********************************
 	* Prototypes for creating the menu *
 	************************************/
+	
     /* This section is for the File menu */
     void onNewFile(wxCommandEvent &event);
     void OnSave(wxCommandEvent &event);
@@ -51,17 +142,25 @@ private:
     
     void OnExit(wxCommandEvent &event);
 	
+	void onResize(wxSizeEvent &event);
+	
 	/*************************
 	* Prototypes for toolbar *
 	**************************/
 	
 	void createTopToolBar();
 	
+	/***********************
+	* Controller Functions *
+	************************/
+	
+	
+	
 	/************
 	* Variables *
 	*************/
 	
-	int *clientSizeX, *clientSizeY;
+//	int *clientSizeX, *clientSizeY;
 	
 	wxMenuBar *menuBar = new wxMenuBar;
     wxMenu *menuFile = new wxMenu;
@@ -75,8 +174,13 @@ private:
 	
 	wxPanel *newOpenClosePanel = new wxPanel();
 	
+	wxSize minSize = wxSize(450, 340);
+	
+	OmniFEMMainFrameController controller;
+	
     wxDECLARE_EVENT_TABLE();
 };
+
 
 
 /* Enum for the menus of the menu bar */
@@ -96,6 +200,14 @@ enum
 	ID_Open = 13,
 	ID_LUASCRIPT = 14
 };
+
+
+
+
+
+
+
+
 
 
 

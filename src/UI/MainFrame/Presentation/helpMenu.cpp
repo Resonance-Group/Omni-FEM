@@ -2,7 +2,7 @@
 	This file will contain all of the class implementation for the help menu in the menu bar of the main fram
 */
 
-#include "UI/OmniFEM.h"
+#include "UI/OmniFEMFrame.h"
 
 void OmniFEMMainFrame::OnAbout(wxCommandEvent &event)
 {
