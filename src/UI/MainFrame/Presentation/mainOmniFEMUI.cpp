@@ -56,76 +56,51 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     CreateStatusBar();
     
     SetStatusText("Omni-FEM Simulator");
-   
- 
-	wxStandardPaths path = wxStandardPaths::Get();
-       wxString test1 = path.GetResourcesDir(); // usr/local/share/Omni-FEM
-    wxString test2 = path.GetLocalDataDir();// /etc/Omni-FEM
-    wxString test3 = path.GetConfigDir();// /etc
-    wxString test4 = path.GetDataDir();// /usr/local/lcoal/share/Omni-FEM
-    wxString test5 = path.GetUserDataDir(); // /home/phillip/.Omni-FEM
-    
-    wxMessageBox(test1, "path", wxOK);
-    wxMessageBox(test2, "path", wxOK);
-    wxMessageBox(test3, "path", wxOK);
-    wxMessageBox(test4, "path", wxOK);
-    wxMessageBox(test5, "path", wxOK); 
-    
-//	createTopToolBar();
+
+	createTopToolBar();
 	
 //	this->GetClientSize(clientSizeX, clientSizeY);
 	
 	// This seciton will create a new panel and apply 2 buttons on the panel. 
 	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
-	newOpenClosePanel->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE);
+	clientAreaPanel->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE);
 	
-	wxButton *buttonNewFile = new wxButton(newOpenClosePanel, ID_New, "New", wxPoint(10, 10), wxSize(100, 100));
-	wxButton *buttonOpenFile = new wxButton(newOpenClosePanel, ID_Open, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
-	
-	
-	
-//	newOpenClosePanel->Destroy();
+	wxButton *buttonNewFile = new wxButton(clientAreaPanel, ID_New, "New", wxPoint(10, 10), wxSize(100, 100));
+	wxButton *buttonOpenFile = new wxButton(clientAreaPanel, ID_Open, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
 }
 
 
 
+/*!
+ * The function used to create the toolbar at of the main window
+ */
 void OmniFEMMainFrame::createTopToolBar()
 {
-//	wxToolBar *tempToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
-//	mainFrameToolBar = tempToolBar;
-    wxStandardPaths *path;
-//    mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
-//	wxImage::AddHandler(new wxPNGHandler);
-	
-	/* This section will need to load the images into memory */
-    wxString test1 = path->GetResourcesDir();
-    wxString test2 = path->GetLocalDataDir();
-    wxString test3 = path->GetConfigDir();
-    wxString test4 = path->GetDataDir();
-    wxString test5 = path->GetUserDataDir();
+	wxToolBar *tempToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);	
+    wxStandardPaths path = wxStandardPaths::Get();
+	wxImage::AddHandler(new wxPNGHandler);
+	std::string resourcesDirectory = path.GetAppDocumentsDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
     
-    wxMessageBox(test1, "path", wxOK);
-    wxMessageBox(test2, "path", wxOK);
-    wxMessageBox(test3, "path", wxOK);
-    wxMessageBox(test4, "path", wxOK);
-    wxMessageBox(test5, "path", wxOK);
-//	wxImage saveImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/save.png", wxBITMAP_TYPE_PNG);
-//	wxImage openImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/Open.png", wxBITMAP_TYPE_PNG);
-//	wxImage newFileImage("/home/philm/GitHub/Omni-FEM/src/UI/MainFrame/resources/new_file.png", wxBITMAP_TYPE_PNG);
+    //    mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+    mainFrameToolBar = tempToolBar;
+	/* This section will need to load the images into memory */
+	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
+	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
+	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
 	
 	/* This section will convert the images into bitmaps */
-//	wxBitmap saveBitmap(saveImage);
-//	wxBitmap openImageBitmap(openImage);
-//	wxBitmap newFileBitmap(newFileImage);
+	wxBitmap saveBitmap(saveImage);
+	wxBitmap openImageBitmap(openImage);
+	wxBitmap newFileBitmap(newFileImage);
 	
 	/* This section will add the tool to the toolbar */
-/*	mainFrameToolBar->AddTool(ID_New, newFileBitmap, "New File");
+	mainFrameToolBar->AddTool(ID_New, newFileBitmap, "New File");
 	mainFrameToolBar->AddTool(ID_Open, openImageBitmap, "Open");
 	mainFrameToolBar->AddTool(ID_SaveAs, saveBitmap, "Save");
 	
 	/* Enable the tooolbar and associate it with the main frame */
-//	mainFrameToolBar->Realize();
-//	this->SetToolBar(mainFrameToolBar);
+	mainFrameToolBar->Realize();
+	this->SetToolBar(mainFrameToolBar);
 	
 //	mainFrameToolBar->EnableTool(ID_SaveAs, false);
 }
@@ -135,6 +110,16 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 {
     Close(true);
 }
+
+
+
+void OmniFEMMainFrame::createDimensionClient()
+{
+    clientAreaPanel->Destroy();
+    clientAreaPanel->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE);
+    wxButton *TwoDimButton = new wxButton(clientAreaPanel, ID_TwoDim, "2-D", wxPoint(10, 10), wxSize(100, 100));
+}
+
 
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 {

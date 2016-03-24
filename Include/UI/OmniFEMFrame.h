@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
 #include <wx/stdpaths.h>
+#include <string.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -74,7 +75,12 @@ private:
 
 
 
-/* This class handles all of the functions for the controller section of OmniFEM */
+/*! \class OmniFEMMainFrameController
+ *  \brief The class representing the controller layer for OmniFEM's main frame
+ * 
+ *  This class contains all of the processing calls in order to manage the OmniFEM MainFrame.
+ *  
+*/
 class OmniFEMMainFrameController
 {
 /* Constructor */
@@ -88,17 +94,16 @@ private:
 	
 	OmniFEMMainFrameAbstraction abstractionLayer;
 	
-	
-	
-	
-	
 	/**********************
 	* Function Prototypes *
 	***********************/
 public:
 
-	
+	//! This function will update the systemState of OmniFEM in the abstraction layer
 	void updateOmniFEMState(systemState omniFEMState);
+    
+    //! This will get the current state of OmniFEM contained in the abstraction layer
+    systemState getOmniFEMState();
 	
 	
 };
@@ -144,6 +149,12 @@ private:
     void OnExit(wxCommandEvent &event);
 	
 	void onResize(wxSizeEvent &event);
+    
+ 	/*****************************
+	* Prototypes for client area *
+	******************************/   
+    
+    void createDimensionClient();
 	
 	/*************************
 	* Prototypes for toolbar *
@@ -155,6 +166,13 @@ private:
 	* Controller Functions *
 	************************/
 	
+    
+    
+    /*************************
+	* Prototypes for buttons *
+	**************************/
+    
+    void onTwoDimButton(wxCommandEvent &event);
 	
 	
 	/************
@@ -173,7 +191,7 @@ private:
 	
 	wxToolBar *mainFrameToolBar;
 	
-	wxPanel *newOpenClosePanel = new wxPanel();
+	wxPanel *clientAreaPanel = new wxPanel();
 	
 	wxSize minSize = wxSize(450, 340);
 	
@@ -199,7 +217,8 @@ enum
 	ID_DeleteMesh = 11,
 	ID_Precision = 12,
 	ID_Open = 13,
-	ID_LUASCRIPT = 14
+	ID_LUASCRIPT = 14,
+    ID_TwoDim = 15
 };
 
 

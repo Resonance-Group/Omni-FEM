@@ -32,6 +32,7 @@
           <File Name="src/UI/MainFrame/Presentation/problemMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/save.png"/>
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>

@@ -44,6 +44,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	*************************/
 	EVT_BUTTON(ID_New, OmniFEMMainFrame::onNewFile)
 	EVT_BUTTON(ID_Open, OmniFEMMainFrame::onOpenFile)
+    EVT_BUTTON(ID_TwoDim, OmniFEMMainFrame::onTwoDimButton)
     
 wxEND_EVENT_TABLE()
 
