@@ -37,7 +37,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
 	
-//	EVT_SIZE(OmniFEMMainFrame::onResize)
+	EVT_SIZE(OmniFEMMainFrame::onResize)
 	
 	/************************
 	* Button Event Handling *
@@ -45,6 +45,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	EVT_BUTTON(ID_New, OmniFEMMainFrame::onNewFile)
 	EVT_BUTTON(ID_Open, OmniFEMMainFrame::onOpenFile)
     EVT_BUTTON(ID_TwoDim, OmniFEMMainFrame::onTwoDimButton)
+	EVT_BUTTON(ID_BACK, OmniFEMMainFrame::onBackButton)
     
 wxEND_EVENT_TABLE()
 

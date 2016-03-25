@@ -14,10 +14,8 @@ void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
             return;
     }
     
+	
     createDimensionClient();
-        
-        
-    wxMessageBox("Created New File", "New File Creation", wxOK | wxICON_INFORMATION);
 }
 
 

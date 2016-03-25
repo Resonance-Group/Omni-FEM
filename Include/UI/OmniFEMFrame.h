@@ -5,6 +5,8 @@
 #include <wx/aboutdlg.h>
 #include <wx/stdpaths.h>
 #include <string.h>
+#include <wx/textctrl.h>
+#include <wx/stattext.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -142,24 +144,38 @@ private:
 	void onDeleteMesh(wxCommandEvent &event);
     
     /* This section is for the Help menu */
+	
+	//! Event called to view the manual
     void onManual(wxCommandEvent &event);
+	
+	//! Event called to view the manual
     void onLicense(wxCommandEvent &event);
+	
+	//! Event called to view the manual
     void OnAbout(wxCommandEvent &event);
     
+	//! Event called to view the manual
     void OnExit(wxCommandEvent &event);
 	
-	void onResize(wxSizeEvent &event);
-    
+
  	/*****************************
 	* Prototypes for client area *
 	******************************/   
     
+	//! Function that is called to begin the creating a new simulation
+	/*
+		This will be called in order for the user to choose the dimesnion of the simulation
+	*/
     void createDimensionClient();
+	
+	//! Function that is called to create the initial client area
+	void createInitialStartup();
 	
 	/*************************
 	* Prototypes for toolbar *
 	**************************/
 	
+	//! Function called that will create the toolbar for the main frame
 	void createTopToolBar();
 	
 	/***********************
@@ -172,14 +188,24 @@ private:
 	* Prototypes for buttons *
 	**************************/
     
+	//! Function called when the user chooses the two dim button
     void onTwoDimButton(wxCommandEvent &event);
 	
+	//! Function called when the back button is pressed 
+	void onBackButton(wxCommandEvent &event);
+	
+    /********************
+	* Prototypes Others *
+	*********************/	
+	
+	//! Event called when a resize event occurs
+	void onResize(wxSizeEvent &event);	
 	
 	/************
 	* Variables *
 	*************/
 	
-//	int *clientSizeX, *clientSizeY;
+	int clientSizeWidth, clientSizeLength;
 	
 	wxMenuBar *menuBar = new wxMenuBar;
     wxMenu *menuFile = new wxMenu;
@@ -191,7 +217,8 @@ private:
 	
 	wxToolBar *mainFrameToolBar;
 	
-	wxPanel *clientAreaPanel = new wxPanel();
+	wxPanel *initialStartPanel = new wxPanel();
+	wxPanel *dimSelectPanel;
 	
 	wxSize minSize = wxSize(450, 340);
 	
@@ -218,7 +245,8 @@ enum
 	ID_Precision = 12,
 	ID_Open = 13,
 	ID_LUASCRIPT = 14,
-    ID_TwoDim = 15
+    ID_TwoDim = 15,
+	ID_BACK = 16
 };
 
 

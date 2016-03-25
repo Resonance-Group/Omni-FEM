@@ -59,16 +59,34 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 
 	createTopToolBar();
 	
-//	this->GetClientSize(clientSizeX, clientSizeY);
+	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
+
+	createInitialStartup();
+	
+	this->SetMinSize(minSize);
+	this->SetMaxSize(minSize);
+}
+
+
+
+void OmniFEMMainFrame::createInitialStartup()
+{
+	systemState currentState = controller.getOmniFEMState();
+	
+	/* First, the function will need to destoy any other panels that are currently active */
+	if(currentState == systemState::dimensionChoosing)
+	{
+		dimSelectPanel->Destroy();
+		initialStartPanel = new wxPanel();
+	}
 	
 	// This seciton will create a new panel and apply 2 buttons on the panel. 
 	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
-	clientAreaPanel->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE);
+	initialStartPanel->Create(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
 	
-	wxButton *buttonNewFile = new wxButton(clientAreaPanel, ID_New, "New", wxPoint(10, 10), wxSize(100, 100));
-	wxButton *buttonOpenFile = new wxButton(clientAreaPanel, ID_Open, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+	wxButton *buttonNewFile = new wxButton(initialStartPanel, ID_New, "New", wxPoint(10, 10), wxSize(100, 100));
+	wxButton *buttonOpenFile = new wxButton(initialStartPanel, ID_Open, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
 }
-
 
 
 /*!
@@ -115,31 +133,38 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 
 void OmniFEMMainFrame::createDimensionClient()
 {
-    clientAreaPanel->Destroy();
-    clientAreaPanel->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE);
-    wxButton *TwoDimButton = new wxButton(clientAreaPanel, ID_TwoDim, "2-D", wxPoint(10, 10), wxSize(100, 100));
+    initialStartPanel->Destroy();
+    dimSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
+    wxButton *TwoDimButton = new wxButton(dimSelectPanel, ID_TwoDim, "2-D", wxPoint(10, 10), wxSize(100, 100));
+	wxButton *backButton = new wxButton(dimSelectPanel, ID_BACK, "Back", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Dimension:");
+	
+	
+	controller.updateOmniFEMState(systemState::dimensionChoosing);
+}
+
+
+
+void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
+{
+	systemState currentState = controller.getOmniFEMState();
+	
+	if(currentState == systemState::dimensionChoosing)
+	{
+		createInitialStartup();
+		controller.updateOmniFEMState(systemState::initialStartUp);
+	}
+		
 }
 
 
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 {
-	/*
-	wxSize frameSize = event.GetSize();
-	int minXsize = minSize.GetWidth();
-	int minYsize = minSize.GetHeight();
+	systemState currentState = controller.getOmniFEMState();
+	this->GetClientSize(&clientSizeWidth, &clientSizeLength);// This will update the client size
 	
-	int currentXsize = this->GetWindowBorderSize().GetWidth();
-	int currentYsize = this->GetWindowBorderSize().GetHeight();
-	
-	if(currentXsize < minXsize)
+	if(currentState == systemState::initialStartUp || currentState == systemState::dimensionChoosing || currentState == systemState::problemChooseing)
 	{
-		this->SetSize(wxSize(minXsize, currentYsize));
+		return;
 	}
-	else if (currentYsize < minYsize)
-	{
-		this->SetSize(wxSize(currentXsize, minYsize));
-	}
-	*/
-	
-	
 }
