@@ -7,6 +7,7 @@
 #include <string.h>
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
+#include <UI/problemDefinition.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -59,6 +60,12 @@ public:
 	*/
 	void setOmniFEMState(systemState omniFEMState);
 	
+	//! Function to get the current problem dimension
+	problemDimension getProblemDimension();
+	
+	//! Function to set the problem dimension
+	void setProblemDimension(problemDimension dimension);
+	
 	/************
 	* Variables *
 	*************/
@@ -70,8 +77,8 @@ private:
 	*/
 	systemState omniFEMSystemState = systemState::initialStartUp;
 	
-
-
+	problemDefinition definition;
+	
 	
 };
 
@@ -107,6 +114,11 @@ public:
     //! This will get the current state of OmniFEM contained in the abstraction layer
     systemState getOmniFEMState();
 	
+	//! This function will set the problem dimension in the 
+	void setAbstractProblemDim(problemDimension dim);
+	
+	//! This function will be used to get the problem dimension from the abstraction layer
+	problemDimension getAbstractProblemDim();
 	
 };
 
@@ -168,8 +180,28 @@ private:
 	*/
     void createDimensionClient();
 	
+	
 	//! Function that is called to create the initial client area
 	void createInitialStartup();
+	
+	
+	//! This function is called when the user is ready to choose their physics simulation
+	void createProblemChoosingClient();
+	
+	
+	//! This function is called to create the client for defining the physics problem
+	/*
+		Defining would be creating the geometry, creating the mesh, determining boundary conditions, etc.
+	*/
+	void createModelDefiningClient();
+	
+	
+	//! This function is called when the user would like to view the results.
+	/*
+		When the view wants to view results, this function is called in order to create the client frame for viewing
+		the results
+	*/
+	void createResultsViewingClient();
 	
 	/*************************
 	* Prototypes for toolbar *
@@ -178,12 +210,6 @@ private:
 	//! Function called that will create the toolbar for the main frame
 	void createTopToolBar();
 	
-	/***********************
-	* Controller Functions *
-	************************/
-	
-    
-    
     /*************************
 	* Prototypes for buttons *
 	**************************/
@@ -201,6 +227,9 @@ private:
 	//! Event called when a resize event occurs
 	void onResize(wxSizeEvent &event);	
 	
+	//! This is a function that will be for the initial state of Omni-FEM. With items on the toolbar greyed out and menus not accessible
+	void initialStartSettings();
+	
 	/************
 	* Variables *
 	*************/
@@ -215,10 +244,13 @@ private:
     wxMenu *menuProblem = new wxMenu;
     wxMenu *menuHelp = new wxMenu;
 	
-	wxToolBar *mainFrameToolBar;
+	wxToolBar *mainFrameToolBar = new wxToolBar();
 	
 	wxPanel *initialStartPanel = new wxPanel();
 	wxPanel *dimSelectPanel;
+	wxPanel *problemSelectPanel;
+	wxPanel *problemDefiningPanel;
+	wxPanel *viewResultsPanel;
 	
 	wxSize minSize = wxSize(450, 340);
 	
@@ -230,23 +262,40 @@ private:
 
 
 /* Enum for the menus of the menu bar */
-enum
+enum menubarID
 {
-    ID_New = 1,
-    ID_Save = 2,
-    ID_SaveAs = 3,
-    ID_Preferences = 4,
-    ID_Manual = 5,
-    ID_License = 6,
-	ID_ViewResults = 7,
-	ID_CreateMesh = 9,
-	ID_ShowMesh = 10,
-	ID_DeleteMesh = 11,
-	ID_Precision = 12,
-	ID_Open = 13,
-	ID_LUASCRIPT = 14,
-    ID_TwoDim = 15,
-	ID_BACK = 16
+    ID_menubarNew = 1,
+    ID_menubarSave = 2,
+    ID_menubarSaveAs = 3,
+    ID_menubarPreferences = 4,
+    ID_menubarManual = 5,
+    ID_menubarLicense = 6,
+	ID_menubarViewResults = 7,
+	ID_menubarCreateMesh = 9,
+	ID_menubarShowMesh = 10,
+	ID_menubarDeleteMesh = 11,
+	ID_menubarPrecision = 12,
+	ID_menubarOpen = 13,
+	ID_menubarLUASCRIPT = 14,
+
+};
+
+
+enum toolbarID
+{
+	ID_ToolBarNew = 1,
+	ID_ToolBarOpen = 2,
+	ID_ToolBarSave = 3
+};
+
+
+enum buttonID
+{
+	ID_buttonTwoDim = 1,
+	ID_buttonBack = 2,
+	ID_buttonNew = 3,
+	ID_buttonOpen = 4
+	
 };
 
 

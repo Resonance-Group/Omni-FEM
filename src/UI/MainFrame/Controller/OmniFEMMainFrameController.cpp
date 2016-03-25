@@ -19,3 +19,17 @@ systemState OmniFEMMainFrameController::getOmniFEMState()
 {
     return abstractionLayer.getOmniFEMState();
 }
+
+
+
+void OmniFEMMainFrameController::setAbstractProblemDim(problemDimension dim)
+{
+	abstractionLayer.setProblemDimension(dim);
+}
+
+
+
+problemDimension OmniFEMMainFrameController::getAbstractProblemDim()
+{
+	return abstractionLayer.getProblemDimension();
+}

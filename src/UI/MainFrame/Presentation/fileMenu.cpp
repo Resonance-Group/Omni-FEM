@@ -14,7 +14,6 @@ void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
             return;
     }
     
-	
     createDimensionClient();
 }
 

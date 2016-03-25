@@ -4,5 +4,21 @@
 
 void OmniFEMMainFrame::onTwoDimButton(wxCommandEvent &event)
 {
-    wxMessageBox("Creating 2D problem", "system", wxOK | wxICON_INFORMATION);
+    createProblemChoosingClient();
+}
+
+
+
+void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
+{
+	systemState currentState = controller.getOmniFEMState();
+	
+	if(currentState == systemState::dimensionChoosing)
+	{
+		createInitialStartup();
+	}
+	else if(currentState == systemState::problemChooseing)
+	{
+		createDimensionClient();
+	}
 }

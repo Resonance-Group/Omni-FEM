@@ -9,29 +9,29 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	***********************/
 	
     /* This section is for the file menu */
-    EVT_MENU(ID_New,   OmniFEMMainFrame::onNewFile)
-    EVT_MENU(ID_Save, OmniFEMMainFrame::OnSave)
-    EVT_MENU(ID_SaveAs, OmniFEMMainFrame::onSaveAs)
-	EVT_MENU(ID_Open, OmniFEMMainFrame::onOpenFile)
+    EVT_MENU(menubarID::ID_menubarNew,   OmniFEMMainFrame::onNewFile)
+    EVT_MENU(menubarID::ID_menubarSave, OmniFEMMainFrame::OnSave)
+    EVT_MENU(menubarID::ID_menubarSaveAs, OmniFEMMainFrame::onSaveAs)
+	EVT_MENU(menubarID::ID_menubarOpen, OmniFEMMainFrame::onOpenFile)
     
     /* This section is for the Edit menu */
-	EVT_MENU(ID_LUASCRIPT, OmniFEMMainFrame::onLuaRun)
-    EVT_MENU(ID_Preferences, OmniFEMMainFrame::onPreferences)
+	EVT_MENU(menubarID::ID_menubarLUASCRIPT, OmniFEMMainFrame::onLuaRun)
+    EVT_MENU(menubarID::ID_menubarPreferences, OmniFEMMainFrame::onPreferences)
 	
 	/* This section is for the View menu */
-	EVT_MENU(ID_ViewResults, OmniFEMMainFrame::onViewResults)
+	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)
 	
 	/* This section is for the Problem menu */
-	EVT_MENU(ID_Precision, OmniFEMMainFrame::onPrecision)
+	EVT_MENU(menubarID::ID_menubarPrecision, OmniFEMMainFrame::onPrecision)
 	
 	/*This section is for the mesh menu */
-    EVT_MENU(ID_CreateMesh, OmniFEMMainFrame::onCreateMesh)
-	EVT_MENU(ID_ShowMesh, OmniFEMMainFrame::onShowMesh)
-	EVT_MENU(ID_DeleteMesh, OmniFEMMainFrame::onDeleteMesh)
+    EVT_MENU(menubarID::ID_menubarCreateMesh, OmniFEMMainFrame::onCreateMesh)
+	EVT_MENU(menubarID::ID_menubarShowMesh, OmniFEMMainFrame::onShowMesh)
+	EVT_MENU(menubarID::ID_menubarDeleteMesh, OmniFEMMainFrame::onDeleteMesh)
 	
     /* This section is for the Help menu */
-	EVT_MENU(ID_Manual, OmniFEMMainFrame::onManual)
-    EVT_MENU(ID_License, OmniFEMMainFrame::onLicense)
+	EVT_MENU(menubarID::ID_menubarManual, OmniFEMMainFrame::onManual)
+    EVT_MENU(menubarID::ID_menubarLicense, OmniFEMMainFrame::onLicense)
     EVT_MENU(wxID_ABOUT, OmniFEMMainFrame::OnAbout)
     
     /* Everything Else */
@@ -42,10 +42,21 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	/************************
 	* Button Event Handling *
 	*************************/
-	EVT_BUTTON(ID_New, OmniFEMMainFrame::onNewFile)
-	EVT_BUTTON(ID_Open, OmniFEMMainFrame::onOpenFile)
-    EVT_BUTTON(ID_TwoDim, OmniFEMMainFrame::onTwoDimButton)
-	EVT_BUTTON(ID_BACK, OmniFEMMainFrame::onBackButton)
+	
+	EVT_BUTTON(buttonID::ID_buttonNew, OmniFEMMainFrame::onNewFile)
+	EVT_BUTTON(buttonID::ID_buttonOpen, OmniFEMMainFrame::onOpenFile)
+    EVT_BUTTON(buttonID::ID_buttonTwoDim, OmniFEMMainFrame::onTwoDimButton)
+	EVT_BUTTON(buttonID::ID_buttonBack, OmniFEMMainFrame::onBackButton)
+	
+	/*************************
+	* ToolBar Event Handling *
+	**************************/	
+	
+	EVT_TOOL(toolbarID::ID_ToolBarNew, OmniFEMMainFrame::onNewFile)
+	EVT_TOOL(toolbarID::ID_ToolBarOpen, OmniFEMMainFrame::onOpenFile)
+	EVT_TOOL(toolbarID::ID_ToolBarSave, OmniFEMMainFrame::OnSave)
+	
+	
     
 wxEND_EVENT_TABLE()
 

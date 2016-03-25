@@ -1,5 +1,9 @@
+#include <string.h>
+
 #ifndef OMNIFEMProblemDefinition_H_
 #define OMNIFEMProblemDefininition_H_
+
+
 
 //! Enum contianing the dimension of the problem
 /*! 
@@ -29,9 +33,11 @@ class problemDefinition
 	* Variables *
 	*************/
 private:
-//! A variable holding the dimension of the problem
+	//! A variable holding the dimension of the problem
 	problemDimension dimension = problemDimension::zero_Dimension;
 	
+	//! A string containing the name of the problem
+//	string name = "untitled";
 	
 	/**********************
 	* Function Prototypes *

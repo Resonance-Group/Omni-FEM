@@ -1,12 +1,14 @@
 #include "UI/OmniFEMFrame.h"
 
 
+
 bool OmniFEMApp::OnInit()
 {
    OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50), minSize);
    frame->Show(true);
    return true; 
 }
+
 
 
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size) : wxFrame(NULL, wxID_ANY, title, pos, size)
@@ -23,33 +25,33 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     
     
     /* Creating the menu listing of File menu */
-    menuFile->Append(ID_New, "&New\tCtrl-N");
-    menuFile->Append(ID_Save, "&Save\tCtrl-S");
-    menuFile->Append(ID_SaveAs, "&Save As");
-	menuFile->Append(ID_Open, "&Open");
+    menuFile->Append(menubarID::ID_menubarNew, "&New\tCtrl-N");
+    menuFile->Append(menubarID::ID_menubarSave, "&Save\tCtrl-S");
+    menuFile->Append(menubarID::ID_menubarSaveAs, "&Save As");
+	menuFile->Append(menubarID::ID_menubarOpen, "&Open");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-	menuEdit->Append(ID_LUASCRIPT, "&Lua Script\tCtrl-L");
-    menuEdit->Append(ID_Preferences, "&Preferences\tCtrl-P");
+	menuEdit->Append(menubarID::ID_menubarLUASCRIPT, "&Lua Script\tCtrl-L");
+    menuEdit->Append(menubarID::ID_menubarPreferences, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
-	menuView->Append(ID_ViewResults, "&View Results");
+	menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
 	
 	/* Create the menu listing for the mesh menu */
-	menuMesh->Append(ID_CreateMesh, "&Create Mesh");
-	menuMesh->Append(ID_ShowMesh, "&Show Mesh");
-	menuMesh->Append(ID_DeleteMesh, "&Delete Mesh");
+	menuMesh->Append(menubarID::ID_menubarCreateMesh, "&Create Mesh");
+	menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
+	menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
     
     /* Creates the menu listing of the help menu */
-    menuHelp->Append(ID_Manual, "View Manual");
+    menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
     menuHelp->AppendSeparator();
-    menuHelp->Append(ID_License, "License");
+    menuHelp->Append(menubarID::ID_menubarLicense, "License");
     menuHelp->Append(wxID_ABOUT);
 	
 	/*Create the menu listing of the Problem Menu */
-	menuProblem->Append(ID_Precision, "&Set Precision");
+	menuProblem->Append(menubarID::ID_menubarPrecision, "&Set Precision");
     
     /* Create and display the menu bar */
     SetMenuBar(menuBar);
@@ -58,14 +60,32 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     SetStatusText("Omni-FEM Simulator");
 
 	createTopToolBar();
+	createInitialStartup();
+	initialStartSettings();
 	
 	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
-
-	createInitialStartup();
-	
 	this->SetMinSize(minSize);
 	this->SetMaxSize(minSize);
 }
+
+
+
+
+
+void OmniFEMMainFrame::initialStartSettings()
+{
+	menuBar->Enable(menubarID::ID_menubarShowMesh,	false);
+	menuBar->Enable(menubarID::ID_menubarSave,		false);
+	menuBar->Enable(menubarID::ID_menubarSaveAs,		false);
+	menuBar->Enable(menubarID::ID_menubarPreferences,	false);
+	menuBar->Enable(menubarID::ID_menubarViewResults,	false);
+	menuBar->Enable(menubarID::ID_menubarCreateMesh,	false);
+	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	false);
+	menuBar->Enable(menubarID::ID_menubarPrecision,	false);
+	
+	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	false);
+}
+
 
 
 
@@ -84,23 +104,22 @@ void OmniFEMMainFrame::createInitialStartup()
 	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
 	initialStartPanel->Create(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
 	
-	wxButton *buttonNewFile = new wxButton(initialStartPanel, ID_New, "New", wxPoint(10, 10), wxSize(100, 100));
-	wxButton *buttonOpenFile = new wxButton(initialStartPanel, ID_Open, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+	wxButton *buttonNewFile = new wxButton(initialStartPanel, buttonID::ID_buttonNew, "New", wxPoint(10, 10), wxSize(100, 100));
+	wxButton *buttonOpenFile = new wxButton(initialStartPanel, buttonID::ID_buttonOpen, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+
+	controller.updateOmniFEMState(systemState::initialStartUp);
 }
 
 
-/*!
- * The function used to create the toolbar at of the main window
- */
+
 void OmniFEMMainFrame::createTopToolBar()
 {
-	wxToolBar *tempToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);	
     wxStandardPaths path = wxStandardPaths::Get();
 	wxImage::AddHandler(new wxPNGHandler);
 	std::string resourcesDirectory = path.GetAppDocumentsDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
     
-    //    mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
-    mainFrameToolBar = tempToolBar;
+    mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+
 	/* This section will need to load the images into memory */
 	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
 	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
@@ -112,16 +131,15 @@ void OmniFEMMainFrame::createTopToolBar()
 	wxBitmap newFileBitmap(newFileImage);
 	
 	/* This section will add the tool to the toolbar */
-	mainFrameToolBar->AddTool(ID_New, newFileBitmap, "New File");
-	mainFrameToolBar->AddTool(ID_Open, openImageBitmap, "Open");
-	mainFrameToolBar->AddTool(ID_SaveAs, saveBitmap, "Save");
+	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, newFileBitmap, "New File");
+	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, openImageBitmap, "Open");
+	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, saveBitmap, "Save");
 	
 	/* Enable the tooolbar and associate it with the main frame */
 	mainFrameToolBar->Realize();
 	this->SetToolBar(mainFrameToolBar);
-	
-//	mainFrameToolBar->EnableTool(ID_SaveAs, false);
 }
+
 
 
 void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
@@ -133,10 +151,16 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 
 void OmniFEMMainFrame::createDimensionClient()
 {
-    initialStartPanel->Destroy();
+	systemState currentState = controller.getOmniFEMState();
+	
+	if(currentState == systemState::problemChooseing)
+		problemSelectPanel->Destroy();
+	else
+		initialStartPanel->Destroy();
+		
     dimSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
-    wxButton *TwoDimButton = new wxButton(dimSelectPanel, ID_TwoDim, "2-D", wxPoint(10, 10), wxSize(100, 100));
-	wxButton *backButton = new wxButton(dimSelectPanel, ID_BACK, "Back", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+    wxButton *TwoDimButton = new wxButton(dimSelectPanel, buttonID::ID_buttonTwoDim, "2-D", wxPoint(10, 50), wxSize(50, 50));
+	wxButton *backButton = new wxButton(dimSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(10, 100 + (260 - 220)), wxSize(100, 25));
 	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Dimension:");
 	
 	
@@ -145,17 +169,17 @@ void OmniFEMMainFrame::createDimensionClient()
 
 
 
-void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
+void OmniFEMMainFrame::createProblemChoosingClient()
 {
-	systemState currentState = controller.getOmniFEMState();
+	dimSelectPanel->Destroy();
 	
-	if(currentState == systemState::dimensionChoosing)
-	{
-		createInitialStartup();
-		controller.updateOmniFEMState(systemState::initialStartUp);
-	}
-		
+	problemSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
+	
+	wxButton *backButton = new wxButton(problemSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(10, 100 + (260 - 220)), wxSize(100, 25));
+	
+	controller.updateOmniFEMState(systemState::problemChooseing);
 }
+
 
 
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
