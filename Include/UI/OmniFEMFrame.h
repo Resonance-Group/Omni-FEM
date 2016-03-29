@@ -8,6 +8,11 @@
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <UI/problemDefinition.h>
+#include <wx/listbox.h>
+
+#include <sstream>
+#include <locale>
+
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -66,6 +71,12 @@ public:
 	//! Function to set the problem dimension
 	void setProblemDimension(problemDimension dimension);
 	
+	//! Function used to get the current physics of the problem 
+	physicProblems getProblemPhysics();
+	
+	//! Function used to set the current physics problem
+	void setProblemPhysics(physicProblems phy);
+	
 	/************
 	* Variables *
 	*************/
@@ -119,6 +130,12 @@ public:
 	
 	//! This function will be used to get the problem dimension from the abstraction layer
 	problemDimension getAbstractProblemDim();
+	
+	//! This function will get the physics problem in the abstraction
+	physicProblems getAbstractProblemPhysics();
+	
+	//! This function will set the phycis problem in the abstraction
+	void setAbstractProblemPhysics(physicProblems phy);
 	
 };
 
@@ -182,7 +199,7 @@ private:
 	
 	
 	//! Function that is called to create the initial client area
-	void createInitialStartup();
+	void createInitialStartupClient();
 	
 	
 	//! This function is called when the user is ready to choose their physics simulation
@@ -220,6 +237,8 @@ private:
 	//! Function called when the back button is pressed 
 	void onBackButton(wxCommandEvent &event);
 	
+	void onFinishButton(wxCommandEvent &event);
+	
     /********************
 	* Prototypes Others *
 	*********************/	
@@ -228,15 +247,19 @@ private:
 	void onResize(wxSizeEvent &event);	
 	
 	//! This is a function that will be for the initial state of Omni-FEM. With items on the toolbar greyed out and menus not accessible
-	void initialStartSettings();
+	void enableToolMenuBar(bool enable);
+	
+	//! This is the function that is called when the combox box is clicked for choosing a physics problem
+	void physicsProblemComboBox(wxCommandEvent &event);
 	
 	/************
 	* Variables *
 	*************/
 	
-	int clientSizeWidth, clientSizeLength;
+	int clientSizeWidth, clientSizeLength;// The width is the x and the length is the Y
 	
 	wxMenuBar *menuBar = new wxMenuBar;
+	
     wxMenu *menuFile = new wxMenu;
     wxMenu *menuEdit = new wxMenu;
     wxMenu *menuView = new wxMenu;
@@ -254,6 +277,8 @@ private:
 	
 	wxSize minSize = wxSize(450, 340);
 	
+	wxArrayString arrayPhysicsProblem;
+	
 	OmniFEMMainFrameController controller;
 	
     wxDECLARE_EVENT_TABLE();
@@ -261,7 +286,7 @@ private:
 
 
 
-/* Enum for the menus of the menu bar */
+//! Enum for the menus of the menu bar
 enum menubarID
 {
     ID_menubarNew = 1,
@@ -281,6 +306,8 @@ enum menubarID
 };
 
 
+
+//! Enum for the tool bar
 enum toolbarID
 {
 	ID_ToolBarNew = 1,
@@ -289,20 +316,36 @@ enum toolbarID
 };
 
 
+
+//! Enum for the buttons
 enum buttonID
 {
 	ID_buttonTwoDim = 1,
 	ID_buttonBack = 2,
 	ID_buttonNew = 3,
-	ID_buttonOpen = 4
-	
+	ID_buttonOpen = 4,
+	ID_buttonFinish = 5
 };
 
 
 
+//! Enums for comboboxs
+enum comboListBoxID
+{
+	ID_physicsProblems = 1
+};
 
 
 
+//! These enums are for the different panels
+enum panelID
+{
+	ID_initialCreation = 0,
+	ID_dimSelectFrame = 1,
+	ID_probSelectPanel = 2,
+	ID_probDefiningPanel = 3,
+	ID_viewResultsPanel = 4
+};
 
 
 

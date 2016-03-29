@@ -1,7 +1,10 @@
 #include "UI/OmniFEMFrame.h"
 
 
-
+/***************
+ * Constructor *
+ ***************/
+ 
 bool OmniFEMApp::OnInit()
 {
    OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50), minSize);
@@ -9,8 +12,10 @@ bool OmniFEMApp::OnInit()
    return true; 
 }
 
-
-
+/****************************
+ * Function Implementations *
+ ****************************/
+ 
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size) : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
 	minSize = size;
@@ -60,36 +65,41 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     SetStatusText("Omni-FEM Simulator");
 
 	createTopToolBar();
-	createInitialStartup();
-	initialStartSettings();
-	
 	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
+	
+	createInitialStartupClient();
+	enableToolMenuBar(false);
+	
+	
 	this->SetMinSize(minSize);
 	this->SetMaxSize(minSize);
-}
-
-
-
-
-
-void OmniFEMMainFrame::initialStartSettings()
-{
-	menuBar->Enable(menubarID::ID_menubarShowMesh,	false);
-	menuBar->Enable(menubarID::ID_menubarSave,		false);
-	menuBar->Enable(menubarID::ID_menubarSaveAs,		false);
-	menuBar->Enable(menubarID::ID_menubarPreferences,	false);
-	menuBar->Enable(menubarID::ID_menubarViewResults,	false);
-	menuBar->Enable(menubarID::ID_menubarCreateMesh,	false);
-	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	false);
-	menuBar->Enable(menubarID::ID_menubarPrecision,	false);
 	
-	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	false);
+	arrayPhysicsProblem.Add("Electrostatics");
+	arrayPhysicsProblem.Add("Magnetics");
 }
 
 
 
 
-void OmniFEMMainFrame::createInitialStartup()
+
+void OmniFEMMainFrame::enableToolMenuBar(bool enable)
+{
+	menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
+	menuBar->Enable(menubarID::ID_menubarSave,		enable);
+	menuBar->Enable(menubarID::ID_menubarSaveAs,		enable);
+	menuBar->Enable(menubarID::ID_menubarPreferences,	enable);
+	menuBar->Enable(menubarID::ID_menubarViewResults,	enable);
+	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
+	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
+	menuBar->Enable(menubarID::ID_menubarPrecision,	enable);
+	
+	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	enable);
+}
+
+
+
+
+void OmniFEMMainFrame::createInitialStartupClient()
 {
 	systemState currentState = controller.getOmniFEMState();
 	
@@ -155,13 +165,23 @@ void OmniFEMMainFrame::createDimensionClient()
 	
 	if(currentState == systemState::problemChooseing)
 		problemSelectPanel->Destroy();
-	else
+	else if(currentState == systemState::initialStartUp)
 		initialStartPanel->Destroy();
+	else if(currentState == systemState::problemDefining)
+	{
+		problemDefiningPanel->Destroy();
+		this->SetSize(minSize);
+		enableToolMenuBar(false);
+//		this->SetMinSize(minSize);
+		this->SetMaxSize(minSize);
+	}
 		
     dimSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
+	
     wxButton *TwoDimButton = new wxButton(dimSelectPanel, buttonID::ID_buttonTwoDim, "2-D", wxPoint(10, 50), wxSize(50, 50));
-	wxButton *backButton = new wxButton(dimSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(10, 100 + (260 - 220)), wxSize(100, 25));
-	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Dimension:");
+	wxButton *backButton = new wxButton(dimSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(5, clientSizeLength - 25 - 5), wxSize(100, 25));
+	
+	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Dimension:", wxPoint(5, 5));
 	
 	
 	controller.updateOmniFEMState(systemState::dimensionChoosing);
@@ -175,11 +195,53 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 	
 	problemSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
 	
-	wxButton *backButton = new wxButton(problemSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(10, 100 + (260 - 220)), wxSize(100, 25));
+	wxButton *backButton = new wxButton(problemSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(5, clientSizeLength - 25 - 5), wxSize(100, 25));
+	wxButton *finishButton = new wxButton(problemSelectPanel, buttonID::ID_buttonFinish, "Finish", wxPoint(125, clientSizeLength - 25 - 5), wxSize(100, 25));
+	wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:", wxPoint(5, 5));
+	
+	wxListBox *physicsProblems = new wxListBox(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
+	physicsProblems->SetSelection(0);
 	
 	controller.updateOmniFEMState(systemState::problemChooseing);
 }
 
+
+
+void OmniFEMMainFrame::createModelDefiningClient()
+{
+	systemState currentState = controller.getOmniFEMState();
+	
+	if(currentState == systemState::initialStartUp)
+		initialStartPanel->Destroy();
+	else if(currentState == systemState::dimensionChoosing)
+		dimSelectPanel->Destroy();
+	else if(currentState == systemState::problemChooseing)
+		problemSelectPanel->Destroy();
+		
+	enableToolMenuBar(true);
+	
+	this->SetMaxSize(wxSize(-1, -1));
+	this->SetSize(1120, 611);// This was determined through trial and error
+	
+	problemDefiningPanel = new wxPanel(this, panelID::ID_probDefiningPanel, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
+	
+	controller.updateOmniFEMState(systemState::problemDefining);
+	
+}
+
+	/********************
+	 * Event Procedures *
+	 ********************/
+	 
+void OmniFEMMainFrame::physicsProblemComboBox(wxCommandEvent &event)
+{
+	int physicsSelection = event.GetSelection();
+	
+	if(physicsSelection == 0)
+		controller.setAbstractProblemPhysics(physicProblems::electrostatics);
+	else if(physicsSelection == 1)
+		controller.setAbstractProblemPhysics(physicProblems::magnetics);
+}
 
 
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
@@ -190,5 +252,9 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 	if(currentState == systemState::initialStartUp || currentState == systemState::dimensionChoosing || currentState == systemState::problemChooseing)
 	{
 		return;
+	}
+	else if(currentState == systemState::problemDefining)
+	{
+		problemDefiningPanel->SetSize(wxSize(clientSizeWidth, clientSizeLength));
 	}
 }

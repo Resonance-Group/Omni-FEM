@@ -5,6 +5,8 @@
 void OmniFEMMainFrame::onTwoDimButton(wxCommandEvent &event)
 {
     createProblemChoosingClient();
+	
+	controller.setAbstractProblemDim(problemDimension::two_dimension);
 }
 
 
@@ -15,10 +17,17 @@ void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
 	
 	if(currentState == systemState::dimensionChoosing)
 	{
-		createInitialStartup();
+		createInitialStartupClient();
 	}
 	else if(currentState == systemState::problemChooseing)
 	{
 		createDimensionClient();
 	}
+}
+
+
+
+void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
+{
+	createModelDefiningClient();
 }

@@ -34,3 +34,16 @@ void OmniFEMMainFrameAbstraction::setProblemDimension(problemDimension dimension
 {
 	definition.setProblemDimension(dimension);
 }
+
+
+void OmniFEMMainFrameAbstraction::setProblemPhysics(physicProblems phy)
+{
+	definition.setPhysicsProblem(phy);
+}
+
+
+
+physicProblems OmniFEMMainFrameAbstraction::getProblemPhysics()
+{
+	return definition.getPhysicProblem();
+}

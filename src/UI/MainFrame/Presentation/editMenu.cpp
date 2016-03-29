@@ -6,7 +6,10 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-    wxMessageBox("Preferences are located here", "Preferences", wxOK | wxICON_INFORMATION);
+	int windowX, windowY;
+	this->GetSize(&windowX, &windowY);
+	
+	wxMessageBox(std::to_string(windowX) + " x " + std::to_string(windowY), "Preferences", wxOK | wxICON_INFORMATION);
 }
 
 

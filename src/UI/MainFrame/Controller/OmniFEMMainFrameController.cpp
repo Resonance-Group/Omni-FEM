@@ -33,3 +33,17 @@ problemDimension OmniFEMMainFrameController::getAbstractProblemDim()
 {
 	return abstractionLayer.getProblemDimension();
 }
+
+
+
+physicProblems OmniFEMMainFrameController::getAbstractProblemPhysics()
+{
+	return abstractionLayer.getProblemPhysics();
+}
+
+
+
+void OmniFEMMainFrameController::setAbstractProblemPhysics(physicProblems phy)
+{
+	abstractionLayer.setProblemPhysics(phy);
+}

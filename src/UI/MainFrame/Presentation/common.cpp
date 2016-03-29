@@ -36,7 +36,6 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     
     /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
-	
 	EVT_SIZE(OmniFEMMainFrame::onResize)
 	
 	/************************
@@ -47,6 +46,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	EVT_BUTTON(buttonID::ID_buttonOpen, OmniFEMMainFrame::onOpenFile)
     EVT_BUTTON(buttonID::ID_buttonTwoDim, OmniFEMMainFrame::onTwoDimButton)
 	EVT_BUTTON(buttonID::ID_buttonBack, OmniFEMMainFrame::onBackButton)
+	EVT_BUTTON(buttonID::ID_buttonFinish, OmniFEMMainFrame::onFinishButton)
 	
 	/*************************
 	* ToolBar Event Handling *
@@ -56,7 +56,11 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	EVT_TOOL(toolbarID::ID_ToolBarOpen, OmniFEMMainFrame::onOpenFile)
 	EVT_TOOL(toolbarID::ID_ToolBarSave, OmniFEMMainFrame::OnSave)
 	
-	
+	/********
+	* Other *
+	*********/
+
+	EVT_LISTBOX(comboListBoxID::ID_physicsProblems, OmniFEMMainFrame::physicsProblemComboBox)
     
 wxEND_EVENT_TABLE()
 
