@@ -73,6 +73,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 	
 	this->SetMinSize(minSize);
 	this->SetMaxSize(minSize);
+	this->SetInitialSize(minSize);
 	
 	arrayPhysicsProblem.Add("Electrostatics");
 	arrayPhysicsProblem.Add("Magnetics");
@@ -170,10 +171,12 @@ void OmniFEMMainFrame::createDimensionClient()
 	else if(currentState == systemState::problemDefining)
 	{
 		problemDefiningPanel->Destroy();
-		this->SetSize(minSize);
+//		this->SetSize(minSize);
+//this
+//this->SetSize(500, 500);
 		enableToolMenuBar(false);
 //		this->SetMinSize(minSize);
-		this->SetMaxSize(minSize);
+//		this->SetMaxSize(minSize);
 	}
 		
     dimSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
@@ -181,7 +184,7 @@ void OmniFEMMainFrame::createDimensionClient()
     wxButton *TwoDimButton = new wxButton(dimSelectPanel, buttonID::ID_buttonTwoDim, "2-D", wxPoint(10, 50), wxSize(50, 50));
 	wxButton *backButton = new wxButton(dimSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(5, clientSizeLength - 25 - 5), wxSize(100, 25));
 	
-	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Dimension:", wxPoint(5, 5));
+	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Spatial Dimension:", wxPoint(5, 5));
 	
 	
 	controller.updateOmniFEMState(systemState::dimensionChoosing);
@@ -223,7 +226,23 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	this->SetMaxSize(wxSize(-1, -1));
 	this->SetSize(1120, 611);// This was determined through trial and error
 	
-	problemDefiningPanel = new wxPanel(this, panelID::ID_probDefiningPanel, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
+	geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxPoint((int)((double)0.17 * (double)clientSizeWidth), 10), wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	vertBoxSizer->Add(geometryBuilderPanel, 1, wxEXPAND | wxALL, 5);
+	
+	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxPoint(10, 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	vertBoxSizer->Add(modelBuilderTreePanel, 1, wxEXPAND | wxALL, 5);
+	
+	settingsPanel = new wxPanel(this, panelID::ID_settings, wxPoint((int)((double)0.82 * (double)clientSizeWidth + (double)20), 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	vertBoxSizer->Add(settingsPanel, 1, wxEXPAND | wxALL, 5);
+	
+	horizBoxSizer->Add(vertBoxSizer, 1, wxEXPAND, 5);
+	
+	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxPoint(10, (int)((double)0.66 * (double)clientSizeLength + (double)20)), wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
+	horizBoxSizer->Add(statusInfoPanel, 1, wxEXPAND | wxALL, 5);
+	
+	this->SetSizer(horizBoxSizer);
+	this->Layout();
+	//problemDefiningPanel = new wxPanel(this, panelID::ID_probDefiningPanel, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
 	
 	controller.updateOmniFEMState(systemState::problemDefining);
 	
@@ -255,6 +274,8 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 	}
 	else if(currentState == systemState::problemDefining)
 	{
-		problemDefiningPanel->SetSize(wxSize(clientSizeWidth, clientSizeLength));
+	//	geometryBuilderPanel->SetSize(wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)));
+		
+	//	modelBuilderTreePanel->SetSize(wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)));
 	}
 }

@@ -9,9 +9,8 @@
 #include <wx/stattext.h>
 #include <UI/problemDefinition.h>
 #include <wx/listbox.h>
+#include <wx/sizer.h>
 
-#include <sstream>
-#include <locale>
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -256,23 +255,67 @@ private:
 	* Variables *
 	*************/
 	
-	int clientSizeWidth, clientSizeLength;// The width is the x and the length is the Y
+	//! Stores the client size of the main window in the x direction
+	int clientSizeWidth;
 	
+	//! Stores the client size of the main window in the y direction
+	int clientSizeLength;
+	
+	//! The menu bar for the main window
 	wxMenuBar *menuBar = new wxMenuBar;
 	
+	wxBoxSizer *vertBoxSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer *horizBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+	
+	//! This would be the file menu in the menu bar
     wxMenu *menuFile = new wxMenu;
+	
+	//! This would be the edit menu in the menu bar
     wxMenu *menuEdit = new wxMenu;
+	
+	//! This would be the view menu in the menu bar
     wxMenu *menuView = new wxMenu;
+	
+	//! This would be the mesh menu in the menu bar
     wxMenu *menuMesh = new wxMenu;
+	
+	//! This would be the problem menu in the menu bar
     wxMenu *menuProblem = new wxMenu;
+	
+	//! This would be the help menu in the menu bar
     wxMenu *menuHelp = new wxMenu;
 	
+	//! This is the object for the toolbar of the main window
 	wxToolBar *mainFrameToolBar = new wxToolBar();
 	
+	//! Creates the panel for the first screen
 	wxPanel *initialStartPanel = new wxPanel();
+	
+	//! Panel for selecting the dimension
 	wxPanel *dimSelectPanel;
+	
+	//! Panel for selecting the physics problem
 	wxPanel *problemSelectPanel;
+	
+	//! This panel will be used in the model builder window. The purpose is to display status messages
+	wxPanel *statusInfoPanel;
+	
+	//! This panel will be used in the problem defining state
+	/*
+		This object will be a list listing commonly acessed parameters. Such as listing
+		the materials used, the geometry along with the different simualtions associated with teh project
+	*/
+	wxPanel *modelBuilderTreePanel;
+	
+	//! This panel will be used to draw the geometry on 
+	wxPanel *geometryBuilderPanel;
+	
+	//! This panel will be used to dispaly settings that are selected
+	wxPanel *settingsPanel;
+	
 	wxPanel *problemDefiningPanel;
+	
+	
 	wxPanel *viewResultsPanel;
 	
 	wxSize minSize = wxSize(450, 340);
@@ -280,6 +323,7 @@ private:
 	wxArrayString arrayPhysicsProblem;
 	
 	OmniFEMMainFrameController controller;
+	
 	
     wxDECLARE_EVENT_TABLE();
 };
@@ -301,8 +345,7 @@ enum menubarID
 	ID_menubarDeleteMesh = 11,
 	ID_menubarPrecision = 12,
 	ID_menubarOpen = 13,
-	ID_menubarLUASCRIPT = 14,
-
+	ID_menubarLUASCRIPT = 14
 };
 
 
@@ -344,7 +387,11 @@ enum panelID
 	ID_dimSelectFrame = 1,
 	ID_probSelectPanel = 2,
 	ID_probDefiningPanel = 3,
-	ID_viewResultsPanel = 4
+	ID_viewResultsPanel = 4,
+	ID_geometryBuilder = 5,
+	ID_settings = 6,
+	ID_modelBuilderTree = 7,
+	ID_status = 8
 };
 
 
