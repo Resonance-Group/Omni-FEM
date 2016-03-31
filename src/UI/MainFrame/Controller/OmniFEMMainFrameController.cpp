@@ -47,3 +47,8 @@ void OmniFEMMainFrameController::setAbstractProblemPhysics(physicProblems phy)
 {
 	abstractionLayer.setProblemPhysics(phy);
 }
+
+int OmniFEMMainFrameController::getBorderSize()
+{
+	return abstractionLayer.getBorderWidth();
+}

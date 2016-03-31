@@ -226,23 +226,22 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	this->SetMaxSize(wxSize(-1, -1));
 	this->SetSize(1120, 611);// This was determined through trial and error
 	
-	geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxPoint((int)((double)0.17 * (double)clientSizeWidth), 10), wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-	vertBoxSizer->Add(geometryBuilderPanel, 1, wxEXPAND | wxALL, 5);
+	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxSHAPED, controller.getBorderSize());
+
+	geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	groupOneSizer->Add(geometryBuilderPanel, 1, wxALIGN_CENTER | wxALL | wxSHAPED, controller.getBorderSize());
 	
-	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxPoint(10, 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-	vertBoxSizer->Add(modelBuilderTreePanel, 1, wxEXPAND | wxALL, 5);
+	settingsPanel = new wxPanel(this, panelID::ID_settings, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	groupOneSizer->Add(settingsPanel, 1, wxALIGN_RIGHT | wxALL | wxSHAPED, controller.getBorderSize());
 	
-	settingsPanel = new wxPanel(this, panelID::ID_settings, wxPoint((int)((double)0.82 * (double)clientSizeWidth + (double)20), 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-	vertBoxSizer->Add(settingsPanel, 1, wxEXPAND | wxALL, 5);
+	vertBoxSizer->Add(groupOneSizer, 0, wxSHAPED | wxALL, controller.getBorderSize());
 	
-	horizBoxSizer->Add(vertBoxSizer, 1, wxEXPAND, 5);
+	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxDefaultPosition, wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
+	vertBoxSizer->Add(statusInfoPanel, 1, wxEXPAND | wxALL | wxSHAPED, controller.getBorderSize());
 	
-	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxPoint(10, (int)((double)0.66 * (double)clientSizeLength + (double)20)), wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
-	horizBoxSizer->Add(statusInfoPanel, 1, wxEXPAND | wxALL, 5);
-	
-	this->SetSizer(horizBoxSizer);
+	this->SetSizer(vertBoxSizer);
 	this->Layout();
-	//problemDefiningPanel = new wxPanel(this, panelID::ID_probDefiningPanel, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
 	
 	controller.updateOmniFEMState(systemState::problemDefining);
 	
@@ -274,8 +273,15 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 	}
 	else if(currentState == systemState::problemDefining)
 	{
-	//	geometryBuilderPanel->SetSize(wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)));
-		
-	//	modelBuilderTreePanel->SetSize(wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)));
+		// geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxPoint((int)((double)0.17 * (double)clientSizeWidth), 10), wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+		// settingsPanel = new wxPanel(this, panelID::ID_settings, wxPoint((int)((double)0.82 * (double)clientSizeWidth + (double)20), 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+		// modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxPoint(10, 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+		// statusInfoPanel = new wxPanel(this, panelID::ID_status, wxPoint(10, (int)((double)0.66 * (double)clientSizeLength + (double)20)), wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
+		/*
+		geometryBuilderPanel->SetSize(wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)));
+		modelBuilderTreePanel->SetSize(wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)));
+		settingsPanel->SetSize(wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)));
+		statusInfoPanel->SetSize(wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10));
+		*/
 	}
 }

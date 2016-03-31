@@ -42,7 +42,7 @@ enum class systemState
 /*! \class OmniFEMMainFrameAbstraction
 	\brief The class representing the abstraction layer for OmniFEM's main frame
 	
-	More detailed description
+	This will contain all of the data that the presentation will need access to.
 */
 class OmniFEMMainFrameAbstraction
 {
@@ -76,6 +76,9 @@ public:
 	//! Function used to set the current physics problem
 	void setProblemPhysics(physicProblems phy);
 	
+	//! This function will retrive the border width for the box sizer
+	int getBorderWidth();
+	
 	/************
 	* Variables *
 	*************/
@@ -87,8 +90,16 @@ private:
 	*/
 	systemState omniFEMSystemState = systemState::initialStartUp;
 	
+	//! This object is created for each physics problem
+	/*!
+		This is setting up for future additions where the model tree builder
+		will be able to display more then one physics problem per solution.
+		Each phyics problem will be it's own object in code
+	*/
 	problemDefinition definition;
 	
+	//! This variable stores the border size
+	int borderSize = 5;
 	
 };
 
@@ -98,6 +109,7 @@ private:
  *  \brief The class representing the controller layer for OmniFEM's main frame
  * 
  *  This class contains all of the processing calls in order to manage the OmniFEM MainFrame.
+ *	This class handles the presentation of the main frame for Omni-FEM and is thus one of the largest objects in the whole program
  *  
 */
 class OmniFEMMainFrameController
@@ -135,6 +147,9 @@ public:
 	
 	//! This function will set the phycis problem in the abstraction
 	void setAbstractProblemPhysics(physicProblems phy);
+	
+	//! This function will retrieve the border size of the boxSizer.
+	int getBorderSize();
 	
 };
 
@@ -264,8 +279,8 @@ private:
 	//! The menu bar for the main window
 	wxMenuBar *menuBar = new wxMenuBar;
 	
+	wxBoxSizer *groupOneSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *vertBoxSizer = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer *horizBoxSizer = new wxBoxSizer(wxHORIZONTAL);
 	
 	//! This would be the file menu in the menu bar
     wxMenu *menuFile = new wxMenu;

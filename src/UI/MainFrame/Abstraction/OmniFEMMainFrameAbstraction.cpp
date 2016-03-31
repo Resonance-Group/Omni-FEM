@@ -47,3 +47,8 @@ physicProblems OmniFEMMainFrameAbstraction::getProblemPhysics()
 {
 	return definition.getPhysicProblem();
 }
+
+int OmniFEMMainFrameAbstraction::getBorderWidth()
+{
+	return borderSize;
+}
