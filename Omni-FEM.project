@@ -46,6 +46,19 @@
           <File Name="src/UI/MainFrame/Controller/OmniFEMMainFrameController.cpp"/>
         </VirtualDirectory>
       </VirtualDirectory>
+      <VirtualDirectory Name="Geometry">
+        <VirtualDirectory Name="2D">
+          <VirtualDirectory Name="Presentation">
+            <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
+          </VirtualDirectory>
+          <VirtualDirectory Name="Controller">
+            <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
+          </VirtualDirectory>
+          <VirtualDirectory Name="Abstraction">
+            <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -55,6 +68,7 @@
     <VirtualDirectory Name="UI">
       <File Name="Include/UI/OmniFEMFrame.h"/>
       <File Name="Include/UI/problemDefinition.h"/>
+      <File Name="Include/UI/geometryEditor2D.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

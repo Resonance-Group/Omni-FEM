@@ -11,6 +11,7 @@
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
+#include <UI/geometryEditor2D.h>
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html

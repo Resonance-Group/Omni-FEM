@@ -214,6 +214,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 {
 	systemState currentState = controller.getOmniFEMState();
 	
+	
 	if(currentState == systemState::initialStartUp)
 		initialStartPanel->Destroy();
 	else if(currentState == systemState::dimensionChoosing)
@@ -225,9 +226,10 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	
 	this->SetMaxSize(wxSize(-1, -1));
 	this->SetSize(1120, 611);// This was determined through trial and error
+	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
 	
 	/* This section is creating the general layout of the panel using he sizers in wxWidgets */
-	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
+	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, modelBuilderPanelSize, wxBORDER_SIMPLE | wxVSCROLL | wxHSCROLL);
 	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
 
 	geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
@@ -236,13 +238,18 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	settingsPanel = new wxPanel(this, panelID::ID_settings, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
 	groupOneSizer->Add(settingsPanel, 1, wxALIGN_RIGHT | wxALL | wxEXPAND, controller.getBorderSize());
 	
-	vertBoxSizer->Add(groupOneSizer, 2, wxALL | wxEXPAND, controller.getBorderSize());
+	vertBoxSizer->Add(groupOneSizer, 1, wxALL | wxEXPAND, controller.getBorderSize());
 	
 	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxDefaultPosition, wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
 	vertBoxSizer->Add(statusInfoPanel, 0, wxEXPAND | wxALL, controller.getBorderSize());
 	
+	
 	/* This section is populating the layout with everything that is needed for the user */
-	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, wxSize(500, 800), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);
+	/*********************************
+	* Tree Ctrl (Hiearchary Listbox) *
+	**********************************/
+	
+	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, modelBuilderPanelSize - wxSize(2, 0), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);// The -2 appears in the size in order to give some extra room for hte scroll bars
 	
 	controller.setRootTreeIDAbstraction(modelbuilderTreeCtrl->AddRoot(controller.getWorkspaceNameAbstraction()));// This is the highest level
 	
@@ -253,6 +260,12 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	controller.setAbstractMeshID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Mesh"));
 	
 	modelbuilderTreeCtrl->ExpandAll();
+	
+	/*******************
+	* Geometry Builder *
+	********************/
+	wxStaticText *geometryBuilderName = new wxStaticText(geometryBuilderPanel, wxID_ANY, "Model Builder", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	geometryBuilderName->SetFont(wxFont(12, wxDEFAULT, wxNORMAL, wxNORMAL));
 	
 	this->SetSizer(vertBoxSizer);
 	this->Layout();
@@ -292,5 +305,8 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 		// modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxPoint(10, 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
 		// statusInfoPanel = new wxPanel(this, panelID::ID_status, wxPoint(10, (int)((double)0.66 * (double)clientSizeLength + (double)20)), wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
 		this->Layout();
+		
+		wxSize newTreeCtrlDim = modelBuilderTreePanel->GetSize() - wxSize(2, 0);
+		modelbuilderTreeCtrl->SetSize(newTreeCtrlDim);
 	}
 }
