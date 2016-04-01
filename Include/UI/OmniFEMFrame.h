@@ -10,7 +10,7 @@
 #include <UI/problemDefinition.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
-
+#include <wx/treectrl.h>
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -79,6 +79,51 @@ public:
 	//! This function will retrive the border width for the box sizer
 	int getBorderWidth();
 	
+	//! This will retrieve the workspace/solution name
+	wxString getworkspaceName();
+	
+	//! This will set the workspace/solution name
+	void setWorkspaceName(wxString name);
+	
+	//! This will set the main tree ID for the tree control
+	void setRootTreeID(wxTreeItemId tree);
+	
+	//! This will return the main tree ID for the tree control
+	/* 
+		This is not an actual interger ID but rather the whole class
+	*/
+	wxTreeItemId getRootTreeID();
+	
+	//! This will retreive the problem IF from the simuation object
+	wxTreeItemId getSimProblemID();
+	
+	//! This will set the problem IF in the simulation object
+	void setSimProblemID(wxTreeItemId problemID);
+	
+	//! This will set the geometry ID of the simulation object
+	void setSimGeometryID(wxTreeItemId geometryID);
+	
+	//! This will get the geometry ID of the simulation object
+	wxTreeItemId getSimGeometryID();
+	
+	//! This will set the Material ID of the simulation object
+	void setSimMaterialsID(wxTreeItemId materialsID);
+	
+	//! This will get the material ID of the simulation object
+	wxTreeItemId getSimMaterialsID();
+	
+	//! This will set the mesh ID of the simulation object
+	void setSimMeshID(wxTreeItemId simMeshID);
+	
+	//! This will get the mesh ID of the simulation object
+	wxTreeItemId getSimMeshID();
+	
+	//! This will set the simulation name
+	void setSimulationName(wxString simName);
+	
+	//! This will retieve the simulation name
+	wxString getSimulationName();
+	
 	/************
 	* Variables *
 	*************/
@@ -101,6 +146,11 @@ private:
 	//! This variable stores the border size
 	int borderSize = 5;
 	
+	//! The name of the solution/workspace
+	wxString workspaceName = "untitled";
+	
+	//! This variable is used to store the data for the tree control in the model builder window
+	wxTreeItemId rootTree;
 };
 
 
@@ -150,6 +200,48 @@ public:
 	
 	//! This function will retrieve the border size of the boxSizer.
 	int getBorderSize();
+	
+	//! This will get the workspace/solution name from the abstraction layer
+	wxString getWorkspaceNameAbstraction();
+	
+	//! This will set the workspace name in the abstraction layer
+	void setWorkspaceNameAbstraction(wxString name);
+	
+	//! This will set the root tree ID object in the abstraction layer
+	void setRootTreeIDAbstraction(wxTreeItemId tree);
+	
+	//! This will get the root tree ID object from the abstraction layer
+	wxTreeItemId getRootTreeIDAbstraction();
+	
+	//! This will retreive the problem ID from the abstraction layer
+	wxTreeItemId getAbstractProblemID();
+	
+	//! This will set the problem IF in the simulation object
+	void setAbstractProblemID(wxTreeItemId problemID);
+	
+	//! This will set the geometry ID of the simulation object
+	void setAbstractGeometryID(wxTreeItemId geometryID);
+	
+	//! This will get the geometry ID of the simulation object
+	wxTreeItemId getAbstractGeometryID();
+	
+	//! This will set the Material ID of the simulation object
+	void setAbstractMaterialsID(wxTreeItemId materialsID);
+	
+	//! This will get the material ID of the simulation object
+	wxTreeItemId getAbstractMaterialsID();
+	
+	//! This will set the mesh ID of the simulation object
+	void setAbstractMeshID(wxTreeItemId simMeshID);
+	
+	//! This will get the mesh ID of the simulation object
+	wxTreeItemId getAbstractMeshID();
+
+	//! This will retrieve the simulation name from the abstract layer
+	wxString getAbstractSimName();
+	
+	//! This will set the simulation name in the abstraction layer
+	void setAbstractSimName(wxString name);
 	
 };
 
@@ -328,17 +420,23 @@ private:
 	//! This panel will be used to dispaly settings that are selected
 	wxPanel *settingsPanel;
 	
-	wxPanel *problemDefiningPanel;
-	
-	
 	wxPanel *viewResultsPanel;
 	
+	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
 	wxSize minSize = wxSize(450, 340);
 	
+	//! The string of the physics problems that Omni-FEM can simulate
 	wxArrayString arrayPhysicsProblem;
+	
 	
 	OmniFEMMainFrameController controller;
 	
+	wxTreeCtrl *modelbuilderTreeCtrl;
+	
+	wxTreeItemId testMain;
+	wxTreeItemId testOne;
+	wxTreeItemId *testTwo;
+	wxTreeItemId *testThree;
 	
     wxDECLARE_EVENT_TABLE();
 };

@@ -43,3 +43,76 @@ wxString problemDefinition::getProblemName()
 {
 	return name;
 }
+
+
+
+void problemDefinition::setProblemID(wxTreeItemId treeItemID)
+{
+	problemID = treeItemID;
+}
+
+
+
+
+wxTreeItemId problemDefinition::getProblemID()
+{
+	return problemID;
+}
+
+
+
+void problemDefinition::setGeometryID(wxTreeItemId treeItemID)
+{
+	geometryID = treeItemID;
+}
+
+
+
+
+wxTreeItemId problemDefinition::getGeometryID()
+{
+	return geometryID;
+}
+
+
+
+void problemDefinition::setMaterialsID(wxTreeItemId treeItemID)
+{
+	materialsID = treeItemID;
+}
+
+
+
+
+wxTreeItemId problemDefinition::getMaterialsID()
+{
+	return materialsID;
+}
+
+
+
+void problemDefinition::setMeshID(wxTreeItemId treeItemID)
+{
+	meshID = treeItemID;
+}
+
+
+
+wxTreeItemId problemDefinition::getMeshID()
+{
+	return meshID;
+}
+
+
+
+void problemDefinition::setResultsID(wxTreeItemId treeItemID)
+{
+	resultsID = treeItemID;
+}
+
+
+
+wxTreeItemId problemDefinition::getResultsID()
+{
+	return resultsID;
+}

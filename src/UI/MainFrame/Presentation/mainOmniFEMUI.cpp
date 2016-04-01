@@ -170,7 +170,7 @@ void OmniFEMMainFrame::createDimensionClient()
 		initialStartPanel->Destroy();
 	else if(currentState == systemState::problemDefining)
 	{
-		problemDefiningPanel->Destroy();
+		//problemDefiningPanel->Destroy();
 //		this->SetSize(minSize);
 //this
 //this->SetSize(500, 500);
@@ -226,11 +226,12 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	this->SetMaxSize(wxSize(-1, -1));
 	this->SetSize(1120, 611);// This was determined through trial and error
 	
+	/* This section is creating the general layout of the panel using he sizers in wxWidgets */
 	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
 	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
 
 	geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-	groupOneSizer->Add(geometryBuilderPanel, 3, wxALIGN_CENTER | wxALL | wxEXPAND, controller.getBorderSize());
+	groupOneSizer->Add(geometryBuilderPanel, 3, wxALIGN_CENTER | wxALL | wxEXPAND, controller.getBorderSize());// THe middle frame will get the highest propoty when sizing becuase this is what the user will use most often
 	
 	settingsPanel = new wxPanel(this, panelID::ID_settings, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
 	groupOneSizer->Add(settingsPanel, 1, wxALIGN_RIGHT | wxALL | wxEXPAND, controller.getBorderSize());
@@ -239,6 +240,19 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	
 	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxDefaultPosition, wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
 	vertBoxSizer->Add(statusInfoPanel, 0, wxEXPAND | wxALL, controller.getBorderSize());
+	
+	/* This section is populating the layout with everything that is needed for the user */
+	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, wxSize(500, 800), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);
+	
+	controller.setRootTreeIDAbstraction(modelbuilderTreeCtrl->AddRoot(controller.getWorkspaceNameAbstraction()));// This is the highest level
+	
+	controller.setAbstractProblemID(modelbuilderTreeCtrl->AppendItem(controller.getRootTreeIDAbstraction(), controller.getAbstractSimName()));// This will be for the project
+	
+	controller.setAbstractGeometryID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Geometry"));
+	controller.setAbstractMaterialsID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Materials"));
+	controller.setAbstractMeshID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Mesh"));
+	
+	modelbuilderTreeCtrl->ExpandAll();
 	
 	this->SetSizer(vertBoxSizer);
 	this->Layout();

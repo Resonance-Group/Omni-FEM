@@ -52,3 +52,101 @@ int OmniFEMMainFrameAbstraction::getBorderWidth()
 {
 	return borderSize;
 }
+
+
+
+wxString OmniFEMMainFrameAbstraction::getworkspaceName()
+{
+	return workspaceName;
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setWorkspaceName(wxString name)
+{
+	workspaceName = name;
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setRootTreeID(wxTreeItemId tree)
+{
+	rootTree = tree;
+}
+
+
+
+wxTreeItemId OmniFEMMainFrameAbstraction::getRootTreeID()
+{
+	return rootTree;
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setSimProblemID(wxTreeItemId problemID)
+{
+	definition.setProblemID(problemID);
+}
+
+
+
+wxTreeItemId OmniFEMMainFrameAbstraction::getSimProblemID()
+{
+	return definition.getProblemID();
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setSimGeometryID(wxTreeItemId geometryID)
+{
+	definition.setGeometryID(geometryID);
+}
+
+
+
+wxTreeItemId OmniFEMMainFrameAbstraction::getSimGeometryID()
+{
+	return definition.getGeometryID();
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setSimMaterialsID(wxTreeItemId materialsID)
+{
+	definition.setMaterialsID(materialsID);
+}
+
+
+
+wxTreeItemId OmniFEMMainFrameAbstraction::getSimMaterialsID()
+{
+	return definition.getMaterialsID();
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setSimMeshID(wxTreeItemId simMeshID)
+{
+	definition.setMeshID(simMeshID);
+}
+
+
+
+wxTreeItemId OmniFEMMainFrameAbstraction::getSimMeshID()
+{
+	return definition.getMeshID();
+}
+
+
+
+void OmniFEMMainFrameAbstraction::setSimulationName(wxString simName)
+{
+	definition.setProblemName(simName);
+}
+
+
+
+wxString OmniFEMMainFrameAbstraction::getSimulationName()
+{
+	return definition.getProblemName();
+}
