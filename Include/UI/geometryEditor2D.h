@@ -9,6 +9,14 @@
 #include <wx/bmpbuttn.h>
 #include <wx/window.h>
 #include <UI/common.h>
+#include <GL/gl.h>
+
+
+
+
+#define FONTSIZE		14
+#define BORDER			10
+#define BMPBUTTONSIZE	30
 
 /*! \class geometryEditor2DAbstraction
 	\brief The main class for the 2D geometry Editor
@@ -22,14 +30,31 @@ class geometryEditor2DAbstraction
 	***********************/
 public:
 	//! The constructor for the class. This is what will get called first in order to create and manipulate 2D geometry
-	geometryEditor2DAbstraction();
+//	geometryEditor2DAbstraction();
 	
+	//! Will query for the drawing width
+	int getDrawingSizeWidth();
+	
+	//! Will set the drawing size width
+	void setDrawingSizeWidth(int width);
+	
+	//! Will get the Height of the drawing canvas
+	int getDrawingSizeHeight();
+	
+	//! Will set the height of the drawing canvas
+	void setDrawingSizeHeight(int height);
 	
 	
 	/************
 	* Variables *
 	*************/
 private:
+
+	//! This variable will store the X Value of the drawing canvas size
+	int drawingSizeWidth;
+	
+	//! This will store the Y Value of the drawing canvas size
+	int drawingSizeHeight;
 	
 };
 
@@ -47,16 +72,28 @@ class geometryEditor2DController
 	***********************/
 public:
 	//! The constructor for the class. This is what will get called first in order to create and manipulate 2D geometry
-	geometryEditor2DController();
+//	geometryEditor2DController();
 	
+	//! This will get the width from the abstract layer
+	int getDrawingWidthAbstract();
+	
+	//! This will set the width in the abstract layer
+	void setDrawingWidthAbstract(int width);
+	
+	//! This will get the height in the abstract layer
+	int getDrawingHeightAbstract();
+	
+	//! This will set the drawing height in the abstract layer
+	void setDrawingHeightAbstract(int height);
 	
 	
 	/************
 	* Variables *
 	*************/
 private:
-	
-//! The object for the abstract layer of the 
+	//! This is the varable object for the abstract layer
+	geometryEditor2DAbstraction abstraction;
+
 };
 
 
@@ -74,7 +111,6 @@ class geometryEditor2DPresentation : public wxPanel
 public:
 	//! The constructor for the class. This is what will get called first in order to create and manipulate 2D geometry
 	geometryEditor2DPresentation(wxWindow *par, const wxPoint &position, const wxSize &size);
-	void createOpenGLCanvas();
 	
 private:
 	
@@ -86,6 +122,7 @@ private:
 private:
 	wxGLCanvas *drawingCanvas;
 	wxGLContext *drawingContext;
+	geometryEditor2DController controller;
 //	wxGLAttributes dispAttributes;
 };
 
