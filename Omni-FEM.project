@@ -69,6 +69,7 @@
       <File Name="Include/UI/OmniFEMFrame.h"/>
       <File Name="Include/UI/problemDefinition.h"/>
       <File Name="Include/UI/geometryEditor2D.h"/>
+      <File Name="Include/UI/common.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
