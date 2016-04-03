@@ -234,6 +234,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 
 	//geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
 	twoDimGeometryEditor = new geometryEditor2DPresentation(this, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)));
+	
 	groupOneSizer->Add(twoDimGeometryEditor, 3, wxALIGN_CENTER | wxALL | wxEXPAND, controller.getBorderSize());// THe middle frame will get the highest propoty when sizing becuase this is what the user will use most often
 	
 	settingsPanel = new wxPanel(this, panelID::ID_settings, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
@@ -267,7 +268,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	********************/
 //	wxGLCanvas *test = new wxGLCanvas(twoDimDeometryEditor);
 //	twoDimGeometryEditor->createOpenGLCanvas();
-	
+	twoDimGeometryEditor->render();
 	this->SetSizer(vertBoxSizer);
 	this->Layout();
 	

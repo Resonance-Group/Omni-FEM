@@ -6,11 +6,9 @@ The simulator is still under construction
 Please see wiki for more inforation
 
 #Requirements
-Must have wxWidgets v3.0 installed
+Must have wxWidgets v3.0.2 installed
+Must have support for openGL V2.1
 
 #Notes
-
-In order to compile the UI, use the command:
-
-gcc filename.cpp -o CompiledFileName `wx-config --cxxflags` `wx-config --libs` -L/usr/lib64 -lstdc++
+A helpful tool, the project was built using the Code Lite IDE. It can be downloaded here: http://downloads.codelite.org/
 

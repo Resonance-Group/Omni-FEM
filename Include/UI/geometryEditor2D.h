@@ -9,14 +9,17 @@
 #include <wx/bmpbuttn.h>
 #include <wx/window.h>
 #include <UI/common.h>
-#include <GL/gl.h>
-
+#include <freeglut.h>
+#include <gl.h>
+#include <glu.h>
 
 
 
 #define FONTSIZE		14
 #define BORDER			10
 #define BMPBUTTONSIZE	30
+
+#define SCREEN_FPS		60
 
 /*! \class geometryEditor2DAbstraction
 	\brief The main class for the 2D geometry Editor
@@ -111,6 +114,8 @@ class geometryEditor2DPresentation : public wxPanel
 public:
 	//! The constructor for the class. This is what will get called first in order to create and manipulate 2D geometry
 	geometryEditor2DPresentation(wxWindow *par, const wxPoint &position, const wxSize &size);
+	
+	void render();
 	
 private:
 	
