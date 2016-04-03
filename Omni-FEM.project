@@ -50,6 +50,7 @@
         <VirtualDirectory Name="2D">
           <VirtualDirectory Name="Presentation">
             <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
+            <File Name="src/UI/Geometry/2D/Presentation/common.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>

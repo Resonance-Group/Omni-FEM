@@ -29,10 +29,6 @@ void geometryEditor2DPresentation::render()
 {
 	drawingCanvas->SetCurrent(drawingCanvas);
 
-//	glutInit(&argc, args);
-//	glutInitContextVersion(2, 1);
-//	glutInitDisplayMode(GLUT_DOUBLE);
-
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	
@@ -56,6 +52,23 @@ void geometryEditor2DPresentation::render()
 		glVertex2f(0.5f, 0.5f);
 		glVertex2f(-0.5f, 0.5f);
 	glEnd();
+	
+	
+}
+
+
+
+
+void geometryEditor2DPresentation::onPaint(wxPaintEvent &event)
+{
+	wxPaintDC dc(this);
+	int tempWidth, tempHeight;
+	drawingCanvas->GetSize(&tempWidth, &tempHeight);
+	
+	
+	glViewport(0, 0, tempWidth. tempHeight);
+	
+	render();
 	
 	drawingCanvas->SwapBuffers();
 }

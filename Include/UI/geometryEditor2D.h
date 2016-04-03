@@ -118,7 +118,7 @@ public:
 	void render();
 	
 private:
-	
+	void onPaint(wxPaintEvent &event);
 	
 	
 	/************
@@ -128,6 +128,8 @@ private:
 	wxGLCanvas *drawingCanvas;
 	wxGLContext *drawingContext;
 	geometryEditor2DController controller;
+	
+	DECLARE_EVENT_TABLE();
 //	wxGLAttributes dispAttributes;
 };
 
