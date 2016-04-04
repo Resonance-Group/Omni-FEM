@@ -51,6 +51,8 @@
             <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorContext.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
+            <File Name="src/UI/Geometry/2D/Presentation/openGLFunctions.cpp"/>
+            <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.h"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
@@ -71,6 +73,7 @@
       <File Name="Include/UI/problemDefinition.h"/>
       <File Name="Include/UI/geometryEditor2D.h"/>
       <File Name="Include/UI/common.h"/>
+      <File Name="Include/UI/openGLGeometry.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

@@ -1,4 +1,4 @@
-#include <UI/geometryEditor2D.h>
+#include <UI/openGLGeometry.h>
 
 
 geometryEditorContext::geometryEditorContext(wxGLCanvas *canvas) : wxGLContext(canvas)
@@ -11,11 +11,12 @@ geometryEditorContext::geometryEditorContext(wxGLCanvas *canvas) : wxGLContext(c
 	/* This section is for initial setting */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	glOrtho(0.0, (float)canvas->GetSize().x, (float)canvas->GetSize().y, 0.0, 1.0, -1.0);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glClearColor(0.556f, 1.f, 1.f, 0.f);// This will control the color of the background for the drawing canvas
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);// This will control the color of the background for the drawing canvas
 	
 	/* Ensure that there are no errors */
 	GLenum error = glGetError();
@@ -28,14 +29,3 @@ geometryEditorContext::geometryEditorContext(wxGLCanvas *canvas) : wxGLContext(c
 
 
 
-void geometryEditorContext::renderGeometry()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	glBegin(GL_QUADS);
-		glVertex2f(-0.5f, -0.5f);
-		glVertex2f(0.5f, -0.5f);
-		glVertex2f(0.5f, 0.5f);
-		glVertex2f(-0.5f, 0.5f);
-	glEnd();
-}

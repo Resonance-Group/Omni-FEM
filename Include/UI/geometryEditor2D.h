@@ -5,13 +5,12 @@
 	This file will contain all of the definitions for the 2D Geometry Editor
 */
 #include <wx/wx.h>
-#include <wx/glcanvas.h>
+
 #include <wx/bmpbuttn.h>
 #include <wx/window.h>
 #include <UI/common.h>
-#include <freeglut.h>
-#include <gl.h>
-#include <glu.h>
+
+#include <UI/openGLGeometry.h>
 
 
 
@@ -101,30 +100,7 @@ private:
 
 
 
-class geometryEditorContext : public wxGLContext
-{
-public:
-	geometryEditorContext(wxGLCanvas *canvas);
-	
-	void renderGeometry();
-};
 
-
-
-class geometryEditorCanvas : public wxGLCanvas
-{
-public:
-	geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size);
-	
-private:
-	void onGeometryPaint(wxPaintEvent &event);
-	
-	geometryEditorContext *canvasContext;
-	
-	void render();
-	
-	DECLARE_EVENT_TABLE();
-};
 
 
 
