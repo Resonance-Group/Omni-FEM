@@ -101,6 +101,31 @@ private:
 
 
 
+class geometryEditorContext : public wxGLContext
+{
+public:
+	geometryEditorContext(wxGLCanvas *canvas);
+	
+	void renderGeometry();
+};
+
+
+
+class geometryEditorCanvas : public wxGLCanvas
+{
+public:
+	geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size);
+	
+private:
+	void onGeometryPaint(wxPaintEvent &event);
+	
+	geometryEditorContext *canvasContext;
+	
+	DECLARE_EVENT_TABLE();
+};
+
+
+
 /*! \class geometryEditor2DPresentation
 	\brief The main class for the 2D geometry Editor
 	
@@ -115,23 +140,17 @@ public:
 	//! The constructor for the class. This is what will get called first in order to create and manipulate 2D geometry
 	geometryEditor2DPresentation(wxWindow *par, const wxPoint &position, const wxSize &size);
 	
-	void render();
-	
-private:
-	void onPaint(wxPaintEvent &event);
-	
 	
 	/************
 	* Variables *
 	*************/
 private:
-	wxGLCanvas *drawingCanvas;
-	wxGLContext *drawingContext;
+	geometryEditorCanvas *drawingCanvas;
 	geometryEditor2DController controller;
 	
 	DECLARE_EVENT_TABLE();
-//	wxGLAttributes dispAttributes;
 };
+
 
 
 

@@ -5,70 +5,18 @@ geometryEditor2DPresentation::geometryEditor2DPresentation(wxWindow *par, const 
 {
 	wxStaticText *geometryBuilderName = new wxStaticText(this, wxID_ANY, "Model Builder", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	geometryBuilderName->SetFont(wxFont(FONTSIZE, wxDEFAULT, wxNORMAL, wxNORMAL));
-	int tempWidth, tempHeight;// This are intermediate variables
-	int argc;
-	char* args[9];
+	int tempHeight, tempWidth;
 	
 	this->GetSize(&tempWidth, &tempHeight);
 	
 	controller.setDrawingHeightAbstract(tempHeight - FONTSIZE - BMPBUTTONSIZE - BORDER); 
 	controller.setDrawingWidthAbstract(tempWidth - 2 * BORDER);// The 20 is for a 10 pt border 
 	
-//	drawingCanvas = new wxGLCanvas(this, wxID_ANY, 0, wxPoint(10, FONTSIZE + BMPBUTTONSIZE), wxSize(controller.getDrawingWidthAbstract(), controller.getDrawingHeightAbstract()), wxBORDER_DOUBLE | wxBORDER_RAISED);
-	drawingContext = new wxGLContext(drawingCanvas = new wxGLCanvas(this, wxID_ANY, 0, wxPoint(10, FONTSIZE + BMPBUTTONSIZE), wxSize(controller.getDrawingWidthAbstract(), controller.getDrawingHeightAbstract()), wxBORDER_DOUBLE | wxBORDER_RAISED));	
-	
-
-	
-//	glClearColor(1, 0, 0, 0);
-
-}
-
-
-
-void geometryEditor2DPresentation::render()
-{
-	drawingCanvas->SetCurrent(drawingCanvas);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glClearColor(0.f, 0.f, 0.f, 1.f);
-	
-	GLenum error = glGetError();
-	if(error != GL_NO_ERROR)
-	{
-	//	wxMessageBox("Error - " + gluErrorString(error));
-		return;
-	}
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	glBegin(GL_QUADS);
-		glVertex2f(-0.5f, -0.5f);
-		glVertex2f(0.5f, -0.5f);
-		glVertex2f(0.5f, 0.5f);
-		glVertex2f(-0.5f, 0.5f);
-	glEnd();
-	
+	drawingCanvas = new geometryEditorCanvas(this, wxPoint(10, FONTSIZE + BMPBUTTONSIZE), wxSize(controller.getDrawingWidthAbstract(), controller.getDrawingHeightAbstract()));
 	
 }
 
 
+wxBEGIN_EVENT_TABLE(geometryEditor2DPresentation, wxPanel)
 
-
-void geometryEditor2DPresentation::onPaint(wxPaintEvent &event)
-{
-	wxPaintDC dc(this);
-	int tempWidth, tempHeight;
-	drawingCanvas->GetSize(&tempWidth, &tempHeight);
-	
-	
-	glViewport(0, 0, tempWidth. tempHeight);
-	
-	render();
-	
-	drawingCanvas->SwapBuffers();
-}
+wxEND_EVENT_TABLE()
