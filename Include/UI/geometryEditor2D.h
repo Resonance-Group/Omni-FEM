@@ -121,6 +121,8 @@ private:
 	
 	geometryEditorContext *canvasContext;
 	
+	void render();
+	
 	DECLARE_EVENT_TABLE();
 };
 

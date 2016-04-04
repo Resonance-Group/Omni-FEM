@@ -7,19 +7,33 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 }
 
 
+void geometryEditorCanvas::render()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	glBegin(GL_QUADS);
+		glVertex2f(-0.5f, -0.5f);
+		glVertex2f(0.5f, -0.5f);
+		glVertex2f(0.5f, 0.5f);
+		glVertex2f(-0.5f, 0.5f);
+	glEnd();
+}
 
+
+/* This function gets called over and over */
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
 	wxPaintDC dc(this);
 	
-	const wxSize canvasSize = GetSize();
-	canvasContext = new geometryEditorContext(this);
+	const wxSize canvasSize = GetSize();// This will get the current size of the drawing canvas
+	canvasContext = new geometryEditorContext(this);// initilize the context
 	
-	glViewport(0, 0, canvasSize.x, canvasSize.y);
+	glViewport(0, 0, canvasSize.x, canvasSize.y);// Set the viewport to see the rendering
 	
-	canvasContext->renderGeometry();
+//	canvasContext->renderGeometry();// Render the geometry
+	render();
 	
-	SwapBuffers();
+	SwapBuffers();// Display the output
 	
 //	wxMessageBox("test");
 }
