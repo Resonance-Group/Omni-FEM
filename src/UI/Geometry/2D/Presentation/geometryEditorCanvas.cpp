@@ -2,7 +2,33 @@
 
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
+	geometryContext = new wxGLContext(this);
+	wxGLCanvas::SetCurrent(*geometryContext);
+	
+	glViewport(0, 0, this->GetSize().x, this->GetSize().y);// Set the viewport to see the rendering
+	
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);// This will control the color of the background for the drawing canvas
 
+	glMatrixMode(GL_MODELVIEW);// The matrix mode specifies which matrix stack is the target for matrix operations
+	glLoadIdentity();// Initial value
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	/*	
+		This will setup the screen such that the x value will extend from the left (x = 0) to the right (x = canvas->GetSize().x)
+		As for the y value, it will extend from the top (y = 0) to the bottom (y = canvas->GetSize().y)
+		By default, the screen is the the unit square. This command changes that 
+	*/
+	glOrtho(0.0, (float)this->GetSize().x, (float)this->GetSize().y, 0.0, 1.0, -1.0);
+	
+	/* Ensure that there are no errors */
+	GLenum error = glGetError();
+	if(error != GL_NO_ERROR)
+	{
+	//	wxMessageBox("Error - " + gluErrorString(error));
+		return;
+	}	
 }
 
 
@@ -12,8 +38,7 @@ void geometryEditorCanvas::render()
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	//Reset to modelview matrix
-	glMatrixMode(GL_MODELVIEW);// The matrix mode specifies which matrix stack is the target for matrix operations
-	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
 	
 	glTranslated((float)this->GetSize().x / 2.0f, (float)this->GetSize().y / 2.0f, 0.0f);
 	
@@ -49,17 +74,12 @@ void geometryEditorCanvas::render()
 /* This function gets called over and over */
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
-	wxPaintDC dc(this);
-	
-	const wxSize canvasSize = GetSize();// This will get the current size of the drawing canvas
-	canvasContext = new geometryEditorContext(this);// initilize the context
-	
-	glViewport(0, 0, canvasSize.x, canvasSize.y);// Set the viewport to see the rendering
+	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
+	wxPaintDC dc(this);// This is required for drawing
 	
 	render();
 	
 	SwapBuffers();// Display the output
-	
 }
 
 

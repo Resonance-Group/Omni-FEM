@@ -49,10 +49,8 @@
         <VirtualDirectory Name="2D">
           <VirtualDirectory Name="Presentation">
             <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
-            <File Name="src/UI/Geometry/2D/Presentation/geometryEditorContext.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/openGLFunctions.cpp"/>
-            <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.h"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
