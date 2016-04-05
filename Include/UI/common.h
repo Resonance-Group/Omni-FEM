@@ -1,6 +1,35 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#define LETTER_A 0x41
+#define LETTER_B 0x42
+#define LETTER_C 0x43
+#define LETTER_D 0x44
+#define LETTER_E 0x45
+#define LETTER_e 0x65
+#define LETTER_F 0x46
+#define LETTER_G 0x47
+#define LETTER_H 0x48
+#define LETTER_I 0x49
+#define LETTER_J 0x4A
+#define LETTER_K 0x4B
+#define LETTER_L 0x4C
+#define LETTER_M 0x4D
+#define LETTER_N 0x4E
+#define LETTER_O 0x4F
+#define LETTER_P 0x50
+#define LETTER_Q 0x51
+#define LETTER_R 0x52
+#define LETTER_S 0x53
+#define LETTER_T 0x54
+#define LETTER_U 0x55
+#define LETTER_V 0x56
+#define LETTER_W 0x57
+#define LETTER_X 0x58
+#define LETTER_Y 0x59
+#define LETTER_Z 0x5A
+
+
 //! Enum for the menus of the menu bar
 enum menubarID
 {
@@ -64,5 +93,9 @@ enum panelID
 	ID_modelBuilderTree = 7,
 	ID_status = 8
 };
+
+
+
+
 
 #endif

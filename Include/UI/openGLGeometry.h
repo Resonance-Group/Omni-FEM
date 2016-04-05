@@ -3,6 +3,7 @@
 
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
+#include <UI/common.h>
 #include <freeglut.h>
 #include <gl.h>
 #include <glu.h>
@@ -33,14 +34,21 @@ public:
 	int colormode = COLOR_MODE_MULTI;
 	
 private:
+    //! This is the event that is fired when the canvas is drawn or re-drawn
 	void onGeometryPaint(wxPaintEvent &event);
 	
+    //! Rendering the geometry
 	void render();
 	
+    //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
 	
     int viewPortMode = ViewPortMode::VIEWPORT_MODE_FULL;
     
+    //! The event that will be fired when a key on the keyboard is pressed down
+    void onKeyDown(wxKeyEvent &event);
+    
+    //! This is the context which will be associated to the class
 	wxGLContext *geometryContext;
 	
 	DECLARE_EVENT_TABLE();
