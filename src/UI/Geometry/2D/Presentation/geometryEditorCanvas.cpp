@@ -40,8 +40,25 @@ void geometryEditorCanvas::render()
 	//Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
 	
+    // Translate to the center of the screen (0,0)
 	glTranslated((float)this->GetSize().x / 2.0f, (float)this->GetSize().y / 2.0f, 0.0f);
 	
+    int tempWidth = this->GetSize().x;
+    int tempHeight = this->GetSize().y;
+    
+    if(viewPortMode == ViewPortMode::VIEWPORT_MODE_FULL)
+    {
+        glViewport(0, 0, tempWidth, tempHeight);
+        
+        glBegin(GL_QUADS);
+            glColor3f(1.0f, 0.0f, 0.0f);
+            glVertex2f(-tempWidth / 2.0f, -tempHeight / 2.0f);
+            glVertex2f(tempWidth / 2.0f, -tempHeight / 2.0f);
+            glVertex2f(tempWidth / 2.0f, tempHeight / 2.0f);
+            glVertex2f(-tempWidth / 2.0f, tempHeight / 2.0f);
+        glEnd();
+    }
+/*
 	if(colormode == COLOR_MODE_CYAN)
 	{
 		glBegin(GL_QUADS);
@@ -67,7 +84,7 @@ void geometryEditorCanvas::render()
 			glColor3f(0.f, 0.f, 1.f);
 			glVertex2f(-50.f, 50.f);
 		glEnd();
-	}
+	}*/
 }
 
 

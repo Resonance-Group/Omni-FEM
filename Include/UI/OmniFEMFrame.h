@@ -249,8 +249,12 @@ public:
 
 
 
-/* This class is akin to the global data structure */
-class OmniFEMMainFrame : public wxFrame
+/*! \class OmniFEMMainFrame
+ *  \brief The main class for everything
+ * 
+ *  This class is also the presentation layer of the main frame
+ */
+ class OmniFEMMainFrame : public wxFrame
 {
 public:
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);

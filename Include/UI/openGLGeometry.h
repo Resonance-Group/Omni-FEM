@@ -11,6 +11,15 @@
 #define COLOR_MODE_MULTI 1
 
 
+enum ViewPortMode
+{
+	VIEWPORT_MODE_FULL,
+	VIEWPORT_MODE_HALF_CENTER,
+	VIEWPORT_MODE_HALF_TOP,
+	VIEWPORT_MODE_QUAD,
+	VIEWPORT_MODE_RADAR
+};
+
 class geometryEditorCanvas : public wxGLCanvas
 {
 public:
@@ -30,19 +39,14 @@ private:
 	
 	void onResize(wxSizeEvent &event);
 	
+    int viewPortMode = ViewPortMode::VIEWPORT_MODE_FULL;
+    
 	wxGLContext *geometryContext;
 	
 	DECLARE_EVENT_TABLE();
 };
 
 
-enum ViewPortMode
-{
-	VIEWPORT_MODE_FULL,
-	VIEWPORT_MODE_HALF_CENTER,
-	VIEWPORT_MODE_HALF_TOP,
-	VIEWPORT_MODE_QUAD,
-	VIEWPORT_MODE_RADAR
-};
+
 
 #endif

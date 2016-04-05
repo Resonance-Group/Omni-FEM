@@ -225,8 +225,8 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	enableToolMenuBar(true);
 	
 	this->SetMaxSize(wxSize(-1, -1));
-	this->SetSize(1024, 768);
-	this->SetMinSize(wxSize(1024, 768));
+	this->SetSize(960, 544);
+	this->SetMinSize(wxSize(960, 544));
 	
 	
 	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
