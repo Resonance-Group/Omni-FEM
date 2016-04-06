@@ -1,12 +1,13 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+/*	These defines are for the keyboard press event. These were obtained from the ASCII chart 
+	at http://www.bibase.com/images/ascii.gif */
 #define LETTER_A 0x41
 #define LETTER_B 0x42
 #define LETTER_C 0x43
 #define LETTER_D 0x44
 #define LETTER_E 0x45
-#define LETTER_e 0x65
 #define LETTER_F 0x46
 #define LETTER_G 0x47
 #define LETTER_H 0x48
@@ -29,6 +30,32 @@
 #define LETTER_Y 0x59
 #define LETTER_Z 0x5A
 
+#define LETTER_a 0x61
+#define LETTER_b 0x62
+#define LETTER_c 0x63
+#define LETTER_d 0x64
+#define LETTER_e 0x65
+#define LETTER_f 0x66
+#define LETTER_g 0x67
+#define LETTER_h 0x68
+#define LETTER_i 0x69
+#define LETTER_j 0x6A
+#define LETTER_k 0x6B
+#define LETTER_l 0x6C
+#define LETTER_m 0x6D
+#define LETTER_n 0x6E
+#define LETTER_o 0x6F
+#define LETTER_p 0x70
+#define LETTER_q 0x71
+#define LETTER_r 0x72
+#define LETTER_s 0x73
+#define LETTER_t 0x74
+#define LETTER_u 0x75
+#define LETTER_v 0x76
+#define LETTER_w 0x77
+#define LETTER_x 0x78
+#define LETTER_y 0x79
+#define LETTER_z 0x7A
 
 //! Enum for the menus of the menu bar
 enum menubarID

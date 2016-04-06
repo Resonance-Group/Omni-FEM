@@ -31,7 +31,6 @@ public:
 	*/
 	geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size);
 	
-	int colormode = COLOR_MODE_MULTI;
 	
 private:
     //! This is the event that is fired when the canvas is drawn or re-drawn
@@ -47,9 +46,19 @@ private:
     
     //! The event that will be fired when a key on the keyboard is pressed down
     void onKeyDown(wxKeyEvent &event);
-    
+
+	/************
+	* Variables *
+	*************/
+private:	
+	
     //! This is the context which will be associated to the class
 	wxGLContext *geometryContext;
+	
+	float canvasWidth = 0;
+	float canvasHeight = 0;
+	
+	GLfloat cameraX = 0.0f, cameraY = 0.0f;
 	
 	DECLARE_EVENT_TABLE();
 };
