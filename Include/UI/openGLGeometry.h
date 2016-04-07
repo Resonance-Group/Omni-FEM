@@ -8,18 +8,19 @@
 #include <gl.h>
 #include <glu.h>
 
-#define COLOR_MODE_CYAN 0
-#define COLOR_MODE_MULTI 1
 
-
-enum ViewPortMode
+class LTexture
 {
-	VIEWPORT_MODE_FULL,
-	VIEWPORT_MODE_HALF_CENTER,
-	VIEWPORT_MODE_HALF_TOP,
-	VIEWPORT_MODE_QUAD,
-	VIEWPORT_MODE_RADAR
+public:
+	LTexture();
+	~LTexture();
+	
+	bool loadTexturesFromPixels32(GLuint *pixels, GLuint width, GLuint height);
+	void freeTexture();
+	void render(GLfloat x, GLfloat y);
+	
 };
+
 
 class geometryEditorCanvas : public wxGLCanvas
 {
@@ -42,11 +43,29 @@ private:
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
 	
-    int viewPortMode = ViewPortMode::VIEWPORT_MODE_FULL;
+ //   int viewPortMode = ViewPortMode::VIEWPORT_MODE_FULL;
     
     //! The event that will be fired when a key on the keyboard is pressed down
     void onKeyDown(wxKeyEvent &event);
-
+	
+	//! The event that is fired when the mouse wheel is rolled
+	/*
+		This event is primarly for zooming the view
+	*/
+	void onMouseWheel(wxMouseEvent &event);
+	
+	//! This event will cause the focus to be transfered to the canvas
+	void onEnterWindow(wxMouseEvent &event);
+	
+	//! This event will cause the focus to be transfered back to the parent window
+	void onLeavingWindow(wxMouseEvent &event);
+	
+	//! This event is fired when the mouse moves on the canvas
+	/*
+		Currently, this functions updates the mouseX and mouseY variables which store the coordinates of the mouse
+		pointer. The reference is the the top left corner of the canvas
+	*/
+	void onMouseMove(wxMouseEvent &event);
 	/************
 	* Variables *
 	*************/
@@ -57,6 +76,11 @@ private:
 	
 	float canvasWidth = 0;
 	float canvasHeight = 0;
+	float zoomX = 1;
+	float zoomY = 1;
+	
+	int mouseX;
+	int mouseY;
 	
 	GLfloat cameraX = 0.0f, cameraY = 0.0f;
 	
@@ -64,6 +88,21 @@ private:
 };
 
 
+/*! \class nodePoint
+	\brief This class is used to create a node
+*/
+class nodePoint
+{
+public:
+	nodePoint();
+	
+	//! This function will draw the node with the center at xcoordinate and ycoordinate
+	void drawnodePoint(GLfloat xcoordinate, GLfloat ycoordinate);
+	
+	/************
+	* Variables *
+	*************/
+};
 
 
 #endif

@@ -1,4 +1,5 @@
 #include <UI/openGLGeometry.h>
+#include <string.h>
 
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
@@ -105,7 +106,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 	else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
 	{
 		cameraY += 16.0f;
-	}
+	}	
 	else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
 	{
 		cameraX -= 16.0f;
@@ -126,7 +127,13 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 }
 
 
-/* This function gets called over and over */
+void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
+{
+	mouseX = event.GetX();
+	mouseY = event.GetY();
+}
+
+
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
@@ -145,8 +152,48 @@ void geometryEditorCanvas::onResize(wxSizeEvent &event)
 
 
 
+void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
+{
+	if(event.GetWheelRotation() > 0)
+	{
+		zoomX += 1.5f;
+		zoomY += 1.5f;
+	}
+	else if(event.GetWheelRotation() < 0)
+	{
+		zoomX -= 1.5f;
+		zoomY -= 1.5f;
+	}
+	
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glLoadIdentity();
+	
+	glScalef(zoomX, zoomY, 0.0f);
+	glPushMatrix();
+	
+    this->Refresh();// This will force the canvas to experience a redraw event
+}
+
+
+void geometryEditorCanvas::onEnterWindow(wxMouseEvent &event)
+{
+	this->SetFocus();
+}
+
+
+
+void geometryEditorCanvas::onLeavingWindow(wxMouseEvent &event)
+{
+	this->GetParent()->SetFocus();
+}
+
 wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
 	EVT_PAINT(geometryEditorCanvas::onGeometryPaint)
 	EVT_SIZE(geometryEditorCanvas::onResize)
     EVT_KEY_DOWN(geometryEditorCanvas::onKeyDown)
+//	EVT_MOUSEWHEEL(geometryEditorCanvas::onMouseWheel)
+	EVT_ENTER_WINDOW(geometryEditorCanvas::onEnterWindow)
+	EVT_LEAVE_WINDOW(geometryEditorCanvas::onLeavingWindow)
+	EVT_MOTION(geometryEditorCanvas::onMouseMove)
 wxEND_EVENT_TABLE()
