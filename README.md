@@ -15,5 +15,8 @@ For building the project, run the command:
 
 sudo apt-get install freeglut3-dev
 
-This will get the OpenGL libraries. Double check compiler settings to make sure that -lglut, -lGL, and -lGLU are placed in their approiate places (This does matter)
+This will get the OpenGL libraries. Double check compiler settings to make sure that -lglut, -lGL, and -lGLU are placed in their approiate places (This does matter).
+
+To install wxwidgets, follow these instructions:
+http://codelite.org/LiteEditor/WxWidgets30Binaries
 

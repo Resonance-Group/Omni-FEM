@@ -124,6 +124,12 @@ public:
 	/************
 	* Variables *
 	*************/
+private:
+	//! The x point for the center
+	double xPoint;
+	
+	//! The y point for the center
+	double yPoint;
 };
 
 

@@ -53,7 +53,7 @@ void geometryEditorCanvas::render()
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	
-    glPushMatrix();
+ //   glPushMatrix();
 	
 	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
 	
@@ -218,3 +218,5 @@ wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
 	EVT_LEAVE_WINDOW(geometryEditorCanvas::onLeavingWindow)
 	EVT_MOTION(geometryEditorCanvas::onMouseMove)
 wxEND_EVENT_TABLE()
+
+//nodePoint::drawnodePoint(GLdouble xcoordinate, GL)
