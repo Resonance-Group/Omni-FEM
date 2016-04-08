@@ -1,12 +1,20 @@
 #include <UI/openGLGeometry.h>
 #include <string.h>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
 
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
 	geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*geometryContext);
-	canvasHeight = (float)this->GetSize().y;
-	canvasWidth = (float)this->GetSize().x;
+	canvasHeight = (double)this->GetSize().y;
+	canvasWidth = (double)this->GetSize().x;
+	
+	coordinateFactorWidth = canvasWidth / (double)factor;
+	coordinateFactorHeight = canvasHeight / (double)factor;
 	
 	glViewport(0, 0, canvasWidth, canvasHeight);// Set the viewport to see the rendering
 	
@@ -112,7 +120,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 		cameraX -= 16.0f;
 	}
 	else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
-	{
+	{	
 		cameraX += 16.0f;
 	}
     
@@ -129,8 +137,22 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 
 void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 {
+	
+	std::stringstream test1, test2;
+	
 	mouseX = event.GetX();
 	mouseY = event.GetY();
+	
+	// Converts the mouse pointer into a cartesian graph position
+	mouseGraphX = ((double)mouseX - (double)canvasWidth / 2) / coordinateFactorWidth - (double)cameraX / coordinateFactorWidth;
+	
+	mouseGraphY =((double)canvasHeight / 2 - (double)mouseY)  / coordinateFactorHeight - (double)cameraY / coordinateFactorHeight;
+
+	test1 << std::fixed << setprecision(3) << mouseGraphX;
+	test2 << std::fixed << setprecision(3) << mouseGraphY;
+	
+//	wxMessageBox(test1.str() + " " + test2.str());
+
 }
 
 
@@ -154,22 +176,21 @@ void geometryEditorCanvas::onResize(wxSizeEvent &event)
 
 void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
 {
-	if(event.GetWheelRotation() > 0)
-	{
-		zoomX += 1.5f;
-		zoomY += 1.5f;
-	}
-	else if(event.GetWheelRotation() < 0)
-	{
-		zoomX -= 1.5f;
-		zoomY -= 1.5f;
-	}
-	
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glLoadIdentity();
 	
-	glScalef(zoomX, zoomY, 0.0f);
+	if(event.GetWheelRotation() > 0)
+	{
+		glScaled(zoomFactor, zoomFactor, 0.0d);
+		totalZoom *= zoomFactor;
+	}
+	else if(event.GetWheelRotation() < 0)
+	{
+		glScaled(1.0d / zoomFactor, 1.0d / zoomFactor, 0.0d);
+		totalZoom /= zoomFactor;
+	}
+	
 	glPushMatrix();
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -192,7 +213,7 @@ wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
 	EVT_PAINT(geometryEditorCanvas::onGeometryPaint)
 	EVT_SIZE(geometryEditorCanvas::onResize)
     EVT_KEY_DOWN(geometryEditorCanvas::onKeyDown)
-//	EVT_MOUSEWHEEL(geometryEditorCanvas::onMouseWheel)
+	EVT_MOUSEWHEEL(geometryEditorCanvas::onMouseWheel)
 	EVT_ENTER_WINDOW(geometryEditorCanvas::onEnterWindow)
 	EVT_LEAVE_WINDOW(geometryEditorCanvas::onLeavingWindow)
 	EVT_MOTION(geometryEditorCanvas::onMouseMove)

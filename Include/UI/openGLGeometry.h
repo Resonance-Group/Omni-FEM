@@ -9,6 +9,8 @@
 #include <glu.h>
 
 
+
+
 class LTexture
 {
 public:
@@ -74,13 +76,33 @@ private:
     //! This is the context which will be associated to the class
 	wxGLContext *geometryContext;
 	
-	float canvasWidth = 0;
-	float canvasHeight = 0;
+	double canvasWidth = 0;
+	double canvasHeight = 0;
+	
 	float zoomX = 1;
 	float zoomY = 1;
 	
+	//! This variable will give the mouse x coordinate wrt top left corner of canvas.
 	int mouseX;
+	
+	//! This variable will give the mouse y coordinate wrt top left corner of canvas.
 	int mouseY;
+	
+	//! This will give the mouse x coordinate in the cartesian plane of the canvas
+	double mouseGraphX;
+	
+	//! This will be the mouse y coordinate in the cartesian plane of the canvas
+	double mouseGraphY;
+	
+	double coordinateFactorWidth;
+
+	double coordinateFactorHeight;
+	
+	double zoomFactor = 2;
+	
+	double totalZoom = 1;
+
+	const int factor = 6;
 	
 	GLfloat cameraX = 0.0f, cameraY = 0.0f;
 	
