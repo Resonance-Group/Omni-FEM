@@ -8,6 +8,9 @@
 #include <gl.h>
 #include <glu.h>
 #include <UI/geometryShapes.h>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
 
 
 
@@ -107,8 +110,15 @@ private:
 
 	const int factor = 10;
 	
+    //! These variables contain the screen offset
 	GLfloat cameraX = 0.0f, cameraY = 0.0f;
 	
+    wxStaticText *debugCoordinate;
+    
+    wxStaticText *debugPixelCoordinate;
+    
+    
+    
 	nodePoint *testPoint;
 	
 	DECLARE_EVENT_TABLE();

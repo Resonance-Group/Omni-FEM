@@ -1,14 +1,17 @@
 #include <UI/openGLGeometry.h>
 #include <string.h>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
+
 #include <math.h>
 
 using namespace std;
 
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
+    debugCoordinate = new wxStaticText(this, wxID_ANY, "None", wxPoint(0, 10));
+    debugPixelCoordinate = new wxStaticText(this, wxID_ANY, "None");
+    
+    this->SetLabel("none");
+    
 	geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*geometryContext);
 	canvasHeight = (double)this->GetSize().y;
@@ -82,6 +85,7 @@ void geometryEditorCanvas::render()
     //Blue quad
     glBegin( GL_QUADS );
         glColor3f( 0.f, 0.f, 1.f );
+
         glVertex2f( -canvasWidth / 4.f, -canvasHeight / 4.f );
         glVertex2f(  canvasWidth / 4.f, -canvasHeight / 4.f );
         glVertex2f(  canvasWidth / 4.f,  canvasHeight / 4.f );
@@ -107,7 +111,7 @@ void geometryEditorCanvas::drawGrid()
 {
 	int pixelHeight = 0;
 	int pixelWidth = 0;
-	double tolerance = (double)pow((double)10, (double)-5);
+	double tolerance = (double)0.013;
 	double ycoor = 0.0d;
 	double xcoor = 0.0d;
 	
@@ -119,19 +123,21 @@ void geometryEditorCanvas::drawGrid()
 	
 	for(int j = 0; j < canvasHeight; j++)
 	{
-		pixelHeight = j * (canvasHeight + 1);// This will convert the loop counter into a pixel value
+		pixelHeight = j;// This will convert the loop counter into a pixel value
 		ycoor = convertToYCoordinate((double)pixelHeight);
-		int modyCoor = fmod(ycoor, (double)2);// This will see if the coordinate value is 1, 2, 3, 4, 5, etc. Will return 1 if odd, 0 if even
+		double modyCoor = fmod(ycoor, (double)2);// This will see if the coordinate value is 1, 2, 3, 4, 5, etc. Will return 1 if odd, 0 if even
 		
 		/* this if statment serves as a tool forchecking to see if the Ycoordinate is 1, 2, 3, 4, etc. */
+     //   if(modyCoor == 1 || modyCoor == 0 || modyCoor == -1)
 		if(((modyCoor >= (1 - tolerance) && modyCoor <= 1) || (modyCoor <= (1 + tolerance)) && modyCoor >= 1) || (modyCoor >= 0 && modyCoor <= tolerance) || (modyCoor >= (2 - tolerance) && modyCoor < 2))
 		{
 			for(int i = 0; i <= canvasWidth; i++)
 			{
-				pixelWidth = i * (canvasWidth + 1);
+				pixelWidth = j * canvasWidth + i;
 				xcoor = convertToXCoordinate((double)pixelWidth);
-				int modxCoor = fmod(xcoor, (double)2);
+				double modxCoor = fmod(xcoor, (double)2);
 				
+        //        if(modxCoor == 1 || modxCoor == 0 || modxCoor == -1)
 				if(((modxCoor >= (1 - tolerance) && modxCoor <= 1) || (modxCoor <= (1 + tolerance)) && modxCoor >= 1) || (modxCoor >= 0 && modxCoor <= tolerance) || (modxCoor >= (2 - tolerance) && modxCoor < 2))
 				{
 					glBegin(GL_POINTS);
@@ -192,10 +198,21 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 {
 	mouseX = event.GetX();
 	mouseY = event.GetY();
+	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	
 	// Converts the mouse pointer into a cartesian graph position
 	mouseGraphX = convertToXCoordinate((double)mouseX);
 	mouseGraphY = convertToYCoordinate((double)mouseY);
+    
+    stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
+	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
+    
+    stringMousePixelX << std::fixed << setprecision(1) << mouseX;
+    stringMousePixelY << std::fixed << setprecision(1) << mouseY;
+    
+    debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
+    debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
+    this->Refresh();
 
 }
 
@@ -217,15 +234,28 @@ double geometryEditorCanvas::convertToYCoordinate(double yPoint)
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
+    std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
-	glClear(GL_COLOR_BUFFER_BIT);
+	
+     debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
+    debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());   
+    glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	
 	render();
 	
 	glFlush();
 	SwapBuffers();// Display the output
+ 
+    stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
+	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
+    
+    stringMousePixelX << std::fixed << setprecision(1) << mouseX;
+    stringMousePixelY << std::fixed << setprecision(1) << mouseY;
+    
+    this->SetLabel("NOne");
+   
 }
 
 
@@ -281,12 +311,6 @@ void geometryEditorCanvas::onLeavingWindow(wxMouseEvent &event)
 void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 {
 	wxGLCanvas::SetCurrent(*geometryContext);
-	std::stringstream test1, test2;
-	
-	test1 << std::fixed << setprecision(3) << mouseGraphX;
-	test2 << std::fixed << setprecision(3) << mouseGraphY;
-	
-	wxMessageBox(test1.str() + " " + test2.str());
 
 
 //	testPoint = new nodePoint(mouseGraphX, mouseGraphY, this);
