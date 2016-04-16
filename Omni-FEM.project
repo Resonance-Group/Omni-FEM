@@ -51,6 +51,7 @@
             <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/openGLFunctions.cpp"/>
+            <File Name="src/UI/Geometry/2D/Presentation/geometryDefinitions.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
@@ -72,6 +73,7 @@
       <File Name="Include/UI/geometryEditor2D.h"/>
       <File Name="Include/UI/common.h"/>
       <File Name="Include/UI/openGLGeometry.h"/>
+      <File Name="Include/UI/geometryShapes.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
@@ -88,7 +90,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-Os;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-O;-std=c++14;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-O;-std=c++14;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
         <IncludePath Value="/usr/include/GL"/>
       </Compiler>

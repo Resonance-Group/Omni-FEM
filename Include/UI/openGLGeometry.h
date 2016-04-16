@@ -7,21 +7,8 @@
 #include <freeglut.h>
 #include <gl.h>
 #include <glu.h>
+#include <UI/geometryShapes.h>
 
-
-
-
-class LTexture
-{
-public:
-	LTexture();
-	~LTexture();
-	
-	bool loadTexturesFromPixels32(GLuint *pixels, GLuint width, GLuint height);
-	void freeTexture();
-	void render(GLfloat x, GLfloat y);
-	
-};
 
 
 class geometryEditorCanvas : public wxGLCanvas
@@ -41,6 +28,18 @@ private:
 	
     //! Rendering the geometry
 	void render();
+	
+	//! This function will convert a xpoint to an x-coordinate value
+	/*
+		Please note that this function is assuming that you are providing an x-point 
+	*/
+	double convertToXCoordinate(double xPoint);
+	
+	//! This function will convert a ypoint to an y-coordinate value
+	/*
+		Please note that this function is assuming that you are providing an y-point 
+	*/
+	double convertToYCoordinate(double yPoint);
 	
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
@@ -68,6 +67,10 @@ private:
 		pointer. The reference is the the top left corner of the canvas
 	*/
 	void onMouseMove(wxMouseEvent &event);
+	
+	void onMouseLeftDown(wxMouseEvent &event);
+	
+	void drawGrid();
 	/************
 	* Variables *
 	*************/
@@ -102,35 +105,17 @@ private:
 	
 	double totalZoom = 1;
 
-	const int factor = 6;
+	const int factor = 10;
 	
 	GLfloat cameraX = 0.0f, cameraY = 0.0f;
+	
+	nodePoint *testPoint;
 	
 	DECLARE_EVENT_TABLE();
 };
 
 
-/*! \class nodePoint
-	\brief This class is used to create a node
-*/
-class nodePoint
-{
-public:
-	nodePoint();
-	
-	//! This function will draw the node with the center at xcoordinate and ycoordinate
-	void drawnodePoint(GLfloat xcoordinate, GLfloat ycoordinate);
-	
-	/************
-	* Variables *
-	*************/
-private:
-	//! The x point for the center
-	double xPoint;
-	
-	//! The y point for the center
-	double yPoint;
-};
+
 
 
 #endif
