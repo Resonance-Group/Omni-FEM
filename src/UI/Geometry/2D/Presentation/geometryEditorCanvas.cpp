@@ -120,7 +120,7 @@ void geometryEditorCanvas::drawGrid()
 	for(int j = 0; j < canvasHeight; j++)
 	{
 		pixelHeight = j * (canvasHeight + 1);// This will convert the loop counter into a pixel value
-		ycoord = convertToYCoordinate((double)pixelHeight);
+		ycoor = convertToYCoordinate((double)pixelHeight);
 		int modyCoor = fmod(ycoor, (double)2);// This will see if the coordinate value is 1, 2, 3, 4, 5, etc. Will return 1 if odd, 0 if even
 		
 		/* this if statment serves as a tool forchecking to see if the Ycoordinate is 1, 2, 3, 4, etc. */
