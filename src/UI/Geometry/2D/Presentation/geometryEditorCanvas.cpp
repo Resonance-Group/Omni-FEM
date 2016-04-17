@@ -7,8 +7,13 @@ using namespace std;
 
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
-    debugCoordinate = new wxStaticText(this, wxID_ANY, "None", wxPoint(0, 10));
-    debugPixelCoordinate = new wxStaticText(this, wxID_ANY, "None");
+ //   debugCoordinate = new wxStaticText(this, wxID_ANY, "None", wxPoint(0, 10));
+ //   debugPixelCoordinate = new wxStaticText(this, wxID_ANY, "None");
+    
+    debugCoordinate = new wxGLString("None");
+    debugPixelCoordinate = new wxGLString("none");
+    
+    
     
     this->SetLabel("none");
     
@@ -45,6 +50,8 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 	//	wxMessageBox("Error - " + gluErrorString(error));
 		return;
 	}	
+    
+    
 }
 
 
@@ -210,8 +217,8 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
     stringMousePixelX << std::fixed << setprecision(1) << mouseX;
     stringMousePixelY << std::fixed << setprecision(1) << mouseY;
     
-    debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
-    debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
+ //   debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
+ //   debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
     this->Refresh();
 
 }
@@ -238,14 +245,18 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
 	
-     debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
-    debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());   
+  //   debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
+ //   debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());   
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	
 	render();
 	
 	glFlush();
+    
+    debugCoordinate->bind();
+    debugCoordinate->render(0, 1);
+    
 	SwapBuffers();// Display the output
  
     stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
@@ -254,7 +265,6 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
     stringMousePixelX << std::fixed << setprecision(1) << mouseX;
     stringMousePixelY << std::fixed << setprecision(1) << mouseY;
     
-    this->SetLabel("NOne");
    
 }
 

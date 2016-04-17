@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <UI/wxGLString.h>
 
 
 
@@ -113,11 +114,9 @@ private:
     //! These variables contain the screen offset
 	GLfloat cameraX = 0.0f, cameraY = 0.0f;
 	
-    wxStaticText *debugCoordinate;
+    wxGLString *debugCoordinate;
     
-    wxStaticText *debugPixelCoordinate;
-    
-    
+    wxGLString *debugPixelCoordinate;
     
 	nodePoint *testPoint;
 	

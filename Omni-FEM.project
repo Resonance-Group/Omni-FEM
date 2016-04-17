@@ -64,6 +64,7 @@
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
+      <File Name="src/common/wxGLString.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -74,6 +75,7 @@
       <File Name="Include/UI/common.h"/>
       <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>
+      <File Name="Include/UI/wxGLString.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
