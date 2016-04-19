@@ -60,7 +60,6 @@ void geometryEditorCanvas::render()
 	//Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
-	
     glPushMatrix();
 	
 	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
@@ -116,16 +115,22 @@ void geometryEditorCanvas::render()
 
 void geometryEditorCanvas::drawGrid()
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+    glPushMatrix();
 	
-	/*
-	for(double i = 0; i < factor; i++)
+	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
+	
+	for(int i = -10; i <= 10; i++)
 	{
-		for(double j = 0; j < factor; j++)
+		for(int j = -10; j <= 10; j++)
 		{
-			
+			glBegin(GL_POINTS);
+				glColor3f( 0.f, 0.f, 0.f );
+				glVertex2i(convertToXPixel((double)j, (double)i), convertToYPixel((double)j, (double)i));
+			glEnd();
 		}
 	}
-	*/
 }
 
 
@@ -185,47 +190,51 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 
 
 
-double geometryEditorCanvas::convertToXCoordinate(double xPoint, double yPoint)
+double geometryEditorCanvas::convertToXCoordinate(int xPixel, int yPixel)
 {
-	return (Acoeff * (xPoint + cameraX) +  Bcoeff * (yPoint + cameraY) + Ccoeff);
+	return (Acoeff * ((double)xPixel + cameraX) +  Bcoeff * ((double)yPixel + cameraY) + Ccoeff);
 }
 
 
 
-double geometryEditorCanvas::convertToYCoordinate(double xPoint, double yPoint)
+double geometryEditorCanvas::convertToYCoordinate(int xPixel, int yPixel)
 {
-	return (Bcoeff * (xPoint + cameraX) - Acoeff * (yPoint + cameraY) + Dcoeff);
+	return (Bcoeff * ((double)xPixel + cameraX) - Acoeff * ((double)yPixel + cameraY) + Dcoeff);
 }
 
+int geometryEditorCanvas::convertToXPixel(double XCoor, double YCoor)
+{
+	return (int)((Acoeff * XCoor + Bcoeff * YCoor - Bcoeff * Dcoeff - Acoeff * Ccoeff) / (pow(Acoeff, 2) + pow(Bcoeff, 2)) - cameraX);
+}
 
+int geometryEditorCanvas::convertToYPixel(double XCoor, double YCoor)
+{
+	return (int)((Bcoeff * XCoor - Acoeff * YCoor - Bcoeff * Ccoeff - Acoeff * Acoeff) / (pow(Acoeff, 2) + pow(Bcoeff, 2)) - cameraY);
+}
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
-    std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
 	
-  //   debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
- //   debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());   
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	
 	render();
 	
-	glFlush();
-    
-    debugCoordinate->bind();
-    debugCoordinate->render(0, 1);
-    
+	glMatrixMode(GL_MODELVIEW);
+	
+	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
+	
+	glBegin(GL_POINTS);
+		glVertex2f(255.0f, 255.0f);
+		glVertex2f(255.0f, 251.0f);
+		glVertex2f(255.0f, 252.0f);
+		glVertex2f(255.0f, 253.0f);
+		glVertex2f(255.0f, 254.0f);
+	glEnd();
+	
 	SwapBuffers();// Display the output
- 
-    stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
-	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
-    
-    stringMousePixelX << std::fixed << setprecision(1) << mouseX;
-    stringMousePixelY << std::fixed << setprecision(1) << mouseY;
-    
-   
 }
 
 
