@@ -116,46 +116,6 @@ void geometryEditorCanvas::render()
 
 void geometryEditorCanvas::drawGrid()
 {
-	int pixelHeight = 0;
-	int pixelWidth = 0;
-	double tolerance = (double)0.013;
-	double ycoor = 0.0d;
-	double xcoor = 0.0d;
-	
-	//Reset to modelview matrix
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glPushMatrix();
-	glTranslatef(canvasWidth / 2.0f - (float)cameraX, canvasHeight / 2.0f - (float)cameraY, 0.0f);
-	
-	for(int j = 0; j < canvasHeight; j++)
-	{
-		pixelHeight = j;// This will convert the loop counter into a pixel value
-		ycoor = convertToYCoordinate((double)pixelHeight);
-		double modyCoor = fmod(ycoor, (double)2);// This will see if the coordinate value is 1, 2, 3, 4, 5, etc. Will return 1 if odd, 0 if even
-		
-		/* this if statment serves as a tool forchecking to see if the Ycoordinate is 1, 2, 3, 4, etc. */
-     //   if(modyCoor == 1 || modyCoor == 0 || modyCoor == -1)
-		if(((modyCoor >= (1 - tolerance) && modyCoor <= 1) || (modyCoor <= (1 + tolerance)) && modyCoor >= 1) || (modyCoor >= 0 && modyCoor <= tolerance) || (modyCoor >= (2 - tolerance) && modyCoor < 2))
-		{
-			for(int i = 0; i <= canvasWidth; i++)
-			{
-				pixelWidth = j * canvasWidth + i;
-				xcoor = convertToXCoordinate((double)pixelWidth);
-				double modxCoor = fmod(xcoor, (double)2);
-				
-        //        if(modxCoor == 1 || modxCoor == 0 || modxCoor == -1)
-				if(((modxCoor >= (1 - tolerance) && modxCoor <= 1) || (modxCoor <= (1 + tolerance)) && modxCoor >= 1) || (modxCoor >= 0 && modxCoor <= tolerance) || (modxCoor >= (2 - tolerance) && modxCoor < 2))
-				{
-					glBegin(GL_POINTS);
-						glColor3d(0.0d, 0.0d, 0.0d);
-						glVertex2i(pixelWidth, pixelHeight);
-					glEnd();
-				}
-			}
-		}
-		
-	}
 	
 	/*
 	for(double i = 0; i < factor; i++)
@@ -208,8 +168,8 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	
 	// Converts the mouse pointer into a cartesian graph position
-	mouseGraphX = convertToXCoordinate((double)mouseX);
-	mouseGraphY = convertToYCoordinate((double)mouseY);
+	mouseGraphX = convertToXCoordinate((double)mouseX, (double)mouseY);
+	mouseGraphY = convertToYCoordinate((double)mouseX, (double)mouseY);
     
     stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
 	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
@@ -225,16 +185,16 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 
 
 
-double geometryEditorCanvas::convertToXCoordinate(double xPoint)
+double geometryEditorCanvas::convertToXCoordinate(double xPoint, double yPoint)
 {
-	return ((xPoint - (double)canvasWidth / 2) / coordinateFactorWidth - (double)cameraX / coordinateFactorWidth);
+	return (Acoeff * (xPoint + cameraX) +  Bcoeff * (yPoint + cameraY) + Ccoeff);
 }
 
 
 
-double geometryEditorCanvas::convertToYCoordinate(double yPoint)
+double geometryEditorCanvas::convertToYCoordinate(double xPoint, double yPoint)
 {
-	return (((double)canvasHeight / 2 - yPoint)  / coordinateFactorHeight - (double)cameraY / coordinateFactorHeight);
+	return (Bcoeff * (xPoint + cameraX) - Acoeff * (yPoint + cameraY) + Dcoeff);
 }
 
 

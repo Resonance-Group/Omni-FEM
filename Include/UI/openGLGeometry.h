@@ -33,17 +33,29 @@ private:
     //! Rendering the geometry
 	void render();
 	
-	//! This function will convert a xpoint to an x-coordinate value
+	//! This function will convert a xpoint (pixel) to an x-coordinate value
 	/*
-		Please note that this function is assuming that you are providing an x-point 
+		This is 1/2 of the mapping function. The function follow the idea presented in the following webpage:
+    *   https://msdn.microsoft.com/en-us/library/jj635757(v=vs.85).aspx
+    *   
+    *   The mapping is a affline transformation and the program is using the equation:
+    *   x' = ax + by + c (The coefficients used here are defined as private variables)
+    *   The coefficients can be solved with the use of matrices. The program will need to
+    *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToXCoordinate(double xPoint);
+	double convertToXCoordinate(double xPoint, double yPoint);
 	
-	//! This function will convert a ypoint to an y-coordinate value
+	//! This function will convert a ypoint (pixel) to an y-coordinate value
 	/*
-		Please note that this function is assuming that you are providing an y-point 
+		This is 1/2 of the mapping function. The function follow the idea presented in the following webpage:
+    *   https://msdn.microsoft.com/en-us/library/jj635757(v=vs.85).aspx
+    *   
+    *   The mapping is a affline transformation and the program is using the equation:
+    *   y' = bx - ay + d (The coefficients used here are defined as private variables)
+    *   The coefficients can be solved with the use of matrices. The program will need to
+    *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToYCoordinate(double yPoint);
+	double convertToYCoordinate(double xPoint, double yPoint);
 	
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
@@ -110,7 +122,38 @@ private:
 	double totalZoom = 1;
 
 	const int factor = 10;
+    
+    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
+    /*
+     *  For more complete documentation, please read documentation for the function that 
+     *  uses this variable
+     * 
+     */ 
+    double Acoeff = (double)-0.0393804;
 	
+    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
+    /*
+     *  For more complete documentation, please read documentation for the function that 
+     *  uses this variable
+     * 
+     */  
+    double Bcoeff = (double)-0.0166944;
+    
+    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
+    /*
+     *  For more complete documentation, please read documentation for the function that 
+     *  uses this variable
+     * 
+     */ 
+     double Ccoeff = (double)-10.0;
+     
+     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
+    /*
+     *  For more complete documentation, please read documentation for the function that 
+     *  uses this variable
+     * 
+     */ 
+     double Dcoeff = (double)10.0;
     //! These variables contain the screen offset
 	GLfloat cameraX = 0.0f, cameraY = 0.0f;
 	
