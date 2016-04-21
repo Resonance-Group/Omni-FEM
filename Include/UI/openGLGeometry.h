@@ -43,7 +43,7 @@ private:
     *   The coefficients can be solved with the use of matrices. The program will need to
     *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToXCoordinate(int xPixel, int yPixel);
+	double convertToXCoordinate(int xPixel);
 	
 	//! This function will convert a ypoint (pixel) to an y-coordinate value
 	/*
@@ -55,21 +55,21 @@ private:
     *   The coefficients can be solved with the use of matrices. The program will need to
     *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToYCoordinate(int xPixel, int yPixel);
+	double convertToYCoordinate(int yPixel);
 	
 	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the X pixel point
 	/*
 	 * 	This is 1/2 of a feature. The coorseopnding function is convertToYPixel.
 	 *  Both need to be called in order to create a pixel pair.
 	 */
-	int convertToXPixel(double XCoor, double YCoor);
+	int convertToXPixel(double XCoor);
 	
 	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the Y pixel point
 	/*
 	 * 	This is 1/2 of a feature. The coorseopnding function is convertToXPixel.
 	 *  Both need to be called in order to create a pixel pair.
 	 */
-	int convertToYPixel(double XCoor, double YCoor);
+	int convertToYPixel(double YCoor);
 	
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
