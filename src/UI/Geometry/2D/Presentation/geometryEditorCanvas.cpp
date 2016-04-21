@@ -9,7 +9,7 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 {
  //   debugCoordinate = new wxStaticText(this, wxID_ANY, "None", wxPoint(0, 10));
  //   debugPixelCoordinate = new wxStaticText(this, wxID_ANY, "None");
-    
+    // At startup, the canvas size is initially 613x241 pixels
     debugCoordinate = new wxGLString("None");
     debugPixelCoordinate = new wxGLString("none");
     
@@ -66,7 +66,7 @@ void geometryEditorCanvas::render()
 	
     //Red quad
     glBegin( GL_QUADS );
-        glColor3f( 1.f, 1.f, 1.f );
+        glColor3f( 0.f, 0.f, 0.f );
         glVertex2f( -canvasWidth / 4.f, -canvasHeight / 4.f );
         glVertex2f(  canvasWidth / 4.f, -canvasHeight / 4.f );
         glVertex2f(  canvasWidth / 4.f,  canvasHeight / 4.f );
@@ -119,15 +119,18 @@ void geometryEditorCanvas::drawGrid()
 	glPopMatrix();
     glPushMatrix();
 	
-	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
+//	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
 	
 	for(int i = -10; i <= 10; i++)
 	{
+		
 		for(int j = -10; j <= 10; j++)
 		{
+			int tempYPixel = convertToYPixel((double)j, (double)i);
+			int tempXPixel = convertToXPixel((double)j, (double)i);
 			glBegin(GL_POINTS);
 				glColor3f( 0.f, 0.f, 0.f );
-				glVertex2i(convertToXPixel((double)j, (double)i), convertToYPixel((double)j, (double)i));
+				glVertex2i(tempXPixel, tempYPixel);
 			glEnd();
 		}
 	}
@@ -158,7 +161,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 	glPopMatrix();
 	glLoadIdentity();
 	
-	glTranslated(cameraX, cameraY, 0.0f);
+	glTranslatef(cameraX, cameraY, 0.0f);
 	glPushMatrix();
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -184,7 +187,7 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
     
  //   debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
  //   debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
-    this->Refresh();
+  //  this->Refresh();
 
 }
 
@@ -192,25 +195,30 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 
 double geometryEditorCanvas::convertToXCoordinate(int xPixel, int yPixel)
 {
-	return (Acoeff * ((double)xPixel + cameraX) +  Bcoeff * ((double)yPixel + cameraY) + Ccoeff);
+	return (Xcoeff * ((double)xPixel - cameraX) - graphOffset);
 }
 
 
 
 double geometryEditorCanvas::convertToYCoordinate(int xPixel, int yPixel)
 {
-	return (Bcoeff * ((double)xPixel + cameraX) - Acoeff * ((double)yPixel + cameraY) + Dcoeff);
+	return (Ycoeff* ((double)yPixel - cameraY) + graphOffset);
 }
+
+
 
 int geometryEditorCanvas::convertToXPixel(double XCoor, double YCoor)
 {
-	return (int)((Acoeff * XCoor + Bcoeff * YCoor - Bcoeff * Dcoeff - Acoeff * Ccoeff) / (pow(Acoeff, 2) + pow(Bcoeff, 2)) - cameraX);
+	return (int)((XCoor + graphOffset) / Xcoeff) + cameraX;
 }
+
 
 int geometryEditorCanvas::convertToYPixel(double XCoor, double YCoor)
 {
-	return (int)((Bcoeff * XCoor - Acoeff * YCoor - Bcoeff * Ccoeff - Acoeff * Acoeff) / (pow(Acoeff, 2) + pow(Bcoeff, 2)) - cameraY);
+	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraY; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
 }
+
+
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
@@ -221,19 +229,6 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	drawGrid();
 	
 	render();
-	
-	glMatrixMode(GL_MODELVIEW);
-	
-	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
-	
-	glBegin(GL_POINTS);
-		glVertex2f(255.0f, 255.0f);
-		glVertex2f(255.0f, 251.0f);
-		glVertex2f(255.0f, 252.0f);
-		glVertex2f(255.0f, 253.0f);
-		glVertex2f(255.0f, 254.0f);
-	glEnd();
-	
 	SwapBuffers();// Display the output
 }
 
@@ -290,11 +285,18 @@ void geometryEditorCanvas::onLeavingWindow(wxMouseEvent &event)
 void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 {
 	wxGLCanvas::SetCurrent(*geometryContext);
+	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
+	
 
+    
+    stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
+	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
+	
+	wxMessageBox(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
 
 //	testPoint = new nodePoint(mouseGraphX, mouseGraphY, this);
 
-	this->Refresh();
+//	this->Refresh();
 }
 
 wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)

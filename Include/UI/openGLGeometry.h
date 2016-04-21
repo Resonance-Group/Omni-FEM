@@ -143,7 +143,7 @@ private:
      *  uses this variable
      * 
      */ 
-    double Acoeff = (double)-0.0393804;
+    double Ycoeff = (double)-0.0829876d;
 	
     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
     /*
@@ -151,7 +151,7 @@ private:
      *  uses this variable
      * 
      */  
-    double Bcoeff = (double)-0.0166944;
+    double Xcoeff = (double)0.0326264d;
     
     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
     /*
@@ -159,18 +159,10 @@ private:
      *  uses this variable
      * 
      */ 
-     double Ccoeff = (double)-10.0;
-     
-     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
-    /*
-     *  For more complete documentation, please read documentation for the function that 
-     *  uses this variable
-     * 
-     */ 
-     double Dcoeff = (double)10.0;
+     double graphOffset = (double)10.0d;
 	 
     //! These variables contain the screen offset
-	double cameraX = 0.0f, cameraY = 0.0f;
+	float cameraX = 0.0f, cameraY = 0.0f;
 	
     wxGLString *debugCoordinate;
     
