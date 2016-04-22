@@ -121,10 +121,10 @@ void geometryEditorCanvas::drawGrid()
 	
 //	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
 	
-	for(int heightLoop = -10; heightLoop <= 10; heightLoop++)
+	for(int heightLoop = (-10 + cameraY * Ycoeff); heightLoop <= (10 + cameraY * Ycoeff); heightLoop++)
 	{
 		
-		for(int widthLoop = -10; widthLoop <= 10; widthLoop++)
+		for(int widthLoop = (-10 + cameraX * Xcoeff); widthLoop <= (10 + cameraX * Xcoeff); widthLoop++)
 		{
 			int tempYPixel = convertToYPixel((double)heightLoop);
 			int tempXPixel = convertToXPixel((double)widthLoop);
@@ -176,8 +176,8 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	
 	// Converts the mouse pointer into a cartesian graph position
-	mouseGraphX = convertToXCoordinate((double)mouseX);
-	mouseGraphY = convertToYCoordinate((double)mouseY);
+	mouseGraphX = convertToXCoordinate((double)mouseX, cameraX);
+	mouseGraphY = convertToYCoordinate((double)mouseY, cameraY);
     
     stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
 	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
@@ -195,30 +195,49 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 
 double geometryEditorCanvas::convertToXCoordinate(int xPixel)
 {
-	return (Xcoeff * ((double)xPixel - cameraX) - graphOffset);
+	return (Xcoeff * ((double)xPixel) - graphOffset);
 }
 
+
+double geometryEditorCanvas::convertToXCoordinate(int xPixel, int cameraOffset)
+{
+	return (Xcoeff * ((double)xPixel - cameraOffset) - graphOffset);
+}
 
 
 double geometryEditorCanvas::convertToYCoordinate(int yPixel)
 {
-	return (Ycoeff* ((double)yPixel - cameraY) + graphOffset);
+	return (Ycoeff* ((double)yPixel) + graphOffset);
 }
 
+
+double geometryEditorCanvas::convertToYCoordinate(int yPixel, int cameraOffset)
+{
+	return (Ycoeff* ((double)yPixel - cameraOffset) + graphOffset);
+}
 
 
 int geometryEditorCanvas::convertToXPixel(double XCoor)
 {
-	return (int)((XCoor + graphOffset) / Xcoeff) + cameraX;
+	return (int)((XCoor + graphOffset) / Xcoeff);
+}
+
+
+int geometryEditorCanvas::convertToXPixel(double XCoor, int cameraOffset)
+{
+	return (int)((XCoor + graphOffset) / Xcoeff) + cameraOffset;
 }
 
 
 int geometryEditorCanvas::convertToYPixel(double YCoor)
 {
-	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraY; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
+	return (int)((YCoor - graphOffset) / Ycoeff) + 3; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
 }
 
-
+int geometryEditorCanvas::convertToYPixel(double YCoor, int cameraOffset)
+{
+	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraOffset; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
+}
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
