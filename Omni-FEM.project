@@ -55,6 +55,7 @@
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
+            <File Name="src/UI/Geometry/2D/Controller/geometry2D.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Abstraction">
             <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>

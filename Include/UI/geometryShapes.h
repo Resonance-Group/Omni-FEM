@@ -10,6 +10,83 @@
 //#include <UI/openGLGeometry.h>
 
 
+class geometry2D
+{
+public:
+	
+	geometry2D();
+	
+	void refresh();
+	
+	void setVertexNumber(int number);
+	
+	int getVertexNumber();
+private:
+	int numberOfVertexs;
+	bool isSelected;
+};
+
+
+
+class edgeLineShape : geometry2D
+{
+	
+};
+
+
+
+class rectangleShape : edgeLineShape
+{
+public:
+	rectangleShape();
+	
+	void getArea();
+	void getParameter();
+	
+	double getSideLengthA();
+	double getSideLengthB();
+	
+	void setSideLengthA(double length);
+	void setSideLengthB(double length);
+	
+	void draw();
+private:
+	double sideLengthA;
+	double sideLengthB;
+	
+	
+	
+};
+
+
+
+class node : rectangleShape
+{
+	
+};
+
+
+
+
+class arcShape : geometry2D
+{
+	
+};
+
+
+
+class circleShape : arcShape
+{
+	
+};
+
+
+
+class ellipseShape : circleShape
+{
+	
+};
+
 /*! \class nodePoint
 	\brief This class is used to create a node
 */

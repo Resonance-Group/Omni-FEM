@@ -51,7 +51,8 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 		return;
 	}	
     
-    
+    nodeList.push_back(wxPoint(5, 3));
+	nodeList.push_back(wxPoint(10, 5));
 }
 
 

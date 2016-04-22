@@ -170,6 +170,8 @@ private:
     
 	nodePoint *testPoint;
 	
+	std::vector<wxPoint> nodeList;
+	
 	DECLARE_EVENT_TABLE();
 };
 

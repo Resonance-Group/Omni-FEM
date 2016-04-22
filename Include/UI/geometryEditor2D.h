@@ -58,6 +58,8 @@ private:
 	//! This will store the Y Value of the drawing canvas size
 	int drawingSizeHeight;
 	
+	
+	
 };
 
 
