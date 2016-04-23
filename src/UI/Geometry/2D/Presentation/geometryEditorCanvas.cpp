@@ -122,13 +122,13 @@ void geometryEditorCanvas::drawGrid()
 	
 //	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
 	
-	for(int i = -10; i <= 10; i++)
+	for(int heightLoop = (-10 + cameraY * Ycoeff); heightLoop <= (10 + cameraY * Ycoeff); heightLoop++)
 	{
 		
-		for(int j = -10; j <= 10; j++)
+		for(int widthLoop = (-10 + cameraX * Xcoeff); widthLoop <= (10 + cameraX * Xcoeff); widthLoop++)
 		{
-			int tempYPixel = convertToYPixel((double)j, (double)i);
-			int tempXPixel = convertToXPixel((double)j, (double)i);
+			int tempYPixel = convertToYPixel((double)heightLoop);
+			int tempXPixel = convertToXPixel((double)widthLoop);
 			glBegin(GL_POINTS);
 				glColor3f( 0.f, 0.f, 0.f );
 				glVertex2i(tempXPixel, tempYPixel);
@@ -143,19 +143,19 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
     if(event.GetKeyCode() == LETTER_W || event.GetKeyCode() == LETTER_w)
     {
-        cameraY -= 100.0f;
+        cameraY -= 1.0f;
     }
 	else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
 	{
-		cameraY += 100.0f;
+		cameraY += 1.0f;
 	}	
 	else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
 	{
-		cameraX -= 100.0f;
+		cameraX -= 1.0f;
 	}
 	else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
 	{	
-		cameraX += 100.0f;
+		cameraX += 1.0f;
 	}
     
 	glMatrixMode(GL_MODELVIEW);
@@ -177,8 +177,8 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	
 	// Converts the mouse pointer into a cartesian graph position
-	mouseGraphX = convertToXCoordinate((double)mouseX, (double)mouseY);
-	mouseGraphY = convertToYCoordinate((double)mouseX, (double)mouseY);
+	mouseGraphX = convertToXCoordinate((double)mouseX, cameraX);
+	mouseGraphY = convertToYCoordinate((double)mouseY, cameraY);
     
     stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
 	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
@@ -194,32 +194,51 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 
 
 
-double geometryEditorCanvas::convertToXCoordinate(int xPixel, int yPixel)
+double geometryEditorCanvas::convertToXCoordinate(int xPixel)
 {
-	return (Xcoeff * ((double)xPixel - cameraX) - graphOffset);
+	return (Xcoeff * ((double)xPixel) - graphOffset);
 }
 
 
-
-double geometryEditorCanvas::convertToYCoordinate(int xPixel, int yPixel)
+double geometryEditorCanvas::convertToXCoordinate(int xPixel, int cameraOffset)
 {
-	return (Ycoeff* ((double)yPixel - cameraY) + graphOffset);
+	return (Xcoeff * ((double)xPixel - cameraOffset) - graphOffset);
 }
 
 
-
-int geometryEditorCanvas::convertToXPixel(double XCoor, double YCoor)
+double geometryEditorCanvas::convertToYCoordinate(int yPixel)
 {
-	return (int)((XCoor + graphOffset) / Xcoeff) + cameraX;
+	return (Ycoeff* ((double)yPixel) + graphOffset);
 }
 
 
-int geometryEditorCanvas::convertToYPixel(double XCoor, double YCoor)
+double geometryEditorCanvas::convertToYCoordinate(int yPixel, int cameraOffset)
 {
-	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraY; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
+	return (Ycoeff* ((double)yPixel - cameraOffset) + graphOffset);
 }
 
 
+int geometryEditorCanvas::convertToXPixel(double XCoor)
+{
+	return (int)((XCoor + graphOffset) / Xcoeff);
+}
+
+
+int geometryEditorCanvas::convertToXPixel(double XCoor, int cameraOffset)
+{
+	return (int)((XCoor + graphOffset) / Xcoeff) + cameraOffset;
+}
+
+
+int geometryEditorCanvas::convertToYPixel(double YCoor)
+{
+	return (int)((YCoor - graphOffset) / Ycoeff) + 3; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
+}
+
+int geometryEditorCanvas::convertToYPixel(double YCoor, int cameraOffset)
+{
+	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraOffset; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
+}
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
@@ -230,6 +249,14 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	drawGrid();
 	
 	render();
+	
+	for(int i = 0; i < nodeList.size(); i++)
+	{
+		nodeList[i].draw();
+	}
+	
+	
+	
 	SwapBuffers();// Display the output
 }
 
@@ -242,6 +269,62 @@ void geometryEditorCanvas::onResize(wxSizeEvent &event)
 	this->Refresh();
 }
 
+
+
+void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance)
+{
+	edgeLineShape edgeLine;
+	std::vector<double> firstNode, secondNode, thirdNode;
+	
+	
+	/* This section will make sure that two nodes are not drawn on top of each other */
+	for(int i = 0; i < nodeList.size(); i++)
+	{
+		if(nodeList[i].getDistance(xPoint, yPoint) < d)
+			return;
+	}
+	
+	/* This section will make sure that a node is not drawn ontop of a block label */
+	for(int i = 0; i < blockLabelList.size(); i++)
+	{
+		if(blockLabelList[i].getDistance(xPoint, yPoint) < d)
+			return;
+	}
+	
+	node newNodePoint = new node(xPoint, yPoint);
+	
+	nodeList.push_back(newNodePoint);
+	
+	/* If the node is in between a line, then break the line into 2 lines */
+	for(int i = 0; i < lineList.size(); i++)
+	{
+		if(fabs(-5) < d)
+		{
+			edgeLine = lineList[i];
+			lineList[i].setSecondNodeIndex((int)(nodeList.size() - 1)); // This will set the recently created node to be the second node of the shortend line
+			edgeLine.setFirstNodeIndex((int)(nodeList.size() - 1)); // This will set the recently created node to be the first node of the new line
+			lineList.push_back(edgeLine);// Add the new line to the array
+		}
+	}
+	
+	/* If the node is in between an arc, then break the arc into 2 */
+	for(int i = 0; i < arcList.size(); i++)
+	{
+		if(fabs(-5) < d)
+		{
+			firstNode.push_back(nodeList[arcList[i].getFirstNodeIndex()].getXPoint);
+			firstNode.push_back(nodeList[arcList[i].getFirstNodeIndex()].getYPoint);
+			
+			secondNode.push_back(nodeList[arcList[i].getSecondNodeIndex()].getXPoint);
+			secondNode.push_back(nodeList[arcList[i].getSecondNodeIndex()].getYPoint);
+			
+			thirdNode.push_back(xPoint);
+			thirdNode.push_back(yPoint);
+			
+			
+		}
+	}
+}
 
 
 void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
