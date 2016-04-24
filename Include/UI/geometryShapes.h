@@ -3,10 +3,12 @@
 
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
-#include <UI/common.h>
+//#include <UI/common.h>
 #include <freeglut.h>
 #include <gl.h>
 #include <glu.h>
+#include <math.h>
+
 //#include <UI/openGLGeometry.h>
 
 /*! \class geometry2D
@@ -18,7 +20,7 @@ public:
 	
 	geometry2D();
 	
-	void refresh();
+//	void refresh();
 	
 	//! This will set the number of vertexs for the shape
 	/*	
@@ -33,20 +35,50 @@ public:
 	//! This will get the number of vertices
 	int getVertexNumber();
 	
+	//! Function used to set the X coordiante for the center point of the shape
+	void setCenterXCoordinate(double xCenter);
+	
+	//! Function used to set the Y coordiante for the center point of the shape
+	void setCenterYCoordiante(double yCenter);
+	
+	//! Function used to get the X Coordinate of the center point point of the shape
+	double getCenterXCoordinate();
+	
+	//! Function used to get the Y Coordinate of the center point point of the shape
+	double getCenterYCoordinate();
+	
+	//! Function used to set the group that the shape is assocated with
+	void setGroup(int group);
+	
+	//! Function used to retrieive the group number that the shape is associated with
+	int getGroup();
+	
 	//! the function will be called when the user selects the geomtry shape
 	void toggleSelect();
-private:
+	
+	//! This function will return the selected status
+	bool getIsSelected();
+protected:
 	
 	//! The number of vertices for the geometry shape
 	int numberOfVertices;
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
 	bool isSelected;
+	
+	//! Data type used to store the group number that the shape is associated with
+	int inGroup;
+
+	//! This data type stroes the center x  position
+	double xCenterCoordinate;
+	
+	//! This data type stores the center y position
+	double yCenterCoordinate;
 };
 
 
 
-class edgeLineShape : geometry2D
+class edgeLineShape : public geometry2D
 {
 public:
 	edgeLineShape();
@@ -56,14 +88,16 @@ public:
 	
 	int getFirstNodeIndex();
 	int getSecondNodeIndex();
+	
+	
 private:
 	/*! \brief  A line is composed of 2 nodes.
 	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
 	 *			How do we tell the object which node the line connects to?
 	 *			We differenatiate by using the index of the array.
 	 *			This variables stores the index of first node which connects the line.
-	 */
-	int nodeIndex1
+	 */	
+	int nodeIndex1;
 	
 	/*! \brief  A line is composed of 2 nodes.
 	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
@@ -72,59 +106,84 @@ private:
 	 *			This variables stores the index of second node which connects the line.
 	 */
 	int nodeIndex2;
+	
+
+		
+
 };
 
 
 
-class rectangleShape : edgeLineShape
+class rectangleShape : public geometry2D
 {
 public:
-	rectangleShape();
 	rectangleShape(double xCenterPoint, double yCenterPoint);
 	
-	void getArea();
-	void getParameter();
+//	void getArea();
+//	void getParameter();
 	
-	double getSideLengthA();
-	double getSideLengthB();
+//	double getSideLengthA();
+//	double getSideLengthB();
 	
-	double getXPoint();
-	double getYPoint();
+//	double getXPoint();
+//	double getYPoint();
 	
-	void setSideLengthA(double length);
-	void setSideLengthB(double length);
+//	void setSideLengthA(double length);
+//	void setSideLengthB(double length);
 	
-	void draw();
+	double getDistance(double xp, double yp);
+	
+	//! This is the function that is called in order to draw the rectangle. One thing that is 
+	virtual void draw();
 private:
-	double sideLengthA;
-	double sideLengthB;
-	
-	//! This is the point in x of the center for the node
-	double xPoint;
-	
-	//! This is the point in y of the center for the node
-	double yPoint;
+//	double sideLengthA;
+//	double sideLengthB;
 };
 
 
 
-class node : rectangleShape
+class node : public rectangleShape
 {
 public:
 	node(double xCenter, double yCenter);
 	
-	//! This function will retunr the distance between this object and another
-	double getDistance(double x, double y);
+	//! This function will set the center xPixel value used in drawing the shape 
+	void setCenterXPixel(int xPix);
 	
+	//! This function will set the center yPixel value used in drawing the shape 
+	void setCenterYPixel(int yPix);
+	
+	//! This function will draw the shape
+	void draw();
+	
+private:
+	//! This variable stores the x coordinate for the center in pixels
+	int xPixel;
+
+	//! This variable stores the y coordinate for the center in pixels	
+	int yPixel;
 };
 
 
-class blockLabel : node
+
+class blockLabel : public rectangleShape
 {
+public:
+	blockLabel();
 	
+	
+	
+private:
+	double maxArea;
+	
+	std::string blockType;
+	
+	bool isExternal;
+	
+	bool isDefault;
 };
 
-class arcShape : geometry2D
+class arcShape : public geometry2D
 {
 public:
 	arcShape();
@@ -141,7 +200,7 @@ private:
 	 *			We differenatiate by using the index of the array.
 	 *			This variables stores the index of first node which connects the line.
 	 */
-	int nodeIndex1
+	int nodeIndex1;
 	
 	/*! \brief  An arc is composed of 2 nodes.
 	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
@@ -150,45 +209,37 @@ private:
 	 *			This variables stores the index of second node which connects the line.
 	 */
 	int nodeIndex2;	
+	
+	bool isNormalDirection;
+	
+	bool isHidden;
+	
+	double maxSideLength;
+	
+	double arcLength;
+	
+	std::string boundaryMarker;
+	
+	std::string inConductor;
+	
+	
 };
 
 
 
-class circleShape : arcShape
+class circleShape : public arcShape
 {
 	
 };
 
 
 
-class ellipseShape : circleShape
+class ellipseShape : public circleShape
 {
 	
 };
 
-/*! \class nodePoint
-	\brief This class is used to create a node
-*/
-class nodePoint
-{
-public:
-	//! The constructor will be called in order to draw the node at scoordinate and ycoordinate
-	nodePoint(GLdouble xcoordinate, GLdouble ycoordinate, wxGLCanvas *parent);
-	
-	/************
-	* Variables *
-	*************/
-private:
-	//! The x point for the center
-	GLdouble xPoint;
-	
-	//! The y point for the center
-	GLdouble yPoint;
-	
-	GLdouble pixelXPoint;
-	
-	GLdouble pixelYPoint;
-};
+
 
 
 #endif

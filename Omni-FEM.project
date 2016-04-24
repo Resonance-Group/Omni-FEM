@@ -51,11 +51,13 @@
             <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/openGLFunctions.cpp"/>
-            <File Name="src/UI/Geometry/2D/Presentation/geometryDefinitions.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
             <File Name="src/UI/Geometry/2D/Controller/geometry2D.cpp"/>
+            <File Name="src/UI/Geometry/2D/Controller/archShape.cpp"/>
+            <File Name="src/UI/Geometry/2D/Controller/rectangleShape.cpp"/>
+            <File Name="src/UI/Geometry/2D/Controller/nodePT.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Abstraction">
             <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>
@@ -78,6 +80,7 @@
       <File Name="Include/UI/geometryShapes.h"/>
       <File Name="Include/UI/wxGLString.h"/>
     </VirtualDirectory>
+    <VirtualDirectory Name="common"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

@@ -77,6 +77,8 @@ private:
 	
 	void addNode(double xPoint, double yPoint, double distance);
 	
+	//! This fuinction is to be used on geometry objects to convert their center coordinate value into a center Pixel value. 
+	void convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel);
 	
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
@@ -174,8 +176,6 @@ private:
     wxGLString *debugCoordinate;
     
     wxGLString *debugPixelCoordinate;
-    
-	nodePoint *testPoint;
 	
 	std::vector<node> nodeList;
 	std::vector<blockLabel> blockLabelList;

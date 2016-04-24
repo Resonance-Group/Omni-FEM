@@ -50,66 +50,14 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 	//	wxMessageBox("Error - " + gluErrorString(error));
 		return;
 	}	
-    
-    nodeList.push_back(wxPoint(5, 3));
-	nodeList.push_back(wxPoint(10, 5));
 }
 
 
 void geometryEditorCanvas::render()
 {
-	//Reset to modelview matrix
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-    glPushMatrix();
+
 	
-	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
-	
-    //Red quad
-    glBegin( GL_QUADS );
-        glColor3f( 0.f, 0.f, 0.f );
-        glVertex2f( -canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f,  canvasHeight / 4.f );
-        glVertex2f( -canvasWidth / 4.f,  canvasHeight / 4.f );
-    glEnd();
-
-    //Move to the right of the screen
-    glTranslatef( canvasWidth, 0.f, 0.f );
-
-    //Green quad
-    glBegin( GL_QUADS );
-        glColor3f( 0.f, 1.f, 0.f );
-        glVertex2f( -canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f,  canvasHeight / 4.f );
-        glVertex2f( -canvasWidth / 4.f,  canvasHeight / 4.f );
-    glEnd();
-
-    //Move to the lower right of the screen
-    glTranslatef( 0.f, canvasHeight, 0.f );
-
-    //Blue quad
-    glBegin( GL_QUADS );
-        glColor3f( 0.f, 0.f, 1.f );
-
-        glVertex2f( -canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f,  canvasHeight / 4.f );
-        glVertex2f( -canvasWidth / 4.f,  canvasHeight / 4.f );
-    glEnd();
-
-    //Move below the screen
-    glTranslatef( -canvasWidth, 0.f, 0.f );
-
-    //Yellow quad
-    glBegin( GL_QUADS );
-        glColor3f( 1.f, 1.f, 0.f );
-        glVertex2f( -canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f, -canvasHeight / 4.f );
-        glVertex2f(  canvasWidth / 4.f,  canvasHeight / 4.f );
-        glVertex2f( -canvasWidth / 4.f,  canvasHeight / 4.f );
-    glEnd();
+    
     
 }
 
@@ -240,18 +188,38 @@ int geometryEditorCanvas::convertToYPixel(double YCoor, int cameraOffset)
 	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraOffset; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
 }
 
+
+void geometryEditorCanvas::convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel)
+{
+	xPixel = convertToXPixel(xPoint);
+	
+	yPixel = convertToYPixel(yPoint);
+}
+
+
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 {
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
 	
+		//Reset to modelview matrix
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+    glPushMatrix();
+	
+	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
+	
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	
-	render();
-	
 	for(int i = 0; i < nodeList.size(); i++)
 	{
+		int tempX = 0;
+		int tempY = 0;
+		convertPixelToCoor(nodeList[i].getCenterXCoordinate(), nodeList[i].getCenterYCoordinate(), tempX, tempY);
+		nodeList[i].setCenterXPixel(tempX);
+		nodeList[i].setCenterYPixel(tempY);
+		
 		nodeList[i].draw();
 	}
 	
@@ -273,30 +241,28 @@ void geometryEditorCanvas::onResize(wxSizeEvent &event)
 
 void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance)
 {
-	edgeLineShape edgeLine;
-	std::vector<double> firstNode, secondNode, thirdNode;
+//	edgeLineShape edgeLine;
+//	std::vector<double> firstNode, secondNode, thirdNode;
 	
 	
 	/* This section will make sure that two nodes are not drawn on top of each other */
 	for(int i = 0; i < nodeList.size(); i++)
 	{
-		if(nodeList[i].getDistance(xPoint, yPoint) < d)
+		if(nodeList[i].getDistance(xPoint, yPoint) < 1)
 			return;
 	}
 	
 	/* This section will make sure that a node is not drawn ontop of a block label */
 	for(int i = 0; i < blockLabelList.size(); i++)
 	{
-		if(blockLabelList[i].getDistance(xPoint, yPoint) < d)
+		if(blockLabelList[i].getDistance(xPoint, yPoint) < 1)
 			return;
 	}
 	
-	node newNodePoint = new node(xPoint, yPoint);
-	
-	nodeList.push_back(newNodePoint);
+	nodeList.push_back(*(new node(xPoint, yPoint)));
 	
 	/* If the node is in between a line, then break the line into 2 lines */
-	for(int i = 0; i < lineList.size(); i++)
+/*	for(int i = 0; i < lineList.size(); i++)
 	{
 		if(fabs(-5) < d)
 		{
@@ -305,10 +271,10 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 			edgeLine.setFirstNodeIndex((int)(nodeList.size() - 1)); // This will set the recently created node to be the first node of the new line
 			lineList.push_back(edgeLine);// Add the new line to the array
 		}
-	}
+	} */
 	
 	/* If the node is in between an arc, then break the arc into 2 */
-	for(int i = 0; i < arcList.size(); i++)
+/*	for(int i = 0; i < arcList.size(); i++)
 	{
 		if(fabs(-5) < d)
 		{
@@ -323,7 +289,7 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 			
 			
 		}
-	}
+	}*/
 }
 
 
@@ -371,16 +337,16 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 	wxGLCanvas::SetCurrent(*geometryContext);
 	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	
-
-    
     stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
 	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
 	
-	wxMessageBox(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
+	addNode(mouseGraphX, mouseGraphY, 0);
+	
+//	wxMessageBox(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
 
 //	testPoint = new nodePoint(mouseGraphX, mouseGraphY, this);
 
-//	this->Refresh();
+	this->Refresh();
 }
 
 wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
