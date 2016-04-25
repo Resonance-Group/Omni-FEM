@@ -2,7 +2,9 @@
 
 geometry2D::geometry2D()
 {
+	isSelected = false;
 	
+	groupNumber = 0;
 }
 
 
@@ -59,14 +61,14 @@ double geometry2D::getCenterYCoordinate()
 
 void geometry2D::setGroup(int group)
 {
-	inGroup = group;
+	groupNumber = group;
 }
 
 
 
 int geometry2D::getGroup()
 {
-	return inGroup;
+	return groupNumber;
 }
 
 

@@ -67,7 +67,7 @@ protected:
 	bool isSelected;
 	
 	//! Data type used to store the group number that the shape is associated with
-	int inGroup;
+	int groupNumber;
 
 	//! This data type stroes the center x  position
 	double xCenterCoordinate;
@@ -90,7 +90,7 @@ public:
 	int getSecondNodeIndex();
 	
 	
-private:
+protected:
 	/*! \brief  A line is composed of 2 nodes.
 	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
 	 *			How do we tell the object which node the line connects to?
@@ -153,8 +153,16 @@ public:
 	//! This function will set the center yPixel value used in drawing the shape 
 	void setCenterYPixel(int yPix);
 	
+	int getCenterXPixel();
+	
+	int getCenterYPixel();
+	
 	//! This function will draw the shape
 	void draw();
+	
+	void setNodeIndex(int index);
+	
+	int getNodeIndex();
 	
 private:
 	//! This variable stores the x coordinate for the center in pixels
@@ -162,6 +170,9 @@ private:
 
 	//! This variable stores the y coordinate for the center in pixels	
 	int yPixel;
+	
+	//! The nodes are stored in array. For quickier accesssing, this will store the index which is associated with the node
+	int nodeIndex;
 };
 
 
@@ -183,32 +194,12 @@ private:
 	bool isDefault;
 };
 
-class arcShape : public geometry2D
+class arcShape : public edgeLineShape
 {
 public:
 	arcShape();
 
-	void setFirstNodeIndex(int index);
-	void setSecondNodeIndex(int index);
-	
-	int getFirstNodeIndex();
-	int getSecondNodeIndex();
 private:
-	/*! \brief  An arc is composed of 2 nodes.
-	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
-	 *			How do we tell the object which node the line connects to?
-	 *			We differenatiate by using the index of the array.
-	 *			This variables stores the index of first node which connects the line.
-	 */
-	int nodeIndex1;
-	
-	/*! \brief  An arc is composed of 2 nodes.
-	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
-	 *			How do we tell the object which node the line connects to?
-	 *			We differenatiate by using the index of the array.
-	 *			This variables stores the index of second node which connects the line.
-	 */
-	int nodeIndex2;	
 	
 	bool isNormalDirection;
 	

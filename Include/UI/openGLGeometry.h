@@ -75,7 +75,11 @@ private:
 	int convertToYPixel(double YCoor);
     int convertToYPixel(double YCoor, int cameraOffset);
 	
+	//! This is the function that is called when the user would like to add a new node
 	void addNode(double xPoint, double yPoint, double distance);
+	
+	//! This function is called in order to toggel the block list creation flag
+	void toggleBlockListCreation();
 	
 	//! This fuinction is to be used on geometry objects to convert their center coordinate value into a center Pixel value. 
 	void convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel);
@@ -172,6 +176,19 @@ private:
 	 
     //! These variables contain the screen offset
 	float cameraX = 0.0f, cameraY = 0.0f;
+	
+	//! This variable will store the index of the first selected node.
+	/*!
+	 *	This variable is used to determine which two nodes the user would 
+		like to create an arc or line segment
+	 */
+	int firstSelectedNodeIndex = -1;
+	
+	//! This is a flag which indicates the user would like to create a block label
+	bool blockLabelCreationIsEnabled = false;
+	
+	//! This flag will indicate if the user would like to create an arc or a line
+	bool lineCreationFlag = true;
 	
     wxGLString *debugCoordinate;
     

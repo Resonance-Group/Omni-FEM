@@ -8,8 +8,6 @@ rectangleShape::rectangleShape(double xCenterPoint, double yCenterPoint)
 	
 	isSelected = false;
 	
-	inGroup = 0;
-	
 	numberOfVertices = 4;
 }
 
