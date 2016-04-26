@@ -59,6 +59,7 @@
             <File Name="src/UI/Geometry/2D/Controller/rectangleShape.cpp"/>
             <File Name="src/UI/Geometry/2D/Controller/nodePT.cpp"/>
             <File Name="src/UI/Geometry/2D/Controller/edgeLineShape.cpp"/>
+            <File Name="src/UI/Geometry/2D/Controller/geometryAdd.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Abstraction">
             <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>

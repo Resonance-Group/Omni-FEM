@@ -78,6 +78,8 @@ private:
 	//! This is the function that is called when the user would like to add a new node
 	void addNode(double xPoint, double yPoint, double distance);
 	
+	void addLineSegment(int node0, int node1);
+	
 	//! This function is called in order to toggel the block list creation flag
 	void toggleBlockListCreation();
 	

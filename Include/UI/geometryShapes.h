@@ -89,6 +89,10 @@ public:
 	int getFirstNodeIndex();
 	int getSecondNodeIndex();
 	
+	void setHiddenStatus(bool status);
+	bool getHiddenStatus();
+	
+	void setBoundaryMarker(std::string boundary);
 	
 protected:
 	/*! \brief  A line is composed of 2 nodes.
@@ -107,9 +111,17 @@ protected:
 	 */
 	int nodeIndex2;
 	
-
-		
-
+	//! Status to indicate if the line is hidden
+	bool isHidden;
+	
+	//! The length of the line?
+	double maxSideLength;
+	
+	//! The boundary that the line is associated with
+	std::string boundaryMarker;
+	
+	//! The conductor that the line is associated with
+	std::string inConductor;
 };
 
 
