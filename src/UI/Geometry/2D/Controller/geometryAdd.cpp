@@ -23,7 +23,8 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 	}
 	
 	nodeList.push_back(*(new node(xPoint, yPoint)));
-	nodeList[nodeList.size()].setNodeIndex(nodeList.size());
+    int testSize = nodeList.size();
+	nodeList[testSize - 1].setNodeIndex(testSize - 1);
 	
 	/* If the node is in between a line, then break the line into 2 lines */
 	for(int i = 0; i < lineList.size(); i++)
@@ -57,8 +58,11 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 }
 
 
-void geometryEditorCanvas::addLineSegment(int node0, int node1)
+void geometryEditorCanvas::addLineSegment(int node0, int node1, edgeLineShape *parseSegment)
 {
+    double nodePointX, nodePointY;
+    edgeLineShape *tempLine = new edgeLineShape;
+    
 	if(node0 == node1)
 		return;
 		
@@ -67,4 +71,26 @@ void geometryEditorCanvas::addLineSegment(int node0, int node1)
 		if((lineList[i].getFirstNodeIndex() == node0 && lineList[i].getSecondNodeIndex() == node1) || (lineList[i].getFirstNodeIndex() == node0 && lineList[i].getSecondNodeIndex() == node0))
 			return;
 	}
+    
+    if(parseSegment != NULL)
+        tempLine = parseSegment;
+    
+    tempLine->setFirstNodeIndex(node0);
+    tempLine->setSecondNodeIndex(node1);
+    
+    /* This section will check to see if there are any intersections with other segments. If so, create a node at the intersection */
+    for(int i = 0; i < lineList.size(); i++)
+    {
+   //     if(true)
+   //         addNode(nodePointX, nodePointY, 0);
+    }
+    
+    /* This section will check to see if there are any intersections with arcs. If so, create a node at the intersection */
+    for(int i = 0; i < arcList.size(); i++)
+    {
+        
+    }
+    
+    lineList.push_back(*tempLine);
+    
 }

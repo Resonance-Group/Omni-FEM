@@ -93,6 +93,12 @@ public:
 	bool getHiddenStatus();
 	
 	void setBoundaryMarker(std::string boundary);
+    std::string getBoundaryMarker();
+    
+    void setConductor(std::string conductor);
+    std::string getConductor();
+    
+    virtual void draw(int node1X, int node1Y, int node2X, int node2Y);
 	
 protected:
 	/*! \brief  A line is composed of 2 nodes.
