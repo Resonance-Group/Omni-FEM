@@ -70,6 +70,7 @@
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
       <File Name="src/common/wxGLString.cpp"/>
+      <File Name="src/common/FEMVector.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -82,7 +83,9 @@
       <File Name="Include/UI/geometryShapes.h"/>
       <File Name="Include/UI/wxGLString.h"/>
     </VirtualDirectory>
-    <VirtualDirectory Name="common"/>
+    <VirtualDirectory Name="common">
+      <File Name="Include/common/FEMVector.h"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>
