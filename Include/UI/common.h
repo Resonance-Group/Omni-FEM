@@ -57,6 +57,8 @@
 #define LETTER_y 0x79
 #define LETTER_z 0x7A
 
+#define DEL_KEY 0x7F
+
 //! Enum for the menus of the menu bar
 enum menubarID
 {

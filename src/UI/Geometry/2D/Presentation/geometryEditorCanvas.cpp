@@ -89,30 +89,60 @@ void geometryEditorCanvas::drawGrid()
 
 void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
-    if(event.GetKeyCode() == LETTER_W || event.GetKeyCode() == LETTER_w)
-    {
-        cameraY -= 10.0f;
-    }
-	else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
+	std::vector<int> deletednodes;
+	
+	if(event.GetKeyCode() != DEL_KEY)
 	{
-		cameraY += 10.0f;
-	}	
-	else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
-	{
-		cameraX -= 10.0f;
-	}
-	else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
-	{	
-		cameraX += 10.0f;
-	}
+		if(event.GetKeyCode() == LETTER_W || event.GetKeyCode() == LETTER_w)
+		{
+			cameraY -= 10.0f;
+		}
+		else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
+		{
+			cameraY += 10.0f;
+		}	
+		else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
+		{
+			cameraX -= 10.0f;
+		}
+		else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
+		{	
+			cameraX += 10.0f;
+		}
     
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		glLoadIdentity();
+		
+		glTranslatef(cameraX, cameraY, 0.0f);
+		glPushMatrix();
 	
-	glTranslatef(cameraX, cameraY, 0.0f);
-	glPushMatrix();
-	
+	}
+	else
+	{
+		if(nodeList.size() == 1)
+		{
+			nodeList.clear();
+		}
+		else
+		{
+			for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
+			{
+				if(nodeIterator->getIsSelected())
+				{
+					nodeList.erase(nodeIterator);
+					nodeIterator = nodeList.begin();
+				}
+			}
+			
+			if(nodeList.size() == 1 && nodeList[0].getIsSelected() == true)
+			{
+				nodeList.clear();
+			}
+				
+		}
+	}
+
     this->Refresh();// This will force the canvas to experience a redraw event
 }
 
@@ -212,28 +242,28 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	
-    if(nodeList.size() > 0)
-    {
-        for(int i = 0; i < nodeList.size(); i++)
-        {
-            int tempX = 0;
-            int tempY = 0;
-            convertPixelToCoor(nodeList[i].getCenterXCoordinate(), nodeList[i].getCenterYCoordinate(), tempX, tempY);
-            nodeList[i].setCenterXPixel(tempX);
-            nodeList[i].setCenterYPixel(tempY);
+	if(nodeList.size() > 0)
+	{
+		for(int i = 0; i < nodeList.size(); i++)
+		{
+			int tempX = 0;
+			int tempY = 0;
+			convertPixelToCoor(nodeList[i].getCenterXCoordinate(), nodeList[i].getCenterYCoordinate(), tempX, tempY);
+			nodeList[i].setCenterXPixel(tempX);
+			nodeList[i].setCenterYPixel(tempY);
 		
-            nodeList[i].draw();
-        }
-    }
+			nodeList[i].draw();
+		}
+	}
 	
-    if(nodeList.size() > 0)
-    {
-        for(int i = 0; i < lineList.size(); i++)
-        {
-            lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
-        }
-    }
-    
+	if(nodeList.size() > 0)
+	{
+		for(int i = 0; i < lineList.size(); i++)
+		{
+			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
+		}
+	}
+	
 	SwapBuffers();// Display the output
 }
 
@@ -320,7 +350,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
     /* This section will be for node handling */
 	for(int i = 0; i < nodeList.size(); i++)
 	{
-		if(((mouseX >= nodeList[i].getCenterXPixel() - 5) && (mouseX <= nodeList[i].getCenterXPixel() + 5) && (mouseY <= nodeList[i].getCenterYPixel() + 5) && (mouseY >=nodeList[i].getCenterYPixel() - 5)) && nodeSelected == false)
+		if((((mouseX - cameraX) >= nodeList[i].getCenterXPixel() - 5) && ((mouseX - cameraX) <= nodeList[i].getCenterXPixel() + 5) && ((mouseY - cameraY) <= nodeList[i].getCenterYPixel() + 5) && ((mouseY - cameraY) >=nodeList[i].getCenterYPixel() - 5)) && nodeSelected == false)
 		{
 			if(blockLabelCreationIsEnabled)
 				return;
@@ -378,8 +408,6 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 				if(lineCreationFlag)
 				{
 					addLineSegment(firstSelectedNodeIndex, nodeList[i].getNodeIndex(), NULL);
-                 //   this->Refresh();
-                 //   return;
 				}
 				else
 				{
@@ -391,8 +419,9 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 				this->Refresh();
 				return;
 			}
-		}
+		}			
 	}
+	
 	addNode(mouseGraphX, mouseGraphY, 0);
 	this->Refresh();
 }
