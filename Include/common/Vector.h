@@ -26,71 +26,69 @@
 class Vector
 {
 	public:
-		
-		
-
 		// member functions
-		Vector(double x, double y);
+		explicit Vector(double x, double y);
+		explicit Vector();
 		
 		//! This function is used to find the square root of a number.
 		/*!
 			Note that the base class does not have this function defined.
 			The definition will be in the child classes
 		*/
-		virtual Vector sqrt();
+		virtual Vector Sqrt();
 		virtual Vector Inv();
 		void Set(double x, double y);
 		virtual double Abs();
 		double Arg();
-		double getXComponent();
-		double getYComponent();
+		 double getXComponent();
+		 double getYComponent();
 		char* ToString(char *s);
 		char* ToStringAlt(char *s);
 		
 	//operator redefinition
 		//Addition
-		Vector operator+( const Vector& z );
+		Vector operator+( Vector &z);
 		Vector operator+(double z);
 		Vector operator+(int z);
-		friend Vector operator+( int x,  const Vector& y );
-		friend Vector operator+( double x,  const Vector& y );
-		friend Vector operator+( const Vector& x,  const Vector& y );
-		void operator+=( const Vector& z);
+		friend Vector operator+(int x,  Vector &y);
+		friend Vector operator+(double x,  Vector &y);
+		friend Vector operator+(Vector &x,  Vector &y);
+		void operator+=( Vector &z);
 		void operator+=(double z);
 		void operator+=(int z);
 
 		//Subtraction
 		Vector operator-();
-		Vector operator-( const Vector& z );
+		Vector operator-(  Vector& z );
 		Vector operator-(double z);
 		Vector operator-(int z);
-		friend Vector operator-( int x,  const Vector& y );
-		friend Vector operator-( double x,  const Vector& y );
-		friend Vector operator-( const Vector& x,  const Vector& y );
-		friend Vector operator-( const Vector& x );
-		void operator-=( const Vector& z);
+		friend Vector operator-( int x,   Vector& y );
+		friend Vector operator-( double x,   Vector& y );
+		friend Vector operator-(  Vector& x,   Vector& y );
+		friend Vector operator-(  Vector& x );
+		void operator-=(  Vector& z);
 		void operator-=(double z);
 		void operator-=(int z);
 
 		//Multiplication
-		Vector operator*( const Vector& z );
+		Vector operator*( Vector &z);
 		Vector operator*(double z);
 		Vector operator*(int z);
-		friend Vector operator*( int x,  const Vector& y );
-		friend Vector operator*( double x,  const Vector& y );
-		friend Vector operator*( const Vector& x,  const Vector& y );
-		void operator*=( const Vector& z);
+		friend Vector operator*( int x,   Vector& y );
+		friend Vector operator*( double x,   Vector& y );
+		friend Vector operator*(Vector &x, Vector &y);
+		void operator*=(  Vector& z);
 		void operator*=(double z);
 		void operator*=(int z);
 
 		//Division
-		Vector operator/( const Vector& z );
+		Vector operator/(  Vector& z );
 		Vector operator/(double z);
 		Vector operator/(int z);
-		friend Vector operator/( int x,  const Vector& y );
-		friend Vector operator/( double x,  const Vector& y );
-		friend Vector operator/( const Vector &x,  const Vector& y );
-		void operator/=( const Vector& z);
+		friend Vector operator/( int x,   Vector& y );
+		friend Vector operator/( double x,   Vector& y );
+		friend Vector operator/(  Vector &x,   Vector& y );
+		void operator/=(Vector &z);
 		void operator/=(double z);
 		void operator/=(int z);
 
@@ -99,32 +97,32 @@ class Vector
 		void operator=(int z);
 
 		//Tests
-		bool operator==( const Vector& z);
+		bool operator==(Vector& z);
 		bool operator==(double z);
 		bool operator==(int z);
 		
-		bool operator!=( const Vector& z);
+		bool operator!=(Vector& z);
 		bool operator!=(double z);
 		bool operator!=(int z);
 
-		bool operator<( const Vector& z);
-		bool operator<( double z);
-		bool operator<( int z);
+		bool operator<(Vector &z);
+		bool operator<(double z);
+		bool operator<(int z);
 
-		bool operator<=( const Vector& z);
-		bool operator<=( double z);
-		bool operator<=( int z);
+		bool operator<=(Vector &z);
+		bool operator<=(double z);
+		bool operator<=(int z);
 
-		bool operator>( const Vector& z);
-		bool operator>( double z);
-		bool operator>( int z);
+		bool operator>(Vector &z);
+		bool operator>(double z);
+		bool operator>(int z);
 
-		bool operator>=( const Vector& z);
-		bool operator>=( double z);
-		bool operator>=( int z);
+		bool operator>=(Vector &z);
+		bool operator>=(double z);
+		bool operator>=(int z);
 
 
-private:
+protected:
 
 		//! For the Vector, this is the x coordinate.
 		/*!
@@ -160,8 +158,9 @@ private:
 class ComplexNumber : public Vector
 {
 public:
-	//! The constructor
+	//! The ructor
 	ComplexNumber(double realComponent, double imaginaryComponent);
+	ComplexNumber();
 	
 	//! This function will calculate and return the conjugate of the Complex number
 	ComplexNumber getConjugate();
@@ -173,7 +172,7 @@ public:
 	double getImaginaryComponent();
 	
 	//! This function will calculate the square root of the complex number and return it
-	Vector sqrt();
+	Vector Sqrt();
 	
 	//! This function will compute and return the inverse of the complex number
 	ComplexNumber getInverse();
@@ -189,31 +188,29 @@ private:
 
 
 // useful functions...
-
-double Re( const Vector& a);
-double Im( const Vector& a);
-double abs( const Vector& x );
-double absq( const Vector& x );
-double arg( const Vector& x );
-Vector conj( const Vector& x);
-Vector exp( const Vector& x );
-Vector sqrt( const Vector& x );
-Vector tanh( const Vector& x );
-Vector sinh( const Vector& x );
-Vector cosh( const Vector& x );
-Vector cos( const Vector& x );
-Vector acos( const Vector& x );
-Vector sin( const Vector& x );
-Vector asin( const Vector& x );
-Vector tan( const Vector& x );
-Vector atan( const Vector& x );
-Vector atan2( const Vector& y, const Vector &x);
-Vector log( const Vector& x );
-Vector pow( const Vector& x, int y);
-Vector pow( const Vector& x, double y);
-Vector pow( const Vector& x,  const Vector &y);
-Vector Chop( const Vector& a, double tol = 1.e-12);
-
+/*
+double abs(  Vector& x );
+double absq(  Vector& x );
+double arg(  Vector& x );
+Vector conj(  Vector& x);
+Vector exp(  Vector& x );
+Vector sqrt(  Vector& x );
+Vector tanh(  Vector& x );
+Vector sinh(  Vector& x );
+Vector cosh(  Vector& x );
+Vector cos(  Vector& x );
+Vector acos(  Vector& x );
+Vector sin(  Vector& x );
+Vector asin(  Vector& x );
+Vector tan(  Vector& x );
+Vector atan(  Vector& x );
+Vector atan2(  Vector& y,  Vector &x);
+Vector log(  Vector& x );
+Vector pow(  Vector& x, int y);
+Vector pow(  Vector& x, double y);
+Vector pow(  Vector& x,   Vector &y);
+Vector Chop(  Vector& a, double tol = 1.e-12);
+*/
 
 
 

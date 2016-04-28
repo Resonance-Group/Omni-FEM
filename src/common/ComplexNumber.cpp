@@ -1,10 +1,15 @@
-#include "common/FEMVector.h"
+#include "common/Vector.h"
 
-ComplexNumber(double realComponent, double imaginaryComponent) : Vector(realComponent, imaginaryComponent)
+ComplexNumber::ComplexNumber(double realComponent, double imaginaryComponent) : Vector(realComponent, imaginaryComponent)
 {
 	
 }
 
+
+ComplexNumber::ComplexNumber() : Vector()
+{
+	
+}
 
 
 ComplexNumber ComplexNumber::getConjugate()
@@ -27,12 +32,12 @@ double ComplexNumber::getImaginaryComponent()
 
 
 
-Vector ComplexNumber::sqrt()
+Vector ComplexNumber::Sqrt()
 {
 	double w, z;
-	ComplexNumber y;
+	ComplexNumber *y = new ComplexNumber(0.0d, 0.0d);
 
-	if ((re == 0) && (im == 0))
+	if ((xComponent == 0) && (yComponent == 0))
 		w = 0;
 	else if (fabs(xComponent) > fabs(yComponent))
 	{
@@ -47,33 +52,25 @@ Vector ComplexNumber::sqrt()
 
 	if (w == 0)
 	{
-		y.setComplexNumber(0.0d, 0.0d);
-		return y;
+		y->setComplexNumber(0.0d, 0.0d);
+		return *y;
 	}
 
-	if (re >= 0)
+	if (xComponent >= 0)
 	{
-		y.setComplexNumber(w, yComponent / (2.0d * w));
-		return y;
+		y->setComplexNumber(w, yComponent / (2.0d * w));
+		return *y;
 	}
 
-	if (im >= 0)
+	if (yComponent >= 0)
 	{
-		y.setComplexNumber(fabs(yComponent) / (2.0d * w), w);
-		return y;
+		y->setComplexNumber(fabs(yComponent) / (2.0d * w), w);
+		return *y;
 	}
 	
-	y.setComplexNumber(fabs(yComponent) / (2.0d * w), -w);
-	return y;
+	y->setComplexNumber(fabs(yComponent) / (2.0d * w), -w);
+	return *y;
 }
-
-
-
-ComplexNumber ComplexNumber::getInverse()
-{
-	
-}
-
 
 
 void ComplexNumber::setComplexNumber(double realComponent, double imaginaryComponent)
@@ -85,7 +82,7 @@ void ComplexNumber::setComplexNumber(double realComponent, double imaginaryCompo
 
 
 
-double ComplexNumber::Abs()
+double Vector::Abs()
 {
 	if ((xComponent == 0) && (yComponent == 0))
 		return 0.;
@@ -98,22 +95,20 @@ double ComplexNumber::Abs()
 
 
 
-Vector ComplexNumber::Inv()
+ComplexNumber ComplexNumber::getInverse()
 {
 	double c;
-	Vector z;
+	ComplexNumber z;
 
 	if (fabs(xComponent) > fabs(yComponent))
 	{
 		c = yComponent / xComponent;
-		z.xComponent = 1.0d / (xComponent * (1.0d + c * c));
-		z.yComponent = (-c) * z.xComponent;
+		z.Set(1.0d / (xComponent * (1.0d + c * c)), (-c) * z.getXComponent());
 	}
 	else 
 	{
-		c = xComponent / yComponent;
-		z.yComponent = (-1.0d) / (yComponent*(1.0d + c * c));
-		z.xComponent = (-c) * z.yComponent;
+		c = getXComponent() / yComponent;
+		z.Set((-1.0d) / (yComponent*(1.0d + c * c)), (-c) * z.yComponent);
 	}
 
 	return z;
