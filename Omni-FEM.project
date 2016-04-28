@@ -71,6 +71,7 @@
       <File Name="src/common/ProblemDefinition.cpp"/>
       <File Name="src/common/wxGLString.cpp"/>
       <File Name="src/common/FEMVector.cpp"/>
+      <File Name="src/common/ComplexNumber.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">

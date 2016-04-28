@@ -1,546 +1,465 @@
-#include "common/FEMVector.h"
+#include "common/Vector.h"
 
-FEMVector::FEMVector(double x)
+Vector::Vector(double x, double y)
 {
-	re = x;
-	im = 0.;
+	xComponent = x;
+	yComponent = y;
 }
 
-FEMVector::FEMVector(int x)
+Vector Vector::sqrt()
 {
-	re = (double)x;
-	im = 0.;
+
 }
 
-FEMVector::FEMVector()
+
+
+double Vector::Abs()
 {
-	re = 0.;
-	im = 0.;
+	
 }
 
-FEMVector::FEMVector(double x, double y)
+/* Calculates the angle between the real and yComponentagnary part */
+double Vector::Arg()
 {
-	re = x;
-	im = y;
-}
-
-FEMVector FEMVector::Sqrt()
-{
-	double w, z;
-	FEMVector y;
-
-	if ((re == 0) && (im == 0))
-		w = 0;
-	else if (fabs(re) > fabs(im))
-	{
-		z = im / re;
-		w = sqrt(fabs(re))*sqrt((1. + sqrt(1. + z*z)) / 2.);
-	}
-	else
-	{
-		z = re / im;
-		w = sqrt(fabs(im))*sqrt((fabs(z) + sqrt(1. + z*z)) / 2.);
-	}
-
-	if (w == 0)
-	{
-		y.re = 0;
-		y.im = 0;
-		return y;
-	}
-
-	if (re >= 0)
-	{
-		y.re = w;
-		y.im = im / (2.*w);
-		return y;
-	}
-
-	if (im >= 0)
-	{
-		y.re = fabs(im) / (2.*w);
-		y.im = w;
-		return y;
-	}
-
-	y.re = fabs(im) / (2.*w);
-	y.im = (-w);
-	return y;
-}
-
-FEMVector FEMVector::Conj()
-{
-	return FEMVector(re, -im);
-}
-
-double FEMVector::Abs()
-{
-	if ((re == 0) && (im == 0))
+	if ((xComponent == 0) && (yComponent == 0))
 		return 0.;
 
-	if (fabs(re) > fabs(im))
-		return fabs(re)*sqrt(1. + (im / re)*(im / re));
+	return atan2(yComponent, xComponent);
+}
+
+Vector Vector::Inv()
+{
+	
+}
+
+double Vector::getXComponent()
+{
+	return xComponent;
+}
+
+double Vector::getYComponent()
+{
+	return yComponent;
+}
+
+void Vector::Set(double x, double y)
+{
+	xComponent = x; 
+	yComponent = y;
+}
+
+char* Vector::ToString(char *s)
+{
+	if (yComponent < 0)
+		sprintf(s, "%.3e - j %.3e", xComponent, fabs(yComponent));
 	else
-		return fabs(im)*sqrt(1. + (re / im)*(re / im));
-}
-
-/* Calculates the angle between the real and imagnary part */
-double FEMVector::Arg()
-{
-	if ((re == 0) && (im == 0))
-		return 0.;
-
-	return atan2(im, re);
-}
-
-FEMVector FEMVector::Inv()
-{
-	double c;
-	FEMVector z;
-
-	if (fabs(re) > fabs(im))
-	{
-		c = im / re;
-		z.re = 1. / (re*(1. + c*c));
-		z.im = (-c)*z.re;
-	}
-	else 
-	{
-		c = re / im;
-		z.im = (-1.) / (im*(1. + c*c));
-		z.re = (-c)*z.im;
-	}
-
-	return z;
-}
-
-double FEMVector::Re()
-{
-	return re;
-}
-
-double FEMVector::Im()
-{
-	return im;
-}
-
-void FEMVector::Set(double x, double y)
-{
-	re = x; 
-	im = y;
-}
-
-char* FEMVector::ToString(char *s)
-{
-	if (im < 0)
-		sprintf(s, "%.3e - j %.3e", re, fabs(im));
-	else
-		sprintf(s, "%.3e + j %.3e", re, im);
+		sprintf(s, "%.3e + j %.3e", xComponent, yComponent);
 	return s;
 }
 
 //******* Addition ***************************************************
 
-FEMVector FEMVector::operator+(const FEMVector& z)
+Vector Vector::operator+(const Vector &z)
 {
-	return FEMVector(re + z.re, im + z.im);
+	return Vector(xComponent + z.getXComponent(), yComponent + z.getYComponent());
 };
 
-FEMVector FEMVector::operator+(int z)
+Vector Vector::operator+(int z)
 {
-	return FEMVector(re + ((double)z), im);
+	return Vector(xComponent + ((double)z), yComponent);
 };
 
-FEMVector FEMVector::operator+(double z)
+Vector Vector::operator+(double z)
 {
-	return FEMVector(re + z, im);
+	return Vector(xComponent + z, yComponent);
 };
 
-void FEMVector::operator+=(const FEMVector& z)
+void Vector::operator+=(const Vector &z)
 {
-	re += z.re;
-	im += z.im;
+	xComponent += z.getXComponent();
+	yComponent += z.getYComponent();
 };
 
-void FEMVector::operator+=(double z)
+void Vector::operator+=(double z)
 {
-	re += z;
+	xComponent += z;
 };
 
-void FEMVector::operator+=(int z)
+void Vector::operator+=(int z)
 {
-	re += (double)z;
+	xComponent += (double)z;
 };
 
-FEMVector operator+(int x, const FEMVector& y)
+Vector operator+(int x, const Vector &y)
 {
-	return FEMVector(((double)x) + y.re, y.im);
+	return Vector(((double)x) + y.getXComponent(), y.getYComponent());
 }
 
-FEMVector operator+(double x, const FEMVector& y)
+Vector operator+(double x, const Vector &y)
 {
-	return FEMVector(x + y.re, y.im);
+	return Vector(x + y.xComponent, y.getYComponent());
 }
 
-FEMVector operator+(const FEMVector& x, const FEMVector& y)
+Vector operator+(const Vector &x, const Vector &y)
 {
-	return FEMVector(x.re + y.re, x.im + y.im);
+	return Vector(x.xComponent + y.xComponent, x.getYComponent() + y.getYComponent());
 }
 
 
 //******* Subtraction ***************************************************
-FEMVector FEMVector::operator-()
+Vector Vector::operator-()
 {
-	return FEMVector(-re, -im);
+	return Vector(-xComponent, -yComponent);
 }
 
-FEMVector FEMVector::operator-(const FEMVector& z)
+Vector Vector::operator-(const Vector &z)
 {
-	return FEMVector(re - z.re, im - z.im);
+	return Vector(xComponent - z.xComponent, yComponent - z.getYComponent());
 };
 
-FEMVector FEMVector::operator-(int z)
+Vector Vector::operator-(int z)
 {
-	return FEMVector(re - ((double)z), im);
+	return Vector(xComponent - ((double)z), yComponent);
 };
 
-FEMVector FEMVector::operator-(double z)
+Vector Vector::operator-(double z)
 {
-	return FEMVector(re - z, im);
+	return Vector(xComponent - z, yComponent);
 };
 
-void FEMVector::operator-=(const FEMVector& z)
+void Vector::operator-=(const Vector &z)
 {
-	re -= z.re;
-	im -= z.im;
+
+	xComponent -= z.getXComponent();
+	yComponent -= z.getYComponent();
 };
 
-void FEMVector::operator-=(double z)
+void Vector::operator-=(double z)
 {
 	re -= z;
 };
 
-void FEMVector::operator-=(int z)
+void Vector::operator-=(int z)
 {
 	re -= (double)z;
 };
 
-FEMVector operator-(int x, const FEMVector& y)
+Vector operator-(int x, const Vector &y)
 {
-	return FEMVector(((double)x) - y.re, -y.im);
+	return Vector(((double)x) - y.re, -y.getYComponent());
 }
 
-FEMVector operator-(double x, const FEMVector& y)
+Vector operator-(double x, const Vector &y)
 {
-	return FEMVector(x - y.re, -y.im);
+	return Vector(x - y.re, -y.getYComponent());
 }
 
-FEMVector operator-(const FEMVector& x, const FEMVector& y)
+Vector operator-(const Vector &x, const Vector &y)
 {
-	return FEMVector(x.re - y.re, x.im - y.im);
+	return Vector(x.re - y.re, x.getYComponent() - y.getYComponent());
 }
 
-FEMVector operator-(const FEMVector& y)
+Vector operator-(const Vector &y)
 {
-	return FEMVector(-y.re, -y.im);
+	return Vector(-y.re, -y.getYComponent());
 }
 //******* Multiplication ***************************************************
 
-FEMVector FEMVector::operator*(const FEMVector& z)
+Vector Vector::operator*(const Vector &z)
 {
-	return FEMVector(re*z.re - im*z.im, re*z.im + im*z.re);
+	return Vector(re * z.re - yComponent * z.getYComponent(), re * z.getYComponent() + yComponent * z.re);
 };
 
-FEMVector FEMVector::operator*(int z)
+Vector Vector::operator*(int z)
 {
-	return FEMVector(re*((double)z), im*((double)z));
+	return Vector(re * ((double)z), yComponent * ((double)z));
 };
 
-FEMVector FEMVector::operator*(double z)
+Vector Vector::operator*(double z)
 {
-	return FEMVector(re*z, im*z);
+	return Vector(re * z, yComponent * z);
 };
 
-void FEMVector::operator*=(const FEMVector& z)
+void Vector::operator*=(const Vector &z)
 {
-	FEMVector x(re*z.re - im*z.im, re*z.im + im*z.re);
-	re = x.re; im = x.im;
+	Vector x(re * z.re - yComponent * z.getYComponent(), re * z.getYComponent() + yComponent * z.re);
+	re = x.re; yComponent = x.getYComponent();
 };
 
-void FEMVector::operator*=(double z)
+void Vector::operator*=(double z)
 {
-	re *= z; im *= z;
+	re *= z; yComponent *= z;
 };
 
-void FEMVector::operator*=(int z)
+void Vector::operator*=(int z)
 {
 	re *= (double)z;
-	im *= (double)z;
+	yComponent *= (double)z;
 };
 
-FEMVector operator*(int x, const FEMVector& y)
+Vector operator*(int x, const Vector &y)
 {
-	return FEMVector(((double)x) * y.re, ((double)x)*y.im);
+	return Vector(((double)x) * y.re, ((double)x) * y.getYComponent());
 }
 
-FEMVector operator*(double x, const FEMVector& y)
+Vector operator*(double x, const Vector &y)
 {
-	return FEMVector(x*y.re, x*y.im);
+	return Vector(x * y.re, x * y.getYComponent());
 }
 
-FEMVector operator*(const FEMVector& x, const FEMVector& y)
+Vector operator*(const Vector &x, const Vector &y)
 {
-	return FEMVector(x.re*y.re - x.im*y.im, x.re*y.im + x.im*y.re);
+	return Vector(x.re * y.re - x.getYComponent() * y.yComponent, x.re * y.getYComponent() + x.getYComponent() * y.re);
 }
 
 //******* Division ***************************************************
 
-FEMVector FEMVector::operator/(const FEMVector& z)
+Vector Vector::operator/(const Vector &z)
 {
 	double c;
-	FEMVector y;
+	Vector y;
 
-	if (fabs(z.re) > fabs(z.im))
+	if (fabs(z.re) > fabs(z.getYComponent()))
 	{
-		c = z.im / z.re;
-		y.re = 1. / (z.re*(1. + c*c));
-		y.im = (-c)*y.re;
+		c = z.getYComponent() / z.re;
+		y.re = 1. / (z.re * (1. + c * c));
+		y.getYComponent() = (-c) * y.re;
 	}
 	else
 	{
-		c = z.re / z.im;
-		y.im = (-1.) / (z.im*(1. + c*c));
-		y.re = (-c)*y.im;
+		c = z.re / z.getYComponent();
+		y.getYComponent() = (-1.) / (z.getYComponent() * (1. + c * c));
+		y.re = (-c) * y.getYComponent();
 	}
 
 	return *this * y;
 };
 
 
-FEMVector FEMVector::operator/(int z)
+Vector Vector::operator/(int z)
 {
-	return FEMVector(re / ((double)z), im / ((double)z));
+	return Vector(re / ((double)z), yComponent / ((double)z));
 };
 
-FEMVector FEMVector::operator/(double z)
+Vector Vector::operator/(double z)
 {
-	return FEMVector(re / z, im / z);
+	return Vector(re / z, yComponent / z);
 };
 
-void FEMVector::operator/=(const FEMVector& z)
+void Vector::operator/=(const Vector &z)
 {
 	*this = *this / z;
 };
 
-void FEMVector::operator/=(double z)
+void Vector::operator/=(double z)
 {
 	re /= z;
-	im /= z;
+	yComponent /= z;
 };
 
-void FEMVector::operator/=(int z)
+void Vector::operator/=(int z)
 {
 	re /= (double)z;
-	im /= (double)z;
+	yComponent /= (double)z;
 };
 
-FEMVector operator/(int x, const FEMVector& z)
+Vector operator/(int x, const Vector& z)
 {
 	double c;
-	FEMVector y;
+	Vector y;
 
-	if (fabs(z.re) > fabs(z.im))
+	if (fabs(z.re) > fabs(z.getYComponent()))
 	{
-		c = z.im / z.re;
-		y.re = 1. / (z.re*(1. + c*c));
-		y.im = (-c)*y.re;
+		c = z.getYComponent() / z.re;
+		y.re = 1. / (z.re * (1. + c * c));
+		y.getYComponent() = (-c) * y.re;
 	}
 	else
 	{
-		c = z.re / z.im;
-		y.im = (-1.) / (z.im*(1. + c*c));
-		y.re = (-c)*y.im;
+		c = z.re / z.getYComponent();
+		y.getYComponent() = (-1.) / (z.getYComponent() * (1. + c * c));
+		y.re = (-c) * y.getYComponent();
 	}
 
 	y.re *= (double)x;
-	y.im *= (double)x;
+	y.yComponent *= (double)x;
 
 	return y;
 }
 
-FEMVector operator/(double x, const FEMVector& z)
+Vector operator/(double x, const Vector& z)
 {
 	double c;
-	FEMVector y;
+	Vector y;
 
-	if (fabs(z.re) > fabs(z.im))
+	if (fabs(z.re) > fabs(z.getYComponent()))
 	{
-		c = z.im / z.re;
-		y.re = 1. / (z.re*(1. + c*c));
-		y.im = (-c)*y.re;
+		c = z.getYComponent() / z.re;
+		y.re = 1. / (z.re * (1. + c * c));
+		y.getYComponent() = (-c) * y.re;
 	}
 	else
 	{
-		c = z.re / z.im;
-		y.im = (-1.) / (z.im*(1. + c*c));
-		y.re = (-c)*y.im;
+		c = z.re / z.getYComponent();
+		y.getYComponent() = (-1.) / (z.getYComponent() * (1. + c * c));
+		y.re = (-c) * y.getYComponent();
 	}
 
 	y.re *= x;
-	y.im *= x;
+	y.getYComponent() *= x;
 
 	return y;
 }
 
-FEMVector operator/(const FEMVector& x, const FEMVector& z)
+Vector operator/(const Vector &x, const Vector &z)
 {
 	double c;
-	FEMVector y;
+	Vector y;
 
-	if (fabs(z.re) > fabs(z.im))
+	if (fabs(z.re) > fabs(z.getYComponent()))
 	{
-		c = z.im / z.re;
-		y.re = 1. / (z.re*(1. + c*c));
-		y.im = (-c)*y.re;
+		c = z.getYComponent() / z.re;
+		y.re = 1. / (z.re * (1. + c * c));
+		y.getYComponent() = (-c) * y.re;
 	}
 	else
 	{
-		c = z.re / z.im;
-		y.im = (-1.) / (z.im*(1. + c*c));
-		y.re = (-c)*y.im;
+		c = z.re / z.getYComponent();
+		y.getYComponent() = (-1.) / (z.getYComponent() * (1. + c*c));
+		y.re = (-c) * y.getYComponent();
 	}
 
-	return x*y;
+	return (x * y);
 }
 
 //****** Equals definitions ********************************
 
-void FEMVector::operator=(double z)
+void Vector::operator=(double z)
 {
 	re = z;
-	im = 0;
+	yComponent = 0;
 }
 
-void FEMVector::operator=(int z)
+void Vector::operator=(int z)
 {
 	re = (double)z;
-	im = 0;
+	yComponent = 0;
 }
 
 //***** Tests ***********************************************
-bool FEMVector::operator==(const FEMVector& z) 
+bool Vector::operator==(const Vector& z) 
 {
-	if ((z.im == im) && (z.re == re))
-		return TRUE;
+	if ((z.getYComponent() == yComponent) && (z.re == re))
+		return true;
 
-	return FALSE;
+	return false;
 }
 
-bool FEMVector::operator==(double z)
+bool Vector::operator==(double z)
 {
-	if ((z == re) && (im == 0))
-		return TRUE;
+	if ((z == re) && (yComponent == 0))
+		return true;
 
-	return FALSE;
+	return false;
 }
 
-bool FEMVector::operator==(int z)
+bool Vector::operator==(int z)
 {
-	if ((re == (double)z) && (im == 0))
-		return TRUE;
+	if ((re == (double)z) && (yComponent == 0))
+		return true;
 
-	return FALSE;
+	return false;
 }
 
-bool FEMVector::operator!=(const FEMVector& z)
+bool Vector::operator!=(const Vector& z)
 {
-	if ((z.re == re) && (z.im == im))
-		return FALSE;
+	if ((z.re == re) && (z.getYComponent() == yComponent))
+		return false;
 
-	return TRUE;
+	return true;
 }
 
-bool FEMVector::operator!=(double z)
+bool Vector::operator!=(double z)
 {
-	if ((re != z) || (im != 0))
-		return TRUE;
+	if ((re != z) || (yComponent != 0))
+		return true;
 
-	return FALSE;
+	return false;
 }
 
-bool FEMVector::operator!=(int z) {
-	if ((re != (double)z) || (im != 0)) 
-		return TRUE;
+bool Vector::operator!=(int z) {
+	if ((re != (double)z) || (yComponent != 0)) 
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 //***** Useful functions ************************************
 
-FEMVector conj(const FEMVector& x)
+Vector conj(const Vector &x)
 {
-	return FEMVector(x.re, -x.im);
+	return Vector(x.re, -x.getYComponent());
 }
 
-FEMVector exp(const FEMVector& x)
+Vector exp(const Vector &x)
 {
-	FEMVector y;
+	Vector y;
 
-	y.re = cos(x.im)*exp(x.re);
-	y.im = sin(x.im)*exp(x.re);
+	y.re = cos(x.getYComponent()) * exp(x.re);
+	y.getYComponent() = sin(x.getYComponent()) * exp(x.re);
 
 	return y;
 }
 
-FEMVector sqrt(const FEMVector& x)
+Vector sqrt(const Vector &x)
 {
 	double w, z;
-	FEMVector y;
+	Vector y;
 
-	if ((x.re == 0) && (x.im == 0))
+	if ((x.re == 0) && (x.getYComponent() == 0))
 		w = 0;
 
-	else if (fabs(x.re) > fabs(x.im))
+	else if (fabs(x.re) > fabs(x.getYComponent()))
 	{
-		z = x.im / x.re;
-		w = sqrt(fabs(x.re))*sqrt((1. + sqrt(1. + z*z)) / 2.);
+		z = x.getYComponent() / x.re;
+		w = sqrt(fabs(x.re)) * sqrt((1. + sqrt(1. + z * z)) / 2.);
 	}
 	else
 	{
-		z = x.re / x.im;
-		w = sqrt(fabs(x.im))*sqrt((fabs(z) + sqrt(1. + z*z)) / 2.);
+		z = x.re / x.getYComponent();
+		w = sqrt(fabs(x.getYComponent())) * sqrt((fabs(z) + sqrt(1. + z * z)) / 2.);
 	}
 
 	if (w == 0)
 	{
 		y.re = 0;
-		y.im = 0;
+		y.getYComponent() = 0;
 		return y;
 	}
 
 	if (x.re >= 0)
 	{
 		y.re = w;
-		y.im = x.im / (2.*w);
+		y.getYComponent() = x.getYComponent() / (2. * w);
 		return y;
 	}
 
-	if (x.im >= 0)
+	if (x.getYComponent() >= 0)
 	{
-		y.re = fabs(x.im) / (2.*w);
-		y.im = w;
+		y.re = fabs(x.getYComponent()) / (2. * w);
+		y.getYComponent() = w;
 		return y;
 	}
 
-	y.re = fabs(x.im) / (2.*w);
-	y.im = (-w);
+	y.re = fabs(x.getYComponent()) / (2. * w);
+	y.getYComponent() = (-w);
 
 	return y;
 }
 
-FEMVector tanh(const FEMVector& x)
+Vector tanh(const Vector& x)
 {
-	FEMVector y;
+	Vector y;
 
 	if (x.re > 0)
 	{
@@ -554,88 +473,88 @@ FEMVector tanh(const FEMVector& x)
 	return y;
 }
 
-FEMVector sinh(const FEMVector& x)
+Vector sinh(const Vector& x)
 {
 	return (exp(x) - exp(-x)) / 2;
 }
 
-FEMVector cosh(const FEMVector& x)
+Vector cosh(const Vector& x)
 {
 	return (exp(x) + exp(-x)) / 2;
 }
 
 
-FEMVector cos(const FEMVector& x)
+Vector cos(const Vector& x)
 {
 	return (exp(I*x) + exp(-I*x)) / 2;
 }
 
-FEMVector acos(const FEMVector& x)
+Vector acos(const Vector& x)
 {
 	return PI / 2. - arg(I*x + sqrt(1 - x*x)) + I*log(abs(I*x + sqrt(1 - x*x)));
 }
 
-FEMVector sin(const FEMVector& x)
+Vector sin(const Vector& x)
 {
 	return (exp(I*x) - exp(-I*x)) / (2 * I);
 }
 
-FEMVector asin(const FEMVector& x)
+Vector asin(const Vector& x)
 {
 	return arg(I*x + sqrt(1 - x*x)) - I*log(abs(I*x + sqrt(1 - x*x)));
 }
 
-FEMVector tan(const FEMVector& x)
+Vector tan(const Vector& x)
 {
 	return sin(x) / cos(x);
 }
 
-FEMVector atan(const FEMVector& x)
+Vector atan(const Vector& x)
 {
 	return (arg(1 + I*x) - arg(1 - I*x) - I*(log(abs(1 + I*x) / abs(1 - I*x)))) / 2;
 }
 
-double abs(const FEMVector& x)
+double abs(const Vector& x)
 {
-	if ((x.re == 0) && (x.im == 0))
+	if ((x.re == 0) && (x.yComponent == 0))
 		return 0.;
 
-	if (fabs(x.re) > fabs(x.im))
-		return fabs(x.re)*sqrt(1. + (x.im / x.re)*(x.im / x.re));
+	if (fabs(x.re) > fabs(x.yComponent))
+		return fabs(x.re)*sqrt(1. + (x.yComponent / x.re)*(x.yComponent / x.re));
 	else
-		return fabs(x.im)*sqrt(1. + (x.re / x.im)*(x.re / x.im));
+		return fabs(x.yComponent)*sqrt(1. + (x.re / x.yComponent)*(x.re / x.yComponent));
 }
 
-double arg(const FEMVector& x)
+double arg(const Vector& x)
 {
-	if ((x.re == 0) && (x.im == 0))
+	if ((x.re == 0) && (x.yComponent == 0))
 		return 0.;
 
-	return atan2(x.im, x.re);
+	return atan2(x.yComponent, x.re);
 }
 
-FEMVector log(const FEMVector& x)
+Vector log(const Vector& x)
 {
-	FEMVector y;
+	Vector y;
 
-	y.im = arg(x);
+	y.yComponent = arg(x);
 	y.re = log(abs(x));
 
 	return y;
 }
 
-FEMVector pow(const FEMVector& x, double y)
+Vector pow(const Vector& x, double y)
 {
 	return exp(y * log(x));
 }
 
-FEMVector pow(const FEMVector& x, int y)
+Vector pow(const Vector& x, int y)
 {
 	if (y == 0)
-		return FEMVector(1, 0);
+		return Vector(1, 0);
 
 	int i;
-	FEMVector z;
+	Vector z;
 
 	if (y > 0)
 	{
@@ -646,7 +565,7 @@ FEMVector pow(const FEMVector& x, int y)
 	else
 	{
 		z = 1 / x;
-		FEMVector w = z;
+		Vector w = z;
 		for (i = 1; i < (-y); i++) 
 			z *= w;
 	}
@@ -654,18 +573,18 @@ FEMVector pow(const FEMVector& x, int y)
 	return z;
 }
 
-FEMVector pow(const FEMVector& x, const FEMVector& y)
+Vector pow(const Vector& x, const Vector& y)
 {
 	return exp(y * log(x));
 }
 
-double Re(const FEMVector& a)
+double Re(const Vector& a)
 {
 	return a.re;
 }
 
-double Im(const FEMVector& a)
+double yComponent(const Vector& a)
 {
-	return a.im;
+	return a.yComponent;
 }
 
