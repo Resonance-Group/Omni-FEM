@@ -132,6 +132,10 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 				{
 					nodeList.erase(nodeIterator);
 					nodeIterator = nodeList.begin();
+					if(firstSelectedNodeIndex != -1 && (nodeIterator->getCenterXPixel() == nodeList[firstSelectedNodeIndex].getCenterXPixel()) && (nodeIterator->getCenterYPixel() == nodeList[firstSelectedNodeIndex].getCenterYPixel()))
+					{
+						firstSelectedNodeIndex = -1;
+					}
 				}
 			}
 			
