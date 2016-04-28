@@ -82,7 +82,7 @@ void ComplexNumber::setComplexNumber(double realComponent, double imaginaryCompo
 
 
 
-double Vector::Abs()
+double ComplexNumber::Abs()
 {
 	if ((xComponent == 0) && (yComponent == 0))
 		return 0.;

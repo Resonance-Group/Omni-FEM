@@ -22,8 +22,9 @@ Vector Vector::Sqrt()
 
 double Vector::Abs()
 {
-	
+	return 0.0d;
 }
+
 
 /* Calculates the angle between the real and yComponentagnary part */
 double Vector::Arg()
@@ -39,12 +40,12 @@ Vector Vector::Inv()
 	
 }
 
- double Vector::getXComponent()
+double Vector::getXComponent() const
 {
 	return xComponent;
 }
 
- double Vector::getYComponent()
+double Vector::getYComponent() const
 {
 	return yComponent;
 }
@@ -66,7 +67,7 @@ char* Vector::ToString(char *s)
 
 //******* Addition ***************************************************
 
-Vector Vector::operator+(Vector &z)
+Vector Vector::operator+(const Vector &z)
 {
 	Vector *tempVect = new Vector(xComponent + z.getXComponent(), yComponent + z.getYComponent());
 	return *tempVect;
@@ -82,7 +83,7 @@ Vector Vector::operator+(double z)
 	return Vector(xComponent + z, yComponent);
 };
 
-void Vector::operator+=(Vector &z)
+void Vector::operator+=(const Vector &z)
 {
 	xComponent += z.getXComponent();
 	yComponent += z.getYComponent();
@@ -98,17 +99,17 @@ void Vector::operator+=(int z)
 	xComponent += (double)z;
 };
 
-Vector operator+(int x,  Vector &y)
+Vector operator+(int x, const Vector &y)
 {
 	return Vector(((double)x) + y.getXComponent(), y.getYComponent());
 }
 
-Vector operator+(double x,  Vector &y)
+Vector operator+(double x, const Vector &y)
 {
 	return Vector(x + y.xComponent, y.getYComponent());
 }
 
-Vector operator+( Vector &x,  Vector &y)
+Vector operator+(const Vector &x, const Vector &y)
 {
 	return Vector(x.getXComponent() + y.getXComponent(), x.getYComponent() + y.getYComponent());
 }
@@ -120,7 +121,7 @@ Vector Vector::operator-()
 	return Vector(-xComponent, -yComponent);
 }
 
-Vector Vector::operator-( Vector &z)
+Vector Vector::operator-(const Vector &z)
 {
 	return Vector(xComponent - z.getXComponent(), yComponent - z.getYComponent());
 };
@@ -135,7 +136,7 @@ Vector Vector::operator-(double z)
 	return Vector(xComponent - z, yComponent);
 };
 
-void Vector::operator-=( Vector &z)
+void Vector::operator-=(const Vector &z)
 {
 
 	xComponent -= z.getXComponent();
@@ -152,28 +153,28 @@ void Vector::operator-=(int z)
 	xComponent -= (double)z;
 };
 
-Vector operator-(int x,  Vector &y)
+Vector operator-(int x, const Vector &y)
 {
 	return Vector(((double)x) - y.getXComponent(), -y.getYComponent());
 }
 
-Vector operator-(double x,  Vector &y)
+Vector operator-(double x, const Vector &y)
 {
 	return Vector(x - y.getXComponent(), -y.getYComponent());
 }
 
-Vector operator-( Vector &x,  Vector &y)
+Vector operator-(const Vector &x, const Vector &y)
 {
 	return Vector(x.getXComponent() - y.getXComponent(), x.getYComponent() - y.getYComponent());
 }
 
-Vector operator-( Vector &y)
+Vector operator-(const Vector &y)
 {
 	return Vector(-y.getXComponent(), -y.getYComponent());
 }
 //******* Multiplication ***************************************************
 
-Vector Vector::operator*( Vector &z)
+Vector Vector::operator*(const Vector &z)
 {
 	return Vector(xComponent * z.getXComponent() - yComponent * z.getYComponent(), xComponent * z.getYComponent() + yComponent * z.getXComponent());
 };
@@ -188,7 +189,7 @@ Vector Vector::operator*(double z)
 	return Vector(xComponent * z, yComponent * z);
 };
 
-void Vector::operator*=( Vector &z)
+void Vector::operator*=(const Vector &z)
 {
 	Vector x(xComponent * z.getXComponent() - yComponent * z.getYComponent(), xComponent * z.getYComponent() + yComponent * z.getXComponent());
 	xComponent = x.getXComponent(); yComponent = x.getYComponent();
@@ -206,17 +207,17 @@ void Vector::operator*=(int z)
 	yComponent *= (double)z;
 };
 
-Vector operator*(int x,  Vector &y)
+Vector operator*(int x, const Vector &y)
 {
 	return Vector(((double)x) * y.getXComponent(), ((double)x) * y.getYComponent());
 }
 
-Vector operator*(double x,  Vector &y)
+Vector operator*(double x, const Vector &y)
 {
 	return Vector(x * y.getXComponent(), x * y.getYComponent());
 }
 
-Vector operator*(Vector &x, Vector &y)
+Vector operator*(const Vector &x, const Vector &y)
 {
 	Vector *tempVector = new Vector(x.getXComponent() * y.getXComponent() - x.getYComponent() * y.getYComponent(), x.getXComponent()* y.getYComponent() + x.getYComponent() * y.getXComponent());
 	return (*tempVector);
@@ -224,7 +225,7 @@ Vector operator*(Vector &x, Vector &y)
 
 //******* Division ***************************************************
 
-Vector Vector::operator/(Vector &z)
+Vector Vector::operator/(const Vector &z)
 {
 	double c;
 	Vector y;
@@ -255,7 +256,7 @@ Vector Vector::operator/(double z)
 	return Vector(xComponent / z, yComponent / z);
 };
 
-void  Vector::operator/=(Vector &z)
+void  Vector::operator/=(const Vector &z)
 {
 	*this = this->operator/(z);
 //	*this = *this / z;
@@ -273,7 +274,7 @@ void Vector::operator/=(int z)
 	yComponent /= (double)z;
 };
 
-Vector operator/(int x,  Vector &z)
+Vector operator/(int x, const Vector &z)
 { 
 	double c;
 	Vector y;
@@ -293,7 +294,7 @@ Vector operator/(int x,  Vector &z)
 	return y;
 }
 
-Vector operator/(double x,  Vector &z)
+Vector operator/(double x, const Vector &z)
 {
 	double c;
 	Vector y;
@@ -312,7 +313,7 @@ Vector operator/(double x,  Vector &z)
 	return y;
 }
 
-Vector operator/( Vector &x,  Vector &z)
+Vector operator/(const Vector &x, const Vector &z)
 {
 	double c;
 	Vector y;
@@ -346,7 +347,7 @@ void Vector::operator=(int z)
 }
 
 //***** Tests ***********************************************
-bool Vector::operator==( Vector& z) 
+bool Vector::operator==(const Vector& z) 
 {
 	if ((z.getYComponent() == yComponent) && (z.getXComponent() == xComponent))
 		return true;
@@ -370,7 +371,7 @@ bool Vector::operator==(int z)
 	return false;
 }
 
-bool Vector::operator!=( Vector &z)
+bool Vector::operator!=(const Vector &z)
 {
 	if ((z.getXComponent() == xComponent) && (z.getYComponent() == yComponent))
 		return false;

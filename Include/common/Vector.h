@@ -40,55 +40,55 @@ class Vector
 		void Set(double x, double y);
 		virtual double Abs();
 		double Arg();
-		 double getXComponent();
-		 double getYComponent();
+		double getXComponent() const;
+		double getYComponent() const;
 		char* ToString(char *s);
 		char* ToStringAlt(char *s);
 		
 	//operator redefinition
 		//Addition
-		Vector operator+( Vector &z);
+		Vector operator+(const Vector &z);
 		Vector operator+(double z);
 		Vector operator+(int z);
-		friend Vector operator+(int x,  Vector &y);
-		friend Vector operator+(double x,  Vector &y);
-		friend Vector operator+(Vector &x,  Vector &y);
-		void operator+=( Vector &z);
+		friend Vector operator+(int x, const Vector &y);
+		friend Vector operator+(double x, const Vector &y);
+		friend Vector operator+(const Vector &x, const Vector &y);
+		void operator+=(const Vector &z);
 		void operator+=(double z);
 		void operator+=(int z);
 
 		//Subtraction
 		Vector operator-();
-		Vector operator-(  Vector& z );
+		Vector operator-(const Vector &z);
 		Vector operator-(double z);
 		Vector operator-(int z);
-		friend Vector operator-( int x,   Vector& y );
-		friend Vector operator-( double x,   Vector& y );
-		friend Vector operator-(  Vector& x,   Vector& y );
-		friend Vector operator-(  Vector& x );
-		void operator-=(  Vector& z);
+		friend Vector operator-(int x, const Vector &y);
+		friend Vector operator-(double x, const Vector &y);
+		friend Vector operator-(const Vector &x, const Vector &y);
+		friend Vector operator-(const Vector &x );
+		void operator-=(const Vector& z);
 		void operator-=(double z);
 		void operator-=(int z);
 
 		//Multiplication
-		Vector operator*( Vector &z);
+		Vector operator*(const Vector &z);
 		Vector operator*(double z);
 		Vector operator*(int z);
-		friend Vector operator*( int x,   Vector& y );
-		friend Vector operator*( double x,   Vector& y );
-		friend Vector operator*(Vector &x, Vector &y);
-		void operator*=(  Vector& z);
+		friend Vector operator*(int x, const Vector &y);
+		friend Vector operator*(double x, const Vector &y);
+		friend Vector operator*(const Vector &x, const Vector &y);
+		void operator*=(const Vector &z);
 		void operator*=(double z);
 		void operator*=(int z);
 
 		//Division
-		Vector operator/(  Vector& z );
+		Vector operator/(const Vector &z);
 		Vector operator/(double z);
 		Vector operator/(int z);
-		friend Vector operator/( int x,   Vector& y );
-		friend Vector operator/( double x,   Vector& y );
-		friend Vector operator/(  Vector &x,   Vector& y );
-		void operator/=(Vector &z);
+		friend Vector operator/(int x, const Vector &y);
+		friend Vector operator/(double x, const Vector &y);
+		friend Vector operator/(const Vector &x, const Vector &y);
+		void operator/=(const Vector &z);
 		void operator/=(double z);
 		void operator/=(int z);
 
@@ -97,27 +97,27 @@ class Vector
 		void operator=(int z);
 
 		//Tests
-		bool operator==(Vector& z);
+		bool operator==(const Vector &z);
 		bool operator==(double z);
 		bool operator==(int z);
 		
-		bool operator!=(Vector& z);
+		bool operator!=(const Vector &z);
 		bool operator!=(double z);
 		bool operator!=(int z);
 
-		bool operator<(Vector &z);
+		bool operator<(const Vector &z);
 		bool operator<(double z);
 		bool operator<(int z);
 
-		bool operator<=(Vector &z);
+		bool operator<=(const Vector &z);
 		bool operator<=(double z);
 		bool operator<=(int z);
 
-		bool operator>(Vector &z);
+		bool operator>(const Vector &z);
 		bool operator>(double z);
 		bool operator>(int z);
 
-		bool operator>=(Vector &z);
+		bool operator>=(const Vector &z);
 		bool operator>=(double z);
 		bool operator>=(int z);
 
@@ -180,13 +180,14 @@ public:
 	//! This function is called in order to set the real and imaginary components of the complex number
 	void setComplexNumber(double realComponent, double imaginaryComponent);
 	
-	
+	double Abs();
 	
 private:
 	
 };
 
 
+//TODO: These functions need to be integrated into the base class
 // useful functions...
 /*
 double abs(  Vector& x );
