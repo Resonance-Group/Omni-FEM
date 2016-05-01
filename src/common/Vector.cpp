@@ -22,7 +22,10 @@ Vector Vector::Sqrt()
 
 double Vector::Abs()
 {
-	return 0.0d;
+	if(xComponent == 0.0d && yComponent == 0.0d)
+		return 0;
+	else
+		return sqrt(pow(xComponent, 2) + pow(yComponent, 2));
 }
 
 
@@ -101,44 +104,50 @@ void Vector::operator+=(int z)
 
 Vector operator+(int x, const Vector &y)
 {
-	return Vector(((double)x) + y.getXComponent(), y.getYComponent());
+	Vector *tempVect = new Vector(((double)x) + y.getXComponent(), y.getYComponent());
+	return *tempVect;
 }
 
 Vector operator+(double x, const Vector &y)
 {
-	return Vector(x + y.xComponent, y.getYComponent());
+	Vector *tempVect = new Vector(x + y.xComponent, y.getYComponent());
+	return *tempVect;
 }
 
 Vector operator+(const Vector &x, const Vector &y)
 {
-	return Vector(x.getXComponent() + y.getXComponent(), x.getYComponent() + y.getYComponent());
+	Vector *tempVect = new Vector(x.getXComponent() + y.getXComponent(), x.getYComponent() + y.getYComponent());
+	return *tempVect;
 }
 
 
 //******* Subtraction ***************************************************
 Vector Vector::operator-()
 {
-	return Vector(-xComponent, -yComponent);
+	Vector *tempVect = new Vector(-xComponent, -yComponent);
+	return *tempVect;
 }
 
 Vector Vector::operator-(const Vector &z)
 {
-	return Vector(xComponent - z.getXComponent(), yComponent - z.getYComponent());
+	Vector *tempVect = new Vector(xComponent - z.getXComponent(), yComponent - z.getYComponent());
+	return *tempVect;
 };
 
 Vector Vector::operator-(int z)
 {
-	return Vector(xComponent - ((double)z), yComponent);
+	Vector *tempVect = new Vector(xComponent - ((double)z), yComponent);
+	return *tempVect;
 };
 
 Vector Vector::operator-(double z)
 {
-	return Vector(xComponent - z, yComponent);
+	Vector *tempVect = new Vector(xComponent - z, yComponent);
+	return *tempVect;
 };
 
 void Vector::operator-=(const Vector &z)
 {
-
 	xComponent -= z.getXComponent();
 	yComponent -= z.getYComponent();
 };
@@ -155,44 +164,52 @@ void Vector::operator-=(int z)
 
 Vector operator-(int x, const Vector &y)
 {
-	return Vector(((double)x) - y.getXComponent(), -y.getYComponent());
+	Vector *tempVect = new Vector(((double)x) - y.getXComponent(), -y.getYComponent());
+	return *tempVect;
 }
 
 Vector operator-(double x, const Vector &y)
 {
-	return Vector(x - y.getXComponent(), -y.getYComponent());
+	Vector *tempVect = new Vector(x - y.getXComponent(), -y.getYComponent());
+	return *tempVect;
 }
 
 Vector operator-(const Vector &x, const Vector &y)
 {
-	return Vector(x.getXComponent() - y.getXComponent(), x.getYComponent() - y.getYComponent());
+	Vector *tempVect = new Vector(x.getXComponent() - y.getXComponent(), x.getYComponent() - y.getYComponent());
+	return *tempVect;
 }
 
 Vector operator-(const Vector &y)
 {
-	return Vector(-y.getXComponent(), -y.getYComponent());
+	Vector *tempVect = new Vector(-y.getXComponent(), -y.getYComponent());
+	return *tempVect;
 }
 //******* Multiplication ***************************************************
 
 Vector Vector::operator*(const Vector &z)
 {
-	return Vector(xComponent * z.getXComponent() - yComponent * z.getYComponent(), xComponent * z.getYComponent() + yComponent * z.getXComponent());
+	Vector *tempVect = new Vector(xComponent * z.getXComponent() - yComponent * z.getYComponent(), xComponent * z.getYComponent() + yComponent * z.getXComponent());
+	return *tempVect;
 };
 
 Vector Vector::operator*(int z)
 {
-	return Vector(xComponent * ((double)z), yComponent * ((double)z));
+	Vector *tempVect = new Vector(xComponent * ((double)z), yComponent * ((double)z));
+	return *tempVect;
 };
 
 Vector Vector::operator*(double z)
 {
-	return Vector(xComponent * z, yComponent * z);
+	Vector *tempVect = new Vector(xComponent * z, yComponent * z);
+	return *tempVect;
 };
 
 void Vector::operator*=(const Vector &z)
 {
-	Vector x(xComponent * z.getXComponent() - yComponent * z.getYComponent(), xComponent * z.getYComponent() + yComponent * z.getXComponent());
-	xComponent = x.getXComponent(); yComponent = x.getYComponent();
+	Vector *tempVect = new Vector(xComponent * z.getXComponent() - yComponent * z.getYComponent(), xComponent * z.getYComponent() + yComponent * z.getXComponent());
+	xComponent = tempVect->getXComponent(); 
+	yComponent = tempVect->getYComponent();
 };
 
 void Vector::operator*=(double z)
@@ -209,12 +226,14 @@ void Vector::operator*=(int z)
 
 Vector operator*(int x, const Vector &y)
 {
-	return Vector(((double)x) * y.getXComponent(), ((double)x) * y.getYComponent());
+	Vector *tempVect = new Vector(((double)x) * y.getXComponent(), ((double)x) * y.getYComponent());
+	return Vector();
 }
 
 Vector operator*(double x, const Vector &y)
 {
-	return Vector(x * y.getXComponent(), x * y.getYComponent());
+	Vector *tempVect = new Vector(x * y.getXComponent(), x * y.getYComponent());
+	return *tempVect;
 }
 
 Vector operator*(const Vector &x, const Vector &y)
@@ -229,31 +248,39 @@ Vector Vector::operator/(const Vector &z)
 {
 	double c;
 	Vector y;
+	double tempXComponent, tempYComponent;
 
 	if (fabs(z.getXComponent()) > fabs(z.getYComponent()))
 	{
 		c = z.getYComponent() / z.getXComponent();
-		y.Set(1. / (z.getXComponent() * (1. + c * c)), (-c) * y.getXComponent());
+		tempXComponent = 1.0 / (z.getXComponent() * (1.0 + pow(c, 2)));
+		tempYComponent = (-c) * tempXComponent;
+		y.Set(tempXComponent, tempYComponent);
 	}
 	else
 	{
 		c = z.getXComponent() / z.getYComponent();
-		y.Set((-1.) / (z.getYComponent() * (1. + c * c)), (-c) * y.getYComponent());
+		tempYComponent = (-1.0) / (z.getYComponent() * (1.0 + pow(c, 2)));
+		tempXComponent = (-c) * tempYComponent;
+		y.Set(tempXComponent, tempYComponent);
 	}
-	Vector test1 = *this;
+//	Vector test1 = *this;
 	
-	return test1.operator *(y);
+	return *this * y;
+	
 };
 
 
 Vector Vector::operator/(int z)
 {
-	return Vector(xComponent / ((double)z), yComponent / ((double)z));
+	Vector *tempVect = new Vector(xComponent / ((double)z), yComponent / ((double)z));
+	return *tempVect;
 };
 
 Vector Vector::operator/(double z)
 {
-	return Vector(xComponent / z, yComponent / z);
+	Vector *tempVect = new Vector(xComponent / z, yComponent / z);
+	return *tempVect;
 };
 
 void  Vector::operator/=(const Vector &z)
@@ -317,16 +344,25 @@ Vector operator/(const Vector &x, const Vector &z)
 {
 	double c;
 	Vector y;
+	double tempXComponent, tempYComponent;
 
 	if (fabs(z.getXComponent()) > fabs(z.getYComponent()))
 	{
 		c = z.getYComponent() / z.getXComponent();
-		y.Set(1. / (z.getXComponent() * (1. + c * c)), (-c) * y.getXComponent());
+		
+		tempXComponent = 1.0 / (z.getXComponent() * (1.0 * pow(c, 2)));
+		tempYComponent = (-c) * tempXComponent;
+		
+		y.Set(tempXComponent, tempYComponent);
 	}
 	else
 	{
 		c = z.getXComponent() / z.getYComponent();
-		y.Set((-1.) / (z.getYComponent() * (1. + c*c)), (-c) * y.getYComponent());
+		
+		tempYComponent = (-1.0) / (z.getYComponent() * (1 + pow(c, 2)));
+		tempXComponent = (-c) * tempYComponent;
+		
+		y.Set(tempXComponent, tempYComponent);
 	}
 
 	return x * y;

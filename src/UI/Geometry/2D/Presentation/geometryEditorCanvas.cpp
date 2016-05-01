@@ -90,6 +90,13 @@ void geometryEditorCanvas::drawGrid()
 void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
 	std::vector<int> deletednodes;
+	Vector test1, test2, test3;
+	
+	test1.Set(5, 2);
+	test2.Set(3, 1);
+	
+	test3 = test1 + test2;
+	
 	
 	if(event.GetKeyCode() != DEL_KEY)
 	{
@@ -411,6 +418,14 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 			{
 				if(lineCreationFlag)
 				{
+					
+					double tempXCoor, tempYCoor;
+					for(int k = 0; k < lineList.size(); k++)
+					{
+						if(getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor) == true)
+							addNode(tempXCoor, tempYCoor, 0);
+					}
+					
 					addLineSegment(firstSelectedNodeIndex, nodeList[i].getNodeIndex(), NULL);
 				}
 				else

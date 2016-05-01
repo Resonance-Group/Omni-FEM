@@ -12,6 +12,8 @@
 #include <iostream>
 #include <iomanip>
 #include <UI/wxGLString.h>
+#include <common/Vector.h>
+#include <math.h>
 
 
 
@@ -78,7 +80,11 @@ private:
 	//! This is the function that is called when the user would like to add a new node
 	void addNode(double xPoint, double yPoint, double distance);
 	
+	//! This function will be called in order to create a line between 2 nodes
 	void addLineSegment(int node0, int node1, edgeLineShape *parseSegment);
+	
+	//! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
+	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
 	
 	//! This function is called in order to toggel the block list creation flag
 	void toggleBlockListCreation();

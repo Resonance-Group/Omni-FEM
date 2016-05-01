@@ -94,3 +94,49 @@ void geometryEditorCanvas::addLineSegment(int node0, int node1, edgeLineShape *p
     lineList.push_back(*tempLine);
     
 }
+
+
+
+
+bool geometryEditorCanvas::getIntersection(int node0, int node1, int lineSegmentIndex, double &intercetionXPoint, double &intercestionYPoint)
+{
+	Vector p0, p1, q0, q1;
+	double error, x, z;
+	Vector test1, test2, test3, test4, test5, test6;
+	
+	// If the end point already exists, do not create it
+	if(node0 == lineList[lineSegmentIndex].getFirstNodeIndex() || node0 == lineList[lineSegmentIndex].getSecondNodeIndex() || node1 == lineList[lineSegmentIndex].getFirstNodeIndex() || node1 == lineList[lineSegmentIndex].getSecondNodeIndex())
+	{
+		return false;
+	}
+	
+	p0.Set(nodeList[lineList[lineSegmentIndex].getFirstNodeIndex()].getCenterXCoordinate(), nodeList[lineList[lineSegmentIndex].getFirstNodeIndex()].getCenterYCoordinate());
+	
+	p1.Set(nodeList[lineList[lineSegmentIndex].getSecondNodeIndex()].getCenterXCoordinate(), nodeList[lineList[lineSegmentIndex].getSecondNodeIndex()].getCenterYCoordinate());
+	
+	q0.Set(nodeList[node0].getCenterXCoordinate(), nodeList[node0].getCenterYCoordinate());
+	
+	q1.Set(nodeList[node1].getCenterXCoordinate(), nodeList[node1].getCenterYCoordinate());
+	
+	error = std::min((p1 - p0).Abs(), (q1 - q0).Abs()) * 1.0e-8;
+	
+	q0 = (q0 - p0) / (p1 - p0);
+	q1 = (q1 - p0) / (p1 - p0);
+	
+	if((q0.getXComponent() <= 0 && q1.getXComponent() <= 0) || (q0.getXComponent() >= 1 && q1.getXComponent() >= 1) || (q0.getYComponent() <= 0 && q1.getYComponent() <= 0) || (q0.getYComponent() >= 0 && q1.getYComponent() >= 0))
+		return false;
+		
+	z = q0.getYComponent() / (q0 - q1).getYComponent();
+	
+	x = ((1.0 - z) * q0 + z * q1).getXComponent();
+	
+	if(x < error || (x > (1.0 - error)))
+		return false;
+		
+	p0.Set((1.0 - z) * nodeList[node0].getCenterXCoordinate() + z * nodeList[node0].getCenterXCoordinate(), (1.0 - z) * nodeList[node0].getCenterYCoordinate() + z * nodeList[node0].getCenterYCoordinate());
+
+	intercetionXPoint = p0.getXComponent();
+	intercestionYPoint = p0.getYComponent();
+	
+	return true;
+}
