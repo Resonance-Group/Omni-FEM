@@ -6,12 +6,21 @@ node::node(double xCenter, double yCenter) : rectangleShape(xCenter, yCenter)
 	yPixel = 0;
 }
 
+node::node()
+{
+    
+}
+
 void node::setCenterYPixel(int yPix)
 {
 	yPixel = yPix;
 }
 
-
+void node::setCenter(double xCoor, double yCoor)
+{
+    xCenterCoordinate = xCoor;
+    yCenterCoordinate = yCoor;
+}
 
 void node::setCenterXPixel(int xPix)
 {

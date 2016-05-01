@@ -252,18 +252,20 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
-	
+	int nodeListSize = nodeList.size();
+    
 	if(nodeList.size() > 0)
 	{
-		for(int i = 0; i < nodeList.size(); i++)
+		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
 		{
 			int tempX = 0;
 			int tempY = 0;
-			convertPixelToCoor(nodeList[i].getCenterXCoordinate(), nodeList[i].getCenterYCoordinate(), tempX, tempY);
-			nodeList[i].setCenterXPixel(tempX);
-			nodeList[i].setCenterYPixel(tempY);
+			convertPixelToCoor(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), tempX, tempY);
+
+			nodeIterator->setCenterXPixel(tempX);
+			nodeIterator->setCenterYPixel(tempY);
 		
-			nodeList[i].draw();
+			nodeIterator->draw();
 		}
 	}
 	
@@ -422,7 +424,9 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					double tempXCoor, tempYCoor;
 					for(int k = 0; k < lineList.size(); k++)
 					{
-						if(getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor) == true)
+                        bool test1;
+                        test1 = getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor);
+						if(test1 == true)
 							addNode(tempXCoor, tempYCoor, 0);
 					}
 					

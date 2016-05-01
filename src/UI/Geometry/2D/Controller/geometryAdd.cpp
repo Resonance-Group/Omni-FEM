@@ -6,12 +6,13 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 	edgeLineShape *edgeLine;
 	edgeLine = new edgeLineShape();
 //	std::vector<double> firstNode, secondNode, thirdNode;
-	
-	
+	int nodeListSize = nodeList.size();
+	node newNode;
+    
 	/* This section will make sure that two nodes are not drawn on top of each other */
-	for(int i = 0; i < nodeList.size(); i++)
+	for(int i = 0; i < nodeListSize; i++)
 	{
-		if(nodeList[i].getDistance(xPoint, yPoint) < 0.01)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeList[i].getDistance(xPoint, yPoint) < 0.0)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
 	
@@ -22,7 +23,9 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 			return;
 	}
 	
-	nodeList.push_back(*(new node(xPoint, yPoint)));
+    newNode.setCenter(xPoint, yPoint);
+    
+	nodeList.push_back(newNode);
     int testSize = nodeList.size();
 	nodeList[testSize - 1].setNodeIndex(testSize - 1);
 	

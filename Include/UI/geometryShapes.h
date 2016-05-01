@@ -136,7 +136,8 @@ class rectangleShape : public geometry2D
 {
 public:
 	rectangleShape(double xCenterPoint, double yCenterPoint);
-	
+	rectangleShape();
+    
 //	void getArea();
 //	void getParameter();
 	
@@ -164,9 +165,12 @@ class node : public rectangleShape
 {
 public:
 	node(double xCenter, double yCenter);
-	
+	node();
+    
 	//! This function will set the center xPixel value used in drawing the shape 
 	void setCenterXPixel(int xPix);
+    
+    void setCenter(double xCoor, double yCoor);
 	
 	//! This function will set the center yPixel value used in drawing the shape 
 	void setCenterYPixel(int yPix);
