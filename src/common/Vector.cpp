@@ -303,18 +303,22 @@ void Vector::operator/=(int z)
 
 Vector operator/(int x, const Vector &z)
 { 
-	double c;
+	double c, tempXComp, tempYComp;
 	Vector y;
 
 	if (fabs(z.getXComponent()) > fabs(z.getYComponent()))
 	{
 		c = z.getYComponent() / z.getXComponent();
-		y.Set(1. / (z.getXComponent() * (1. + c * c)), (-c) * y.getXComponent());
+		tempXComp = 1. / (z.getXComponent() * (1. + c * c));
+		tempYComp = (-c) * tempXComp;
+		y.Set(tempXComp, tempYComp);
 	}
 	else
 	{
 		c = z.getXComponent() / z.getYComponent();
-		y.Set((-1.) / (z.getYComponent() * (1. + c * c)), (-c) * y.getYComponent());
+		tempYComp =  -1. / (z.getYComponent() * (1. + c * c));
+		tempXComp = (-c) * tempYComp;
+		y.Set(tempXComp, tempYComp);
 	}
 
 	y.Set(y.getXComponent() * (double)x, y.getYComponent() * (double)x);
@@ -323,19 +327,24 @@ Vector operator/(int x, const Vector &z)
 
 Vector operator/(double x, const Vector &z)
 {
-	double c;
+	double c, tempXComp, tempYComp;
 	Vector y;
 
 	if (fabs(z.getXComponent()) > fabs(z.getYComponent()))
 	{
 		c = z.getYComponent() / z.getXComponent();
-		y.Set(1. / (z.getXComponent() * (1. + c * c)), (-c) * y.getXComponent());
+		tempXComp = 1. / (z.getXComponent() * (1. + c * c));
+		tempYComp = (-c) * tempXComp;
+		y.Set(tempXComp, tempYComp);
 	}
 	else
 	{
 		c = z.getXComponent() / z.getYComponent();
-		y.Set((-1.) / (z.getYComponent() * (1. + c * c)), (-c) * y.getYComponent());
+		tempYComp =  -1. / (z.getYComponent() * (1. + c * c));
+		tempXComp = (-c) * tempYComp;
+		y.Set(tempXComp, tempYComp);
 	}
+	
 	y.Set(y.getXComponent() * x, y.getYComponent() * x);
 	return y;
 }
@@ -350,7 +359,7 @@ Vector operator/(const Vector &x, const Vector &z)
 	{
 		c = z.getYComponent() / z.getXComponent();
 		
-		tempXComponent = 1.0 / (z.getXComponent() * (1.0 * pow(c, 2)));
+		tempXComponent = 1.0 / (z.getXComponent() * (1.0 + pow(c, 2)));
 		tempYComponent = (-c) * tempXComponent;
 		
 		y.Set(tempXComponent, tempYComponent);

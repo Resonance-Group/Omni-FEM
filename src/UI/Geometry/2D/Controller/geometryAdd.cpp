@@ -30,7 +30,7 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 	nodeList[testSize - 1].setNodeIndex(testSize - 1);
 	
 	/* If the node is in between a line, then break the line into 2 lines */
-	for(int i = 0; i < lineList.size(); i++)
+/*	for(int i = 0; i < lineList.size(); i++)
 	{
 		if(fabs(-5) < distance)
 		{
@@ -39,7 +39,7 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 			edgeLine->setFirstNodeIndex((int)(nodeList.size() - 1)); // This will set the recently created node to be the first node of the new line
 			lineList.push_back(*(edgeLine));// Add the new line to the array
 		}
-	} 
+	} */
 	
 	/* If the node is in between an arc, then break the arc into 2 */
 /*	for(int i = 0; i < arcList.size(); i++)
@@ -105,7 +105,7 @@ bool geometryEditorCanvas::getIntersection(int node0, int node1, int lineSegment
 {
 	Vector p0, p1, q0, q1;
 	double error, x, z;
-	Vector test1, test2, test3, test4, test5, test6;
+	double test1, test2;
 	
 	// If the end point already exists, do not create it
 	if(node0 == lineList[lineSegmentIndex].getFirstNodeIndex() || node0 == lineList[lineSegmentIndex].getSecondNodeIndex() || node1 == lineList[lineSegmentIndex].getFirstNodeIndex() || node1 == lineList[lineSegmentIndex].getSecondNodeIndex())
@@ -135,11 +135,17 @@ bool geometryEditorCanvas::getIntersection(int node0, int node1, int lineSegment
 	
 	if(x < error || (x > (1.0 - error)))
 		return false;
-		
-	p0.Set((1.0 - z) * nodeList[node0].getCenterXCoordinate() + z * nodeList[node0].getCenterXCoordinate(), (1.0 - z) * nodeList[node0].getCenterYCoordinate() + z * nodeList[node0].getCenterYCoordinate());
-
+	
+	test1 = (1.0 - z) * nodeList[node0].getCenterXCoordinate() + z * nodeList[node1].getCenterXCoordinate();
+	test2 = (1.0 - z) * nodeList[node0].getCenterYCoordinate() + z * nodeList[node1].getCenterYCoordinate();
+	
+	p0.Set(test1, test2);
+//	p0.Set(5.0, 5.0);
 	intercetionXPoint = p0.getXComponent();
 	intercestionYPoint = p0.getYComponent();
+	
+//	intercetionXPoint = 5;
+//	intercestionYPoint = 5;
 	
 	return true;
 }

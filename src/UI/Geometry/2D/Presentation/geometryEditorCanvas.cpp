@@ -3,6 +3,9 @@
 
 #include <math.h>
 
+class tempXCoor;
+class tempXCoor;
+class tempXCoor;
 using namespace std;
 
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
@@ -90,12 +93,8 @@ void geometryEditorCanvas::drawGrid()
 void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
 	std::vector<int> deletednodes;
-	Vector test1, test2, test3;
 	
-	test1.Set(5, 2);
-	test2.Set(3, 1);
-	
-	test3 = test1 + test2;
+	addNode(5, 5, 0);
 	
 	
 	if(event.GetKeyCode() != DEL_KEY)
@@ -254,6 +253,16 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	drawGrid();
 	int nodeListSize = nodeList.size();
     
+	
+	
+	if(lineList.size() > 0)
+	{
+		for(int i = 0; i < lineList.size(); i++)
+		{
+			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
+		}
+	}
+	
 	if(nodeList.size() > 0)
 	{
 		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
@@ -266,14 +275,6 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 			nodeIterator->setCenterYPixel(tempY);
 		
 			nodeIterator->draw();
-		}
-	}
-	
-	if(nodeList.size() > 0)
-	{
-		for(int i = 0; i < lineList.size(); i++)
-		{
-			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
 		}
 	}
 	
@@ -427,7 +428,13 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
                         bool test1;
                         test1 = getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor);
 						if(test1 == true)
+						{
 							addNode(tempXCoor, tempYCoor, 0);
+							tempXCoor = 0;
+							tempYCoor = 1;
+			//				addNode(5, 5, 0);
+							addNode(tempXCoor, tempYCoor, 0);
+						}
 					}
 					
 					addLineSegment(firstSelectedNodeIndex, nodeList[i].getNodeIndex(), NULL);
