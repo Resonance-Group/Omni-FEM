@@ -425,15 +425,9 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					double tempXCoor, tempYCoor;
 					for(int k = 0; k < lineList.size(); k++)
 					{
-                        bool test1;
-                        test1 = getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor);
-						if(test1 == true)
+						if(getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor) == true)
 						{
-							addNode(tempXCoor, tempYCoor, 0);
-							tempXCoor = 0;
-							tempYCoor = 1;
-			//				addNode(5, 5, 0);
-							addNode(tempXCoor, tempYCoor, 0);
+							addNode(tempXCoor, tempYCoor, 0.01);
 						}
 					}
 					

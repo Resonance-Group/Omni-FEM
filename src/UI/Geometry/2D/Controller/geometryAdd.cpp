@@ -5,7 +5,10 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 {
 	edgeLineShape *edgeLine;
 	edgeLine = new edgeLineShape();
-//	std::vector<double> firstNode, secondNode, thirdNode;
+	arcShape *arcSegment;
+	arcSegment = new arcShape();
+	
+	Vector firstNode, secondNode, thirdNode, c;
 	int nodeListSize = nodeList.size();
 	node newNode;
     
@@ -30,34 +33,39 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 	nodeList[testSize - 1].setNodeIndex(testSize - 1);
 	
 	/* If the node is in between a line, then break the line into 2 lines */
-/*	for(int i = 0; i < lineList.size(); i++)
+	for(int i = 0; i < lineList.size(); i++)
 	{
-		if(fabs(-5) < distance)
+		if(geoController.calculateShortestDistance(xPoint, yPoint, i, nodeList, lineList) < distance)
 		{
 			edgeLine = &(lineList[i]);
 			lineList[i].setSecondNodeIndex((int)(nodeList.size() - 1)); // This will set the recently created node to be the second node of the shortend line
 			edgeLine->setFirstNodeIndex((int)(nodeList.size() - 1)); // This will set the recently created node to be the first node of the new line
 			lineList.push_back(*(edgeLine));// Add the new line to the array
 		}
-	} */
+	} 
 	
 	/* If the node is in between an arc, then break the arc into 2 */
-/*	for(int i = 0; i < arcList.size(); i++)
+	for(int i = 0; i < arcList.size(); i++)
 	{
-		if(fabs(-5) < d)
+		if(fabs(-5) < distance)
 		{
-			firstNode.push_back(nodeList[arcList[i].getFirstNodeIndex()].getXPoint);
-			firstNode.push_back(nodeList[arcList[i].getFirstNodeIndex()].getYPoint);
-					
-			secondNode.push_back(nodeList[arcList[i].getSecondNodeIndex()].getXPoint);
-			secondNode.push_back(nodeList[arcList[i].getSecondNodeIndex()].getYPoint);
+			firstNode.Set(nodeList[arcList[i].getFirstNodeIndex()].getCenterXCoordinate(), nodeList[arcList[i].getFirstNodeIndex()].getCenterYCoordinate());
+			secondNode.Set(nodeList[arcList[i].getSecondNodeIndex()].getCenterXCoordinate(), nodeList[arcList[i].getSecondNodeIndex()].getCenterYCoordinate());
+			thirdNode.Set(xPoint, yPoint);
 			
-			thirdNode.push_back(xPoint);
-			thirdNode.push_back(yPoint);
+			//getCircle{arcList[i], c, R);// No idea what this is.... yet
 			
+			arcSegment = &arcList[i];
 			
+			arcList[i].setSecondNodeIndex((int)nodeList.size() - 1);
+			arcList[i].setArcLength((((firstNode - c) / (secondNode - c)) * 180.0 / PI).Arg());
+			
+			arcSegment->setFirstNodeIndex((int)nodeList.size() - 1);
+			arcSegment->setArcLength((((firstNode - c) / (secondNode - c)) * 180.0 / PI).Arg());
+			
+			arcList.push_back(*arcSegment);
 		}
-	}*/
+	}
 }
 
 

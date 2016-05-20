@@ -27,14 +27,14 @@ void edgeLineShape::setSecondNodeIndex(int index)
 
 
 
-int edgeLineShape::getFirstNodeIndex()
+int edgeLineShape::getFirstNodeIndex() const
 {
 	return nodeIndex1;
 }
 
 
 
-int edgeLineShape::getSecondNodeIndex()
+int edgeLineShape::getSecondNodeIndex() const
 {
 	return nodeIndex2;
 }

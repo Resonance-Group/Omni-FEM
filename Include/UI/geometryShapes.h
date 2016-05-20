@@ -42,10 +42,10 @@ public:
 	void setCenterYCoordiante(double yCenter);
 	
 	//! Function used to get the X Coordinate of the center point point of the shape
-	double getCenterXCoordinate();
+	double getCenterXCoordinate() const;
 	
 	//! Function used to get the Y Coordinate of the center point point of the shape
-	double getCenterYCoordinate();
+	double getCenterYCoordinate() const;
 	
 	//! Function used to set the group that the shape is assocated with
 	void setGroup(int group);
@@ -86,8 +86,8 @@ public:
 	void setFirstNodeIndex(int index);
 	void setSecondNodeIndex(int index);
 	
-	int getFirstNodeIndex();
-	int getSecondNodeIndex();
+	int getFirstNodeIndex() const;
+	int getSecondNodeIndex() const;
 	
 	void setHiddenStatus(bool status);
 	bool getHiddenStatus();
@@ -216,10 +216,14 @@ private:
 	bool isDefault;
 };
 
+
+
 class arcShape : public edgeLineShape
 {
 public:
 	arcShape();
+	
+	void setArcLength(double lengthOfArc);
 
 private:
 	

@@ -14,6 +14,7 @@
 #include <UI/wxGLString.h>
 #include <common/Vector.h>
 #include <math.h>
+#include <UI/geometryEditorController.h>
 
 
 
@@ -96,7 +97,7 @@ private:
 	void onResize(wxSizeEvent &event);
 	
  //   int viewPortMode = ViewPortMode::VIEWPORT_MODE_FULL;
-    
+    	
     //! The event that will be fired when a key on the keyboard is pressed down
     void onKeyDown(wxKeyEvent &event);
 	
@@ -129,6 +130,9 @@ private:
 	
     //! This is the context which will be associated to the class
 	wxGLContext *geometryContext;
+	
+	//! This is the controller potion for the geometry editor
+	geometryEditorController geoController;
 	
 	double canvasWidth = 0;
 	double canvasHeight = 0;

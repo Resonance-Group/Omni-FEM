@@ -18,6 +18,12 @@ arcShape::arcShape() : edgeLineShape()
 
 
 
+void arcShape::setArcLength(double lengthOfArc)
+{
+	arcLength = lengthOfArc;
+}
+
+
 
 
 
