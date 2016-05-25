@@ -25,5 +25,12 @@ void arcShape::setArcLength(double lengthOfArc)
 
 
 
+double arcShape::getArcLength()
+{
+	return arcLength;
+}
+
+
+
 
 

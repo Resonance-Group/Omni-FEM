@@ -84,6 +84,9 @@ private:
 	//! This function will be called in order to create a line between 2 nodes
 	void addLineSegment(int node0, int node1, edgeLineShape *parseSegment);
 	
+	//! This function will add an arc segment between two selected nodes
+	void addArcSegment();
+	
 	//! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
 	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
 	
@@ -123,6 +126,9 @@ private:
 	void onMouseLeftDown(wxMouseEvent &event);
 	
 	void drawGrid();
+	
+	//! This function will determine the center and the radius of the given arc.
+	void getCircle(arcShape &arc, Vector &center, double &radius);
 	/************
 	* Variables *
 	*************/
@@ -200,7 +206,7 @@ private:
 	bool blockLabelCreationIsEnabled = false;
 	
 	//! This flag will indicate if the user would like to create an arc or a line
-	bool lineCreationFlag = true;
+	bool lineCreationFlag = false;
 	
 	bool recalculatenodeCenters;
 	

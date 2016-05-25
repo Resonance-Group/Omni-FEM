@@ -435,6 +435,26 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 				}
 				else
 				{
+					/* 
+						This section of the code will calculate many features that make up the arc such as the arc Legnth.
+						The add arcSegment will calculate anything needed for intercestions
+					*/
+					arcShape arcSegment;
+					wxDialog *arcSegmentDlg = new wxDialog(NULL, wxID_ANY, "Arc Segment Dialog");
+					
+					arcSegmentDlg->CreateButtonSizer(wxOK);
+					
+					if(arcSegmentDlg->ShowModal() == wxID_OK)
+					{
+						arcSegment.setFirstNodeIndex(firstSelectedNodeIndex);
+						arcSegment.setSecondNodeIndex(nodeList[i].getNodeIndex());
+					}
+					else
+						return;
+					
+					
+					
+					
 					// Draw an arc
 				}
 				

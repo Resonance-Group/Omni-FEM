@@ -69,6 +69,27 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 }
 
 
+
+void geometryEditorCanvas::getCircle(arcShape &arc, Vector &center, double &radius)
+{
+	Vector firstNode, secondNode, temp, tempNode;
+	double distance;
+	
+	firstNode.Set(nodeList[arc.getFirstNodeIndex()].getCenterXCoordinate(), nodeList[arc.getFirstNodeIndex()].getCenterYCoordinate());
+	secondNode.Set(nodeList[arc.getSecondNodeIndex()].getCenterXCoordinate(), nodeList[arc.getSecondNodeIndex()].getCenterYCoordinate());
+	
+	
+	tempNode = firstNode - secondNode;
+	distance = Vabs(tempNode);
+	
+	temp = (firstNode - secondNode) / distance;
+	
+	radius = distance / (2.0 * sin(arc.getArcLength() * PI / 360.0));
+	
+	center = firstNode + (distance / 2.0 + J * sqrt(pow(radius, 2) - pow(distance, 2) / 4.0)) * temp;
+}
+
+
 void geometryEditorCanvas::addLineSegment(int node0, int node1, edgeLineShape *parseSegment)
 {
     double nodePointX, nodePointY;

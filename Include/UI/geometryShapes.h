@@ -224,6 +224,8 @@ public:
 	arcShape();
 	
 	void setArcLength(double lengthOfArc);
+	
+	double getArcLength();
 
 private:
 	
