@@ -210,6 +210,9 @@ private:
 	
 	bool recalculatenodeCenters;
 	
+	/*! This array string will contain all of the boudy lists in it */
+	wxArrayString *boundaryList = new wxArrayString();
+	
     wxGLString *debugCoordinate;
     
     wxGLString *debugPixelCoordinate;

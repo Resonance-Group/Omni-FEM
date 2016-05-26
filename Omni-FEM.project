@@ -73,6 +73,7 @@
       <File Name="src/common/wxGLString.cpp"/>
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
+      <File Name="src/common/omniFEMDialog.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -88,6 +89,7 @@
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
+      <File Name="Include/common/omniFEMDialog.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

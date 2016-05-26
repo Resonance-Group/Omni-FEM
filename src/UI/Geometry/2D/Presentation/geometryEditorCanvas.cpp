@@ -16,8 +16,6 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
     debugCoordinate = new wxGLString("None");
     debugPixelCoordinate = new wxGLString("none");
     
-    
-    
     this->SetLabel("none");
     
 	geometryContext = new wxGLContext(this);
@@ -52,7 +50,9 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 	{
 	//	wxMessageBox("Error - " + gluErrorString(error));
 		return;
-	}	
+	}
+
+	boundaryList->Add("<None>");
 }
 
 
@@ -440,9 +440,26 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						The add arcSegment will calculate anything needed for intercestions
 					*/
 					arcShape arcSegment;
-					wxDialog *arcSegmentDlg = new wxDialog(NULL, wxID_ANY, "Arc Segment Dialog");
+					wxDialog *arcSegmentDlg = new wxDialog(NULL, wxID_ANY, "Arc Segment Dialog", wxDefaultPosition, wxSize(269, 205));
+					wxPanel *dialogPanel = new wxPanel(arcSegmentDlg);
+					wxButton *buttonOk = new wxButton(dialogPanel, wxID_OK, "Ok", wxPoint(101, 165), wxSize(75, 23));
+					wxButton *buttonCancel = new wxButton(dialogPanel, wxID_CANCEL, "Cancel", wxPoint(182, 165), wxSize(75, 23));
 					
-					arcSegmentDlg->CreateButtonSizer(wxOK);
+					wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+					
+					wxStaticText *arcAngleText = new wxStaticText(dialogPanel, wxID_ANY, "Arc Angle (deg):", wxPoint(12, 38), wxSize(80,13));
+					arcAngleText->SetFont(*font);
+					
+					wxStaticText *maxSegmentText = new wxStaticText(dialogPanel, wxID_ANY, "Max Segment:", wxPoint(12, 83), wxSize(72,13));
+					maxSegmentText->SetFont(*font);
+					
+					wxStaticText *boundaryText = new wxStaticText(dialogPanel, wxID_ANY, "Boundary", wxPoint(12, 125), wxSize(52,13));
+					boundaryText->SetFont(*font);
+					
+					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "180", wxPoint(101, 35), wxSize(156, 20));
+					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "3", wxPoint(101, 80), wxSize(156, 20));
+
+					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "", wxPoint(101, 122), wxSize(156, 21), *boundaryList);
 					
 					if(arcSegmentDlg->ShowModal() == wxID_OK)
 					{
