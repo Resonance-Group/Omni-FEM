@@ -189,8 +189,8 @@ private:
 //Vector *J = new Vector(0.0, 1.0);
 
 /* This functions are defined specifically for vector math. They are labeled with a V for vector so that the compiler or developer does not get this confused with the math.h functions */
-double Varg(Vector &x);
-double Vabs(Vector &x);
+double Varg(const Vector &x);
+double Vabs(const Vector &x);
 Vector Vexp(Vector &x);
 
 Vector Vsqrt(Vector &x);

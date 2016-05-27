@@ -32,5 +32,17 @@ double arcShape::getArcLength()
 
 
 
+void arcShape::setMaxSideLength(double sideLength)
+{
+	maxSideLength = sideLength;
+}
 
 
+	
+double arcShape::getMaxSideLength()
+{
+	return maxSideLength;
+}
+	
+	
+	

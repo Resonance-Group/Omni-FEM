@@ -85,7 +85,7 @@ private:
 	void addLineSegment(int node0, int node1, edgeLineShape *parseSegment);
 	
 	//! This function will add an arc segment between two selected nodes
-	void addArcSegment();
+	void addArcSegment(arcShape &arcSeg, double tolerance = 0);
 	
 	//! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
 	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
@@ -129,6 +129,15 @@ private:
 	
 	//! This function will determine the center and the radius of the given arc.
 	void getCircle(arcShape &arc, Vector &center, double &radius);
+	
+	/*! This function will calculate the shortest distance from a point to an arc */
+	double shortestDistanceFromArc(Vector point, arcShape &arcSegment);
+	
+	/*! This function will get the number of instersection points where a line and an arc intersect */
+	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
+	
+	/*! This function will calculate the number of intersection points where two arcs intersect */
+	int getArcToArcIntersection();
 	/************
 	* Variables *
 	*************/
@@ -211,7 +220,7 @@ private:
 	bool recalculatenodeCenters;
 	
 	/*! This array string will contain all of the boudy lists in it */
-	wxArrayString *boundaryList = new wxArrayString();
+	wxArrayString boundaryList;
 	
     wxGLString *debugCoordinate;
     

@@ -501,7 +501,7 @@ Vector Vsin(const Vector &z)
 }
 
 
-double Vabs(Vector &x)
+double Vabs(const Vector &x)
 {
 	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
 		return 0.;
@@ -514,7 +514,7 @@ double Vabs(Vector &x)
 
 
 
-double Varg( Vector &x)
+double Varg(const Vector &x)
 {
 	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
 		return 0.;

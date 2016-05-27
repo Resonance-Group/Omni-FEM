@@ -55,14 +55,14 @@ bool edgeLineShape::getHiddenStatus()
 
 
 
-void edgeLineShape::setBoundaryMarker(std::string boundary)
+void edgeLineShape::setBoundaryMarker(wxString boundary)
 {
     boundaryMarker = boundary;
 }
 
 
 
-std::string edgeLineShape::getBoundaryMarker()
+wxString edgeLineShape::getBoundaryMarker()
 {
     return boundaryMarker;
 }

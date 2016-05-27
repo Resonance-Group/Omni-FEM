@@ -52,7 +52,7 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 		return;
 	}
 
-	boundaryList->Add("<None>");
+	boundaryList.Add("<None>");
 }
 
 
@@ -440,6 +440,8 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						The add arcSegment will calculate anything needed for intercestions
 					*/
 					arcShape arcSegment;
+					
+					/* First, we will create a dialog box so that some basic propeties of the arc can be set by the user */
 					wxDialog *arcSegmentDlg = new wxDialog(NULL, wxID_ANY, "Arc Segment Dialog", wxDefaultPosition, wxSize(269, 205));
 					wxPanel *dialogPanel = new wxPanel(arcSegmentDlg);
 					wxButton *buttonOk = new wxButton(dialogPanel, wxID_OK, "Ok", wxPoint(101, 165), wxSize(75, 23));
@@ -459,20 +461,30 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "180", wxPoint(101, 35), wxSize(156, 20));
 					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "3", wxPoint(101, 80), wxSize(156, 20));
 
-					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "", wxPoint(101, 122), wxSize(156, 21), *boundaryList);
+					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "", wxPoint(101, 122), wxSize(156, 21), boundaryList);
 					
 					if(arcSegmentDlg->ShowModal() == wxID_OK)
 					{
+						/* If the user clicked on ok to idicate they are done, we will then set the properties to an arc segment and add the segment to the geometry */
+						double arcAngleVal = 0.0;
+						double maxSegmentVal = 0.0;
+						int index = boundaryComboBox->GetSelection();
+						wxString test = boundaryList.Item(index);
+						
+						arcAngle->GetValue().ToDouble(&arcAngleVal);
+						arcSegment.setArcLength(arcAngleVal);// This needs to be changed to reflect that it is really the arc angle and not length
+						
+						maxSegment->GetValue().ToDouble(&maxSegmentVal);
+						arcSegment.setMaxSideLength(maxSegmentVal);
+						
+						//arcSegment.setBoundaryMarker(test);
+						arcSegment.setBoundaryMarker(test);
+						
 						arcSegment.setFirstNodeIndex(firstSelectedNodeIndex);
 						arcSegment.setSecondNodeIndex(nodeList[i].getNodeIndex());
+						
+						addArcSegment(arcSegment);
 					}
-					else
-						return;
-					
-					
-					
-					
-					// Draw an arc
 				}
 				
 				nodeList[firstSelectedNodeIndex].toggleSelect();

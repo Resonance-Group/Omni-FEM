@@ -92,8 +92,8 @@ public:
 	void setHiddenStatus(bool status);
 	bool getHiddenStatus();
 	
-	void setBoundaryMarker(std::string boundary);
-    std::string getBoundaryMarker();
+	void setBoundaryMarker(wxString boundary);
+    wxString getBoundaryMarker();
     
     void setConductor(std::string conductor);
     std::string getConductor();
@@ -124,7 +124,7 @@ protected:
 	double maxSideLength;
 	
 	//! The boundary that the line is associated with
-	std::string boundaryMarker;
+	wxString boundaryMarker;
 	
 	//! The conductor that the line is associated with
 	std::string inConductor;
@@ -218,6 +218,7 @@ private:
 
 
 
+/*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
 class arcShape : public edgeLineShape
 {
 public:
@@ -226,6 +227,10 @@ public:
 	void setArcLength(double lengthOfArc);
 	
 	double getArcLength();
+	
+	void setMaxSideLength(double sideLength);
+	
+	double getMaxSideLength();
 
 private:
 	
@@ -236,11 +241,6 @@ private:
 	double maxSideLength;
 	
 	double arcLength;
-	
-	std::string boundaryMarker;
-	
-	std::string inConductor;
-	
 	
 };
 
