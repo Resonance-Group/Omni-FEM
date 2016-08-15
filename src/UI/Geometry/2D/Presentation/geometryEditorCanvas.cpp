@@ -71,40 +71,44 @@ void geometryEditorCanvas::drawGrid()
 	glPopMatrix();
     glPushMatrix();
 	
-//	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
-	
     glLineWidth(1.0);
     
     glEnable(GL_LINE_STIPPLE);
     glLineStipple(1, 0x1C47);
     
+    double cornerMinX = convertToXCoordinate(0);
+    double cornerMinY = convertToYCoordinate(0);
+    
+    double cornerMaxX = convertToXCoordinate(canvasWidth);
+    double cornerMaxY = convertToYCoordinate(canvasHeight);
+    
     glBegin(GL_LINES);
     
-        if((canvasHeight / gridStep - canvasWidth / gridStep < 200) && (canvasWidth / gridStep > 0) && (canvasHeight / gridStep > 0))
+        if(((cornerMaxX - cornerMinX) / gridStep + (cornerMinY - cornerMaxY) / gridStep < 200) && ((cornerMaxX - cornerMinX) / gridStep > 0) && ((cornerMinY - cornerMaxY) / gridStep > 0))
         {
             /* Create the grid for the vertical lines first */
-            for(int i = 0; i < canvasWidth / gridStep + 1; i++)
+            for(int i = cornerMinX / gridStep - 1; i < cornerMaxX / gridStep + 1; i++)
             {
                 if(i % 5 == 0)
                     glColor3d(0.0, 0.0, 0.0);
                 else
                     glColor3d(0.6, 0.6, 0.6);
                     
-                glVertex2d(i * gridStep, 0);
+                glVertex2d(i * gridStep, cornerMinY);
                 
-                glVertex2d(i * gridStep, canvasHeight);
+                glVertex2d(i * gridStep, cornerMaxY);
             }
             
             /* Create the grid for the horizontal lines */
-            for(int i = canvasHeight / gridStep - 1; i > 0; i--)
+            for(int i = cornerMaxY / gridStep - 1; i < cornerMinY / gridStep + 1; i++)
             {
                 if(i % 5 == 0)
                     glColor3d(0.0, 0.0, 0.0);
                 else
                     glColor3d(0.6, 0.6, 0.6);
                     
-                glVertex2d(0, i * gridStep);
-                glVertex2d(canvasWidth, i * gridStep);
+                glVertex2d(cornerMinX, i * gridStep);
+                glVertex2d(cornerMaxX, i * gridStep);
             }
         }
         
@@ -134,34 +138,32 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
 	std::vector<int> deletednodes;
 	
-	addNode(5, 5, 0);
-	
 	
 	if(event.GetKeyCode() != DEL_KEY)
 	{
 		if(event.GetKeyCode() == LETTER_W || event.GetKeyCode() == LETTER_w)
 		{
-			cameraY -= 10.0f;
+			cameraY -= 0.1f;
 		}
 		else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
 		{
-			cameraY += 10.0f;
+			cameraY += 0.1f;
 		}	
 		else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
 		{
-			cameraX -= 10.0f;
+			cameraX -= 0.1f;
 		}
 		else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
 		{	
-			cameraX += 10.0f;
+			cameraX += 0.1f;
 		}
     
-		glMatrixMode(GL_MODELVIEW);
+/*		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
 		glLoadIdentity();
 		
 		glTranslatef(cameraX, cameraY, 0.0f);
-		glPushMatrix();
+		glPushMatrix(); */
 	
 	}
 	else
@@ -205,8 +207,8 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
 	
 	// Converts the mouse pointer into a cartesian graph position
-	mouseGraphX = convertToXCoordinate((double)mouseX, cameraX);
-	mouseGraphY = convertToYCoordinate((double)mouseY, cameraY);
+	mouseGraphX = (((2.0 / canvasWidth) * (mouseX - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
+	mouseGraphY = (-(2.0 / canvasHeight) * (mouseY - canvasHeight / 2.0)) / zoomFactor;
     
     stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
 	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
@@ -291,11 +293,8 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
     
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
     glLoadIdentity();
-//	glPopMatrix();
-//    glPushMatrix();
-	
-	//glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
 	
     if(zoomFactor < 1e-9)
         zoomFactor = 1e-9;
@@ -304,7 +303,8 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
         zoomFactor = 1e6;
         
     glScaled(zoomFactor / (canvasWidth / canvasHeight), zoomFactor, 1.0);
-    glTranslated(-cameraX, -cameraY, 1.0);
+    glTranslated(cameraX, cameraY, 0.0);
+    glPushMatrix();
     
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
@@ -358,7 +358,27 @@ void geometryEditorCanvas::toggleBlockListCreation()
 
 void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
 {
-	zoomFactor *= pow(1.2, event.GetWheelDelta() / 150.0);
+    if(event.GetWheelRotation() > 0)
+    {
+   //     wxMessageBox("Wheel Rotated");
+        
+        cameraX += mouseGraphX;
+        cameraY += mouseGraphY;
+        
+        zoomFactor = zoomFactor * pow(1.2, 2);
+        
+        /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process */
+        mouseGraphX = (((2.0 / canvasWidth) * (mouseX - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
+        mouseGraphY = (-(2.0 / canvasHeight) * (mouseY - canvasHeight / 2.0)) / zoomFactor;
+        
+        cameraX -= mouseGraphX;
+        cameraY -= mouseGraphY;
+    }
+	
+    if(event.MiddleDown() && event.Dragging())
+    {
+        wxMessageBox("It works");
+    }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
 }

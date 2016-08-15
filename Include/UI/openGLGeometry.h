@@ -177,7 +177,7 @@ private:
 
 	const int factor = 10;
     
-    double gridStep = 11.0; // This variable controls the grid step which controls how the graph is drawn
+    double gridStep = 0.05; // This variable controls the grid step which controls how the graph is drawn
     
     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
     /*
