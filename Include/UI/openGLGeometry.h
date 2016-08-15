@@ -68,14 +68,14 @@ private:
 	 *  Both need to be called in order to create a pixel pair.
 	 */
 	int convertToXPixel(double XCoor, int cameraOffset);
-	int convertToXPixel(double XCoor);
+	double convertToXPixel(double XCoor);
     
 	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the Y pixel point
 	/*
 	 * 	This is 1/2 of a feature. The coorseopnding function is convertToXPixel.
 	 *  Both need to be called in order to create a pixel pair.
 	 */
-	int convertToYPixel(double YCoor);
+	double convertToYPixel(double YCoor);
     int convertToYPixel(double YCoor, int cameraOffset);
 	
 	//! This is the function that is called when the user would like to add a new node
@@ -149,8 +149,8 @@ private:
 	//! This is the controller potion for the geometry editor
 	geometryEditorController geoController;
 	
-	double canvasWidth = 0;
-	double canvasHeight = 0;
+	double canvasWidth = 0;// The height of the canvas
+	double canvasHeight = 0;// The width of the canvas /* These two comments need to be confirmed */
 	
 	float zoomX = 1;
 	float zoomY = 1;
@@ -171,11 +171,13 @@ private:
 
 	double coordinateFactorHeight;
 	
-	double zoomFactor = 2;
+	double zoomFactor = 1;
 	
 	double totalZoom = 1;
 
 	const int factor = 10;
+    
+    double gridStep = 11.0; // This variable controls the grid step which controls how the graph is drawn
     
     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
     /*

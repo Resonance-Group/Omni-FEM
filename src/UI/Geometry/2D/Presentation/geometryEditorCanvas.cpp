@@ -80,102 +80,52 @@ void geometryEditorCanvas::drawGrid()
     
     glBegin(GL_LINES);
     
-	for(int heightLoop = (-10 + cameraY * Ycoeff); heightLoop <= (10 + cameraY * Ycoeff); heightLoop++)
-	{
-		
-		for(int widthLoop = (-10 + cameraX * Xcoeff); widthLoop <= (10 + cameraX * Xcoeff); widthLoop++)
-		{
-			int tempYPixel = convertToYPixel((double)heightLoop);
-			int tempXPixel = convertToXPixel((double)widthLoop);
-			glBegin(GL_POINTS);
-				glColor3f( 0.f, 0.f, 0.f );
-				glVertex2i(tempXPixel, tempYPixel);
-			glEnd();
-		}
-	}
-    
-    
- /* Listed below is the code from Github for Agros2D. The code is for drawing a grid. This needs to be integrated into Omni-FEM */
-
-/* SceneView::paintGrid()
-
-    loadProjection2d(true);
-
-    Point cornerMin = position(Point(0, 0));
-    Point cornerMax = position(Point(contextWidth(), contextHeight()));
-
-    glDisable(GL_DEPTH_TEST);
-
-    // heavy line
-    int heavyLine = 5;
-
-    glLineWidth(1.0);
-    glEnable(GL_LINE_STIPPLE);
-    glLineStipple(1, 0x1C47);
-    glBegin(GL_LINES);
-
-    if ((((cornerMax.x-cornerMin.x)/Util::config()->gridStep + (cornerMin.y-cornerMax.y)/Util::config()->gridStep) < 200) &&
-            ((cornerMax.x-cornerMin.x)/Util::config()->gridStep > 0) && ((cornerMin.y-cornerMax.y)/Util::config()->gridStep > 0))
-    {
-     * The gridStep is set to 0.05
-        // vertical lines
-        for (int i = cornerMin.x/Util::config()->gridStep - 1; i < cornerMax.x/Util::config()->gridStep + 1; i++)
+        if((canvasHeight / gridStep - canvasWidth / gridStep < 200) && (canvasWidth / gridStep > 0) && (canvasHeight / gridStep > 0))
         {
-            if (i % heavyLine == 0)
-                glColor3d(Util::config()->colorCross.redF(),
-                          Util::config()->colorCross.greenF(),
-                          Util::config()->colorCross.blueF());
-            else
-                glColor3d(Util::config()->colorGrid.redF(),
-                          Util::config()->colorGrid.greenF(),
-                          Util::config()->colorGrid.blueF());
-            glVertex2d(i*Util::config()->gridStep, cornerMin.y);
-            glVertex2d(i*Util::config()->gridStep, cornerMax.y);
+            /* Create the grid for the vertical lines first */
+            for(int i = 0; i < canvasWidth / gridStep + 1; i++)
+            {
+                if(i % 5 == 0)
+                    glColor3d(0.0, 0.0, 0.0);
+                else
+                    glColor3d(0.6, 0.6, 0.6);
+                    
+                glVertex2d(i * gridStep, 0);
+                
+                glVertex2d(i * gridStep, canvasHeight);
+            }
+            
+            /* Create the grid for the horizontal lines */
+            for(int i = canvasHeight / gridStep - 1; i > 0; i--)
+            {
+                if(i % 5 == 0)
+                    glColor3d(0.0, 0.0, 0.0);
+                else
+                    glColor3d(0.6, 0.6, 0.6);
+                    
+                glVertex2d(0, i * gridStep);
+                glVertex2d(canvasWidth, i * gridStep);
+            }
         }
-
-        // horizontal lines
-        for (int i = cornerMax.y/Util::config()->gridStep - 1; i < cornerMin.y/Util::config()->gridStep + 1; i++)
-        {
-            if (i % heavyLine == 0)
-                glColor3d(Util::config()->colorCross.redF(),
-                          Util::config()->colorCross.greenF(),
-                          Util::config()->colorCross.blueF());
-            else
-                glColor3d(Util::config()->colorGrid.redF(),
-                          Util::config()->colorGrid.greenF(),
-                          Util::config()->colorGrid.blueF());
-            glVertex2d(cornerMin.x, i*Util::config()->gridStep);
-            glVertex2d(cornerMax.x, i*Util::config()->gridStep);
-        }        
-    }
+        
     glEnd();
     glDisable(GL_LINE_STIPPLE);
-
-    if (m_scene->problemInfo()->problemType == ProblemType_Axisymmetric)
-    {
-        drawBlend(cornerMin,
-                  Point(0, cornerMax.y),
-                  Util::config()->colorGrid.redF(),
-                  Util::config()->colorGrid.greenF(),
-                  Util::config()->colorGrid.blueF(), 0.25);
-    }
-
-    // axes
-    glColor3d(Util::config()->colorCross.redF(),
-              Util::config()->colorCross.greenF(),
-              Util::config()->colorCross.blueF());
-    glLineWidth(1.5);
-    glBegin(GL_LINES);
-    // y axis
-    glVertex2d(0, cornerMin.y);
-    glVertex2d(0, cornerMax.y);
-    // x axis
-    glVertex2d(((m_scene->problemInfo()->problemType == ProblemType_Axisymmetric) ? 0 : cornerMin.x), 0);
-    glVertex2d(cornerMax.x, 0);
-    glEnd();
-
- */
     
+    /* Create the axis */    
+    glColor3d(7, 7, 7);
+    glLineWidth(2.5);
+    
+    glBegin(GL_LINES);
+        glColor3d(0.0, 0.0, 0.0);
+        glVertex2d(0, canvasHeight / 2);
+        glVertex2d(canvasWidth, canvasHeight / 2);
+        
+        glVertex2d(canvasWidth / 2, 0);
+        glVertex2d(canvasWidth / 2, canvasHeight);
+    glEnd();
+    
+    
+    glLineWidth(0.5);
 }
 
 
@@ -274,7 +224,8 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 
 double geometryEditorCanvas::convertToXCoordinate(int xPixel)
 {
-	return (Xcoeff * ((double)xPixel) - graphOffset);
+//	return (Xcoeff * ((double)xPixel) - graphOffset);
+    return (((2.0 / canvasWidth) * xPixel - 1) / zoomFactor * (canvasWidth / canvasHeight) + cameraX);
 }
 
 
@@ -286,7 +237,7 @@ double geometryEditorCanvas::convertToXCoordinate(int xPixel, int cameraOffset)
 
 double geometryEditorCanvas::convertToYCoordinate(int yPixel)
 {
-	return (Ycoeff* ((double)yPixel) + graphOffset);
+	return -((2.0 / canvasHeight) * yPixel - 1) / zoomFactor + cameraY;
 }
 
 
@@ -296,9 +247,9 @@ double geometryEditorCanvas::convertToYCoordinate(int yPixel, int cameraOffset)
 }
 
 
-int geometryEditorCanvas::convertToXPixel(double XCoor)
+double geometryEditorCanvas::convertToXPixel(double XCoor)
 {
-	return (int)((XCoor + graphOffset) / Xcoeff);
+	return ((1.0 + (XCoor - cameraX)) * zoomFactor / (canvasWidth / canvasHeight) + cameraX);
 }
 
 
@@ -308,9 +259,9 @@ int geometryEditorCanvas::convertToXPixel(double XCoor, int cameraOffset)
 }
 
 
-int geometryEditorCanvas::convertToYPixel(double YCoor)
+double geometryEditorCanvas::convertToYPixel(double YCoor)
 {
-	return (int)((YCoor - graphOffset) / Ycoeff) + 3; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
+	return ((1.0 + (YCoor - cameraY) * zoomFactor) * canvasHeight / 2.0); // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
 }
 
 int geometryEditorCanvas::convertToYPixel(double YCoor, int cameraOffset)
@@ -332,13 +283,29 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
 	
-		//Reset to modelview matrix
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    
+    
+    //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-    glPushMatrix();
+    glLoadIdentity();
+//	glPopMatrix();
+//    glPushMatrix();
 	
-	glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
+	//glTranslatef(canvasWidth / 2.0f, canvasHeight / 2.0f, 0.0f);
 	
+    if(zoomFactor < 1e-9)
+        zoomFactor = 1e-9;
+    
+    if(zoomFactor > 1e6)
+        zoomFactor = 1e6;
+        
+    glScaled(zoomFactor / (canvasWidth / canvasHeight), zoomFactor, 1.0);
+    glTranslated(-cameraX, -cameraY, 1.0);
+    
     glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
 	int nodeListSize = nodeList.size();
@@ -391,24 +358,7 @@ void geometryEditorCanvas::toggleBlockListCreation()
 
 void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
 {
-	glMatrixMode(GL_MODELVIEW);
-//	glPopMatrix();
-//	glLoadIdentity();
-	
-	if(event.GetWheelRotation() > 0)
-	{
-		glOrtho(0.0, canvasWidth * zoomFactor, canvasHeight * zoomFactor, 0.0, 1.0, -1.0);
-		//glScaled(zoomFactor, zoomFactor, 0.0d);
-		totalZoom *= zoomFactor;
-	}
-	else if(event.GetWheelRotation() < 0)
-	{
-		glOrtho(0.0, (double)canvasWidth / zoomFactor, (double)canvasHeight / zoomFactor, 0.0, 1.0, -1.0);
-		//glScaled(1.0d / zoomFactor, 1.0d / zoomFactor, 0.0d);
-		totalZoom /= zoomFactor;
-	}
-	
-//	glPushMatrix();
+	zoomFactor *= pow(1.2, event.GetWheelDelta() / 150.0);
 	
     this->Refresh();// This will force the canvas to experience a redraw event
 }
