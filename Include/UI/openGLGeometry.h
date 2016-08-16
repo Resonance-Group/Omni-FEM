@@ -14,6 +14,7 @@
 #include <UI/wxGLString.h>
 #include <common/Vector.h>
 #include <math.h>
+#include <UI/geometryEditorController.h>
 
 
 
@@ -67,14 +68,14 @@ private:
 	 *  Both need to be called in order to create a pixel pair.
 	 */
 	int convertToXPixel(double XCoor, int cameraOffset);
-	int convertToXPixel(double XCoor);
+	double convertToXPixel(double XCoor);
     
 	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the Y pixel point
 	/*
 	 * 	This is 1/2 of a feature. The coorseopnding function is convertToXPixel.
 	 *  Both need to be called in order to create a pixel pair.
 	 */
-	int convertToYPixel(double YCoor);
+	double convertToYPixel(double YCoor);
     int convertToYPixel(double YCoor, int cameraOffset);
 	
 	//! This is the function that is called when the user would like to add a new node
@@ -82,6 +83,9 @@ private:
 	
 	//! This function will be called in order to create a line between 2 nodes
 	void addLineSegment(int node0, int node1, edgeLineShape *parseSegment);
+	
+	//! This function will add an arc segment between two selected nodes
+	void addArcSegment(arcShape &arcSeg, double tolerance = 0);
 	
 	//! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
 	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
@@ -96,7 +100,7 @@ private:
 	void onResize(wxSizeEvent &event);
 	
  //   int viewPortMode = ViewPortMode::VIEWPORT_MODE_FULL;
-    
+    	
     //! The event that will be fired when a key on the keyboard is pressed down
     void onKeyDown(wxKeyEvent &event);
 	
@@ -122,6 +126,22 @@ private:
 	void onMouseLeftDown(wxMouseEvent &event);
 	
 	void drawGrid();
+	
+	//! This function will determine the center and the radius of the given arc.
+	void getCircle(arcShape &arc, Vector &center, double &radius);
+	
+	/*! This function will calculate the shortest distance from a point to an arc */
+	double shortestDistanceFromArc(Vector point, arcShape &arcSegment);
+	
+	/*! This function will get the number of instersection points where a line and an arc intersect */
+	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
+	
+	/*! This function will calculate the number of intersection points where two arcs intersect */
+	int getArcToArcIntersection();
+    
+    /*! This function needs to be called whenever there is a draw. */
+    void updateProjection();
+    
 	/************
 	* Variables *
 	*************/
@@ -130,8 +150,11 @@ private:
     //! This is the context which will be associated to the class
 	wxGLContext *geometryContext;
 	
-	double canvasWidth = 0;
-	double canvasHeight = 0;
+	//! This is the controller potion for the geometry editor
+	geometryEditorController geoController;
+	
+	double canvasWidth = 0;// The height of the canvas
+	double canvasHeight = 0;// The width of the canvas /* These two comments need to be confirmed */
 	
 	float zoomX = 1;
 	float zoomY = 1;
@@ -152,11 +175,13 @@ private:
 
 	double coordinateFactorHeight;
 	
-	double zoomFactor = 2;
+	double zoomFactor = 1;
 	
 	double totalZoom = 1;
 
 	const int factor = 10;
+    
+    double gridStep = 0.05; // This variable controls the grid step which controls how the graph is drawn
     
     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
     /*
@@ -196,9 +221,12 @@ private:
 	bool blockLabelCreationIsEnabled = false;
 	
 	//! This flag will indicate if the user would like to create an arc or a line
-	bool lineCreationFlag = true;
+	bool lineCreationFlag = false;
 	
 	bool recalculatenodeCenters;
+	
+	/*! This array string will contain all of the boudy lists in it */
+	wxArrayString boundaryList;
 	
     wxGLString *debugCoordinate;
     

@@ -18,6 +18,31 @@ arcShape::arcShape() : edgeLineShape()
 
 
 
+void arcShape::setArcLength(double lengthOfArc)
+{
+	arcLength = lengthOfArc;
+}
 
 
 
+double arcShape::getArcLength()
+{
+	return arcLength;
+}
+
+
+
+void arcShape::setMaxSideLength(double sideLength)
+{
+	maxSideLength = sideLength;
+}
+
+
+	
+double arcShape::getMaxSideLength()
+{
+	return maxSideLength;
+}
+	
+	
+	

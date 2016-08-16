@@ -4,12 +4,11 @@
 #include "stdio.h"
 #include "math.h"
 
-#define PI 3.141592653589793238462643383
+#define PI 3.141592653589793238462643383279502884197169399375105820974944592307816406286
 #define SmallNo 1.e-14
 #define DEG 0.01745329251994329576923690768
 
-
-#define I Vector(0,1)
+#define J Vector(0, 1)
 
 /*! /class Vector
 	/brief	This is the class that will handle all Vector related functions
@@ -70,7 +69,7 @@ class Vector
 		void operator-=(double z);
 		void operator-=(int z);
 
-		//Multiplication
+		//MultiplicationVector Vsin(const Vector &x) 
 		Vector operator*(const Vector &z);
 		Vector operator*(double z);
 		Vector operator*(int z);
@@ -186,6 +185,17 @@ private:
 	
 };
 
+/*! Defining the imagnary number */
+//Vector *J = new Vector(0.0, 1.0);
+
+/* This functions are defined specifically for vector math. They are labeled with a V for vector so that the compiler or developer does not get this confused with the math.h functions */
+double Varg(const Vector &x);
+double Vabs(const Vector &x);
+Vector Vexp(Vector &x);
+
+Vector Vsqrt(Vector &x);
+Vector Vsin(const Vector &z);
+
 
 //TODO: These functions need to be integrated into the base class
 // useful functions...
@@ -194,7 +204,6 @@ double abs(  Vector& x );
 double absq(  Vector& x );
 double arg(  Vector& x );
 Vector conj(  Vector& x);
-Vector exp(  Vector& x );
 Vector sqrt(  Vector& x );
 Vector tanh(  Vector& x );
 Vector sinh(  Vector& x );

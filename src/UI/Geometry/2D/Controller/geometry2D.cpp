@@ -45,14 +45,14 @@ void geometry2D::setCenterYCoordiante(double yCenter)
 
 
 
-double geometry2D::getCenterXCoordinate()
+double geometry2D::getCenterXCoordinate() const
 {
 	return xCenterCoordinate;
 }
 
 
 
-double geometry2D::getCenterYCoordinate()
+double geometry2D::getCenterYCoordinate() const
 {
 	return yCenterCoordinate;
 }

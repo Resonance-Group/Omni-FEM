@@ -27,14 +27,14 @@ void edgeLineShape::setSecondNodeIndex(int index)
 
 
 
-int edgeLineShape::getFirstNodeIndex()
+int edgeLineShape::getFirstNodeIndex() const
 {
 	return nodeIndex1;
 }
 
 
 
-int edgeLineShape::getSecondNodeIndex()
+int edgeLineShape::getSecondNodeIndex() const
 {
 	return nodeIndex2;
 }
@@ -55,14 +55,14 @@ bool edgeLineShape::getHiddenStatus()
 
 
 
-void edgeLineShape::setBoundaryMarker(std::string boundary)
+void edgeLineShape::setBoundaryMarker(wxString boundary)
 {
     boundaryMarker = boundary;
 }
 
 
 
-std::string edgeLineShape::getBoundaryMarker()
+wxString edgeLineShape::getBoundaryMarker()
 {
     return boundaryMarker;
 }

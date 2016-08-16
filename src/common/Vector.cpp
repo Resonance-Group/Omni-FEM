@@ -303,18 +303,22 @@ void Vector::operator/=(int z)
 
 Vector operator/(int x, const Vector &z)
 { 
-	double c;
+	double c, tempXComp, tempYComp;
 	Vector y;
 
 	if (fabs(z.getXComponent()) > fabs(z.getYComponent()))
 	{
 		c = z.getYComponent() / z.getXComponent();
-		y.Set(1. / (z.getXComponent() * (1. + c * c)), (-c) * y.getXComponent());
+		tempXComp = 1. / (z.getXComponent() * (1. + c * c));
+		tempYComp = (-c) * tempXComp;
+		y.Set(tempXComp, tempYComp);
 	}
 	else
 	{
 		c = z.getXComponent() / z.getYComponent();
-		y.Set((-1.) / (z.getYComponent() * (1. + c * c)), (-c) * y.getYComponent());
+		tempYComp =  -1. / (z.getYComponent() * (1. + c * c));
+		tempXComp = (-c) * tempYComp;
+		y.Set(tempXComp, tempYComp);
 	}
 
 	y.Set(y.getXComponent() * (double)x, y.getYComponent() * (double)x);
@@ -323,19 +327,24 @@ Vector operator/(int x, const Vector &z)
 
 Vector operator/(double x, const Vector &z)
 {
-	double c;
+	double c, tempXComp, tempYComp;
 	Vector y;
 
 	if (fabs(z.getXComponent()) > fabs(z.getYComponent()))
 	{
 		c = z.getYComponent() / z.getXComponent();
-		y.Set(1. / (z.getXComponent() * (1. + c * c)), (-c) * y.getXComponent());
+		tempXComp = 1. / (z.getXComponent() * (1. + c * c));
+		tempYComp = (-c) * tempXComp;
+		y.Set(tempXComp, tempYComp);
 	}
 	else
 	{
 		c = z.getXComponent() / z.getYComponent();
-		y.Set((-1.) / (z.getYComponent() * (1. + c * c)), (-c) * y.getYComponent());
+		tempYComp =  -1. / (z.getYComponent() * (1. + c * c));
+		tempXComp = (-c) * tempYComp;
+		y.Set(tempXComp, tempYComp);
 	}
+	
 	y.Set(y.getXComponent() * x, y.getYComponent() * x);
 	return y;
 }
@@ -350,7 +359,7 @@ Vector operator/(const Vector &x, const Vector &z)
 	{
 		c = z.getYComponent() / z.getXComponent();
 		
-		tempXComponent = 1.0 / (z.getXComponent() * (1.0 * pow(c, 2)));
+		tempXComponent = 1.0 / (z.getXComponent() * (1.0 + pow(c, 2)));
 		tempYComponent = (-c) * tempXComponent;
 		
 		y.Set(tempXComponent, tempYComponent);
@@ -432,37 +441,23 @@ bool Vector::operator!=(int z)
 }
 
 //***** Useful functions ************************************
-/*
-Vector conj( Vector &x)
-{
-	return Vector(x.getXComponent(), -x.getYComponent());
-}
 
-Vector exp( Vector &x)
-{
-	Vector y;
-
-	y.Set(cos(x.getYComponent()) * exp(x.getXComponent()), sin(x.getYComponent()) * exp(x.getXComponent()));
-	return y;
-}
-
-Vector sqrt( Vector &x)
+Vector Vsqrt(Vector &x)
 {
 	double w, z;
 	Vector y;
 
 	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
 		w = 0;
-
 	else if (fabs(x.getXComponent()) > fabs(x.getYComponent()))
 	{
 		z = x.getYComponent() / x.getXComponent();
-		w = sqrt(fabs(x.getXComponent())) * sqrt((1. + sqrt(1. + z * z)) / 2.);
+		w = sqrt(fabs(x.getXComponent())) * sqrt((1. + sqrt(1. + pow(z, 2))) / 2.);
 	}
 	else
 	{
 		z = x.getXComponent() / x.getYComponent();
-		w = sqrt(fabs(x.getYComponent())) * sqrt((fabs(z) + sqrt(1. + z * z)) / 2.);
+		w = sqrt(fabs(x.getYComponent())) * sqrt((fabs(z) + sqrt(1. + pow(z, 2))) / 2.);
 	}
 
 	if (w == 0)
@@ -473,7 +468,7 @@ Vector sqrt( Vector &x)
 
 	if (x.getXComponent() >= 0)
 	{
-		y.Set(w, x.getYComponent() / (2. * w))
+		y.Set(w, x.getYComponent() / (2. * w));
 		return y;
 	}
 
@@ -486,6 +481,55 @@ Vector sqrt( Vector &x)
 	y.Set(fabs(x.getYComponent()) / (2. * w), w);
 	return y;
 }
+
+
+
+Vector Vexp(Vector &x)
+{
+	Vector y;
+
+	y.Set(cos(x.getYComponent()) * exp(x.getXComponent()), sin(x.getYComponent()) * exp(x.getXComponent()));
+	return y;
+}
+
+
+
+Vector Vsin(const Vector &z)
+{
+	return (J * z);
+//	return (Vexp(z * (J)) - Vexp(z * (*J * -1.0)));
+}
+
+
+double Vabs(const Vector &x)
+{
+	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
+		return 0.;
+
+	if (fabs(x.getXComponent()) > fabs(x.getYComponent()))
+		return fabs(x.getXComponent()) * sqrt(1. + (x.getYComponent() / x.getXComponent()) * (x.getYComponent() / x.getXComponent()));
+	else
+		return fabs(x.getYComponent()) * sqrt(1. + (x.getXComponent() / x.getYComponent()) * (x.getXComponent() / x.getYComponent()));
+}
+
+
+
+double Varg(const Vector &x)
+{
+	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
+		return 0.;
+
+	return atan2(x.getYComponent(), x.getXComponent());
+}
+/*
+Vector conj( Vector &x)
+{
+	return Vector(x.getXComponent(), -x.getYComponent());
+}
+
+
+
+
 
 Vector tanh( Vector &x)
 {
@@ -524,10 +568,7 @@ Vector acos( Vector& x)
 	return PI / 2. - arg(I * x + sqrt(1 - x * x)) + I * log(abs(I * x + sqrt(1 - x * x)));
 }
 
-Vector sin( Vector &x)
-{
-	return (exp(I * x) - exp(-I * x)) / (2 * I);
-}
+
 
 Vector asin( Vector &x)
 {
@@ -544,24 +585,9 @@ Vector atan( Vector &x)
 	return (arg(1 + I * x) - arg(1 - I * x) - I * (log(abs(1 + I * x) / abs(1 - I * x)))) / 2;
 }
 
-double abs( Vector &x)
-{
-	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
-		return 0.;
 
-	if (fabs(x.getXComponent()) > fabs(x.getYComponent()))
-		return fabs(x.getXComponent()) * sqrt(1. + (x.getYComponent() / x.getXComponent()) * (x.getYComponent() / x.getXComponent()));
-	else
-		return fabs(x.getYComponent()) * sqrt(1. + (x.getXComponent() / x.getYComponent()) * (x.getXComponent() / x.getYComponent()));
-}
 
-double arg( Vector &x)
-{
-	if ((x.getXComponent() == 0) && (x.getYComponent() == 0))
-		return 0.;
 
-	return atan2(x.getYComponent(), x.getXComponent());
-}
 
 Vector log( Vector &x)
 {

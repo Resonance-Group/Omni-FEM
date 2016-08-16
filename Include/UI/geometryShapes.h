@@ -42,10 +42,10 @@ public:
 	void setCenterYCoordiante(double yCenter);
 	
 	//! Function used to get the X Coordinate of the center point point of the shape
-	double getCenterXCoordinate();
+	double getCenterXCoordinate() const;
 	
 	//! Function used to get the Y Coordinate of the center point point of the shape
-	double getCenterYCoordinate();
+	double getCenterYCoordinate() const;
 	
 	//! Function used to set the group that the shape is assocated with
 	void setGroup(int group);
@@ -86,14 +86,14 @@ public:
 	void setFirstNodeIndex(int index);
 	void setSecondNodeIndex(int index);
 	
-	int getFirstNodeIndex();
-	int getSecondNodeIndex();
+	int getFirstNodeIndex() const;
+	int getSecondNodeIndex() const;
 	
 	void setHiddenStatus(bool status);
 	bool getHiddenStatus();
 	
-	void setBoundaryMarker(std::string boundary);
-    std::string getBoundaryMarker();
+	void setBoundaryMarker(wxString boundary);
+    wxString getBoundaryMarker();
     
     void setConductor(std::string conductor);
     std::string getConductor();
@@ -124,7 +124,7 @@ protected:
 	double maxSideLength;
 	
 	//! The boundary that the line is associated with
-	std::string boundaryMarker;
+	wxString boundaryMarker;
 	
 	//! The conductor that the line is associated with
 	std::string inConductor;
@@ -216,10 +216,21 @@ private:
 	bool isDefault;
 };
 
+
+
+/*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
 class arcShape : public edgeLineShape
 {
 public:
 	arcShape();
+	
+	void setArcLength(double lengthOfArc);
+	
+	double getArcLength();
+	
+	void setMaxSideLength(double sideLength);
+	
+	double getMaxSideLength();
 
 private:
 	
@@ -230,11 +241,6 @@ private:
 	double maxSideLength;
 	
 	double arcLength;
-	
-	std::string boundaryMarker;
-	
-	std::string inConductor;
-	
 	
 };
 
