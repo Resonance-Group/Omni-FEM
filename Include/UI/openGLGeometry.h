@@ -138,6 +138,10 @@ private:
 	
 	/*! This function will calculate the number of intersection points where two arcs intersect */
 	int getArcToArcIntersection();
+    
+    /*! This function needs to be called whenever there is a draw. */
+    void updateProjection();
+    
 	/************
 	* Variables *
 	*************/

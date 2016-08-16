@@ -65,14 +65,40 @@ void geometryEditorCanvas::render()
 }
 
 
+
+void geometryEditorCanvas::updateProjection()
+{
+    // First, load the projection matrix and reset the view to a default view
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    
+    
+    //Reset to modelview matrix
+	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+	
+    /* This section will handle the translation (panning) and scaled (zooming). 
+     * Needs to be called each time a draw occurs in order to update the placement of all the components */
+    if(zoomFactor < 1e-9)
+        zoomFactor = 1e-9;
+    
+    if(zoomFactor > 1e6)
+        zoomFactor = 1e6;
+        
+    glScaled(zoomFactor / (canvasWidth / canvasHeight), zoomFactor, 1.0);
+    glTranslated(-cameraX, -cameraY, 0.0);
+	
+    
+}
+
+
 void geometryEditorCanvas::drawGrid()
 {
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-    glPushMatrix();
-	
-    glLineWidth(1.0);
+	updateProjection();
     
+    glLineWidth(1.0);
     glEnable(GL_LINE_STIPPLE);
     glLineStipple(1, 0x1C47);
     
@@ -115,21 +141,20 @@ void geometryEditorCanvas::drawGrid()
     glEnd();
     glDisable(GL_LINE_STIPPLE);
     
-    /* Create the axis */    
-    glColor3d(7, 7, 7);
-    glLineWidth(2.5);
+    /* Create the center axis */    
+    glColor3d(0.0, 0.0, 0.0);
+    glLineWidth(1.5);
     
     glBegin(GL_LINES);
-        glColor3d(0.0, 0.0, 0.0);
-        glVertex2d(0, canvasHeight / 2);
-        glVertex2d(canvasWidth, canvasHeight / 2);
+        glVertex2d(0, cornerMinY);
+        glVertex2d(0, cornerMaxY);
         
-        glVertex2d(canvasWidth / 2, 0);
-        glVertex2d(canvasWidth / 2, canvasHeight);
+        glVertex2d(cornerMinX, 0);
+        glVertex2d(cornerMaxX, 0);
     glEnd();
     
     
-    glLineWidth(0.5);
+    glLineWidth(0.5);// Resets the line width back to the default
 }
 
 
@@ -157,14 +182,6 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 		{	
 			cameraX += 0.1f;
 		}
-    
-/*		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-		glLoadIdentity();
-		
-		glTranslatef(cameraX, cameraY, 0.0f);
-		glPushMatrix(); */
-	
 	}
 	else
 	{
@@ -202,6 +219,9 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 
 void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 {
+    int dx = event.GetX() - mouseX;
+    int dy = event.GetY() - mouseY;
+    
 	mouseX = event.GetX();
 	mouseY = event.GetY();
 	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
@@ -216,10 +236,13 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
     stringMousePixelX << std::fixed << setprecision(1) << mouseX;
     stringMousePixelY << std::fixed << setprecision(1) << mouseY;
     
- //   debugPixelCoordinate->SetLabel(stringMousePixelX.str() + " " + stringMousePixelY.str());
- //   debugCoordinate->SetLabel(stringMouseXCoor.str() + " " + stringMouseYCoor.str());
-  //  this->Refresh();
+    if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
+    {
+        cameraX -= (2.0 / canvasWidth) * (dx / zoomFactor) * (canvasWidth / canvasHeight);
+        cameraY += (2.0 / canvasHeight) * (dy / zoomFactor);
+    }
 
+    this->Refresh();
 }
 
 
@@ -285,35 +308,16 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	wxGLCanvas::SetCurrent(*geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
 	
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glDisable(GL_DEPTH_TEST);
     
-    
-    //Reset to modelview matrix
-	glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-    glLoadIdentity();
-	
-    if(zoomFactor < 1e-9)
-        zoomFactor = 1e-9;
-    
-    if(zoomFactor > 1e6)
-        zoomFactor = 1e6;
-        
-    glScaled(zoomFactor / (canvasWidth / canvasHeight), zoomFactor, 1.0);
-    glTranslated(cameraX, cameraY, 0.0);
-    glPushMatrix();
-    
-    glClear(GL_COLOR_BUFFER_BIT);
 	drawGrid();
-	int nodeListSize = nodeList.size();
     
-	
-	
 	if(lineList.size() > 0)
 	{
+        updateProjection();
 		for(int i = 0; i < lineList.size(); i++)
 		{
 			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
@@ -322,6 +326,7 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	
 	if(nodeList.size() > 0)
 	{
+        updateProjection();
 		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
 		{
 			int tempX = 0;
@@ -358,14 +363,17 @@ void geometryEditorCanvas::toggleBlockListCreation()
 
 void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
 {
-    if(event.GetWheelRotation() > 0)
+    if(event.GetWheelRotation() != 0)
     {
    //     wxMessageBox("Wheel Rotated");
         
         cameraX += mouseGraphX;
         cameraY += mouseGraphY;
         
-        zoomFactor = zoomFactor * pow(1.2, 2);
+        if(event.GetWheelRotation() > 0)
+            zoomFactor = zoomFactor * pow(1.2, -(event.GetWheelDelta()) / 150.0);
+        else
+            zoomFactor = zoomFactor * pow(1.2, (event.GetWheelDelta()) / 150.0);
         
         /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process */
         mouseGraphX = (((2.0 / canvasWidth) * (mouseX - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
@@ -558,6 +566,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 	addNode(mouseGraphX, mouseGraphY, 0);
 	this->Refresh();
 }
+
 
 wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
 	EVT_PAINT(geometryEditorCanvas::onGeometryPaint)
