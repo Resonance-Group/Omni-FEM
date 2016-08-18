@@ -15,8 +15,9 @@
 #include <common/Vector.h>
 #include <math.h>
 #include <UI/geometryEditorController.h>
+#include <sstream>
 
-
+using namespace std;
 
 class geometryEditorCanvas : public wxGLCanvas
 {
@@ -67,7 +68,7 @@ private:
 	 * 	This is 1/2 of a feature. The coorseopnding function is convertToYPixel.
 	 *  Both need to be called in order to create a pixel pair.
 	 */
-	int convertToXPixel(double XCoor, int cameraOffset);
+	double convertToXPixel(double XCoor, int cameraOffset);
 	double convertToXPixel(double XCoor);
     
 	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the Y pixel point
@@ -76,7 +77,7 @@ private:
 	 *  Both need to be called in order to create a pixel pair.
 	 */
 	double convertToYPixel(double YCoor);
-    int convertToYPixel(double YCoor, int cameraOffset);
+    double convertToYPixel(double YCoor, int cameraOffset);
 	
 	//! This is the function that is called when the user would like to add a new node
 	void addNode(double xPoint, double yPoint, double distance);
@@ -237,6 +238,8 @@ private:
 	std::vector<edgeLineShape> lineList;
 	std::vector<arcShape> arcList;
 	
+    std::ostringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;// THis is for debugging
+    
 	DECLARE_EVENT_TABLE();
 };
 
