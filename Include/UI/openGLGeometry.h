@@ -143,6 +143,9 @@ private:
     /*! This function needs to be called whenever there is a draw. */
     void updateProjection();
     
+    /*! Function called when the Right mouse button is clicked */
+    void onMouseRightDown(wxMouseEvent &event);
+    
 	/************
 	* Variables *
 	*************/

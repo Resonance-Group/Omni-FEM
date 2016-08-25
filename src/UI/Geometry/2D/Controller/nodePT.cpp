@@ -48,10 +48,10 @@ void node::draw()
 			glColor3f(1.0f, 0.0f, 0.0f);
 		else
 			glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex2d(xPixel - 0.01, yPixel + 0.01);
-		glVertex2d(xPixel + 0.01, yPixel + 0.01);
-		glVertex2d(xPixel + 0.01, yPixel - 0.01);
-		glVertex2d(xPixel - 0.01, yPixel - 0.01);
+		glVertex2d(xPixel - 5, yPixel + 5);
+		glVertex2d(xPixel + 5, yPixel + 5);
+		glVertex2d(xPixel + 5, yPixel - 5);
+		glVertex2d(xPixel - 5, yPixel - 5);
 	glEnd();
 }
 
