@@ -32,7 +32,7 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 
 	glMatrixMode(GL_MODELVIEW);// The matrix mode specifies which matrix stack is the target for matrix operations
 	glLoadIdentity();// Initial value
-//	glTranslated((float)this->GetSize().x / 2.0f, (float)this->GetSize().y / 2.0f, 0.0f);// This will move the camera to the center of the screen
+	glTranslated((float)this->GetSize().x / 2.0f, (float)this->GetSize().y / 2.0f, 0.0f);// This will move the camera to the center of the screen
     
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -42,8 +42,8 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 		As for the y value, it will extend from the top (y = 0) to the bottom (y = canvas->GetSize().y)
 		By default, the screen is the the unit square. This command changes that 
 	*/
-	glOrtho(0.0, canvasWidth, canvasHeight, 0.0, 1.0, -1.0);
-	
+//	glOrtho(0.0, canvasWidth, canvasHeight, 0.0, 1.0, -1.0);
+	glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	/* Ensure that there are no errors */
 	GLenum error = glGetError();
 	if(error != GL_NO_ERROR)
@@ -53,6 +53,7 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 	}
 
 	boundaryList.Add("<None>");
+    glMatrixMode(GL_MODELVIEW);
 }
 
 
@@ -68,12 +69,13 @@ void geometryEditorCanvas::render()
 
 void geometryEditorCanvas::updateProjection()
 {
+ //   glPopMatrix();
     // First, load the projection matrix and reset the view to a default view
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    
+ //   glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+ //   glOrtho(0.0, canvasWidth, canvasHeight, 0.0, 0.0, 0.0);
     
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
@@ -90,7 +92,7 @@ void geometryEditorCanvas::updateProjection()
     glScaled(zoomFactor / (canvasWidth / canvasHeight), zoomFactor, 1.0);
     glTranslated(-cameraX, -cameraY, 0.0);
 	
-    
+//    glPushMatrix();
 }
 
 
@@ -305,15 +307,32 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	wxPaintDC dc(this);// This is required for drawing
 	
     glMatrixMode(GL_MODELVIEW);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     
-    glDisable(GL_DEPTH_TEST);
+ //   glDisable(GL_DEPTH_TEST);
+    updateProjection();
+    glColor3d(0.0, 0.0, 0.0);
+            glPointSize(6.0);
     
-	drawGrid();
+            glBegin(GL_POINTS);
+                glVertex2d(247, 79);
+            glEnd();
     
+            glColor3d(1.0, 1.0, 1.0);
+            glPointSize(4.0);
+    
+            glBegin(GL_POINTS);
+                glVertex2d(247, 79);
+            glEnd();
+    
+//	drawGrid();
+    glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glPushMatrix();
 	if(lineList.size() > 0)
 	{
-        updateProjection();
+   //     updateProjection();
 		for(int i = 0; i < lineList.size(); i++)
 		{
 			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
@@ -322,7 +341,7 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	
 	if(nodeList.size() > 0)
 	{
-        updateProjection();
+  //      updateProjection();
 		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
 		{
             /* This section will take the current center coordinate for the node and convert it back into a pixel coordiante.
@@ -331,13 +350,17 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 			int tempX = 0;
 			int tempY = 0;
 			convertPixelToCoor(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), tempX, tempY);
-			nodeIterator->setCenterXPixel(tempX);
-			nodeIterator->setCenterYPixel(tempY);
-		
-			nodeIterator->draw();
+			nodeIterator->setCenterXPixel(247);
+			nodeIterator->setCenterYPixel(79);
+            
+            
+            
+	//		nodeIterator->draw();
 		}
 	}
 	
+    glPopMatrix();
+    
 	SwapBuffers();// Display the output
 }
 
@@ -573,9 +596,15 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 void geometryEditorCanvas::onMouseRightDown(wxMouseEvent &event)
 {
     std::string test1 = std::to_string(mouseGraphX);
-    test1.append(", ");
+    std::string test2 = std::to_string(mouseX);
+    test1.append(" , ");
     test1.append(std::to_string(mouseGraphY));
+    
+    test2.append(" , ");
+    test2.append(std::to_string(mouseY));
+    
     wxMessageBox(test1);
+    wxMessageBox(test2);
  //   wxMessageBox(stringMouseXCoor.str());
 }
 

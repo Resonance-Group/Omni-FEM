@@ -41,20 +41,20 @@ int node::getCenterYPixel()
 
 void node::draw()
 {
-    glMatrixMode(GL_MODELVIEW);
-	glPolygonMode(GL_FRONT, GL_LINE);
-	glBegin(GL_POLYGON);
-		if(isSelected)
-			glColor3f(1.0f, 0.0f, 0.0f);
-		else
-			glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex2d(xPixel - 5, yPixel + 5);
-		glVertex2d(xPixel + 5, yPixel + 5);
-		glVertex2d(xPixel + 5, yPixel - 5);
-		glVertex2d(xPixel - 5, yPixel - 5);
-	glEnd();
+    glColor3d(0.0, 0.0, 0.0);
+    glPointSize(6.0);
+    
+    glBegin(GL_POINTS);
+        glVertex2d(xPixel, yPixel);
+    glEnd();
+    
+    glColor3d(1.0, 1.0, 1.0);
+    glPointSize(4.0);
+    
+    glBegin(GL_POINTS);
+        glVertex2d(xPixel, yPixel);
+    glEnd();
 }
-
 
 
 void node::setNodeIndex(int index)
