@@ -102,7 +102,15 @@ void geometryEditorCanvas::drawGrid()
     
     glLineWidth(1.0);
     glEnable(GL_LINE_STIPPLE);
-    glLineStipple(1, 0x1C47);
+ //   glLineStipple(1, 0x1C47);
+    /* 
+     * The binary form is able to dispaly the concept of glLineStipple for 
+     * new users better then the Hex form. Although, the function is able to accept Hex
+     * For an idea of how glLineStipple work, refer to the following link
+     * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg
+     * 
+     */ 
+    glLineStipple(1, 0b0001110001000111);
     
     double cornerMinX = convertToXCoordinate(0);
     double cornerMinY = convertToYCoordinate(0);
@@ -165,27 +173,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
 	std::vector<int> deletednodes;
 	
-	
-	if(event.GetKeyCode() != DEL_KEY)
-	{
-		if(event.GetKeyCode() == LETTER_W || event.GetKeyCode() == LETTER_w)
-		{
-			cameraY -= 0.1f;
-		}
-		else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
-		{
-			cameraY += 0.1f;
-		}	
-		else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
-		{
-			cameraX -= 0.1f;
-		}
-		else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
-		{	
-			cameraX += 0.1f;
-		}
-	}
-	else
+	if(event.GetKeyCode() == DEL_KEY)
 	{
 		if(nodeList.size() == 1)
 		{
@@ -199,7 +187,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 				{
 					nodeList.erase(nodeIterator);
 					nodeIterator = nodeList.begin();
-					if(firstSelectedNodeIndex != -1 && (nodeIterator->getCenterXPixel() == nodeList[firstSelectedNodeIndex].getCenterXPixel()) && (nodeIterator->getCenterYPixel() == nodeList[firstSelectedNodeIndex].getCenterYPixel()))
+					if(firstSelectedNodeIndex != -1 && (nodeIterator->getCenterXCoordinate() == nodeList[firstSelectedNodeIndex].getCenterXCoordinate()) && (nodeIterator->getCenterYCoordinate() == nodeList[firstSelectedNodeIndex].getCenterYCoordinate()))
 					{
 						firstSelectedNodeIndex = -1;
 					}
@@ -311,31 +299,15 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
     
  //   glDisable(GL_DEPTH_TEST);
     updateProjection();
-    glColor3d(0.0, 0.0, 0.0);
-            glPointSize(6.0);
-    
-            glBegin(GL_POINTS);
-                glVertex2d(247, 79);
-            glEnd();
-    
-            glColor3d(1.0, 1.0, 1.0);
-            glPointSize(4.0);
-    
-            glBegin(GL_POINTS);
-                glVertex2d(247, 79);
-            glEnd();
-    
-//	drawGrid();
-    glPushMatrix();
+    drawGrid();
     glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-    glPushMatrix();
 	if(lineList.size() > 0)
 	{
    //     updateProjection();
 		for(int i = 0; i < lineList.size(); i++)
 		{
-			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
+            // Look into passing the nodeList vector by reference to the draw function and doing this in the draw function
+			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXCoordinate(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYCoordinate(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXCoordinate(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYCoordinate());
 		}
 	}
 	
@@ -344,22 +316,12 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
   //      updateProjection();
 		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
 		{
-            /* This section will take the current center coordinate for the node and convert it back into a pixel coordiante.
-             * The program will then use the pixel coordinate to draw the object
-             */
-			int tempX = 0;
-			int tempY = 0;
-			convertPixelToCoor(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), tempX, tempY);
-			nodeIterator->setCenterXPixel(247);
-			nodeIterator->setCenterYPixel(79);
-            
-            
-            
-	//		nodeIterator->draw();
+            /* Interestingly, the function does not have to convert the cartesian coordinates into pixels and draw
+             * The reason for this is unknown. 
+             */ 
+			nodeIterator->draw();
 		}
 	}
-	
-    glPopMatrix();
     
 	SwapBuffers();// Display the output
 }
@@ -456,7 +418,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
     /* This section will be for node handling */
 	for(int i = 0; i < nodeList.size(); i++)
 	{
-		if((((mouseX) >= nodeList[i].getCenterXPixel() - 5) && ((mouseX - cameraX) <= nodeList[i].getCenterXPixel() + 5) && ((mouseY - cameraY) <= nodeList[i].getCenterYPixel() + 5) && ((mouseY - cameraY) >=nodeList[i].getCenterYPixel() - 5)) && nodeSelected == false)
+		if(((mouseGraphX >= nodeList[i].getCenterXCoordinate() - 0.01 * zoomFactor) && (mouseGraphX <= nodeList[i].getCenterXCoordinate() + 0.01 * zoomFactor) && (mouseGraphY <= nodeList[i].getCenterYCoordinate() + 0.01 * zoomFactor) && (mouseGraphY >=nodeList[i].getCenterYCoordinate() - 0.01 * zoomFactor)) && nodeSelected == false)
 		{
 			if(blockLabelCreationIsEnabled)
 				return;
@@ -499,24 +461,34 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 			}
 			else if(firstSelectedNodeIndex == -1)
 			{
+                /* This section will clear any nodes that were selected such that the one that was 
+                 * selected is the only one that is selected
+                 */ 
 				for (int j = 0; j < nodeList.size(); j++)
 				{
 					if(nodeList[j].getIsSelected())
 						nodeList[j].toggleSelect();
 				}
-				nodeList[i].toggleSelect();
+				nodeList[i].toggleSelect(); // Select the one that the user wants
 				firstSelectedNodeIndex = i;
-				this->Refresh();
-				return;
+				this->Refresh();// Update the screen
+				return; // quit the function
 			}
 			else
 			{
+                /* This section deals with creating a line between the two nodes
+                 */ 
 				if(lineCreationFlag)
 				{
 					
 					double tempXCoor, tempYCoor;
 					for(int k = 0; k < lineList.size(); k++)
 					{
+                        /* In this fucntion, we already have the index to the first node the user selected
+                         * i would be the index of the second node the user selected.
+                         * k is the index to the line segment. The purpose of the fuction
+                         * tempx and tempyCoor are simply temporarl coordinates that are used as a midway.
+                         */ 
 						if(getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor) == true)
 						{
 							addNode(tempXCoor, tempYCoor, 0.01);

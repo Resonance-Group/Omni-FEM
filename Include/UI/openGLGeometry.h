@@ -88,7 +88,12 @@ private:
 	//! This function will add an arc segment between two selected nodes
 	void addArcSegment(arcShape &arcSeg, double tolerance = 0);
 	
-	//! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
+	/*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
+     * node0 is the first node that the user selects
+     * node1 is the second node that the user selects
+     * lineSegment is the line segment index that will be checked for an intersection
+     * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
+     */
 	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
 	
 	//! This function is called in order to toggel the block list creation flag
@@ -225,7 +230,7 @@ private:
 	bool blockLabelCreationIsEnabled = false;
 	
 	//! This flag will indicate if the user would like to create an arc or a line
-	bool lineCreationFlag = false;
+	bool lineCreationFlag = true;
 	
 	bool recalculatenodeCenters;
 	

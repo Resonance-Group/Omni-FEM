@@ -41,18 +41,22 @@ int node::getCenterYPixel()
 
 void node::draw()
 {
-    glColor3d(0.0, 0.0, 0.0);
+    if(isSelected)
+        glColor3d(1.0, 0.0, 0.0);
+    else
+        glColor3d(0.0, 0.0, 0.0);
+    
     glPointSize(6.0);
     
     glBegin(GL_POINTS);
-        glVertex2d(xPixel, yPixel);
+        glVertex2d(xCenterCoordinate, yCenterCoordinate);
     glEnd();
     
     glColor3d(1.0, 1.0, 1.0);
     glPointSize(4.0);
     
     glBegin(GL_POINTS);
-        glVertex2d(xPixel, yPixel);
+        glVertex2d(xCenterCoordinate, yCenterCoordinate);
     glEnd();
 }
 

@@ -83,15 +83,16 @@ std::string edgeLineShape::getConductor()
 
 
 
-void edgeLineShape::draw(int node1X, int node1Y, int node2X, int node2Y)
+void edgeLineShape::draw(double node1X, double node1Y, double node2X, double node2Y)
 {
+    glLineWidth(2.0);
     glBegin(GL_LINES);
         if(isSelected)
             glColor3f(1.0f, 0.0f, 0.0f);
         else
             glColor3f(0.0f, 0.0f, 0.0f);
-        glVertex2i(node1X, node1Y);
-        glVertex2i(node2X, node2Y);
+        glVertex2d(node1X, node1Y);
+        glVertex2d(node2X, node2Y);
     glEnd();
-        
+    glLineWidth(0.5);
 }

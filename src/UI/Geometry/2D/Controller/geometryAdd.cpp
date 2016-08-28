@@ -97,7 +97,8 @@ void geometryEditorCanvas::addLineSegment(int node0, int node1, edgeLineShape *p
     
 	if(node0 == node1)
 		return;
-		
+	
+/* Check to see if the line has already been created */	
 	for(int i = 0; i < lineList.size(); i++)
 	{
 		if((lineList[i].getFirstNodeIndex() == node0 && lineList[i].getSecondNodeIndex() == node1) || (lineList[i].getFirstNodeIndex() == node0 && lineList[i].getSecondNodeIndex() == node0))
@@ -123,7 +124,7 @@ void geometryEditorCanvas::addLineSegment(int node0, int node1, edgeLineShape *p
         
     }
     
-    lineList.push_back(*tempLine);
+    lineList.push_back(*tempLine);// Add the line to the list
     
 }
 

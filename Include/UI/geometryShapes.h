@@ -69,10 +69,10 @@ protected:
 	//! Data type used to store the group number that the shape is associated with
 	int groupNumber;
 
-	//! This data type stroes the center x  position
+	//! This data type stroes the center x  position in Cartesian Coordiantes
 	double xCenterCoordinate;
 	
-	//! This data type stores the center y position
+	//! This data type stores the center y position in Cartesians Coordiantes
 	double yCenterCoordinate;
 };
 
@@ -98,7 +98,7 @@ public:
     void setConductor(std::string conductor);
     std::string getConductor();
     
-    virtual void draw(int node1X, int node1Y, int node2X, int node2Y);
+    virtual void draw(double node1X, double node1Y, double node2X, double node2Y);
 	
 protected:
 	/*! \brief  A line is composed of 2 nodes.
