@@ -58,10 +58,10 @@ void geometryEditorCanvas::addNode(double xPoint, double yPoint, double distance
 			arcSegment = &arcList[i];
 			
 			arcList[i].setSecondNodeIndex((int)nodeList.size() - 1);
-			arcList[i].setArcLength((((firstNode - c) / (secondNode - c)) * 180.0 / PI).Arg());
+			arcList[i].setArcAngle((((firstNode - c) / (secondNode - c)) * 180.0 / PI).Arg());
 			
 			arcSegment->setFirstNodeIndex((int)nodeList.size() - 1);
-			arcSegment->setArcLength((((firstNode - c) / (secondNode - c)) * 180.0 / PI).Arg());
+			arcSegment->setArcAngle((((firstNode - c) / (secondNode - c)) * 180.0 / PI).Arg());
 			
 			arcList.push_back(*arcSegment);
 		}
@@ -84,7 +84,7 @@ void geometryEditorCanvas::getCircle(arcShape &arc, Vector &center, double &radi
 	
 	temp = (firstNode - secondNode) / distance;
 	
-	radius = distance / (2.0 * sin(arc.getArcLength() * PI / 360.0));
+	radius = distance / (2.0 * sin(arc.getArcAngle() * PI / 360.0));
 	
 	center = firstNode + (distance / 2.0 + J * sqrt(pow(radius, 2) - pow(distance, 2) / 4.0)) * temp;
 }
@@ -202,7 +202,7 @@ double geometryEditorCanvas::shortestDistanceFromArc(Vector pointVec, arcShape &
 	
 	z = Varg(tempVec / (vec1 - centerVec)) * 180 / PI;
 	
-	if((z > 0) && (z < arcSegment.getArcLength()))
+	if((z > 0) && (z < arcSegment.getArcAngle()))
 		return length;
 		
 	z = Vabs(pointVec - vec1);
@@ -232,7 +232,7 @@ int geometryEditorCanvas::getLineToArcIntersection(edgeLineShape &lineSegment, a
 	distance = Vabs(arcSegVec2 - arcSegVec1);
 	
 	tempVec1 = (arcSegVec2 - arcSegVec1) / distance;
-	radius = distance / (2.0 * sin(arcSegment.getArcLength() * PI / 360.));
+	radius = distance / (2.0 * sin(arcSegment.getArcAngle() * PI / 360.));
 	
 	tempVec3 = arcSegVec1 + (distance / 2.0 + J * sqrt(pow(radius, 2) - pow(distance, 2) / 4.0)) * tempVec1;
 	
@@ -251,7 +251,7 @@ int geometryEditorCanvas::getLineToArcIntersection(edgeLineShape &lineSegment, a
 		pointVec[intersectionCounter] = lineSegVec1 + tempVec2.getXComponent() * tempVec1;
 		radius = ((pointVec[intersectionCounter] - lineSegVec1) / tempVec1).getXComponent();
 		z = Varg((pointVec[intersectionCounter] - tempVec3) / (arcSegVec1 - tempVec3));
-		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcLength() * PI / 180))
+		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
 			intersectionCounter++;
 		return intersectionCounter;
 	}
@@ -259,13 +259,13 @@ int geometryEditorCanvas::getLineToArcIntersection(edgeLineShape &lineSegment, a
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * tempVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / tempVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - tempVec3) / (arcSegVec1 - tempVec3));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcLength() * PI / 180))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
 		intersectionCounter++;
 		
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * tempVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / tempVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - tempVec3) / (arcSegVec1 - tempVec3));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcLength() * PI / 180))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
 		intersectionCounter++;
 		
 	return intersectionCounter;
@@ -285,7 +285,7 @@ void geometryEditorCanvas::addArcSegment(arcShape &arcSeg, double tolerance)
 		
 	for(int i = 0; i < arcList.size(); i++)
 	{
-		if((arcList[i].getFirstNodeIndex() == arcSeg.getFirstNodeIndex()) && (arcList[i].getSecondNodeIndex() == arcSeg.getSecondNodeIndex()) && (fabs(arcList[i].getArcLength() - arcSeg.getArcLength()) < 1.0e-02))
+		if((arcList[i].getFirstNodeIndex() == arcSeg.getFirstNodeIndex()) && (arcList[i].getSecondNodeIndex() == arcSeg.getSecondNodeIndex()) && (fabs(arcList[i].getArcAngle() - arcSeg.getArcAngle()) < 1.0e-02))
 			return;
 	}
 	
@@ -352,7 +352,7 @@ void geometryEditorCanvas::addArcSegment(arcShape &arcSeg, double tolerance)
 	getCircle(arcSeg, centerPoint, radius);
 	
 	if(tolerance == 0)
-		minDistance = fabs(radius * PI * arcSeg.getArcLength() / 180.0) * 1.0e-05;
+		minDistance = fabs(radius * PI * arcSeg.getArcAngle() / 180.0) * 1.0e-05;
 	else
 		minDistance = tolerance;
 	
@@ -375,12 +375,12 @@ void geometryEditorCanvas::addArcSegment(arcShape &arcSeg, double tolerance)
 				newArc = arcSeg;
 				
 				newArc.setSecondNodeIndex(loopCounter);
-				newArc.setArcLength(Varg((vec3 - centerPoint) / (vec1 - centerPoint)) * 180.0 / PI);
+				newArc.setArcAngle(Varg((vec3 - centerPoint) / (vec1 - centerPoint)) * 180.0 / PI);
 				addArcSegment(newArc, minDistance);
 				
 				newArc = arcSeg;
 				newArc.setFirstNodeIndex(loopCounter);
-				newArc.setArcLength(Varg((vec2 - centerPoint) / (vec3 - centerPoint)) * 180.0 / PI);
+				newArc.setArcAngle(Varg((vec2 - centerPoint) / (vec3 - centerPoint)) * 180.0 / PI);
 				addArcSegment(newArc, minDistance);
 				
 				loopCounter = nodeList.size();

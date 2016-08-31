@@ -8,6 +8,8 @@
 #include <gl.h>
 #include <glu.h>
 #include <math.h>
+#include <vector>
+#include <common/Vector.h>
 
 //#include <UI/openGLGeometry.h>
 
@@ -224,23 +226,48 @@ class arcShape : public edgeLineShape
 public:
 	arcShape();
 	
-	void setArcLength(double lengthOfArc);
+	void setArcAngle(double angleOfArc);
 	
-	double getArcLength();
+	double getArcAngle();
 	
-	void setMaxSideLength(double sideLength);
+	void setNumSegments(double segments);
 	
-	double getMaxSideLength();
+	double getnumSegments();
+    
+    void draw();
 
+    /*! \brief  This function will be calculating the radius and center point of the arc
+	 *			The idea is as follows:
+     *          By knowing the 2 endpoints and the arc angle, we are able to caluclate the radius and the center point
+     *          For the radius, this is the law of cosines: c^2 = 2 * R^2 * (1 - cos(theta) )
+                where c is the length of the sector through the beginning and starting endpoints and theta is the arc angle
+                Then, 
+	 */
+    void calculate(std::vector<node> &arcNodeList);
+    
 private:
 	
 	bool isNormalDirection;
 	
 	bool isHidden;
 	
-	double maxSideLength;
+	double numSegments;
 	
-	double arcLength;
+    //! This data is the angle of the arc used in calculations
+	double arcAngle;
+    
+    //! The radius of the arc from the center point
+    double radius;
+    
+    bool isCounterClockWise = true;
+    
+    double startNodeXCoordinate;
+    
+    double startNodeYCoordinate;
+    
+    double endNodeXCoordinate;
+    
+    double endNodeYCoordinate;
 	
 };
 

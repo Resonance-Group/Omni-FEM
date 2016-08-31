@@ -102,7 +102,6 @@ void geometryEditorCanvas::drawGrid()
     
     glLineWidth(1.0);
     glEnable(GL_LINE_STIPPLE);
- //   glLineStipple(1, 0x1C47);
     /* 
      * The binary form is able to dispaly the concept of glLineStipple for 
      * new users better then the Hex form. Although, the function is able to accept Hex
@@ -110,7 +109,7 @@ void geometryEditorCanvas::drawGrid()
      * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg
      * 
      */ 
-    glLineStipple(1, 0b0001110001000111);
+    glLineStipple(1, 0b0000100001000010);
     
     double cornerMinX = convertToXCoordinate(0);
     double cornerMinY = convertToYCoordinate(0);
@@ -311,6 +310,14 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 		}
 	}
 	
+    if(arcList.size() > 0)
+    {
+        for(std::vector<arcShape>::iterator arcIterator = arcList.begin(); arcIterator != arcList.end(); ++arcIterator)
+        {
+            arcIterator->draw();
+        }
+    }
+    
 	if(nodeList.size() > 0)
 	{
   //      updateProjection();
@@ -322,6 +329,8 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 			nodeIterator->draw();
 		}
 	}
+    
+    
     
 	SwapBuffers();// Display the output
 }
@@ -536,10 +545,10 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						wxString test = boundaryList.Item(index);
 						
 						arcAngle->GetValue().ToDouble(&arcAngleVal);
-						arcSegment.setArcLength(arcAngleVal);// This needs to be changed to reflect that it is really the arc angle and not length
+						arcSegment.setArcAngle(arcAngleVal);// This needs to be changed to reflect that it is really the arc angle and not length
 						
 						maxSegment->GetValue().ToDouble(&maxSegmentVal);
-						arcSegment.setMaxSideLength(maxSegmentVal);
+						arcSegment.setNumSegments(maxSegmentVal);
 						
 						//arcSegment.setBoundaryMarker(test);
 						arcSegment.setBoundaryMarker(test);
@@ -547,6 +556,8 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						arcSegment.setFirstNodeIndex(firstSelectedNodeIndex);
 						arcSegment.setSecondNodeIndex(nodeList[i].getNodeIndex());
 						
+                        arcSegment.calculate(nodeList);
+                        
 						addArcSegment(arcSegment);
 					}
 				}

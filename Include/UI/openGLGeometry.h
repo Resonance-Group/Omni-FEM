@@ -230,7 +230,7 @@ private:
 	bool blockLabelCreationIsEnabled = false;
 	
 	//! This flag will indicate if the user would like to create an arc or a line
-	bool lineCreationFlag = true;
+	bool lineCreationFlag = false;
 	
 	bool recalculatenodeCenters;
 	
