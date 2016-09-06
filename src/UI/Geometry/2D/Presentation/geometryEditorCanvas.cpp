@@ -3,11 +3,6 @@
 
 #include <math.h>
 
-class tempXCoor;
-class tempXCoor;
-class tempXCoor;
-
-
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
  //   debugCoordinate = new wxStaticText(this, wxID_ANY, "None", wxPoint(0, 10));
@@ -531,10 +526,10 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					wxStaticText *boundaryText = new wxStaticText(dialogPanel, wxID_ANY, "Boundary", wxPoint(12, 125), wxSize(52,13));
 					boundaryText->SetFont(*font);
 					
-					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "180", wxPoint(101, 35), wxSize(156, 20));
-					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "3", wxPoint(101, 80), wxSize(156, 20));
+					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "35", wxPoint(101, 35), wxSize(156, 20));
+					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "10", wxPoint(101, 80), wxSize(156, 20));
 
-					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "", wxPoint(101, 122), wxSize(156, 21), boundaryList);
+					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "<None>", wxPoint(101, 122), wxSize(156, 21), boundaryList);
 					
 					if(arcSegmentDlg->ShowModal() == wxID_OK)
 					{
