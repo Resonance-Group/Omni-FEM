@@ -219,6 +219,7 @@ double geometryEditorCanvas::shortestDistanceFromArc(Vector pointVec, arcShape &
 int geometryEditorCanvas::getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec)
 {
 	/* Note: this function has not yet been verified to be working. Logical bugs could still exist */
+    // This function was ported from Cbeladraw::GetLineArcIntersection
 	Vector lineSegVec1, lineSegVec2, arcSegVec1, arcSegVec2, tempVec1, tempVec2, tempVec3;
 	double distance, length, radius, z;
 	int intersectionCounter = 0;
@@ -272,8 +273,16 @@ int geometryEditorCanvas::getLineToArcIntersection(edgeLineShape &lineSegment, a
 }
 
 
+int geometryEditorCanvas::getArcToArcIntersection(edgeLineShape &segment, arcShape &arc, Vector &intersectionVector)
+{
+    
+}
+
+
+
 void geometryEditorCanvas::addArcSegment(arcShape &arcSeg, double tolerance)
 {
+    // This function was obtained from CbeladrawDoc::AddArcSegment
 	edgeLineShape segment;
 	arcShape newArc;
 	Vector intersectingNodes[2];
@@ -322,7 +331,7 @@ void geometryEditorCanvas::addArcSegment(arcShape &arcSeg, double tolerance)
 	/* This section will check for any intesections with lines and arcs and if so, place a node there */
 	for(int i = 0; i < lineList.size(); i++)// This will check how many times the existing arc intercests the proposed arc.
 	{
-		int j = 0; // Place the function for intersecting here This will be for an arc intersecting a line
+		int j = getLineToArcIntersection(lineList[i], arcSeg, intersectingNodes); // Place the function for intersecting here This will be for an arc intersecting a line
 		
 		if(j > 0)
 		{

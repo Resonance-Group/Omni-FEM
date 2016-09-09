@@ -64,15 +64,15 @@ void arcShape::calculate(std::vector<node> &arcNodeList)
     double distanceSquared = 0;
     
     // Use this site for reference: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
-    if(arcNodeList[nodeIndex2].getCenterXCoordinate() > arcNodeList[nodeIndex1].getCenterXCoordinate())
+ /*   if(arcNodeList[nodeIndex2].getCenterXCoordinate() > arcNodeList[nodeIndex1].getCenterXCoordinate())
     {
         startNodeXCoordinate = arcNodeList[nodeIndex2].getCenterXCoordinate();
         endNodeXCoordinate = arcNodeList[nodeIndex1].getCenterXCoordinate();
         
         startNodeYCoordinate = arcNodeList[nodeIndex2].getCenterYCoordinate();
         endNodeYCoordinate =  arcNodeList[nodeIndex1].getCenterYCoordinate();
-    }
-    else
+    }*/
+ //   else
     {
         startNodeXCoordinate = arcNodeList[nodeIndex1].getCenterXCoordinate();
         endNodeXCoordinate = arcNodeList[nodeIndex2].getCenterXCoordinate();
