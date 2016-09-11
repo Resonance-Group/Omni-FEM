@@ -151,4 +151,17 @@ void arcShape::draw()
         glVertex2d(endNodeXCoordinate, endNodeYCoordinate);
     glEnd();
 }	
-	
+
+
+
+double arcShape::getRadius()
+{
+    return radius;
+}	
+
+
+
+double arcShape::getArcLength()
+{
+    return radius * arcAngle * (PI / 180.0);
+}

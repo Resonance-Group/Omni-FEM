@@ -143,7 +143,8 @@ private:
 	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
 	
 	/*! This function will calculate the number of intersection points where two arcs intersect */
-	int getArcToArcIntersection(edgeLineShape &segment, arcShape &arc, Vector &intersectionVector);
+	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
+    
     
     /*! This function needs to be called whenever there is a draw. */
     void updateProjection();

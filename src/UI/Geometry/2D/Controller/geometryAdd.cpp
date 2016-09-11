@@ -273,12 +273,60 @@ int geometryEditorCanvas::getLineToArcIntersection(edgeLineShape &lineSegment, a
 }
 
 
-int geometryEditorCanvas::getArcToArcIntersection(edgeLineShape &segment, arcShape &arc, Vector &intersectionVector)
+int geometryEditorCanvas::getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point)
 {
+    // This function was ported from CbeladrawDoc::GetArcArcIntersection (Please note that the variable names may not be accurate to what they actually are. This is because there is a lack of documentation in FEMM)
+    Vector arcCenter1, arcCenter2, arc1StartNode, arc2StartNode, tempVec;
+    double distance, arcRadius1, arcRadius2, length, center, arc1Length, arc2Length, z0, z1;
+    int counter;
     
+    arc1StartNode.Set(nodeList[arcSegment1.getFirstNodeIndex()].getCenterXCoordinate(), arcList[arcSegment1.getFirstNodeIndex()].getCenterYCoordinate());
+    arc2StartNode.Set(nodeList[arcSegment2.getFirstNodeIndex()].getCenterXCoordinate(), arcList[arcSegment2.getFirstNodeIndex()].getCenterYCoordinate());
+    
+    arcRadius1 = arcSegment1.getRadius();
+    arcRadius2 = arcSegment2.getRadius();
+    
+    arcCenter1.Set(arcSegment1.getCenterXCoordinate(), arcSegment1.getCenterYCoordinate());
+    arcCenter2.Set(arcSegment2.getCenterXCoordinate(), arcSegment2.getCenterYCoordinate());
+    
+    distance = Vabs(arcCenter1, arcCenter2);
+    
+    if((distance > (arcRadius1 + arcRadius2) || (distance < 1.0e-08)))
+        return 0;
+    
+    length = sqrt((arcRadius1 + arcRadius2 - distance) * (distance + arcRadius1 - arcRadius2) * (distance - arcRadius1 + arcRadius2) * (distance + arcRadius1 + arcRadius2)) / (2.0 * distance);
+    
+    center = 1.0 + pow((arcRadius1 / distance), 2) - pow(arcRadius2 / distance, 2);
+    
+    tempVec = (arcCenter2 - arcCenter1) / distance;
+    
+    arc1Length = arcSegment1.getArcLength();
+    arc2Length = arcSegment2.getArcLength();
+    
+    point[counter] = arcCenter1 + (center * distance / 2.0 + I * length) * tempVec;
+    
+    z0 = Varg((p[counter] - arcCenter1) / (arc1StartNode - arcCenter1));
+    z1 = Varg((p[counter] - arcCenter2) / (arc2StartNode - arcCenter2));
+    
+    if((z0 > 0.0) && (z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
+        counter++;
+        
+    if(fabs(distance - arcRadius1 + arcRadius2) / (arcRadius1 + arcRadius2) < 1.0e-05)
+    {
+        p[counter] = arcCenter1 + center * distance * (tempVec / 2.0);
+        return counter;
+    }
+    
+    p[counter] = arcCenter1 + (center * distance / 2.0 - I * length) * tempVec;
+    z0 = Varg((p[counter] - arc1StartNode) / (arc1StartNode - arcCenter1));
+    z1 = Varg((p[counter] - arc2StartNode) / (arc2StartNode - arcCenter2));
+    
+    if((z0 > 0.0) && (z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
+        counter++;
+        
+    return counter;
+
 }
-
-
 
 void geometryEditorCanvas::addArcSegment(arcShape &arcSeg, double tolerance)
 {

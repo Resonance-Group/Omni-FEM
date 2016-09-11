@@ -245,6 +245,10 @@ public:
 	 */
     void calculate(std::vector<node> &arcNodeList);
     
+    double getRadius();
+    
+    double getArcLength();
+    
 private:
 	
 	bool isNormalDirection;
@@ -253,7 +257,7 @@ private:
 	
 	double numSegments;
 	
-    //! This data is the angle of the arc used in calculations
+    //! This data is the angle of the arc used in calculations. This should be in degrees
 	double arcAngle;
     
     //! The radius of the arc from the center point
