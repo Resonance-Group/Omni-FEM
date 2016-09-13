@@ -34,9 +34,6 @@ private:
     //! This is the event that is fired when the canvas is drawn or re-drawn
 	void onGeometryPaint(wxPaintEvent &event);
 	
-    //! Rendering the geometry
-	void render();
-	
 	//! This function will convert a xpoint (pixel) to an x-coordinate value
 	/*
 		This is 1/2 of the mapping function. The function follow the idea presented in the following webpage:
@@ -47,7 +44,6 @@ private:
     *   The coefficients can be solved with the use of matrices. The program will need to
     *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToXCoordinate(int xPixel, int cameraOffset);
     double convertToXCoordinate(int xPixel);
 	
 	//! This function will convert a ypoint (pixel) to an y-coordinate value
@@ -60,24 +56,7 @@ private:
     *   The coefficients can be solved with the use of matrices. The program will need to
     *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToYCoordinate(int yPixel, int cameraOffset);
 	double convertToYCoordinate(int yPixel);
-    
-	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the X pixel point
-	/*
-	 * 	This is 1/2 of a feature. The coorseopnding function is convertToYPixel.
-	 *  Both need to be called in order to create a pixel pair.
-	 */
-	double convertToXPixel(double XCoor, int cameraOffset);
-	double convertToXPixel(double XCoor);
-    
-	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the Y pixel point
-	/*
-	 * 	This is 1/2 of a feature. The coorseopnding function is convertToXPixel.
-	 *  Both need to be called in order to create a pixel pair.
-	 */
-	double convertToYPixel(double YCoor);
-    double convertToYPixel(double YCoor, int cameraOffset);
 	
 	//! This is the function that is called when the user would like to add a new node
 	void addNode(double xPoint, double yPoint, double distance);
@@ -98,9 +77,6 @@ private:
 	
 	//! This function is called in order to toggel the block list creation flag
 	void toggleBlockListCreation();
-	
-	//! This fuinction is to be used on geometry objects to convert their center coordinate value into a center Pixel value. 
-	void convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel);
 	
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
@@ -144,7 +120,6 @@ private:
 	
 	/*! This function will calculate the number of intersection points where two arcs intersect */
 	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
-    
     
     /*! This function needs to be called whenever there is a draw. */
     void updateProjection();
@@ -192,22 +167,6 @@ private:
 	const int factor = 10;
     
     double gridStep = 0.05; // This variable controls the grid step which controls how the graph is drawn
-    
-    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
-    /*
-     *  For more complete documentation, please read documentation for the function that 
-     *  uses this variable
-     * 
-     */ 
-    double Ycoeff = (double)-0.0829876d;
-	
-    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
-    /*
-     *  For more complete documentation, please read documentation for the function that 
-     *  uses this variable
-     * 
-     */  
-    double Xcoeff = (double)0.0326264d;
     
     //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
     /*

@@ -2,19 +2,17 @@
 
 node::node(double xCenter, double yCenter) : rectangleShape(xCenter, yCenter)
 {
-	xPixel = 0;
-	yPixel = 0;
+
 }
+
+
 
 node::node()
 {
     
 }
 
-void node::setCenterYPixel(int yPix)
-{
-	yPixel = yPix;
-}
+
 
 void node::setCenter(double xCoor, double yCoor)
 {
@@ -22,22 +20,7 @@ void node::setCenter(double xCoor, double yCoor)
     yCenterCoordinate = yCoor;
 }
 
-void node::setCenterXPixel(int xPix)
-{
-	xPixel = xPix;
-}
 
-
-int node::getCenterXPixel()
-{
-	return xPixel;
-}
-
-
-int node::getCenterYPixel()
-{
-	return yPixel;
-}
 
 void node::draw()
 {
@@ -59,6 +42,7 @@ void node::draw()
         glVertex2d(xCenterCoordinate, yCenterCoordinate);
     glEnd();
 }
+
 
 
 void node::setNodeIndex(int index)
