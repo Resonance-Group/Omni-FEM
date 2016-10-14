@@ -102,10 +102,6 @@ private:
 
 
 
-
-
-
-
 /*! \class geometryEditor2DPresentation
 	\brief The main class for the 2D geometry Editor
 	

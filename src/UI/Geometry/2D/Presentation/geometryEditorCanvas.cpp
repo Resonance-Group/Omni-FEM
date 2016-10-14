@@ -52,15 +52,6 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 }
 
 
-void geometryEditorCanvas::render()
-{
-
-	
-    
-    
-}
-
-
 
 void geometryEditorCanvas::updateProjection()
 {
@@ -245,42 +236,6 @@ double geometryEditorCanvas::convertToYCoordinate(int yPixel)
     return (-(2.0 / canvasHeight) * ((double)yPixel - canvasHeight / 2.0)) / zoomFactor + cameraY;
 }
 
-
-double geometryEditorCanvas::convertToYCoordinate(int yPixel, int cameraOffset)
-{
-	return (Ycoeff* ((double)yPixel - cameraOffset) + graphOffset);
-}
-
-
-double geometryEditorCanvas::convertToXPixel(double XCoor)
-{
-	return ((XCoor - cameraX) * zoomFactor * canvasHeight) / 2.0 + (canvasWidth / 2.0);
-}
-
-
-double geometryEditorCanvas::convertToXPixel(double XCoor, int cameraOffset)
-{
-	return 0.0;
-}
-
-
-double geometryEditorCanvas::convertToYPixel(double YCoor)
-{
-	return ((YCoor - cameraY) * zoomFactor * canvasHeight) / -2.0 + (canvasHeight / 2.0); 
-}
-
-double geometryEditorCanvas::convertToYPixel(double YCoor, int cameraOffset)
-{
-	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraOffset; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
-}
-
-
-void geometryEditorCanvas::convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel)
-{
-	xPixel = convertToXPixel(xPoint);
-	
-	yPixel = convertToYPixel(yPoint);
-}
 
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
