@@ -289,7 +289,7 @@ int geometryEditorCanvas::getArcToArcIntersection(arcShape& arcSegment1, arcShap
     arcCenter1.Set(arcSegment1.getCenterXCoordinate(), arcSegment1.getCenterYCoordinate());
     arcCenter2.Set(arcSegment2.getCenterXCoordinate(), arcSegment2.getCenterYCoordinate());
     
-    distance = Vabs(arcCenter1, arcCenter2);
+    distance = Vabs(arcCenter1 - arcCenter2);
     
     if((distance > (arcRadius1 + arcRadius2) || (distance < 1.0e-08)))
         return 0;
@@ -303,23 +303,23 @@ int geometryEditorCanvas::getArcToArcIntersection(arcShape& arcSegment1, arcShap
     arc1Length = arcSegment1.getArcLength();
     arc2Length = arcSegment2.getArcLength();
     
-    point[counter] = arcCenter1 + (center * distance / 2.0 + I * length) * tempVec;
+    point[counter] = arcCenter1 + (center * distance / 2.0 + J * length) * tempVec;
     
-    z0 = Varg((p[counter] - arcCenter1) / (arc1StartNode - arcCenter1));
-    z1 = Varg((p[counter] - arcCenter2) / (arc2StartNode - arcCenter2));
+    z0 = Varg((point[counter] - arcCenter1) / (arc1StartNode - arcCenter1));
+    z1 = Varg((point[counter] - arcCenter2) / (arc2StartNode - arcCenter2));
     
     if((z0 > 0.0) && (z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
         counter++;
         
     if(fabs(distance - arcRadius1 + arcRadius2) / (arcRadius1 + arcRadius2) < 1.0e-05)
     {
-        p[counter] = arcCenter1 + center * distance * (tempVec / 2.0);
+        point[counter] = arcCenter1 + center * distance * (tempVec / 2.0);
         return counter;
     }
     
-    p[counter] = arcCenter1 + (center * distance / 2.0 - I * length) * tempVec;
-    z0 = Varg((p[counter] - arc1StartNode) / (arc1StartNode - arcCenter1));
-    z1 = Varg((p[counter] - arc2StartNode) / (arc2StartNode - arcCenter2));
+    point[counter] = arcCenter1 + (center * distance / 2.0 - J * length) * tempVec;
+    z0 = Varg((point[counter] - arc1StartNode) / (arc1StartNode - arcCenter1));
+    z1 = Varg((point[counter] - arc2StartNode) / (arc2StartNode - arcCenter2));
     
     if((z0 > 0.0) && (z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
         counter++;

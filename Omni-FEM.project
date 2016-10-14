@@ -90,6 +90,14 @@
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
       <File Name="Include/common/omniFEMDialog.h"/>
+      <File Name="Include/common/ConductorProperty.h"/>
+      <File Name="Include/common/MaterialFolder.h"/>
+      <File Name="Include/common/NodalProperty.h"/>
+      <File Name="Include/common/CircuitProperty.h"/>
+      <File Name="Include/common/MaterialProperty.h"/>
+      <File Name="Include/common/ElectroStaticMaterial.h"/>
+      <File Name="Include/common/enums.h"/>
+      <File Name="Include/common/BoundaryConditions.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
