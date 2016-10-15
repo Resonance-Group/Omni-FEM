@@ -98,6 +98,9 @@
       <File Name="Include/common/ElectroStaticMaterial.h"/>
       <File Name="Include/common/enums.h"/>
       <File Name="Include/common/BoundaryConditions.h"/>
+      <File Name="Include/common/ElectricalBoundary.h"/>
+      <File Name="Include/common/MagneticBoundary.h"/>
+      <File Name="Include/common/MagneticMaterial.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

@@ -63,8 +63,27 @@ enum bcEnum
     PERIODIC,
     ANTI-PERIODIC,
     /* This is specific for Magnetics */
+    /*!
+     *  The vector potental A is prescribed along a given boundary. This boundary condition
+     *  can be used to presribe the flux passing normal to a boundary, since the normal
+     *  flux is equal to the tangential derivative of A along the bounary.
+     *  The parameters are identified by A0, A1, A2, and phi
+     */ 
     PRESCRIBE_A,
+    
+    /*! 
+     *  This boundary condition denotes an interface with a material subject to eddy currents at
+     *  high enough frequencies suc hthat the skin dpeth in the material
+     *  is very small. The boundary condition is a Robin boundary condition with complex
+     *  coefficients of the form:
+     *  da/dn + ((1 + j) / delta) * A = 0.
+     *  where n denotes the direction of the outward normal to the boundary and delta
+     *  denotes the skin depth of the material the the frequency of interest
+     *  delta = sqrt(2 / (omega * mur * mu0 * sigma))
+     */ 
     SMALL_SKIN_DEPTH,
+    
+    //! An experimental BC
     STRATEGIC_DUAL_IMAGE,
     /* These are specific for E-stat */
     FIXED_VOLTAGE,
