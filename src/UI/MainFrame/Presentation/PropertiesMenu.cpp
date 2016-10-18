@@ -2,36 +2,37 @@
 
 
 
-OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
+void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
 {
-    wxPanel *propertiesPanel = new wxPanel;
-    
+    propertiesDialog *test = new propertiesDialog();
+    test->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    test->drawInitial();
 }
 
 
 
-OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
-{
-    
-}
-
-
-
-OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
+void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
 {
     
 }
 
 
 
-OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
+void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
 {
     
 }
 
 
 
-OmniFEMMainFrame::onMatLibrary(wxCommandEvent &event)
+void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
+{
+    
+}
+
+
+
+void OmniFEMMainFrame::onMatLibrary(wxCommandEvent &event)
 {
     
 }

@@ -33,6 +33,7 @@
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>
@@ -97,6 +98,7 @@
       <File Name="Include/UI/geometryShapes.h"/>
       <File Name="Include/UI/wxGLString.h"/>
       <File Name="Include/UI/geometryEditorController.h"/>
+      <File Name="Include/UI/PropertiesDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

@@ -370,9 +370,9 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	EVT_MENU(menubarID::ID_menubarPrecision, OmniFEMMainFrame::onPrecision)
 	
     /* This section is for the Grid menu */
-    EVT_MENU(menubarID::ID_menubarShowGrid, OmniFEMMainFrame::onDispGrid)
+/*    EVT_MENU(menubarID::ID_menubarShowGrid, OmniFEMMainFrame::onDispGrid)
     EVT_MENU(menubarID::ID_menubarSnapGrid, OmniFEMMainFrame::onSnapGrid)
-    EVT_MENU(menubarID::ID_menubarSetGrid, OmniFEMMainFrame::onSetGrid)
+    EVT_MENU(menubarID::ID_menubarSetGrid, OmniFEMMainFrame::onSetGrid) */
     
     /* This section is for the Properties menu */
     EVT_MENU(menubarID::ID_menubarMaterials, OmniFEMMainFrame::onMaterials)

@@ -13,7 +13,7 @@
 #include <wx/treectrl.h>
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
-
+#include <UI/PropertiesDialog.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -254,7 +254,7 @@ public:
  * 
  *  This class is also the presentation layer of the main frame
  */
- class OmniFEMMainFrame : public wxFrame
+class OmniFEMMainFrame : public wxFrame
 {
 public:
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
