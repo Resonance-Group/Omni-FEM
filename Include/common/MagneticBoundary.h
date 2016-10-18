@@ -51,7 +51,7 @@ public:
     void setPhi(double value);
     double getPhi();
     
-    void setSigma(double value)
+    void setSigma(double value);
     double getSigma();
     
     void setMu(double value);

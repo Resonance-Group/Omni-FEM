@@ -36,7 +36,7 @@ private:
     double _strandDia = 0;
 public:
     void toggleLienarBH();
-    void getBHState();
+    bool getBHState();
     
     void setMUrX(double value);
     double getMUrX();

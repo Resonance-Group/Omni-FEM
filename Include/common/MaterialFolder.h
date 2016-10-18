@@ -1,6 +1,8 @@
 #ifndef MATERIALFOLDER_H_
 #define MATERIALFOLDER_H_
 
+#include <string>
+
 using namespace std;
 
 
@@ -29,7 +31,7 @@ public:
     void setFolderURL(string url);
     string getFolderURL();
     
-    void setfolderVendor(string vendor);
+    void setFolderVendor(string vendor);
     string getFolderVendor();
 };
 

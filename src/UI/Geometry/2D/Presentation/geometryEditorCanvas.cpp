@@ -224,10 +224,6 @@ double geometryEditorCanvas::convertToXCoordinate(int xPixel)
 }
 
 
-double geometryEditorCanvas::convertToXCoordinate(int xPixel, int cameraOffset)
-{
-	return (Xcoeff * ((double)xPixel - cameraOffset) - graphOffset);
-}
 
 
 double geometryEditorCanvas::convertToYCoordinate(int yPixel)

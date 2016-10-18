@@ -1,6 +1,8 @@
 #ifndef NODALPROPERTY_H_
 #define NODALPROPERTY_H_
 
+#include <string>
+
 using namespace std;
 
 /*! /brief  in the E-Static sim, a node can contain certain settings that would be necessary for 

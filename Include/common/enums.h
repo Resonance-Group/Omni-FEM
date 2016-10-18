@@ -4,7 +4,7 @@
 //! This enum is used to set the AC SOlver that Omni-FEM will use
 enum acSolverEnum
 {
-    SUCC.APPROX,
+    SUCCAPPROX,
     NEWTON
 };
 
@@ -44,9 +44,9 @@ enum problemTypeEnum
 enum lamWireEnum
 {
     NOT_LAMINATED_OR_STRANDED,
-    LAMINATED_IN-PLANE,
-    LAMINATED_PARALLEL_X_OR_R-AXISYMMETRIC,
-    LAMINATED_PARALLEL_Y_OR_Z-AXISYMMETRIC,
+    LAMINATED_IN_PLANE,
+    LAMINATED_PARALLEL_X_OR_R_AXISYMMETRIC,
+    LAMINATED_PARALLEL_Y_OR_Z_AXISYMMETRIC,
     MAGNET_WIRE,
     PLAIN_STRANDED_WIRE,
     LITZ_WIRE,
@@ -61,7 +61,7 @@ enum bcEnum
     /* The first part are the BC conditions that appear in both simulations E-stat and magnetics */
     MIXED,
     PERIODIC,
-    ANTI-PERIODIC,
+    ANTIPERIODIC,
     /* This is specific for Magnetics */
     /*!
      *  The vector potental A is prescribed along a given boundary. This boundary condition

@@ -2,6 +2,7 @@
 #define BOUNDARYCONDITIONS_H_
 
 #include <common/enums.h>
+#include <string>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ public:
     
     void setBC(bcEnum BC);
     bcEnum getBC();
-}
+};
 
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef CIRCUITPROPERTY_H_
 #define CIRCUITPROPERTY_H_
 
+#include <string>
+
 using namespace std;
 
 /*! /brief  In a magnetics simulation, ablock label can contain a circuit property.

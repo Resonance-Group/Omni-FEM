@@ -1,6 +1,8 @@
 #ifndef MATERIALPROPERTY_H_
 #define MATERIALPROPERTY_H_
 
+#include <string>
+
 using namespace std;
 
 
@@ -12,7 +14,7 @@ class materialProperty
 {
 private:
     //! The name of the material
-    string _propertyName
+    string _propertyName;
     
 public:
     //! The getter/setter for the name

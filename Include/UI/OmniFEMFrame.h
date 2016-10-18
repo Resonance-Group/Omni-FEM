@@ -279,6 +279,18 @@ private:
 	/* This section is for the Problem Menu */
 	void onPrecision(wxCommandEvent &event);
 	
+    /* This section is for the Grid Menu */
+    void onDispGrid(wxCommandEvent &event);
+    void onSnapGrid(wxCommandEvent &event);
+    void onSetGrid(wxCommandEvent &event);
+    
+    /* Thos section is for the Properties Menu */
+    void onMaterials(wxCommandEvent &event);
+    void onBoundary(wxCommandEvent &event);
+    void onPointProperty(wxCommandEvent &event);
+    void onCircuitsConductor(wxCommandEvent &event);
+    void onMatLibrary(wxCommandEvent &event);
+    
 	/* This section is for the Mesh menu */
 	void onCreateMesh(wxCommandEvent &event);
 	void onShowMesh(wxCommandEvent &event);
@@ -389,12 +401,18 @@ private:
 	//! This would be the view menu in the menu bar
     wxMenu *menuView = new wxMenu;
 	
-	//! This would be the mesh menu in the menu bar
-    wxMenu *menuMesh = new wxMenu;
-	
 	//! This would be the problem menu in the menu bar
     wxMenu *menuProblem = new wxMenu;
 	
+    //! The Grid menu in the menu bar
+    wxMenu *menuGrid = new wxMenu;
+    
+    //! The properties menu in the menu bar
+    wxMenu *menuProperties = new wxMenu;
+    
+    //! This would be the mesh menu in the menu bar
+    wxMenu *menuMesh = new wxMenu;
+    
 	//! This would be the help menu in the menu bar
     wxMenu *menuHelp = new wxMenu;
 	
