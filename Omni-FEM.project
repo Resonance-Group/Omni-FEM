@@ -42,6 +42,7 @@
         </VirtualDirectory>
         <VirtualDirectory Name="Abstraction">
           <File Name="src/UI/MainFrame/Abstraction/OmniFEMMainFrameAbstraction.cpp"/>
+          <File Name="src/UI/MainFrame/Abstraction/ProblemDefinition.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="Controller">
           <File Name="src/UI/MainFrame/Controller/OmniFEMMainFrameController.cpp"/>
@@ -114,6 +115,9 @@
       <File Name="Include/common/ElectricalBoundary.h"/>
       <File Name="Include/common/MagneticBoundary.h"/>
       <File Name="Include/common/MagneticMaterial.h"/>
+      <File Name="Include/common/ProblemDefinition.h"/>
+      <File Name="Include/common/MagneticPreference.h"/>
+      <File Name="Include/common/ElectrostaticPreference.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

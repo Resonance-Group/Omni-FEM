@@ -14,6 +14,7 @@
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
+#include <common/BoundaryConditions.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -45,6 +46,8 @@ enum class systemState
 	\brief The class representing the abstraction layer for OmniFEM's main frame
 	
 	This will contain all of the data that the presentation will need access to.
+     * THis will also contain all of the high level data that is needed for the simualtion to run.
+     * This includes data of teh boundary condition.
 */
 class OmniFEMMainFrameAbstraction
 {
@@ -153,6 +156,9 @@ private:
 	
 	//! This variable is used to store the data for the tree control in the model builder window
 	wxTreeItemId rootTree;
+    
+    
+
 };
 
 
