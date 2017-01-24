@@ -8,7 +8,7 @@
  *  /brief THis class is used to store all of the preferences for the magnetic physics problem
  *  For ease, all data types will be public
  */
-class magneticPref
+class magneticPreference
 {
 public:
     //! This is the AC frequeny that will be used when solving the problem in conjuction with the "circuit simulation"

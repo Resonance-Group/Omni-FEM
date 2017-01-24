@@ -1,4 +1,4 @@
-#include "UI/OmniFEMFrame.h"
+#include "UI/MainFrameController.h"
 
 
 OmniFEMMainFrameController::OmniFEMMainFrameController()

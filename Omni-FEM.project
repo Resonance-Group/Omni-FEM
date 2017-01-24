@@ -70,6 +70,9 @@
           </VirtualDirectory>
         </VirtualDirectory>
       </VirtualDirectory>
+      <VirtualDirectory Name="MaterialsDialog">
+        <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -100,6 +103,11 @@
       <File Name="Include/UI/wxGLString.h"/>
       <File Name="Include/UI/geometryEditorController.h"/>
       <File Name="Include/UI/PropertiesDialog.h"/>
+      <File Name="Include/UI/MainFrameAbstraction.h"/>
+      <File Name="Include/UI/MainFrameController.h"/>
+      <VirtualDirectory Name="MaterialsDialog">
+        <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

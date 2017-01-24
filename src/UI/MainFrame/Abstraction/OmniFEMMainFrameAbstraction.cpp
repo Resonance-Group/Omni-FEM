@@ -1,6 +1,6 @@
 /* This file contains the main data for the OmniFEM.
 	For example, this structure s*/
-#include "UI/OmniFEMFrame.h"
+#include "UI/MainFrameAbstraction.h"
 
 OmniFEMMainFrameAbstraction::OmniFEMMainFrameAbstraction()
 {
