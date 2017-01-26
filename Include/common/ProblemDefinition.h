@@ -3,6 +3,9 @@
 
 #include <common/BoundaryConditions.h>
 #include <common/MaterialProperty.h>
+#include <vector>
+
+
 
 /*! /class problemDef
  *  /brief This class will contain any and all data types that are related to defining a problem
@@ -19,7 +22,7 @@ private:
     std::vector<boundaryCondition> _boundaryConditionList;
     
     //! This list is the global list for all of the materials that will be used in the problem
-    std:vector<materialProperty> _materialList;
+    std::vector<materialProperty> _materialList;
     
     /**********
     * Methods *
@@ -41,16 +44,16 @@ public:
     void addMaterial(materialProperty material);
     
     //! This function will combine the input list with the global list
-    void addMaterialList(std:vector<materialProperty> materialList);
+    void addMaterialList(std::vector<materialProperty> materialList);
     
     //! THis function will copy the input list to the global list
-    void copyMaterialList(std:vector<materialProperty> materialList);
+    void copyMaterialList(std::vector<materialProperty> materialList);
     
     //! This function will return the global list
-    std:vector<materialProperty> getMaterialList();
+    std::vector<materialProperty> getMaterialList();
     
     
-}
+};
 
 
 #endif

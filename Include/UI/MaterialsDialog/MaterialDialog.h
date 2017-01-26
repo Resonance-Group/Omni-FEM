@@ -1,14 +1,19 @@
 #ifndef MATERIALDIALOGCONTROLLER_H_
 #define MATERIALDIALOGCONTROLLER_H_
 
+#include <vector>
+
 #include <wx/wx.h>
 #include <wx/stattext.h>
 #include <wx/combobox.h>
 #include <wx/arrstr.h>
-#include <vector>
+
 #include <common/MaterialProperty.h>
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
+#include <common/enums.h>
+
+using namespace std;
 
 /*! /class materialDialog
  *  /brief
@@ -21,7 +26,7 @@ class materialDialog : public wxFrame
 {
 private:
 //! This will contain a local copy of the materials list. This will allow for easy editing
-    std:vector<materialProperty> _materialList;
+    std::vector<materialProperty> _materialList;
     
     wxComboBox *selection = new wxComboBox();
     
@@ -31,25 +36,27 @@ private:
         This function is called when the Add Property button is called.
         This fucntion will create another dialog box and add a property to the ;ist once the user is finished
     */ 
-    void onAddProperty();
+    void onAddProperty(wxCommandEvent &event);
     
     /*! /brief
      *  This function will be called when the delete button is pressed
      *  This function will remove the selection from the list.
      */
-    void onDeleteProperty();
+    void onDeleteProperty(wxCommandEvent &event);
     
     /*! /brief
      *  This function will be called when the modify button is pressed
      *  This function will create another dialog box allowing the user to modif the property
      */
-    void onModifyProperty();
+    void onModifyProperty(wxCommandEvent &event);
     
     /*! /brief
      *  This function will be called when the OK button is pressed
      *  This function will close the dialog box and save the list to the main list in the Main Frame object
      */
-    void onOk();
+    void onOk(wxCommandEvent &event);
+    
+    
 public:
     //! This is the constructor for the class. Right now, this does not really do anything
     materialDialog(std::vector<materialProperty> materialList);
@@ -60,7 +67,8 @@ public:
     //! The creation of the dialog box is a two step process. This is the second step 
     void createDialog();
     
-    
+private:
+    wxDECLARE_EVENT_TABLE();
 };
 
 #endif

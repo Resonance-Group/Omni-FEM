@@ -1,21 +1,27 @@
 #ifndef OMNIFEMFrame_H_
 #define OMNIFEMFrame_H_
 
+#include <string.h>
+
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
 #include <wx/stdpaths.h>
-#include <string.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <UI/problemDefinition.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
+
+//#include <UI/problemDefinition.h>
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
-#include <common/BoundaryConditions.h>
+#include <UI/MainFrameAbstraction.h>
+#include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MainFrameController.h>
+
+#include <common/BoundaryConditions.h>
+#include <common/enums.h>
+
+
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -31,15 +37,7 @@ class OmniFEMApp : public wxApp
 
 
 
-enum class systemState
-{
-	initialStartUp = 0,
-	dimensionChoosing = 1,
-	problemChooseing = 2,
-	problemDefining = 3,
-	simulatingProblem = 4,
-	viewingResults = 5
-};
+
 
 
 /*! \class OmniFEMMainFrame

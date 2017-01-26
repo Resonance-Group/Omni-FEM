@@ -4,35 +4,9 @@
 #include <wx/wx.h>
 #include <wx/treectrl.h>
 
-//! Enum contianing the dimension of the problem
-/*! 
-	Please note that Omni-FEM does not support all of these dimensions.
-	Some are placed here as a place holder for future releases
-*/
-enum class problemDimension
-{
-	zero_Dimension = 0,
-	one_dimension = 1,
-	two_dimension = 2,
-	three_dimension = 3
-};
+#include <common/enums.h>
 
 
-
-//! Enum containing the different physics problems
-/*!
-	This is the enum that is used to determine what physics problem 
-	will be simulated. This could effect the view of some menus.
-	For a later addition of multiphysics, this system will need
-	to be revised.
-	
-	For now, the enum number must correspond to the index number in the wxArrayString object.
-*/
-enum class physicProblems
-{
-	electrostatics = 0,
-	magnetics = 1
-};
 
 
 //! This class will handle all of the problem definition settings.

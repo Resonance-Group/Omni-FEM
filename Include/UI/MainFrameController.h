@@ -1,21 +1,25 @@
 #ifndef MAINFRAMCONTROLLER_H_
 #define MAINFRAMCONTROLLER_H_
 
+#include <string.h>
+
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
 #include <wx/stdpaths.h>
-#include <string.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <UI/problemDefinition.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
+
+//#include <UI/problemDefinition.h>
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
-#include <common/BoundaryConditions.h>
 #include <UI/MainFrameAbstraction.h>
+
+#include <common/BoundaryConditions.h>
+#include <common/enums.h>
+
+#include <UI/MaterialsDialog/MaterialDialog.h>
 
 /*! \class OmniFEMMainFrameController
  *  \brief The class representing the controller layer for OmniFEM's main frame
@@ -104,6 +108,8 @@ public:
 	
 	//! This will set the simulation name in the abstraction layer
 	void setAbstractSimName(wxString name);
+    
+    void createMaterialDialog();
 	
 };
 

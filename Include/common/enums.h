@@ -1,6 +1,49 @@
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
+
+
+//! Enum contianing the dimension of the problem
+/*! 
+	Please note that Omni-FEM does not support all of these dimensions.
+	Some are placed here as a place holder for future releases
+*/
+enum class problemDimension
+{
+	zero_Dimension = 0,
+	one_dimension = 1,
+	two_dimension = 2,
+	three_dimension = 3
+};
+
+
+
+//! Enum containing the different physics problems
+/*!
+	This is the enum that is used to determine what physics problem 
+	will be simulated. This could effect the view of some menus.
+	For a later addition of multiphysics, this system will need
+	to be revised.
+	
+	For now, the enum number must correspond to the index number in the wxArrayString object.
+*/
+enum class physicProblems
+{
+	electrostatics = 0,
+	magnetics = 1
+};
+
+
+enum class systemState
+{
+	initialStartUp = 0,
+	dimensionChoosing = 1,
+	problemChooseing = 2,
+	problemDefining = 3,
+	simulatingProblem = 4,
+	viewingResults = 5
+};
+
 //! This enum is used to set the AC SOlver that Omni-FEM will use
 enum acSolverEnum
 {
@@ -88,6 +131,17 @@ enum bcEnum
     /* These are specific for E-stat */
     FIXED_VOLTAGE,
     SURFACE_CHARGE_DENSITY
+};
+
+
+
+//! This enum is used for the properties dialog box
+enum propertiesDialogEnum
+{
+    ID_ButtonOk,
+    ID_ButtonAdd,
+    ID_ButtonDelete,
+    ID_ButtonModify
 };
 
 #endif

@@ -7,6 +7,7 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
 //    propertiesDialog *test = new propertiesDialog();
 //    test->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 //    test->drawInitial();
+    controller.createMaterialDialog();
 }
 
 

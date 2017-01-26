@@ -150,3 +150,11 @@ wxString OmniFEMMainFrameController::getAbstractSimName()
 {
 	return abstractionLayer.getSimulationName();
 }
+
+void OmniFEMMainFrameController::createMaterialDialog()
+{
+    std::vector<materialProperty> test;
+   materialDialog *materialDiag = new materialDialog(test); 
+   materialDiag->Show();
+    
+}
