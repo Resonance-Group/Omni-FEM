@@ -148,7 +148,10 @@ enum propertiesDialogEnum
 enum generalFrameButton
 {
     ID_ButtonOk,
-    ID_ButtonCancel
+    ID_ButtonCancel, 
+    ID_ButtonEdit,
+    ID_ComboBox1,
+    ID_ComboBox2
 };
 
 #endif

@@ -11,6 +11,18 @@ void magneticMaterial::toggleLienarBH()
 
 
 
+void magneticMaterial::setPhiMax(double value)
+{
+    _phiMax = value;
+}
+
+
+double magneticMaterial::getPhiMax()
+{
+    return _phiMax;
+}
+
+
 
 bool magneticMaterial::getBHState()
 {
@@ -89,14 +101,14 @@ double magneticMaterial::getCoercivity()
 
 
 
-void magneticMaterial::setRho(double value)
+void magneticMaterial::setSigma(double value)
 {
     _electricalConductivity = value;
 }
 
 
 
-double magneticMaterial::getRho()
+double magneticMaterial::getSigma()
 {
     return _electricalConductivity;
 }

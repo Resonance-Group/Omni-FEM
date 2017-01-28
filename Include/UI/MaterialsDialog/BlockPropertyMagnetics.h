@@ -20,6 +20,15 @@
 class blockPropertyMagnetic : public wxFrame
 {
 private:
+    
+    wxArrayString *BHSettingsArray = new wxArrayString();
+    
+    wxArrayString *LamWireSettingsArray = new wxArrayString();
+    
+    wxComboBox *specialAttriComboBox = new wxComboBox();
+    
+    wxComboBox *BHCurveComboBox = new wxComboBox();
+
     magneticMaterial _magneticMaterial;
 
     void onOk(wxCommandEvent &event);
