@@ -64,9 +64,6 @@ public:
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~materialDialog();
     
-    //! The creation of the dialog box is a two step process. This is the second step 
-    void createDialog();
-    
 private:
     wxDECLARE_EVENT_TABLE();
 };

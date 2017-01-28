@@ -72,6 +72,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
+        <File Name="src/UI/MaterialsDialog/BlockPropertyMagnetic.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -107,6 +108,7 @@
       <File Name="Include/UI/MainFrameController.h"/>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
+        <File Name="Include/UI/MaterialsDialog/BlockPropertyMagnetics.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

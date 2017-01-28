@@ -23,10 +23,38 @@ materialDialog::materialDialog(std::vector<materialProperty> materialList) : wxF
     
 }
 
+
+
 void materialDialog::onOk(wxCommandEvent &event)
 {
-    wxMessageBox("Success");
+    // Fire an event in order to save the local list into the global list
 }
+
+
+
+void materialDialog::onAddProperty(wxCommandEvent &event)
+{
+    
+} 
+
+
+
+void materialDialog::onDeleteProperty(wxCommandEvent &event)
+{
+    
+}
+
+
+
+void materialDialog::onModifyProperty(wxCommandEvent &event)
+{
+    if(_materialList.size() > 0)
+    {
+        // show some stuff
+    }
+}
+
+
 
 materialDialog::~materialDialog()
 {
@@ -34,7 +62,8 @@ materialDialog::~materialDialog()
 }
 
 wxBEGIN_EVENT_TABLE(materialDialog, wxFrame)
-
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonOk, materialDialog::onOk)
-
+    EVT_BUTTON(propertiesDialogEnum::ID_ButtonAdd, materialDialog::onAddProperty)
+    EVT_BUTTON(propertiesDialogEnum::ID_ButtonDelete, materialDialog::onDeleteProperty)
+    EVT_BUTTON(propertiesDialogEnum::ID_ButtonModify, materialDialog::onModifyProperty)
 wxEND_EVENT_TABLE()

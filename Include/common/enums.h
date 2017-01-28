@@ -144,4 +144,11 @@ enum propertiesDialogEnum
     ID_ButtonModify
 };
 
+//! This enum is a general enum for frames that will include buttons or other widgets
+enum generalFrameButton
+{
+    ID_ButtonOk,
+    ID_ButtonCancel
+};
+
 #endif
