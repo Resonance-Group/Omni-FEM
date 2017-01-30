@@ -1,12 +1,9 @@
 #include "common/MagneticMaterial.h"
 
 
-void magneticMaterial::toggleLienarBH()
+void magneticMaterial::setBHCurveLinearity(bool isLinear)
 {
-    if(_isLinear)
-        _isLinear = false;
-    else
-        _isLinear = true;
+    _isLinear = isLinear;
 }
 
 

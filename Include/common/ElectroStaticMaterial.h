@@ -6,7 +6,7 @@
 /*! This class is used to create materials needed for the electrostatic simulation
  *  It inherits from the materialProperty class.
  */ 
-class electrostaticMaterial : materialProperty
+class electrostaticMaterial : public materialProperty
 {
 private:
     //! This value contains the relative permittivity in the X plane 

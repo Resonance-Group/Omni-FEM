@@ -128,6 +128,7 @@
       <File Name="Include/common/ProblemDefinition.h"/>
       <File Name="Include/common/MagneticPreference.h"/>
       <File Name="Include/common/ElectrostaticPreference.h"/>
+      <File Name="Include/common/omniFEMEvent.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

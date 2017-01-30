@@ -12,6 +12,9 @@
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
 #include <common/enums.h>
+#include <common/omniFEMEvent.h>
+
+#include <UI/MaterialsDialog/BlockPropertyMagnetics.h>
 
 using namespace std;
 
@@ -55,6 +58,12 @@ private:
      *  This function will close the dialog box and save the list to the main list in the Main Frame object
      */
     void onOk(wxCommandEvent &event);
+    
+    void onAddMaterialEvent(MagneticMaterialReturnEvent &event);
+    
+    blockPropertyMagnetic *newMaterial = new blockPropertyMagnetic();
+    
+    
     
     
 public:

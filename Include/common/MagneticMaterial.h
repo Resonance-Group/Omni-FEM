@@ -8,7 +8,7 @@
  *  /brief
  *  This is the class that is specific to the properties for the magnetic materials
  */ 
-class magneticMaterial : materialProperty
+class magneticMaterial : public materialProperty
 {
 private:
     //! This data type will indicate if a Linear or non-linear BH curve should be used for the material
@@ -54,7 +54,7 @@ private:
     double _strandDia = 0;
 public:
     //! This will toggle the status of the isLinear boolean to indicate if the material is linear/nonlinear. The default value is that the material is linear
-    void toggleLienarBH();
+    void setBHCurveLinearity(bool isLinear);
     
     //! This will get the state of the isLinear boolean
     bool getBHState();

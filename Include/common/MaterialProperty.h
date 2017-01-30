@@ -18,8 +18,8 @@ private:
     
 public:
     //! The getter/setter for the name
-    void setName(string name);
-    string getName();
+    void setName(std::string name);
+    std::string getName();
 };
 
 #endif

@@ -93,7 +93,9 @@ enum lamWireEnum
     MAGNET_WIRE,
     PLAIN_STRANDED_WIRE,
     LITZ_WIRE,
-    SQUARE_WIRE
+    SQUARE_WIRE, 
+    CCA_10,
+    CCA_15
 };
 
 
@@ -147,11 +149,30 @@ enum propertiesDialogEnum
 //! This enum is a general enum for frames that will include buttons or other widgets
 enum generalFrameButton
 {
-    ID_ButtonOk,
-    ID_ButtonCancel, 
-    ID_ButtonEdit,
     ID_ComboBox1,
     ID_ComboBox2
+};
+
+enum magneticBlockPropertyDiag
+{
+    ID_TextControl1,
+    ID_TextControl2,
+    ID_TextControl3,
+    ID_TextControl4,
+    ID_TextControl5,
+    ID_TextControl6,
+    ID_TextControl7,
+    ID_TextControl8,
+    ID_TextControl9,
+    ID_TextControl10,
+    ID_TextControl11,
+    ID_TextControl12,
+    ID_TextControl13
+};
+
+enum CustomEvent
+{
+    MagneticMaterial
 };
 
 #endif

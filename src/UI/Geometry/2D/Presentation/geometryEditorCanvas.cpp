@@ -491,7 +491,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						wxString test = boundaryList.Item(index);
 						
 						arcAngle->GetValue().ToDouble(&arcAngleVal);
-						arcSegment.setArcAngle(arcAngleVal);// This needs to be changed to reflect that it is really the arc angle and not length
+						arcSegment.setArcAngle(arcAngleVal);
 						
 						maxSegment->GetValue().ToDouble(&maxSegmentVal);
 						arcSegment.setNumSegments(maxSegmentVal);
