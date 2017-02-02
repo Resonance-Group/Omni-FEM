@@ -1,6 +1,6 @@
 #include <UI/MaterialsDialog/BlockPropertyMagnetics.h>
 
-
+/*
 blockPropertyMagnetic::blockPropertyMagnetic(magneticMaterial material) : wxFrame(NULL, wxID_ANY, "Magnetic Block Property", wxDefaultPosition, wxSize(416, 486))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -156,10 +156,10 @@ blockPropertyMagnetic::blockPropertyMagnetic(magneticMaterial material) : wxFram
     this->SetMinSize(this->GetSize());
     this->SetMaxSize(this->GetSize());
 }
+*/
 
 
-
-blockPropertyMagnetic::blockPropertyMagnetic() : wxFrame(NULL, wxID_ANY, "Magnetic Block Property", wxDefaultPosition, wxSize(416, 488))
+blockPropertyMagnetic::blockPropertyMagnetic() : wxDialog(NULL, wxID_ANY, "Magnetic Block Property", wxDefaultPosition, wxSize(416, 488))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -169,13 +169,13 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxFrame(NULL, wxID_ANY, "Magnet
     BHCurve->SetFont(*font);
     wxStaticText *linearMaterial = new wxStaticText(this, wxID_ANY, "Linear Material Properties", wxPoint(2, 85), wxSize(129, 13));
     linearMaterial->SetFont(*font);
-    wxStaticText *relativeUx = new wxStaticText(this, wxID_ANY, "Relative ux:", wxPoint(21, 104), wxSize(63,13));
+    wxStaticText *relativeUx = new wxStaticText(this, wxID_ANY, wxT("Relative μx:"), wxPoint(21, 104), wxSize(63,13));
     relativeUx->SetFont(*font);
-    wxStaticText *relativeUy = new wxStaticText(this, wxID_ANY, "Relative uy:", wxPoint(233, 104), wxSize(63, 13));
+    wxStaticText *relativeUy = new wxStaticText(this, wxID_ANY, wxT("Relative μy:"), wxPoint(233, 104), wxSize(63, 13));
     relativeUy->SetFont(*font);
-    wxStaticText *phiX = new wxStaticText(this, wxID_ANY, "Phi hx:", wxPoint(21, 130), wxSize(38, 13));
+    wxStaticText *phiX = new wxStaticText(this, wxID_ANY, wxT("ϕ hx:"), wxPoint(21, 130), wxSize(38, 13));
     phiX->SetFont(*font);
-    wxStaticText *phiY = new wxStaticText(this, wxID_ANY, "Phi hy:", wxPoint(233, 130), wxSize(38, 13));
+    wxStaticText *phiY = new wxStaticText(this, wxID_ANY, wxT("ϕ hy:"), wxPoint(233, 130), wxSize(38, 13));
     phiY->SetFont(*font);
     wxStaticText *deg1 = new wxStaticText(this, wxID_ANY, "deg", wxPoint(187, 130), wxSize(25, 13));
     deg1->SetFont(*font);
@@ -185,7 +185,7 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxFrame(NULL, wxID_ANY, "Magnet
     deg3->SetFont(*font);
     wxStaticText *nonlinearMatLabel = new wxStaticText(this, wxID_ANY, "Nonlinear Material Properties:", wxPoint(2, 162), wxSize(145, 13));
     nonlinearMatLabel->SetFont(*font);
-    wxStaticText *phiMaxLabel = new wxStaticText(this, wxID_ANY, "Phi hmax:", wxPoint(233, 183), wxSize(52, 13));
+    wxStaticText *phiMaxLabel = new wxStaticText(this, wxID_ANY, wxT("ϕ hmax:"), wxPoint(233, 183), wxSize(52, 13));
     phiMaxLabel->SetFont(*font);
     wxStaticText *coercivityLabel = new wxStaticText(this, wxID_ANY, "Coercivity:", wxPoint(2, 214), wxSize(56, 13));
     coercivityLabel->SetFont(*font);
@@ -193,7 +193,7 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxFrame(NULL, wxID_ANY, "Magnet
     eConductivityLabel->SetFont(*font);
     wxStaticText *HcLabel = new wxStaticText(this, wxID_ANY, "Hc, A/m2", wxPoint(24, 236), wxSize(56, 13));
     HcLabel->SetFont(*font);
-    wxStaticText *sigLabel = new wxStaticText(this, wxID_ANY, "sig. MS/m:", wxPoint(233, 236), wxSize(55, 13));
+    wxStaticText *sigLabel = new wxStaticText(this, wxID_ANY, wxT("σ MS/m:"), wxPoint(233, 236), wxSize(55, 13));
     sigLabel->SetFont(*font);
     wxStaticText *specialAttrLabel = new wxStaticText(this, wxID_ANY, "Special Attributes: Lamination and Wire Type", wxPoint(2, 322), wxSize(219, 13));
     specialAttrLabel->SetFont(*font);
@@ -215,8 +215,15 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxFrame(NULL, wxID_ANY, "Magnet
     currentDesnityLabel->SetFont(*font);
     
     editBHCurve->Create(this, wxID_EDIT, "Edit B-H Curve", wxPoint(24, 178), wxSize(157, 23));
+    editBHCurve->SetFont(*font);
+    
+    
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(248, 449), wxSize(75, 23));
+    okButton->SetFont(*font);
+    
     wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(329, 449), wxSize(75, 23));
+    cancelButton->SetFont(*font);
+    
     
     BHSettingsArray->Add("Linear B-H Curve");
     BHSettingsArray->Add("Nonlinear B-H Curve");
@@ -255,18 +262,43 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxFrame(NULL, wxID_ANY, "Magnet
     //_magneticMaterial = material;
     
     nameTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl1, _magneticMaterial.getName(), wxPoint(95, 12), wxSize(251, 20));
+    nameTextCtrl->SetFont(*font);
+    
     relativeUxTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl2, std::to_string(_magneticMaterial.getMUrX()), wxPoint(104, 101), wxSize(77, 20));
+    relativeUxTextCtrl->SetFont(*font);
+    
     phiXTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl3, std::to_string(_magneticMaterial.getPhiX()), wxPoint(104, 127), wxSize(77, 20));
+    phiXTextCtrl->SetFont(*font);
+    
     relativeUyTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl4, std::to_string(_magneticMaterial.getMUrY()), wxPoint(302, 101), wxSize(77, 20));
+    relativeUyTextCtrl->SetFont(*font);
+    
     phiYTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl5, std::to_string(_magneticMaterial.getPhiY()), wxPoint(302, 127), wxSize(77, 20));
+    phiYTextCtrl->SetFont(*font);
+    
     phiMaxTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl6, std::to_string(_magneticMaterial.getPhiMax()), wxPoint(302, 180), wxSize(77, 20));
+    phiMaxTextCtrl->SetFont(*font);
+    
     coercivityTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl7, std::to_string(_magneticMaterial.getCoercivity()), wxPoint(104, 233), wxSize(77, 20));
+    coercivityTextCtrl->SetFont(*font);
+    
     eConductivityTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl8, std::to_string(_magneticMaterial.getSigma()), wxPoint(302, 233), wxSize(77, 20));
+    eConductivityTextCtrl->SetFont(*font);
+    
     currentDesnityTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl9, std::to_string(_magneticMaterial.getCurrentDensity()), wxPoint(104, 290), wxSize(249, 20));
+    currentDesnityTextCtrl->SetFont(*font);
+    
     lamThickTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl10, std::to_string(_magneticMaterial.getLaminationThickness()), wxPoint(104, 372), wxSize(77, 20));
+    lamThickTextCtrl->SetFont(*font);
+    
     numStrandsTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl11, std::to_string(_magneticMaterial.getNumberStrands()), wxPoint(104, 408), wxSize(77, 20));
+    numStrandsTextCtrl->SetFont(*font);
+    
     lamFFTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl12, std::to_string(_magneticMaterial.getLaminationFillFactor()), wxPoint(302, 372), wxSize(77, 20));
+    lamFFTextCtrl->SetFont(*font);
+    
     strandDiaTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl13, std::to_string(_magneticMaterial.getStrandDiameter()), wxPoint(302, 408), wxSize(77, 20));
+    strandDiaTextCtrl->SetFont(*font);
     
     if(_magneticMaterial.getBHState())
     {
@@ -338,6 +370,53 @@ blockPropertyMagnetic::~blockPropertyMagnetic()
 }
 
 
+void blockPropertyMagnetic::getNewMaterial(magneticMaterial &newMaterial)
+{
+    double value;
+    
+    coercivityTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setCoercivity(value);
+    
+    newMaterial.setName(nameTextCtrl->GetValue().ToStdString());
+    
+    currentDesnityTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setCurrentDensity(value);
+    
+    lamFFTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setLaminationFillFactor(value);
+    
+    lamThickTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setLaminationThickness(value);
+    
+    relativeUxTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setMUrX(value);
+    
+    relativeUyTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setMUrY(value);
+    
+    numStrandsTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setNumberStrands(value);
+    
+    phiXTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setPhiX(value);
+    
+    phiYTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setPhiY(0);
+    
+    eConductivityTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setSigma(0);
+    
+    newMaterial.setSpecialAttribute((lamWireEnum)specialAttriComboBox->GetSelection());
+
+    if(BHCurveComboBox->GetSelection() == 0)
+        newMaterial.setBHCurveLinearity(true);
+    else
+        newMaterial.setBHCurveLinearity(false);
+
+    strandDiaTextCtrl->GetValue().ToDouble(&value);
+    newMaterial.setStrandDiameter(value);  
+}
+
 
 void blockPropertyMagnetic::onOk(wxCommandEvent &event)
 {
@@ -386,9 +465,9 @@ void blockPropertyMagnetic::onOk(wxCommandEvent &event)
     strandDiaTextCtrl->GetValue().ToDouble(&value);
     _magneticMaterial.setStrandDiameter(value);
     
-    magneticEvent.setMaterial(_magneticMaterial);
+    //magneticEvent.setMaterial(_magneticMaterial);
     
-    wxQueueEvent(pdest, &magneticEvent);
+    //wxQueueEvent(pdest, &magneticEvent);
 }
 
 
@@ -473,9 +552,9 @@ void blockPropertyMagnetic::onSpecialComboBox(wxCommandEvent &event)
 
 
 
-wxBEGIN_EVENT_TABLE(blockPropertyMagnetic, wxFrame)
-    EVT_BUTTON(wxID_OK, blockPropertyMagnetic::onOk)
-    EVT_BUTTON(wxID_CANCEL, blockPropertyMagnetic::onCancel)
+wxBEGIN_EVENT_TABLE(blockPropertyMagnetic, wxDialog)
+//    EVT_BUTTON(wxID_OK, blockPropertyMagnetic::onOk)
+//    EVT_BUTTON(wxID_CANCEL, blockPropertyMagnetic::onCancel)
     EVT_BUTTON(wxID_EDIT, blockPropertyMagnetic::onBHCurve)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, blockPropertyMagnetic::onBHCurveCombo)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox2, blockPropertyMagnetic::onSpecialComboBox)

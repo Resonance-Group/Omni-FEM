@@ -59,7 +59,7 @@ private:
      */
     void onOk(wxCommandEvent &event);
     
-    void onAddMaterialEvent(MagneticMaterialReturnEvent &event);
+    //void onAddMaterialEvent(MagneticMaterialReturnEvent &event);
     
     blockPropertyMagnetic *newMaterial = new blockPropertyMagnetic();
     

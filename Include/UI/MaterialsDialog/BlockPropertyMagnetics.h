@@ -20,7 +20,7 @@
  *  THe dialog box is rather large however, there are only two buttons.
  *  Due to the simplicity of the dialog box, this class will be the abstraction, controller, and presentation
  */
-class blockPropertyMagnetic : public wxFrame
+class blockPropertyMagnetic : public wxDialog
 {
 private:
 
@@ -61,18 +61,21 @@ private:
     
     void onSpecialComboBox(wxCommandEvent &event);
     
+    
   //  wxEvtHandler *pdest;
     
 public:
-    blockPropertyMagnetic(magneticMaterial material);
+ //   blockPropertyMagnetic(magneticMaterial material);
     
     blockPropertyMagnetic();
     
     ~blockPropertyMagnetic();
-
+    
+    void getNewMaterial(magneticMaterial &newMaterial);
+    
 private:
     wxDECLARE_EVENT_TABLE();
-    wxDEFINE_EVENT(MAGNETIC_MATERIAL_EVT_TYPE, MagneticMaterialReturnEvent);
+//    wxDEFINE_EVENT(MAGNETIC_MATERIAL_EVT_TYPE, MagneticMaterialReturnEvent);
 };
 
 

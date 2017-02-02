@@ -29,7 +29,7 @@ materialDialog::materialDialog(std::vector<materialProperty> materialList) : wxF
     this->SetMinSize(this->GetSize());
     this->SetMaxSize(this->GetSize());
     
-    Bind(MAGNETIC_MATERIAL_EVT_TYPE, &materialDialog::onAddMaterialEvent, this, CustomEvent::MagneticMaterial);
+ //   Bind(MAGNETIC_MATERIAL_EVT_TYPE, &materialDialog::onAddMaterialEvent, this, CustomEvent::MagneticMaterial);
 }
 
 
@@ -43,7 +43,11 @@ void materialDialog::onOk(wxCommandEvent &event)
 
 void materialDialog::onAddProperty(wxCommandEvent &event)
 {
-    newMaterial->Show(); 
+    magneticMaterial newMat;
+    if(newMaterial->ShowModal() == wxID_OK)
+    {
+        newMaterial->getNewMaterial(newMat);
+    }
 } 
 
 
@@ -63,13 +67,13 @@ void materialDialog::onModifyProperty(wxCommandEvent &event)
     }
 }
 
-
+/*
 void materialDialog::onAddMaterialEvent(MagneticMaterialReturnEvent &event)
 {
     wxMessageBox("Got it");
  //   _materialList.push_back(event.getMaterial());
 }
-
+*/
 
 materialDialog::~materialDialog()
 {
@@ -81,5 +85,5 @@ wxBEGIN_EVENT_TABLE(materialDialog, wxFrame)
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonAdd, materialDialog::onAddProperty)
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonDelete, materialDialog::onDeleteProperty)
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonModify, materialDialog::onModifyProperty)
-    EVT_MAGNETIC_MATERIAL_RETURN(CustomEvent::MagneticMaterial, materialDialog::onAddMaterialEvent)
+ //   EVT_MAGNETIC_MATERIAL_RETURN(CustomEvent::MagneticMaterial, materialDialog::onAddMaterialEvent)
 wxEND_EVENT_TABLE()

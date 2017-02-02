@@ -11,7 +11,7 @@
 #include <common/enums.h>
 #include <common/MagneticMaterial.h>
 
-
+/*
 decltype void (wxEvtHandler::*MyFooEventFunction)(MagneticMaterialReturnEvent &)
 #define MyFooEventHandler(func) wxEVENT_HANDLER_CAST(MyFooEventFunction, func)
 #define EVT_MAGNETIC_MATERIAL_RETURN(id, func) \ wx__DECLARE_EVT1(MAGNETIC_MATERIAL_EVT_TYPE, id, MyFooEventFunction(func))
@@ -54,6 +54,6 @@ public:
     
     
 };
-
+*/
 
 #endif
