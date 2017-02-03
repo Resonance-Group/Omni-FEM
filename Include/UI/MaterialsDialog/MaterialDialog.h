@@ -64,6 +64,9 @@ private:
     blockPropertyMagnetic *newMaterial = new blockPropertyMagnetic();
     
     
+    //! This function is called everytime the Combo box list needs to be updated (happens when a new material is added to the list)
+    void updateComboBox();
+    
     
     
 public:
