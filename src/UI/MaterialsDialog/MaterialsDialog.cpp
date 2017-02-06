@@ -44,11 +44,13 @@ void materialDialog::onOk(wxCommandEvent &event)
 void materialDialog::onAddProperty(wxCommandEvent &event)
 {
     magneticMaterial newMat;
+    newMaterial->clearMaterial();
     if(newMaterial->ShowModal() == wxID_OK)
     {
         newMaterial->getNewMaterial(newMat);
         _materialList.push_back(newMat);
         selection->Append(newMat.getName());
+        selection->SetSelection(0);
     }
 } 
 
@@ -63,9 +65,15 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
 
 void materialDialog::onModifyProperty(wxCommandEvent &event)
 {
+    magneticMaterial selectedMaterial;
     if(_materialList.size() > 0)
     {
-        // show some stuff
+        selectedMaterial = _materialList.at(selection->GetCurrentSelection());
+        newMaterial->setMaterial(selectedMaterial);
+        if(newMaterial->ShowModal() == wxID_OK)
+        {
+            // Do some stuff
+        }
     }
 }
 

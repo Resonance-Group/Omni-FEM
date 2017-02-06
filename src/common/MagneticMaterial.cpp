@@ -193,3 +193,5 @@ double magneticMaterial::getStrandDiameter()
 {
     return _strandDia;
 }
+
+
