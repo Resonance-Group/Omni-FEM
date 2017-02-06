@@ -153,7 +153,7 @@ wxString OmniFEMMainFrameController::getAbstractSimName()
 
 void OmniFEMMainFrameController::createMaterialDialog()
 {
-    std::vector<materialProperty> test;
+    std::vector<magneticMaterial> test;
    materialDialog *materialDiag = new materialDialog(test); 
    materialDiag->Show();
     

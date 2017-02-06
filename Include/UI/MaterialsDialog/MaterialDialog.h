@@ -29,11 +29,11 @@ class materialDialog : public wxFrame
 {
 private:
 //! This will contain a local copy of the materials list. This will allow for easy editing
-    std::vector<materialProperty> _materialList;
+    std::vector<magneticMaterial> _magneticMaterialList;
     
     wxComboBox *selection = new wxComboBox();
     
-    wxArrayString *materialNameArray = new wxArrayString();
+    wxArrayString *magneticMaterialNameArray = new wxArrayString();
     
     /*! /brief
         This function is called when the Add Property button is called.
@@ -61,7 +61,7 @@ private:
     
     //void onAddMaterialEvent(MagneticMaterialReturnEvent &event);
     
-    blockPropertyMagnetic *newMaterial = new blockPropertyMagnetic();
+    blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
     
     
     //! This function is called everytime the Combo box list needs to be updated (happens when a new material is added to the list)
@@ -70,8 +70,8 @@ private:
     
     
 public:
-    //! This is the constructor for the class. Right now, this does not really do anything
-    materialDialog(std::vector<materialProperty> materialList);
+    //! This is the constructor for the class. This constructor is for a magnetic material
+    materialDialog(std::vector<magneticMaterial> materialList);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~materialDialog();

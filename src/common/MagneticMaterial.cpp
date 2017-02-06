@@ -195,3 +195,10 @@ double magneticMaterial::getStrandDiameter()
 }
 
 
+
+void magneticMaterial::setMagneticMaterial(magneticMaterial mat)
+{
+    _isLinear = mat.getBHState();
+}
+
+

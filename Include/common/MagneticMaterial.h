@@ -137,7 +137,7 @@ public:
     //! This will get hte strand diameter of the material (if any). Units are in mm.
     double getStrandDiameter();
     
- //   void operator=(magneticMaterial mat);
+    void setMagneticMaterial(magneticMaterial mat);
 };
 
 

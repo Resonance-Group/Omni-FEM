@@ -1,14 +1,14 @@
 #include <UI/MaterialsDialog/MaterialDialog.h>
 
-materialDialog::materialDialog(std::vector<materialProperty> materialList) : wxFrame(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
+materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxFrame(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
-    _materialList = materialList;
+    _magneticMaterialList = materialList;
     
-    for(std::vector<materialProperty>::iterator materialIterator = _materialList.begin(); materialIterator != _materialList.end(); ++materialIterator)
+    for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin(); materialIterator != _magneticMaterialList.end(); ++materialIterator)
     {
-        materialNameArray->Add(wxString(materialIterator->getName()));
+        magneticMaterialNameArray->Add(wxString(materialIterator->getName()));
     }
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 49), wxSize(125, 26));
@@ -22,14 +22,12 @@ materialDialog::materialDialog(std::vector<materialProperty> materialList) : wxF
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 6), wxSize(165, 21), *materialNameArray);
+    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 6), wxSize(165, 21), *magneticMaterialNameArray);
     selection->SetFont(*font);
     
     this->FitInside();
     this->SetMinSize(this->GetSize());
     this->SetMaxSize(this->GetSize());
-    
- //   Bind(MAGNETIC_MATERIAL_EVT_TYPE, &materialDialog::onAddMaterialEvent, this, CustomEvent::MagneticMaterial);
 }
 
 
@@ -44,11 +42,11 @@ void materialDialog::onOk(wxCommandEvent &event)
 void materialDialog::onAddProperty(wxCommandEvent &event)
 {
     magneticMaterial newMat;
-    newMaterial->clearMaterial();
-    if(newMaterial->ShowModal() == wxID_OK)
+    magneticMaterialPropertyDialog->clearMaterial();
+    if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
     {
-        newMaterial->getNewMaterial(newMat);
-        _materialList.push_back(newMat);
+        magneticMaterialPropertyDialog->getNewMaterial(newMat);
+        _magneticMaterialList.push_back(newMat);
         selection->Append(newMat.getName());
         selection->SetSelection(0);
     }
@@ -66,11 +64,13 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
 void materialDialog::onModifyProperty(wxCommandEvent &event)
 {
     magneticMaterial selectedMaterial;
-    if(_materialList.size() > 0)
+    //magneticMaterial test;
+    if(_magneticMaterialList.size() > 0)
     {
-        selectedMaterial = _materialList.at(selection->GetCurrentSelection());
-        newMaterial->setMaterial(selectedMaterial);
-        if(newMaterial->ShowModal() == wxID_OK)
+        int currentSelection = selection->GetSelection();
+        selectedMaterial = _magneticMaterialList.at(currentSelection);
+        magneticMaterialPropertyDialog->setMaterial(selectedMaterial);
+        if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
         {
             // Do some stuff
         }
