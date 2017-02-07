@@ -15,8 +15,9 @@
 #include <common/Vector.h>
 #include <math.h>
 #include <UI/geometryEditorController.h>
+#include <sstream>
 
-
+using namespace std;
 
 class geometryEditorCanvas : public wxGLCanvas
 {
@@ -33,9 +34,6 @@ private:
     //! This is the event that is fired when the canvas is drawn or re-drawn
 	void onGeometryPaint(wxPaintEvent &event);
 	
-    //! Rendering the geometry
-	void render();
-	
 	//! This function will convert a xpoint (pixel) to an x-coordinate value
 	/*
 		This is 1/2 of the mapping function. The function follow the idea presented in the following webpage:
@@ -46,7 +44,6 @@ private:
     *   The coefficients can be solved with the use of matrices. The program will need to
     *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToXCoordinate(int xPixel, int cameraOffset);
     double convertToXCoordinate(int xPixel);
 	
 	//! This function will convert a ypoint (pixel) to an y-coordinate value
@@ -59,24 +56,7 @@ private:
     *   The coefficients can be solved with the use of matrices. The program will need to
     *   resolve for the coefficients when the zoom changes
 	*/
-	double convertToYCoordinate(int yPixel, int cameraOffset);
 	double convertToYCoordinate(int yPixel);
-    
-	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the X pixel point
-	/*
-	 * 	This is 1/2 of a feature. The coorseopnding function is convertToYPixel.
-	 *  Both need to be called in order to create a pixel pair.
-	 */
-	int convertToXPixel(double XCoor, int cameraOffset);
-	double convertToXPixel(double XCoor);
-    
-	//! Converts a (x, y) coordinate point to a pixel coordinate. Returns the Y pixel point
-	/*
-	 * 	This is 1/2 of a feature. The coorseopnding function is convertToXPixel.
-	 *  Both need to be called in order to create a pixel pair.
-	 */
-	double convertToYPixel(double YCoor);
-    int convertToYPixel(double YCoor, int cameraOffset);
 	
 	//! This is the function that is called when the user would like to add a new node
 	void addNode(double xPoint, double yPoint, double distance);
@@ -87,14 +67,16 @@ private:
 	//! This function will add an arc segment between two selected nodes
 	void addArcSegment(arcShape &arcSeg, double tolerance = 0);
 	
-	//! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
+	/*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
+     * node0 is the first node that the user selects
+     * node1 is the second node that the user selects
+     * lineSegment is the line segment index that will be checked for an intersection
+     * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
+     */
 	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
 	
 	//! This function is called in order to toggel the block list creation flag
 	void toggleBlockListCreation();
-	
-	//! This fuinction is to be used on geometry objects to convert their center coordinate value into a center Pixel value. 
-	void convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel);
 	
     //! The event that will be fired when the window experiences a resize
 	void onResize(wxSizeEvent &event);
@@ -137,10 +119,13 @@ private:
 	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
 	
 	/*! This function will calculate the number of intersection points where two arcs intersect */
-	int getArcToArcIntersection();
+	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
     
     /*! This function needs to be called whenever there is a draw. */
     void updateProjection();
+    
+    /*! Function called when the Right mouse button is clicked */
+    void onMouseRightDown(wxMouseEvent &event);
     
 	/************
 	* Variables *
@@ -189,22 +174,6 @@ private:
      *  uses this variable
      * 
      */ 
-    double Ycoeff = (double)-0.0829876d;
-	
-    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
-    /*
-     *  For more complete documentation, please read documentation for the function that 
-     *  uses this variable
-     * 
-     */  
-    double Xcoeff = (double)0.0326264d;
-    
-    //! This is a coefficient that is used to define the mapping of the pixels to the coordinate system used in the program. This 
-    /*
-     *  For more complete documentation, please read documentation for the function that 
-     *  uses this variable
-     * 
-     */ 
      double graphOffset = (double)10.0d;
 	 
     //! These variables contain the screen offset
@@ -237,6 +206,8 @@ private:
 	std::vector<edgeLineShape> lineList;
 	std::vector<arcShape> arcList;
 	
+    std::ostringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;// THis is for debugging
+    
 	DECLARE_EVENT_TABLE();
 };
 

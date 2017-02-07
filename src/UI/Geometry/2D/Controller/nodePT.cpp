@@ -2,19 +2,17 @@
 
 node::node(double xCenter, double yCenter) : rectangleShape(xCenter, yCenter)
 {
-	xPixel = 0;
-	yPixel = 0;
+
 }
+
+
 
 node::node()
 {
     
 }
 
-void node::setCenterYPixel(int yPix)
-{
-	yPixel = yPix;
-}
+
 
 void node::setCenter(double xCoor, double yCoor)
 {
@@ -22,36 +20,27 @@ void node::setCenter(double xCoor, double yCoor)
     yCenterCoordinate = yCoor;
 }
 
-void node::setCenterXPixel(int xPix)
-{
-	xPixel = xPix;
-}
 
-
-int node::getCenterXPixel()
-{
-	return xPixel;
-}
-
-
-int node::getCenterYPixel()
-{
-	return yPixel;
-}
 
 void node::draw()
 {
-	glPolygonMode(GL_FRONT, GL_LINE);
-	glBegin(GL_POLYGON);
-		if(isSelected)
-			glColor3f(1.0f, 0.0f, 0.0f);
-		else
-			glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex2i(xPixel - 2, yPixel + 2);
-		glVertex2i(xPixel + 2, yPixel + 2);
-		glVertex2i(xPixel + 2, yPixel - 2);
-		glVertex2i(xPixel - 2, yPixel - 2);
-	glEnd();
+    if(isSelected)
+        glColor3d(1.0, 0.0, 0.0);
+    else
+        glColor3d(0.0, 0.0, 0.0);
+    
+    glPointSize(6.0);
+    
+    glBegin(GL_POINTS);
+        glVertex2d(xCenterCoordinate, yCenterCoordinate);
+    glEnd();
+    
+    glColor3d(1.0, 1.0, 1.0);
+    glPointSize(4.0);
+    
+    glBegin(GL_POINTS);
+        glVertex2d(xCenterCoordinate, yCenterCoordinate);
+    glEnd();
 }
 
 

@@ -3,11 +3,6 @@
 
 #include <math.h>
 
-class tempXCoor;
-class tempXCoor;
-class tempXCoor;
-using namespace std;
-
 geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &position, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, position, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
  //   debugCoordinate = new wxStaticText(this, wxID_ANY, "None", wxPoint(0, 10));
@@ -32,7 +27,7 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 
 	glMatrixMode(GL_MODELVIEW);// The matrix mode specifies which matrix stack is the target for matrix operations
 	glLoadIdentity();// Initial value
-//	glTranslated((float)this->GetSize().x / 2.0f, (float)this->GetSize().y / 2.0f, 0.0f);// This will move the camera to the center of the screen
+	glTranslated((float)this->GetSize().x / 2.0f, (float)this->GetSize().y / 2.0f, 0.0f);// This will move the camera to the center of the screen
     
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -42,8 +37,8 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 		As for the y value, it will extend from the top (y = 0) to the bottom (y = canvas->GetSize().y)
 		By default, the screen is the the unit square. This command changes that 
 	*/
-	glOrtho(0.0, canvasWidth, canvasHeight, 0.0, 1.0, -1.0);
-	
+//	glOrtho(0.0, canvasWidth, canvasHeight, 0.0, 1.0, -1.0);
+	glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	/* Ensure that there are no errors */
 	GLenum error = glGetError();
 	if(error != GL_NO_ERROR)
@@ -53,27 +48,20 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
 	}
 
 	boundaryList.Add("<None>");
-}
-
-
-void geometryEditorCanvas::render()
-{
-
-	
-    
-    
+    glMatrixMode(GL_MODELVIEW);
 }
 
 
 
 void geometryEditorCanvas::updateProjection()
 {
+ //   glPopMatrix();
     // First, load the projection matrix and reset the view to a default view
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    
+ //   glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+ //   glOrtho(0.0, canvasWidth, canvasHeight, 0.0, 0.0, 0.0);
     
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
@@ -90,7 +78,7 @@ void geometryEditorCanvas::updateProjection()
     glScaled(zoomFactor / (canvasWidth / canvasHeight), zoomFactor, 1.0);
     glTranslated(-cameraX, -cameraY, 0.0);
 	
-    
+//    glPushMatrix();
 }
 
 
@@ -100,7 +88,14 @@ void geometryEditorCanvas::drawGrid()
     
     glLineWidth(1.0);
     glEnable(GL_LINE_STIPPLE);
-    glLineStipple(1, 0x1C47);
+    /* 
+     * The binary form is able to dispaly the concept of glLineStipple for 
+     * new users better then the Hex form. Although, the function is able to accept Hex
+     * For an idea of how glLineStipple work, refer to the following link
+     * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg
+     * 
+     */ 
+    glLineStipple(1, 0b0000100001000010);
     
     double cornerMinX = convertToXCoordinate(0);
     double cornerMinY = convertToYCoordinate(0);
@@ -163,27 +158,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
 	std::vector<int> deletednodes;
 	
-	
-	if(event.GetKeyCode() != DEL_KEY)
-	{
-		if(event.GetKeyCode() == LETTER_W || event.GetKeyCode() == LETTER_w)
-		{
-			cameraY -= 0.1f;
-		}
-		else if(event.GetKeyCode() == LETTER_S || event.GetKeyCode() == LETTER_s)
-		{
-			cameraY += 0.1f;
-		}	
-		else if(event.GetKeyCode() == LETTER_A || event.GetKeyCode() == LETTER_a)
-		{
-			cameraX -= 0.1f;
-		}
-		else if(event.GetKeyCode() == LETTER_d || event.GetKeyCode() == LETTER_D)
-		{	
-			cameraX += 0.1f;
-		}
-	}
-	else
+	if(event.GetKeyCode() == DEL_KEY)
 	{
 		if(nodeList.size() == 1)
 		{
@@ -197,7 +172,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 				{
 					nodeList.erase(nodeIterator);
 					nodeIterator = nodeList.begin();
-					if(firstSelectedNodeIndex != -1 && (nodeIterator->getCenterXPixel() == nodeList[firstSelectedNodeIndex].getCenterXPixel()) && (nodeIterator->getCenterYPixel() == nodeList[firstSelectedNodeIndex].getCenterYPixel()))
+					if(firstSelectedNodeIndex != -1 && (nodeIterator->getCenterXCoordinate() == nodeList[firstSelectedNodeIndex].getCenterXCoordinate()) && (nodeIterator->getCenterYCoordinate() == nodeList[firstSelectedNodeIndex].getCenterYCoordinate()))
 					{
 						firstSelectedNodeIndex = -1;
 					}
@@ -224,18 +199,12 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
     
 	mouseX = event.GetX();
 	mouseY = event.GetY();
-	std::stringstream stringMouseXCoor, stringMouseYCoor, stringMousePixelX, stringMousePixelY;
+	
 	
 	// Converts the mouse pointer into a cartesian graph position
-	mouseGraphX = (((2.0 / canvasWidth) * (mouseX - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
-	mouseGraphY = (-(2.0 / canvasHeight) * (mouseY - canvasHeight / 2.0)) / zoomFactor;
-    
-    stringMouseXCoor << std::fixed << setprecision(3) << mouseGraphX;
-	stringMouseYCoor << std::fixed << setprecision(3) << mouseGraphY;
-    
-    stringMousePixelX << std::fixed << setprecision(1) << mouseX;
-    stringMousePixelY << std::fixed << setprecision(1) << mouseY;
-    
+	mouseGraphX = (((2.0 / canvasWidth) * (mouseX - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight) + cameraX;
+	mouseGraphY = (-(2.0 / canvasHeight) * (mouseY - canvasHeight / 2.0)) / zoomFactor + cameraY;
+  
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
         cameraX -= (2.0 / canvasWidth) * (dx / zoomFactor) * (canvasWidth / canvasHeight);
@@ -250,57 +219,19 @@ void geometryEditorCanvas::onMouseMove(wxMouseEvent &event)
 double geometryEditorCanvas::convertToXCoordinate(int xPixel)
 {
 //	return (Xcoeff * ((double)xPixel) - graphOffset);
-    return (((2.0 / canvasWidth) * xPixel - 1) / zoomFactor * (canvasWidth / canvasHeight) + cameraX);
+//    return (((2.0 / canvasWidth) * xPixel - 1) / zoomFactor * (canvasWidth / canvasHeight) + cameraX);
+    return (((2.0 / canvasWidth) * ((double)xPixel - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight) + cameraX;
 }
 
 
-double geometryEditorCanvas::convertToXCoordinate(int xPixel, int cameraOffset)
-{
-	return (Xcoeff * ((double)xPixel - cameraOffset) - graphOffset);
-}
 
 
 double geometryEditorCanvas::convertToYCoordinate(int yPixel)
 {
-	return -((2.0 / canvasHeight) * yPixel - 1) / zoomFactor + cameraY;
+//	return -((2.0 / canvasHeight) * yPixel - 1) / zoomFactor + cameraY;
+    return (-(2.0 / canvasHeight) * ((double)yPixel - canvasHeight / 2.0)) / zoomFactor + cameraY;
 }
 
-
-double geometryEditorCanvas::convertToYCoordinate(int yPixel, int cameraOffset)
-{
-	return (Ycoeff* ((double)yPixel - cameraOffset) + graphOffset);
-}
-
-
-double geometryEditorCanvas::convertToXPixel(double XCoor)
-{
-	return ((1.0 + (XCoor - cameraX)) * zoomFactor / (canvasWidth / canvasHeight) + cameraX);
-}
-
-
-int geometryEditorCanvas::convertToXPixel(double XCoor, int cameraOffset)
-{
-	return (int)((XCoor + graphOffset) / Xcoeff) + cameraOffset;
-}
-
-
-double geometryEditorCanvas::convertToYPixel(double YCoor)
-{
-	return ((1.0 + (YCoor - cameraY) * zoomFactor) * canvasHeight / 2.0); // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
-}
-
-int geometryEditorCanvas::convertToYPixel(double YCoor, int cameraOffset)
-{
-	return (int)((YCoor - graphOffset) / Ycoeff) + 3 + cameraOffset; // Due to there being errors in the double data type, a small offset of 3 needed to be introduced
-}
-
-
-void geometryEditorCanvas::convertPixelToCoor(double xPoint, double yPoint, int &xPixel, int &yPixel)
-{
-	xPixel = convertToXPixel(xPoint);
-	
-	yPixel = convertToYPixel(yPoint);
-}
 
 
 void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
@@ -309,37 +240,44 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
 	wxPaintDC dc(this);// This is required for drawing
 	
     glMatrixMode(GL_MODELVIEW);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     
-    glDisable(GL_DEPTH_TEST);
-    
-	drawGrid();
-    
+ //   glDisable(GL_DEPTH_TEST);
+    updateProjection();
+    drawGrid();
+    glMatrixMode(GL_MODELVIEW);
 	if(lineList.size() > 0)
 	{
-        updateProjection();
+   //     updateProjection();
 		for(int i = 0; i < lineList.size(); i++)
 		{
-			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXPixel(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYPixel());
+            // Look into passing the nodeList vector by reference to the draw function and doing this in the draw function
+			lineList[i].draw(nodeList[lineList[i].getFirstNodeIndex()].getCenterXCoordinate(), nodeList[lineList[i].getFirstNodeIndex()].getCenterYCoordinate(), nodeList[lineList[i].getSecondNodeIndex()].getCenterXCoordinate(), nodeList[lineList[i].getSecondNodeIndex()].getCenterYCoordinate());
 		}
 	}
 	
+    if(arcList.size() > 0)
+    {
+        for(std::vector<arcShape>::iterator arcIterator = arcList.begin(); arcIterator != arcList.end(); ++arcIterator)
+        {
+            arcIterator->draw();
+        }
+    }
+    
 	if(nodeList.size() > 0)
 	{
-        updateProjection();
+  //      updateProjection();
 		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
 		{
-			int tempX = 0;
-			int tempY = 0;
-			convertPixelToCoor(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), tempX, tempY);
-
-			nodeIterator->setCenterXPixel(tempX);
-			nodeIterator->setCenterYPixel(tempY);
-		
+            /* Interestingly, the function does not have to convert the cartesian coordinates into pixels and draw
+             * The reason for this is unknown. 
+             */ 
 			nodeIterator->draw();
 		}
 	}
-	
+    
+    
+    
 	SwapBuffers();// Display the output
 }
 
@@ -363,29 +301,31 @@ void geometryEditorCanvas::toggleBlockListCreation()
 
 void geometryEditorCanvas::onMouseWheel(wxMouseEvent &event)
 {
+    double tempMouseX = event.GetX();
+    double tempMouseY = event.GetY();
+    
     if(event.GetWheelRotation() != 0)
     {
-   //     wxMessageBox("Wheel Rotated");
+        double temp1X, temp2Y;
         
-        cameraX += mouseGraphX;
-        cameraY += mouseGraphY;
+        temp1X = (((2.0 / canvasWidth) * (event.GetX() - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
+        temp2Y = (-(2.0 / canvasHeight) * (event.GetY() - canvasHeight / 2.0)) / zoomFactor;
+        
+        cameraX += temp1X;
+        cameraY += temp2Y;
         
         if(event.GetWheelRotation() > 0)
             zoomFactor = zoomFactor * pow(1.2, -(event.GetWheelDelta()) / 150.0);
         else
             zoomFactor = zoomFactor * pow(1.2, (event.GetWheelDelta()) / 150.0);
         
-        /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process */
-        mouseGraphX = (((2.0 / canvasWidth) * (mouseX - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
-        mouseGraphY = (-(2.0 / canvasHeight) * (mouseY - canvasHeight / 2.0)) / zoomFactor;
+        /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
+         * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
+        temp1X = (((2.0 / canvasWidth) * (event.GetX() - canvasWidth / 2.0)) / zoomFactor) * (canvasWidth / canvasHeight);
+        temp2Y = (-(2.0 / canvasHeight) * (event.GetY() - canvasHeight / 2.0)) / zoomFactor;
         
-        cameraX -= mouseGraphX;
-        cameraY -= mouseGraphY;
-    }
-	
-    if(event.MiddleDown() && event.Dragging())
-    {
-        wxMessageBox("It works");
+        cameraX -= temp1X;
+        cameraY -= temp2Y;
     }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -410,8 +350,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 {
 	wxGLCanvas::SetCurrent(*geometryContext);
 	bool nodeSelected = false;
-	
-	
+    
 	if(blockLabelCreationIsEnabled)
 	{
 		if(!(nodeList.size() >= 2 && (lineList.size() > 0 || arcList.size() > 0)))
@@ -419,7 +358,9 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 	}
 	else if(nodeList.size() == 0)
 	{
-		addNode(mouseGraphX, mouseGraphY, 0);
+        double temp1 = convertToXCoordinate(mouseX);
+        double temp2 = convertToYCoordinate(mouseY);
+		addNode(temp1, temp2, 0);
 		this->Refresh();
 		return;
 	}
@@ -432,13 +373,13 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
     /* This section will be for node handling */
 	for(int i = 0; i < nodeList.size(); i++)
 	{
-		if((((mouseX - cameraX) >= nodeList[i].getCenterXPixel() - 5) && ((mouseX - cameraX) <= nodeList[i].getCenterXPixel() + 5) && ((mouseY - cameraY) <= nodeList[i].getCenterYPixel() + 5) && ((mouseY - cameraY) >=nodeList[i].getCenterYPixel() - 5)) && nodeSelected == false)
+		if(((mouseGraphX >= nodeList[i].getCenterXCoordinate() - 0.01 * zoomFactor) && (mouseGraphX <= nodeList[i].getCenterXCoordinate() + 0.01 * zoomFactor) && (mouseGraphY <= nodeList[i].getCenterYCoordinate() + 0.01 * zoomFactor) && (mouseGraphY >=nodeList[i].getCenterYCoordinate() - 0.01 * zoomFactor)) && nodeSelected == false)
 		{
 			if(blockLabelCreationIsEnabled)
 				return;
 			else if(event.ShiftDown())
 			{
-				/*	This section will first check to see if any other shape is selected.
+				/*	This section will first chewxMouseEvent &eventck to see if any other shape is selected.
 					If the shape is selected, then toggle the selection.
 					As a last step, the function will then toggle select the selected node
 				*/
@@ -475,24 +416,34 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 			}
 			else if(firstSelectedNodeIndex == -1)
 			{
+                /* This section will clear any nodes that were selected such that the one that was 
+                 * selected is the only one that is selected
+                 */ 
 				for (int j = 0; j < nodeList.size(); j++)
 				{
 					if(nodeList[j].getIsSelected())
 						nodeList[j].toggleSelect();
 				}
-				nodeList[i].toggleSelect();
+				nodeList[i].toggleSelect(); // Select the one that the user wants
 				firstSelectedNodeIndex = i;
-				this->Refresh();
-				return;
+				this->Refresh();// Update the screen
+				return; // quit the function
 			}
 			else
 			{
+                /* This section deals with creating a line between the two nodes
+                 */ 
 				if(lineCreationFlag)
 				{
 					
 					double tempXCoor, tempYCoor;
 					for(int k = 0; k < lineList.size(); k++)
 					{
+                        /* In this fucntion, we already have the index to the first node the user selected
+                         * i would be the index of the second node the user selected.
+                         * k is the index to the line segment. The purpose of the fuction
+                         * tempx and tempyCoor are simply temporarl coordinates that are used as a midway.
+                         */ 
 						if(getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor) == true)
 						{
 							addNode(tempXCoor, tempYCoor, 0.01);
@@ -526,10 +477,10 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					wxStaticText *boundaryText = new wxStaticText(dialogPanel, wxID_ANY, "Boundary", wxPoint(12, 125), wxSize(52,13));
 					boundaryText->SetFont(*font);
 					
-					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "180", wxPoint(101, 35), wxSize(156, 20));
-					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "3", wxPoint(101, 80), wxSize(156, 20));
+					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "35", wxPoint(101, 35), wxSize(156, 20));
+					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "10", wxPoint(101, 80), wxSize(156, 20));
 
-					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "", wxPoint(101, 122), wxSize(156, 21), boundaryList);
+					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "<None>", wxPoint(101, 122), wxSize(156, 21), boundaryList);
 					
 					if(arcSegmentDlg->ShowModal() == wxID_OK)
 					{
@@ -540,10 +491,10 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						wxString test = boundaryList.Item(index);
 						
 						arcAngle->GetValue().ToDouble(&arcAngleVal);
-						arcSegment.setArcLength(arcAngleVal);// This needs to be changed to reflect that it is really the arc angle and not length
+						arcSegment.setArcAngle(arcAngleVal);
 						
 						maxSegment->GetValue().ToDouble(&maxSegmentVal);
-						arcSegment.setMaxSideLength(maxSegmentVal);
+						arcSegment.setNumSegments(maxSegmentVal);
 						
 						//arcSegment.setBoundaryMarker(test);
 						arcSegment.setBoundaryMarker(test);
@@ -551,6 +502,8 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						arcSegment.setFirstNodeIndex(firstSelectedNodeIndex);
 						arcSegment.setSecondNodeIndex(nodeList[i].getNodeIndex());
 						
+                        arcSegment.calculate(nodeList);
+                        
 						addArcSegment(arcSegment);
 					}
 				}
@@ -568,6 +521,24 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 }
 
 
+
+void geometryEditorCanvas::onMouseRightDown(wxMouseEvent &event)
+{
+    std::string test1 = std::to_string(mouseGraphX);
+    std::string test2 = std::to_string(mouseX);
+    test1.append(" , ");
+    test1.append(std::to_string(mouseGraphY));
+    
+    test2.append(" , ");
+    test2.append(std::to_string(mouseY));
+    
+    wxMessageBox(test1);
+    wxMessageBox(test2);
+ //   wxMessageBox(stringMouseXCoor.str());
+}
+
+
+
 wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
 	EVT_PAINT(geometryEditorCanvas::onGeometryPaint)
 	EVT_SIZE(geometryEditorCanvas::onResize)
@@ -577,6 +548,7 @@ wxBEGIN_EVENT_TABLE(geometryEditorCanvas, wxGLCanvas)
 	EVT_LEAVE_WINDOW(geometryEditorCanvas::onLeavingWindow)
 	EVT_MOTION(geometryEditorCanvas::onMouseMove)
 	EVT_LEFT_DOWN(geometryEditorCanvas::onMouseLeftDown)
+    EVT_RIGHT_DOWN(geometryEditorCanvas::onMouseRightDown)
 wxEND_EVENT_TABLE()
 
 //nodePoint::drawnodePoint(GLdouble xcoordinate, GL)

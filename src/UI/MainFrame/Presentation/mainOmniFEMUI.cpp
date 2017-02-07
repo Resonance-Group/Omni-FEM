@@ -24,8 +24,10 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuEdit, "&Edit");
     menuBar->Append(menuView, "&View");
-    menuBar->Append(menuMesh, "&Mesh");
     menuBar->Append(menuProblem, "&Problem");
+    menuBar->Append(menuGrid, "&Grid");
+    menuBar->Append(menuProperties, "&Properties");
+    menuBar->Append(menuMesh, "&Mesh");
     menuBar->Append(menuHelp, "&Help");
     
     
@@ -43,7 +45,25 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 	
 	/* Creting the menu listing of the View Menu */
 	menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
-	
+    menuView->AppendSeparator();
+    menuView->Append(menubarID::ID_menubarDispBlockLabels, "&Show Block Name");
+	menuView->Append(menubarID::ID_menubarDispStatusBar, "&Show Status Bar");
+    menuView->Append(menubarID::ID_menubarDispLuaConsole, "&Lua Console");
+    
+    /* Create hte menu listing for the grid menu option */
+    menuGrid->Append(menubarID::ID_menubarShowGrid, "&Display Grid");
+    menuGrid->Append(menubarID::ID_menubarSnapGrid, "&Snap to Grid");
+    menuGrid->Append(menubarID::ID_menubarSetGrid, "&Set Grid");
+    
+    /* Create the menu listing for the properties option */
+    menuProperties->Append(menubarID::ID_menubarMaterials, "&Materials\tCtrl-M");
+    menuProperties->Append(menubarID::ID_menubarBoundary, "&Boundary Conditions\tCtrl-B");
+    menuProperties->Append(menubarID::ID_menubarPoint, "&Nodal Properties");
+    menuProperties->Append(menubarID::ID_menubarCircuitsCond, "&Circuits/Conductors");
+    menuProperties->AppendSeparator();
+    menuProperties->Append(menubarID::ID_menubarMatLibrary, "&Materials Library\tCtrl-L");
+    
+    
 	/* Create the menu listing for the mesh menu */
 	menuMesh->Append(menubarID::ID_menubarCreateMesh, "&Create Mesh");
 	menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
@@ -342,10 +362,25 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	
 	/* This section is for the View menu */
 	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)
+ /*   EVT_MENU(menubarID::ID_menubarDispBlockLabels, OmniFEMMainFrame::onDispGrid)
+    EVT_MENU(menubarID::ID_menubarDispStatusBar, OmniFEMMainFrame::onSnapGrid)
+    EVT_MENU(menubarID::ID_menubarDispLuaConsole, OmniFEMMainFrame::onSetGrid)*/
 	
 	/* This section is for the Problem menu */
 	EVT_MENU(menubarID::ID_menubarPrecision, OmniFEMMainFrame::onPrecision)
 	
+    /* This section is for the Grid menu */
+/*    EVT_MENU(menubarID::ID_menubarShowGrid, OmniFEMMainFrame::onDispGrid)
+    EVT_MENU(menubarID::ID_menubarSnapGrid, OmniFEMMainFrame::onSnapGrid)
+    EVT_MENU(menubarID::ID_menubarSetGrid, OmniFEMMainFrame::onSetGrid) */
+    
+    /* This section is for the Properties menu */
+    EVT_MENU(menubarID::ID_menubarMaterials, OmniFEMMainFrame::onMaterials)
+    EVT_MENU(menubarID::ID_menubarBoundary, OmniFEMMainFrame::onBoundary)
+    EVT_MENU(menubarID::ID_menubarPoint, OmniFEMMainFrame::onPointProperty)
+    EVT_MENU(menubarID::ID_menubarCircuitsCond, OmniFEMMainFrame::onCircuitsConductor)
+    EVT_MENU(menubarID::ID_menubarMatLibrary, OmniFEMMainFrame::onMatLibrary)
+    
 	/*This section is for the mesh menu */
     EVT_MENU(menubarID::ID_menubarCreateMesh, OmniFEMMainFrame::onCreateMesh)
 	EVT_MENU(menubarID::ID_menubarShowMesh, OmniFEMMainFrame::onShowMesh)

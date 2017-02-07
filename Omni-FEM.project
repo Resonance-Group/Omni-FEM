@@ -32,6 +32,8 @@
           <File Name="src/UI/MainFrame/Presentation/save.png"/>
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>
@@ -40,6 +42,7 @@
         </VirtualDirectory>
         <VirtualDirectory Name="Abstraction">
           <File Name="src/UI/MainFrame/Abstraction/OmniFEMMainFrameAbstraction.cpp"/>
+          <File Name="src/UI/MainFrame/Abstraction/ProblemDefinition.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="Controller">
           <File Name="src/UI/MainFrame/Controller/OmniFEMMainFrameController.cpp"/>
@@ -67,6 +70,14 @@
           </VirtualDirectory>
         </VirtualDirectory>
       </VirtualDirectory>
+      <VirtualDirectory Name="MaterialsDialog">
+        <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
+        <File Name="src/UI/MaterialsDialog/BlockPropertyMagnetic.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="BoundaryDialog">
+        <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
+        <File Name="src/UI/BoundaryDialog/BoundaryDialog.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -74,6 +85,16 @@
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
       <File Name="src/common/omniFEMDialog.cpp"/>
+      <File Name="src/common/MagneticMaterial.cpp"/>
+      <File Name="src/common/MagneticBoundary.cpp"/>
+      <File Name="src/common/BoundaryConditions.cpp"/>
+      <File Name="src/common/CircuitProperty.cpp"/>
+      <File Name="src/common/ConductorProperty.cpp"/>
+      <File Name="src/common/ElectricalBoundary.cpp"/>
+      <File Name="src/common/ElectroStaticMaterial.cpp"/>
+      <File Name="src/common/MaterialFolder.cpp"/>
+      <File Name="src/common/MaterialProperty.cpp"/>
+      <File Name="src/common/NodalProperty.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -86,10 +107,36 @@
       <File Name="Include/UI/geometryShapes.h"/>
       <File Name="Include/UI/wxGLString.h"/>
       <File Name="Include/UI/geometryEditorController.h"/>
+      <File Name="Include/UI/PropertiesDialog.h"/>
+      <File Name="Include/UI/MainFrameAbstraction.h"/>
+      <File Name="Include/UI/MainFrameController.h"/>
+      <VirtualDirectory Name="MaterialsDialog">
+        <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
+        <File Name="Include/UI/MaterialsDialog/BlockPropertyMagnetics.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="BoundaryDialog">
+        <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
+        <File Name="Include/UI/MaterialsDialog/MagneticBoundaryPropertyDiaglog.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
       <File Name="Include/common/omniFEMDialog.h"/>
+      <File Name="Include/common/ConductorProperty.h"/>
+      <File Name="Include/common/MaterialFolder.h"/>
+      <File Name="Include/common/NodalProperty.h"/>
+      <File Name="Include/common/CircuitProperty.h"/>
+      <File Name="Include/common/MaterialProperty.h"/>
+      <File Name="Include/common/ElectroStaticMaterial.h"/>
+      <File Name="Include/common/enums.h"/>
+      <File Name="Include/common/BoundaryConditions.h"/>
+      <File Name="Include/common/ElectricalBoundary.h"/>
+      <File Name="Include/common/MagneticBoundary.h"/>
+      <File Name="Include/common/MagneticMaterial.h"/>
+      <File Name="Include/common/ProblemDefinition.h"/>
+      <File Name="Include/common/MagneticPreference.h"/>
+      <File Name="Include/common/ElectrostaticPreference.h"/>
+      <File Name="Include/common/omniFEMEvent.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

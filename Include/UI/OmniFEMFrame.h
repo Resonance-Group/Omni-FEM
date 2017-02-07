@@ -1,18 +1,26 @@
 #ifndef OMNIFEMFrame_H_
 #define OMNIFEMFrame_H_
 
+#include <string.h>
+
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
 #include <wx/stdpaths.h>
-#include <string.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <UI/problemDefinition.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
+
+//#include <UI/problemDefinition.h>
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
+#include <UI/PropertiesDialog.h>
+#include <UI/MainFrameAbstraction.h>
+#include <UI/MaterialsDialog/MaterialDialog.h>
+#include <UI/MainFrameController.h>
+
+#include <common/BoundaryConditions.h>
+#include <common/enums.h>
+
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -29,223 +37,6 @@ class OmniFEMApp : public wxApp
 
 
 
-enum class systemState
-{
-	initialStartUp = 0,
-	dimensionChoosing = 1,
-	problemChooseing = 2,
-	problemDefining = 3,
-	simulatingProblem = 4,
-	viewingResults = 5
-};
-
-
-
-/*! \class OmniFEMMainFrameAbstraction
-	\brief The class representing the abstraction layer for OmniFEM's main frame
-	
-	This will contain all of the data that the presentation will need access to.
-*/
-class OmniFEMMainFrameAbstraction
-{
-	
-public:
-	//! This is the main constructor for the class
-	OmniFEMMainFrameAbstraction();
-	
-	//! This will return the state of OmniFEM
-	/*!
-		/return The state of OmniFEM
-	*/
-	systemState getOmniFEMState();
-
-	//! This function will set the state of OmniFEM.
-	/*!
-		This function will also call an event in order to update the presentation approiately
-		/param omniFEMState The state that OmniFEM will be going into.
-	*/
-	void setOmniFEMState(systemState omniFEMState);
-	
-	//! Function to get the current problem dimension
-	problemDimension getProblemDimension();
-	
-	//! Function to set the problem dimension
-	void setProblemDimension(problemDimension dimension);
-	
-	//! Function used to get the current physics of the problem 
-	physicProblems getProblemPhysics();
-	
-	//! Function used to set the current physics problem
-	void setProblemPhysics(physicProblems phy);
-	
-	//! This function will retrive the border width for the box sizer
-	int getBorderWidth();
-	
-	//! This will retrieve the workspace/solution name
-	wxString getworkspaceName();
-	
-	//! This will set the workspace/solution name
-	void setWorkspaceName(wxString name);
-	
-	//! This will set the main tree ID for the tree control
-	void setRootTreeID(wxTreeItemId tree);
-	
-	//! This will return the main tree ID for the tree control
-	/* 
-		This is not an actual interger ID but rather the whole class
-	*/
-	wxTreeItemId getRootTreeID();
-	
-	//! This will retreive the problem IF from the simuation object
-	wxTreeItemId getSimProblemID();
-	
-	//! This will set the problem IF in the simulation object
-	void setSimProblemID(wxTreeItemId problemID);
-	
-	//! This will set the geometry ID of the simulation object
-	void setSimGeometryID(wxTreeItemId geometryID);
-	
-	//! This will get the geometry ID of the simulation object
-	wxTreeItemId getSimGeometryID();
-	
-	//! This will set the Material ID of the simulation object
-	void setSimMaterialsID(wxTreeItemId materialsID);
-	
-	//! This will get the material ID of the simulation object
-	wxTreeItemId getSimMaterialsID();
-	
-	//! This will set the mesh ID of the simulation object
-	void setSimMeshID(wxTreeItemId simMeshID);
-	
-	//! This will get the mesh ID of the simulation object
-	wxTreeItemId getSimMeshID();
-	
-	//! This will set the simulation name
-	void setSimulationName(wxString simName);
-	
-	//! This will retieve the simulation name
-	wxString getSimulationName();
-	
-	/************
-	* Variables *
-	*************/
-private:
-	
-	//! The state of OmniFEM
-	/*!
-		This variable holds the current state of OmniFEM
-	*/
-	systemState omniFEMSystemState = systemState::initialStartUp;
-	
-	//! This object is created for each physics problem
-	/*!
-		This is setting up for future additions where the model tree builder
-		will be able to display more then one physics problem per solution.
-		Each phyics problem will be it's own object in code
-	*/
-	problemDefinition definition;
-	
-	//! This variable stores the border size
-	int borderSize = 5;
-	
-	//! The name of the solution/workspace
-	wxString workspaceName = "untitled";
-	
-	//! This variable is used to store the data for the tree control in the model builder window
-	wxTreeItemId rootTree;
-};
-
-
-
-/*! \class OmniFEMMainFrameController
- *  \brief The class representing the controller layer for OmniFEM's main frame
- * 
- *  This class contains all of the processing calls in order to manage the OmniFEM MainFrame.
- *	This class handles the presentation of the main frame for Omni-FEM and is thus one of the largest objects in the whole program
- *  
-*/
-class OmniFEMMainFrameController
-{
-/* Constructor */
-public:
-	OmniFEMMainFrameController();
-	
-	/************
-	* Variables *
-	*************/
-private:
-	
-	OmniFEMMainFrameAbstraction abstractionLayer;
-	
-	/**********************
-	* Function Prototypes *
-	***********************/
-public:
-
-	//! This function will update the systemState of OmniFEM in the abstraction layer
-	void updateOmniFEMState(systemState omniFEMState);
-    
-    //! This will get the current state of OmniFEM contained in the abstraction layer
-    systemState getOmniFEMState();
-	
-	//! This function will set the problem dimension in the 
-	void setAbstractProblemDim(problemDimension dim);
-	
-	//! This function will be used to get the problem dimension from the abstraction layer
-	problemDimension getAbstractProblemDim();
-	
-	//! This function will get the physics problem in the abstraction
-	physicProblems getAbstractProblemPhysics();
-	
-	//! This function will set the phycis problem in the abstraction
-	void setAbstractProblemPhysics(physicProblems phy);
-	
-	//! This function will retrieve the border size of the boxSizer.
-	int getBorderSize();
-	
-	//! This will get the workspace/solution name from the abstraction layer
-	wxString getWorkspaceNameAbstraction();
-	
-	//! This will set the workspace name in the abstraction layer
-	void setWorkspaceNameAbstraction(wxString name);
-	
-	//! This will set the root tree ID object in the abstraction layer
-	void setRootTreeIDAbstraction(wxTreeItemId tree);
-	
-	//! This will get the root tree ID object from the abstraction layer
-	wxTreeItemId getRootTreeIDAbstraction();
-	
-	//! This will retreive the problem ID from the abstraction layer
-	wxTreeItemId getAbstractProblemID();
-	
-	//! This will set the problem IF in the simulation object
-	void setAbstractProblemID(wxTreeItemId problemID);
-	
-	//! This will set the geometry ID of the simulation object
-	void setAbstractGeometryID(wxTreeItemId geometryID);
-	
-	//! This will get the geometry ID of the simulation object
-	wxTreeItemId getAbstractGeometryID();
-	
-	//! This will set the Material ID of the simulation object
-	void setAbstractMaterialsID(wxTreeItemId materialsID);
-	
-	//! This will get the material ID of the simulation object
-	wxTreeItemId getAbstractMaterialsID();
-	
-	//! This will set the mesh ID of the simulation object
-	void setAbstractMeshID(wxTreeItemId simMeshID);
-	
-	//! This will get the mesh ID of the simulation object
-	wxTreeItemId getAbstractMeshID();
-
-	//! This will retrieve the simulation name from the abstract layer
-	wxString getAbstractSimName();
-	
-	//! This will set the simulation name in the abstraction layer
-	void setAbstractSimName(wxString name);
-	
-};
 
 
 
@@ -254,7 +45,7 @@ public:
  * 
  *  This class is also the presentation layer of the main frame
  */
- class OmniFEMMainFrame : public wxFrame
+class OmniFEMMainFrame : public wxFrame
 {
 public:
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
@@ -279,6 +70,18 @@ private:
 	/* This section is for the Problem Menu */
 	void onPrecision(wxCommandEvent &event);
 	
+    /* This section is for the Grid Menu */
+    void onDispGrid(wxCommandEvent &event);
+    void onSnapGrid(wxCommandEvent &event);
+    void onSetGrid(wxCommandEvent &event);
+    
+    /* Thos section is for the Properties Menu */
+    void onMaterials(wxCommandEvent &event);
+    void onBoundary(wxCommandEvent &event);
+    void onPointProperty(wxCommandEvent &event);
+    void onCircuitsConductor(wxCommandEvent &event);
+    void onMatLibrary(wxCommandEvent &event);
+    
 	/* This section is for the Mesh menu */
 	void onCreateMesh(wxCommandEvent &event);
 	void onShowMesh(wxCommandEvent &event);
@@ -389,12 +192,18 @@ private:
 	//! This would be the view menu in the menu bar
     wxMenu *menuView = new wxMenu;
 	
-	//! This would be the mesh menu in the menu bar
-    wxMenu *menuMesh = new wxMenu;
-	
 	//! This would be the problem menu in the menu bar
     wxMenu *menuProblem = new wxMenu;
 	
+    //! The Grid menu in the menu bar
+    wxMenu *menuGrid = new wxMenu;
+    
+    //! The properties menu in the menu bar
+    wxMenu *menuProperties = new wxMenu;
+    
+    //! This would be the mesh menu in the menu bar
+    wxMenu *menuMesh = new wxMenu;
+    
 	//! This would be the help menu in the menu bar
     wxMenu *menuHelp = new wxMenu;
 	

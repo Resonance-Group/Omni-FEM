@@ -11,10 +11,14 @@ rectangleShape::rectangleShape(double xCenterPoint, double yCenterPoint)
 	numberOfVertices = 4;
 }
 
+
+
 rectangleShape::rectangleShape()
 {
     
 }
+
+
 
 double rectangleShape::getDistance(double xp, double yp)
 {

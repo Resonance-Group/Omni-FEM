@@ -8,6 +8,8 @@
 #include <gl.h>
 #include <glu.h>
 #include <math.h>
+#include <vector>
+#include <common/Vector.h>
 
 //#include <UI/openGLGeometry.h>
 
@@ -69,10 +71,15 @@ protected:
 	//! Data type used to store the group number that the shape is associated with
 	int groupNumber;
 
-	//! This data type stroes the center x  position
+	//! This data type stroes the center x  position in Cartesian Coordiantes
+	/*! 
+		For arcs, this is the center of the circle.
+		For lines, this is the midpoint
+		For nodes and blocklabels, this would be the center of the square.
+	*/
 	double xCenterCoordinate;
 	
-	//! This data type stores the center y position
+	//! This data type stores the center y position in Cartesians Coordiantes
 	double yCenterCoordinate;
 };
 
@@ -98,7 +105,7 @@ public:
     void setConductor(std::string conductor);
     std::string getConductor();
     
-    virtual void draw(int node1X, int node1Y, int node2X, int node2Y);
+    virtual void draw(double node1X, double node1Y, double node2X, double node2Y);
 	
 protected:
 	/*! \brief  A line is composed of 2 nodes.
@@ -137,26 +144,11 @@ class rectangleShape : public geometry2D
 public:
 	rectangleShape(double xCenterPoint, double yCenterPoint);
 	rectangleShape();
-    
-//	void getArea();
-//	void getParameter();
-	
-//	double getSideLengthA();
-//	double getSideLengthB();
-	
-//	double getXPoint();
-//	double getYPoint();
-	
-//	void setSideLengthA(double length);
-//	void setSideLengthB(double length);
 	
 	double getDistance(double xp, double yp);
 	
 	//! This is the function that is called in order to draw the rectangle. One thing that is 
 	virtual void draw();
-private:
-//	double sideLengthA;
-//	double sideLengthB;
 };
 
 
@@ -167,17 +159,7 @@ public:
 	node(double xCenter, double yCenter);
 	node();
     
-	//! This function will set the center xPixel value used in drawing the shape 
-	void setCenterXPixel(int xPix);
-    
     void setCenter(double xCoor, double yCoor);
-	
-	//! This function will set the center yPixel value used in drawing the shape 
-	void setCenterYPixel(int yPix);
-	
-	int getCenterXPixel();
-	
-	int getCenterYPixel();
 	
 	//! This function will draw the shape
 	void draw();
@@ -187,12 +169,6 @@ public:
 	int getNodeIndex();
 	
 private:
-	//! This variable stores the x coordinate for the center in pixels
-	int xPixel;
-
-	//! This variable stores the y coordinate for the center in pixels	
-	int yPixel;
-	
 	//! The nodes are stored in array. For quickier accesssing, this will store the index which is associated with the node
 	int nodeIndex;
 };
@@ -203,8 +179,6 @@ class blockLabel : public rectangleShape
 {
 public:
 	blockLabel();
-	
-	
 	
 private:
 	double maxArea;
@@ -224,40 +198,54 @@ class arcShape : public edgeLineShape
 public:
 	arcShape();
 	
-	void setArcLength(double lengthOfArc);
+	void setArcAngle(double angleOfArc);
 	
-	double getArcLength();
+	double getArcAngle();
 	
-	void setMaxSideLength(double sideLength);
+	void setNumSegments(double segments);
 	
-	double getMaxSideLength();
+	double getnumSegments();
+    
+    void draw();
 
+    /*! \brief  This function will be calculating the radius and center point of the arc
+	 *			The idea is as follows:
+     *          By knowing the 2 endpoints and the arc angle, we are able to caluclate the radius and the center point
+     *          For the radius, this is the law of cosines: c^2 = 2 * R^2 * (1 - cos(theta) )
+                where c is the length of the sector through the beginning and starting endpoints and theta is the arc angle
+                Then, we can calculate the 
+	 */
+    void calculate(std::vector<node> &arcNodeList);
+    
+    double getRadius();
+    
+    double getArcLength();
+    
 private:
 	
 	bool isNormalDirection;
 	
 	bool isHidden;
 	
-	double maxSideLength;
+	double numSegments;
 	
-	double arcLength;
+    //! This data is the angle of the arc used in calculations. This should be in degrees
+	double arcAngle;
+    
+    //! The radius of the arc from the center point
+    double radius;
+    
+    bool isCounterClockWise = true;
+    
+    double startNodeXCoordinate;
+    
+    double startNodeYCoordinate;
+    
+    double endNodeXCoordinate;
+    
+    double endNodeYCoordinate;
 	
 };
-
-
-
-class circleShape : public arcShape
-{
-	
-};
-
-
-
-class ellipseShape : public circleShape
-{
-	
-};
-
 
 
 
