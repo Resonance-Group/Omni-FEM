@@ -136,9 +136,6 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxDialog(NULL, wxID_ANY, "Magne
     wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(339, 407), wxSize(75, 23));
     cancelButton->SetFont(*font);
 
-    
-
- //   this->Fit();
     this->SetMinSize(this->GetSize());
     this->SetMaxSize(this->GetSize());
 }
@@ -156,13 +153,13 @@ void blockPropertyMagnetic::getNewMaterial(magneticMaterial &newMaterial)
     double value;
     
     coercivityTextCtrl->GetValue().ToDouble(&value);
-    newMaterial.setCoercivity(value);
+    newMaterial.setCoercivity(value); 
     
     newMaterial.setName(nameTextCtrl->GetValue().ToStdString());
     
     currentDesnityTextCtrl->GetValue().ToDouble(&value);
     newMaterial.setCurrentDensity(value);
-    
+
     lamFFTextCtrl->GetValue().ToDouble(&value);
     newMaterial.setLaminationFillFactor(value);
     
@@ -182,10 +179,10 @@ void blockPropertyMagnetic::getNewMaterial(magneticMaterial &newMaterial)
     newMaterial.setPhiX(value);
     
     phiYTextCtrl->GetValue().ToDouble(&value);
-    newMaterial.setPhiY(0);
+    newMaterial.setPhiY(value);
     
     eConductivityTextCtrl->GetValue().ToDouble(&value);
-    newMaterial.setSigma(0);
+    newMaterial.setSigma(value);
     
     newMaterial.setSpecialAttribute((lamWireEnum)specialAttriComboBox->GetSelection());
 
@@ -277,6 +274,8 @@ void blockPropertyMagnetic::setMaterial(magneticMaterial &material)
 {
     _magneticMaterial = material;
     
+    setTextControlValues();
+    
     if(_magneticMaterial.getBHState())
     {
         BHCurveComboBox->SetSelection(0);
@@ -300,8 +299,7 @@ void blockPropertyMagnetic::setMaterial(magneticMaterial &material)
         
     specialAttriComboBox->SetSelection((int)_magneticMaterial.getSpecialAttribute());
     
-    lamWireEnum result = _magneticMaterial.getSpecialAttribute();
-    if(result == lamWireEnum::NOT_LAMINATED_OR_STRANDED)
+    if(_magneticMaterial.getSpecialAttribute() == lamWireEnum::NOT_LAMINATED_OR_STRANDED)
     {
         coercivityTextCtrl->Enable(true);
         lamFFTextCtrl->Enable(false);
@@ -309,7 +307,7 @@ void blockPropertyMagnetic::setMaterial(magneticMaterial &material)
         numStrandsTextCtrl->Enable(false);
         strandDiaTextCtrl->Enable(false);
     }
-    else if(result == lamWireEnum::LAMINATED_IN_PLANE || result == lamWireEnum::LAMINATED_PARALLEL_X_OR_R_AXISYMMETRIC || result == lamWireEnum::LAMINATED_PARALLEL_Y_OR_Z_AXISYMMETRIC)
+    else if(_magneticMaterial.getSpecialAttribute() == lamWireEnum::LAMINATED_IN_PLANE || _magneticMaterial.getSpecialAttribute() == lamWireEnum::LAMINATED_PARALLEL_X_OR_R_AXISYMMETRIC || _magneticMaterial.getSpecialAttribute() == lamWireEnum::LAMINATED_PARALLEL_Y_OR_Z_AXISYMMETRIC)
     {
         coercivityTextCtrl->Enable(false);
         lamFFTextCtrl->Enable(true);
@@ -317,7 +315,7 @@ void blockPropertyMagnetic::setMaterial(magneticMaterial &material)
         numStrandsTextCtrl->Enable(false);
         strandDiaTextCtrl->Enable(false);
     }
-    else if(result == lamWireEnum::MAGNET_WIRE || result == lamWireEnum::SQUARE_WIRE)
+    else if(_magneticMaterial.getSpecialAttribute() == lamWireEnum::MAGNET_WIRE || _magneticMaterial.getSpecialAttribute() == lamWireEnum::SQUARE_WIRE)
     {
         coercivityTextCtrl->Enable(false);
         lamFFTextCtrl->Enable(false);
@@ -325,7 +323,7 @@ void blockPropertyMagnetic::setMaterial(magneticMaterial &material)
         numStrandsTextCtrl->Enable(false);
         strandDiaTextCtrl->Enable(true);
     }
-    else if(result == lamWireEnum::PLAIN_STRANDED_WIRE || result == lamWireEnum::LITZ_WIRE || result == lamWireEnum::CCA_10 || result == lamWireEnum::CCA_15)
+    else if(_magneticMaterial.getSpecialAttribute() == lamWireEnum::PLAIN_STRANDED_WIRE || _magneticMaterial.getSpecialAttribute() == lamWireEnum::LITZ_WIRE || _magneticMaterial.getSpecialAttribute() == lamWireEnum::CCA_10 || _magneticMaterial.getSpecialAttribute() == lamWireEnum::CCA_15)
     {
         coercivityTextCtrl->Enable(false);
         lamFFTextCtrl->Enable(false);
@@ -353,6 +351,8 @@ void blockPropertyMagnetic::clearMaterial()
     _magneticMaterial.setSpecialAttribute(lamWireEnum::NOT_LAMINATED_OR_STRANDED);
     _magneticMaterial.setStrandDiameter(0);
     
+    setTextControlValues();
+    
     if(_magneticMaterial.getBHState())
     {
         BHCurveComboBox->SetSelection(0);
@@ -411,9 +411,31 @@ void blockPropertyMagnetic::clearMaterial()
     } 
 }
 
+
+
+void blockPropertyMagnetic::setTextControlValues()
+{
+    nameTextCtrl->SetValue(_magneticMaterial.getName());
+    relativeUxTextCtrl->SetValue(std::to_string(_magneticMaterial.getMUrX()));
+    phiXTextCtrl->SetValue(std::to_string(_magneticMaterial.getPhiX()));
+    relativeUyTextCtrl->SetValue(std::to_string(_magneticMaterial.getMUrY()));
+    phiYTextCtrl->SetValue(std::to_string(_magneticMaterial.getPhiY()));
+    
+    phiMaxTextCtrl->SetValue(std::to_string(_magneticMaterial.getPhiMax()));
+    
+    coercivityTextCtrl->SetValue(std::to_string(_magneticMaterial.getCoercivity()));
+    
+    eConductivityTextCtrl->SetValue(std::to_string(_magneticMaterial.getSigma()));
+    
+    currentDesnityTextCtrl->SetValue(std::to_string(_magneticMaterial.getCurrentDensity()));
+    
+    lamThickTextCtrl->SetValue(std::to_string(_magneticMaterial.getLaminationThickness()));
+    numStrandsTextCtrl->SetValue(std::to_string(_magneticMaterial.getNumberStrands()));
+    lamFFTextCtrl->SetValue(std::to_string(_magneticMaterial.getLaminationFillFactor()));
+    strandDiaTextCtrl->SetValue(std::to_string(_magneticMaterial.getStrandDiameter())); 
+}
+
 wxBEGIN_EVENT_TABLE(blockPropertyMagnetic, wxDialog)
-//    EVT_BUTTON(wxID_OK, blockPropertyMagnetic::onOk)
-//    EVT_BUTTON(wxID_CANCEL, blockPropertyMagnetic::onCancel)
     EVT_BUTTON(wxID_EDIT, blockPropertyMagnetic::onBHCurve)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, blockPropertyMagnetic::onBHCurveCombo)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox2, blockPropertyMagnetic::onSpecialComboBox)

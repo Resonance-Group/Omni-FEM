@@ -81,3 +81,16 @@ double magneticBoundary::getMu()
 {
     return _mur;
 }
+
+
+void magneticBoundary::setBC(bcEnumMagnetic BC)
+{
+    _type = BC;
+}
+
+
+
+bcEnumMagnetic magneticBoundary::getBC()
+{
+    return _type;
+}

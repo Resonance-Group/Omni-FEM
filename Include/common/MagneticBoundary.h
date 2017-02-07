@@ -6,7 +6,7 @@
 /*! /brief  This class is specifically set for the boundary
  *          conditions of the magnetic solver
  */ 
-class magneticBoundary : boundaryCondition
+class magneticBoundary : public boundaryCondition
 {
 private:
     /*!
@@ -37,6 +37,9 @@ private:
     
     //! The relative permeability used in the calculation of the small skin depth boundary condition
     double _mur = 0;
+    
+    //! This is the type of boundary condition that belongs to the class
+    bcEnumMagnetic _type;
 public:
     //! This section is for the getters/setters of the private variables
     void setA0(double value);
@@ -56,6 +59,9 @@ public:
     
     void setMu(double value);
     double getMu();
+    
+    void setBC(bcEnumMagnetic BC);
+    bcEnumMagnetic getBC();
 };
 
 

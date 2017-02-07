@@ -100,14 +100,9 @@ enum lamWireEnum
 
 
 
-//! This enum will be used to designate the different Boundary conditions
-enum bcEnum
+//! This enum will be used to designate the different Boundary conditions for the magnetic Boundary Conditions
+enum bcEnumMagnetic
 {
-    /* The first part are the BC conditions that appear in both simulations E-stat and magnetics */
-    MIXED,
-    PERIODIC,
-    ANTIPERIODIC,
-    /* This is specific for Magnetics */
     /*!
      *  The vector potental A is prescribed along a given boundary. This boundary condition
      *  can be used to presribe the flux passing normal to a boundary, since the normal
@@ -115,7 +110,6 @@ enum bcEnum
      *  The parameters are identified by A0, A1, A2, and phi
      */ 
     PRESCRIBE_A,
-    
     /*! 
      *  This boundary condition denotes an interface with a material subject to eddy currents at
      *  high enough frequencies suc hthat the skin dpeth in the material
@@ -127,14 +121,20 @@ enum bcEnum
      *  delta = sqrt(2 / (omega * mur * mu0 * sigma))
      */ 
     SMALL_SKIN_DEPTH,
-    
+    MIXED,
     //! An experimental BC
     STRATEGIC_DUAL_IMAGE,
-    /* These are specific for E-stat */
-    FIXED_VOLTAGE,
-    SURFACE_CHARGE_DENSITY
+    PERIODIC,
+    ANTIPERIODIC
 };
 
+
+enum bcEnumElectroStatic
+{
+   /* These are specific for E-stat */
+    FIXED_VOLTAGE,
+    SURFACE_CHARGE_DENSITY 
+};
 
 
 //! This enum is used for the properties dialog box

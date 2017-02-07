@@ -74,6 +74,10 @@
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
         <File Name="src/UI/MaterialsDialog/BlockPropertyMagnetic.cpp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="BoundaryDialog">
+        <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
+        <File Name="src/UI/BoundaryDialog/BoundaryDialog.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -109,6 +113,10 @@
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyMagnetics.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="BoundaryDialog">
+        <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
+        <File Name="Include/UI/MaterialsDialog/MagneticBoundaryPropertyDiaglog.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

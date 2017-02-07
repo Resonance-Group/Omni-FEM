@@ -1,6 +1,6 @@
 #include <UI/MaterialsDialog/MaterialDialog.h>
 
-materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxFrame(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
+materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxDialog(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -17,7 +17,7 @@ materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxF
     
     wxButton *modifyPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonModify, "Modify Property", wxPoint(12, 107), wxSize(125, 26));
     
-    wxButton *okButton = new wxButton(this, propertiesDialogEnum::ID_ButtonOk, "OK", wxPoint(146, 107), wxSize(75, 23));
+    wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(146, 107), wxSize(75, 23));
     
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
@@ -32,13 +32,6 @@ materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxF
 
 
 
-void materialDialog::onOk(wxCommandEvent &event)
-{
-    // Fire an event in order to save the local list into the global list
-}
-
-
-
 void materialDialog::onAddProperty(wxCommandEvent &event)
 {
     magneticMaterial newMat;
@@ -46,6 +39,14 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
     if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
     {
         magneticMaterialPropertyDialog->getNewMaterial(newMat);
+        for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin();  materialIterator != _magneticMaterialList.end(); ++materialIterator)
+        {
+            if(materialIterator->getName() == newMat.getName())
+            {
+                wxMessageBox(newMat.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxCENTRE | wxICON_INFORMATION); 
+                break;
+            }
+        }
         _magneticMaterialList.push_back(newMat);
         selection->Append(newMat.getName());
         selection->SetSelection(0);
@@ -56,7 +57,13 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
 
 void materialDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    
+    if(_magneticMaterialList.size() > 0)
+    {
+        int currentSelection = selection->GetCurrentSelection();
+        _magneticMaterialList.erase(_magneticMaterialList.begin() + currentSelection);
+        selection->Delete(currentSelection);
+        selection->SetSelection(0);
+    }
 }
 
 
@@ -64,7 +71,6 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
 void materialDialog::onModifyProperty(wxCommandEvent &event)
 {
     magneticMaterial selectedMaterial;
-    //magneticMaterial test;
     if(_magneticMaterialList.size() > 0)
     {
         int currentSelection = selection->GetSelection();
@@ -72,25 +78,41 @@ void materialDialog::onModifyProperty(wxCommandEvent &event)
         magneticMaterialPropertyDialog->setMaterial(selectedMaterial);
         if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
         {
-            // Do some stuff
+            int i = 0;
+            magneticMaterialPropertyDialog->getNewMaterial(selectedMaterial);
+            for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin();  materialIterator != _magneticMaterialList.end();++materialIterator)
+            {
+                if(materialIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
+                {
+                    wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxCENTRE | wxICON_INFORMATION); 
+                    break;
+                }
+                i++;
+            }
+            _magneticMaterialList.at(currentSelection) = selectedMaterial;
+            selection->SetString(currentSelection, selectedMaterial.getName());
+            
         }
     }
 }
 
 
 
-void materialDialog::updateComboBox()
+std::vector<magneticMaterial> materialDialog::getMaterialList()
 {
-    
+    return _magneticMaterialList;
 }
+
+
 
 materialDialog::~materialDialog()
 {
     
 }
 
-wxBEGIN_EVENT_TABLE(materialDialog, wxFrame)
-    EVT_BUTTON(propertiesDialogEnum::ID_ButtonOk, materialDialog::onOk)
+
+
+wxBEGIN_EVENT_TABLE(materialDialog, wxDialog)
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonAdd, materialDialog::onAddProperty)
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonDelete, materialDialog::onDeleteProperty)
     EVT_BUTTON(propertiesDialogEnum::ID_ButtonModify, materialDialog::onModifyProperty)

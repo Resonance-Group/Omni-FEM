@@ -12,7 +12,6 @@
 #include <common/enums.h>
 #include <common/MaterialProperty.h>
 #include <common/MagneticMaterial.h>
-#include <common/omniFEMEvent.h>
 
 
 /*! /class blockPropertMagnetic
@@ -108,13 +107,20 @@ private:
     //! THis function is called in order ot update the form when the user chooses the different options listed in the corresponding combo-box
     void onSpecialComboBox(wxCommandEvent &event);
     
+    //! This is an internal function that gets called in order to update the fields in the text control box
+    void setTextControlValues();
+    
 public:
     
     blockPropertyMagnetic();
     
     ~blockPropertyMagnetic();
     
-    //! When a new material is created, this function must be called in order to retrieve the new material
+    /*! /brief
+     *  When a new material is created, this function must be called in order to retrieve the new material
+     *  Note: There is currently no checking if the number that is entered is a valid number. This is up to the user.
+     *  IF a number is accidently typed as 1.5.3, then wxWidgets will automaticcaly truncate the number to 1.5
+     */ 
     void getNewMaterial(magneticMaterial &newMaterial);
     
     //! This will set the private variable _magneticMaterial to be equal to matieral. Useful if modifying a material

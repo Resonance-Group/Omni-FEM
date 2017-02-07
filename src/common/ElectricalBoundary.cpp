@@ -25,3 +25,15 @@ double electricalBoundary::getSigma()
 {
     return _surfaceChargeDensity;
 }
+
+
+void electricalBoundary::setBC(bcEnumElectroStatic BC)
+{
+    _type = BC;
+}
+
+
+bcEnumElectroStatic electricalBoundary::getBC()
+{
+    return _type;
+}

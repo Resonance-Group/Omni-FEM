@@ -4,9 +4,6 @@
 
 void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
 {
-//    propertiesDialog *test = new propertiesDialog();
-//    test->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-//    test->drawInitial();
     controller.createMaterialDialog();
 }
 
@@ -14,7 +11,7 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
 {
-    
+    controller.createBoundaryDialog();
 }
 
 

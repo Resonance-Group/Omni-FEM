@@ -17,9 +17,12 @@
 #include <UI/MainFrameAbstraction.h>
 
 #include <common/BoundaryConditions.h>
+#include <common/ElectricalBoundary.h>
+#include <common/MagneticBoundary.h>
 #include <common/enums.h>
 
 #include <UI/MaterialsDialog/MaterialDialog.h>
+#include <UI/BoundaryDialog/BoundaryDialog.h>
 
 /*! \class OmniFEMMainFrameController
  *  \brief The class representing the controller layer for OmniFEM's main frame
@@ -109,7 +112,10 @@ public:
 	//! This will set the simulation name in the abstraction layer
 	void setAbstractSimName(wxString name);
     
+    //! This function is called when the user presses CTRL+M or clicks on the materials under the properties pane
     void createMaterialDialog();
+    
+    void createBoundaryDialog();
 	
 };
 

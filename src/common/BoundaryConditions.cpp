@@ -39,17 +39,3 @@ double boundaryCondition::getC1Value()
 {
     return _c1;
 }
-
-
-
-void boundaryCondition::setBC(bcEnum BC)
-{
-    _bcType = BC;
-}
-
-
-
-bcEnum boundaryCondition::getBC()
-{
-    return _bcType;
-}

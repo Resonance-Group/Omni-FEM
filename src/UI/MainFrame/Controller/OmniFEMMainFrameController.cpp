@@ -151,10 +151,25 @@ wxString OmniFEMMainFrameController::getAbstractSimName()
 	return abstractionLayer.getSimulationName();
 }
 
+
+
 void OmniFEMMainFrameController::createMaterialDialog()
 {
     std::vector<magneticMaterial> test;
-   materialDialog *materialDiag = new materialDialog(test); 
-   materialDiag->Show();
-    
+    materialDialog *materialDiag = new materialDialog(test); 
+    if(materialDiag->ShowModal() == wxID_OK)
+    {
+        test = materialDiag->getMaterialList();
+    }
+}
+
+
+void OmniFEMMainFrameController::createBoundaryDialog()
+{
+    std::vector<magneticBoundary> test;
+    boundaryDialog *magneticBoundaryDialog = new boundaryDialog(test);
+    if(magneticBoundaryDialog->ShowModal() == wxID_OK)
+    {
+        test = magneticBoundaryDialog->getBoundaryList();
+    }
 }

@@ -12,7 +12,6 @@
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
 #include <common/enums.h>
-#include <common/omniFEMEvent.h>
 
 #include <UI/MaterialsDialog/BlockPropertyMagnetics.h>
 
@@ -25,14 +24,20 @@ using namespace std;
  *  This is simply the class that handles the selection of the different materials for editing, deleting, or adding to the list.
  *  Due to the small size, this combines all three, controller, Aabstraction, and presentation into one class
  */
-class materialDialog : public wxFrame
+class materialDialog : public wxDialog
 {
 private:
 //! This will contain a local copy of the materials list. This will allow for easy editing
     std::vector<magneticMaterial> _magneticMaterialList;
     
+    //! This is the combo box containing the current avaiable magnetic materials
     wxComboBox *selection = new wxComboBox();
     
+    /*! /brief 
+     *  The string array containing the names of the different magnetic materials
+     *  This variable is actually used once to load the initial state of the names into the combo box.
+     *  Once the forum is loaded, this variable is no longer used as the combo box list can be directly edited.
+     */ 
     wxArrayString *magneticMaterialNameArray = new wxArrayString();
     
     /*! /brief
@@ -53,21 +58,8 @@ private:
      */
     void onModifyProperty(wxCommandEvent &event);
     
-    /*! /brief
-     *  This function will be called when the OK button is pressed
-     *  This function will close the dialog box and save the list to the main list in the Main Frame object
-     */
-    void onOk(wxCommandEvent &event);
-    
-    //void onAddMaterialEvent(MagneticMaterialReturnEvent &event);
-    
+    //! This contains the dialog that is used to edit and add the magnetic materials to/from the list
     blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
-    
-    
-    //! This function is called everytime the Combo box list needs to be updated (happens when a new material is added to the list)
-    void updateComboBox();
-    
-    
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
@@ -75,6 +67,9 @@ public:
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~materialDialog();
+    
+    //! This function needs to be called in order to retrieve the editted list once the dialog is closed
+    std::vector<magneticMaterial> getMaterialList();
     
 private:
     wxDECLARE_EVENT_TABLE();

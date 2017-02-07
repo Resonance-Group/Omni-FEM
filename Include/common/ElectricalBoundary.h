@@ -15,12 +15,18 @@ private:
     
     //! This is the data type for the surface charge density boundary condition
     double _surfaceChargeDensity = 0;
+    
+    //! This is the boundary condition for the class
+    bcEnumElectroStatic _type;
 public:
     void setVoltage(double value);
     double getVoltage();
     
     void setSigma(double value);
     double getSigma();
+    
+    void setBC(bcEnumElectroStatic BC);
+    bcEnumElectroStatic getBC();
 };
 
 #endif
