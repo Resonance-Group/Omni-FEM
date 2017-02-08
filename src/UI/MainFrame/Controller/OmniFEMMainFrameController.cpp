@@ -173,3 +173,22 @@ void OmniFEMMainFrameController::createBoundaryDialog()
         test = magneticBoundaryDialog->getBoundaryList();
     }
 }
+
+
+
+void OmniFEMMainFrameController::createNodalDialog()
+{
+    std::vector<nodalProperty> test;
+    nodalPropertiesDialog *diag = new nodalPropertiesDialog(test);
+    if(diag->ShowModal() == wxID_OK)
+    {
+        test = diag->getNodalPropertyList();
+    }
+}
+
+
+
+void OmniFEMMainFrameController::createCircuitsConductorsDialog()
+{
+    
+}

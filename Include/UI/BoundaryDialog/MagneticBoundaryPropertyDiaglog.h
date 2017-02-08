@@ -24,8 +24,6 @@ private:
     //! This is a local copy of the new or modified magnetic boundary
     magneticBoundary _magneticBoundary;
     
-    wxTextCtrl *nameTextCtrl = new wxTextCtrl();
-    
     wxArrayString *BCNameArray = new wxArrayString();
     
     wxComboBox *BCComboBox = new wxComboBox();
@@ -35,6 +33,8 @@ private:
     wxStaticBox *mixedBCGroupBox = new wxStaticBox();
     
     wxStaticBox *prescribedAGroupBox = new wxStaticBox();
+    
+    wxTextCtrl *nameTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *uRelativeTextCtrl = new wxTextCtrl();
     
@@ -61,11 +61,14 @@ public:
     //! The desctrutor for the class
     ~magneticBoundaryDialog();
     
-    //! This function will return the new/modified boundary condition. However, this function must be called after the form return a wxID_OK
-    magneticBoundary getNewBoundary();
-    
     //! This function will set the boundary condition of the local boundary condition. Useful for when modifying a BC
-    void setBoundaryCondition();
+    void setBoundaryCondition(magneticBoundary &boundary);
+    
+    //! This will retireive the boundary condition. THis function is needed when modifying a BC or adding a new one in order to pull for the updated/new parameters. This function should be called after the Modal return wxID_OK
+    void getBoundaryCondition(magneticBoundary &boundary);
+    
+    //! This will restore the local boundary condition back to default values. This is useful when adding a new boundary condition
+    void clearBoundary();
     
 private:
    wxDECLARE_EVENT_TABLE();

@@ -78,6 +78,10 @@
         <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
         <File Name="src/UI/BoundaryDialog/BoundaryDialog.cpp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="NodalProperty">
+        <File Name="src/UI/NodalProperty/PropertyDialog.cpp"/>
+        <File Name="src/UI/NodalProperty/NodalPropertyDialog.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -117,6 +121,10 @@
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/MagneticBoundaryPropertyDiaglog.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="NodalProperty">
+        <File Name="Include/UI/NodalProperty/PropertyDialog.h"/>
+        <File Name="Include/UI/NodalProperty/NodalPropertyDialog.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

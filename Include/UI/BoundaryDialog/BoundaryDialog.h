@@ -19,22 +19,22 @@
 
 /*! /class materialDialog
  *  /brief
- *  This is the controller for the materials selection dialog box.
- *  PLease note that this class is different then the one for the materials libraray. This is not the material library.
- *  This is simply the class that handles the selection of the different materials for editing, deleting, or adding to the list.
+ *  This is the controller for the boundary selection dialog box.
+ *  PLease note that this class is different then the one for the boundary libraray. This is not the material library.
+ *  This is simply the class that handles the selection of the different boundary for editing, deleting, or adding to the list.
  *  Due to the small size, this combines all three, controller, Aabstraction, and presentation into one class
  */
 class boundaryDialog : public wxDialog
 {
 private:
-//! This will contain a local copy of the materials list. This will allow for easy editing
+//! This will contain a local copy of the boundary list. This will allow for easy editing
     std::vector<magneticBoundary> _magneticBoundaryList;
     
-    //! This is the combo box containing the current avaiable magnetic materials
+    //! This is the combo box containing the current avaiable magnetic boundary
     wxComboBox *selection = new wxComboBox();
     
     /*! /brief 
-     *  The string array containing the names of the different magnetic materials
+     *  The string array containing the names of the different magnetic boundary
      *  This variable is actually used once to load the initial state of the names into the combo box.
      *  Once the forum is loaded, this variable is no longer used as the combo box list can be directly edited.
      */ 
@@ -58,7 +58,7 @@ private:
      */
     void onModifyProperty(wxCommandEvent &event);
     
-    //! This contains the dialog that is used to edit and add the magnetic materials to/from the list
+    //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
     magneticBoundaryDialog *_magBoundaryDialog = new magneticBoundaryDialog();
     
 public:

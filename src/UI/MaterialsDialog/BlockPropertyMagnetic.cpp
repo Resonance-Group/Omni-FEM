@@ -142,12 +142,6 @@ blockPropertyMagnetic::blockPropertyMagnetic() : wxDialog(NULL, wxID_ANY, "Magne
 
 
 
-blockPropertyMagnetic::~blockPropertyMagnetic()
-{
-    
-}
-
-
 void blockPropertyMagnetic::getNewMaterial(magneticMaterial &newMaterial)
 {
     double value;
@@ -434,6 +428,15 @@ void blockPropertyMagnetic::setTextControlValues()
     lamFFTextCtrl->SetValue(std::to_string(_magneticMaterial.getLaminationFillFactor()));
     strandDiaTextCtrl->SetValue(std::to_string(_magneticMaterial.getStrandDiameter())); 
 }
+
+
+
+blockPropertyMagnetic::~blockPropertyMagnetic()
+{
+    
+}
+
+
 
 wxBEGIN_EVENT_TABLE(blockPropertyMagnetic, wxDialog)
     EVT_BUTTON(wxID_EDIT, blockPropertyMagnetic::onBHCurve)

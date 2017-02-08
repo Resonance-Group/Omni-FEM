@@ -43,7 +43,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
         {
             if(materialIterator->getName() == newMat.getName())
             {
-                wxMessageBox(newMat.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxCENTRE | wxICON_INFORMATION); 
+                wxMessageBox(newMat.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER); 
                 break;
             }
         }
@@ -84,7 +84,7 @@ void materialDialog::onModifyProperty(wxCommandEvent &event)
             {
                 if(materialIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
                 {
-                    wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxCENTRE | wxICON_INFORMATION); 
+                    wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER); 
                     break;
                 }
                 i++;

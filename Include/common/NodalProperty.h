@@ -26,8 +26,8 @@ public:
     void setName(string name);
     string getName();
     
-    void toggleSpecificPotentialState();
-    bool getSpecificPotentialState();
+    void setState(bool state);
+    bool getState();
     
     void setValue(double value);
     double getValue();

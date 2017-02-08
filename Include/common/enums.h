@@ -150,7 +150,9 @@ enum propertiesDialogEnum
 enum generalFrameButton
 {
     ID_ComboBox1,
-    ID_ComboBox2
+    ID_ComboBox2,
+    ID_RadioButton1,
+    ID_RadioButton2
 };
 
 enum magneticBlockPropertyDiag
