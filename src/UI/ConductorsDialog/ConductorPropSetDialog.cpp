@@ -23,9 +23,8 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
     selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *circuitNameArray);
     selection->SetFont(*font);
     
-    headerSizer->Add(name, 0, wxALIGN_CENTER);
-  //  headerSizer->Add(6, 0, 0);
-    headerSizer->Add(selection, 0, wxLEFT | wxDOWN, 6);
+    headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT, 6);
+    headerSizer->Add(selection, 0, wxALIGN_CENTER);
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
     addPropertyButton->SetFont(*font);
@@ -36,15 +35,17 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
     wxButton *modifyPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonModify, "Modify Property", wxPoint(12, 101), wxSize(102, 23));
     modifyPropertyButton->SetFont(*font);
     
-    propertySizer->Add(addPropertyButton, 0, wxALIGN_TOP | wxALIGN_LEFT);
-    propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxALIGN_LEFT);
-    propertySizer->Add(modifyPropertyButton, 0, wxALIGN_BOTTOM | wxALIGN_LEFT);
+    propertySizer->Add(addPropertyButton, 0, wxALIGN_TOP | wxLEFT, 6);
+    propertySizer->Add(0, 6, 0);
+    propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxLEFT, 6);
+    propertySizer->Add(0, 6, 0);
+    propertySizer->Add(modifyPropertyButton, 0, wxALIGN_BOTTOM | wxDOWN | wxLEFT, 6);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(120, 101), wxSize(75, 23));
     okButton->SetFont(*font);
     
-    okSizer->Add(0, 46, 0);
-    okSizer->Add(okButton, 0, wxALIGN_BOTTOM);
+    okSizer->Add(0, 58, 0);
+    okSizer->Add(okButton, 0, wxALIGN_BOTTOM | wxDOWN | wxRIGHT, 6);
     
     intermediateSizer->Add(propertySizer, 0, wxALIGN_LEFT);
     intermediateSizer->Add(6, 0, 0);

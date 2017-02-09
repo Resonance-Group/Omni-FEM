@@ -4,12 +4,27 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
+    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer *propertySizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *okSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
+    
     _nodalPropertyList = nodalPropertyList;
     
     for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
     {
         nodalPropertyNameArray->Add(wxString(nodalIterator->getName()));
     }
+
+    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
+    name->SetFont(*font);
+    
+    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *nodalPropertyNameArray);
+    selection->SetFont(*font);
+    
+    headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT, 6);
+    headerSizer->Add(selection, 0, wxALIGN_CENTER);
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
     addPropertyButton->SetFont(*font);
@@ -20,18 +35,28 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
     wxButton *modifyPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonModify, "Modify Property", wxPoint(12, 101), wxSize(102, 23));
     modifyPropertyButton->SetFont(*font);
     
+    propertySizer->Add(addPropertyButton, 0, wxALIGN_TOP | wxLEFT, 6);
+    propertySizer->Add(0, 6, 0);
+    propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxLEFT, 6);
+    propertySizer->Add(0, 6, 0);
+    propertySizer->Add(modifyPropertyButton, 0, wxALIGN_BOTTOM | wxDOWN | wxLEFT, 6);
+    
     wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(120, 101), wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
-    name->SetFont(*font);
+    okSizer->Add(0, 58, 0);
+    okSizer->Add(okButton, 0, wxALIGN_BOTTOM | wxDOWN | wxRIGHT, 6);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *nodalPropertyNameArray);
-    selection->SetFont(*font);
+    intermediateSizer->Add(propertySizer, 0, wxALIGN_LEFT);
+    intermediateSizer->Add(6, 0, 0);
+    intermediateSizer->Add(okSizer, 0, wxALIGN_RIGHT);
     
-    this->SetInitialSize(wxSize(204, 140));
-    this->Fit();
-    this->SetMaxSize(wxSize(204, 140));
+    
+    topSizer->Add(headerSizer, 0, wxALIGN_TOP);
+    topSizer->Add(0, 10, 0);
+    topSizer->Add(intermediateSizer, 0, wxALIGN_BOTTOM);
+    
+    SetSizerAndFit(topSizer);
 }
 
 

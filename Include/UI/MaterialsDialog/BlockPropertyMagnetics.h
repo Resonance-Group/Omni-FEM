@@ -8,6 +8,7 @@
 #include <wx/combobox.h>
 #include <wx/arrstr.h>
 #include <wx/statbox.h>
+#include <wx/sizer.h>
 
 #include <common/enums.h>
 #include <common/MaterialProperty.h>
