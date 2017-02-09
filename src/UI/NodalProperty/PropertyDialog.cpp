@@ -1,6 +1,6 @@
 #include <UI/NodalProperty/PropertyDialog.h>
 
-nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 136))
+nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -29,9 +29,9 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
     selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *nodalPropertyNameArray);
     selection->SetFont(*font);
     
-    this->SetInitialSize(wxSize(204, 136));
+    this->SetInitialSize(wxSize(204, 140));
     this->Fit();
-    this->SetMaxSize(wxSize(204, 136));
+    this->SetMaxSize(wxSize(204, 140));
 }
 
 

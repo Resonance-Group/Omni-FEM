@@ -82,6 +82,9 @@
         <File Name="src/UI/NodalProperty/PropertyDialog.cpp"/>
         <File Name="src/UI/NodalProperty/NodalPropertyDialog.cpp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="ConductorsDialog">
+        <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -125,6 +128,9 @@
       <VirtualDirectory Name="NodalProperty">
         <File Name="Include/UI/NodalProperty/PropertyDialog.h"/>
         <File Name="Include/UI/NodalProperty/NodalPropertyDialog.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ConductorsDialog">
+        <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

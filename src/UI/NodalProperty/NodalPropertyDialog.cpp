@@ -1,8 +1,13 @@
 #include <UI/NodalProperty/NodalPropertyDialog.h>
 
-nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Property", wxDefaultPosition, wxSize(238, 220))
+nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Property", wxDefaultPosition)
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer *radioSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *valueSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     
     _nodalProperty.setName("New Point Property");
     _nodalProperty.setValue(0);
@@ -13,6 +18,9 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     nameTextCtrl->Create(this, wxID_ANY, _nodalProperty.getName(), wxPoint(50, 6), wxSize(175, 20));
     nameTextCtrl->SetFont(*font);
     
+    headerSizer->Add(name, 0, wxALIGN_CENTER);
+    headerSizer->Add(nameTextCtrl, 0, wxSHAPED);
+    
     /* Adding in the radio buttons */
     radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Specified Potential Property", wxPoint(50, 32), wxSize(176, 19));
     radioButton1->SetFont(*font);
@@ -20,6 +28,9 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Current Property", wxPoint(50, 55), wxSize(144, 19));
     radioButton2->SetFont(*font);
     radioButton2->SetValue(false);
+    
+    radioSizer->Add(radioButton1);
+    radioSizer->Add(radioButton2);
     
     /*Creating the group boxes */
     groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (Wb/m)", wxPoint(15, 78), wxSize(210, 49));
@@ -33,15 +44,30 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     textCtrl2->SetFont(*font);
     textCtrl2->Enable(false);
     
+    valueSizer->Add(groupBox1);
+    valueSizer->Add(groupBox2);
+    
     /* The buttons */
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(69, 188), wxSize(75, 23));
     okButton->SetFont(*font);
     wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(150, 188), wxSize(75, 23));
     cancelButton->SetFont(*font);
     
+    footerSizer->Add(okButton);
+    footerSizer->Add(cancelButton);
+    
+    topSizer->Add(headerSizer, 0, wxALIGN_CENTER_VERTICAL);
+    topSizer->Add(radioSizer, 0, wxALIGN_CENTER);
+    topSizer->Add(valueSizer, 0, wxALIGN_CENTER);
+    topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
+    
+    SetSizerAndFit(topSizer);
+    
+    /*
     this->SetInitialSize(wxSize(238, 220));
     this->Fit();
     this->SetMaxSize(wxSize(238, 220));
+     */
 }
 
 

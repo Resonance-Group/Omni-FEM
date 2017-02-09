@@ -24,6 +24,7 @@
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/BoundaryDialog/BoundaryDialog.h>
 #include <UI/NodalProperty/PropertyDialog.h>
+#include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
 /*! \class OmniFEMMainFrameController
  *  \brief The class representing the controller layer for OmniFEM's main frame

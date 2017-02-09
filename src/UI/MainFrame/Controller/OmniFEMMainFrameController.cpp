@@ -190,5 +190,10 @@ void OmniFEMMainFrameController::createNodalDialog()
 
 void OmniFEMMainFrameController::createCircuitsConductorsDialog()
 {
-    
+    std::vector<circuitProperty> test;
+    conductorPropertySetDialog *diag = new conductorPropertySetDialog(test);
+    if(diag->ShowModal() == wxID_OK)
+    {
+        test = diag->getCircuitList();
+    }
 }
