@@ -84,6 +84,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="ConductorsDialog">
         <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
+        <File Name="src/UI/ConductorsDialog/CircuitPropertyDialog.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -131,6 +132,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="ConductorsDialog">
         <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
+        <File Name="Include/UI/ConductorsDialog/CircuitPropertyDialog.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

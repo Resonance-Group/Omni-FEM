@@ -1,6 +1,6 @@
 #include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
-conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProperty> circuitList) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition)
+conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProperty> circuitList) : wxDialog(NULL, wxID_ANY, "Conductor Definition", wxDefaultPosition)
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -23,8 +23,8 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
     selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *circuitNameArray);
     selection->SetFont(*font);
     
-    headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT, 6);
-    headerSizer->Add(selection, 0, wxALIGN_CENTER);
+    headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
+    headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
     addPropertyButton->SetFont(*font);
@@ -35,7 +35,8 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
     wxButton *modifyPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonModify, "Modify Property", wxPoint(12, 101), wxSize(102, 23));
     modifyPropertyButton->SetFont(*font);
     
-    propertySizer->Add(addPropertyButton, 0, wxALIGN_TOP | wxLEFT, 6);
+    propertySizer->Add(0, 10, 0);
+    propertySizer->Add(addPropertyButton, 0, wxLEFT, 6);
     propertySizer->Add(0, 6, 0);
     propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxLEFT, 6);
     propertySizer->Add(0, 6, 0);
@@ -44,7 +45,7 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
     wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(120, 101), wxSize(75, 23));
     okButton->SetFont(*font);
     
-    okSizer->Add(0, 58, 0);
+    okSizer->Add(0, 68, 0);
     okSizer->Add(okButton, 0, wxALIGN_BOTTOM | wxDOWN | wxRIGHT, 6);
     
     intermediateSizer->Add(propertySizer, 0, wxALIGN_LEFT);
