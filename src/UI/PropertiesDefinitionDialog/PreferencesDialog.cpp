@@ -143,8 +143,6 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     
-    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
     _electrPreference = pref;
     
     probTypeNameArray->Add("Planar");
@@ -164,7 +162,7 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     probTypeText->SetFont(*font);
     problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), *probTypeNameArray);
     problemTypeComboBox->SetFont(*font);
-    problemTypeComboBox->SetSelection((int)_magPreference.getProblemType());
+    problemTypeComboBox->SetSelection((int)_electrPreference.getProblemType());
     probTypeSizer->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
     probTypeSizer->Add(8, 0, 0);
     probTypeSizer->Add(problemTypeComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -173,7 +171,7 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     lengthUnitsText->SetFont(*font);
     lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 39), wxSize(121, 21), *lengthUnitsNameArray);
     lengthUnitsComboBox->SetFont(*font);
-    lengthUnitsComboBox->SetSelection((int)_magPreference.getUnitLength());
+    lengthUnitsComboBox->SetSelection((int)_electrPreference.getUnitLength());
     lengthSizer->Add(lengthUnitsText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     lengthSizer->Add(8, 0, 0);
     lengthSizer->Add(lengthUnitsComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
@@ -183,7 +181,7 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     depthTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 118), wxSize(121, 20));
     std::ostream dStream(depthTextCtrl);
     dStream << std::setprecision(4);
-    dStream << _magPreference.getDepth();
+    dStream << _electrPreference.getDepth();
     depthTextCtrl->SetFont(*font);
     depthSizer->Add(depthText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     depthSizer->Add(59, 0, 0);
@@ -194,7 +192,7 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 144), wxSize(121, 20));
     std::ostream spStream(solverPrecisionTextCtrl);
     spStream << std::setprecision(4);
-    spStream << _magPreference.getPrecision();
+    spStream << _electrPreference.getPrecision();
     solverPrecisionTextCtrl->SetFont(*font);
     solverPreSizer->Add(solverPrecisionText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     solverPreSizer->Add(solverPrecisionTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
@@ -204,7 +202,7 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     minAngleTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 170), wxSize(121, 20));
     std::ostream minAngleStream(minAngleTextCtrl);
     minAngleStream << std::setprecision(4);
-    minAngleStream << _magPreference.getMinAngle();
+    minAngleStream << _electrPreference.getMinAngle();
     minAngleTextCtrl->SetFont(*font);
     minAngleSizer->Add(minAngleText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     minAngleSizer->Add(7, 0, 0);
@@ -214,7 +212,7 @@ preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(N
     commentSizer->GetStaticBox()->SetFont(*font);
     commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(6, 19), wxSize(192, 87), wxTE_MULTILINE);
     commentsTextCtrl->SetFont(*font);
-    commentsTextCtrl->SetValue(_magPreference.getComments());
+    commentsTextCtrl->SetValue(_electrPreference.getComments());
     commentSizer->Add(commentsTextCtrl);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(63, 330), wxSize(75, 23));
@@ -265,7 +263,21 @@ void preferencesDialog::getPreferences(magneticPreference &settings)
 
 void preferencesDialog::getPreferences(electroStaticPreference &settings)
 {
+    double value;
     
+    settings.setProblemType((problemTypeEnum)problemTypeComboBox->GetSelection());
+    settings.setUnitLength((unitLengthEnum)lengthUnitsComboBox->GetSelection());
+    
+    depthTextCtrl->GetValue().ToDouble(&value);
+    settings.setDepth(value);
+    
+    solverPrecisionTextCtrl->GetValue().ToDouble(&value);
+    settings.setPrecision(value);
+    
+    minAngleTextCtrl->GetValue().ToDouble(&value);
+    settings.setMinAngle(value);
+    
+    settings.setComments(commentsTextCtrl->GetValue());
 }
 
 
