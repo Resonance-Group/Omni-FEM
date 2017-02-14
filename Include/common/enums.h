@@ -172,9 +172,5 @@ enum magneticBlockPropertyDiag
     ID_TextControl13
 };
 
-enum CustomEvent
-{
-    MagneticMaterial
-};
 
 #endif

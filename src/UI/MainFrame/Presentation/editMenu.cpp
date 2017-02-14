@@ -7,11 +7,11 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-    magneticPreference test;
+    static magneticPreference test;
 	preferencesDialog *newDiag = new preferencesDialog(test);
     if(newDiag->ShowModal() == wxID_OK)
     {
-        
+        newDiag->getPreferences(test);
     }
 }
 

@@ -1,5 +1,6 @@
 #include <UI/NodalProperty/PropertyDialog.h>
 
+
 nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);

@@ -9,18 +9,40 @@
  *  This class contains all of the settings that the user can change for solving the electro static portion of 
  *  the simualor
  */ 
-class electroStaticPref
+class electroStaticPreference
 {
+private:
+    double _depth = 1;
+    double _precision = powf(10, -8);
+    double _gridSize = 0.25;
+    bool _showGridState = true;
+    bool _showOriginState = false;
+    bool _showBlockNamesState = true;
+    double _pixelperunit = 100;
+    planarCoordinateEnum _coordinateType = CARTESIAN;
+    problemTypeEnum _probType = PLANAR;
+    
 public:
-    double depth = 1;
-    double precision = powf(10, -8);
-    double gridSize = 0.25;
-    bool showGrid = true;
-    bool showOrigin = false;
-    bool showBlockNames = true;
-    double pixelperunit = 100;
-    planarCoordinateEnum coordinateType = CARTESIAN;
-    problemTypeEnum probType = PLANAR;
+
+    void setDepth(double &depth)
+    {
+        _depth = depth;
+    }
+    
+    double getDepth()
+    {
+        return _depth;
+    }
+    
+    void setPrecision(double &precision)
+    {
+        _precision = precision;
+    }
+    
+    double getPrecision()
+    {
+        return _precision;
+    }
  
 };
 

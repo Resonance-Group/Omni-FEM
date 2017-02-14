@@ -1,6 +1,8 @@
 #ifndef MAGNETIC_PREFERENCE_H_
 #define MAGNETIC_PREFERENCE_H_
 
+#include <wx/string.h>
+
 #include <common/enums.h>
 #include <math.h>
 
@@ -53,6 +55,8 @@ private:
     //! This will deteremine what type of wire Omni-FEM is working with when solving the circuit component
     lamWireEnum _wireType = NOT_LAMINATED_OR_STRANDED;
     
+    wxString _comments;
+    
 public:
     
     //! This will set the frequency that the problem is going to simulate the AC circuits
@@ -100,7 +104,7 @@ public:
         return _minAngle;
     }
     
-    void setUnitLength(unitLengthEnum &unit)
+    void setUnitLength(unitLengthEnum unit)
     {
         _lengthUnit = unit;
     }
@@ -120,7 +124,7 @@ public:
         return _coordinateType;
     }
     
-    void setProblemType(problemTypeEnum &type)
+    void setProblemType(problemTypeEnum type)
     {
         _probType = type;
     }
@@ -180,7 +184,7 @@ public:
         return _pixelsUnit;
     }
     
-    void setACSolver(acSolverEnum &solver)
+    void setACSolver(acSolverEnum solver)
     {
         _acSolver = solver;
     }
@@ -198,6 +202,16 @@ public:
     lamWireEnum getLamWireType()
     {
         return _wireType;
+    }
+    
+    void setComments(wxString comments)
+    {
+        _comments = comments;
+    }
+    
+    wxString getComments()
+    {
+        return _comments;
     }
     
 };

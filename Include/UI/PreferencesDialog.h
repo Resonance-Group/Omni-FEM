@@ -21,6 +21,9 @@ private:
     //! This will contain a local copy of all the setting that are to be edited for magnetic simulations 
     magneticPreference _magPreference;
     
+    //! This is the local copy of the electrostatic settings that are to be edited for the electrostatic simulation
+    electroStaticPreference _electrPreference;
+    
     //! The combo box for specifing the problem type for Magnetic Simulations
     wxComboBox *problemTypeComboBox = new wxComboBox();
     
@@ -55,13 +58,13 @@ public:
 
     preferencesDialog(magneticPreference &pref);
     
-    preferencesDialog(electroStaticPref &pref);
+    preferencesDialog(electroStaticPreference &pref);
     
     ~preferencesDialog();
     
     void getPreferences(magneticPreference &settings);
     
-    void getPreferences(electroStaticPref &settigns);
+    void getPreferences(electroStaticPreference &settings);
 
     
 };
