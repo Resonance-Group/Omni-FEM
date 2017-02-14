@@ -122,6 +122,8 @@ public:
     void createNodalDialog();
     
     void createCircuitsConductorsDialog();
+    
+    void createProblemDefinitionDialog();
 };
 
 #endif

@@ -24,11 +24,15 @@ private:
     wxTextCtrl *nameTextCtrl = new wxTextCtrl();
     
     //! This box is created for inputting a value for the circuit current of the property
-    wxTextCtrl *circuitCurrent = new wxTextCtrl();
+    wxTextCtrl *circuitCurrentTextCtrl = new wxTextCtrl();
     
     wxRadioButton *radioButton1 = new wxRadioButton();
     
     wxRadioButton *radioButton2 = new wxRadioButton();
+    
+    void onRadioButton1Click(wxCommandEvent &event);
+    
+    void onRadioButton2Click(wxCommandEvent &event);
 public:
     
     circuitPropertyDialog();
@@ -50,7 +54,7 @@ public:
     
     
 private:
-
+    wxDECLARE_EVENT_TABLE();  
 };
 
 

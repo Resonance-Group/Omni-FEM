@@ -15,17 +15,14 @@ string circuitProperty::getName()
 
 
 
-void circuitProperty::toggleSeriesCircuit()
+void circuitProperty::setCircuitSeriesState(bool isSeries)
 {
-    if(_isSeries)
-        _isSeries = false;
-    else
-        _isSeries = true;
+    _isSeries = isSeries;
 }
 
 
 
-bool circuitProperty::getCircuitState()
+bool circuitProperty::getCircuitSeriesState()
 {
     return _isSeries;
 }

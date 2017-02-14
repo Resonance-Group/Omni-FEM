@@ -13,6 +13,8 @@
 #include <common/ConductorProperty.h>
 #include <common/enums.h>
 
+#include <UI/ConductorsDialog/CircuitPropertyDialog.h>
+
 //#include <UI/NodalProperty/NodalPropertyDialog.h>
 
 class conductorPropertySetDialog : public wxDialog
@@ -59,7 +61,7 @@ private:
     void onModifyProperty(wxCommandEvent &event);
     
     //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
-//    nodalPropertyDialog *_nodalPropertyDialog = new nodalPropertyDialog();
+    circuitPropertyDialog *_circuitPropertyDialog = new circuitPropertyDialog();
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material

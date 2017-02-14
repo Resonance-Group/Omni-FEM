@@ -86,6 +86,9 @@
         <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/CircuitPropertyDialog.cpp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="PropertiesDefinitionDialog">
+        <File Name="src/UI/PropertiesDefinitionDialog/PreferencesDialog.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -134,6 +137,7 @@
         <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
         <File Name="Include/UI/ConductorsDialog/CircuitPropertyDialog.h"/>
       </VirtualDirectory>
+      <File Name="Include/UI/PreferencesDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

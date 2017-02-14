@@ -64,25 +64,23 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
 
 void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
 {
-    /*
-    nodalProperty newNodalProperty;
-    _nodalPropertyDialog->clearNodalProperty();
-    if(_nodalPropertyDialog->ShowModal() == wxID_OK)
+    circuitProperty newCircuit;
+    _circuitPropertyDialog->clearCircuit();
+    if(_circuitPropertyDialog->ShowModal() == wxID_OK)
     {
-        _nodalPropertyDialog->getNodalProperty(newNodalProperty);
-        for(std::vector<nodalProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
+        _circuitPropertyDialog->getNewCircuit(newCircuit);
+        for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
         {
-            if(circuitIterator->getName() == newNodalProperty.getName())
+            if(circuitIterator->getName() == newCircuit.getName())
             {
-                wxMessageBox(newNodalProperty.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
+                wxMessageBox(newCircuit.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
                 break;
             }
         }
-        _circuitList.push_back(newNodalProperty);
-        selection->Append(newNodalProperty.getName());
+        _circuitList.push_back(newCircuit);
+        selection->Append(newCircuit.getName());
         selection->SetSelection(0);
     }
-     */
 } 
 
 
@@ -109,22 +107,21 @@ void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
 
 void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
 {
-    /*
     circuitProperty selectedCircuitProperty;
     if(_circuitList.size() > 0)
     {
         int currentSelection = selection->GetSelection();
         selectedCircuitProperty = _circuitList.at(currentSelection);
-        _nodalPropertyDialog->setNodalProperty(selectedCircuitProperty);
-        if(_nodalPropertyDialog->ShowModal() == wxID_OK)
+        _circuitPropertyDialog->setCircuit(selectedCircuitProperty);
+        if(_circuitPropertyDialog->ShowModal() == wxID_OK)
         {
             /*
              * This is a counter. The loop is checking to see if the user accidently changed the name of the material to one that is already there.
              * However, the one that the user wants to modify is still in the list. So, the program needs to skip
-             * that one. Which, this counter will assit in that
-              *
+             * that one. Which, this counter will assist in that
+             */
             int i = 0;
-            _nodalPropertyDialog->getNodalProperty(selectedCircuitProperty);
+            _circuitPropertyDialog->getNewCircuit(selectedCircuitProperty);
             for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
             {
                 if(circuitIterator->getName() == selectedCircuitProperty.getName() && (i != currentSelection))
@@ -140,7 +137,6 @@ void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
         }
         selection->SetSelection(0);
     }
-     */ 
 }
 
 
@@ -152,12 +148,11 @@ std::vector<circuitProperty> conductorPropertySetDialog::getCircuitList()
 
 
 
-
-
 conductorPropertySetDialog::~conductorPropertySetDialog()
 {
     
 }
+
 
 
 wxBEGIN_EVENT_TABLE(conductorPropertySetDialog, wxDialog)

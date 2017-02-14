@@ -10,10 +10,10 @@
 */
 enum class problemDimension
 {
-	zero_Dimension = 0,
-	one_dimension = 1,
-	two_dimension = 2,
-	three_dimension = 3
+	zero_Dimension,
+	one_dimension,
+	two_dimension,
+	three_dimension
 };
 
 
@@ -29,19 +29,19 @@ enum class problemDimension
 */
 enum class physicProblems
 {
-	electrostatics = 0,
-	magnetics = 1
+	electrostatics,
+	magnetics
 };
 
 
 enum class systemState
 {
-	initialStartUp = 0,
-	dimensionChoosing = 1,
-	problemChooseing = 2,
-	problemDefining = 3,
-	simulatingProblem = 4,
-	viewingResults = 5
+	initialStartUp,
+	dimensionChoosing,
+	problemChooseing,
+	problemDefining,
+	simulatingProblem,
+	viewingResults
 };
 
 //! This enum is used to set the AC SOlver that Omni-FEM will use

@@ -3,13 +3,16 @@
 */
 
 #include "UI/OmniFEMFrame.h"
+#include <common/MagneticPreference.h>
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-	int windowX, windowY;
-	this->GetSize(&windowX, &windowY);
-	
-	wxMessageBox(std::to_string(windowX) + " x " + std::to_string(windowY), "Preferences", wxOK | wxICON_INFORMATION);
+    magneticPreference test;
+	preferencesDialog *newDiag = new preferencesDialog(test);
+    if(newDiag->ShowModal() == wxID_OK)
+    {
+        
+    }
 }
 
 

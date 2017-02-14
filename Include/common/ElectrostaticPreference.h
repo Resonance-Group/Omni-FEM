@@ -15,13 +15,13 @@ public:
     double depth = 1;
     double precision = powf(10, -8);
     double gridSize = 0.25;
-    bool showGrid = True;
-    bool showOrigin = False;
-    bool showBlockNames = True;
+    bool showGrid = true;
+    bool showOrigin = false;
+    bool showBlockNames = true;
     double pixelperunit = 100;
     planarCoordinateEnum coordinateType = CARTESIAN;
     problemTypeEnum probType = PLANAR;
  
-}
+};
 
 #endif

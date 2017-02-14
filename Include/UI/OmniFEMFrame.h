@@ -17,6 +17,7 @@
 #include <UI/MainFrameAbstraction.h>
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MainFrameController.h>
+#include <UI/PreferencesDialog.h>
 
 #include <common/BoundaryConditions.h>
 #include <common/enums.h>

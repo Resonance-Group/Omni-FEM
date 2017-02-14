@@ -1,8 +1,9 @@
 /* This file will contain the class implementation of the problemDefinition class */
 #include "UI/problemDefinition.h"
+#include <common/ProblemDefinition.h>
 
-
-problemDimension problemDefinition::getCurrentDimension()
+// This is the old stuff that needs to be intergrated in the new problem definition class
+problemDimension problemDef::getCurrentDimension()
 {
 	return dimension;
 }
@@ -10,7 +11,7 @@ problemDimension problemDefinition::getCurrentDimension()
 
 
 
-void problemDefinition::setProblemDimension(problemDimension dim)
+void problemDef::setProblemDimension(problemDimension dim)
 {
 	dimension = dim;
 }
@@ -18,35 +19,35 @@ void problemDefinition::setProblemDimension(problemDimension dim)
 
 
 
-void problemDefinition::setPhysicsProblem(physicProblems phy)
+void problemDef::setPhysicsProblem(physicProblems phy)
 {
 	desginatedProblem = phy;
 }
 
 
 
-physicProblems problemDefinition::getPhysicProblem()
+physicProblems problemDef::getPhysicProblem()
 {
 	return desginatedProblem;
 }
 
 
 
-void problemDefinition::setProblemName(wxString problemName)
+void problemDef::setProblemName(wxString problemName)
 {
 	name = problemName;
 }
 
 
 
-wxString problemDefinition::getProblemName()
+wxString problemDef::getProblemName()
 {
 	return name;
 }
 
 
 
-void problemDefinition::setProblemID(wxTreeItemId treeItemID)
+void problemDef::setProblemID(wxTreeItemId treeItemID)
 {
 	problemID = treeItemID;
 }
@@ -54,14 +55,14 @@ void problemDefinition::setProblemID(wxTreeItemId treeItemID)
 
 
 
-wxTreeItemId problemDefinition::getProblemID()
+wxTreeItemId problemDef::getProblemID()
 {
 	return problemID;
 }
 
 
 
-void problemDefinition::setGeometryID(wxTreeItemId treeItemID)
+void problemDef::setGeometryID(wxTreeItemId treeItemID)
 {
 	geometryID = treeItemID;
 }
@@ -69,14 +70,14 @@ void problemDefinition::setGeometryID(wxTreeItemId treeItemID)
 
 
 
-wxTreeItemId problemDefinition::getGeometryID()
+wxTreeItemId problemDef::getGeometryID()
 {
 	return geometryID;
 }
 
 
 
-void problemDefinition::setMaterialsID(wxTreeItemId treeItemID)
+void problemDef::setMaterialsID(wxTreeItemId treeItemID)
 {
 	materialsID = treeItemID;
 }
@@ -84,35 +85,38 @@ void problemDefinition::setMaterialsID(wxTreeItemId treeItemID)
 
 
 
-wxTreeItemId problemDefinition::getMaterialsID()
+wxTreeItemId problemDef::getMaterialsID()
 {
 	return materialsID;
 }
 
 
 
-void problemDefinition::setMeshID(wxTreeItemId treeItemID)
+void problemDef::setMeshID(wxTreeItemId treeItemID)
 {
 	meshID = treeItemID;
 }
 
 
 
-wxTreeItemId problemDefinition::getMeshID()
+wxTreeItemId problemDef::getMeshID()
 {
 	return meshID;
 }
 
 
 
-void problemDefinition::setResultsID(wxTreeItemId treeItemID)
+void problemDef::setResultsID(wxTreeItemId treeItemID)
 {
 	resultsID = treeItemID;
 }
 
 
 
-wxTreeItemId problemDefinition::getResultsID()
+wxTreeItemId problemDef::getResultsID()
 {
 	return resultsID;
 }
+
+//-------------------The new stuff------------------------
+

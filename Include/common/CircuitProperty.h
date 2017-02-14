@@ -27,8 +27,8 @@ public:
     void setName(string name);
     string getName();
     
-    void toggleSeriesCircuit();
-    bool getCircuitState();
+    void setCircuitSeriesState(bool isSeries);
+    bool getCircuitSeriesState();
     
     void setCurrent(double currentValue);
     double getCurrent();
