@@ -83,10 +83,7 @@ void circuitPropertyDialog::setCircuit(circuitProperty &circuit)
 {
     _circuitProperty = circuit;
     
-    nameTextCtrl->SetValue(_circuitProperty.getName());
-    circuitCurrentTextCtrl->SetValue(std::to_string(_circuitProperty.getCurrent()));
-    radioButton1->SetValue(!_circuitProperty.getCircuitSeriesState());
-    radioButton2->SetValue(_circuitProperty.getCircuitSeriesState());
+    setTextBox();
 }
 
 
@@ -97,10 +94,7 @@ void circuitPropertyDialog::clearCircuit()
     _circuitProperty.setCurrent(0.0);
     _circuitProperty.setCircuitSeriesState(false);
     
-    nameTextCtrl->SetValue(_circuitProperty.getName());
-    circuitCurrentTextCtrl->SetValue(std::to_string(_circuitProperty.getCurrent()));
-    radioButton1->SetValue(!_circuitProperty.getCircuitSeriesState());
-    radioButton2->SetValue(_circuitProperty.getCircuitSeriesState());
+    setTextBox();
 }
 
 
@@ -119,6 +113,21 @@ void circuitPropertyDialog::onRadioButton2Click(wxCommandEvent &event)
     radioButton2->SetValue(true);    
 }
 
+
+
+void circuitPropertyDialog::setTextBox()
+{
+    std::ostream currentStream(circuitCurrentTextCtrl);
+    
+    nameTextCtrl->SetValue(_circuitProperty.getName());
+    
+    radioButton1->SetValue(!_circuitProperty.getCircuitSeriesState());
+    radioButton2->SetValue(_circuitProperty.getCircuitSeriesState());
+    
+    circuitCurrentTextCtrl->SetValue(wxEmptyString);
+    currentStream << setprecision(7);
+    currentStream << _circuitProperty.getCurrent();
+}
 
 
 circuitPropertyDialog::~circuitPropertyDialog()

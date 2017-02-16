@@ -2,6 +2,8 @@
 #define CIRCUITPROPERTYDIALOG_H_
 
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 #include <wx/wx.h>
 #include <wx/stattext.h>
@@ -33,6 +35,8 @@ private:
     void onRadioButton1Click(wxCommandEvent &event);
     
     void onRadioButton2Click(wxCommandEvent &event);
+    
+    void setTextBox();
 public:
     
     circuitPropertyDialog();
