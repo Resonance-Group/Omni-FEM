@@ -1,13 +1,16 @@
 #include <UI/NodalProperty/NodalPropertyDialog.h>
 
+
+
 nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Property", wxDefaultPosition)
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *radioSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *valueSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
     _nodalProperty.setName("New Point Property");
     _nodalProperty.setValue(0);
@@ -15,11 +18,11 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     /* This first part is for the header */
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
-    nameTextCtrl->Create(this, wxID_ANY, _nodalProperty.getName(), wxPoint(50, 6), wxSize(175, 20));
+    nameTextCtrl->Create(this, wxID_ANY, _nodalProperty.getName(), wxPoint(50, 6), wxSize(165, 20));
     nameTextCtrl->SetFont(*font);
     
-    headerSizer->Add(name, 0, wxALIGN_CENTER);
-    headerSizer->Add(nameTextCtrl, 0, wxSHAPED);
+    headerSizer->Add(name, 0, wxCENTER | wxALL , 6);
+    headerSizer->Add(nameTextCtrl, 0, wxCenter | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     /* Adding in the radio buttons */
     radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Specified Potential Property", wxPoint(50, 32), wxSize(176, 19));
@@ -29,8 +32,8 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     radioButton2->SetFont(*font);
     radioButton2->SetValue(false);
     
-    radioSizer->Add(radioButton1);
-    radioSizer->Add(radioButton2);
+    radioSizer->Add(radioButton1, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
+    radioSizer->Add(radioButton2, 0, wxLEFT | wxRIGHT, 6);
     
     /*Creating the group boxes */
     groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (Wb/m)", wxPoint(15, 78), wxSize(210, 49));
@@ -44,8 +47,8 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     textCtrl2->SetFont(*font);
     textCtrl2->Enable(false);
     
-    valueSizer->Add(groupBox1);
-    valueSizer->Add(groupBox2);
+    valueSizer->Add(groupBox1, 0, wxALL, 6);
+    valueSizer->Add(groupBox2, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
     
     /* The buttons */
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(69, 188), wxSize(75, 23));
@@ -53,23 +56,16 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(150, 188), wxSize(75, 23));
     cancelButton->SetFont(*font);
     
-    footerSizer->Add(okButton);
-    footerSizer->Add(cancelButton);
+    footerSizer->Add(okButton, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
+    footerSizer->Add(cancelButton, 0, wxRIGHT | wxBOTTOM, 6);
     
-    topSizer->Add(headerSizer, 0, wxALIGN_CENTER_VERTICAL);
-    topSizer->Add(radioSizer, 0, wxALIGN_CENTER);
-    topSizer->Add(valueSizer, 0, wxALIGN_CENTER);
+    topSizer->Add(headerSizer);
+    topSizer->Add(radioSizer);
+    topSizer->Add(valueSizer);
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
     
     SetSizerAndFit(topSizer);
-    
-    /*
-    this->SetInitialSize(wxSize(238, 220));
-    this->Fit();
-    this->SetMaxSize(wxSize(238, 220));
-     */
 }
-
 
 
 
@@ -82,6 +78,7 @@ void nodalPropertyDialog::onRadioButton1Cllick(wxCommandEvent &event)
 }
 
 
+
 void nodalPropertyDialog::onRadioButton2Cllick(wxCommandEvent &event)
 {
     radioButton1->SetValue(false);
@@ -89,6 +86,7 @@ void nodalPropertyDialog::onRadioButton2Cllick(wxCommandEvent &event)
     textCtrl1->Enable(false);
     textCtrl2->Enable(true);
 }
+
 
 
 void nodalPropertyDialog::getNodalProperty(nodalProperty &nodalProp)
@@ -112,28 +110,12 @@ void nodalPropertyDialog::getNodalProperty(nodalProperty &nodalProp)
 }
 
 
+
 void nodalPropertyDialog::setNodalProperty(nodalProperty &nodalProp)
 {
     _nodalProperty = nodalProp;
     
-    nameTextCtrl->SetValue(_nodalProperty.getName());
-    radioButton1->SetValue(_nodalProperty.getState());
-    radioButton2->SetValue(!_nodalProperty.getState());
-    
-    if(_nodalProperty.getState())
-    {
-        textCtrl1->Enable(true);
-        textCtrl1->SetValue(std::to_string(_nodalProperty.getValue()));
-        textCtrl2->SetValue(std::to_string(0.0));
-        textCtrl2->Enable(false);
-    }
-    else
-    {
-        textCtrl2->Enable(true);
-        textCtrl2->SetValue(std::to_string(_nodalProperty.getValue()));
-        textCtrl1->SetValue(std::to_string(0.0));
-        textCtrl1->Enable(false);
-    }
+    setTextBox();
 }
 
 
@@ -144,20 +126,38 @@ void nodalPropertyDialog::clearNodalProperty()
     _nodalProperty.setValue(0);
     _nodalProperty.setState(true);
     
+    setTextBox();
+}
+
+
+
+void nodalPropertyDialog::setTextBox()
+{
+    std::ostream textCtrl1Stream(textCtrl1);
+    std::ostream textCtrl2Stream(textCtrl2);
+    
     nameTextCtrl->SetValue(_nodalProperty.getName());
+    
     radioButton1->SetValue(_nodalProperty.getState());
     radioButton2->SetValue(!_nodalProperty.getState());
     
-    textCtrl2->SetValue(std::to_string(0.0));
-    textCtrl1->SetValue(std::to_string(0.0));
+    textCtrl1->SetValue(wxEmptyString);
+    textCtrl2->SetValue(wxEmptyString);
+    
+    textCtrl1Stream << setprecision(7);
+    textCtrl2Stream << setprecision(7);
     
     if(_nodalProperty.getState())
     {
+        textCtrl1Stream << _nodalProperty.getValue();
+        textCtrl2Stream << 0;
         textCtrl1->Enable(true);
         textCtrl2->Enable(false);
     }
     else
     {
+        textCtrl2Stream << _nodalProperty.getValue();
+        textCtrl1Stream << 0;
         textCtrl2->Enable(true);
         textCtrl1->Enable(false);
     }

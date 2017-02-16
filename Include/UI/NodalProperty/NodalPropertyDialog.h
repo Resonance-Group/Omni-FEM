@@ -2,6 +2,8 @@
 #define NODALPROPERTYDIALOG_H_
 
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 #include <wx/wx.h>
 #include <wx/stattext.h>
@@ -9,6 +11,7 @@
 #include <wx/arrstr.h>
 #include <wx/statbox.h>
 #include <wx/radiobut.h>
+#include <wx/sizer.h>
 
 #include <common/NodalProperty.h>
 #include <common/enums.h>
@@ -63,6 +66,8 @@ private:
     void onRadioButton1Cllick(wxCommandEvent &event);
     
     void onRadioButton2Cllick(wxCommandEvent &event);
+    
+    void setTextBox();
     
 public:
     
