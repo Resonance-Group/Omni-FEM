@@ -2,12 +2,15 @@
 #define MAGNETIC_BOUNDARY_PROPERTY_DIALOG_H_
 
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 #include <wx/wx.h>
 #include <wx/stattext.h>
 #include <wx/combobox.h>
 #include <wx/arrstr.h>
 #include <wx/statbox.h>
+#include <wx/sizer.h>
 
 #include <common/enums.h>
 #include <common/BoundaryConditions.h>
@@ -28,21 +31,15 @@ private:
     
     wxComboBox *BCComboBox = new wxComboBox();
     
-    wxStaticBox *smallSkinDepthGroupBox = new wxStaticBox();
-    
-    wxStaticBox *mixedBCGroupBox = new wxStaticBox();
-    
-    wxStaticBox *prescribedAGroupBox = new wxStaticBox();
-    
     wxTextCtrl *nameTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *uRelativeTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *sigTextCtrl = new wxTextCtrl();
     
-    wxTextCtrl *c1TextCtrl = new wxTextCtrl();
-    
     wxTextCtrl *c0TextCtrl = new wxTextCtrl();
+    
+    wxTextCtrl *c1TextCtrl = new wxTextCtrl();
     
     wxTextCtrl *A0TextCtrl = new wxTextCtrl();
     
@@ -53,6 +50,8 @@ private:
     wxTextCtrl *phiTextCtrl = new wxTextCtrl();
     
     void onBCComboChange(wxCommandEvent &event);
+    
+    void setTextBox();
     
 public:
     //! The constructor for the class

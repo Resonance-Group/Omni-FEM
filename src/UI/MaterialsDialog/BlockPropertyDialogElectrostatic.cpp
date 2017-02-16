@@ -116,6 +116,7 @@ void blockPropertyDialogElectrostatic::setTextBox()
     std::ostream chargeStream(_chargeDensityTextCtrl);
     
     _name->SetValue(_material.getName());
+    
     _relativeEpiXTextCtrl->SetValue(wxEmptyString);
     relativeXStream << std::setprecision(3);
     relativeXStream << _material.getEpsilonX();

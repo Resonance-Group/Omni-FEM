@@ -129,7 +129,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
-        <File Name="Include/UI/MaterialsDialog/MagneticBoundaryPropertyDiaglog.h"/>
+        <File Name="Include/UI/BoundaryDialog/MagneticBoundaryPropertyDiaglog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="NodalProperty">
         <File Name="Include/UI/NodalProperty/PropertyDialog.h"/>
