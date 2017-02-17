@@ -31,6 +31,11 @@ private:
 //! This will contain a local copy of the boundary list. This will allow for easy editing
     std::vector<magneticBoundary> _magneticBoundaryList;
     
+    //! This is a local copy of the electrical boundary list. Allows for easy editing of the list
+    std::vector<electricalBoundary> _electricalBoundaryList;
+    
+    physicProblems _problem;
+    
     //! This is the combo box containing the current avaiable magnetic boundary
     wxComboBox *selection = new wxComboBox();
     
@@ -39,7 +44,7 @@ private:
      *  This variable is actually used once to load the initial state of the names into the combo box.
      *  Once the forum is loaded, this variable is no longer used as the combo box list can be directly edited.
      */ 
-    wxArrayString *magneticBoundaryNameArray = new wxArrayString();
+    wxArrayString *_boundaryNameArray = new wxArrayString();
     
     /*! /brief
         This function is called when the Add Property button is called.
@@ -59,6 +64,8 @@ private:
      */
     void onModifyProperty(wxCommandEvent &event);
     
+    void makeDialog();
+    
     //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
     magneticBoundaryDialog *_magBoundaryDialog = new magneticBoundaryDialog();
     
@@ -66,11 +73,16 @@ public:
     //! This is the constructor for the class. This constructor is for a magnetic material
     boundaryDialog(std::vector<magneticBoundary> boundaryList);
     
+    //! This is the constructor for the electricla boundary
+    boundaryDialog(std::vector<electricalBoundary> boundaryList);
+    
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~boundaryDialog();
     
     //! This function needs to be called in order to retrieve the editted list once the dialog is closed
-    std::vector<magneticBoundary> getBoundaryList();
+    std::vector<magneticBoundary> getMagneticBoundaryList();
+    
+    std::vector<electricalBoundary> getElectrostaticBoundaryList();
     
 private:
     wxDECLARE_EVENT_TABLE();

@@ -1,26 +1,50 @@
 #include <UI/BoundaryDialog/BoundaryDialog.h>
 
-boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition", wxDefaultPosition, wxSize(233, 148))
+boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
+{
+    _problem = physicProblems::magnetics;
+    
+    _magneticBoundaryList = boundaryList;
+    
+    for(std::vector<magneticBoundary>::iterator boundaryIterator = _magneticBoundaryList.begin(); boundaryIterator != _magneticBoundaryList.end(); ++boundaryIterator)
+    {
+        _boundaryNameArray->Add(wxString(boundaryIterator->getBoundaryName()));
+    }
+
+    makeDialog();
+}
+
+
+
+boundaryDialog::boundaryDialog(std::vector<electricalBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
+{
+    _problem = physicProblems::electrostatics;
+    
+    _electricalBoundaryList = boundaryList;
+    
+    for(std::vector<electricalBoundary>::iterator boundaryIterator = _electricalBoundaryList.begin(); boundaryIterator != _electricalBoundaryList.end(); ++boundaryIterator)
+    {
+        _boundaryNameArray->Add(wxString(boundaryIterator->getBoundaryName()));
+    }
+
+    makeDialog();
+}
+
+
+void boundaryDialog::makeDialog()
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
+
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *propertySizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *okSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
     
-    _magneticBoundaryList = boundaryList;
-    
-    for(std::vector<magneticBoundary>::iterator boundaryIterator = _magneticBoundaryList.begin(); boundaryIterator != _magneticBoundaryList.end(); ++boundaryIterator)
-    {
-        magneticBoundaryNameArray->Add(wxString(boundaryIterator->getBoundaryName()));
-    }
-
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *magneticBoundaryNameArray);
+    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *_boundaryNameArray);
     selection->SetFont(*font);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
@@ -52,14 +76,12 @@ boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxD
     intermediateSizer->Add(6, 0, 0);
     intermediateSizer->Add(okSizer, 0, wxALIGN_RIGHT);
     
-    
     topSizer->Add(headerSizer, 0, wxALIGN_TOP);
     topSizer->Add(0, 10, 0);
     topSizer->Add(intermediateSizer, 0, wxALIGN_BOTTOM);
     
     SetSizerAndFit(topSizer);
 }
-
 
 
 void boundaryDialog::onAddProperty(wxCommandEvent &event)
@@ -87,10 +109,17 @@ void boundaryDialog::onAddProperty(wxCommandEvent &event)
 
 void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_magneticBoundaryList.size() > 0)
+    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::magnetics)
     {
         int currentSelection = selection->GetCurrentSelection();
         _magneticBoundaryList.erase(_magneticBoundaryList.begin() + currentSelection);
+        selection->Delete(currentSelection);
+        selection->SetSelection(0);
+    }
+    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::electrostatics)
+    {
+        int currentSelection = selection->GetCurrentSelection();
+        _electricalBoundaryList.erase(_electricalBoundaryList.begin() + currentSelection);
         selection->Delete(currentSelection);
         selection->SetSelection(0);
     }
