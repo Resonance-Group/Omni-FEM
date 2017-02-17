@@ -31,6 +31,7 @@ boundaryDialog::boundaryDialog(std::vector<electricalBoundary> boundaryList) : w
 }
 
 
+
 void boundaryDialog::makeDialog()
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -82,6 +83,7 @@ void boundaryDialog::makeDialog()
     
     SetSizerAndFit(topSizer);
 }
+
 
 
 void boundaryDialog::onAddProperty(wxCommandEvent &event)
@@ -163,9 +165,16 @@ void boundaryDialog::onModifyProperty(wxCommandEvent &event)
 
 
 
-std::vector<magneticBoundary> boundaryDialog::getBoundaryList()
+std::vector<magneticBoundary> boundaryDialog::getMagneticBoundaryList()
 {
     return _magneticBoundaryList;
+}
+
+
+
+std::vector<electricalBoundary> boundaryDialog::getElectrostaticBoundaryList()
+{
+    return _electricalBoundaryList;
 }
 
 
