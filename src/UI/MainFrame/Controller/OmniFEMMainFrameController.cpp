@@ -166,11 +166,11 @@ void OmniFEMMainFrameController::createMaterialDialog()
 
 void OmniFEMMainFrameController::createBoundaryDialog()
 {
-    std::vector<magneticBoundary> test;
-    boundaryDialog *magneticBoundaryDialog = new boundaryDialog(test);
-    if(magneticBoundaryDialog->ShowModal() == wxID_OK)
+    std::vector<electricalBoundary> test;
+    boundaryDialog *_boundaryDialog = new boundaryDialog(test);
+    if(_boundaryDialog->ShowModal() == wxID_OK)
     {
-        test = magneticBoundaryDialog->getBoundaryList();
+        test = _boundaryDialog->getElectrostaticBoundaryList();
     }
 }
 

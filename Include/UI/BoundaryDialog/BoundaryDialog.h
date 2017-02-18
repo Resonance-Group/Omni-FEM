@@ -1,7 +1,6 @@
 #ifndef BOUNDARY_DIALOG_H_
 #define BOUNDARY_DIALOG_H_
 
-
 #include <vector>
 
 #include <wx/wx.h>
@@ -16,6 +15,7 @@
 #include <common/enums.h>
 
 #include <UI/BoundaryDialog/MagneticBoundaryPropertyDiaglog.h>
+#include <UI/BoundaryDialog/EstaticboundaryPropertyDialog.h>
 
 
 /*! /class materialDialog
@@ -68,6 +68,8 @@ private:
     
     //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
     magneticBoundaryDialog *_magBoundaryDialog = new magneticBoundaryDialog();
+    
+    electricalStaticBoundaryDialog *_estaticBoundaryDialog = new electricalStaticBoundaryDialog();
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material

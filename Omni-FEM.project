@@ -78,6 +78,7 @@
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
         <File Name="src/UI/BoundaryDialog/BoundaryDialog.cpp"/>
+        <File Name="src/UI/BoundaryDialog/eStaticboundaryPropertyDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="NodalProperty">
         <File Name="src/UI/NodalProperty/PropertyDialog.cpp"/>
@@ -130,6 +131,7 @@
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
         <File Name="Include/UI/BoundaryDialog/MagneticBoundaryPropertyDiaglog.h"/>
+        <File Name="Include/UI/BoundaryDialog/EstaticboundaryPropertyDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="NodalProperty">
         <File Name="Include/UI/NodalProperty/PropertyDialog.h"/>

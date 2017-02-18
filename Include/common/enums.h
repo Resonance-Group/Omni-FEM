@@ -133,7 +133,10 @@ enum bcEnumElectroStatic
 {
    /* These are specific for E-stat */
     FIXED_VOLTAGE,
-    SURFACE_CHARGE_DENSITY 
+    SURFACE_CHARGE_DENSITY,
+    E_STATIC_MIXED, 
+    E_STATIC_PERIODIC,
+    E_STATIC_ANTIPERIODIC
 };
 
 
