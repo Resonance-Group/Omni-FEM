@@ -155,7 +155,8 @@ enum generalFrameButton
     ID_ComboBox1,
     ID_ComboBox2,
     ID_RadioButton1,
-    ID_RadioButton2
+    ID_RadioButton2, 
+    ID_CHECKBOX1
 };
 
 enum magneticBlockPropertyDiag

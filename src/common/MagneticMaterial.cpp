@@ -8,15 +8,15 @@ void magneticMaterial::setBHCurveLinearity(bool isLinear)
 
 
 
-void magneticMaterial::setPhiMax(double value)
+void magneticMaterial::setJilesAtherton(jilesAthertonParameters parameter)
 {
-    _phiMax = value;
+    _nonLinearParameters = parameter;
 }
 
 
-double magneticMaterial::getPhiMax()
+jilesAthertonParameters magneticMaterial::getJilesAtherton()
 {
-    return _phiMax;
+    return _nonLinearParameters;
 }
 
 

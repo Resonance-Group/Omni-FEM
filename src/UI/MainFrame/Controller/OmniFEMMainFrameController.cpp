@@ -155,11 +155,11 @@ wxString OmniFEMMainFrameController::getAbstractSimName()
 
 void OmniFEMMainFrameController::createMaterialDialog()
 {
-    std::vector<electrostaticMaterial> test;
+    std::vector<magneticMaterial> test;
     materialDialog *materialDiag = new materialDialog(test); 
     if(materialDiag->ShowModal() == wxID_OK)
     {
-        test = materialDiag->getElectroMaterialList();
+
     }
 }
 
@@ -170,7 +170,7 @@ void OmniFEMMainFrameController::createBoundaryDialog()
     boundaryDialog *_boundaryDialog = new boundaryDialog(test);
     if(_boundaryDialog->ShowModal() == wxID_OK)
     {
-        test = _boundaryDialog->getElectrostaticBoundaryList();
+
     }
 }
 
@@ -182,7 +182,7 @@ void OmniFEMMainFrameController::createNodalDialog()
     nodalPropertiesDialog *diag = new nodalPropertiesDialog(test);
     if(diag->ShowModal() == wxID_OK)
     {
-        test = diag->getNodalPropertyList();
+
     }
 }
 
@@ -194,6 +194,6 @@ void OmniFEMMainFrameController::createCircuitsConductorsDialog()
     conductorPropertySetDialog *diag = new conductorPropertySetDialog(test);
     if(diag->ShowModal() == wxID_OK)
     {
-        test = diag->getCircuitList();
+
     }
 }
