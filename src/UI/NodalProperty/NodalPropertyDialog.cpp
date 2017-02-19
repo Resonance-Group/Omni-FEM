@@ -2,9 +2,24 @@
 
 
 
-nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Property", wxDefaultPosition)
+nodalPropertyDialog::nodalPropertyDialog(physicProblems problem) : wxDialog(NULL, wxID_ANY, "Nodal Property")
+{
+    createDialog(problem);
+}
+
+
+
+nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Property")
+{
+    
+}
+
+
+void nodalPropertyDialog::createDialog(physicProblems problem)
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    
+    _problem = problem;
     
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *radioSizer = new wxBoxSizer(wxVERTICAL);
@@ -28,7 +43,10 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Specified Potential Property", wxPoint(50, 32), wxSize(176, 19));
     radioButton1->SetFont(*font);
     radioButton1->SetValue(true);
-    radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Current Property", wxPoint(50, 55), wxSize(144, 19));
+    if(_problem == physicProblems::magnetics)
+        radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Current Property", wxPoint(50, 55), wxSize(144, 19));
+    else
+        radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Charge Density Property", wxPoint(50, 55), wxSize(190, 19));
     radioButton2->SetFont(*font);
     radioButton2->SetValue(false);
     
@@ -36,12 +54,18 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     radioSizer->Add(radioButton2, 0, wxLEFT | wxRIGHT, 6);
     
     /*Creating the group boxes */
-    groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (Wb/m)", wxPoint(15, 78), wxSize(210, 49));
+    if(_problem == physicProblems::magnetics)
+        groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (Wb/m)", wxPoint(15, 78), wxSize(210, 49));
+    else
+        groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (V)", wxPoint(15, 78), wxSize(210, 49));
     groupBox1->SetFont(*font);
     textCtrl1->Create(groupBox1, wxID_ANY, std::to_string(0.0), wxPoint(6, 5), wxSize(198, 20));
     textCtrl1->SetFont(*font);
     textCtrl1->Enable(true);
-    groupBox2->Create(this, wxID_ANY, "Point Current (Amps)", wxPoint(15, 133), wxSize(210, 49));
+    if(_problem == physicProblems::magnetics)
+        groupBox2->Create(this, wxID_ANY, "Point Current (Amps)", wxPoint(15, 133), wxSize(210, 49));
+    else
+        groupBox2->Create(this, wxID_ANY, "Point Charge Density (C/m)", wxPoint(15, 133), wxSize(210, 49));
     groupBox2->SetFont(*font);
     textCtrl2->Create(groupBox2, wxID_ANY, std::to_string(0.0), wxPoint(6, 5), wxSize(198, 20));
     textCtrl2->SetFont(*font);
@@ -64,9 +88,10 @@ nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Pro
     topSizer->Add(valueSizer);
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
     
+    updateInterface();
+    
     SetSizerAndFit(topSizer);
 }
-
 
 
 void nodalPropertyDialog::onRadioButton1Cllick(wxCommandEvent &event)
@@ -115,7 +140,7 @@ void nodalPropertyDialog::setNodalProperty(nodalProperty &nodalProp)
 {
     _nodalProperty = nodalProp;
     
-    setTextBox();
+    updateInterface();
 }
 
 
@@ -126,12 +151,12 @@ void nodalPropertyDialog::clearNodalProperty()
     _nodalProperty.setValue(0);
     _nodalProperty.setState(true);
     
-    setTextBox();
+    updateInterface();
 }
 
 
 
-void nodalPropertyDialog::setTextBox()
+void nodalPropertyDialog::updateInterface()
 {
     std::ostream textCtrl1Stream(textCtrl1);
     std::ostream textCtrl2Stream(textCtrl2);

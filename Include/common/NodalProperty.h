@@ -26,7 +26,10 @@ public:
     void setName(string name);
     string getName();
     
-    //! This function will set the state of the property which determined if the property is a specific potential or point current
+    /*! /brief 
+     * This function will set the state of the property which determined if the property is a specific potential or point current for magnetics
+     * For electrostatics, this function will change the state to be either a Specific Potential or a POint Charge Dnesity value
+     */ 
     void setState(bool state);
     
     //! This function will get the state of the property. Function returns true to indicate that the value in the class is for a specificed potential
@@ -35,6 +38,8 @@ public:
     void setValue(double value);
     double getValue();
 };
+
+
 
 
 

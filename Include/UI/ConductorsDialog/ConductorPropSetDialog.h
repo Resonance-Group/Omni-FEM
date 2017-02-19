@@ -14,8 +14,7 @@
 #include <common/enums.h>
 
 #include <UI/ConductorsDialog/CircuitPropertyDialog.h>
-
-//#include <UI/NodalProperty/NodalPropertyDialog.h>
+#include <UI/ConductorsDialog/ConductorPropertyDialog.h>
 
 class conductorPropertySetDialog : public wxDialog
 {
@@ -24,6 +23,8 @@ private:
     std::vector<circuitProperty> _circuitList;
     
     std::vector<conductorProperty> _conductorList;
+    
+    physicProblems _problem;
     
     //! This is the combo box containing the current avaiable magnetic boundary
     wxComboBox *selection = new wxComboBox();
@@ -60,12 +61,16 @@ private:
      */
     void onModifyProperty(wxCommandEvent &event);
     
+    void makeDialog();
+    
     //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
-    circuitPropertyDialog *_circuitPropertyDialog = new circuitPropertyDialog();
+    
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
     conductorPropertySetDialog(std::vector<circuitProperty> circuitList);
+    
+    conductorPropertySetDialog(std::vector<conductorProperty> conductorList);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~conductorPropertySetDialog();

@@ -15,56 +15,28 @@ string conductorProperty::getName()
 
 
 
-void conductorProperty::togglePrescribeVoltage()
+void conductorProperty::setIsTotalChargeState(bool state)
 {
-    if(!_isTotalCharge)
-    {
-        if(_isPrescribeVoltage)
-            _isPrescribeVoltage = false;
-        else
-            _isPrescribeVoltage = true;
-    }
+    _isTotalCharge = state;
 }
 
 
 
-bool conductorProperty::getPrescribeVoltageState()
+bool conductorProperty::getIsTotalChargeState()
 {
-    return _isPrescribeVoltage;
+    return _isTotalCharge;
 }
 
 
 
-void conductorProperty::toggleTotalCharge()
+void conductorProperty::setValue(double value)
 {
-    if(!_isPrescribeVoltage)
-    {
-        if(_isTotalCharge)
-        {
-            _isTotalCharge = false;
-        }
-        else
-            _isTotalCharge = true;
-    }
+    _value = value;
 }
 
 
 
-void conductorProperty::setVoltage(double value)
+double conductorProperty::getValue()
 {
-    _voltageValue = value;
-}
-
-
-
-double conductorProperty::getVoltage()
-{
-    return _voltageValue;
-}
-
-
-
-void conductorProperty::setCharge(double value)
-{
-    _charge = value;
+    return _value;
 }

@@ -21,10 +21,15 @@
  *  This calss is for creating the Block Property dialog when in the magnetics simualtion
  *  THe dialog box is rather large however, there are only two buttons.
  *  Due to the simplicity of the dialog box, this class will be the abstraction, controller, and presentation
+ * 
+ * Because the difference between dialog boxes for eletctrostatic and magnetics are similair, this class
+ * will be handling both cases.
  */
 class nodalPropertyDialog : public wxDialog
 {
 private:
+    physicProblems _problem;
+
     //! This is the nodal property that will either be created (added to the global list) or modified
     nodalProperty _nodalProperty;
 
@@ -67,9 +72,11 @@ private:
     
     void onRadioButton2Cllick(wxCommandEvent &event);
     
-    void setTextBox();
+    void updateInterface();
     
 public:
+    
+    nodalPropertyDialog(physicProblems problem);
     
     nodalPropertyDialog();
     
@@ -87,6 +94,9 @@ public:
     
     //! This will reset the variable _nodalProperty to default values. Useful if adding a new nodal Property
     void clearNodalProperty();
+    
+    //! This is mainly for two step creation
+    void createDialog(physicProblems problem);
     
 private:
     wxDECLARE_EVENT_TABLE();

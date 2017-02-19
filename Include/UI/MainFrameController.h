@@ -19,6 +19,7 @@
 #include <common/BoundaryConditions.h>
 #include <common/ElectricalBoundary.h>
 #include <common/MagneticBoundary.h>
+#include <common/ConductorProperty.h>
 #include <common/enums.h>
 
 #include <UI/MaterialsDialog/MaterialDialog.h>

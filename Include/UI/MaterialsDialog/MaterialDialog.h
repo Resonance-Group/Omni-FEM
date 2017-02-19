@@ -67,7 +67,7 @@ private:
     void onModifyProperty(wxCommandEvent &event);
     
     //! This contains the dialog that is used to edit and add the magnetic materials to/from the list
-    blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
+    
     
     blockPropertyDialogElectrostatic *_eStaticMaterialDialog = new blockPropertyDialogElectrostatic();
     

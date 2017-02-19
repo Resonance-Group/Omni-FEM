@@ -429,7 +429,7 @@ void blockPropertyMagnetic::updateInterface()
     eConductivityStream << _magneticMaterial.getSigma();
     
     currentDensityTextCtrl->SetValue(wxEmptyString);
-    currentDensityStream << std::setprecision(30);
+    currentDensityStream << std::setprecision(15);
     currentDensityStream << _magneticMaterial.getCurrentDensity();
     
     lamThickTextCtrl->SetValue(wxEmptyString);
@@ -508,7 +508,7 @@ void blockPropertyMagnetic::updateInterface()
 
 blockPropertyMagnetic::~blockPropertyMagnetic()
 {
-    
+   this->Close(); 
 }
 
 

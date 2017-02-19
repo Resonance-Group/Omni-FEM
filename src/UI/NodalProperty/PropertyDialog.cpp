@@ -1,7 +1,7 @@
 #include <UI/NodalProperty/PropertyDialog.h>
 
 
-nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
+nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList, physicProblems problem) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -12,6 +12,7 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
     wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
     
     _nodalPropertyList = nodalPropertyList;
+    _problem = problem;
     
     for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
     {
@@ -53,7 +54,6 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
     intermediateSizer->Add(6, 0, 0);
     intermediateSizer->Add(okSizer, 0, wxALIGN_RIGHT);
     
-    
     topSizer->Add(headerSizer, 0, wxALIGN_TOP);
     topSizer->Add(0, 10, 0);
     topSizer->Add(intermediateSizer, 0, wxALIGN_BOTTOM);
@@ -66,10 +66,17 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
 void nodalPropertiesDialog::onAddProperty(wxCommandEvent &event)
 {
     nodalProperty newNodalProperty;
-    _nodalPropertyDialog->clearNodalProperty();
-    if(_nodalPropertyDialog->ShowModal() == wxID_OK)
+    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog();
+    
+    if(_problem == physicProblems::electrostatics)
+        nodalPropDialog->createDialog(physicProblems::electrostatics);
+    else
+        nodalPropDialog->createDialog(physicProblems::magnetics);
+        
+    nodalPropDialog->clearNodalProperty();
+    if(nodalPropDialog->ShowModal() == wxID_OK)
     {
-        _nodalPropertyDialog->getNodalProperty(newNodalProperty);
+        nodalPropDialog->getNodalProperty(newNodalProperty);
         for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
         {
             if(nodalIterator->getName() == newNodalProperty.getName())
@@ -102,12 +109,19 @@ void nodalPropertiesDialog::onDeleteProperty(wxCommandEvent &event)
 void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
 {
     nodalProperty selectedNodalProperty;
+    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog();
+    
+    if(_problem == physicProblems::electrostatics)
+        nodalPropDialog->createDialog(physicProblems::electrostatics);
+    else
+        nodalPropDialog->createDialog(physicProblems::magnetics);
+        
     if(_nodalPropertyList.size() > 0)
     {
         int currentSelection = selection->GetSelection();
         selectedNodalProperty = _nodalPropertyList.at(currentSelection);
-        _nodalPropertyDialog->setNodalProperty(selectedNodalProperty);
-        if(_nodalPropertyDialog->ShowModal() == wxID_OK)
+        nodalPropDialog->setNodalProperty(selectedNodalProperty);
+        if(nodalPropDialog->ShowModal() == wxID_OK)
         {
             /*
              * This is a counter. The loop is checking to see if the user accidently changed the name of the material to one that is already there.
@@ -115,7 +129,7 @@ void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
              * that one. Which, this counter will assit in that
               */
             int i = 0;
-            _nodalPropertyDialog->getNodalProperty(selectedNodalProperty);
+            nodalPropDialog->getNodalProperty(selectedNodalProperty);
             for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
             {
                 if(nodalIterator->getName() == selectedNodalProperty.getName() && (i != currentSelection))

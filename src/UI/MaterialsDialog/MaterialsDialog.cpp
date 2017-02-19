@@ -90,6 +90,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
 {
     if(_problem == physicProblems::magnetics)
     {
+        blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
         magneticMaterial newMat;
         magneticMaterialPropertyDialog->clearMaterial();
         if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
@@ -157,6 +158,7 @@ void materialDialog::onModifyProperty(wxCommandEvent &event)
     
     if(_magneticMaterialList.size() > 0 && _problem == physicProblems::magnetics)
     {
+        blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
         magneticMaterial selectedMaterial;
         int currentSelection = selection->GetSelection();
         selectedMaterial = _magneticMaterialList.at(currentSelection);

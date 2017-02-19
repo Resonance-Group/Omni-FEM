@@ -17,8 +17,10 @@
 class nodalPropertiesDialog : public wxDialog
 {
 private:
-//! This will contain a local copy of the boundary list. This will allow for easy editing
+    //! This will contain a local copy of the nodal property list. This will allow for easy editing. Since there is no significant different between electro static and magnetics, this will handle both cases
     std::vector<nodalProperty> _nodalPropertyList;
+    
+    physicProblems _problem;
     
     //! This is the combo box containing the current avaiable magnetic boundary
     wxComboBox *selection = new wxComboBox();
@@ -49,11 +51,11 @@ private:
     void onModifyProperty(wxCommandEvent &event);
     
     //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
-    nodalPropertyDialog *_nodalPropertyDialog = new nodalPropertyDialog();
+    
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
-    nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList);
+    nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList, physicProblems problem);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~nodalPropertiesDialog();
