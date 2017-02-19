@@ -8,10 +8,13 @@
 #include <wx/combobox.h>
 #include <wx/arrstr.h>
 #include <wx/statbox.h>
+#include <wx/sizer.h>
 
 #include <common/enums.h>
 #include <common/MaterialProperty.h>
 #include <common/MagneticMaterial.h>
+
+#include <UI/MaterialsDialog/JilesAthertonParametersDialog.h>
 
 
 /*! /class blockPropertMagnetic
@@ -41,9 +44,6 @@ private:
     //! This box is created for inputting a value for the hystersis lag angle in the y-plane
     wxTextCtrl *phiYTextCtrl = new wxTextCtrl();
     
-    //! This text control will be replaced with something more appriate for the Jiles-Artherton model. But for non-linear materials, this is the max hystersis lag angle 
-    wxTextCtrl *phiMaxTextCtrl = new wxTextCtrl();
-    
     //! This box is created for inputting a value for the coercivity of the material
     wxTextCtrl *coercivityTextCtrl = new wxTextCtrl();
     
@@ -51,7 +51,7 @@ private:
     wxTextCtrl *eConductivityTextCtrl = new wxTextCtrl();
     
     //! This box is created for inputting a value for the current density of the material
-    wxTextCtrl *currentDesnityTextCtrl = new wxTextCtrl();
+    wxTextCtrl *currentDensityTextCtrl = new wxTextCtrl();
     
     //! This box is created for inputting a value for the lamination thickness
     wxTextCtrl *lamThickTextCtrl = new wxTextCtrl();
@@ -77,28 +77,10 @@ private:
     //! This drop-down box is created in order to allow the user to choose if the magnetic mateiral is linear or not
     wxComboBox *BHCurveComboBox = new wxComboBox();
     
-    //! THis will be deleted once the Jiles-Artherton model is implemented
-    wxButton *editBHCurve = new wxButton();
-    
-    //! This group box is used to group the options for the Linear Material Properties
-    wxStaticBox *linearMatPropGroupBox = new wxStaticBox();
-    
-    //! This group box is used to group the coercivity options together
-    wxStaticBox *coercivityGroupBox = new wxStaticBox();
-    
-    //! This group is used to group the electrical Conductivity together
-    wxStaticBox *eConductivityGroupBox = new wxStaticBox();
-    
-    //! This group box is used to group together the Special Attribute options
-    wxStaticBox *specialAttriGroupBox = new wxStaticBox();
-    
-    //! This group box is used to group the source current density together
-    wxStaticBox *sourceCurrentGroupBox = new wxStaticBox();
-    
-    //! This group box is used to store the options for the nonlinear properties of the magnetic material
-    wxStaticBox *nonlinearGroupBox = new wxStaticBox();
-    
-    //! This button will be deleted
+    //! This is the button used to edit the Jiles-Artherton Model parameters when clicked
+    wxButton *jilesAthertonButton = new wxButton();
+        
+    //! This function is called when the button is pressed in order to edit the Jiles-Atherton parameters
     void onBHCurve(wxCommandEvent &event);
     
     //! This function is called in order to update the form should the user choose to change the material from linear to non-linear and vice-versa
@@ -108,7 +90,7 @@ private:
     void onSpecialComboBox(wxCommandEvent &event);
     
     //! This is an internal function that gets called in order to update the fields in the text control box
-    void setTextControlValues();
+    void updateInterface();
     
 public:
     

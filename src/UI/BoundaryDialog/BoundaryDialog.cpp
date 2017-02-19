@@ -1,72 +1,150 @@
 #include <UI/BoundaryDialog/BoundaryDialog.h>
 
-boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition", wxDefaultPosition, wxSize(233, 148))
+boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
 {
-    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    _problem = physicProblems::magnetics;
     
     _magneticBoundaryList = boundaryList;
     
     for(std::vector<magneticBoundary>::iterator boundaryIterator = _magneticBoundaryList.begin(); boundaryIterator != _magneticBoundaryList.end(); ++boundaryIterator)
     {
-        magneticBoundaryNameArray->Add(wxString(boundaryIterator->getBoundaryName()));
+        _boundaryNameArray->Add(wxString(boundaryIterator->getBoundaryName()));
     }
+
+    makeDialog();
+}
+
+
+
+boundaryDialog::boundaryDialog(std::vector<electricalBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
+{
+    _problem = physicProblems::electrostatics;
     
-    wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 49), wxSize(125, 26));
+    _electricalBoundaryList = boundaryList;
     
-    wxButton *deletePropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonDelete, "Delete Property", wxPoint(12, 78), wxSize(125, 26));
-    
-    wxButton *modifyPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonModify, "Modify Property", wxPoint(12, 107), wxSize(125, 26));
-    
-    wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(146, 107), wxSize(75, 23));
+    for(std::vector<electricalBoundary>::iterator boundaryIterator = _electricalBoundaryList.begin(); boundaryIterator != _electricalBoundaryList.end(); ++boundaryIterator)
+    {
+        _boundaryNameArray->Add(wxString(boundaryIterator->getBoundaryName()));
+    }
+
+    makeDialog();
+}
+
+
+
+void boundaryDialog::makeDialog()
+{
+    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer *propertySizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *okSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
     
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 6), wxSize(165, 21), *magneticBoundaryNameArray);
+    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *_boundaryNameArray);
     selection->SetFont(*font);
     
-    this->FitInside();
-    this->SetMinSize(this->GetSize());
-    this->SetMaxSize(this->GetSize());
+    headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
+    headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);
+    
+    wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
+    addPropertyButton->SetFont(*font);
+    
+    wxButton *deletePropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonDelete, "Delete Property", wxPoint(12, 72), wxSize(102, 23));
+    deletePropertyButton->SetFont(*font);
+    
+    wxButton *modifyPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonModify, "Modify Property", wxPoint(12, 101), wxSize(102, 23));
+    modifyPropertyButton->SetFont(*font);
+    
+    propertySizer->Add(0, 10, 0);
+    propertySizer->Add(addPropertyButton, 0, wxLEFT, 6);
+    propertySizer->Add(0, 6, 0);
+    propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxLEFT, 6);
+    propertySizer->Add(0, 6, 0);
+    propertySizer->Add(modifyPropertyButton, 0, wxALIGN_BOTTOM | wxDOWN | wxLEFT, 6);
+    
+    wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(120, 101), wxSize(75, 23));
+    okButton->SetFont(*font);
+    
+    okSizer->Add(0, 68, 0);
+    okSizer->Add(okButton, 0, wxALIGN_BOTTOM | wxDOWN | wxRIGHT, 6);
+    
+    intermediateSizer->Add(propertySizer, 0, wxALIGN_LEFT);
+    intermediateSizer->Add(6, 0, 0);
+    intermediateSizer->Add(okSizer, 0, wxALIGN_RIGHT);
+    
+    topSizer->Add(headerSizer, 0, wxALIGN_TOP);
+    topSizer->Add(0, 10, 0);
+    topSizer->Add(intermediateSizer, 0, wxALIGN_BOTTOM);
+    
+    SetSizerAndFit(topSizer);
 }
 
 
 
 void boundaryDialog::onAddProperty(wxCommandEvent &event)
 {
-    if(_magBoundaryDialog->ShowModal() == wxID_OK)
+    if(_problem == physicProblems::magnetics)
     {
-        
-    }
-    /*
-    magneticMaterial newMat;
-    magneticMaterialPropertyDialog->clearMaterial();
-    if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
-    {
-        magneticMaterialPropertyDialog->getNewMaterial(newMat);
-        for(std::vector<magneticMaterial>::iterator boundaryIterator = _magneticMaterialList.begin();  boundaryIterator != _magneticMaterialList.end(); ++boundaryIterator)
+        magneticBoundary magBC;
+        _magBoundaryDialog->clearBoundary();
+        if(_magBoundaryDialog->ShowModal() == wxID_OK)
         {
-            if(boundaryIterator->getName() == newMat.getName())
+            _magBoundaryDialog->getBoundaryCondition(magBC);
+            for(std::vector<magneticBoundary>::iterator boundaryIterator = _magneticBoundaryList.begin(); boundaryIterator != _magneticBoundaryList.end(); ++boundaryIterator)
             {
-                wxMessageBox(newMat.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxCENTRE | wxICON_INFORMATION); 
-                break;
+                if(boundaryIterator->getBoundaryName() == magBC.getBoundaryName())
+                {
+                    wxMessageBox(magBC.getBoundaryName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
+                    break;
+                }
             }
+            _magneticBoundaryList.push_back(magBC);
+            selection->Append(magBC.getBoundaryName());
+            selection->SetSelection(0);
         }
-        _magneticMaterialList.push_back(newMat);
-        selection->Append(newMat.getName());
-        selection->SetSelection(0);
     }
-     */
+    else if(_problem == physicProblems::electrostatics)
+    {
+        electricalBoundary estaticBC;
+        _estaticBoundaryDialog->clearBoundary();
+        if(_estaticBoundaryDialog->ShowModal() == wxID_OK)
+        {
+            _estaticBoundaryDialog->getBoundaryCondition(estaticBC);
+            for(std::vector<electricalBoundary>::iterator boundaryIterator = _electricalBoundaryList.begin(); boundaryIterator != _electricalBoundaryList.end(); ++boundaryIterator)
+            {
+                if(boundaryIterator->getBoundaryName() == estaticBC.getBoundaryName())
+                {
+                    wxMessageBox(estaticBC.getBoundaryName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
+                    break;
+                }
+            }
+            _electricalBoundaryList.push_back(estaticBC);
+            selection->Append(estaticBC.getBoundaryName());
+            selection->SetSelection(0);
+        }
+    }
 } 
 
 
 
 void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_magneticBoundaryList.size() > 0)
+    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::magnetics)
     {
         int currentSelection = selection->GetCurrentSelection();
         _magneticBoundaryList.erase(_magneticBoundaryList.begin() + currentSelection);
+        selection->Delete(currentSelection);
+        selection->SetSelection(0);
+    }
+    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::electrostatics)
+    {
+        int currentSelection = selection->GetCurrentSelection();
+        _electricalBoundaryList.erase(_electricalBoundaryList.begin() + currentSelection);
         selection->Delete(currentSelection);
         selection->SetSelection(0);
     }
@@ -76,39 +154,80 @@ void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
 
 void boundaryDialog::onModifyProperty(wxCommandEvent &event)
 {
-    /*
-    magneticMaterial selectedMaterial;
-    if(_magneticMaterialList.size() > 0)
+    
+    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::magnetics)
     {
+        magneticBoundary selectedBoundary;
         int currentSelection = selection->GetSelection();
-        selectedMaterial = _magneticMaterialList.at(currentSelection);
-        magneticMaterialPropertyDialog->setMaterial(selectedMaterial);
-        if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
+        selectedBoundary = _magneticBoundaryList.at(currentSelection);
+        _magBoundaryDialog->setBoundaryCondition(selectedBoundary);
+        if(_magBoundaryDialog->ShowModal() == wxID_OK)
         {
+            /*
+             * This is a counter. The loop is checking to see if the user accidently changed the name of the material to one that is already there.
+             * However, the one that the user wants to modify is still in the list. So, the program needs to skip
+             * that one. Which, this counter will assit in that
+             */ 
             int i = 0;
-            magneticMaterialPropertyDialog->getNewMaterial(selectedMaterial);
-            for(std::vector<magneticMaterial>::iterator boundaryIterator = _magneticMaterialList.begin();  boundaryIterator != _magneticMaterialList.end();++boundaryIterator)
+            _magBoundaryDialog->getBoundaryCondition(selectedBoundary);
+            for(std::vector<magneticBoundary>::iterator boundaryIterator = _magneticBoundaryList.begin(); boundaryIterator != _magneticBoundaryList.end(); ++boundaryIterator)
             {
-                if(boundaryIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
+                if(boundaryIterator->getBoundaryName() == selectedBoundary.getBoundaryName() && (i != currentSelection))
                 {
-                    wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxCENTRE | wxICON_INFORMATION); 
+                    wxMessageBox(selectedBoundary.getBoundaryName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
                     break;
                 }
+                
                 i++;
-            }
-            _magneticMaterialList.at(currentSelection) = selectedMaterial;
-            selection->SetString(currentSelection, selectedMaterial.getName());
-            
+            } 
+            _magneticBoundaryList.at(currentSelection) = selectedBoundary;
+            selection->SetString(currentSelection, selectedBoundary.getBoundaryName());
         }
+        selection->SetSelection(0);
     }
-     */ 
+    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::electrostatics)
+    {
+        int currentSelection = selection->GetSelection();
+        electricalBoundary selectedBoundary = _electricalBoundaryList.at(currentSelection);
+        _estaticBoundaryDialog->setBoundaryCondition(selectedBoundary);
+        if(_estaticBoundaryDialog->ShowModal() == wxID_OK)
+        {
+            /*
+             * This is a counter. The loop is checking to see if the user accidently changed the name of the material to one that is already there.
+             * However, the one that the user wants to modify is still in the list. So, the program needs to skip
+             * that one. Which, this counter will assit in that
+             */ 
+            int i = 0;
+            _estaticBoundaryDialog->getBoundaryCondition(selectedBoundary);
+            for(std::vector<electricalBoundary>::iterator boundaryIterator = _electricalBoundaryList.begin(); boundaryIterator != _electricalBoundaryList.end(); ++boundaryIterator)
+            {
+                if(boundaryIterator->getBoundaryName() == selectedBoundary.getBoundaryName() && (i != currentSelection))
+                {
+                    wxMessageBox(selectedBoundary.getBoundaryName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
+                    break;
+                }
+                
+                i++;
+            } 
+            _electricalBoundaryList.at(currentSelection) = selectedBoundary;
+            selection->SetString(currentSelection, selectedBoundary.getBoundaryName());
+        }
+        selection->SetSelection(0);
+    }
 }
 
 
 
-std::vector<magneticBoundary> boundaryDialog::getBoundaryList()
+std::vector<magneticBoundary> boundaryDialog::getMagneticBoundaryList()
 {
     return _magneticBoundaryList;
+}
+
+
+
+std::vector<electricalBoundary> boundaryDialog::getElectrostaticBoundaryList()
+{
+    return _electricalBoundaryList;
 }
 
 

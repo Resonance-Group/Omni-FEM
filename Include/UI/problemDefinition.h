@@ -16,7 +16,7 @@
 	Bounday condition setting, name, file path.
 	This class must be created for eah problem
 */
-class problemDefinition
+class problemDef
 {
 
 	/************

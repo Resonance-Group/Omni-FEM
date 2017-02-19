@@ -15,17 +15,14 @@ string nodalProperty::getName()
 
 
 
-void nodalProperty::toggleSpecificPotentialState()
+void nodalProperty::setState(bool state)
 {
-    if(_isSpecificPotential)
-        _isSpecificPotential = false;
-    else
-        _isSpecificPotential = true;
+    _isSpecificPotential = state;
 }
 
 
 
-bool nodalProperty::getSpecificPotentialState()
+bool nodalProperty::getState()
 {
     return _isSpecificPotential;
 }

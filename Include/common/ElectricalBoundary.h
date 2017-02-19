@@ -7,7 +7,7 @@
 /*! /brief  This class is specific for the boundary conditions of the electrostatic 
  *          solver.
  */ 
-class electricalBoundary : boundaryCondition
+class electricalBoundary : public boundaryCondition
 {
 private:
     //! This is the data type for the fixed votlage boundary condition

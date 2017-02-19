@@ -18,14 +18,14 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
 {
-    
+    controller.createNodalDialog();
 }
 
 
 
 void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
 {
-    
+    controller.createCircuitsConductorsDialog();
 }
 
 

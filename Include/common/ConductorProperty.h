@@ -15,36 +15,31 @@ private:
     //! This is the name of the property
     string _conductorName;
     
-    //! Set to true if the conductor is suppose to have a prescribed voltage value
-    bool _isPrescribeVoltage = false;
+    //! Set to True if the conductor is suppose to have a charge value False will be that the COnductor is a Prescribed Voltage
+    bool _isTotalCharge = true;
     
-    //! Set to True if the conductor is suppose to have a charge value
-    bool _isTotalCharge = false;
-    
-    //! The value of the prescribed voltage
-    double _voltageValue = 0;
+    //! The value of the object. The meaning of value is determined by the above boolean
+    double _value = 0;
     
     //! The value of the charge
     double _charge = 0;
 public:
-    conductorProperty();
     //! This next sections are the getters/setters for the private variables
     void setName(string name);
+    
     string getName();
     
-    //! Toggle the total prescribed voltage state from true -> false or false -> true. Technically, only one should be active at a time. Checks are in place to ensure this.
-    void togglePrescribeVoltage();
-    bool getPrescribeVoltageState();
+    //! This function will set the conductor to be either a total charge or prescribed voltage
+    void setIsTotalChargeState(bool state);
     
-    //! Toggle the total charge state from true -> false or false -> true
-    void toggleTotalCharge();
-    bool getTotalChargeState();
+    //! This function will return true if the conductor is a total charge property
+    bool getIsTotalChargeState();
     
-    void setVoltage(double value);
-    double getVoltage();
+    //! This will set the value to be either total charge or prescibe voltage
+    void setValue(double value);
     
-    void setCharge(double value);
-    double getCharge();
+    //! This will return either the total charge or prescibed voltage
+    double getValue();
 };
 
 

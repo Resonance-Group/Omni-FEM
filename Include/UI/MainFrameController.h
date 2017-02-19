@@ -19,10 +19,13 @@
 #include <common/BoundaryConditions.h>
 #include <common/ElectricalBoundary.h>
 #include <common/MagneticBoundary.h>
+#include <common/ConductorProperty.h>
 #include <common/enums.h>
 
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/BoundaryDialog/BoundaryDialog.h>
+#include <UI/NodalProperty/PropertyDialog.h>
+#include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
 /*! \class OmniFEMMainFrameController
  *  \brief The class representing the controller layer for OmniFEM's main frame
@@ -117,6 +120,11 @@ public:
     
     void createBoundaryDialog();
 	
+    void createNodalDialog();
+    
+    void createCircuitsConductorsDialog();
+    
+    void createProblemDefinitionDialog();
 };
 
 #endif

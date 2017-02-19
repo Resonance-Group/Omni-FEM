@@ -73,10 +73,25 @@
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
         <File Name="src/UI/MaterialsDialog/BlockPropertyMagnetic.cpp"/>
+        <File Name="src/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.cpp"/>
+        <File Name="src/UI/MaterialsDialog/JilesArtheronParameterDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
         <File Name="src/UI/BoundaryDialog/BoundaryDialog.cpp"/>
+        <File Name="src/UI/BoundaryDialog/eStaticboundaryPropertyDialog.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="NodalProperty">
+        <File Name="src/UI/NodalProperty/PropertyDialog.cpp"/>
+        <File Name="src/UI/NodalProperty/NodalPropertyDialog.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ConductorsDialog">
+        <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
+        <File Name="src/UI/ConductorsDialog/CircuitPropertyDialog.cpp"/>
+        <File Name="src/UI/ConductorsDialog/ConductorPropertyDialog.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="PropertiesDefinitionDialog">
+        <File Name="src/UI/PropertiesDefinitionDialog/PreferencesDialog.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -112,12 +127,25 @@
       <File Name="Include/UI/MainFrameController.h"/>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
+        <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>
+        <File Name="Include/UI/MaterialsDialog/JilesAthertonParametersDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyMagnetics.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
-        <File Name="Include/UI/MaterialsDialog/MagneticBoundaryPropertyDiaglog.h"/>
+        <File Name="Include/UI/BoundaryDialog/MagneticBoundaryPropertyDiaglog.h"/>
+        <File Name="Include/UI/BoundaryDialog/EstaticboundaryPropertyDialog.h"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="NodalProperty">
+        <File Name="Include/UI/NodalProperty/PropertyDialog.h"/>
+        <File Name="Include/UI/NodalProperty/NodalPropertyDialog.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ConductorsDialog">
+        <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
+        <File Name="Include/UI/ConductorsDialog/CircuitPropertyDialog.h"/>
+        <File Name="Include/UI/ConductorsDialog/ConductorPropertyDialog.h"/>
+      </VirtualDirectory>
+      <File Name="Include/UI/PreferencesDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -137,6 +165,7 @@
       <File Name="Include/common/MagneticPreference.h"/>
       <File Name="Include/common/ElectrostaticPreference.h"/>
       <File Name="Include/common/omniFEMEvent.h"/>
+      <File Name="Include/common/JilesAthertonParameters.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

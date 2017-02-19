@@ -89,7 +89,7 @@ void geometryEditorCanvas::drawGrid()
     glLineWidth(1.0);
     glEnable(GL_LINE_STIPPLE);
     /* 
-     * The binary form is able to dispaly the concept of glLineStipple for 
+     * The binary form is able to display the concept of glLineStipple for 
      * new users better then the Hex form. Although, the function is able to accept Hex
      * For an idea of how glLineStipple work, refer to the following link
      * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg

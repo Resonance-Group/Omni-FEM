@@ -15,7 +15,7 @@ private:
     //! The name of the property
     string _nodalName;
     
-    //! Currently, there are two options, a specified potential proper and a point charge density. This attribute combines the two into a boolean data type.
+    //! Currently, there are two options, a specified potential property and a point current. This attribute combines the two into a boolean data type.
     bool _isSpecificPotential = true;
     
     //! This is the value associated with the above boolean. the units are C/m for charge density
@@ -26,12 +26,20 @@ public:
     void setName(string name);
     string getName();
     
-    void toggleSpecificPotentialState();
-    bool getSpecificPotentialState();
+    /*! /brief 
+     * This function will set the state of the property which determined if the property is a specific potential or point current for magnetics
+     * For electrostatics, this function will change the state to be either a Specific Potential or a POint Charge Dnesity value
+     */ 
+    void setState(bool state);
+    
+    //! This function will get the state of the property. Function returns true to indicate that the value in the class is for a specificed potential
+    bool getState();
     
     void setValue(double value);
     double getValue();
 };
+
+
 
 
 

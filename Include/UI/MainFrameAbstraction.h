@@ -125,7 +125,7 @@ private:
 		will be able to display more then one physics problem per solution.
 		Each phyics problem will be it's own object in code
 	*/
-	problemDefinition definition;
+	problemDef definition;
 	
 	//! This variable stores the border size
 	int borderSize = 5;

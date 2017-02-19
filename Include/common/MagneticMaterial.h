@@ -3,6 +3,7 @@
 
 #include <common/MaterialProperty.h>
 #include <common/enums.h>
+#include <common/JilesAthertonParameters.h>
 
 /*! /class magneticMaterial 
  *  /brief
@@ -26,8 +27,8 @@ private:
     //! The hysteresis lag angle in the Y-direction
     double _phiHY = 0;
     
-    //! The max hystersis lag angle. Used in calculations for the non-linear B-H curve
-    double _phiMax = 0;
+    //! This is the properties for the Jiles-Atherton Model
+    jilesAthertonParameters _nonLinearParameters;
     
     //! The coercivity of the material. Units are in A/m.
     double _coercivity = 0;
@@ -83,11 +84,11 @@ public:
     //! This will get the hystersis lag angle in the y-direction. Note that this parameter is only used for the linear approximation
     double getPhiY();
     
-    //! This will set the max hystersis lag angle. Note: This is only used during a nonlinear B-H curve
-    void setPhiMax(double value);
+    //! This will set the Jiles Atherton model parameters.
+    void setJilesAtherton(jilesAthertonParameters parameter);
     
-    //! This will get the max hystersis lag angle. Note: This is only used during a nonlinear B-H curve
-    double getPhiMax();
+    //! This function will return the Jiles-Artherton model parameters
+    jilesAthertonParameters getJilesAtherton();
     
     //! This will set the coercivity for the material. Units are in A/m.
     void setCoercivity(double value);
@@ -138,6 +139,11 @@ public:
     double getStrandDiameter();
     
     void setMagneticMaterial(magneticMaterial mat);
+    
+    void clearJilesAtherton()
+    {
+        _nonLinearParameters.clear();
+    }
 };
 
 
