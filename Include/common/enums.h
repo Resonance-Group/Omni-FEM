@@ -29,6 +29,7 @@ enum class problemDimension
 */
 enum class physicProblems
 {
+    NO_PHYSICS_DEFINED,
 	electrostatics,
 	magnetics
 };

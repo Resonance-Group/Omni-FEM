@@ -24,7 +24,6 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuEdit, "&Edit");
     menuBar->Append(menuView, "&View");
-    menuBar->Append(menuProblem, "&Problem");
     menuBar->Append(menuGrid, "&Grid");
     menuBar->Append(menuProperties, "&Properties");
     menuBar->Append(menuMesh, "&Mesh");
@@ -40,20 +39,33 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-	menuEdit->Append(menubarID::ID_menubarLUASCRIPT, "&Lua Script\tCtrl-L");
+    menuEdit->Append(wxID_ANY, "&Undo");
+    menuEdit->Append(wxID_ANY, "&Copy");
+    menuEdit->Append(wxID_ANY, "&Delete");
+    menuEdit->Append(wxID_ANY, "&Move");
+    menuEdit->Append(wxID_ANY, "&Scale");
+    menuEdit->Append(wxID_ANY, "&Mirror");
+    menuEdit->Append(wxID_ANY, "&Create Radius");
+    menuEdit->Append(wxID_ANY, "&Create Open Boundary");
+    menuEdit->AppendSeparator();
     menuEdit->Append(menubarID::ID_menubarPreferences, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
-	menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
+    menuView->Append(wxID_ANY, "&Zoom In");
+    menuView->Append(wxID_ANY, "&Zoom Out");
+    menuView->Append(wxID_ANY, "&Zoom Window");
     menuView->AppendSeparator();
     menuView->Append(menubarID::ID_menubarDispBlockLabels, "&Show Block Name");
 	menuView->Append(menubarID::ID_menubarDispStatusBar, "&Show Status Bar");
+    menuView->AppendSeparator();
+    menuView->Append(wxID_ANY, "&Status Bar");
     menuView->Append(menubarID::ID_menubarDispLuaConsole, "&Lua Console");
+    menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
     
     /* Create hte menu listing for the grid menu option */
     menuGrid->Append(menubarID::ID_menubarShowGrid, "&Display Grid");
     menuGrid->Append(menubarID::ID_menubarSnapGrid, "&Snap to Grid");
-    menuGrid->Append(menubarID::ID_menubarSetGrid, "&Set Grid");
+    menuGrid->Append(menubarID::ID_menubarSetGrid, "&Set Grid Preferences");
     
     /* Create the menu listing for the properties option */
     menuProperties->Append(menubarID::ID_menubarMaterials, "&Materials\tCtrl-M");
@@ -74,9 +86,6 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuHelp->AppendSeparator();
     menuHelp->Append(menubarID::ID_menubarLicense, "License");
     menuHelp->Append(wxID_ABOUT);
-	
-	/*Create the menu listing of the Problem Menu */
-	menuProblem->Append(menubarID::ID_menubarPrecision, "&Set Precision");
     
     /* Create and display the menu bar */
     SetMenuBar(menuBar);
@@ -95,8 +104,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 	this->SetMaxSize(minSize);
 	this->SetInitialSize(minSize);
 	
-	arrayPhysicsProblem.Add("Electrostatics");
-	arrayPhysicsProblem.Add("Magnetics");
+	
 }
 
 
@@ -112,7 +120,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 	menuBar->Enable(menubarID::ID_menubarViewResults,	enable);
 	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
-	menuBar->Enable(menubarID::ID_menubarPrecision,	enable);
+//	menuBar->Enable(menubarID::ID_menubarPrecision,	enable);
 	
 	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	enable);
 }
@@ -214,6 +222,11 @@ void OmniFEMMainFrame::createDimensionClient()
 
 void OmniFEMMainFrame::createProblemChoosingClient()
 {
+    wxArrayString arrayPhysicsProblem;
+    
+    arrayPhysicsProblem.Add("Electrostatics");
+	arrayPhysicsProblem.Add("Magnetics");
+    
 	dimSelectPanel->Destroy();
 	
 	problemSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
@@ -222,7 +235,7 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 	wxButton *finishButton = new wxButton(problemSelectPanel, buttonID::ID_buttonFinish, "Finish", wxPoint(125, clientSizeLength - 25 - 5), wxSize(100, 25));
 	wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:", wxPoint(5, 5));
 	
-	wxListBox *physicsProblems = new wxListBox(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
+	physicsProblems->Create(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
 	physicsProblems->SetSelection(0);
 	
 	controller.updateOmniFEMState(systemState::problemChooseing);

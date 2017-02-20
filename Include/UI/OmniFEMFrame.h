@@ -241,15 +241,13 @@ private:
 	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
 	wxSize minSize = wxSize(450, 340);
 	
-	//! The string of the physics problems that Omni-FEM can simulate
-	wxArrayString arrayPhysicsProblem;
-	
-	
 	OmniFEMMainFrameController controller;
 	
 	wxTreeCtrl *modelbuilderTreeCtrl;
 	
 	geometryEditor2DPresentation *twoDimGeometryEditor;
+    
+    wxListBox *physicsProblems = new wxListBox();
 	
     wxDECLARE_EVENT_TABLE();
 };

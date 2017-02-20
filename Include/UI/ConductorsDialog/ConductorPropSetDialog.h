@@ -78,6 +78,8 @@ public:
     //! This function needs to be called in order to retrieve the editted list once the dialog is closed
     std::vector<circuitProperty> getCircuitList();
     
+    std::vector<conductorProperty> getConductorList();
+    
 private:
     wxDECLARE_EVENT_TABLE();  
     

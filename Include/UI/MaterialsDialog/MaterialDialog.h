@@ -71,7 +71,7 @@ private:
     
     blockPropertyDialogElectrostatic *_eStaticMaterialDialog = new blockPropertyDialogElectrostatic();
     
-    void makeDialog(wxArrayString nameArray);
+    void makeDialog();
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material

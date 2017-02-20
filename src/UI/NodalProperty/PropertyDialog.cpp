@@ -24,6 +24,8 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
     
     selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *nodalPropertyNameArray);
     selection->SetFont(*font);
+    if(nodalPropertyNameArray->GetCount() > 0)
+        selection->SetSelection(0);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
     headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);

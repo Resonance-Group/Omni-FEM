@@ -141,9 +141,9 @@
         <File Name="Include/UI/NodalProperty/NodalPropertyDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ConductorsDialog">
-        <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
         <File Name="Include/UI/ConductorsDialog/CircuitPropertyDialog.h"/>
         <File Name="Include/UI/ConductorsDialog/ConductorPropertyDialog.h"/>
+        <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/PreferencesDialog.h"/>
     </VirtualDirectory>
