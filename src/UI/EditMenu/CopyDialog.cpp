@@ -1,4 +1,4 @@
-#include <UI/CopyDialog.h>
+#include <UI/EditMenu/CopyDialog.h>
 
 
 copyDialog::copyDialog() : wxDialog(NULL, wxID_ANY, "Copy")
@@ -20,14 +20,14 @@ copyDialog::copyDialog() : wxDialog(NULL, wxID_ANY, "Copy")
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
-    _rotationCheckBox->Create(this, generalFrameButton::ID_RadioButton1, "Rotation", wxPoint(12, 12), wxSize(65, 17));
+    _rotationCheckBox->Create(this, generalFrameButton::ID_RadioButton1, "Rotation", wxPoint(12, 12), wxSize(75, 17));
     _rotationCheckBox->SetFont(*font);
     _rotationCheckBox->SetValue(true);
     headerSizer->Add(_rotationCheckBox, 0, wxALL, 6);
     
-    wxStaticText *shiftText = new wxStaticText(rotationSizer->GetStaticBox(), wxID_ANY, "Angular Shift (deg):", wxPoint(6, 22), wxSize(95, 13));
+    wxStaticText *shiftText = new wxStaticText(rotationSizer->GetStaticBox(), wxID_ANY, "Angular Shift (deg):", wxPoint(6, 22), wxSize(110, 13));
     shiftText->SetFont(*font);
-    wxStaticText *aboutPointText = new wxStaticText(rotationSizer->GetStaticBox(), wxID_ANY, "About Point (x, y):", wxPoint(6, 48), wxSize(90, 13));
+    wxStaticText *aboutPointText = new wxStaticText(rotationSizer->GetStaticBox(), wxID_ANY, "About Point (x, y):", wxPoint(6, 48), wxSize(105, 13));
     aboutPointText->SetFont(*font);
     _angularShiftTextCtrl->Create(rotationSizer->GetStaticBox(), wxID_ANY, "0", wxPoint(107, 19), wxSize(100, 20));
     _angularShiftTextCtrl->SetFont(*font);
@@ -39,21 +39,23 @@ copyDialog::copyDialog() : wxDialog(NULL, wxID_ANY, "Copy")
     RSLine1->Add(shiftText, 0, wxALL | wxCENTER, 6);
     RSLine1->Add(_angularShiftTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     RSLine2->Add(aboutPointText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+    RSLine2->Add(5, 0, 0);
     RSLine2->Add(_aboutPointXTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    RSLine2->Add(_aboutPointYTextCtrl, 0, wxCENTER | wxALIGN_RIGHT | wxBOTTOM | wxRIGHT, 6);
+    
+    RSLine3->Add(_aboutPointYTextCtrl, 0, wxBOTTOM | wxRIGHT, 6);
     
     rotationSizer->Add(RSLine1);
     rotationSizer->Add(RSLine2);
-    rotationSizer->Add(RSLine3);
+    rotationSizer->Add(RSLine3, 0, wxALIGN_RIGHT);
     
-    _translationCheckBox->Create(this, generalFrameButton::ID_RadioButton2, "Translation", wxPoint(12, 143), wxSize(77, 17));
+    _translationCheckBox->Create(this, generalFrameButton::ID_RadioButton2, "Translation", wxPoint(12, 143), wxSize(90, 17));
     _translationCheckBox->SetFont(*font);
     _translationCheckBox->SetValue(false);
     translationCheckBoxSizer->Add(_translationCheckBox, 0, wxALL, 6);
     
-    wxStaticText *horizontalText = new wxStaticText(this, wxID_ANY, "Horizontal Shift:", wxPoint(6, 22), wxSize(81, 13));
+    wxStaticText *horizontalText = new wxStaticText(this, wxID_ANY, "Horizontal Shift:", wxPoint(6, 22), wxSize(100, 13));
     horizontalText->SetFont(*font);
-    wxStaticText *verticalText = new wxStaticText(this, wxID_ANY, "Vertical Shift:", wxPoint(6, 48), wxSize(69, 13));
+    wxStaticText *verticalText = new wxStaticText(this, wxID_ANY, "Vertical Shift:", wxPoint(6, 48), wxSize(100, 13));
     verticalText->SetFont(*font);
     _horizontalShiftTextCtrl->Create(this, wxID_ANY, "0", wxPoint(107, 19), wxSize(100, 20));
     _horizontalShiftTextCtrl->SetFont(*font);
@@ -63,21 +65,24 @@ copyDialog::copyDialog() : wxDialog(NULL, wxID_ANY, "Copy")
     _verticalShiftTextCtrl->Enable(false);
     
     TSLine1->Add(horizontalText, 0, wxCENTER | wxALL, 6);
+    TSLine1->Add(10, 0, 0);
     TSLine1->Add(_horizontalShiftTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     TSLine2->Add(verticalText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+    TSLine2->Add(10, 0, 0);
     TSLine2->Add(_verticalShiftTextCtrl, 0, wxCENTER | wxRIGHT | wxBOTTOM, 6);
     
     translationSizer->Add(TSLine1);
     translationSizer->Add(TSLine2);
     
-    wxStaticText *copiesText = new wxStaticText(this, wxID_ANY, "Number of Copies:", wxPoint(9, 253), wxSize(94, 13));
+    wxStaticText *copiesText = new wxStaticText(this, wxID_ANY, "Number of Copies:", wxPoint(9, 253), wxSize(105, 13));
     copiesText->SetFont(*font);
     _numberCopiesTextCtrl->Create(this, wxID_ANY, "0", wxPoint(119, 250), wxSize(100, 20));
     _numberCopiesTextCtrl->SetFont(*font);
     
     numCopiesSizer->Add(copiesText, 0, wxCENTER | wxALL, 6);
-    numCopiesSizer->Add(_numberCopiesTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+    numCopiesSizer->Add(13, 0, 0);
+    numCopiesSizer->Add(_numberCopiesTextCtrl, 0, wxCENTER);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(76, 276), wxSize(75, 23));
     okButton->SetFont(*font);
@@ -89,10 +94,10 @@ copyDialog::copyDialog() : wxDialog(NULL, wxID_ANY, "Copy")
     footerSizer->Add(cancelButton, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     topSizer->Add(headerSizer);
-    topSizer->Add(rotationSizer);
+    topSizer->Add(rotationSizer, 0, wxLEFT | wxRIGHT, 6);
     topSizer->Add(translationCheckBoxSizer);
-    topSizer->Add(translationSizer);
-    topSizer->Add(numCopiesSizer);
+    topSizer->Add(translationSizer, 0, wxLEFT | wxRIGHT, 6);
+    topSizer->Add(numCopiesSizer, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
     
     SetSizerAndFit(topSizer);
@@ -101,7 +106,7 @@ copyDialog::copyDialog() : wxDialog(NULL, wxID_ANY, "Copy")
 
 bool copyDialog::rotationIsSelected()
 {
-    return _rotationCheckBox.IsChecked();
+    return _rotationCheckBox->GetValue();
 }
 
 
@@ -120,7 +125,7 @@ void copyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, long
 }
 
 
-void copyDialog::getTranslationCopy(double &horizontalShift, double &veriticalShift, long &numberCopies)
+void copyDialog::getTranslationCopy(double &horizontalShift, double &verticalShift, long &numberCopies)
 {
     double value;
     long numCopies;

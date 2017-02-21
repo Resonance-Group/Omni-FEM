@@ -95,6 +95,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="EditMenu">
         <File Name="src/UI/EditMenu/CopyDialog.cpp"/>
+        <File Name="src/UI/EditMenu/ScalingDialog.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -149,7 +150,10 @@
         <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/PreferencesDialog.h"/>
-      <File Name="Include/UI/CopyDialog.h"/>
+      <VirtualDirectory Name="EditMenu">
+        <File Name="Include/UI/EditMenu/ScalingDialog.h"/>
+        <File Name="Include/UI/EditMenu/CopyDialog.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

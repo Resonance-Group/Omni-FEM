@@ -39,16 +39,16 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-    menuEdit->Append(wxID_ANY, "&Undo");
-    menuEdit->Append(wxID_ANY, "&Copy");
-    menuEdit->Append(wxID_ANY, "&Delete");
-    menuEdit->Append(wxID_ANY, "&Move");
-    menuEdit->Append(wxID_ANY, "&Scale");
-    menuEdit->Append(wxID_ANY, "&Mirror");
-    menuEdit->Append(wxID_ANY, "&Create Radius");
-    menuEdit->Append(wxID_ANY, "&Create Open Boundary");
+    menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
+    menuEdit->Append(EditMenuID::ID_COPY, "&Copy");
+    menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
+    menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
+    menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
+    menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
+    menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
+    menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
     menuEdit->AppendSeparator();
-    menuEdit->Append(menubarID::ID_menubarPreferences, "&Preferences\tCtrl-P");
+    menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
     menuView->Append(wxID_ANY, "&Zoom In");
@@ -116,7 +116,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 	menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarSave,		enable);
 	menuBar->Enable(menubarID::ID_menubarSaveAs,		enable);
-	menuBar->Enable(menubarID::ID_menubarPreferences,	enable);
+	menuBar->Enable(EditMenuID::ID_PREFERENCES,	enable);
 	menuBar->Enable(menubarID::ID_menubarViewResults,	enable);
 	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
@@ -371,7 +371,9 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     
     /* This section is for the Edit menu */
 	EVT_MENU(menubarID::ID_menubarLUASCRIPT, OmniFEMMainFrame::onLuaRun)
-    EVT_MENU(menubarID::ID_menubarPreferences, OmniFEMMainFrame::onPreferences)
+    EVT_MENU(EditMenuID::ID_PREFERENCES, OmniFEMMainFrame::onPreferences)
+    EVT_MENU(EditMenuID::ID_COPY, OmniFEMMainFrame::onCopy)
+    EVT_MENU(EditMenuID::ID_SCALE, OmniFEMMainFrame::onScale)
 	
 	/* This section is for the View menu */
 	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)

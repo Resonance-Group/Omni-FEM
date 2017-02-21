@@ -10,7 +10,6 @@
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
 
-//#include <UI/problemDefinition.h>
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
@@ -18,6 +17,9 @@
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MainFrameController.h>
 #include <UI/PreferencesDialog.h>
+
+#include <UI/EditMenu/CopyDialog.h>
+#include <UI/EditMenu/ScalingDialog.h>
 
 #include <common/BoundaryConditions.h>
 #include <common/enums.h>
@@ -64,6 +66,8 @@ private:
     /* This section is for the Edit menu */
 	void onLuaRun(wxCommandEvent &event);
     void onPreferences(wxCommandEvent &event);
+    void onCopy(wxCommandEvent &event);
+    void onScale(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
 	void onViewResults(wxCommandEvent &event);
