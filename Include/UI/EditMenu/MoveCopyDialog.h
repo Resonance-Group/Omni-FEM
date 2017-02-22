@@ -13,6 +13,7 @@
 class moveCopyDialog : public wxDialog
 {
 private:
+    //! This boolean keeps track of if the dialog box is to be a move or copy dialog
     bool _isMove;
 
     wxTextCtrl *_angularShiftTextCtrl = new wxTextCtrl();
