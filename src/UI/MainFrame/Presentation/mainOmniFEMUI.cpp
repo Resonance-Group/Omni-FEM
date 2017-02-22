@@ -374,6 +374,12 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_PREFERENCES, OmniFEMMainFrame::onPreferences)
     EVT_MENU(EditMenuID::ID_COPY, OmniFEMMainFrame::onCopy)
     EVT_MENU(EditMenuID::ID_SCALE, OmniFEMMainFrame::onScale)
+    EVT_MENU(EditMenuID::ID_MIRROR, OmniFEMMainFrame::onMirror)
+    EVT_MENU(EditMenuID::ID_UNDO, OmniFEMMainFrame::onUndo)
+    EVT_MENU(EditMenuID::ID_DELETE, OmniFEMMainFrame::onDelete)
+    EVT_MENU(EditMenuID::ID_MOVE, OmniFEMMainFrame::onMove)
+    EVT_MENU(EditMenuID::ID_CREATE_RADIUS, OmniFEMMainFrame::onCreateRadius)
+    EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
 	
 	/* This section is for the View menu */
 	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)

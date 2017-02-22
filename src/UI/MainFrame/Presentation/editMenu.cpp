@@ -7,12 +7,23 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-    //static magneticPreference test;
-    static electroStaticPreference test;
-	preferencesDialog *newDiag = new preferencesDialog(test);
-    if(newDiag->ShowModal() == wxID_OK)
+    if(controller.getAbstractProblemPhysics() == physicProblems::electrostatics)
     {
-        newDiag->getPreferences(test);
+        static electroStaticPreference test;
+        preferencesDialog *newDiag = new preferencesDialog(test);
+        if(newDiag->ShowModal() == wxID_OK)
+        {
+            newDiag->getPreferences(test);
+        }
+    }
+    else if(controller.getAbstractProblemPhysics() == physicProblems::magnetics)
+    {
+        static magneticPreference test;
+        preferencesDialog *newDiag = new preferencesDialog(test);
+        if(newDiag->ShowModal() == wxID_OK)
+        {
+            newDiag->getPreferences(test);
+        }
     }
 }
 
@@ -20,7 +31,7 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCopy(wxCommandEvent &event)
 {
-    copyDialog *test = new copyDialog();
+    moveCopyDialog *test = new moveCopyDialog(false);
     if(test->ShowModal() == wxID_OK)
     {
         
@@ -36,6 +47,56 @@ void OmniFEMMainFrame::onScale(wxCommandEvent &event)
     {
         
     }
+}
+
+
+
+void OmniFEMMainFrame::onMirror(wxCommandEvent &event)
+{
+    mirrorDialog *test = new mirrorDialog();
+    if(test->ShowModal() == wxID_OK)
+    {
+        
+    }
+}
+
+
+
+void OmniFEMMainFrame::onUndo(wxCommandEvent &event)
+{
+    
+}
+
+
+
+void OmniFEMMainFrame::onDelete(wxCommandEvent &event)
+{
+    
+}
+
+
+
+void OmniFEMMainFrame::onMove(wxCommandEvent &event)
+{
+    moveCopyDialog *test = new moveCopyDialog(true);
+    if(test->ShowModal() == wxID_OK)
+    {
+        
+    }
+}
+
+
+
+void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
+{
+    
+} 
+
+
+
+void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
+{
+    
 }
 
 

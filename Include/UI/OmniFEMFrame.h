@@ -18,8 +18,9 @@
 #include <UI/MainFrameController.h>
 #include <UI/PreferencesDialog.h>
 
-#include <UI/EditMenu/CopyDialog.h>
+#include <UI/EditMenu/MoveCopyDialog.h>
 #include <UI/EditMenu/ScalingDialog.h>
+#include <UI/EditMenu/MirrorDialog.h>
 
 #include <common/BoundaryConditions.h>
 #include <common/enums.h>
@@ -68,6 +69,12 @@ private:
     void onPreferences(wxCommandEvent &event);
     void onCopy(wxCommandEvent &event);
     void onScale(wxCommandEvent &event);
+    void onMirror(wxCommandEvent &event);
+    void onUndo(wxCommandEvent &event);
+    void onDelete(wxCommandEvent &event);
+    void onMove(wxCommandEvent &event);
+    void onCreateRadius(wxCommandEvent &event);
+    void onCreateOpenBoundary(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
 	void onViewResults(wxCommandEvent &event);

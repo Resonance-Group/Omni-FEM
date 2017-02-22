@@ -94,8 +94,9 @@
         <File Name="src/UI/PropertiesDefinitionDialog/PreferencesDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="EditMenu">
-        <File Name="src/UI/EditMenu/CopyDialog.cpp"/>
         <File Name="src/UI/EditMenu/ScalingDialog.cpp"/>
+        <File Name="src/UI/EditMenu/MirrorDialog.cpp"/>
+        <File Name="src/UI/EditMenu/MoveCopyDialog.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -152,7 +153,8 @@
       <File Name="Include/UI/PreferencesDialog.h"/>
       <VirtualDirectory Name="EditMenu">
         <File Name="Include/UI/EditMenu/ScalingDialog.h"/>
-        <File Name="Include/UI/EditMenu/CopyDialog.h"/>
+        <File Name="Include/UI/EditMenu/MirrorDialog.h"/>
+        <File Name="Include/UI/EditMenu/MoveCopyDialog.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

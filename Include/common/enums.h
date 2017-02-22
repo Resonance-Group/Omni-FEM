@@ -34,12 +34,12 @@ enum menubarID
 
 enum EditMenuID
 {
-    NO_EDIT_ID,
+    NO_EDIT_ID = 100,
     ID_UNDO,
-    ID_COPY = 100,
+    ID_COPY,
     ID_DELETE,
     ID_MOVE,
-    ID_SCALE = 103,
+    ID_SCALE,
     ID_MIRROR,
     ID_CREATE_RADIUS,
     ID_CREATE_OPEN_BOUNDARY,
@@ -49,7 +49,7 @@ enum EditMenuID
 
 enum ViewMenuID
 {
-    NO_VIEW_ID,
+    NO_VIEW_ID = 200,
     ID_ZOOM_IN,
     ID_ZOOM_OUT,
     ID_ZOOM_WINDOW,
