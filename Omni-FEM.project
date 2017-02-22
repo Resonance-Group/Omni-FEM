@@ -97,6 +97,7 @@
         <File Name="src/UI/EditMenu/ScalingDialog.cpp"/>
         <File Name="src/UI/EditMenu/MirrorDialog.cpp"/>
         <File Name="src/UI/EditMenu/MoveCopyDialog.cpp"/>
+        <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -155,6 +156,7 @@
         <File Name="Include/UI/EditMenu/ScalingDialog.h"/>
         <File Name="Include/UI/EditMenu/MirrorDialog.h"/>
         <File Name="Include/UI/EditMenu/MoveCopyDialog.h"/>
+        <File Name="Include/UI/EditMenu/OpenBoundaryDialog.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

@@ -21,6 +21,7 @@
 #include <UI/EditMenu/MoveCopyDialog.h>
 #include <UI/EditMenu/ScalingDialog.h>
 #include <UI/EditMenu/MirrorDialog.h>
+#include <UI/EditMenu/OpenBoundaryDialog.h>
 
 #include <common/BoundaryConditions.h>
 #include <common/enums.h>

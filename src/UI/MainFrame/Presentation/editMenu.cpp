@@ -96,7 +96,11 @@ void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
 {
-    
+    openBoundaryDialog *test = new openBoundaryDialog();
+    if(test->ShowModal() == wxID_OK)
+    {
+        
+    }
 }
 
 

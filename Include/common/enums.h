@@ -232,4 +232,12 @@ enum magneticBlockPropertyDiag
 };
 
 
+enum OpenBoundaryEdge
+{
+    NO_BOUNDARY_DEFINED,
+    DIRICHLET,
+    NEUMANN
+};
+
+
 #endif
