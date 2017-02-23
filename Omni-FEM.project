@@ -92,6 +92,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="PropertiesDefinitionDialog">
         <File Name="src/UI/PropertiesDefinitionDialog/PreferencesDialog.cpp"/>
+        <File Name="src/UI/PropertiesDefinitionDialog/GridPreferences.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="EditMenu">
         <File Name="src/UI/EditMenu/ScalingDialog.cpp"/>
@@ -166,6 +167,7 @@
         <File Name="Include/UI/ViewMenu/ZoomWindow.h"/>
         <File Name="Include/UI/ViewMenu/LuaConsole.h"/>
       </VirtualDirectory>
+      <File Name="Include/UI/GridPreferencesDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

@@ -58,6 +58,16 @@ enum ViewMenuID
 };
 
 
+enum GridMenuID
+{
+    NO_GRID_ID = 300,
+    ID_SHOW_GRID,
+    ID_SNAP_GRID,
+    ID_SET_GRID,
+    ID_SET_GRID_PREFERENCES
+}
+
+
 //! Enum contianing the dimension of the problem
 /*! 
 	Please note that Omni-FEM does not support all of these dimensions.
