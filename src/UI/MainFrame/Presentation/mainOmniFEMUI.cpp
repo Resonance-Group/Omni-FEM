@@ -51,15 +51,15 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
-    menuView->Append(wxID_ANY, "&Zoom In");
-    menuView->Append(wxID_ANY, "&Zoom Out");
-    menuView->Append(wxID_ANY, "&Zoom Window");
+    menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
+    menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
+    menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
     menuView->AppendSeparator();
-    menuView->Append(menubarID::ID_menubarDispBlockLabels, "&Show Block Name");
-	menuView->Append(menubarID::ID_menubarDispStatusBar, "&Show Status Bar");
+    menuView->Append(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
+	menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
     menuView->AppendSeparator();
-    menuView->Append(wxID_ANY, "&Status Bar");
-    menuView->Append(menubarID::ID_menubarDispLuaConsole, "&Lua Console");
+    menuView->Append(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
+    menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
     menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
     
     /* Create hte menu listing for the grid menu option */
@@ -383,12 +383,18 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	
 	/* This section is for the View menu */
 	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)
+    EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)
+    EVT_MENU(ViewMenuID::ID_ZOOM_OUT, OmniFEMMainFrame::onZoomOut)
+    EVT_MENU(ViewMenuID::ID_ZOOM_WINDOW, OmniFEMMainFrame::onZoomWindow)
+    EVT_MENU(ViewMenuID::ID_SHOW_BLOCK_NAMES, OmniFEMMainFrame::onBlockName)
+    EVT_MENU(ViewMenuID::ID_SHOW_ORPHANS, OmniFEMMainFrame::onOrphans)
+    EVT_MENU(ViewMenuID::ID_SHOW_STATUSBAR, OmniFEMMainFrame::onStatusBar)
+    EVT_MENU(ViewMenuID::ID_LUA_CONSOLE, OmniFEMMainFrame::onLua)
  /*   EVT_MENU(menubarID::ID_menubarDispBlockLabels, OmniFEMMainFrame::onDispGrid)
     EVT_MENU(menubarID::ID_menubarDispStatusBar, OmniFEMMainFrame::onSnapGrid)
     EVT_MENU(menubarID::ID_menubarDispLuaConsole, OmniFEMMainFrame::onSetGrid)*/
 	
 	/* This section is for the Problem menu */
-	EVT_MENU(menubarID::ID_menubarPrecision, OmniFEMMainFrame::onPrecision)
 	
     /* This section is for the Grid menu */
 /*    EVT_MENU(menubarID::ID_menubarShowGrid, OmniFEMMainFrame::onDispGrid)

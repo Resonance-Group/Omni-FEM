@@ -29,7 +29,7 @@ public:
     
     ~openBoundaryDialog();
     
-    void getParameters(int &numberLayers, double &radius, double &horizontalCenter, double &verticalCenter, OpenBoundaryEdge &edgeType);
+    void getParameters(long &numberLayers, double &radius, double &horizontalCenter, double &verticalCenter, OpenBoundaryEdge &edgeType);
 };
 
 

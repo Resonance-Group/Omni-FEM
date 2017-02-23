@@ -4,8 +4,3 @@
 
 #include "UI/OmniFEMFrame.h"
 
-void OmniFEMMainFrame::onPrecision(wxCommandEvent &event)
-{
-	wxMessageBox("Precision set", "Precision", wxOK | wxICON_INFORMATION);
-	wxMessageBox("test", "test", wxOK);
-}

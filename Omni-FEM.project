@@ -99,6 +99,10 @@
         <File Name="src/UI/EditMenu/MoveCopyDialog.cpp"/>
         <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="ViewMenu">
+        <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>
+        <File Name="src/UI/ViewMenu/LuaConsole.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ProblemDefinition.cpp"/>
@@ -157,6 +161,10 @@
         <File Name="Include/UI/EditMenu/MirrorDialog.h"/>
         <File Name="Include/UI/EditMenu/MoveCopyDialog.h"/>
         <File Name="Include/UI/EditMenu/OpenBoundaryDialog.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ViewMenu">
+        <File Name="Include/UI/ViewMenu/ZoomWindow.h"/>
+        <File Name="Include/UI/ViewMenu/LuaConsole.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

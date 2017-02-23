@@ -27,8 +27,6 @@ enum menubarID
     ID_menubarPoint,
     ID_menubarCircuitsCond,
     ID_menubarMatLibrary,
-    ID_menubarDispBlockLabels,
-    ID_menubarDispStatusBar,
     ID_menubarDispLuaConsole
 };
 
@@ -52,8 +50,11 @@ enum ViewMenuID
     NO_VIEW_ID = 200,
     ID_ZOOM_IN,
     ID_ZOOM_OUT,
-    ID_ZOOM_WINDOW,
-    ID_LUA_CONSOLE
+    ID_ZOOM_WINDOW = 203,
+    ID_LUA_CONSOLE,
+    ID_SHOW_STATUSBAR,
+    ID_SHOW_BLOCK_NAMES,
+    ID_SHOW_ORPHANS
 };
 
 
@@ -211,7 +212,10 @@ enum generalFrameButton
     ID_ComboBox2,
     ID_RadioButton1,
     ID_RadioButton2, 
-    ID_CHECKBOX1
+    ID_CHECKBOX1, 
+    ID_BUTTON1,
+    ID_BUTTON2,
+    ID_BUTTON3
 };
 
 enum magneticBlockPropertyDiag

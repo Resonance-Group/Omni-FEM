@@ -82,9 +82,26 @@ openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Bounda
 
 
 
-void openBoundaryDialog::getParameters(int &numberLayers, double &radius, double &horizontalCenter, double &verticalCenter, OpenBoundaryEdge &edgeType)
+void openBoundaryDialog::getParameters(long &numberLayers, double &radius, double &horizontalCenter, double &verticalCenter, OpenBoundaryEdge &edgeType)
 {
+    double value1;
+    long value2;
+    int selection;
     
+    _numberLayersTextCtrl->GetValue().ToLong(&value2);
+    numberLayers = value2;
+    
+    _radiusTextCtrl->GetValue().ToDouble(&value1);
+    radius = value1;
+    
+    _horizontalCenterTextCtrl->GetValue().ToDouble(&value1);
+    horizontalCenter = value1;
+    
+    _verticalCenterTextCtrl->GetValue().ToDouble(&value1);
+    verticalCenter = value1;
+    
+    selection = _edgeTypeComboBox->GetSelection() + 1;
+    edgeType = (OpenBoundaryEdge)selection;
 }
 
 

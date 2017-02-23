@@ -116,6 +116,7 @@ moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
 }
 
 
+
 bool moveCopyDialog::rotationIsSelected()
 {
     return _rotationCheckBox->GetValue();
@@ -137,6 +138,7 @@ void moveCopyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, 
 }
 
 
+
 void moveCopyDialog::getTranslationCopy(double &horizontalShift, double &verticalShift, long &numberCopies)
 {
     double value;
@@ -155,6 +157,7 @@ void moveCopyDialog::getTranslationCopy(double &horizontalShift, double &vertica
     else
         numberCopies = 0;
 }
+
 
 
 void moveCopyDialog::onRotationCheck(wxCommandEvent &event)

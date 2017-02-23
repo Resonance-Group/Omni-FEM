@@ -23,6 +23,9 @@
 #include <UI/EditMenu/MirrorDialog.h>
 #include <UI/EditMenu/OpenBoundaryDialog.h>
 
+#include <UI/ViewMenu/ZoomWindow.h>
+#include <UI/ViewMenu/LuaConsole.h>
+
 #include <common/BoundaryConditions.h>
 #include <common/enums.h>
 
@@ -79,9 +82,18 @@ private:
 	
 	/* This section is for the View Menu */
 	void onViewResults(wxCommandEvent &event);
+    void onZoomIn(wxCommandEvent &event);
+    void onZoomOut(wxCommandEvent &event);
+    void onZoomWindow(wxCommandEvent &event);
+    void onBlockName(wxCommandEvent &event);
+    void onOrphans(wxCommandEvent &event);
+    void onStatusBar(wxCommandEvent &event);
+    void onLua(wxCommandEvent &event);
+    
+    
 	
 	/* This section is for the Problem Menu */
-	void onPrecision(wxCommandEvent &event);
+//	void onPrecision(wxCommandEvent &event);
 	
     /* This section is for the Grid Menu */
     void onDispGrid(wxCommandEvent &event);
