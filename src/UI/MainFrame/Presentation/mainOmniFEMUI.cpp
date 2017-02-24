@@ -27,6 +27,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuBar->Append(menuGrid, "&Grid");
     menuBar->Append(menuProperties, "&Properties");
     menuBar->Append(menuMesh, "&Mesh");
+    menuBar->Append(analysisMenu, "&Analysis");
     menuBar->Append(menuHelp, "&Help");
     
     
@@ -63,23 +64,28 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
     
     /* Create hte menu listing for the grid menu option */
-    menuGrid->Append(menubarID::ID_menubarShowGrid, "&Display Grid");
-    menuGrid->Append(menubarID::ID_menubarSnapGrid, "&Snap to Grid");
+    menuGrid->Append(GridMenuID::ID_SHOW_GRID, "&Display Grid");
+    menuGrid->Append(GridMenuID::ID_SNAP_GRID, "&Snap to Grid");
     menuGrid->Append(GridMenuID::ID_SET_GRID_PREFERENCES, "&Set Grid Preferences");
     
     /* Create the menu listing for the properties option */
-    menuProperties->Append(menubarID::ID_menubarMaterials, "&Materials\tCtrl-M");
-    menuProperties->Append(menubarID::ID_menubarBoundary, "&Boundary Conditions\tCtrl-B");
-    menuProperties->Append(menubarID::ID_menubarPoint, "&Nodal Properties");
-    menuProperties->Append(menubarID::ID_menubarCircuitsCond, "&Circuits/Conductors");
+    menuProperties->Append(PropertiesMenuID::ID_MATERIALS, "&Materials\tCtrl-M");
+    menuProperties->Append(PropertiesMenuID::ID_BOUNDARY, "&Boundary Conditions\tCtrl-B");
+    menuProperties->Append(PropertiesMenuID::ID_POINT, "&Nodal Properties");
+    menuProperties->Append(PropertiesMenuID::ID_CONDUCTORS, "&Circuits/Conductors");
+    menuProperties->Append(PropertiesMenuID::ID_EXTERIOR_REGION, "&Exterior Region");
     menuProperties->AppendSeparator();
-    menuProperties->Append(menubarID::ID_menubarMatLibrary, "&Materials Library\tCtrl-L");
+    menuProperties->Append(PropertiesMenuID::ID_MATERIAL_LIBRARY, "&Materials Library\tCtrl-L");
     
     
 	/* Create the menu listing for the mesh menu */
 	menuMesh->Append(menubarID::ID_menubarCreateMesh, "&Create Mesh");
 	menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
 	menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
+    
+    /* Creating the listinf of the Analysis menu */
+    analysisMenu->Append(wxID_ANY, "Analyze");
+    analysisMenu->Append(wxID_ANY, "View Results");
     
     /* Creates the menu listing of the help menu */
     menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
@@ -397,11 +403,12 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(GridMenuID::ID_SET_GRID_PREFERENCES, OmniFEMMainFrame::onSetGridPreferences) 
     
     /* This section is for the Properties menu */
-    EVT_MENU(menubarID::ID_menubarMaterials, OmniFEMMainFrame::onMaterials)
-    EVT_MENU(menubarID::ID_menubarBoundary, OmniFEMMainFrame::onBoundary)
-    EVT_MENU(menubarID::ID_menubarPoint, OmniFEMMainFrame::onPointProperty)
-    EVT_MENU(menubarID::ID_menubarCircuitsCond, OmniFEMMainFrame::onCircuitsConductor)
-    EVT_MENU(menubarID::ID_menubarMatLibrary, OmniFEMMainFrame::onMatLibrary)
+    EVT_MENU(PropertiesMenuID::ID_MATERIALS, OmniFEMMainFrame::onMaterials)
+    EVT_MENU(PropertiesMenuID::ID_BOUNDARY, OmniFEMMainFrame::onBoundary)
+    EVT_MENU(PropertiesMenuID::ID_POINT, OmniFEMMainFrame::onPointProperty)
+    EVT_MENU(PropertiesMenuID::ID_CONDUCTORS, OmniFEMMainFrame::onCircuitsConductor)
+    EVT_MENU(PropertiesMenuID::ID_EXTERIOR_REGION, OmniFEMMainFrame::onExteriorRegion)
+    EVT_MENU(PropertiesMenuID::ID_MATERIAL_LIBRARY, OmniFEMMainFrame::onMatLibrary)
     
 	/*This section is for the mesh menu */
     EVT_MENU(menubarID::ID_menubarCreateMesh, OmniFEMMainFrame::onCreateMesh)

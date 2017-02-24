@@ -107,6 +107,7 @@ private:
     void onBoundary(wxCommandEvent &event);
     void onPointProperty(wxCommandEvent &event);
     void onCircuitsConductor(wxCommandEvent &event);
+    void onExteriorRegion(wxCommandEvent &event);
     void onMatLibrary(wxCommandEvent &event);
     
 	/* This section is for the Mesh menu */
@@ -230,6 +231,9 @@ private:
     
     //! This would be the mesh menu in the menu bar
     wxMenu *menuMesh = new wxMenu;
+    
+    //! This is the menu entry for hte analsis
+    wxMenu *analysisMenu = new wxMenu;
     
 	//! This would be the help menu in the menu bar
     wxMenu *menuHelp = new wxMenu;

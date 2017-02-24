@@ -21,11 +21,7 @@ enum menubarID
 	ID_menubarLUASCRIPT,
     ID_menubarShowGrid,
     ID_menubarSnapGrid,
-    ID_menubarMaterials,
-    ID_menubarBoundary,
-    ID_menubarPoint,
-    ID_menubarCircuitsCond,
-    ID_menubarMatLibrary,
+    
     ID_menubarDispLuaConsole
 };
 
@@ -49,7 +45,7 @@ enum ViewMenuID
     NO_VIEW_ID = 200,
     ID_ZOOM_IN,
     ID_ZOOM_OUT,
-    ID_ZOOM_WINDOW = 203,
+    ID_ZOOM_WINDOW,
     ID_LUA_CONSOLE,
     ID_SHOW_STATUSBAR,
     ID_SHOW_BLOCK_NAMES,
@@ -63,6 +59,19 @@ enum GridMenuID
     ID_SHOW_GRID,
     ID_SNAP_GRID,
     ID_SET_GRID_PREFERENCES
+};
+
+
+
+enum PropertiesMenuID
+{
+    NO_PROPERTY_ID = 400,
+    ID_MATERIALS,
+    ID_BOUNDARY,
+    ID_POINT,
+    ID_CONDUCTORS,
+    ID_EXTERIOR_REGION,
+    ID_MATERIAL_LIBRARY
 };
 
 

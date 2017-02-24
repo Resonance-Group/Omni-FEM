@@ -30,6 +30,12 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
 
 
 
+void OmniFEMMainFrame::onExteriorRegion(wxCommandEvent &event)
+{
+    
+}
+
+
 void OmniFEMMainFrame::onMatLibrary(wxCommandEvent &event)
 {
     
