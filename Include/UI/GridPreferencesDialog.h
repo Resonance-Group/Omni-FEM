@@ -5,10 +5,12 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
-#include <wx/sizers.h>
+#include <wx/combobox.h>
+#include <wx/sizer.h>
+#include <wx/arrstr.h>
 
 
-class gridPreferences : wxDialog
+class gridPreferences : public wxDialog
 {
 private:
     wxTextCtrl *_ppuTextCtrl = new wxTextCtrl();
@@ -21,7 +23,9 @@ private:
     
     wxCheckBox *_showOriginCheckBox = new wxCheckBox(); 
     
-    wxCheckBox *_showBlockNameCheckBox = new wxCheckBox(); 
+    wxCheckBox *_showBlockNameCheckBox = new wxCheckBox();
+
+    wxComboBox *_coordinateComboBox = new wxComboBox();
     
     void updateInterface();
 public:

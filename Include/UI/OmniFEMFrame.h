@@ -26,6 +26,8 @@
 #include <UI/ViewMenu/ZoomWindow.h>
 #include <UI/ViewMenu/LuaConsole.h>
 
+#include <UI/GridPreferencesDialog.h>
+
 #include <common/BoundaryConditions.h>
 #include <common/enums.h>
 
@@ -98,7 +100,7 @@ private:
     /* This section is for the Grid Menu */
     void onDispGrid(wxCommandEvent &event);
     void onSnapGrid(wxCommandEvent &event);
-    void onSetGrid(wxCommandEvent &event);
+    void onSetGridPreferences(wxCommandEvent &event);
     
     /* Thos section is for the Properties Menu */
     void onMaterials(wxCommandEvent &event);

@@ -34,6 +34,7 @@
           <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>

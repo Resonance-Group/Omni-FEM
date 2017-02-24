@@ -65,7 +65,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     /* Create hte menu listing for the grid menu option */
     menuGrid->Append(menubarID::ID_menubarShowGrid, "&Display Grid");
     menuGrid->Append(menubarID::ID_menubarSnapGrid, "&Snap to Grid");
-    menuGrid->Append(menubarID::ID_menubarSetGrid, "&Set Grid Preferences");
+    menuGrid->Append(GridMenuID::ID_SET_GRID_PREFERENCES, "&Set Grid Preferences");
     
     /* Create the menu listing for the properties option */
     menuProperties->Append(menubarID::ID_menubarMaterials, "&Materials\tCtrl-M");
@@ -390,16 +390,11 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(ViewMenuID::ID_SHOW_ORPHANS, OmniFEMMainFrame::onOrphans)
     EVT_MENU(ViewMenuID::ID_SHOW_STATUSBAR, OmniFEMMainFrame::onStatusBar)
     EVT_MENU(ViewMenuID::ID_LUA_CONSOLE, OmniFEMMainFrame::onLua)
- /*   EVT_MENU(menubarID::ID_menubarDispBlockLabels, OmniFEMMainFrame::onDispGrid)
-    EVT_MENU(menubarID::ID_menubarDispStatusBar, OmniFEMMainFrame::onSnapGrid)
-    EVT_MENU(menubarID::ID_menubarDispLuaConsole, OmniFEMMainFrame::onSetGrid)*/
-	
-	/* This section is for the Problem menu */
 	
     /* This section is for the Grid menu */
-/*    EVT_MENU(menubarID::ID_menubarShowGrid, OmniFEMMainFrame::onDispGrid)
-    EVT_MENU(menubarID::ID_menubarSnapGrid, OmniFEMMainFrame::onSnapGrid)
-    EVT_MENU(menubarID::ID_menubarSetGrid, OmniFEMMainFrame::onSetGrid) */
+    EVT_MENU(GridMenuID::ID_SHOW_GRID, OmniFEMMainFrame::onDispGrid)
+    EVT_MENU(GridMenuID::ID_SNAP_GRID, OmniFEMMainFrame::onSnapGrid)
+    EVT_MENU(GridMenuID::ID_SET_GRID_PREFERENCES, OmniFEMMainFrame::onSetGridPreferences) 
     
     /* This section is for the Properties menu */
     EVT_MENU(menubarID::ID_menubarMaterials, OmniFEMMainFrame::onMaterials)

@@ -21,7 +21,6 @@ enum menubarID
 	ID_menubarLUASCRIPT,
     ID_menubarShowGrid,
     ID_menubarSnapGrid,
-    ID_menubarSetGrid,
     ID_menubarMaterials,
     ID_menubarBoundary,
     ID_menubarPoint,
@@ -63,9 +62,8 @@ enum GridMenuID
     NO_GRID_ID = 300,
     ID_SHOW_GRID,
     ID_SNAP_GRID,
-    ID_SET_GRID,
     ID_SET_GRID_PREFERENCES
-}
+};
 
 
 //! Enum contianing the dimension of the problem
