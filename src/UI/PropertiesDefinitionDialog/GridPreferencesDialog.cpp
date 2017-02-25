@@ -65,7 +65,7 @@ gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid 
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(23, 133), wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxButton *cancelButton = new wxButton(this, wxID_ANY, "Cancel", wxPoint(104, 133), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(104, 133), wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
