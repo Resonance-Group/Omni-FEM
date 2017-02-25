@@ -1,6 +1,10 @@
 #ifndef GRIDPREFERENCES_H_
 #define GRIDPREFERENCES_H_
 
+#include <string>
+#include <iostream>
+#include <iomanip>
+
 #include <wx/wx.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
@@ -9,10 +13,14 @@
 #include <wx/sizer.h>
 #include <wx/arrstr.h>
 
+#include <common/GridPreferences.h>
 
-class gridPreferences : public wxDialog
+
+class gridPreferencesDialog : public wxDialog
 {
 private:
+    gridPreferences _preferences;
+
     wxTextCtrl *_ppuTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *_gridSizeTextCtrl = new wxTextCtrl();
@@ -30,13 +38,13 @@ private:
     void updateInterface();
 public:
 
-    gridPreferences();
+    gridPreferencesDialog();
     
-    ~gridPreferences();
+    ~gridPreferencesDialog();
     
-    void getParameters();
+    void getParameters(gridPreferences &preferences);
     
-    void setParameters();
+    void setParameters(gridPreferences &preferences);
 };
 
 #endif

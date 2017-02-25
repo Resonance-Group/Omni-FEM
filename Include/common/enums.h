@@ -75,6 +75,25 @@ enum PropertiesMenuID
 };
 
 
+
+enum MeshMenuID
+{
+    NO_MESH_MENU_ID = 500,
+    ID_CREATE_MESH,
+    ID_SHOW_MESH,
+    ID_DELETE_MESH
+};
+
+
+
+enum AnalysisMenuID
+{
+    NO_ANALYSIS_MENU_ID = 600,
+    ID_ANALYZE,
+    ID_VIEW_RESULTS
+};
+
+
 //! Enum contianing the dimension of the problem
 /*! 
 	Please note that Omni-FEM does not support all of these dimensions.
@@ -141,6 +160,7 @@ enum unitLengthEnum
 //! This enum is used to set what coordinate system Omni-FEM should use when solving
 enum planarCoordinateEnum
 {
+    NO_COORDINATE_DEFINED,
     CARTESIAN,
     POLAR
 };
