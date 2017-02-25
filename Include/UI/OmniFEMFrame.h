@@ -18,6 +18,8 @@
 #include <UI/MainFrameController.h>
 #include <UI/PreferencesDialog.h>
 
+#include <UI/ExteriorRegion.h>
+
 #include <UI/EditMenu/MoveCopyDialog.h>
 #include <UI/EditMenu/ScalingDialog.h>
 #include <UI/EditMenu/MirrorDialog.h>

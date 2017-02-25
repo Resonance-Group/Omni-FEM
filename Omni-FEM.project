@@ -35,6 +35,7 @@
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>
@@ -169,6 +170,7 @@
         <File Name="Include/UI/ViewMenu/LuaConsole.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/GridPreferencesDialog.h"/>
+      <File Name="Include/UI/ExteriorRegion.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
