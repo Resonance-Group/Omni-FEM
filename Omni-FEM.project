@@ -36,6 +36,7 @@
           <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/AnalysisMenu.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>
@@ -70,6 +71,10 @@
           <VirtualDirectory Name="Abstraction">
             <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>
           </VirtualDirectory>
+        </VirtualDirectory>
+        <VirtualDirectory Name="GeometryDialogs">
+          <File Name="src/UI/Geometry/GeometryDialogs/SegmentPropertyDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
         </VirtualDirectory>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
@@ -171,6 +176,10 @@
       </VirtualDirectory>
       <File Name="Include/UI/GridPreferencesDialog.h"/>
       <File Name="Include/UI/ExteriorRegion.h"/>
+      <VirtualDirectory Name="GeometryDialog">
+        <File Name="Include/UI/GeometryDialog/SegmentPropertyDialog.h"/>
+      </VirtualDirectory>
+      <File Name="Include/UI/BlockPropertyDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -192,6 +201,10 @@
       <File Name="Include/common/omniFEMEvent.h"/>
       <File Name="Include/common/JilesAthertonParameters.h"/>
       <File Name="Include/common/GridPreferences.h"/>
+      <VirtualDirectory Name="GeometryProperties">
+        <File Name="Include/common/GeometryProperties/SegmentProperties.h"/>
+        <File Name="Include/common/GeometryProperties/BlockProperty.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

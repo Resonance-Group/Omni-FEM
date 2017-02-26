@@ -30,10 +30,12 @@
 
 #include <UI/GridPreferencesDialog.h>
 
-#include <common/BoundaryConditions.h>
 #include <common/enums.h>
 
-
+/* Delete after Testing */
+#include <common/ElectroStaticMaterial.h>
+#include <common/GeometryProperties/BlockProperty.h>
+#include <UI/BlockPropertyDialog.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -85,7 +87,6 @@ private:
     void onCreateOpenBoundary(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
-	void onViewResults(wxCommandEvent &event);
     void onZoomIn(wxCommandEvent &event);
     void onZoomOut(wxCommandEvent &event);
     void onZoomWindow(wxCommandEvent &event);
@@ -93,11 +94,6 @@ private:
     void onOrphans(wxCommandEvent &event);
     void onStatusBar(wxCommandEvent &event);
     void onLua(wxCommandEvent &event);
-    
-    
-	
-	/* This section is for the Problem Menu */
-//	void onPrecision(wxCommandEvent &event);
 	
     /* This section is for the Grid Menu */
     void onDispGrid(wxCommandEvent &event);
@@ -117,8 +113,10 @@ private:
 	void onShowMesh(wxCommandEvent &event);
 	void onDeleteMesh(wxCommandEvent &event);
     
-    /* This section is for the Help menu */
-	
+    /* This section is for the Analysis menu */
+    void onAnalyze(wxCommandEvent &event);
+    void onViewResults(wxCommandEvent &event);
+    
 	//! Event called to view the manual
     void onManual(wxCommandEvent &event);
 	

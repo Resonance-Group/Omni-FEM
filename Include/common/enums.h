@@ -122,7 +122,9 @@ enum class physicProblems
 {
     NO_PHYSICS_DEFINED,
 	electrostatics,
-	magnetics
+	magnetics,
+    PROB_ELECTROSTATIC,
+    PROB_MAGNETICS
 };
 
 

@@ -4,16 +4,16 @@
 
 #include "UI/OmniFEMFrame.h"
 
-void OmniFEMMainFrame::onViewResults(wxCommandEvent &event)
-{
-	wxMessageBox("You are viewing results!", "Results", wxOK | wxCANCEL | wxICON_INFORMATION);
-}
-
-
 
 void OmniFEMMainFrame::onZoomIn(wxCommandEvent &event)
 {
-    
+    std::vector<electrostaticMaterial> test;
+    blockProperty test3;
+    blockPropertyDialog *test4 = new blockPropertyDialog(test, test3, false);
+    if(test4->ShowModal() == wxID_OK)
+    {
+        test4->getBlockProperty(test3);
+    }
 }
 
 

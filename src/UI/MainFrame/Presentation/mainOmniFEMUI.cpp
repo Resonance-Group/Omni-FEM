@@ -61,7 +61,6 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuView->AppendSeparator();
     menuView->Append(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
     menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
-    menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
     
     /* Create hte menu listing for the grid menu option */
     menuGrid->Append(GridMenuID::ID_SHOW_GRID, "&Display Grid");
@@ -84,8 +83,8 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 	menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
     
     /* Creating the listinf of the Analysis menu */
-    analysisMenu->Append(wxID_ANY, "Analyze");
-    analysisMenu->Append(wxID_ANY, "View Results");
+    analysisMenu->Append(AnalysisMenuID::ID_ANALYZE, "Analyze");
+    analysisMenu->Append(AnalysisMenuID::ID_VIEW_RESULTS, "View Results");
     
     /* Creates the menu listing of the help menu */
     menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
@@ -123,10 +122,8 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 	menuBar->Enable(menubarID::ID_menubarSave,		enable);
 	menuBar->Enable(menubarID::ID_menubarSaveAs,		enable);
 	menuBar->Enable(EditMenuID::ID_PREFERENCES,	enable);
-	menuBar->Enable(menubarID::ID_menubarViewResults,	enable);
 	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
-//	menuBar->Enable(menubarID::ID_menubarPrecision,	enable);
 	
 	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	enable);
 }
@@ -388,7 +385,6 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
 	
 	/* This section is for the View menu */
-	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)
     EVT_MENU(ViewMenuID::ID_ZOOM_OUT, OmniFEMMainFrame::onZoomOut)
     EVT_MENU(ViewMenuID::ID_ZOOM_WINDOW, OmniFEMMainFrame::onZoomWindow)
@@ -414,6 +410,10 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(menubarID::ID_menubarCreateMesh, OmniFEMMainFrame::onCreateMesh)
 	EVT_MENU(menubarID::ID_menubarShowMesh, OmniFEMMainFrame::onShowMesh)
 	EVT_MENU(menubarID::ID_menubarDeleteMesh, OmniFEMMainFrame::onDeleteMesh)
+    
+    /* This section is for the Analysis menu */
+    EVT_MENU(AnalysisMenuID::ID_ANALYZE, OmniFEMMainFrame::onViewResults)
+	EVT_MENU(AnalysisMenuID::ID_VIEW_RESULTS, OmniFEMMainFrame::onAnalyze)
 	
     /* This section is for the Help menu */
 	EVT_MENU(menubarID::ID_menubarManual, OmniFEMMainFrame::onManual)
