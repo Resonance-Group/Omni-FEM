@@ -3,6 +3,97 @@
 
 
 
+//! Enum for the menus of the menu bar
+enum menubarID
+{
+    ID_menubarNew,
+    ID_menubarSave,
+    ID_menubarSaveAs,
+    ID_menubarPreferences,
+    ID_menubarManual,
+    ID_menubarLicense,
+	ID_menubarViewResults,
+	ID_menubarCreateMesh,
+	ID_menubarShowMesh,
+	ID_menubarDeleteMesh,
+	ID_menubarPrecision,
+	ID_menubarOpen,
+	ID_menubarLUASCRIPT,
+    ID_menubarShowGrid,
+    ID_menubarSnapGrid,
+    
+    ID_menubarDispLuaConsole
+};
+
+enum EditMenuID
+{
+    NO_EDIT_ID = 100,
+    ID_UNDO,
+    ID_COPY,
+    ID_DELETE,
+    ID_MOVE,
+    ID_SCALE,
+    ID_MIRROR,
+    ID_CREATE_RADIUS,
+    ID_CREATE_OPEN_BOUNDARY,
+    ID_PREFERENCES
+};
+
+
+enum ViewMenuID
+{
+    NO_VIEW_ID = 200,
+    ID_ZOOM_IN,
+    ID_ZOOM_OUT,
+    ID_ZOOM_WINDOW,
+    ID_LUA_CONSOLE,
+    ID_SHOW_STATUSBAR,
+    ID_SHOW_BLOCK_NAMES,
+    ID_SHOW_ORPHANS
+};
+
+
+enum GridMenuID
+{
+    NO_GRID_ID = 300,
+    ID_SHOW_GRID,
+    ID_SNAP_GRID,
+    ID_SET_GRID_PREFERENCES
+};
+
+
+
+enum PropertiesMenuID
+{
+    NO_PROPERTY_ID = 400,
+    ID_MATERIALS,
+    ID_BOUNDARY,
+    ID_POINT,
+    ID_CONDUCTORS,
+    ID_EXTERIOR_REGION,
+    ID_MATERIAL_LIBRARY
+};
+
+
+
+enum MeshMenuID
+{
+    NO_MESH_MENU_ID = 500,
+    ID_CREATE_MESH,
+    ID_SHOW_MESH,
+    ID_DELETE_MESH
+};
+
+
+
+enum AnalysisMenuID
+{
+    NO_ANALYSIS_MENU_ID = 600,
+    ID_ANALYZE,
+    ID_VIEW_RESULTS
+};
+
+
 //! Enum contianing the dimension of the problem
 /*! 
 	Please note that Omni-FEM does not support all of these dimensions.
@@ -29,8 +120,11 @@ enum class problemDimension
 */
 enum class physicProblems
 {
+    NO_PHYSICS_DEFINED,
 	electrostatics,
-	magnetics
+	magnetics,
+    PROB_ELECTROSTATIC,
+    PROB_MAGNETICS
 };
 
 
@@ -68,6 +162,7 @@ enum unitLengthEnum
 //! This enum is used to set what coordinate system Omni-FEM should use when solving
 enum planarCoordinateEnum
 {
+    NO_COORDINATE_DEFINED,
     CARTESIAN,
     POLAR
 };
@@ -156,7 +251,12 @@ enum generalFrameButton
     ID_ComboBox2,
     ID_RadioButton1,
     ID_RadioButton2, 
-    ID_CHECKBOX1
+    ID_CHECKBOX1, 
+    ID_BUTTON1,
+    ID_BUTTON2,
+    ID_BUTTON3,
+    ID_TREECTRL1,
+    ID_TREECTRL2
 };
 
 enum magneticBlockPropertyDiag
@@ -174,6 +274,14 @@ enum magneticBlockPropertyDiag
     ID_TextControl11,
     ID_TextControl12,
     ID_TextControl13
+};
+
+
+enum OpenBoundaryEdge
+{
+    NO_BOUNDARY_DEFINED,
+    DIRICHLET,
+    NEUMANN
 };
 
 

@@ -29,5 +29,8 @@ void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
 {
+    int temp = physicsProblems->GetSelection() + 1;
+    controller.setAbstractProblemPhysics((physicProblems)temp);
+ //   controller.setAbstractProblemPhysics(physicProblems::electrostatics);
 	createModelDefiningClient();
 }

@@ -15,7 +15,7 @@ class circuitProperty
 {
 private:
     //! The name of the circuit
-    string _circuitName;
+    string _circuitName = "None";
     
     //! The wire is in series or parallel with each other.
     bool _isSeries = false;

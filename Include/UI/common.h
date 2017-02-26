@@ -59,34 +59,7 @@
 
 #define DEL_KEY 0x7F
 
-//! Enum for the menus of the menu bar
-enum menubarID
-{
-    ID_menubarNew,
-    ID_menubarSave,
-    ID_menubarSaveAs,
-    ID_menubarPreferences,
-    ID_menubarManual,
-    ID_menubarLicense,
-	ID_menubarViewResults,
-	ID_menubarCreateMesh,
-	ID_menubarShowMesh,
-	ID_menubarDeleteMesh,
-	ID_menubarPrecision,
-	ID_menubarOpen,
-	ID_menubarLUASCRIPT,
-    ID_menubarShowGrid,
-    ID_menubarSnapGrid,
-    ID_menubarSetGrid,
-    ID_menubarMaterials,
-    ID_menubarBoundary,
-    ID_menubarPoint,
-    ID_menubarCircuitsCond,
-    ID_menubarMatLibrary,
-    ID_menubarDispBlockLabels,
-    ID_menubarDispStatusBar,
-    ID_menubarDispLuaConsole
-};
+
 
 
 

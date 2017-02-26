@@ -46,6 +46,8 @@ void conductorPropertySetDialog::makeDialog()
     
     selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *conductorNameArray);
     selection->SetFont(*font);
+    if(conductorNameArray->GetCount() > 0)
+        selection->SetSelection(0);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
     headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);
@@ -211,6 +213,13 @@ void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
             selection->SetSelection(0);
         }
     }
+}
+
+
+
+std::vector<conductorProperty> conductorPropertySetDialog::getConductorList()
+{
+    return _conductorList;
 }
 
 

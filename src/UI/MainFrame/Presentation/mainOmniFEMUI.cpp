@@ -24,10 +24,10 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuEdit, "&Edit");
     menuBar->Append(menuView, "&View");
-    menuBar->Append(menuProblem, "&Problem");
     menuBar->Append(menuGrid, "&Grid");
     menuBar->Append(menuProperties, "&Properties");
     menuBar->Append(menuMesh, "&Mesh");
+    menuBar->Append(analysisMenu, "&Analysis");
     menuBar->Append(menuHelp, "&Help");
     
     
@@ -40,28 +40,41 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-	menuEdit->Append(menubarID::ID_menubarLUASCRIPT, "&Lua Script\tCtrl-L");
-    menuEdit->Append(menubarID::ID_menubarPreferences, "&Preferences\tCtrl-P");
+    menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
+    menuEdit->Append(EditMenuID::ID_COPY, "&Copy");
+    menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
+    menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
+    menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
+    menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
+    menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
+    menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
+    menuEdit->AppendSeparator();
+    menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
-	menuView->Append(menubarID::ID_menubarViewResults, "&View Results");
+    menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
+    menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
+    menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
     menuView->AppendSeparator();
-    menuView->Append(menubarID::ID_menubarDispBlockLabels, "&Show Block Name");
-	menuView->Append(menubarID::ID_menubarDispStatusBar, "&Show Status Bar");
-    menuView->Append(menubarID::ID_menubarDispLuaConsole, "&Lua Console");
+    menuView->Append(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
+	menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
+    menuView->AppendSeparator();
+    menuView->Append(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
+    menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
     
     /* Create hte menu listing for the grid menu option */
-    menuGrid->Append(menubarID::ID_menubarShowGrid, "&Display Grid");
-    menuGrid->Append(menubarID::ID_menubarSnapGrid, "&Snap to Grid");
-    menuGrid->Append(menubarID::ID_menubarSetGrid, "&Set Grid");
+    menuGrid->Append(GridMenuID::ID_SHOW_GRID, "&Display Grid");
+    menuGrid->Append(GridMenuID::ID_SNAP_GRID, "&Snap to Grid");
+    menuGrid->Append(GridMenuID::ID_SET_GRID_PREFERENCES, "&Set Grid Preferences");
     
     /* Create the menu listing for the properties option */
-    menuProperties->Append(menubarID::ID_menubarMaterials, "&Materials\tCtrl-M");
-    menuProperties->Append(menubarID::ID_menubarBoundary, "&Boundary Conditions\tCtrl-B");
-    menuProperties->Append(menubarID::ID_menubarPoint, "&Nodal Properties");
-    menuProperties->Append(menubarID::ID_menubarCircuitsCond, "&Circuits/Conductors");
+    menuProperties->Append(PropertiesMenuID::ID_MATERIALS, "&Materials\tCtrl-M");
+    menuProperties->Append(PropertiesMenuID::ID_BOUNDARY, "&Boundary Conditions\tCtrl-B");
+    menuProperties->Append(PropertiesMenuID::ID_POINT, "&Nodal Properties");
+    menuProperties->Append(PropertiesMenuID::ID_CONDUCTORS, "&Circuits/Conductors");
+    menuProperties->Append(PropertiesMenuID::ID_EXTERIOR_REGION, "&Exterior Region");
     menuProperties->AppendSeparator();
-    menuProperties->Append(menubarID::ID_menubarMatLibrary, "&Materials Library\tCtrl-L");
+    menuProperties->Append(PropertiesMenuID::ID_MATERIAL_LIBRARY, "&Materials Library\tCtrl-L");
     
     
 	/* Create the menu listing for the mesh menu */
@@ -69,14 +82,15 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 	menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
 	menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
     
+    /* Creating the listinf of the Analysis menu */
+    analysisMenu->Append(AnalysisMenuID::ID_ANALYZE, "Analyze");
+    analysisMenu->Append(AnalysisMenuID::ID_VIEW_RESULTS, "View Results");
+    
     /* Creates the menu listing of the help menu */
     menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
     menuHelp->AppendSeparator();
     menuHelp->Append(menubarID::ID_menubarLicense, "License");
     menuHelp->Append(wxID_ABOUT);
-	
-	/*Create the menu listing of the Problem Menu */
-	menuProblem->Append(menubarID::ID_menubarPrecision, "&Set Precision");
     
     /* Create and display the menu bar */
     SetMenuBar(menuBar);
@@ -95,8 +109,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
 	this->SetMaxSize(minSize);
 	this->SetInitialSize(minSize);
 	
-	arrayPhysicsProblem.Add("Electrostatics");
-	arrayPhysicsProblem.Add("Magnetics");
+	
 }
 
 
@@ -108,11 +121,9 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 	menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarSave,		enable);
 	menuBar->Enable(menubarID::ID_menubarSaveAs,		enable);
-	menuBar->Enable(menubarID::ID_menubarPreferences,	enable);
-	menuBar->Enable(menubarID::ID_menubarViewResults,	enable);
+	menuBar->Enable(EditMenuID::ID_PREFERENCES,	enable);
 	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
-	menuBar->Enable(menubarID::ID_menubarPrecision,	enable);
 	
 	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	enable);
 }
@@ -214,6 +225,11 @@ void OmniFEMMainFrame::createDimensionClient()
 
 void OmniFEMMainFrame::createProblemChoosingClient()
 {
+    wxArrayString arrayPhysicsProblem;
+    
+    arrayPhysicsProblem.Add("Electrostatics");
+	arrayPhysicsProblem.Add("Magnetics");
+    
 	dimSelectPanel->Destroy();
 	
 	problemSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
@@ -222,7 +238,7 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 	wxButton *finishButton = new wxButton(problemSelectPanel, buttonID::ID_buttonFinish, "Finish", wxPoint(125, clientSizeLength - 25 - 5), wxSize(100, 25));
 	wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:", wxPoint(5, 5));
 	
-	wxListBox *physicsProblems = new wxListBox(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
+	physicsProblems->Create(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
 	physicsProblems->SetSelection(0);
 	
 	controller.updateOmniFEMState(systemState::problemChooseing);
@@ -358,33 +374,46 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     
     /* This section is for the Edit menu */
 	EVT_MENU(menubarID::ID_menubarLUASCRIPT, OmniFEMMainFrame::onLuaRun)
-    EVT_MENU(menubarID::ID_menubarPreferences, OmniFEMMainFrame::onPreferences)
+    EVT_MENU(EditMenuID::ID_PREFERENCES, OmniFEMMainFrame::onPreferences)
+    EVT_MENU(EditMenuID::ID_COPY, OmniFEMMainFrame::onCopy)
+    EVT_MENU(EditMenuID::ID_SCALE, OmniFEMMainFrame::onScale)
+    EVT_MENU(EditMenuID::ID_MIRROR, OmniFEMMainFrame::onMirror)
+    EVT_MENU(EditMenuID::ID_UNDO, OmniFEMMainFrame::onUndo)
+    EVT_MENU(EditMenuID::ID_DELETE, OmniFEMMainFrame::onDelete)
+    EVT_MENU(EditMenuID::ID_MOVE, OmniFEMMainFrame::onMove)
+    EVT_MENU(EditMenuID::ID_CREATE_RADIUS, OmniFEMMainFrame::onCreateRadius)
+    EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
 	
 	/* This section is for the View menu */
-	EVT_MENU(menubarID::ID_menubarViewResults, OmniFEMMainFrame::onViewResults)
- /*   EVT_MENU(menubarID::ID_menubarDispBlockLabels, OmniFEMMainFrame::onDispGrid)
-    EVT_MENU(menubarID::ID_menubarDispStatusBar, OmniFEMMainFrame::onSnapGrid)
-    EVT_MENU(menubarID::ID_menubarDispLuaConsole, OmniFEMMainFrame::onSetGrid)*/
-	
-	/* This section is for the Problem menu */
-	EVT_MENU(menubarID::ID_menubarPrecision, OmniFEMMainFrame::onPrecision)
+    EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)
+    EVT_MENU(ViewMenuID::ID_ZOOM_OUT, OmniFEMMainFrame::onZoomOut)
+    EVT_MENU(ViewMenuID::ID_ZOOM_WINDOW, OmniFEMMainFrame::onZoomWindow)
+    EVT_MENU(ViewMenuID::ID_SHOW_BLOCK_NAMES, OmniFEMMainFrame::onBlockName)
+    EVT_MENU(ViewMenuID::ID_SHOW_ORPHANS, OmniFEMMainFrame::onOrphans)
+    EVT_MENU(ViewMenuID::ID_SHOW_STATUSBAR, OmniFEMMainFrame::onStatusBar)
+    EVT_MENU(ViewMenuID::ID_LUA_CONSOLE, OmniFEMMainFrame::onLua)
 	
     /* This section is for the Grid menu */
-/*    EVT_MENU(menubarID::ID_menubarShowGrid, OmniFEMMainFrame::onDispGrid)
-    EVT_MENU(menubarID::ID_menubarSnapGrid, OmniFEMMainFrame::onSnapGrid)
-    EVT_MENU(menubarID::ID_menubarSetGrid, OmniFEMMainFrame::onSetGrid) */
+    EVT_MENU(GridMenuID::ID_SHOW_GRID, OmniFEMMainFrame::onDispGrid)
+    EVT_MENU(GridMenuID::ID_SNAP_GRID, OmniFEMMainFrame::onSnapGrid)
+    EVT_MENU(GridMenuID::ID_SET_GRID_PREFERENCES, OmniFEMMainFrame::onSetGridPreferences) 
     
     /* This section is for the Properties menu */
-    EVT_MENU(menubarID::ID_menubarMaterials, OmniFEMMainFrame::onMaterials)
-    EVT_MENU(menubarID::ID_menubarBoundary, OmniFEMMainFrame::onBoundary)
-    EVT_MENU(menubarID::ID_menubarPoint, OmniFEMMainFrame::onPointProperty)
-    EVT_MENU(menubarID::ID_menubarCircuitsCond, OmniFEMMainFrame::onCircuitsConductor)
-    EVT_MENU(menubarID::ID_menubarMatLibrary, OmniFEMMainFrame::onMatLibrary)
+    EVT_MENU(PropertiesMenuID::ID_MATERIALS, OmniFEMMainFrame::onMaterials)
+    EVT_MENU(PropertiesMenuID::ID_BOUNDARY, OmniFEMMainFrame::onBoundary)
+    EVT_MENU(PropertiesMenuID::ID_POINT, OmniFEMMainFrame::onPointProperty)
+    EVT_MENU(PropertiesMenuID::ID_CONDUCTORS, OmniFEMMainFrame::onCircuitsConductor)
+    EVT_MENU(PropertiesMenuID::ID_EXTERIOR_REGION, OmniFEMMainFrame::onExteriorRegion)
+    EVT_MENU(PropertiesMenuID::ID_MATERIAL_LIBRARY, OmniFEMMainFrame::onMatLibrary)
     
 	/*This section is for the mesh menu */
     EVT_MENU(menubarID::ID_menubarCreateMesh, OmniFEMMainFrame::onCreateMesh)
 	EVT_MENU(menubarID::ID_menubarShowMesh, OmniFEMMainFrame::onShowMesh)
 	EVT_MENU(menubarID::ID_menubarDeleteMesh, OmniFEMMainFrame::onDeleteMesh)
+    
+    /* This section is for the Analysis menu */
+    EVT_MENU(AnalysisMenuID::ID_ANALYZE, OmniFEMMainFrame::onViewResults)
+	EVT_MENU(AnalysisMenuID::ID_VIEW_RESULTS, OmniFEMMainFrame::onAnalyze)
 	
     /* This section is for the Help menu */
 	EVT_MENU(menubarID::ID_menubarManual, OmniFEMMainFrame::onManual)

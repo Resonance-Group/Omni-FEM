@@ -10,18 +10,28 @@
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
 
-//#include <UI/problemDefinition.h>
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
 #include <UI/MainFrameAbstraction.h>
 #include <UI/MaterialsDialog/MaterialDialog.h>
+#include <UI/MaterialsDialog/MaterialsLibrary.h>
 #include <UI/MainFrameController.h>
 #include <UI/PreferencesDialog.h>
 
-#include <common/BoundaryConditions.h>
-#include <common/enums.h>
+#include <UI/ExteriorRegion.h>
 
+#include <UI/EditMenu/MoveCopyDialog.h>
+#include <UI/EditMenu/ScalingDialog.h>
+#include <UI/EditMenu/MirrorDialog.h>
+#include <UI/EditMenu/OpenBoundaryDialog.h>
+
+#include <UI/ViewMenu/ZoomWindow.h>
+#include <UI/ViewMenu/LuaConsole.h>
+
+#include <UI/GridPreferencesDialog.h>
+
+#include <common/enums.h>
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -64,23 +74,35 @@ private:
     /* This section is for the Edit menu */
 	void onLuaRun(wxCommandEvent &event);
     void onPreferences(wxCommandEvent &event);
+    void onCopy(wxCommandEvent &event);
+    void onScale(wxCommandEvent &event);
+    void onMirror(wxCommandEvent &event);
+    void onUndo(wxCommandEvent &event);
+    void onDelete(wxCommandEvent &event);
+    void onMove(wxCommandEvent &event);
+    void onCreateRadius(wxCommandEvent &event);
+    void onCreateOpenBoundary(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
-	void onViewResults(wxCommandEvent &event);
-	
-	/* This section is for the Problem Menu */
-	void onPrecision(wxCommandEvent &event);
+    void onZoomIn(wxCommandEvent &event);
+    void onZoomOut(wxCommandEvent &event);
+    void onZoomWindow(wxCommandEvent &event);
+    void onBlockName(wxCommandEvent &event);
+    void onOrphans(wxCommandEvent &event);
+    void onStatusBar(wxCommandEvent &event);
+    void onLua(wxCommandEvent &event);
 	
     /* This section is for the Grid Menu */
     void onDispGrid(wxCommandEvent &event);
     void onSnapGrid(wxCommandEvent &event);
-    void onSetGrid(wxCommandEvent &event);
+    void onSetGridPreferences(wxCommandEvent &event);
     
     /* Thos section is for the Properties Menu */
     void onMaterials(wxCommandEvent &event);
     void onBoundary(wxCommandEvent &event);
     void onPointProperty(wxCommandEvent &event);
     void onCircuitsConductor(wxCommandEvent &event);
+    void onExteriorRegion(wxCommandEvent &event);
     void onMatLibrary(wxCommandEvent &event);
     
 	/* This section is for the Mesh menu */
@@ -88,8 +110,10 @@ private:
 	void onShowMesh(wxCommandEvent &event);
 	void onDeleteMesh(wxCommandEvent &event);
     
-    /* This section is for the Help menu */
-	
+    /* This section is for the Analysis menu */
+    void onAnalyze(wxCommandEvent &event);
+    void onViewResults(wxCommandEvent &event);
+    
 	//! Event called to view the manual
     void onManual(wxCommandEvent &event);
 	
@@ -205,6 +229,9 @@ private:
     //! This would be the mesh menu in the menu bar
     wxMenu *menuMesh = new wxMenu;
     
+    //! This is the menu entry for hte analsis
+    wxMenu *analysisMenu = new wxMenu;
+    
 	//! This would be the help menu in the menu bar
     wxMenu *menuHelp = new wxMenu;
 	
@@ -241,15 +268,13 @@ private:
 	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
 	wxSize minSize = wxSize(450, 340);
 	
-	//! The string of the physics problems that Omni-FEM can simulate
-	wxArrayString arrayPhysicsProblem;
-	
-	
 	OmniFEMMainFrameController controller;
 	
 	wxTreeCtrl *modelbuilderTreeCtrl;
 	
 	geometryEditor2DPresentation *twoDimGeometryEditor;
+    
+    wxListBox *physicsProblems = new wxListBox();
 	
     wxDECLARE_EVENT_TABLE();
 };

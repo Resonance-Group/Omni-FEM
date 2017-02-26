@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="Omni-FEM" InternalType="GUI">
+<CodeLite_Project Name="Omni-FEM" InternalType="GUI" Version="10.0.0">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0005Debug000000000000]]>
@@ -34,6 +34,9 @@
           <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
+          <File Name="src/UI/MainFrame/Presentation/AnalysisMenu.cpp"/>
         </VirtualDirectory>
         <VirtualDirectory Name="resources">
           <File Name="src/UI/MainFrame/resources/save.png"/>
@@ -69,12 +72,18 @@
             <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>
           </VirtualDirectory>
         </VirtualDirectory>
+        <VirtualDirectory Name="GeometryDialogs">
+          <File Name="src/UI/Geometry/GeometryDialogs/SegmentPropertyDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
+        </VirtualDirectory>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
         <File Name="src/UI/MaterialsDialog/BlockPropertyMagnetic.cpp"/>
         <File Name="src/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.cpp"/>
         <File Name="src/UI/MaterialsDialog/JilesArtheronParameterDialog.cpp"/>
+        <File Name="src/UI/MaterialsDialog/MaterialsLibrary.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
@@ -92,6 +101,17 @@
       </VirtualDirectory>
       <VirtualDirectory Name="PropertiesDefinitionDialog">
         <File Name="src/UI/PropertiesDefinitionDialog/PreferencesDialog.cpp"/>
+        <File Name="src/UI/PropertiesDefinitionDialog/GridPreferencesDialog.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="EditMenu">
+        <File Name="src/UI/EditMenu/ScalingDialog.cpp"/>
+        <File Name="src/UI/EditMenu/MirrorDialog.cpp"/>
+        <File Name="src/UI/EditMenu/MoveCopyDialog.cpp"/>
+        <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ViewMenu">
+        <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>
+        <File Name="src/UI/ViewMenu/LuaConsole.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
@@ -130,6 +150,7 @@
         <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>
         <File Name="Include/UI/MaterialsDialog/JilesAthertonParametersDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyMagnetics.h"/>
+        <File Name="Include/UI/MaterialsDialog/MaterialsLibrary.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
@@ -141,11 +162,28 @@
         <File Name="Include/UI/NodalProperty/NodalPropertyDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ConductorsDialog">
-        <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
         <File Name="Include/UI/ConductorsDialog/CircuitPropertyDialog.h"/>
         <File Name="Include/UI/ConductorsDialog/ConductorPropertyDialog.h"/>
+        <File Name="Include/UI/ConductorsDialog/ConductorPropSetDialog.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/PreferencesDialog.h"/>
+      <VirtualDirectory Name="EditMenu">
+        <File Name="Include/UI/EditMenu/ScalingDialog.h"/>
+        <File Name="Include/UI/EditMenu/MirrorDialog.h"/>
+        <File Name="Include/UI/EditMenu/MoveCopyDialog.h"/>
+        <File Name="Include/UI/EditMenu/OpenBoundaryDialog.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ViewMenu">
+        <File Name="Include/UI/ViewMenu/ZoomWindow.h"/>
+        <File Name="Include/UI/ViewMenu/LuaConsole.h"/>
+      </VirtualDirectory>
+      <File Name="Include/UI/GridPreferencesDialog.h"/>
+      <File Name="Include/UI/ExteriorRegion.h"/>
+      <VirtualDirectory Name="GeometryDialog">
+        <File Name="Include/UI/GeometryDialog/SegmentPropertyDialog.h"/>
+        <File Name="Include/common/GeometryProperties/NodalSettingDialog.h"/>
+        <File Name="Include/UI/BlockPropertyDialog.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -166,6 +204,12 @@
       <File Name="Include/common/ElectrostaticPreference.h"/>
       <File Name="Include/common/omniFEMEvent.h"/>
       <File Name="Include/common/JilesAthertonParameters.h"/>
+      <File Name="Include/common/GridPreferences.h"/>
+      <VirtualDirectory Name="GeometryProperties">
+        <File Name="Include/common/GeometryProperties/SegmentProperties.h"/>
+        <File Name="Include/common/GeometryProperties/BlockProperty.h"/>
+        <File Name="Include/common/GeometryProperties/NodeSettings.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
@@ -185,10 +229,12 @@
       <Compiler Options="-g;-O0;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-O;-std=c++14;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
         <IncludePath Value="/usr/include/GL"/>
+        <IncludePath Value="/usr/include/wx-3.0"/>
       </Compiler>
       <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="yes" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -227,6 +273,7 @@
       <Linker Options="-s;$(shell wx-config --debug=no --libs --unicode=yes)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>

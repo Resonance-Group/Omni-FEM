@@ -155,22 +155,47 @@ wxString OmniFEMMainFrameController::getAbstractSimName()
 
 void OmniFEMMainFrameController::createMaterialDialog()
 {
-    std::vector<electrostaticMaterial> test;
-    materialDialog *materialDiag = new materialDialog(test); 
-    if(materialDiag->ShowModal() == wxID_OK)
+    if(abstractionLayer.getProblemPhysics() == physicProblems::electrostatics)
     {
-
+        static std::vector<electrostaticMaterial> test;
+        materialDialog *materialDiag = new materialDialog(test);
+        if(materialDiag->ShowModal() == wxID_OK)
+        {
+            test = materialDiag->getElectroMaterialList();
+        }
+    }
+    else if(abstractionLayer.getProblemPhysics() == physicProblems::magnetics)
+    {
+        static std::vector<magneticMaterial> test;
+        materialDialog *materialDiag = new materialDialog(test); 
+        if(materialDiag->ShowModal() == wxID_OK)
+        {
+            test = materialDiag->getMagenticMaterialList();
+        }
     }
 }
 
 
 void OmniFEMMainFrameController::createBoundaryDialog()
 {
-    std::vector<electricalBoundary> test;
-    boundaryDialog *_boundaryDialog = new boundaryDialog(test);
-    if(_boundaryDialog->ShowModal() == wxID_OK)
+    
+    if(abstractionLayer.getProblemPhysics() == physicProblems::electrostatics)
     {
-
+        static std::vector<electricalBoundary> test;
+        boundaryDialog *boundaryDia = new boundaryDialog(test);
+        if(boundaryDia->ShowModal() == wxID_OK)
+        {
+            test = boundaryDia->getElectrostaticBoundaryList();
+        }
+    }
+    else if(abstractionLayer.getProblemPhysics() == physicProblems::magnetics)
+    {
+        static std::vector<magneticBoundary> test;
+        boundaryDialog *boundaryDia = new boundaryDialog(test);
+        if(boundaryDia->ShowModal() == wxID_OK)
+        {
+            test = boundaryDia->getMagneticBoundaryList();
+        }
     }
 }
 
@@ -178,11 +203,23 @@ void OmniFEMMainFrameController::createBoundaryDialog()
 
 void OmniFEMMainFrameController::createNodalDialog()
 {
-    std::vector<nodalProperty> test;
-    nodalPropertiesDialog *diag = new nodalPropertiesDialog(test, physicProblems::electrostatics);
-    if(diag->ShowModal() == wxID_OK)
+    if(abstractionLayer.getProblemPhysics() == physicProblems::electrostatics)
     {
-
+        static std::vector<nodalProperty> test;
+        nodalPropertiesDialog *diag = new nodalPropertiesDialog(test, physicProblems::electrostatics);
+        if(diag->ShowModal() == wxID_OK)
+        {
+            test = diag->getNodalPropertyList();
+        }
+    }
+    else if(abstractionLayer.getProblemPhysics() == physicProblems::magnetics)
+    {
+        static std::vector<nodalProperty> test;
+        nodalPropertiesDialog *diag = new nodalPropertiesDialog(test, physicProblems::magnetics);
+        if(diag->ShowModal() == wxID_OK)
+        {
+            test = diag->getNodalPropertyList();
+        }
     }
 }
 
@@ -190,10 +227,24 @@ void OmniFEMMainFrameController::createNodalDialog()
 
 void OmniFEMMainFrameController::createCircuitsConductorsDialog()
 {
-    std::vector<conductorProperty> test;
-    conductorPropertySetDialog *diag = new conductorPropertySetDialog(test);
-    if(diag->ShowModal() == wxID_OK)
+    
+    
+    if(abstractionLayer.getProblemPhysics() == physicProblems::electrostatics)
     {
-
+        static std::vector<conductorProperty> test;
+        conductorPropertySetDialog *diag = new conductorPropertySetDialog(test);
+        if(diag->ShowModal() == wxID_OK)
+        {
+            test = diag->getConductorList();
+        }
+    }
+    else if(abstractionLayer.getProblemPhysics() == physicProblems::magnetics)
+    {
+        static std::vector<circuitProperty> test;
+        conductorPropertySetDialog *diag = new conductorPropertySetDialog(test);
+        if(diag->ShowModal() == wxID_OK)
+        {
+            test = diag->getCircuitList();
+        }
     }
 }

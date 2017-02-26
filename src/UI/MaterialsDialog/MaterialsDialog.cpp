@@ -11,7 +11,7 @@ materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxD
         materialNameArray->Add(wxString(materialIterator->getName()));
     }
     
-    makeDialog(*materialNameArray);
+    makeDialog();
 }
 
 
@@ -27,12 +27,12 @@ materialDialog::materialDialog(std::vector<electrostaticMaterial> electroStaticM
         materialNameArray->Add(wxString(materialIterator->getName()));
     }
     
-    makeDialog(*materialNameArray);
+    makeDialog();
 }
 
 
 
-void materialDialog::makeDialog(wxArrayString nameArray)
+void materialDialog::makeDialog()
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -45,8 +45,10 @@ void materialDialog::makeDialog(wxArrayString nameArray)
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), nameArray);
+    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *materialNameArray);
     selection->SetFont(*font);
+    if(materialNameArray->GetCount() > 0)
+        selection->SetSelection(0);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
     headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);

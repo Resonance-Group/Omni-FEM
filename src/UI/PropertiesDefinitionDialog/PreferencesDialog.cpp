@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 
-preferencesDialog::preferencesDialog(magneticPreference &pref) : wxDialog(NULL, wxID_ANY, "Problem Definition")
+preferencesDialog::preferencesDialog(magneticPreference &pref) : wxDialog(NULL, wxID_ANY, "Problem Preferences")
 {
     wxBoxSizer *probTypeSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *lengthSizer = new wxBoxSizer(wxHORIZONTAL);

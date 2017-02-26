@@ -13,7 +13,7 @@ class nodalProperty
 {
 private:
     //! The name of the property
-    string _nodalName;
+    string _nodalName = "None";
     
     //! Currently, there are two options, a specified potential property and a point current. This attribute combines the two into a boolean data type.
     bool _isSpecificPotential = true;
