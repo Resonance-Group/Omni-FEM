@@ -46,5 +46,10 @@ void OmniFEMMainFrame::onExteriorRegion(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onMatLibrary(wxCommandEvent &event)
 {
-    
+    std::vector<electrostaticMaterial> test;
+    materialLibraryDialog *test2 = new materialLibraryDialog(test);
+    if(test2->ShowModal() == wxID_OK)
+    {
+        
+    }
 }

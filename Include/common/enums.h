@@ -254,7 +254,9 @@ enum generalFrameButton
     ID_CHECKBOX1, 
     ID_BUTTON1,
     ID_BUTTON2,
-    ID_BUTTON3
+    ID_BUTTON3,
+    ID_TREECTRL1,
+    ID_TREECTRL2
 };
 
 enum magneticBlockPropertyDiag

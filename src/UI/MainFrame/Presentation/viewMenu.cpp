@@ -7,13 +7,7 @@
 
 void OmniFEMMainFrame::onZoomIn(wxCommandEvent &event)
 {
-    std::vector<electrostaticMaterial> test;
-    blockProperty test3;
-    blockPropertyDialog *test4 = new blockPropertyDialog(test, test3, false);
-    if(test4->ShowModal() == wxID_OK)
-    {
-        test4->getBlockProperty(test3);
-    }
+    
 }
 
 

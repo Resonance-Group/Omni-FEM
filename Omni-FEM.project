@@ -75,6 +75,7 @@
         <VirtualDirectory Name="GeometryDialogs">
           <File Name="src/UI/Geometry/GeometryDialogs/SegmentPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
         </VirtualDirectory>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
@@ -82,6 +83,7 @@
         <File Name="src/UI/MaterialsDialog/BlockPropertyMagnetic.cpp"/>
         <File Name="src/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.cpp"/>
         <File Name="src/UI/MaterialsDialog/JilesArtheronParameterDialog.cpp"/>
+        <File Name="src/UI/MaterialsDialog/MaterialsLibrary.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="src/UI/BoundaryDialog/magneticBoundaryDialog.cpp"/>
@@ -148,6 +150,7 @@
         <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>
         <File Name="Include/UI/MaterialsDialog/JilesAthertonParametersDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyMagnetics.h"/>
+        <File Name="Include/UI/MaterialsDialog/MaterialsLibrary.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="BoundaryDialog">
         <File Name="Include/UI/BoundaryDialog/BoundaryDialog.h"/>
@@ -178,8 +181,9 @@
       <File Name="Include/UI/ExteriorRegion.h"/>
       <VirtualDirectory Name="GeometryDialog">
         <File Name="Include/UI/GeometryDialog/SegmentPropertyDialog.h"/>
+        <File Name="Include/common/GeometryProperties/NodalSettingDialog.h"/>
+        <File Name="Include/UI/BlockPropertyDialog.h"/>
       </VirtualDirectory>
-      <File Name="Include/UI/BlockPropertyDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -204,6 +208,7 @@
       <VirtualDirectory Name="GeometryProperties">
         <File Name="Include/common/GeometryProperties/SegmentProperties.h"/>
         <File Name="Include/common/GeometryProperties/BlockProperty.h"/>
+        <File Name="Include/common/GeometryProperties/NodeSettings.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>

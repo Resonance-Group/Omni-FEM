@@ -15,6 +15,7 @@
 #include <UI/PropertiesDialog.h>
 #include <UI/MainFrameAbstraction.h>
 #include <UI/MaterialsDialog/MaterialDialog.h>
+#include <UI/MaterialsDialog/MaterialsLibrary.h>
 #include <UI/MainFrameController.h>
 #include <UI/PreferencesDialog.h>
 
@@ -32,10 +33,6 @@
 
 #include <common/enums.h>
 
-/* Delete after Testing */
-#include <common/ElectroStaticMaterial.h>
-#include <common/GeometryProperties/BlockProperty.h>
-#include <UI/BlockPropertyDialog.h>
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 

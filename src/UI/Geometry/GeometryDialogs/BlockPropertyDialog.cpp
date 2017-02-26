@@ -1,5 +1,5 @@
-#include <UI/BlockPropertyDialog.h>
-
+//#include <UI/BlockPropertyDialog.h>
+#include <UI/GeometryDialog/BlockPropertyDialog.h>
 
 
 blockPropertyDialog::blockPropertyDialog(std::vector<magneticMaterial> &material, std::vector<circuitProperty> &circuit, blockProperty &property, bool isAxisymmetric) : wxDialog(NULL, wxID_ANY, "Block Property")
