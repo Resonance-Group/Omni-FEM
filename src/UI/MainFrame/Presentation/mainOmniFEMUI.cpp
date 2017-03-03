@@ -98,7 +98,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     
     SetStatusText("Omni-FEM Simulator");
 
-	createTopToolBar();
+//	createTopToolBar();
 	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
 	
 	createInitialStartupClient();
@@ -163,17 +163,17 @@ void OmniFEMMainFrame::createTopToolBar()
     mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
 
 	/* This section will need to load the images into memory */
-	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
-	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
-	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
+//	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
+//	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
+//	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
 	
 	/* This section will convert the images into bitmaps */
-	wxBitmap saveBitmap(saveImage);
-	wxBitmap openImageBitmap(openImage);
-	wxBitmap newFileBitmap(newFileImage);
+//	wxBitmap saveBitmap(saveImage);
+//	wxBitmap openImageBitmap(openImage);
+//	wxBitmap newFileBitmap(newFileImage);
 	
 	/* This section will add the tool to the toolbar */
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, newFileBitmap, "New File");
+/*	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, newFileBitmap, "New File");
 	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, openImageBitmap, "Open");
 	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, saveBitmap, "Save");
 	
