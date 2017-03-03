@@ -44,21 +44,21 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
     propertySizer->Add(0, 6, 0);
     propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxLEFT, 6);
     propertySizer->Add(0, 6, 0);
-    propertySizer->Add(modifyPropertyButton, 0, wxALIGN_BOTTOM | wxDOWN | wxLEFT, 6);
+    propertySizer->Add(modifyPropertyButton, 0, wxDOWN | wxLEFT, 6);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(120, 101), wxSize(75, 23));
     okButton->SetFont(*font);
     
     okSizer->Add(0, 68, 0);
-    okSizer->Add(okButton, 0, wxALIGN_BOTTOM | wxDOWN | wxRIGHT, 6);
+    okSizer->Add(okButton, 0, wxDOWN | wxRIGHT, 6);
     
     intermediateSizer->Add(propertySizer, 0, wxALIGN_LEFT);
     intermediateSizer->Add(6, 0, 0);
-    intermediateSizer->Add(okSizer, 0, wxALIGN_RIGHT);
+    intermediateSizer->Add(okSizer, 0);
     
     topSizer->Add(headerSizer, 0, wxALIGN_TOP);
     topSizer->Add(0, 10, 0);
-    topSizer->Add(intermediateSizer, 0, wxALIGN_BOTTOM);
+    topSizer->Add(intermediateSizer, 0);
     
     SetSizerAndFit(topSizer);
 }

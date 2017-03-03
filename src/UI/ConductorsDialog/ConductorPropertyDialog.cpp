@@ -32,7 +32,7 @@ conductorPropertyDialog::conductorPropertyDialog() : wxDialog(NULL, wxID_ANY, "C
     radioButton2->SetValue(false);
     radioSizer->Add(radioButton1, 0, wxALIGN_TOP | wxALL, 6);
     radioSizer->Add(0, 4, 0);
-    radioSizer->Add(radioButton2, 0, wxALIGN_BOTTOM | wxLEFT | wxRIGHT, 6);
+    radioSizer->Add(radioButton2, 0, wxLEFT | wxRIGHT, 6);
     
     chargeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(138, 50), wxSize(156, 20));
     chargeTextCtrl->SetFont(*font);

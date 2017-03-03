@@ -32,7 +32,7 @@ circuitPropertyDialog::circuitPropertyDialog() : wxDialog(NULL, wxID_ANY, "Circu
     radioButton2->SetValue(false);
     
     radioSizer->Add(radioButton1, 0, wxALIGN_TOP | wxLEFT | wxBOTTOM, 6);
-    radioSizer->Add(radioButton2, 0, wxALIGN_BOTTOM | wxLEFT, 6);
+    radioSizer->Add(radioButton2, 0, wxLEFT, 6);
     
     /* Creating the section for the input */
     wxStaticText *circuitText = new wxStaticText(this, wxID_ANY, "Circuit Current (A):", wxPoint(94, 47), wxSize(105, 13));
