@@ -1,3 +1,6 @@
+/* This is the old file that needs to be deleted! */
+
+
 #ifndef OMNIFEMProblemDefinition_H_
 #define OMNIFEMProblemDefininition_H_
 

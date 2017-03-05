@@ -4,28 +4,28 @@
 
 void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
 {
-    controller.createMaterialDialog();
+//    controller.createMaterialDialog();
 }
 
 
 
 void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
 {
-    controller.createBoundaryDialog();
+//    controller.createBoundaryDialog();
 }
 
 
 
 void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
 {
-    controller.createNodalDialog();
+ //   controller.createNodalDialog();
 }
 
 
 
 void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
 {
-    controller.createCircuitsConductorsDialog();
+ //   controller.createCircuitsConductorsDialog();
 }
 
 

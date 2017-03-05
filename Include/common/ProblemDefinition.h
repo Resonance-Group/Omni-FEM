@@ -12,6 +12,7 @@
 #include <common/MagneticBoundary.h>
 #include <common/MagneticMaterial.h>
 #include <common/MagneticPreference.h>
+
 #include <common/NodalProperty.h>
 
 
@@ -27,26 +28,71 @@ class problemDefinition
 	*************/
 private:
     //! This list contains all of the boundary conditions that the user sets. THis is the most generic form such that it holds BC for both the magnetic domain and the electrical
-  //  std::vector<boundaryCondition> _boundaryConditionList;
+    std::vector<electricalBoundary> _localElectricalBoundaryConditionList;
     
     //! This list is the global list for all of the materials that will be used in the problem
-  //  std::vector<materialProperty> _materialList;
+    std::vector<magneticBoundary> _localMagneticBoundaryConditionList;
+    
+    std::vector<conductorProperty> _localConductorList;
+    
+    std::vector<circuitProperty> _localCircuitList;
+    
+    std::vector<magneticMaterial> _localMagneticMaterialList;
+    
+    std::vector<electrostaticMaterial> _localElectrialMaterialList;
+    
+    std::vector<nodalProperty> _localNodalList;
+    
+    electroStaticPreference _localElectricalPreference;
+    
+    magneticPreference _localMagneticPreference;
+    
+    physicProblems _phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
     
     /**********
     * Methods *
 	***********/
 public:
+    void setPhysicsProblem(physicProblems prob)
+    {
+        _phycisProblem = prob;
+    }
+    
+    physicProblems getPhysicsProblem()
+    {
+        return _phycisProblem;
+    }
+
     //! This first function will add a single boundary condition to the list
-    void addBoundaryCondition(boundaryCondition condition);
+    void addBoundaryCondition(magneticBoundary condition)
+    {
+        _localMagneticBoundaryConditionList.push_back(condition);
+    }
     
-    //! This function will take a list and add the input list to the one in the problem Definition class
-    void addBoundaryConditionList(std::vector<boundaryCondition> conditionList);
+    void addBoundaryCondition(electricalBoundary condition)
+    {
+        _localElectricalBoundaryConditionList.push_back(condition);
+    }
     
-    //! This function will copy the conditionList into the current data type
-    void copyBoundaryCondition(std::vector<boundaryCondition> conditionList);
+    void setBoundaryList(std::vector<magneticBoundary> list)
+    {
+        _localMagneticBoundaryConditionList = list;
+    }
     
-    //! This function will return the boundary condition list
-    std::vector<boundaryCondition> getBoundaryConditionList();
+    void setBoundaryList(std::vector<electricalBoundary> list)
+    {
+        _localElectricalBoundaryConditionList = list;
+    }
+    
+    std::vector<magneticBoundary> getMagneticBoundaryList()
+    {
+        return _localMagneticBoundaryConditionList;
+    }
+    
+    std::vector<electricalBoundary> getElectricalBoundaryList()
+    {
+        return _localElectricalBoundaryConditionList;
+    }
     
     //! This function will add a single material into the global list
     void addMaterial(materialProperty material);

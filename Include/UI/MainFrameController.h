@@ -45,8 +45,6 @@ public:
 	*************/
 private:
 	
-	OmniFEMMainFrameAbstraction abstractionLayer;
-	
 	/**********************
 	* Function Prototypes *
 	***********************/

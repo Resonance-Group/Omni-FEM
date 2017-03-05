@@ -31,7 +31,10 @@
 
 #include <UI/GridPreferencesDialog.h>
 
+#include <UI/ModelDefinition/ModelDefinition.h>
+
 #include <common/enums.h>
+
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -59,7 +62,7 @@ class OmniFEMApp : public wxApp
 class OmniFEMMainFrame : public wxFrame
 {
 public:
-    OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+    OmniFEMMainFrame(const wxString &title, const wxPoint &pos);
 private:
 	/***********************************
 	* Prototypes for creating the menu *
@@ -196,6 +199,8 @@ private:
 	* Variables *
 	*************/
 	
+    modelDefinition _model;
+    
 	//! Stores the client size of the main window in the x direction
 	int clientSizeWidth;
 	
@@ -268,13 +273,13 @@ private:
 	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
 	wxSize minSize = wxSize(450, 340);
 	
-	OmniFEMMainFrameController controller;
+//	OmniFEMMainFrameController controller;
 	
 	wxTreeCtrl *modelbuilderTreeCtrl;
 	
 	geometryEditor2DPresentation *twoDimGeometryEditor;
     
-    wxListBox *physicsProblems = new wxListBox();
+    wxListBox *_physicsProblemsListBox = new wxListBox();
 	
     wxDECLARE_EVENT_TABLE();
 };

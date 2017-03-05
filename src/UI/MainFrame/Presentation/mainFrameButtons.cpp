@@ -6,13 +6,14 @@ void OmniFEMMainFrame::onTwoDimButton(wxCommandEvent &event)
 {
     createProblemChoosingClient();
 	
-	controller.setAbstractProblemDim(problemDimension::two_dimension);
+//	controller.setAbstractProblemDim(problemDimension::two_dimension);
 }
 
 
 
 void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
 {
+    /*
 	systemState currentState = controller.getOmniFEMState();
 	
 	if(currentState == systemState::dimensionChoosing)
@@ -23,14 +24,14 @@ void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
 	{
 		createDimensionClient();
 	}
+     */ 
 }
 
 
 
 void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
 {
-    int temp = physicsProblems->GetSelection() + 1;
-    controller.setAbstractProblemPhysics((physicProblems)temp);
- //   controller.setAbstractProblemPhysics(physicProblems::electrostatics);
-	createModelDefiningClient();
+    int temp = _physicsProblemsListBox->GetSelection() + 1;
+    _model.getProblemParameters()->setPhysicsProblem((physicProblems)temp);
+//	createModelDefiningClient();
 }

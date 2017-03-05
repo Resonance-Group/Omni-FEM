@@ -7,6 +7,7 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
+    /*
     if(controller.getAbstractProblemPhysics() == physicProblems::electrostatics)
     {
         static electroStaticPreference test;
@@ -25,6 +26,7 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
             newDiag->getPreferences(test);
         }
     }
+     */ 
 }
 
 

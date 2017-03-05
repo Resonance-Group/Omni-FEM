@@ -43,13 +43,6 @@
           <File Name="src/UI/MainFrame/resources/Open.png"/>
           <File Name="src/UI/MainFrame/resources/new_file.png"/>
         </VirtualDirectory>
-        <VirtualDirectory Name="Abstraction">
-          <File Name="src/UI/MainFrame/Abstraction/OmniFEMMainFrameAbstraction.cpp"/>
-          <File Name="src/UI/MainFrame/Abstraction/ProblemDefinition.cpp"/>
-        </VirtualDirectory>
-        <VirtualDirectory Name="Controller">
-          <File Name="src/UI/MainFrame/Controller/OmniFEMMainFrameController.cpp"/>
-        </VirtualDirectory>
       </VirtualDirectory>
       <VirtualDirectory Name="Geometry">
         <VirtualDirectory Name="2D">
@@ -115,7 +108,6 @@
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
-      <File Name="src/common/ProblemDefinition.cpp"/>
       <File Name="src/common/wxGLString.cpp"/>
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
@@ -183,6 +175,9 @@
         <File Name="Include/UI/GeometryDialog/SegmentPropertyDialog.h"/>
         <File Name="Include/common/GeometryProperties/NodalSettingDialog.h"/>
         <File Name="Include/UI/BlockPropertyDialog.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="ModelDefinition">
+        <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">

@@ -6,15 +6,15 @@
 
 void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
+    /*
     systemState currentState = controller.getOmniFEMState();
     if(currentState == systemState::problemDefining || currentState == systemState::dimensionChoosing || currentState == systemState::problemChooseing || currentState == systemState::viewingResults)
     {
-        /* Create a message box confirming that the user would like to create a new file */
+        // Create a message box confirming that the user would like to create a new file 
         if(wxMessageBox("Create New File?", "New File", wxOK | wxCANCEL | wxICON_QUESTION) == wxCANCEL)
             return;
     }
-    
-    createDimensionClient();
+    */
 }
 
 

@@ -7,7 +7,7 @@
  
 bool OmniFEMApp::OnInit()
 {
-   OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50), minSize);
+   OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50));
    frame->Show(true);
    return true; 
 }
@@ -16,10 +16,8 @@ bool OmniFEMApp::OnInit()
  * Function Implementations *
  ****************************/
  
-OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size) : wxFrame(NULL, wxID_ANY, title, pos, size)
+OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : wxFrame(NULL, wxID_ANY, title, pos)
 {
-	minSize = size;
-	
     /* This creates the main menu Bar at the top */
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuEdit, "&Edit");
@@ -99,15 +97,15 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos, co
     SetStatusText("Omni-FEM Simulator");
 
 //	createTopToolBar();
-	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
+//	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
 	
 	createInitialStartupClient();
 	enableToolMenuBar(false);
 	
 	
-	this->SetMinSize(minSize);
-	this->SetMaxSize(minSize);
-	this->SetInitialSize(minSize);
+//	this->SetMinSize(minSize);
+//	this->SetMaxSize(minSize);
+//	this->SetInitialSize(wxSize(300, 300));
 	
 	
 }
@@ -121,11 +119,41 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 	menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarSave,		enable);
 	menuBar->Enable(menubarID::ID_menubarSaveAs,		enable);
-	menuBar->Enable(EditMenuID::ID_PREFERENCES,	enable);
+	
 	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
 	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
-	
-	mainFrameToolBar->EnableTool(toolbarID::ID_ToolBarSave,	enable);
+    
+    menuBar->Enable(EditMenuID::ID_COPY, enable);
+    menuBar->Enable(EditMenuID::ID_PREFERENCES,	enable);
+    menuBar->Enable(EditMenuID::ID_CREATE_OPEN_BOUNDARY, enable);
+    menuBar->Enable(EditMenuID::ID_CREATE_RADIUS, enable);
+    menuBar->Enable(EditMenuID::ID_DELETE, enable);
+    menuBar->Enable(EditMenuID::ID_MIRROR, enable);
+    menuBar->Enable(EditMenuID::ID_MOVE, enable);
+    menuBar->Enable(EditMenuID::ID_SCALE, enable);
+    menuBar->Enable(EditMenuID::ID_UNDO, enable);
+    
+    menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
+    menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);
+    menuBar->Enable(ViewMenuID::ID_SHOW_ORPHANS, enable);
+    menuBar->Enable(ViewMenuID::ID_SHOW_STATUSBAR, enable);
+    menuBar->Enable(ViewMenuID::ID_ZOOM_IN, enable);
+    menuBar->Enable(ViewMenuID::ID_ZOOM_OUT, enable);
+    menuBar->Enable(ViewMenuID::ID_ZOOM_WINDOW, enable);
+    
+    menuBar->Enable(GridMenuID::ID_SET_GRID_PREFERENCES, enable);
+    menuBar->Enable(GridMenuID::ID_SHOW_GRID, enable);
+    menuBar->Enable(GridMenuID::ID_SNAP_GRID, enable);
+    
+    menuBar->Enable(PropertiesMenuID::ID_BOUNDARY, enable);
+    menuBar->Enable(PropertiesMenuID::ID_CONDUCTORS, enable);
+    menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, enable);
+    menuBar->Enable(PropertiesMenuID::ID_MATERIAL_LIBRARY, enable);
+    menuBar->Enable(PropertiesMenuID::ID_MATERIALS, enable);
+    menuBar->Enable(PropertiesMenuID::ID_POINT, enable);
+    
+    menuBar->Enable(AnalysisMenuID::ID_ANALYZE, enable);
+    menuBar->Enable(AnalysisMenuID::ID_VIEW_RESULTS, enable);
 }
 
 
@@ -133,23 +161,44 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 
 void OmniFEMMainFrame::createInitialStartupClient()
 {
-	systemState currentState = controller.getOmniFEMState();
+//	systemState currentState = _model.getProblemParameters()->;
+    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	
 	/* First, the function will need to destoy any other panels that are currently active */
-	if(currentState == systemState::dimensionChoosing)
+/*	if(currentState == systemState::dimensionChoosing)
 	{
 		dimSelectPanel->Destroy();
 		initialStartPanel = new wxPanel();
 	}
-	
+     */ 
+    
 	// This seciton will create a new panel and apply 2 buttons on the panel. 
 	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
-	initialStartPanel->Create(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
+	initialStartPanel->Create(this, wxID_ANY, wxDefaultPosition);
 	
-	wxButton *buttonNewFile = new wxButton(initialStartPanel, buttonID::ID_buttonNew, "New", wxPoint(10, 10), wxSize(100, 100));
-	wxButton *buttonOpenFile = new wxButton(initialStartPanel, buttonID::ID_buttonOpen, "Open", wxPoint(10, 100 + (260 - 220)), wxSize(100, 100));
+	wxButton *buttonNewFile = new wxButton(initialStartPanel, buttonID::ID_buttonNew, "New", wxDefaultPosition, wxSize(75, 23));
+    buttonNewFile->SetFont(*font);
+//    buttonNewFile->SetMinSize(initialStartPanel->FromDIP(wxSize(75, 23)));
+ //   buttonNewFile->SetInitialSize(FromDIP(wxSize(75, 23), this));
+ //   buttonNewFile->SetSize(buttonNewFile->GetBestFittingSize());
+   // buttonNewFile->SetSize(wxSize(75, 23));
+	wxButton *buttonOpenFile = new wxButton(initialStartPanel, buttonID::ID_buttonOpen, "Open", wxDefaultPosition, wxSize(75, 23));
+    buttonOpenFile->SetFont(*font);
+ //   buttonOpenFile->SetInitialSize(FromDIP(wxSize(75, 23)));
+    
+    buttonSizer->Add(buttonNewFile, 0, wxALL, 6);
+    buttonSizer->Add(buttonOpenFile, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
 
-	controller.updateOmniFEMState(systemState::initialStartUp);
+    initialStartPanel->SetSizer(buttonSizer);
+    
+    SetSizerAndFit(buttonSizer);
+    buttonSizer->Fit(initialStartPanel);
+    
+    this->SetSize(initialStartPanel->GetSize());
+    this->SetMaxSize(this->GetSize());
+
+//	controller.updateOmniFEMState(systemState::initialStartUp);
 }
 
 
@@ -193,8 +242,9 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 
 void OmniFEMMainFrame::createDimensionClient()
 {
-	systemState currentState = controller.getOmniFEMState();
-	
+//	systemState currentState = controller.getOmniFEMState();
+
+/*	
 	if(currentState == systemState::problemChooseing)
 		problemSelectPanel->Destroy();
 	else if(currentState == systemState::initialStartUp)
@@ -209,6 +259,7 @@ void OmniFEMMainFrame::createDimensionClient()
 //		this->SetMinSize(minSize);
 //		this->SetMaxSize(minSize);
 	}
+     */ 
 		
     dimSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
 	
@@ -218,7 +269,7 @@ void OmniFEMMainFrame::createDimensionClient()
 	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Spatial Dimension:", wxPoint(5, 5));
 	
 	
-	controller.updateOmniFEMState(systemState::dimensionChoosing);
+//	controller.updateOmniFEMState(systemState::dimensionChoosing);
 }
 
 
@@ -238,25 +289,26 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 	wxButton *finishButton = new wxButton(problemSelectPanel, buttonID::ID_buttonFinish, "Finish", wxPoint(125, clientSizeLength - 25 - 5), wxSize(100, 25));
 	wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:", wxPoint(5, 5));
 	
-	physicsProblems->Create(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
-	physicsProblems->SetSelection(0);
+	_physicsProblemsListBox->Create(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
+	_physicsProblemsListBox->SetSelection(0);
 	
-	controller.updateOmniFEMState(systemState::problemChooseing);
+//	controller.updateOmniFEMState(systemState::problemChooseing);
 }
 
 
 
 void OmniFEMMainFrame::createModelDefiningClient()
 {
-	systemState currentState = controller.getOmniFEMState();
+//	systemState currentState = controller.getOmniFEMState();
 	
 	
-	if(currentState == systemState::initialStartUp)
+/*	if(currentState == systemState::initialStartUp)
 		initialStartPanel->Destroy();
 	else if(currentState == systemState::dimensionChoosing)
 		dimSelectPanel->Destroy();
 	else if(currentState == systemState::problemChooseing)
 		problemSelectPanel->Destroy();
+         */ 
 		
 	enableToolMenuBar(true);
 	
@@ -269,20 +321,20 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	
 	/* This section is creating the general layout of the panel using he sizers in wxWidgets */
 	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, modelBuilderPanelSize, wxBORDER_SIMPLE | wxVSCROLL | wxHSCROLL);
-	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
+//	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
 
 	//geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
 	twoDimGeometryEditor = new geometryEditor2DPresentation(this, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)));
 	
-	groupOneSizer->Add(twoDimGeometryEditor, 3, wxALIGN_CENTER | wxALL | wxEXPAND, controller.getBorderSize());// THe middle frame will get the highest propoty when sizing becuase this is what the user will use most often
+//	groupOneSizer->Add(twoDimGeometryEditor, 3, wxALIGN_CENTER | wxALL | wxEXPAND, controller.getBorderSize());// THe middle frame will get the highest propoty when sizing becuase this is what the user will use most often
 	
 	settingsPanel = new wxPanel(this, panelID::ID_settings, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-	groupOneSizer->Add(settingsPanel, 1, wxALIGN_RIGHT | wxALL | wxEXPAND, controller.getBorderSize());
+//	groupOneSizer->Add(settingsPanel, 1, wxALIGN_RIGHT | wxALL | wxEXPAND, controller.getBorderSize());
 	
-	vertBoxSizer->Add(groupOneSizer, 1, wxALL | wxEXPAND, controller.getBorderSize());
+//	vertBoxSizer->Add(groupOneSizer, 1, wxALL | wxEXPAND, controller.getBorderSize());
 	
 	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxDefaultPosition, wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
-	vertBoxSizer->Add(statusInfoPanel, 0, wxEXPAND | wxALL, controller.getBorderSize());
+//	vertBoxSizer->Add(statusInfoPanel, 0, wxEXPAND | wxALL, controller.getBorderSize());
 	
 	
 	/* This section is populating the layout with everything that is needed for the user */
@@ -292,13 +344,13 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	
 	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, modelBuilderPanelSize - wxSize(2, 0), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);// The -2 appears in the size in order to give some extra room for hte scroll bars
 	
-	controller.setRootTreeIDAbstraction(modelbuilderTreeCtrl->AddRoot(controller.getWorkspaceNameAbstraction()));// This is the highest level
+//	controller.setRootTreeIDAbstraction(modelbuilderTreeCtrl->AddRoot(controller.getWorkspaceNameAbstraction()));// This is the highest level
 	
-	controller.setAbstractProblemID(modelbuilderTreeCtrl->AppendItem(controller.getRootTreeIDAbstraction(), controller.getAbstractSimName()));// This will be for the project
-	
-	controller.setAbstractGeometryID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Geometry"));
-	controller.setAbstractMaterialsID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Materials"));
-	controller.setAbstractMeshID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Mesh"));
+//	controller.setAbstractProblemID(modelbuilderTreeCtrl->AppendItem(controller.getRootTreeIDAbstraction(), controller.getAbstractSimName()));// This will be for the project
+//	
+//	controller.setAbstractGeometryID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Geometry"));
+//	controller.setAbstractMaterialsID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Materials"));
+//	controller.setAbstractMeshID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Mesh"));
 	
 	modelbuilderTreeCtrl->ExpandAll();
 	
@@ -311,7 +363,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	this->SetSizer(vertBoxSizer);
 	this->Layout();
 	
-	controller.updateOmniFEMState(systemState::problemDefining);
+//	controller.updateOmniFEMState(systemState::problemDefining);
 	
 }
 
@@ -321,17 +373,20 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	 
 void OmniFEMMainFrame::physicsProblemComboBox(wxCommandEvent &event)
 {
+    /*
 	int physicsSelection = event.GetSelection();
 	
 	if(physicsSelection == 0)
 		controller.setAbstractProblemPhysics(physicProblems::electrostatics);
 	else if(physicsSelection == 1)
 		controller.setAbstractProblemPhysics(physicProblems::magnetics);
+         */ 
 }
 
 
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 {
+    /*
 	systemState currentState = controller.getOmniFEMState();
 	this->GetClientSize(&clientSizeWidth, &clientSizeLength);// This will update the client size
 	
@@ -350,6 +405,7 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 		wxSize newTreeCtrlDim = modelBuilderTreePanel->GetSize() - wxSize(2, 0);
 		modelbuilderTreeCtrl->SetSize(newTreeCtrlDim);
 	}
+     */ 
 }
 
 
