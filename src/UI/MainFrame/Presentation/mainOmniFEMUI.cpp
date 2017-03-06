@@ -19,95 +19,84 @@ bool OmniFEMApp::OnInit()
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : wxFrame(NULL, wxID_ANY, title, pos)
 {
     /* This creates the main menu Bar at the top */
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(menuEdit, "&Edit");
-    menuBar->Append(menuView, "&View");
-    menuBar->Append(menuGrid, "&Grid");
-    menuBar->Append(menuProperties, "&Properties");
-    menuBar->Append(menuMesh, "&Mesh");
-    menuBar->Append(analysisMenu, "&Analysis");
-    menuBar->Append(menuHelp, "&Help");
-    
+    _menuBar->Append(_menuFile, "&File");
+    _menuBar->Append(_menuEdit, "&Edit");
+    _menuBar->Append(_menuView, "&View");
+    _menuBar->Append(_menuGrid, "&Grid");
+    _menuBar->Append(_menuProperties, "&Properties");
+    _menuBar->Append(_menuMesh, "&Mesh");
+    _menuBar->Append(_analysisMenu, "&Analysis");
+    _menuBar->Append(_menuHelp, "&Help");
     
     /* Creating the menu listing of File menu */
-    menuFile->Append(menubarID::ID_menubarNew, "&New\tCtrl-N");
-    menuFile->Append(menubarID::ID_menubarSave, "&Save\tCtrl-S");
-    menuFile->Append(menubarID::ID_menubarSaveAs, "&Save As");
-	menuFile->Append(menubarID::ID_menubarOpen, "&Open");
-    menuFile->AppendSeparator();
-    menuFile->Append(wxID_EXIT);
+    _menuFile->Append(menubarID::ID_menubarNew, "&New\tCtrl-N");
+    _menuFile->Append(menubarID::ID_menubarSave, "&Save\tCtrl-S");
+    _menuFile->Append(menubarID::ID_menubarSaveAs, "&Save As");
+	_menuFile->Append(menubarID::ID_menubarOpen, "&Open");
+    _menuFile->AppendSeparator();
+    _menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-    menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
-    menuEdit->Append(EditMenuID::ID_COPY, "&Copy");
-    menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
-    menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
-    menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
-    menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
-    menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
-    menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
-    menuEdit->AppendSeparator();
-    menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
+    _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
+    _menuEdit->Append(EditMenuID::ID_COPY, "&Copy");
+    _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
+    _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
+    _menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
+    _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
+    _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
+    _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
+    _menuEdit->AppendSeparator();
+    _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
 	
 	/* Creting the menu listing of the View Menu */
-    menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
-    menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
-    menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
-    menuView->AppendSeparator();
-    menuView->Append(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
-	menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
-    menuView->AppendSeparator();
-    menuView->Append(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
-    menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
+    _menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
+    _menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
+    _menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
+    _menuView->AppendSeparator();
+    _menuView->Append(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
+	_menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
+    _menuView->AppendSeparator();
+    _menuView->Append(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
+    _menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
     
-    /* Create hte menu listing for the grid menu option */
-    menuGrid->Append(GridMenuID::ID_SHOW_GRID, "&Display Grid");
-    menuGrid->Append(GridMenuID::ID_SNAP_GRID, "&Snap to Grid");
-    menuGrid->Append(GridMenuID::ID_SET_GRID_PREFERENCES, "&Set Grid Preferences");
+    /* Create the menu listing for the grid menu option */
+    _menuGrid->Append(GridMenuID::ID_SHOW_GRID, "&Display Grid");
+    _menuGrid->Append(GridMenuID::ID_SNAP_GRID, "&Snap to Grid");
+    _menuGrid->Append(GridMenuID::ID_SET_GRID_PREFERENCES, "&Set Grid Preferences");
     
     /* Create the menu listing for the properties option */
-    menuProperties->Append(PropertiesMenuID::ID_MATERIALS, "&Materials\tCtrl-M");
-    menuProperties->Append(PropertiesMenuID::ID_BOUNDARY, "&Boundary Conditions\tCtrl-B");
-    menuProperties->Append(PropertiesMenuID::ID_POINT, "&Nodal Properties");
-    menuProperties->Append(PropertiesMenuID::ID_CONDUCTORS, "&Circuits/Conductors");
-    menuProperties->Append(PropertiesMenuID::ID_EXTERIOR_REGION, "&Exterior Region");
-    menuProperties->AppendSeparator();
-    menuProperties->Append(PropertiesMenuID::ID_MATERIAL_LIBRARY, "&Materials Library\tCtrl-L");
-    
+    _menuProperties->Append(PropertiesMenuID::ID_MATERIALS, "&Materials\tCtrl-M");
+    _menuProperties->Append(PropertiesMenuID::ID_BOUNDARY, "&Boundary Conditions\tCtrl-B");
+    _menuProperties->Append(PropertiesMenuID::ID_POINT, "&Nodal Properties");
+    _menuProperties->Append(PropertiesMenuID::ID_CONDUCTORS, "&Circuits/Conductors");
+    _menuProperties->Append(PropertiesMenuID::ID_EXTERIOR_REGION, "&Exterior Region");
+    _menuProperties->AppendSeparator();
+    _menuProperties->Append(PropertiesMenuID::ID_MATERIAL_LIBRARY, "&Materials Library\tCtrl-L");
     
 	/* Create the menu listing for the mesh menu */
-	menuMesh->Append(menubarID::ID_menubarCreateMesh, "&Create Mesh");
-	menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
-	menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
+	_menuMesh->Append(menubarID::ID_menubarCreateMesh, "&Create Mesh");
+	_menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
+	_menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
     
     /* Creating the listinf of the Analysis menu */
-    analysisMenu->Append(AnalysisMenuID::ID_ANALYZE, "Analyze");
-    analysisMenu->Append(AnalysisMenuID::ID_VIEW_RESULTS, "View Results");
+    _analysisMenu->Append(AnalysisMenuID::ID_ANALYZE, "Analyze");
+    _analysisMenu->Append(AnalysisMenuID::ID_VIEW_RESULTS, "View Results");
     
     /* Creates the menu listing of the help menu */
-    menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
-    menuHelp->AppendSeparator();
-    menuHelp->Append(menubarID::ID_menubarLicense, "License");
-    menuHelp->Append(wxID_ABOUT);
+    _menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
+    _menuHelp->AppendSeparator();
+    _menuHelp->Append(menubarID::ID_menubarLicense, "License");
+    _menuHelp->Append(wxID_ABOUT);
     
     /* Create and display the menu bar */
-    SetMenuBar(menuBar);
+    SetMenuBar(_menuBar);
     CreateStatusBar();
     
     SetStatusText("Omni-FEM Simulator");
-
-//	createTopToolBar();
-//	this->GetClientSize(&clientSizeWidth, &clientSizeLength);
 	
 	createInitialStartupClient();
+//    createProblemChoosingClient();
 	enableToolMenuBar(false);
-	
-	
-//	this->SetMinSize(minSize);
-//	this->SetMaxSize(minSize);
-//	this->SetInitialSize(wxSize(300, 300));
-	
-	
 }
 
 
@@ -116,44 +105,44 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
 
 void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 {
-	menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
-	menuBar->Enable(menubarID::ID_menubarSave,		enable);
-	menuBar->Enable(menubarID::ID_menubarSaveAs,		enable);
+	_menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
+	_menuBar->Enable(menubarID::ID_menubarSave, enable);
+	_menuBar->Enable(menubarID::ID_menubarSaveAs, enable);
 	
-	menuBar->Enable(menubarID::ID_menubarCreateMesh,	enable);
-	menuBar->Enable(menubarID::ID_menubarDeleteMesh,	enable);
+	_menuBar->Enable(menubarID::ID_menubarCreateMesh, enable);
+	_menuBar->Enable(menubarID::ID_menubarDeleteMesh, enable);
     
-    menuBar->Enable(EditMenuID::ID_COPY, enable);
-    menuBar->Enable(EditMenuID::ID_PREFERENCES,	enable);
-    menuBar->Enable(EditMenuID::ID_CREATE_OPEN_BOUNDARY, enable);
-    menuBar->Enable(EditMenuID::ID_CREATE_RADIUS, enable);
-    menuBar->Enable(EditMenuID::ID_DELETE, enable);
-    menuBar->Enable(EditMenuID::ID_MIRROR, enable);
-    menuBar->Enable(EditMenuID::ID_MOVE, enable);
-    menuBar->Enable(EditMenuID::ID_SCALE, enable);
-    menuBar->Enable(EditMenuID::ID_UNDO, enable);
+    _menuBar->Enable(EditMenuID::ID_COPY, enable);
+    _menuBar->Enable(EditMenuID::ID_PREFERENCES, enable);
+    _menuBar->Enable(EditMenuID::ID_CREATE_OPEN_BOUNDARY, enable);
+    _menuBar->Enable(EditMenuID::ID_CREATE_RADIUS, enable);
+    _menuBar->Enable(EditMenuID::ID_DELETE, enable);
+    _menuBar->Enable(EditMenuID::ID_MIRROR, enable);
+    _menuBar->Enable(EditMenuID::ID_MOVE, enable);
+    _menuBar->Enable(EditMenuID::ID_SCALE, enable);
+    _menuBar->Enable(EditMenuID::ID_UNDO, enable);
     
-    menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
-    menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);
-    menuBar->Enable(ViewMenuID::ID_SHOW_ORPHANS, enable);
-    menuBar->Enable(ViewMenuID::ID_SHOW_STATUSBAR, enable);
-    menuBar->Enable(ViewMenuID::ID_ZOOM_IN, enable);
-    menuBar->Enable(ViewMenuID::ID_ZOOM_OUT, enable);
-    menuBar->Enable(ViewMenuID::ID_ZOOM_WINDOW, enable);
+    _menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
+    _menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);
+    _menuBar->Enable(ViewMenuID::ID_SHOW_ORPHANS, enable);
+    _menuBar->Enable(ViewMenuID::ID_SHOW_STATUSBAR, enable);
+    _menuBar->Enable(ViewMenuID::ID_ZOOM_IN, enable);
+    _menuBar->Enable(ViewMenuID::ID_ZOOM_OUT, enable);
+    _menuBar->Enable(ViewMenuID::ID_ZOOM_WINDOW, enable);
     
-    menuBar->Enable(GridMenuID::ID_SET_GRID_PREFERENCES, enable);
-    menuBar->Enable(GridMenuID::ID_SHOW_GRID, enable);
-    menuBar->Enable(GridMenuID::ID_SNAP_GRID, enable);
+    _menuBar->Enable(GridMenuID::ID_SET_GRID_PREFERENCES, enable);
+    _menuBar->Enable(GridMenuID::ID_SHOW_GRID, enable);
+    _menuBar->Enable(GridMenuID::ID_SNAP_GRID, enable);
     
-    menuBar->Enable(PropertiesMenuID::ID_BOUNDARY, enable);
-    menuBar->Enable(PropertiesMenuID::ID_CONDUCTORS, enable);
-    menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, enable);
-    menuBar->Enable(PropertiesMenuID::ID_MATERIAL_LIBRARY, enable);
-    menuBar->Enable(PropertiesMenuID::ID_MATERIALS, enable);
-    menuBar->Enable(PropertiesMenuID::ID_POINT, enable);
+    _menuBar->Enable(PropertiesMenuID::ID_BOUNDARY, enable);
+    _menuBar->Enable(PropertiesMenuID::ID_CONDUCTORS, enable);
+    _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, enable);
+    _menuBar->Enable(PropertiesMenuID::ID_MATERIAL_LIBRARY, enable);
+    _menuBar->Enable(PropertiesMenuID::ID_MATERIALS, enable);
+    _menuBar->Enable(PropertiesMenuID::ID_POINT, enable);
     
-    menuBar->Enable(AnalysisMenuID::ID_ANALYZE, enable);
-    menuBar->Enable(AnalysisMenuID::ID_VIEW_RESULTS, enable);
+    _menuBar->Enable(AnalysisMenuID::ID_ANALYZE, enable);
+    _menuBar->Enable(AnalysisMenuID::ID_VIEW_RESULTS, enable);
 }
 
 
@@ -161,46 +150,94 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 
 void OmniFEMMainFrame::createInitialStartupClient()
 {
-//	systemState currentState = _model.getProblemParameters()->;
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	
 	/* First, the function will need to destoy any other panels that are currently active */
-/*	if(currentState == systemState::dimensionChoosing)
+	if(_UIState == systemState::PHYSICS_CHOOSING)
 	{
-		dimSelectPanel->Destroy();
-		initialStartPanel = new wxPanel();
+ //       _problemSelectPanel->Destroy();
+		_initialStartPanel = new wxPanel();
 	}
-     */ 
-    
+    else if(_UIState == systemState::MODEL_DEFINING)
+    {
+        _geometryBuilderPanel->Destroy();
+       _initialStartPanel = new wxPanel(); 
+    }
+      
 	// This seciton will create a new panel and apply 2 buttons on the panel. 
 	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
-	initialStartPanel->Create(this, wxID_ANY, wxDefaultPosition);
+	_initialStartPanel->Create(this, wxID_ANY);
 	
-	wxButton *buttonNewFile = new wxButton(initialStartPanel, buttonID::ID_buttonNew, "New", wxDefaultPosition, wxSize(75, 23));
+	wxButton *buttonNewFile = new wxButton(_initialStartPanel, buttonID::ID_buttonNew, "New", wxDefaultPosition, wxSize(75, 23));
     buttonNewFile->SetFont(*font);
-//    buttonNewFile->SetMinSize(initialStartPanel->FromDIP(wxSize(75, 23)));
- //   buttonNewFile->SetInitialSize(FromDIP(wxSize(75, 23), this));
- //   buttonNewFile->SetSize(buttonNewFile->GetBestFittingSize());
-   // buttonNewFile->SetSize(wxSize(75, 23));
-	wxButton *buttonOpenFile = new wxButton(initialStartPanel, buttonID::ID_buttonOpen, "Open", wxDefaultPosition, wxSize(75, 23));
+	wxButton *buttonOpenFile = new wxButton(_initialStartPanel, buttonID::ID_buttonOpen, "Open", wxDefaultPosition, wxSize(75, 23));
     buttonOpenFile->SetFont(*font);
- //   buttonOpenFile->SetInitialSize(FromDIP(wxSize(75, 23)));
     
     buttonSizer->Add(buttonNewFile, 0, wxALL, 6);
     buttonSizer->Add(buttonOpenFile, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
 
-    initialStartPanel->SetSizer(buttonSizer);
+    _initialStartPanel->SetSizer(buttonSizer);
     
     SetSizerAndFit(buttonSizer);
-    buttonSizer->Fit(initialStartPanel);
+    buttonSizer->Fit(_initialStartPanel);// Needed?
     
-    this->SetSize(initialStartPanel->GetSize());
+    this->SetSize(_initialStartPanel->GetSize());
     this->SetMaxSize(this->GetSize());
 
-//	controller.updateOmniFEMState(systemState::initialStartUp);
+    _UIState = systemState::INITIAL_START_UP;
 }
 
+
+
+void OmniFEMMainFrame::createProblemChoosingClient()
+{
+    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    wxArrayString arrayPhysicsProblem;
+    wxPanel *problemSelectPanel = new wxPanel();
+    wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    
+    arrayPhysicsProblem.Add("Electrostatics");
+	arrayPhysicsProblem.Add("Magnetics");
+    
+    if(_UIState == systemState::INITIAL_START_UP)
+    {
+        _initialStartPanel->Destroy();
+    }
+
+	problemSelectPanel->Create(this, wxID_ANY);
+	
+    wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:");
+    text->SetFont(*font);
+    
+    _physicsProblemsListBox->Create(problemSelectPanel, generalFrameButton::ID_LISTBOX, wxDefaultPosition, wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
+    _physicsProblemsListBox->SetFont(*font);
+	_physicsProblemsListBox->SetSelection(0);
+    
+    topSizer->Add(text, 0, wxALL | wxALIGN_LEFT, 6);
+    topSizer->Add(_physicsProblemsListBox, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxALIGN_LEFT, 6);
+    
+	wxButton *backButton = new wxButton(problemSelectPanel, buttonID::ID_buttonBack, "Back", wxDefaultPosition, wxSize(75, 23));
+    backButton->SetFont(*font);
+	wxButton *finishButton = new wxButton(problemSelectPanel, buttonID::ID_buttonFinish, "Finish", wxDefaultPosition, wxSize(75, 23));
+	finishButton->SetFont(*font);
+    
+    footerSizer->Add(backButton, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+    footerSizer->Add(finishButton, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    
+    topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
+    
+    problemSelectPanel->SetSizer(topSizer);
+    
+    SetSizerAndFit(topSizer, false);
+    topSizer->Fit(problemSelectPanel);
+    
+    this->SetSize(problemSelectPanel->GetSize());
+    this->SetMaxSize(problemSelectPanel->GetSize());
+    
+    _UIState = systemState::PHYSICS_CHOOSING;
+}
 
 
 void OmniFEMMainFrame::createTopToolBar()
@@ -209,7 +246,7 @@ void OmniFEMMainFrame::createTopToolBar()
 	wxImage::AddHandler(new wxPNGHandler);
 	std::string resourcesDirectory = path.GetAppDocumentsDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
     
-    mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+//    _mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
 
 	/* This section will need to load the images into memory */
 //	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
@@ -226,9 +263,10 @@ void OmniFEMMainFrame::createTopToolBar()
 	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, openImageBitmap, "Open");
 	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, saveBitmap, "Save");
 	
-	/* Enable the tooolbar and associate it with the main frame */
+	/* Enable the tooolbar and associate it with the main frame 
 	mainFrameToolBar->Realize();
 	this->SetToolBar(mainFrameToolBar);
+     * */
 }
 
 
@@ -240,60 +278,7 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 
 
 
-void OmniFEMMainFrame::createDimensionClient()
-{
-//	systemState currentState = controller.getOmniFEMState();
 
-/*	
-	if(currentState == systemState::problemChooseing)
-		problemSelectPanel->Destroy();
-	else if(currentState == systemState::initialStartUp)
-		initialStartPanel->Destroy();
-	else if(currentState == systemState::problemDefining)
-	{
-		//problemDefiningPanel->Destroy();
-//		this->SetSize(minSize);
-//this
-//this->SetSize(500, 500);
-		enableToolMenuBar(false);
-//		this->SetMinSize(minSize);
-//		this->SetMaxSize(minSize);
-	}
-     */ 
-		
-    dimSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
-	
-    wxButton *TwoDimButton = new wxButton(dimSelectPanel, buttonID::ID_buttonTwoDim, "2-D", wxPoint(10, 50), wxSize(50, 50));
-	wxButton *backButton = new wxButton(dimSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(5, clientSizeLength - 25 - 5), wxSize(100, 25));
-	
-	wxStaticText *text = new wxStaticText(dimSelectPanel, wxID_ANY, "Choose Spatial Dimension:", wxPoint(5, 5));
-	
-	
-//	controller.updateOmniFEMState(systemState::dimensionChoosing);
-}
-
-
-
-void OmniFEMMainFrame::createProblemChoosingClient()
-{
-    wxArrayString arrayPhysicsProblem;
-    
-    arrayPhysicsProblem.Add("Electrostatics");
-	arrayPhysicsProblem.Add("Magnetics");
-    
-	dimSelectPanel->Destroy();
-	
-	problemSelectPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(clientSizeWidth, clientSizeLength), wxBORDER_SIMPLE);
-	
-	wxButton *backButton = new wxButton(problemSelectPanel, buttonID::ID_buttonBack, "Back", wxPoint(5, clientSizeLength - 25 - 5), wxSize(100, 25));
-	wxButton *finishButton = new wxButton(problemSelectPanel, buttonID::ID_buttonFinish, "Finish", wxPoint(125, clientSizeLength - 25 - 5), wxSize(100, 25));
-	wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:", wxPoint(5, 5));
-	
-	_physicsProblemsListBox->Create(problemSelectPanel, comboListBoxID::ID_physicsProblems, wxPoint(5, 50), wxDefaultSize, arrayPhysicsProblem, wxLB_SINGLE); 
-	_physicsProblemsListBox->SetSelection(0);
-	
-//	controller.updateOmniFEMState(systemState::problemChooseing);
-}
 
 
 
@@ -310,7 +295,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 		problemSelectPanel->Destroy();
          */ 
 		
-	enableToolMenuBar(true);
+/*	enableToolMenuBar(true);
 	
 	this->SetMaxSize(wxSize(-1, -1));
 	this->SetSize(960, 544);
@@ -318,8 +303,8 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	
 	
 	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
-	
-	/* This section is creating the general layout of the panel using he sizers in wxWidgets */
+	*/
+	/* This section is creating the general layout of the panel using he sizers in wxWidgets 
 	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, modelBuilderPanelSize, wxBORDER_SIMPLE | wxVSCROLL | wxHSCROLL);
 //	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
 
@@ -342,7 +327,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 	* Tree Ctrl (Hiearchary Listbox) *
 	**********************************/
 	
-	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, modelBuilderPanelSize - wxSize(2, 0), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);// The -2 appears in the size in order to give some extra room for hte scroll bars
+//	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, modelBuilderPanelSize - wxSize(2, 0), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);// The -2 appears in the size in order to give some extra room for hte scroll bars
 	
 //	controller.setRootTreeIDAbstraction(modelbuilderTreeCtrl->AddRoot(controller.getWorkspaceNameAbstraction()));// This is the highest level
 	
@@ -352,7 +337,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 //	controller.setAbstractMaterialsID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Materials"));
 //	controller.setAbstractMeshID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Mesh"));
 	
-	modelbuilderTreeCtrl->ExpandAll();
+//	modelbuilderTreeCtrl->ExpandAll();
 	
 	/*******************
 	* Geometry Builder *
@@ -360,8 +345,8 @@ void OmniFEMMainFrame::createModelDefiningClient()
 //	wxGLCanvas *test = new wxGLCanvas(twoDimDeometryEditor);
 //	twoDimGeometryEditor->createOpenGLCanvas();
 //	twoDimGeometryEditor->render();
-	this->SetSizer(vertBoxSizer);
-	this->Layout();
+//	this->SetSizer(vertBoxSizer);
+//	this->Layout();
 	
 //	controller.updateOmniFEMState(systemState::problemDefining);
 	
@@ -502,7 +487,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	* Other *
 	*********/
 
-	EVT_LISTBOX(comboListBoxID::ID_physicsProblems, OmniFEMMainFrame::physicsProblemComboBox)
+	EVT_LISTBOX(generalFrameButton::ID_LISTBOX, OmniFEMMainFrame::physicsProblemComboBox)
     
 wxEND_EVENT_TABLE()
 

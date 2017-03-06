@@ -27,7 +27,6 @@ class problemDef
 	*************/
 private:
 	//! A variable holding the dimension of the problem
-	problemDimension dimension = problemDimension::zero_Dimension;
 	
 	//! A string containing the name of the simulation
 	wxString name = "untitiled";
@@ -69,12 +68,6 @@ private:
 	* Function Prototypes *
 	***********************/
 public:
-
-	//! Function used to query the current dimesion of the problem
-	problemDimension getCurrentDimension();
-	
-	//! Function used to set the current dimension of the problem
-	void setProblemDimension(problemDimension dim);
 	
 	//! Function used to set the physics problem
 	void setPhysicsProblem(physicProblems phy);

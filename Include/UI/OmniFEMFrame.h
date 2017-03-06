@@ -16,7 +16,6 @@
 #include <UI/MainFrameAbstraction.h>
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MaterialsDialog/MaterialsLibrary.h>
-#include <UI/MainFrameController.h>
 #include <UI/PreferencesDialog.h>
 
 #include <UI/ExteriorRegion.h>
@@ -64,6 +63,86 @@ class OmniFEMMainFrame : public wxFrame
 public:
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos);
 private:
+
+    /************
+	* Variables *
+	*************/
+	
+    modelDefinition _model;
+    
+	//! Stores the client size of the main window in the x direction
+	int clientSizeWidth;
+	
+	//! Stores the client size of the main window in the y direction
+	int clientSizeLength;
+	
+	//! The menu bar for the main window
+	wxMenuBar *_menuBar = new wxMenuBar;
+	
+	wxBoxSizer *groupOneSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *vertBoxSizer = new wxBoxSizer(wxVERTICAL);
+	
+	//! This would be the file menu in the menu bar
+    wxMenu *_menuFile = new wxMenu;
+	
+	//! This would be the edit menu in the menu bar
+    wxMenu *_menuEdit = new wxMenu;
+	
+	//! This would be the view menu in the menu bar
+    wxMenu *_menuView = new wxMenu;
+	
+	//! This would be the problem menu in the menu bar
+    wxMenu *_menuProblem = new wxMenu;
+	
+    //! The Grid menu in the menu bar
+    wxMenu *_menuGrid = new wxMenu;
+    
+    //! The properties menu in the menu bar
+    wxMenu *_menuProperties = new wxMenu;
+    
+    //! This would be the mesh menu in the menu bar
+    wxMenu *_menuMesh = new wxMenu;
+    
+    //! This is the menu entry for hte analsis
+    wxMenu *_analysisMenu = new wxMenu;
+    
+	//! This would be the help menu in the menu bar
+    wxMenu *_menuHelp = new wxMenu;
+	
+	//! This is the object for the toolbar of the main window
+	wxToolBar *_mainFrameToolBar = new wxToolBar();
+	
+	//! Creates the panel for the first screen
+	wxPanel *_initialStartPanel = new wxPanel();
+    
+   
+	
+	//! Panel for selecting the physics problem
+	wxPanel *_problemSelectPanel;
+	
+	//! This panel will be used in the model builder window. The purpose is to display status messages
+	wxPanel *statusInfoPanel;
+	
+	//! This panel will be used to draw the geometry on 
+	wxPanel *_geometryBuilderPanel;
+	
+	//! This panel will be used to dispaly settings that are selected
+	wxPanel *settingsPanel;
+	
+	wxPanel *_viewResultsPanel;
+	
+	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
+	wxSize minSize = wxSize(450, 340);
+	
+	wxTreeCtrl *modelbuilderTreeCtrl;
+	
+	geometryEditor2DPresentation *twoDimGeometryEditor;
+    
+    wxListBox *_physicsProblemsListBox = new wxListBox();
+    
+    systemState _UIState = systemState::ON_START_UP_STATE;
+
+
 	/***********************************
 	* Prototypes for creating the menu *
 	************************************/
@@ -133,13 +212,6 @@ private:
  	/*****************************
 	* Prototypes for client area *
 	******************************/   
-    
-	//! Function that is called to begin the creating a new simulation
-	/*
-		This will be called in order for the user to choose the dimesnion of the simulation
-	*/
-    void createDimensionClient();
-	
 	
 	//! Function that is called to create the initial client area
 	void createInitialStartupClient();
@@ -195,91 +267,7 @@ private:
 	//! This is the function that is called when the combox box is clicked for choosing a physics problem
 	void physicsProblemComboBox(wxCommandEvent &event);
 	
-	/************
-	* Variables *
-	*************/
 	
-    modelDefinition _model;
-    
-	//! Stores the client size of the main window in the x direction
-	int clientSizeWidth;
-	
-	//! Stores the client size of the main window in the y direction
-	int clientSizeLength;
-	
-	//! The menu bar for the main window
-	wxMenuBar *menuBar = new wxMenuBar;
-	
-	wxBoxSizer *groupOneSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxBoxSizer *vertBoxSizer = new wxBoxSizer(wxVERTICAL);
-	
-	//! This would be the file menu in the menu bar
-    wxMenu *menuFile = new wxMenu;
-	
-	//! This would be the edit menu in the menu bar
-    wxMenu *menuEdit = new wxMenu;
-	
-	//! This would be the view menu in the menu bar
-    wxMenu *menuView = new wxMenu;
-	
-	//! This would be the problem menu in the menu bar
-    wxMenu *menuProblem = new wxMenu;
-	
-    //! The Grid menu in the menu bar
-    wxMenu *menuGrid = new wxMenu;
-    
-    //! The properties menu in the menu bar
-    wxMenu *menuProperties = new wxMenu;
-    
-    //! This would be the mesh menu in the menu bar
-    wxMenu *menuMesh = new wxMenu;
-    
-    //! This is the menu entry for hte analsis
-    wxMenu *analysisMenu = new wxMenu;
-    
-	//! This would be the help menu in the menu bar
-    wxMenu *menuHelp = new wxMenu;
-	
-	//! This is the object for the toolbar of the main window
-	wxToolBar *mainFrameToolBar = new wxToolBar();
-	
-	//! Creates the panel for the first screen
-	wxPanel *initialStartPanel = new wxPanel();
-	
-	//! Panel for selecting the dimension
-	wxPanel *dimSelectPanel;
-	
-	//! Panel for selecting the physics problem
-	wxPanel *problemSelectPanel;
-	
-	//! This panel will be used in the model builder window. The purpose is to display status messages
-	wxPanel *statusInfoPanel;
-	
-	//! This panel will be used in the problem defining state
-	/*
-		This object will be a list listing commonly acessed parameters. Such as listing
-		the materials used, the geometry along with the different simualtions associated with teh project
-	*/
-	wxPanel *modelBuilderTreePanel;
-	
-	//! This panel will be used to draw the geometry on 
-	wxPanel *geometryBuilderPanel;
-	
-	//! This panel will be used to dispaly settings that are selected
-	wxPanel *settingsPanel;
-	
-	wxPanel *viewResultsPanel;
-	
-	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
-	wxSize minSize = wxSize(450, 340);
-	
-//	OmniFEMMainFrameController controller;
-	
-	wxTreeCtrl *modelbuilderTreeCtrl;
-	
-	geometryEditor2DPresentation *twoDimGeometryEditor;
-    
-    wxListBox *_physicsProblemsListBox = new wxListBox();
 	
     wxDECLARE_EVENT_TABLE();
 };

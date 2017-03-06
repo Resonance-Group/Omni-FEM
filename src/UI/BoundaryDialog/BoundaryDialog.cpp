@@ -2,7 +2,7 @@
 
 boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
 {
-    _problem = physicProblems::magnetics;
+    _problem = physicProblems::PROB_MAGNETICS;
     
     _magneticBoundaryList = boundaryList;
     
@@ -18,7 +18,7 @@ boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxD
 
 boundaryDialog::boundaryDialog(std::vector<electricalBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
 {
-    _problem = physicProblems::electrostatics;
+    _problem = physicProblems::PROB_ELECTROSTATIC;
     
     _electricalBoundaryList = boundaryList;
     
@@ -90,7 +90,7 @@ void boundaryDialog::makeDialog()
 
 void boundaryDialog::onAddProperty(wxCommandEvent &event)
 {
-    if(_problem == physicProblems::magnetics)
+    if(_problem == physicProblems::PROB_MAGNETICS)
     {
         magneticBoundary magBC;
         _magBoundaryDialog->clearBoundary();
@@ -110,7 +110,7 @@ void boundaryDialog::onAddProperty(wxCommandEvent &event)
             selection->SetSelection(0);
         }
     }
-    else if(_problem == physicProblems::electrostatics)
+    else if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
         electricalBoundary estaticBC;
         _estaticBoundaryDialog->clearBoundary();
@@ -136,14 +136,14 @@ void boundaryDialog::onAddProperty(wxCommandEvent &event)
 
 void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::magnetics)
+    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         int currentSelection = selection->GetCurrentSelection();
         _magneticBoundaryList.erase(_magneticBoundaryList.begin() + currentSelection);
         selection->Delete(currentSelection);
         selection->SetSelection(0);
     }
-    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::electrostatics)
+    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         int currentSelection = selection->GetCurrentSelection();
         _electricalBoundaryList.erase(_electricalBoundaryList.begin() + currentSelection);
@@ -157,7 +157,7 @@ void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
 void boundaryDialog::onModifyProperty(wxCommandEvent &event)
 {
     
-    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::magnetics)
+    if(_magneticBoundaryList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         magneticBoundary selectedBoundary;
         int currentSelection = selection->GetSelection();
@@ -187,7 +187,7 @@ void boundaryDialog::onModifyProperty(wxCommandEvent &event)
         }
         selection->SetSelection(0);
     }
-    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::electrostatics)
+    else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         int currentSelection = selection->GetSelection();
         electricalBoundary selectedBoundary = _electricalBoundaryList.at(currentSelection);

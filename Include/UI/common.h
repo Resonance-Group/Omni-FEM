@@ -73,26 +73,6 @@ enum toolbarID
 
 
 
-//! Enum for the buttons
-enum buttonID
-{
-	ID_buttonTwoDim = 1,
-	ID_buttonBack = 2,
-	ID_buttonNew = 3,
-	ID_buttonOpen = 4,
-	ID_buttonFinish = 5
-};
-
-
-
-//! Enums for comboboxs
-enum comboListBoxID
-{
-	ID_physicsProblems = 1
-};
-
-
-
 //! These enums are for the different panels
 enum panelID
 {

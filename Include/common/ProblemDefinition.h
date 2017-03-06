@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <wx/string.h>
+
 #include <common/ElectricalBoundary.h>
 #include <common/ElectroStaticMaterial.h>
 #include <common/ElectrostaticPreference.h>
@@ -49,6 +51,8 @@ private:
     
     physicProblems _phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
     
+    wxString _problemName;
+    
     /**********
     * Methods *
 	***********/
@@ -94,19 +98,35 @@ public:
         return _localElectricalBoundaryConditionList;
     }
     
-    //! This function will add a single material into the global list
-    void addMaterial(materialProperty material);
+    void setMaterialList(std::vector<magneticMaterial> list)
+    {
+        _localMagneticMaterialList = list;
+    }
     
-    //! This function will combine the input list with the global list
-    void addMaterialList(std::vector<materialProperty> materialList);
+    void setMaterialList(std::vector<electrostaticMaterial> list)
+    {
+        _localElectrialMaterialList = list;
+    }
     
-    //! THis function will copy the input list to the global list
-    void copyMaterialList(std::vector<materialProperty> materialList);
+    std::vector<magneticMaterial> getMagnetMaterialList()
+    {
+        return _localMagneticMaterialList;
+    }
     
-    //! This function will return the global list
-    std::vector<materialProperty> getMaterialList();
+    std::vector<electrostaticMaterial> getElectricalMaterialList()
+    {
+        return _localElectrialMaterialList;
+    }
     
+    void setName(wxString name)
+    {
+        _problemName = name;
+    }
     
+    wxString getName()
+    {
+        return _problemName;
+    }
 };
 
 

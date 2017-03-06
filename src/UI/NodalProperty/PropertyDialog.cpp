@@ -70,10 +70,10 @@ void nodalPropertiesDialog::onAddProperty(wxCommandEvent &event)
     nodalProperty newNodalProperty;
     nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog();
     
-    if(_problem == physicProblems::electrostatics)
-        nodalPropDialog->createDialog(physicProblems::electrostatics);
+    if(_problem == physicProblems::PROB_ELECTROSTATIC)
+        nodalPropDialog->createDialog(physicProblems::PROB_ELECTROSTATIC);
     else
-        nodalPropDialog->createDialog(physicProblems::magnetics);
+        nodalPropDialog->createDialog(physicProblems::PROB_MAGNETICS);
         
     nodalPropDialog->clearNodalProperty();
     if(nodalPropDialog->ShowModal() == wxID_OK)
@@ -113,10 +113,10 @@ void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
     nodalProperty selectedNodalProperty;
     nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog();
     
-    if(_problem == physicProblems::electrostatics)
-        nodalPropDialog->createDialog(physicProblems::electrostatics);
+    if(_problem == physicProblems::PROB_ELECTROSTATIC)
+        nodalPropDialog->createDialog(physicProblems::PROB_ELECTROSTATIC);
     else
-        nodalPropDialog->createDialog(physicProblems::magnetics);
+        nodalPropDialog->createDialog(physicProblems::PROB_MAGNETICS);
         
     if(_nodalPropertyList.size() > 0)
     {

@@ -94,21 +94,6 @@ enum AnalysisMenuID
 };
 
 
-//! Enum contianing the dimension of the problem
-/*! 
-	Please note that Omni-FEM does not support all of these dimensions.
-	Some are placed here as a place holder for future releases
-*/
-enum class problemDimension
-{
-	zero_Dimension,
-	one_dimension,
-	two_dimension,
-	three_dimension
-};
-
-
-
 //! Enum containing the different physics problems
 /*!
 	This is the enum that is used to determine what physics problem 
@@ -121,8 +106,6 @@ enum class problemDimension
 enum class physicProblems
 {
     NO_PHYSICS_DEFINED,
-	electrostatics,
-	magnetics,
     PROB_ELECTROSTATIC,
     PROB_MAGNETICS
 };
@@ -130,12 +113,12 @@ enum class physicProblems
 
 enum class systemState
 {
-	initialStartUp,
-	dimensionChoosing,
-	problemChooseing,
-	problemDefining,
-	simulatingProblem,
-	viewingResults
+    ON_START_UP_STATE,
+    INITIAL_START_UP,
+    PHYSICS_CHOOSING,
+    MODEL_DEFINING,
+    SIMULATING,
+    VIEWING_RESULTS
 };
 
 //! This enum is used to set the AC SOlver that Omni-FEM will use
@@ -256,7 +239,8 @@ enum generalFrameButton
     ID_BUTTON2,
     ID_BUTTON3,
     ID_TREECTRL1,
-    ID_TREECTRL2
+    ID_TREECTRL2,
+    ID_LISTBOX
 };
 
 enum magneticBlockPropertyDiag
@@ -274,6 +258,17 @@ enum magneticBlockPropertyDiag
     ID_TextControl11,
     ID_TextControl12,
     ID_TextControl13
+};
+
+//! Enum for the buttons
+enum buttonID
+{
+    ID_NO_BUTTON,
+	ID_buttonTwoDim,
+	ID_buttonBack,
+	ID_buttonNew,
+	ID_buttonOpen,
+	ID_buttonFinish
 };
 
 

@@ -43,7 +43,7 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Specified Potential Property", wxPoint(50, 32), wxSize(176, 19));
     radioButton1->SetFont(*font);
     radioButton1->SetValue(true);
-    if(_problem == physicProblems::magnetics)
+    if(_problem == physicProblems::PROB_MAGNETICS)
         radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Current Property", wxPoint(50, 55), wxSize(144, 19));
     else
         radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Charge Density Property", wxPoint(50, 55), wxSize(190, 19));
@@ -54,7 +54,7 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     radioSizer->Add(radioButton2, 0, wxLEFT | wxRIGHT, 6);
     
     /*Creating the group boxes */
-    if(_problem == physicProblems::magnetics)
+    if(_problem == physicProblems::PROB_MAGNETICS)
         groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (Wb/m)", wxPoint(15, 78), wxSize(210, 49));
     else
         groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (V)", wxPoint(15, 78), wxSize(210, 49));
@@ -62,7 +62,7 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     textCtrl1->Create(groupBox1, wxID_ANY, std::to_string(0.0), wxPoint(6, 5), wxSize(198, 20));
     textCtrl1->SetFont(*font);
     textCtrl1->Enable(true);
-    if(_problem == physicProblems::magnetics)
+    if(_problem == physicProblems::PROB_MAGNETICS)
         groupBox2->Create(this, wxID_ANY, "Point Current (Amps)", wxPoint(15, 133), wxSize(210, 49));
     else
         groupBox2->Create(this, wxID_ANY, "Point Charge Density (C/m)", wxPoint(15, 133), wxSize(210, 49));

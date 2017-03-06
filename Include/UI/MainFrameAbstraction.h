@@ -48,11 +48,6 @@ public:
 	*/
 	void setOmniFEMState(systemState omniFEMState);
 	
-	//! Function to get the current problem dimension
-	problemDimension getProblemDimension();
-	
-	//! Function to set the problem dimension
-	void setProblemDimension(problemDimension dimension);
 	
 	//! Function used to get the current physics of the problem 
 	physicProblems getProblemPhysics();
@@ -113,11 +108,7 @@ public:
 	*************/
 private:
 	
-	//! The state of OmniFEM
-	/*!
-		This variable holds the current state of OmniFEM
-	*/
-	systemState omniFEMSystemState = systemState::initialStartUp;
+
 	
 	//! This object is created for each physics problem
 	/*!

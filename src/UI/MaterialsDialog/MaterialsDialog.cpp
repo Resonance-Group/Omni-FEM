@@ -2,7 +2,7 @@
 
 materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxDialog(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
-    _problem = physicProblems::magnetics;
+    _problem = physicProblems::PROB_MAGNETICS;
     
     _magneticMaterialList = materialList;
     
@@ -18,7 +18,7 @@ materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxD
 
 materialDialog::materialDialog(std::vector<electrostaticMaterial> electroStaticMaterialList) : wxDialog(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
-    _problem = physicProblems::electrostatics;
+    _problem = physicProblems::PROB_ELECTROSTATIC;
     
     _electroStaticMaterialList = electroStaticMaterialList;
     
@@ -90,7 +90,7 @@ void materialDialog::makeDialog()
 
 void materialDialog::onAddProperty(wxCommandEvent &event)
 {
-    if(_problem == physicProblems::magnetics)
+    if(_problem == physicProblems::PROB_MAGNETICS)
     {
         blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
         magneticMaterial newMat;
@@ -111,7 +111,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
             selection->SetSelection(0);
         }
     }
-    else if(_problem == physicProblems::electrostatics)
+    else if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
         electrostaticMaterial newMaterial;
         _eStaticMaterialDialog->clearMaterial();
@@ -137,14 +137,14 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
 
 void materialDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_magneticMaterialList.size() > 0 && _problem == physicProblems::magnetics)
+    if(_magneticMaterialList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         int currentSelection = selection->GetCurrentSelection();
         _magneticMaterialList.erase(_magneticMaterialList.begin() + currentSelection);
         selection->Delete(currentSelection);
         selection->SetSelection(0);
     }
-    else if(_electroStaticMaterialList.size() > 0 && _problem == physicProblems::electrostatics)
+    else if(_electroStaticMaterialList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         int currentSelection = selection->GetCurrentSelection();
         _electroStaticMaterialList.erase(_electroStaticMaterialList.begin() + currentSelection);
@@ -158,7 +158,7 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
 void materialDialog::onModifyProperty(wxCommandEvent &event)
 {
     
-    if(_magneticMaterialList.size() > 0 && _problem == physicProblems::magnetics)
+    if(_magneticMaterialList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic();
         magneticMaterial selectedMaterial;
@@ -182,7 +182,7 @@ void materialDialog::onModifyProperty(wxCommandEvent &event)
             selection->SetString(currentSelection, selectedMaterial.getName());
         }
     }
-    else if(_electroStaticMaterialList.size() > 0 && _problem == physicProblems::electrostatics)
+    else if(_electroStaticMaterialList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         electrostaticMaterial selectedMaterial;
         int currentSelection = selection->GetSelection();
