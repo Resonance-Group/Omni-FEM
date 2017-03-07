@@ -31,7 +31,6 @@
           <File Name="src/UI/MainFrame/Presentation/problemMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/save.png"/>
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>

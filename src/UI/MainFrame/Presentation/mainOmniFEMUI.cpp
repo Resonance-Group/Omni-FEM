@@ -95,7 +95,6 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     SetStatusText("Omni-FEM Simulator");
 	
 	createInitialStartupClient();
-//    createProblemChoosingClient();
 	enableToolMenuBar(false);
 }
 
@@ -150,40 +149,34 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 
 void OmniFEMMainFrame::createInitialStartupClient()
 {
+    /* First, the function will need to destoy any other panels that are currently active */
+	this->DestroyChildren();
+    this->CreateStatusBar();
+    this->SetStatusText("Omni-FEM Simulator");
+    
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxPanel *initialStartPanel = new wxPanel(this, wxID_ANY);
 	
-	/* First, the function will need to destoy any other panels that are currently active */
-	if(_UIState == systemState::PHYSICS_CHOOSING)
-	{
- //       _problemSelectPanel->Destroy();
-		_initialStartPanel = new wxPanel();
-	}
-    else if(_UIState == systemState::MODEL_DEFINING)
-    {
-        _geometryBuilderPanel->Destroy();
-       _initialStartPanel = new wxPanel(); 
-    }
-      
 	// This seciton will create a new panel and apply 2 buttons on the panel. 
 	// The 2 buttons are associated with the panel and when the panel is destoryed, so are the buttons.
-	_initialStartPanel->Create(this, wxID_ANY);
 	
-	wxButton *buttonNewFile = new wxButton(_initialStartPanel, buttonID::ID_buttonNew, "New", wxDefaultPosition, wxSize(75, 23));
+	wxButton *buttonNewFile = new wxButton(initialStartPanel, buttonID::ID_buttonNew, "New", wxDefaultPosition, wxSize(75, 23));
     buttonNewFile->SetFont(*font);
-	wxButton *buttonOpenFile = new wxButton(_initialStartPanel, buttonID::ID_buttonOpen, "Open", wxDefaultPosition, wxSize(75, 23));
+	wxButton *buttonOpenFile = new wxButton(initialStartPanel, buttonID::ID_buttonOpen, "Open", wxDefaultPosition, wxSize(75, 23));
     buttonOpenFile->SetFont(*font);
     
     buttonSizer->Add(buttonNewFile, 0, wxALL, 6);
     buttonSizer->Add(buttonOpenFile, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
 
-    _initialStartPanel->SetSizer(buttonSizer);
+    initialStartPanel->SetSizerAndFit(buttonSizer);
     
-    SetSizerAndFit(buttonSizer);
-    buttonSizer->Fit(_initialStartPanel);// Needed?
+    this->SetMinSize(wxSize(initialStartPanel->GetSize().GetWidth(), initialStartPanel->GetSize().GetHeight() + this->GetStatusBar()->GetSize().GetHeight()));
     
-    this->SetSize(_initialStartPanel->GetSize());
+    this->SetClientSize(initialStartPanel->GetSize());
+    
     this->SetMaxSize(this->GetSize());
+    
 
     _UIState = systemState::INITIAL_START_UP;
 }
@@ -192,20 +185,20 @@ void OmniFEMMainFrame::createInitialStartupClient()
 
 void OmniFEMMainFrame::createProblemChoosingClient()
 {
+    this->DestroyChildren();
+    this->CreateStatusBar();
+    this->SetStatusText("Omni-FEM Simulator");
+    
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     wxArrayString arrayPhysicsProblem;
     wxPanel *problemSelectPanel = new wxPanel();
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    _physicsProblemsListBox = new wxListBox();
     
     arrayPhysicsProblem.Add("Electrostatics");
 	arrayPhysicsProblem.Add("Magnetics");
     
-    if(_UIState == systemState::INITIAL_START_UP)
-    {
-        _initialStartPanel->Destroy();
-    }
-
 	problemSelectPanel->Create(this, wxID_ANY);
 	
     wxStaticText *text = new wxStaticText(problemSelectPanel, wxID_ANY, "Select Physics Problem:");
@@ -228,14 +221,14 @@ void OmniFEMMainFrame::createProblemChoosingClient()
     
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
     
-    problemSelectPanel->SetSizer(topSizer);
+    problemSelectPanel->SetSizerAndFit(topSizer);
     
-    SetSizerAndFit(topSizer, false);
-    topSizer->Fit(problemSelectPanel);
+    this->SetMaxSize(problemSelectPanel->GetSize() + (this->GetSize() - this->GetClientSize()));
+
+    this->SetClientSize(problemSelectPanel->GetSize());
     
-    this->SetSize(problemSelectPanel->GetSize());
-    this->SetMaxSize(problemSelectPanel->GetSize());
-    
+    this->SetMinSize(this->GetSize());
+
     _UIState = systemState::PHYSICS_CHOOSING;
 }
 
@@ -284,6 +277,9 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 
 void OmniFEMMainFrame::createModelDefiningClient()
 {
+    this->DestroyChildren();
+    this->CreateStatusBar();
+    this->SetStatusText("Omni-FEM Simulator");
 //	systemState currentState = controller.getOmniFEMState();
 	
 	
@@ -396,6 +392,22 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 
 
 
+void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
+{
+    createInitialStartupClient();
+}
+
+
+
+void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
+{
+    int temp = _physicsProblemsListBox->GetSelection() + 1;
+    _model.getProblemParameters()->setPhysicsProblem((physicProblems)temp);
+//	createModelDefiningClient();
+}
+
+
+
 	/**************
 	* Event Table *
 	***************/
@@ -471,7 +483,6 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	
 	EVT_BUTTON(buttonID::ID_buttonNew, OmniFEMMainFrame::onNewFile)
 	EVT_BUTTON(buttonID::ID_buttonOpen, OmniFEMMainFrame::onOpenFile)
-    EVT_BUTTON(buttonID::ID_buttonTwoDim, OmniFEMMainFrame::onTwoDimButton)
 	EVT_BUTTON(buttonID::ID_buttonBack, OmniFEMMainFrame::onBackButton)
 	EVT_BUTTON(buttonID::ID_buttonFinish, OmniFEMMainFrame::onFinishButton)
 	

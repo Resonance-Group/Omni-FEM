@@ -112,11 +112,6 @@ private:
 	//! This is the object for the toolbar of the main window
 	wxToolBar *_mainFrameToolBar = new wxToolBar();
 	
-	//! Creates the panel for the first screen
-	wxPanel *_initialStartPanel = new wxPanel();
-    
-   
-	
 	//! Panel for selecting the physics problem
 	wxPanel *_problemSelectPanel;
 	
@@ -138,7 +133,7 @@ private:
 	
 	geometryEditor2DPresentation *twoDimGeometryEditor;
     
-    wxListBox *_physicsProblemsListBox = new wxListBox();
+    wxListBox *_physicsProblemsListBox;
     
     systemState _UIState = systemState::ON_START_UP_STATE;
 
@@ -245,9 +240,6 @@ private:
     /*************************
 	* Prototypes for buttons *
 	**************************/
-    
-	//! Function called when the user chooses the two dim button
-    void onTwoDimButton(wxCommandEvent &event);
 	
 	//! Function called when the back button is pressed 
 	void onBackButton(wxCommandEvent &event);
