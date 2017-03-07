@@ -16,12 +16,12 @@
 class modelDefinition
 {
 private:
-    problemDefinition *_parameters;
+    problemDefinition _parameters;
     
 public:
     problemDefinition* getProblemParameters()
     {
-        return _parameters;
+        return &_parameters;
     }
 };
 

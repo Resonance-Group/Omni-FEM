@@ -172,9 +172,7 @@ void OmniFEMMainFrame::createInitialStartupClient()
     initialStartPanel->SetSizerAndFit(buttonSizer);
     
     this->SetMinSize(wxSize(initialStartPanel->GetSize().GetWidth(), initialStartPanel->GetSize().GetHeight() + this->GetStatusBar()->GetSize().GetHeight()));
-    
     this->SetClientSize(initialStartPanel->GetSize());
-    
     this->SetMaxSize(this->GetSize());
     
 
@@ -233,73 +231,17 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 }
 
 
-void OmniFEMMainFrame::createTopToolBar()
-{
-    wxStandardPaths path = wxStandardPaths::Get();
-	wxImage::AddHandler(new wxPNGHandler);
-	std::string resourcesDirectory = path.GetAppDocumentsDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
-    
-//    _mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
-
-	/* This section will need to load the images into memory */
-//	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
-//	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
-//	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
-	
-	/* This section will convert the images into bitmaps */
-//	wxBitmap saveBitmap(saveImage);
-//	wxBitmap openImageBitmap(openImage);
-//	wxBitmap newFileBitmap(newFileImage);
-	
-	/* This section will add the tool to the toolbar */
-/*	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, newFileBitmap, "New File");
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, openImageBitmap, "Open");
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, saveBitmap, "Save");
-	
-	/* Enable the tooolbar and associate it with the main frame 
-	mainFrameToolBar->Realize();
-	this->SetToolBar(mainFrameToolBar);
-     * */
-}
-
-
-
-void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
-{
-    Close(true);
-}
-
-
-
-
-
-
 
 void OmniFEMMainFrame::createModelDefiningClient()
 {
     this->DestroyChildren();
     this->CreateStatusBar();
     this->SetStatusText("Omni-FEM Simulator");
-//	systemState currentState = controller.getOmniFEMState();
-	
-	
-/*	if(currentState == systemState::initialStartUp)
-		initialStartPanel->Destroy();
-	else if(currentState == systemState::dimensionChoosing)
-		dimSelectPanel->Destroy();
-	else if(currentState == systemState::problemChooseing)
-		problemSelectPanel->Destroy();
-         */ 
-		
-/*	enableToolMenuBar(true);
-	
-	this->SetMaxSize(wxSize(-1, -1));
-	this->SetSize(960, 544);
-	this->SetMinSize(wxSize(960, 544));
-	
-	
-	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
-	*/
+    enableToolMenuBar(true);
+    
+
+//	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
+
 	/* This section is creating the general layout of the panel using he sizers in wxWidgets 
 	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, modelBuilderPanelSize, wxBORDER_SIMPLE | wxVSCROLL | wxHSCROLL);
 //	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
@@ -347,6 +289,53 @@ void OmniFEMMainFrame::createModelDefiningClient()
 //	controller.updateOmniFEMState(systemState::problemDefining);
 	
 }
+
+
+
+
+void OmniFEMMainFrame::createTopToolBar()
+{
+    wxStandardPaths path = wxStandardPaths::Get();
+	wxImage::AddHandler(new wxPNGHandler);
+	std::string resourcesDirectory = path.GetAppDocumentsDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
+    
+//    _mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+
+	/* This section will need to load the images into memory */
+//	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
+//	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
+//	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
+	
+	/* This section will convert the images into bitmaps */
+//	wxBitmap saveBitmap(saveImage);
+//	wxBitmap openImageBitmap(openImage);
+//	wxBitmap newFileBitmap(newFileImage);
+	
+	/* This section will add the tool to the toolbar */
+/*	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, newFileBitmap, "New File");
+	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, openImageBitmap, "Open");
+	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, saveBitmap, "Save");
+	
+	/* Enable the tooolbar and associate it with the main frame 
+	mainFrameToolBar->Realize();
+	this->SetToolBar(mainFrameToolBar);
+     * */
+}
+
+
+
+void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
+{
+    Close(true);
+}
+
+
+
+
+
+
+
+
 
 	/********************
 	 * Event Procedures *
@@ -403,7 +392,7 @@ void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
 {
     int temp = _physicsProblemsListBox->GetSelection() + 1;
     _model.getProblemParameters()->setPhysicsProblem((physicProblems)temp);
-//	createModelDefiningClient();
+	createModelDefiningClient();
 }
 
 

@@ -98,6 +98,36 @@ public:
         return _localElectricalBoundaryConditionList;
     }
     
+    void setConductorList(std::vector<conductorProperty> list)
+    {
+        _localConductorList = list;
+    }
+    
+    std::vector<conductorProperty> getConductorList()
+    {
+        return _localConductorList;
+    }
+    
+    void setCircuitList(std::vector<circuitProperty> list)
+    {
+        _localCircuitList = list;
+    }
+    
+    std::vector<circuitProperty> getCircuitList()
+    {
+        return _localCircuitList;
+    }
+    
+    void setNodalList(std::vector<nodalProperty> list)
+    {
+        _localNodalList = list;
+    }
+    
+    std::vector<nodalProperty> getNodalList()
+    {
+        return _localNodalList;
+    }
+    
     void setMaterialList(std::vector<magneticMaterial> list)
     {
         _localMagneticMaterialList = list;

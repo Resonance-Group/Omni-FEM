@@ -13,11 +13,14 @@
 #include <UI/geometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
-#include <UI/MainFrameAbstraction.h>
+
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MaterialsDialog/MaterialsLibrary.h>
-#include <UI/PreferencesDialog.h>
+#include <UI/BoundaryDialog/BoundaryDialog.h>
+#include <UI/NodalProperty/PropertyDialog.h>
+#include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
+#include <UI/PreferencesDialog.h>
 #include <UI/ExteriorRegion.h>
 
 #include <UI/EditMenu/MoveCopyDialog.h>
