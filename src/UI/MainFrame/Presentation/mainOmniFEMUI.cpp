@@ -238,7 +238,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     this->CreateStatusBar();
     this->SetStatusText("Omni-FEM Simulator");
     enableToolMenuBar(true);
-    
+    createTopToolBar();
 
 //	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
 
@@ -295,31 +295,46 @@ void OmniFEMMainFrame::createModelDefiningClient()
 
 void OmniFEMMainFrame::createTopToolBar()
 {
+    wxInitAllImageHandlers();
+    
     wxStandardPaths path = wxStandardPaths::Get();
 	wxImage::AddHandler(new wxPNGHandler);
+    std::string test1 = path.GetAppDocumentsDir().ToStdString();
+    std::string test2 = path.GetConfigDir().ToStdString();
+    std::string test3 = path.GetDataDir().ToStdString();
+    std::string test4 = path.GetDocumentsDir().ToStdString();
+    std::string test5 = path.GetExecutablePath().ToStdString();
+    std::string test6 = path.GetInstallPrefix().ToStdString();
+    std::string test7 = path.GetLocalDataDir().ToStdString();
+    std::string test8 = path.GetPluginsDir().ToStdString();
+    std::string test9 = path.GetResourcesDir().ToStdString();
+    std::string test10 = path.GetTempDir().ToStdString();
+    std::string test11 = path.GetUserConfigDir().ToStdString();
+    std::string test12 = path.GetUserDataDir().ToStdString();
+    std::string test13 = path.GetUserLocalDataDir().ToStdString()''
 	std::string resourcesDirectory = path.GetAppDocumentsDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
     
-//    _mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
+    _mainFrameToolBar->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
 
 	/* This section will need to load the images into memory */
-//	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
-//	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
-//	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
+	wxImage saveImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
+	wxImage openImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
+	wxImage newFileImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
 	
 	/* This section will convert the images into bitmaps */
-//	wxBitmap saveBitmap(saveImage);
-//	wxBitmap openImageBitmap(openImage);
-//	wxBitmap newFileBitmap(newFileImage);
+	wxBitmap saveBitmap(saveImage);
+	wxBitmap openImageBitmap(openImage);
+	wxBitmap newFileBitmap(newFileImage);
 	
 	/* This section will add the tool to the toolbar */
-/*	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, newFileBitmap, "New File");
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, openImageBitmap, "Open");
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, saveBitmap, "Save");
+	_mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, "New File", newFileBitmap);
+	_mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, "Open", openImageBitmap);
+	_mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, "Save", saveBitmap);
 	
-	/* Enable the tooolbar and associate it with the main frame 
-	mainFrameToolBar->Realize();
-	this->SetToolBar(mainFrameToolBar);
-     * */
+	/* Enable the tooolbar and associate it with the main frame */
+	_mainFrameToolBar->Realize();
+	this->SetToolBar(_mainFrameToolBar);
+
 }
 
 
