@@ -10,19 +10,80 @@
 #define MODELDEFINITION_H_
 
 #include <vector>
+#include <freeglut.h>
+#include <gl.h>
+#include <glu.h>
+
+#include <wx/wx.h>
 
 #include <common/ProblemDefinition.h>
+#include <common/GridPreferences.h>
 
-class modelDefinition
+#include <UI/geometryShapes.h>
+
+class modelDefinition : public wxGLCanvas
 {
 private:
     problemDefinition _parameters;
     
+    gridPreferences _preferences;
+    
+    //! This is the context which will be associated to the class
+	wxGLContext *_geometryContext;
+    
+    std::vector<node> _nodeList;
+    
+	std::vector<blockLabel> _blockLabelList;
+    
+	std::vector<edgeLineShape> _lineList;
+    
+	std::vector<arcShape> _arcList;
+    
+    double _zoomFactor = 1;
+    
+    double _cameraX = 0;
+    
+    double _cameraY = 0;
+    
+    double _gridStep = 0.05;
+    
+    void updateProjection();
+    
+    void drawGrid();
+    
+    double convertToXCoordinate(int xPixel);
+    
+    double convertToYCoordinate(int yPixel); 
+    
+    //! This is the event that is fired when the canvas is drawn or re-drawn
+	void onPaintCanvas(wxPaintEvent &event);
+    
+
 public:
+    modelDefinition(wxWindow *par, const wxSize &size);
+
     problemDefinition* getProblemParameters()
     {
         return &_parameters;
     }
+    
+    gridPreferences* getGridPreferences()
+    {
+        return &_preferences;
+    }
+    
+    void updateGrid()
+    {
+        this->Refresh();
+    }
+    
+    void changeSize(wxSize size)
+    {
+        this->SetSize(size);
+    }
+    
+private:
+    wxDECLARE_EVENT_TABLE(); 
 };
 
 #endif

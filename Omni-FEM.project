@@ -32,7 +32,6 @@
           <File Name="src/UI/MainFrame/Presentation/save.png"/>
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/AnalysisMenu.cpp"/>
@@ -48,7 +47,6 @@
           <VirtualDirectory Name="Presentation">
             <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
-            <File Name="src/UI/Geometry/2D/Presentation/openGLFunctions.cpp"/>
           </VirtualDirectory>
           <VirtualDirectory Name="Controller">
             <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
@@ -69,6 +67,7 @@
           <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
         </VirtualDirectory>
+        <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>

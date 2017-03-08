@@ -71,7 +71,7 @@ private:
 	* Variables *
 	*************/
 	
-    modelDefinition _model;
+    modelDefinition *_model;
     
 	//! Stores the client size of the main window in the x direction
 	int clientSizeWidth;
@@ -113,7 +113,7 @@ private:
     wxMenu *_menuHelp = new wxMenu;
 	
 	//! This is the object for the toolbar of the main window
-	wxToolBar *_mainFrameToolBar = new wxToolBar();
+	
 	
 	//! Panel for selecting the physics problem
 	wxPanel *_problemSelectPanel;

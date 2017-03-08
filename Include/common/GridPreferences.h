@@ -21,6 +21,8 @@ private:
     
     bool _isShowBlockName = true;
     
+    bool _isShowAxis = true;
+    
 public:
 
     void setPPU(double ppu)
@@ -91,6 +93,16 @@ public:
     bool getShowBlockNameState()
     {
         return _isShowBlockName;
+    }
+    
+    void setShowAxisState(bool state)
+    {
+        _isShowAxis = state;
+    }
+    
+    bool getShowAxisState()
+    {
+        return _isShowAxis;
     }
 };
     

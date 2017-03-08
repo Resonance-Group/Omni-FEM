@@ -12,7 +12,7 @@ geometryEditorCanvas::geometryEditorCanvas(wxWindow *par, const wxPoint &positio
     debugPixelCoordinate = new wxGLString("none");
     
     this->SetLabel("none");
-    
+
 	geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*geometryContext);
 	canvasHeight = (double)this->GetSize().y;
