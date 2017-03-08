@@ -251,75 +251,17 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     this->SetMaxSize(wxSize(-1, -1));
     this->SetSize(wxSize(960, 544));
-    this->SetMinSize(this->GetSize());
+    this->SetMinSize(wxSize(1, 1));
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-    wxPanel *modelCreationPanel = new wxPanel(this, wxID_ANY);
-    modelDefinition *temp = new modelDefinition(modelCreationPanel, this->GetClientSize());
+ 
+    modelDefinition *temp = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
     
     topSizer->Add(temp, 1, wxALL | wxEXPAND, 6);
     
-    modelCreationPanel->SetSizerAndFit(topSizer);
-    
-    
-    
-    this->SetClientSize(modelCreationPanel->GetSize());
-    
-//    temp->changeSize();
-    
-    
-    
+    this->SetSizerAndFit(topSizer);
+
     _UIState = systemState::MODEL_DEFINING;
-    
-
-//	wxSize modelBuilderPanelSize = wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength));
-
-	/* This section is creating the general layout of the panel using he sizers in wxWidgets 
-	modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxDefaultPosition, modelBuilderPanelSize, wxBORDER_SIMPLE | wxVSCROLL | wxHSCROLL);
-//	groupOneSizer->Add(modelBuilderTreePanel, 1, wxALIGN_LEFT | wxALL | wxEXPAND, controller.getBorderSize());
-
-	//geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-	twoDimGeometryEditor = new geometryEditor2DPresentation(this, wxDefaultPosition, wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)));
-	
-//	groupOneSizer->Add(twoDimGeometryEditor, 3, wxALIGN_CENTER | wxALL | wxEXPAND, controller.getBorderSize());// THe middle frame will get the highest propoty when sizing becuase this is what the user will use most often
-	
-	settingsPanel = new wxPanel(this, panelID::ID_settings, wxDefaultPosition, wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-//	groupOneSizer->Add(settingsPanel, 1, wxALIGN_RIGHT | wxALL | wxEXPAND, controller.getBorderSize());
-	
-//	vertBoxSizer->Add(groupOneSizer, 1, wxALL | wxEXPAND, controller.getBorderSize());
-	
-	statusInfoPanel = new wxPanel(this, panelID::ID_status, wxDefaultPosition, wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
-//	vertBoxSizer->Add(statusInfoPanel, 0, wxEXPAND | wxALL, controller.getBorderSize());
-	
-	
-	/* This section is populating the layout with everything that is needed for the user */
-	/*********************************
-	* Tree Ctrl (Hiearchary Listbox) *
-	**********************************/
-	
-//	modelbuilderTreeCtrl = new wxTreeCtrl(modelBuilderTreePanel, wxID_ANY, wxDefaultPosition, modelBuilderPanelSize - wxSize(2, 0), wxTR_TWIST_BUTTONS | wxTR_NO_LINES | wxTR_FULL_ROW_HIGHLIGHT | wxTR_SINGLE | wxTR_HAS_BUTTONS);// The -2 appears in the size in order to give some extra room for hte scroll bars
-	
-//	controller.setRootTreeIDAbstraction(modelbuilderTreeCtrl->AddRoot(controller.getWorkspaceNameAbstraction()));// This is the highest level
-	
-//	controller.setAbstractProblemID(modelbuilderTreeCtrl->AppendItem(controller.getRootTreeIDAbstraction(), controller.getAbstractSimName()));// This will be for the project
-//	
-//	controller.setAbstractGeometryID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Geometry"));
-//	controller.setAbstractMaterialsID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Materials"));
-//	controller.setAbstractMeshID(modelbuilderTreeCtrl->AppendItem(controller.getAbstractProblemID(), "Mesh"));
-	
-//	modelbuilderTreeCtrl->ExpandAll();
-	
-	/*******************
-	* Geometry Builder *
-	********************/
-//	wxGLCanvas *test = new wxGLCanvas(twoDimDeometryEditor);
-//	twoDimGeometryEditor->createOpenGLCanvas();
-//	twoDimGeometryEditor->render();
-//	this->SetSizer(vertBoxSizer);
-//	this->Layout();
-	
-//	controller.updateOmniFEMState(systemState::problemDefining);
-	
 }
 
 

@@ -1,7 +1,7 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
 
 
-modelDefinition::modelDefinition(wxWindow *par, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, wxDefaultPosition, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
+modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
     _geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*_geometryContext);

@@ -112,9 +112,6 @@ private:
 	//! This would be the help menu in the menu bar
     wxMenu *_menuHelp = new wxMenu;
 	
-	//! This is the object for the toolbar of the main window
-	
-	
 	//! Panel for selecting the physics problem
 	wxPanel *_problemSelectPanel;
 	

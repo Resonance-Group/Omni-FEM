@@ -60,7 +60,7 @@ private:
     
 
 public:
-    modelDefinition(wxWindow *par, const wxSize &size);
+    modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size);
 
     problemDefinition* getProblemParameters()
     {
