@@ -257,8 +257,6 @@ void OmniFEMMainFrame::createModelDefiningClient()
  
     _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
     
- //   modelDefinition *temp = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
-    
     topSizer->Add(_model, 1, wxALL | wxEXPAND, 6);
     
     this->SetSizerAndFit(topSizer);
@@ -275,6 +273,7 @@ void OmniFEMMainFrame::createTopToolBar()
     
     wxStandardPaths path = wxStandardPaths::Get();
 	wxImage::AddHandler(new wxPNGHandler);
+    // The commented out code is used for getting a list of file paths
  /*   std::string test1 = path.GetAppDocumentsDir().ToStdString();
     std::string test2 = path.GetConfigDir().ToStdString();
     std::string test3 = path.GetDataDir().ToStdString();
@@ -324,54 +323,15 @@ void OmniFEMMainFrame::OnExit(wxCommandEvent &event)
 }
 
 
-
-
-
-
-
-
-
 	/********************
 	 * Event Procedures *
 	 ********************/
-	 
-void OmniFEMMainFrame::physicsProblemComboBox(wxCommandEvent &event)
-{
-    /*
-	int physicsSelection = event.GetSelection();
-	
-	if(physicsSelection == 0)
-		controller.setAbstractProblemPhysics(physicProblems::electrostatics);
-	else if(physicsSelection == 1)
-		controller.setAbstractProblemPhysics(physicProblems::magnetics);
-         */ 
-}
-
-
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 {
     if(_UIState == systemState::MODEL_DEFINING)
-        _model->SetSize(this->GetClientSize());
-    /*
-	systemState currentState = controller.getOmniFEMState();
-	this->GetClientSize(&clientSizeWidth, &clientSizeLength);// This will update the client size
-	
-	if(currentState == systemState::initialStartUp || currentState == systemState::dimensionChoosing || currentState == systemState::problemChooseing)
-	{
-		return;
-	}
-	else if(currentState == systemState::problemDefining)
-	{
-		// geometryBuilderPanel = new wxPanel(this, panelID::ID_geometryBuilder, wxPoint((int)((double)0.17 * (double)clientSizeWidth), 10), wxSize((int)((double)0.66 * (double)clientSizeWidth), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-		// settingsPanel = new wxPanel(this, panelID::ID_settings, wxPoint((int)((double)0.82 * (double)clientSizeWidth + (double)20), 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-		// modelBuilderTreePanel = new wxPanel(this, panelID::ID_modelBuilderTree, wxPoint(10, 10), wxSize((int)((double)0.17 * (double)clientSizeWidth - (double)20), (int)((double)0.66 * (double)clientSizeLength)), wxBORDER_SIMPLE);
-		// statusInfoPanel = new wxPanel(this, panelID::ID_status, wxPoint(10, (int)((double)0.66 * (double)clientSizeLength + (double)20)), wxSize(clientSizeWidth - 20, clientSizeLength - (int)((double)0.66 * (double)clientSizeLength + (double)20) - 10), wxBORDER_SIMPLE);
-		this->Layout();
-		
-		wxSize newTreeCtrlDim = modelBuilderTreePanel->GetSize() - wxSize(2, 0);
-		modelbuilderTreeCtrl->SetSize(newTreeCtrlDim);
-	}
-     */ 
+    {
+        _model->SetSize(this->GetClientSize() - wxSize(12, 12));
+    }
 }
 
 
@@ -482,8 +442,6 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	/********
 	* Other *
 	*********/
-
-	EVT_LISTBOX(generalFrameButton::ID_LISTBOX, OmniFEMMainFrame::physicsProblemComboBox)
     
 wxEND_EVENT_TABLE()
 

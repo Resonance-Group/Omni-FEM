@@ -108,22 +108,6 @@ private:
     
 	//! This would be the help menu in the menu bar
     wxMenu *_menuHelp = new wxMenu;
-	
-	//! Panel for selecting the physics problem
-	wxPanel *_problemSelectPanel;
-	
-	//! This panel will be used in the model builder window. The purpose is to display status messages
-	wxPanel *statusInfoPanel;
-	
-	//! This panel will be used to draw the geometry on 
-	wxPanel *_geometryBuilderPanel;
-	
-	//! This panel will be used to dispaly settings that are selected
-	wxPanel *settingsPanel;
-	
-	wxPanel *_viewResultsPanel;
-	
-	wxTreeCtrl *modelbuilderTreeCtrl;
     
     wxListBox *_physicsProblemsListBox;
     
@@ -247,12 +231,7 @@ private:
 	
 	//! This is a function that will be for the initial state of Omni-FEM. With items on the toolbar greyed out and menus not accessible
 	void enableToolMenuBar(bool enable);
-	
-	//! This is the function that is called when the combox box is clicked for choosing a physics problem
-	void physicsProblemComboBox(wxCommandEvent &event);
-	
-	
-	
+
     wxDECLARE_EVENT_TABLE();
 };
 

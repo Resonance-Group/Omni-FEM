@@ -53,7 +53,7 @@ void modelDefinition::updateProjection()
 
 void modelDefinition::drawGrid()
 {
-    updateProjection();
+ //   updateProjection();
     
     double cornerMinX = convertToXCoordinate(0);
     double cornerMinY = convertToYCoordinate(0);
@@ -63,6 +63,7 @@ void modelDefinition::drawGrid()
     
     if(_preferences.getShowGridState())
     {
+        /* The code for drawing the grid was adapted from the Agros2D project */
         glLineWidth(1.0);
         glEnable(GL_LINE_STIPPLE);
         /* 
@@ -128,11 +129,11 @@ void modelDefinition::drawGrid()
         glLineWidth(2.5);
         
         glBegin(GL_LINES);
-            glVertex2d(0, -0.125);
-            glVertex2d(0, 0.125);
+            glVertex2d(0, -0.03125);
+            glVertex2d(0, 0.03125);
             
-            glVertex2d(-0.125, 0);
-            glVertex2d(0.125, 0);
+            glVertex2d(-0.03125, 0);
+            glVertex2d(0.03125, 0);
         glEnd();
     }
     
@@ -154,7 +155,7 @@ double modelDefinition::convertToYCoordinate(int yPixel)
 }
 
 
-
+/* This function gets called everytime a draw routine is needed */
 void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 {
     wxGLCanvas::SetCurrent(*_geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
@@ -197,7 +198,81 @@ void modelDefinition::onResize(wxSizeEvent &event)
 
 
 
+void modelDefinition::onMouseWheel(wxMouseEvent &event)
+{
+    double tempMouseX = event.GetX();
+    double tempMouseY = event.GetY();
+    
+    if(event.GetWheelRotation() != 0)
+    {
+        /* This section of the code was adapted from Agro2D */
+        double temp1X, temp2Y;
+        
+        temp1X = (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        temp2Y = (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        
+        _cameraX += temp1X;
+        _cameraY += temp2Y;
+        
+        if(event.GetWheelRotation() > 0)
+            _zoomFactor = _zoomFactor * pow(1.2, -(event.GetWheelDelta()) / 150.0);
+        else
+            _zoomFactor = _zoomFactor * pow(1.2, (event.GetWheelDelta()) / 150.0);
+        
+        /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
+         * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
+        temp1X = (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        temp2Y = (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        
+        _cameraX -= temp1X;
+        _cameraY -= temp2Y;
+    }
+	
+    this->Refresh();// This will force the canvas to experience a redraw event
+}
+
+
+
+void modelDefinition::onMouseMove(wxMouseEvent &event)
+{
+    int dx = event.GetX() - _mouseXCoordinate;
+    int dy = event.GetY() - _mouseYCoordinate;
+    
+	_mouseXCoordinate = event.GetX();
+	_mouseYCoordinate = event.GetY();
+    
+    if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
+    {
+        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy / _zoomFactor);
+    }
+
+    this->Refresh();
+}
+
+
+
+void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
+{
+    
+}
+
+
+
+void modelDefinition::onMouseRightDown(wxMouseEvent &event)
+{
+    
+}
+
+
+
 wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_PAINT(modelDefinition::onPaintCanvas)
     EVT_SIZE(modelDefinition::onResize)
+    EVT_ENTER_WINDOW(modelDefinition::onEnterWindow)
+    /* This section is the event procedure for the mouse controls */
+    EVT_MOUSEWHEEL(modelDefinition::onMouseWheel)
+    EVT_MOTION(modelDefinition::onMouseMove)
+    EVT_LEFT_DOWN(modelDefinition::onMouseLeftDown)
+    EVT_RIGHT_DOWN(modelDefinition::onMouseRightDown)
 wxEND_EVENT_TABLE()

@@ -39,6 +39,10 @@ private:
     
 	std::vector<arcShape> _arcList;
     
+    int _mouseXCoordinate = 0;
+    
+    int _mouseYCoordinate = 0;
+    
     double _zoomFactor = 1;
     
     double _cameraX = 0;
@@ -59,7 +63,20 @@ private:
 	void onPaintCanvas(wxPaintEvent &event);
     
     void onResize(wxSizeEvent &event);
-
+    
+    void onMouseWheel(wxMouseEvent &event);
+    
+    void onMouseMove(wxMouseEvent &event);
+    
+    void onMouseLeftDown(wxMouseEvent &event);
+    
+    void onMouseRightDown(wxMouseEvent &event);
+    
+    void onEnterWindow(wxMouseEvent &event)
+    {
+        this->SetFocus();
+    }
+    
 public:
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size);
 
