@@ -82,9 +82,6 @@ private:
 	//! The menu bar for the main window
 	wxMenuBar *_menuBar = new wxMenuBar;
 	
-	wxBoxSizer *groupOneSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxBoxSizer *vertBoxSizer = new wxBoxSizer(wxVERTICAL);
-	
 	//! This would be the file menu in the menu bar
     wxMenu *_menuFile = new wxMenu;
 	
@@ -126,12 +123,7 @@ private:
 	
 	wxPanel *_viewResultsPanel;
 	
-	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
-	wxSize minSize = wxSize(450, 340);
-	
 	wxTreeCtrl *modelbuilderTreeCtrl;
-	
-	geometryEditor2DPresentation *twoDimGeometryEditor;
     
     wxListBox *_physicsProblemsListBox;
     

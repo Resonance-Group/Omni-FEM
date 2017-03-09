@@ -255,9 +255,11 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
  
-    modelDefinition *temp = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
+    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
     
-    topSizer->Add(temp, 1, wxALL | wxEXPAND, 6);
+ //   modelDefinition *temp = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
+    
+    topSizer->Add(_model, 1, wxALL | wxEXPAND, 6);
     
     this->SetSizerAndFit(topSizer);
 
@@ -348,6 +350,8 @@ void OmniFEMMainFrame::physicsProblemComboBox(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onResize(wxSizeEvent &event)
 {
+    if(_UIState == systemState::MODEL_DEFINING)
+        _model->SetSize(this->GetClientSize());
     /*
 	systemState currentState = controller.getOmniFEMState();
 	this->GetClientSize(&clientSizeWidth, &clientSizeLength);// This will update the client size

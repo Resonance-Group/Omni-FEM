@@ -45,19 +45,27 @@ gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid 
     line3Sizer->Add(_coordinateComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showGridCheckBox->Create(this, wxID_ANY, "Show Grid", wxPoint(15, 64), wxSize(80, 17));
+    _showGridCheckBox->SetValue(_preferences.getShowGridState());
     _showGridCheckBox->SetFont(*font);
     _showOriginCheckBox->Create(this, wxID_ANY, "Show Origin", wxPoint(102, 64), wxSize(90, 17));
     _showOriginCheckBox->SetFont(*font);
+    _showOriginCheckBox->SetValue(_preferences.getShowOriginState());
     
     line4Sizer->Add(_showGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     line4Sizer->Add(_showOriginCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _snapGridCheckBox->Create(this, wxID_ANY, "Snap Grid", wxPoint(15, 87), wxSize(80, 17));
     _snapGridCheckBox->SetFont(*font);
+    _snapGridCheckBox->SetValue(_preferences.getSnapGridState());
+    _showGridAxisCheckBox->Create(this, wxID_ANY, "Show Grid Axis");
+    _showGridAxisCheckBox->SetFont(*font);
+    _showGridAxisCheckBox->SetValue(_preferences.getShowAxisState());
     
     line5Sizer->Add(_snapGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+    line5Sizer->Add(_showGridAxisCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showBlockNameCheckBox->Create(this, wxID_ANY, "Show Block Names", wxPoint(15, 110), wxSize(135, 17));
+    _showBlockNameCheckBox->SetValue(_preferences.getShowBlockNameState());
     _showBlockNameCheckBox->SetFont(*font);
     
     line6Sizer->Add(_showBlockNameCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
@@ -105,6 +113,7 @@ void gridPreferencesDialog::getParameters(gridPreferences &preferences)
     preferences.setSnapGridState(_snapGridCheckBox->GetValue());
     preferences.setShowOriginState(_showOriginCheckBox->GetValue());
     preferences.setShowBlockNameState(_showBlockNameCheckBox->GetValue());
+    preferences.setShowAxisState(_showGridAxisCheckBox->GetValue());
 }
 
 
@@ -139,6 +148,7 @@ void gridPreferencesDialog::updateInterface()
     _showOriginCheckBox->SetValue(_preferences.getShowOriginState());
     _snapGridCheckBox->SetValue(_preferences.getSnapGridState());
     _showBlockNameCheckBox->SetValue(_preferences.getShowBlockNameState());
+    _showGridAxisCheckBox->SetValue(_preferences.getShowAxisState());
 }
 
 

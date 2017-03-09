@@ -18,11 +18,15 @@ void OmniFEMMainFrame::onSnapGrid(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onSetGridPreferences(wxCommandEvent &event)
 {
-    gridPreferencesDialog *test = new gridPreferencesDialog();
-    static gridPreferences test2;
-    test->setParameters(test2);
-    if(test->ShowModal() == wxID_OK)
+    if(_UIState == systemState::MODEL_DEFINING)
     {
-        test->getParameters(test2);
+        gridPreferences *temp = _model->getGridPreferences();
+        gridPreferencesDialog *preferencesDia = new gridPreferencesDialog();
+        preferencesDia->setParameters(*temp);
+        if(preferencesDia->ShowModal() == wxID_OK)
+        {
+            preferencesDia->getParameters(*temp);
+            _model->setGridPreferences(*temp);
+        }
     }
 }

@@ -32,6 +32,8 @@ private:
     wxCheckBox *_showOriginCheckBox = new wxCheckBox(); 
     
     wxCheckBox *_showBlockNameCheckBox = new wxCheckBox();
+    
+    wxCheckBox *_showGridAxisCheckBox = new wxCheckBox();
 
     wxComboBox *_coordinateComboBox = new wxComboBox();
     

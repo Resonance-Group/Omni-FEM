@@ -58,6 +58,7 @@ private:
     //! This is the event that is fired when the canvas is drawn or re-drawn
 	void onPaintCanvas(wxPaintEvent &event);
     
+    void onResize(wxSizeEvent &event);
 
 public:
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size);
@@ -67,14 +68,15 @@ public:
         return &_parameters;
     }
     
+    void setGridPreferences(gridPreferences &preferences)
+    {
+        _preferences = preferences;
+        this->Refresh();
+    }
+    
     gridPreferences* getGridPreferences()
     {
         return &_preferences;
-    }
-    
-    void updateGrid()
-    {
-        this->Refresh();
     }
     
     void changeSize(wxSize size)
