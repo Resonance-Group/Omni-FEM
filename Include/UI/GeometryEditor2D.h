@@ -19,6 +19,8 @@ private:
     
 	std::vector<arcShape> _arcList;
     
+    int _tolerance = 2;
+    
     // Add in functions that are used to calculate intersection points here
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
@@ -41,6 +43,9 @@ private:
 	/*! This function will calculate the number of intersection points where two arcs intersect */
 	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
     
+    /*! This function is used to calcualte if the shortest distance between a line a node */
+	double calculateShortestDistance(double p, double q, int segmentIndex, std::vector<node> const &refNodeList, std::vector<edgeLineShape> const &refLineList);
+
 public:
     std::vector<node> getNodeList()
     {
@@ -62,13 +67,13 @@ public:
         return _arcList;
     }
     
-    void addNode(double &xPoint, double &yPoint, double &distance);
+    void addNode(double xPoint, double yPoint, double distance);
     
     void addBlockLabel();
     
-    void addLine();
+    void addLine(int node0, int node1, edgeLineShape *parseSegment);
     
-    void addArc();
+    void addArc(arcShape &arcSeg, double tolerance);
 	
 };
 
