@@ -10,7 +10,7 @@
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
 
-#include <UI/geometryEditor2D.h>
+#include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
 #include <UI/PropertiesDialog.h>
 

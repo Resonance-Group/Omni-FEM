@@ -156,6 +156,7 @@ void geometryEditorCanvas::drawGrid()
 
 void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 {
+    /*
 	std::vector<int> deletednodes;
 	
 	if(event.GetKeyCode() == DEL_KEY)
@@ -188,6 +189,7 @@ void geometryEditorCanvas::onKeyDown(wxKeyEvent &event)
 	}
 
     this->Refresh();// This will force the canvas to experience a redraw event
+     * */
 }
 
 
@@ -348,6 +350,7 @@ void geometryEditorCanvas::onLeavingWindow(wxMouseEvent &event)
 
 void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 {
+    /*
 	wxGLCanvas::SetCurrent(*geometryContext);
 	bool nodeSelected = false;
     
@@ -370,7 +373,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 		
 	}
 	
-    /* This section will be for node handling */
+    /* This section will be for node handling 
 	for(int i = 0; i < nodeList.size(); i++)
 	{
 		if(((mouseGraphX >= nodeList[i].getCenterXCoordinate() - 0.01 * zoomFactor) && (mouseGraphX <= nodeList[i].getCenterXCoordinate() + 0.01 * zoomFactor) && (mouseGraphY <= nodeList[i].getCenterYCoordinate() + 0.01 * zoomFactor) && (mouseGraphY >=nodeList[i].getCenterYCoordinate() - 0.01 * zoomFactor)) && nodeSelected == false)
@@ -382,7 +385,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 				/*	This section will first chewxMouseEvent &eventck to see if any other shape is selected.
 					If the shape is selected, then toggle the selection.
 					As a last step, the function will then toggle select the selected node
-				*/
+				
 				if(blockLabelList.size() > 0)
 				{
 					for(int j = 0; j < blockLabelList.size(); j++)
@@ -418,7 +421,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 			{
                 /* This section will clear any nodes that were selected such that the one that was 
                  * selected is the only one that is selected
-                 */ 
+                 
 				for (int j = 0; j < nodeList.size(); j++)
 				{
 					if(nodeList[j].getIsSelected())
@@ -432,7 +435,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 			else
 			{
                 /* This section deals with creating a line between the two nodes
-                 */ 
+                  
 				if(lineCreationFlag)
 				{
 					
@@ -443,7 +446,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
                          * i would be the index of the second node the user selected.
                          * k is the index to the line segment. The purpose of the fuction
                          * tempx and tempyCoor are simply temporarl coordinates that are used as a midway.
-                         */ 
+                          
 						if(getIntersection(firstSelectedNodeIndex, i, k, tempXCoor, tempYCoor) == true)
 						{
 							addNode(tempXCoor, tempYCoor, 0.01);
@@ -457,10 +460,10 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					/* 
 						This section of the code will calculate many features that make up the arc such as the arc Legnth.
 						The add arcSegment will calculate anything needed for intercestions
-					*/
+					
 					arcShape arcSegment;
 					
-					/* First, we will create a dialog box so that some basic propeties of the arc can be set by the user */
+					/* First, we will create a dialog box so that some basic propeties of the arc can be set by the user 
 					wxDialog *arcSegmentDlg = new wxDialog(NULL, wxID_ANY, "Arc Segment Dialog", wxDefaultPosition, wxSize(269, 205));
 					wxPanel *dialogPanel = new wxPanel(arcSegmentDlg);
 					wxButton *buttonOk = new wxButton(dialogPanel, wxID_OK, "Ok", wxPoint(101, 165), wxSize(75, 23));
@@ -484,7 +487,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 					
 					if(arcSegmentDlg->ShowModal() == wxID_OK)
 					{
-						/* If the user clicked on ok to idicate they are done, we will then set the properties to an arc segment and add the segment to the geometry */
+						/* If the user clicked on ok to idicate they are done, we will then set the properties to an arc segment and add the segment to the geometry 
 						double arcAngleVal = 0.0;
 						double maxSegmentVal = 0.0;
 						int index = boundaryComboBox->GetSelection();
@@ -518,6 +521,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 	
 	addNode(mouseGraphX, mouseGraphY, 0);
 	this->Refresh();
+     */
 }
 
 

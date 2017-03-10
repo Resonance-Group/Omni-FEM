@@ -20,7 +20,10 @@ class geometry2D
 {
 public:
 	
-	geometry2D();
+	geometry2D()
+    {
+        
+    }
 	
 //	void refresh();
 	
@@ -32,44 +35,89 @@ public:
 	 *	For polygons, there will be 5+ vertices
 	 *	The circle is a special case will have 0 vertices
 	 */
-	void setVertexNumber(int number);
+	void setVertexNumber(int number)
+    {
+        numberOfVertices = number;
+    }
 	
 	//! This will get the number of vertices
-	int getVertexNumber();
+	int getVertexNumber()
+    {
+        return numberOfVertices;
+    }
 	
 	//! Function used to set the X coordiante for the center point of the shape
-	void setCenterXCoordinate(double xCenter);
+	void setCenterXCoordinate(double xCenter)
+    {
+        xCenterCoordinate = xCenter;
+    }
 	
 	//! Function used to set the Y coordiante for the center point of the shape
-	void setCenterYCoordiante(double yCenter);
+	void setCenterYCoordiante(double yCenter)
+    {
+        yCenterCoordinate = yCenter;
+    }
 	
 	//! Function used to get the X Coordinate of the center point point of the shape
-	double getCenterXCoordinate() const;
+	double getCenterXCoordinate() const
+    {
+        return xCenterCoordinate;
+    }
 	
 	//! Function used to get the Y Coordinate of the center point point of the shape
-	double getCenterYCoordinate() const;
+	double getCenterYCoordinate() const
+    {
+        return yCenterCoordinate;
+    }
+
 	
 	//! Function used to set the group that the shape is assocated with
-	void setGroup(int group);
+	void setGroup(int group)
+    {
+        groupNumber = group;
+    }
 	
 	//! Function used to retrieive the group number that the shape is associated with
-	int getGroup();
+	int getGroup()
+    {
+        return groupNumber;
+    }
 	
 	//! the function will be called when the user selects the geomtry shape
-	void toggleSelect();
+	void setSelectState(bool state)
+    {
+        isSelected = state;
+    }
 	
 	//! This function will return the selected status
-	bool getIsSelected();
+	bool getIsSelectedState()
+    {
+        return isSelected;
+    }
+    
+    void setGroupSelectedState(bool state)
+    {
+        isGroupSelectedState = state;
+    }
+    
+    bool getGroupSelectedState()
+    {
+        return isGroupSelectedState;
+    }
+    
 protected:
 	
 	//! The number of vertices for the geometry shape
 	int numberOfVertices;
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
-	bool isSelected;
+	bool isSelected = false;
+    
+    //! This is used to indicate if the geometry that is selected is for a group
+    bool isGroupSelectedState = false;
 	
 	//! Data type used to store the group number that the shape is associated with
-	int groupNumber;
+	int groupNumber = 0;
 
 	//! This data type stroes the center x  position in Cartesian Coordiantes
 	/*! 

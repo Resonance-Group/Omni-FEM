@@ -45,21 +45,7 @@
       <VirtualDirectory Name="Geometry">
         <VirtualDirectory Name="2D">
           <VirtualDirectory Name="Presentation">
-            <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
             <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
-          </VirtualDirectory>
-          <VirtualDirectory Name="Controller">
-            <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/geometry2D.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/archShape.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/rectangleShape.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/nodePT.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/edgeLineShape.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/geometryAdd.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/geometryEditorController.cpp"/>
-          </VirtualDirectory>
-          <VirtualDirectory Name="Abstraction">
-            <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>
           </VirtualDirectory>
         </VirtualDirectory>
         <VirtualDirectory Name="GeometryDialogs">
@@ -68,6 +54,15 @@
           <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
+        <VirtualDirectory Name="Shapes">
+          <File Name="src/UI/Geometry/Shapes/archShape.cpp"/>
+          <File Name="src/UI/Geometry/Shapes/edgeLineShape.cpp"/>
+          <File Name="src/UI/Geometry/Shapes/geometryAdd.cpp"/>
+          <File Name="src/UI/Geometry/Shapes/geometryEditorController.cpp"/>
+          <File Name="src/UI/Geometry/Shapes/nodePT.cpp"/>
+          <File Name="src/UI/Geometry/Shapes/rectangleShape.cpp"/>
+        </VirtualDirectory>
+        <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
@@ -126,7 +121,6 @@
     <VirtualDirectory Name="UI">
       <File Name="Include/UI/OmniFEMFrame.h"/>
       <File Name="Include/UI/problemDefinition.h"/>
-      <File Name="Include/UI/geometryEditor2D.h"/>
       <File Name="Include/UI/common.h"/>
       <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>
@@ -175,6 +169,7 @@
       <VirtualDirectory Name="ModelDefinition">
         <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>
       </VirtualDirectory>
+      <File Name="Include/UI/GeometryEditor2D.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
