@@ -21,8 +21,8 @@ enum menubarID
 	ID_menubarLUASCRIPT,
     ID_menubarShowGrid,
     ID_menubarSnapGrid,
-    
-    ID_menubarDispLuaConsole
+    ID_menubarDispLuaConsole,
+    ID_PROBLEM_PREFERNCES
 };
 
 enum EditMenuID

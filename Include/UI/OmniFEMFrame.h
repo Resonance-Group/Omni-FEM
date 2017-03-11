@@ -73,11 +73,9 @@ private:
 	
     modelDefinition *_model;
     
-	//! Stores the client size of the main window in the x direction
-	int clientSizeWidth;
-	
-	//! Stores the client size of the main window in the y direction
-	int clientSizeLength;
+    problemDefinition _problemDefinition;
+    
+    bool _displayStatusMenu = true;
 	
 	//! The menu bar for the main window
 	wxMenuBar *_menuBar = new wxMenuBar;
@@ -144,6 +142,9 @@ private:
     void onOrphans(wxCommandEvent &event);
     void onStatusBar(wxCommandEvent &event);
     void onLua(wxCommandEvent &event);
+    
+    /* This section is for the Problem Menu */
+    void onProblemPreferences(wxCommandEvent &event);
 	
     /* This section is for the Grid Menu */
     void onDispGrid(wxCommandEvent &event);

@@ -53,8 +53,6 @@ void modelDefinition::updateProjection()
 
 void modelDefinition::drawGrid()
 {
- //   updateProjection();
-    
     double cornerMinX = convertToXCoordinate(0);
     double cornerMinY = convertToYCoordinate(0);
 
@@ -76,31 +74,43 @@ void modelDefinition::drawGrid()
         glLineStipple(1, 0b0000100001000010);
     
         glBegin(GL_LINES);
-            if(((cornerMaxX - cornerMinX) / _gridStep + (cornerMinY - cornerMaxY) / _gridStep < 200) && ((cornerMaxX - cornerMinX) / _gridStep > 0) && ((cornerMinY - cornerMaxY) / _gridStep > 0))
+            if(((cornerMaxX - cornerMinX) / _preferences.getGridStep() + (cornerMinY - cornerMaxY) / _preferences.getGridStep() < 200) && ((cornerMaxX - cornerMinX) / _preferences.getGridStep() > 0) && ((cornerMinY - cornerMaxY) / _preferences.getGridStep() > 0))
             {
                 /* Create the grid for the vertical lines first */
-                for(int i = cornerMinX / _gridStep - 1; i < cornerMaxX / _gridStep + 1; i++)
+                for(int i = cornerMinX / _preferences.getGridStep() - 1; i < cornerMaxX / _preferences.getGridStep() + 1; i++)
                 {
-                    if(i % 5 == 0)
+                    if(i % 4 == 0)
+                    {
+                        glLineWidth(0.7);
                         glColor3d(0.0, 0.0, 0.0);
+                    }
                     else
-                        glColor3d(0.6, 0.6, 0.6);
+                    {
+                        glLineWidth(0.5);
+                        glColor3d(0.7, 0.7, 0.7);
+                    }
                     
-                    glVertex2d(i * _gridStep, cornerMinY);
+                    glVertex2d(i * _preferences.getGridStep(), cornerMinY);
                 
-                    glVertex2d(i * _gridStep, cornerMaxY);
+                    glVertex2d(i * _preferences.getGridStep(), cornerMaxY);
                 }
             
                 /* Create the grid for the horizontal lines */
-                for(int i = cornerMaxY / _gridStep - 1; i < cornerMinY / _gridStep + 1; i++)
+                for(int i = cornerMaxY / _preferences.getGridStep() - 1; i < cornerMinY / _preferences.getGridStep() + 1; i++)
                 {
-                    if(i % 5 == 0)
+                    if(i % 4 == 0)
+                    {
+                        glLineWidth(0.7);
                         glColor3d(0.0, 0.0, 0.0);
+                    }
                     else
-                        glColor3d(0.6, 0.6, 0.6);
+                    {
+                        glLineWidth(0.5);
+                        glColor3d(0.5, 0.7, 0.7);
+                    }
                     
-                    glVertex2d(cornerMinX, i * _gridStep);
-                    glVertex2d(cornerMaxX, i * _gridStep);
+                    glVertex2d(cornerMinX, i * _preferences.getGridStep());
+                    glVertex2d(cornerMaxX, i * _preferences.getGridStep());
                 }
             }
         
@@ -123,17 +133,18 @@ void modelDefinition::drawGrid()
         glEnd();
     }
     
+    /* This will create a crosshairs to indicate the location of the origin */
     if(_preferences.getShowOriginState())
     {
         glColor3b(0.0, 0.0, 0.0);
         glLineWidth(2.5);
         
         glBegin(GL_LINES);
-            glVertex2d(0, -0.03125);
-            glVertex2d(0, 0.03125);
+            glVertex2d(0, -0.25);
+            glVertex2d(0, 0.25);
             
-            glVertex2d(-0.03125, 0);
-            glVertex2d(0.03125, 0);
+            glVertex2d(-0.25, 0);
+            glVertex2d(0.25, 0);
         glEnd();
     }
     
@@ -200,32 +211,33 @@ void modelDefinition::onResize(wxSizeEvent &event)
 
 void modelDefinition::onMouseWheel(wxMouseEvent &event)
 {
-    double tempMouseX = event.GetX();
-    double tempMouseY = event.GetY();
-    
     if(event.GetWheelRotation() != 0)
     {
         /* This section of the code was adapted from Agro2D */
-        double temp1X, temp2Y;
         
-        temp1X = (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        temp2Y = (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
         
-        _cameraX += temp1X;
-        _cameraY += temp2Y;
-        
-        if(event.GetWheelRotation() > 0)
-            _zoomFactor = _zoomFactor * pow(1.2, -(event.GetWheelDelta()) / 150.0);
+        if(!_preferences.getMouseZoomReverseState())
+        {
+            if(event.GetWheelRotation() > 0)
+                _zoomFactor *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+            else
+                _zoomFactor *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+        }
         else
-            _zoomFactor = _zoomFactor * pow(1.2, (event.GetWheelDelta()) / 150.0);
+        {
+            if(event.GetWheelRotation() < 0)
+                _zoomFactor *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+            else
+                _zoomFactor *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+        }
         
         /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
          * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
-        temp1X = (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        temp2Y = (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
         
-        _cameraX -= temp1X;
-        _cameraY -= temp2Y;
+        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
     }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -246,7 +258,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
         _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
         _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy / _zoomFactor);
     }
-
+    
     this->Refresh();
 }
 
@@ -261,7 +273,21 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 
 void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
+    std::string combineStringPixel;
+    std::string combineStringCoord = "(";
     
+    combineStringPixel = "(";
+    combineStringPixel.append(std::to_string(_mouseXCoordinate));
+    combineStringPixel.append(", ");
+    combineStringPixel.append(std::to_string(_mouseYCoordinate));
+    combineStringPixel.append(")");
+    
+    combineStringCoord.append(std::to_string(convertToXCoordinate(_mouseXCoordinate)));
+    combineStringCoord.append(", ");
+    combineStringCoord.append(std::to_string(convertToYCoordinate(_mouseYCoordinate)));
+    combineStringCoord.append(")");
+    
+    wxMessageBox(combineStringCoord);
 }
 
 

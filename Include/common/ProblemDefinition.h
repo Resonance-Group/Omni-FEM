@@ -51,7 +51,7 @@ private:
     
     physicProblems _phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
     
-    wxString _problemName;
+    wxString _problemName = "Untitled";
     
     /**********
     * Methods *
@@ -157,8 +157,37 @@ public:
     {
         return _problemName;
     }
+    
+    void setPreferences(electroStaticPreference preference)
+    {
+        _localElectricalPreference = preference;
+    }
+    
+    void setPreferences(magneticPreference preference)
+    {
+        _localMagneticPreference = preference;
+    }
+    
+    electroStaticPreference getElectricalPreferences()
+    {
+        return _localElectricalPreference;
+    }
+    
+    magneticPreference getMagneticPreference()
+    {
+        return _localMagneticPreference;
+    }
+    
+    void setProblemName(wxString name)
+    {
+        _problemName = name;
+    }
+    
+    wxString getProblemName()
+    {
+        return _problemName;
+    }
 };
-
 
 #endif
 

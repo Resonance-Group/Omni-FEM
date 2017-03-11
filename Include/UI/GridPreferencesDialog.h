@@ -20,8 +20,6 @@ class gridPreferencesDialog : public wxDialog
 {
 private:
     gridPreferences _preferences;
-
-    wxTextCtrl *_ppuTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *_gridSizeTextCtrl = new wxTextCtrl();
     

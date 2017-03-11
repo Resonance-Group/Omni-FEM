@@ -10,6 +10,8 @@
 #define MODELDEFINITION_H_
 
 #include <vector>
+#include <string>
+
 #include <freeglut.h>
 #include <gl.h>
 #include <glu.h>
@@ -20,28 +22,18 @@
 #include <common/GridPreferences.h>
 
 #include <UI/geometryShapes.h>
+#include <UI/GeometryEditor2D.h>
 
 class modelDefinition : public wxGLCanvas
 {
 private:
-    problemDefinition _parameters;
-    
-    gridPreferences _preferences;
-    
     //! This is the context which will be associated to the class
 	wxGLContext *_geometryContext;
     
-    std::vector<node> _nodeList;
+    //! This is an address for the master definition contained in the main frame
+    problemDefinition _localDefinition;
     
-	std::vector<blockLabel> _blockLabelList;
-    
-	std::vector<edgeLineShape> _lineList;
-    
-	std::vector<arcShape> _arcList;
-    
-    int _mouseXCoordinate = 0;
-    
-    int _mouseYCoordinate = 0;
+    gridPreferences _preferences;
     
     double _zoomFactor = 1;
     
@@ -49,15 +41,23 @@ private:
     
     double _cameraY = 0;
     
-    double _gridStep = 0.05;
+    int _mouseXCoordinate = 0;// This is the pixel coordinate
     
-    void updateProjection();
+    int _mouseYCoordinate = 0;
     
-    void drawGrid();
+    //! This is the variable that will determine to create nodes/block labels
+    bool _createNodes = true;
+    
+    //! This is the variable that will determine to create lines/arcs
+    bool _createLines = true;
     
     double convertToXCoordinate(int xPixel);
     
-    double convertToYCoordinate(int yPixel); 
+    double convertToYCoordinate(int yPixel);
+
+    void updateProjection();
+    
+    void drawGrid(); 
     
     //! This is the event that is fired when the canvas is drawn or re-drawn
 	void onPaintCanvas(wxPaintEvent &event);
@@ -80,11 +80,6 @@ private:
 public:
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size);
 
-    problemDefinition* getProblemParameters()
-    {
-        return &_parameters;
-    }
-    
     void setGridPreferences(gridPreferences &preferences)
     {
         _preferences = preferences;
@@ -96,9 +91,14 @@ public:
         return &_preferences;
     }
     
-    void changeSize(wxSize size)
+    void setCreateNodeState(bool state)
     {
-        this->SetSize(size);
+        _createNodes = state;
+    }
+    
+    void setCreateLinesState(bool state)
+    {
+        _createLines = state;
     }
     
 private:

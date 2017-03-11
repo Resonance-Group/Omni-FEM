@@ -34,7 +34,7 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 	
 	if(saveFileDialog.ShowModal() != wxID_CANCEL)
 	{
-		wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
+
 	}
     
 }
@@ -43,11 +43,14 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
 {
-	wxFileDialog saveFileDialog(this, "Save File", "", "", "", wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR);
+	wxFileDialog saveFileDialog(this, "Save File As", "", "", "", wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR);
 	
 	if(saveFileDialog.ShowModal() != wxID_CANCEL)
 	{
-		wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
+        wxString appendedTitle = "Omni-FEM - ";
+		_problemDefinition.setName(saveFileDialog.GetFilename());
+        appendedTitle.append(_problemDefinition.getName());
+        this->SetTitle(appendedTitle);
 	}
     
 }

@@ -120,7 +120,6 @@
   <VirtualDirectory Name="Include">
     <VirtualDirectory Name="UI">
       <File Name="Include/UI/OmniFEMFrame.h"/>
-      <File Name="Include/UI/problemDefinition.h"/>
       <File Name="Include/UI/common.h"/>
       <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>

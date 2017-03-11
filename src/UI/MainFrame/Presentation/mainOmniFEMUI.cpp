@@ -22,6 +22,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuBar->Append(_menuFile, "&File");
     _menuBar->Append(_menuEdit, "&Edit");
     _menuBar->Append(_menuView, "&View");
+    _menuBar->Append(_menuProblem, "&Problem");
     _menuBar->Append(_menuGrid, "&Grid");
     _menuBar->Append(_menuProperties, "&Properties");
     _menuBar->Append(_menuMesh, "&Mesh");
@@ -53,16 +54,22 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
     _menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
     _menuView->AppendSeparator();
-    _menuView->Append(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
+    _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
+    _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, true);
 	_menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
     _menuView->AppendSeparator();
-    _menuView->Append(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
+    _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
+    _menuView->Check(ViewMenuID::ID_SHOW_STATUSBAR, true);
     _menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
     
+    /* Create the menu listing for the problem menu option */
+    _menuProblem->Append(menubarID::ID_PROBLEM_PREFERNCES, "Problem Preferences");
+    
     /* Create the menu listing for the grid menu option */
-    _menuGrid->Append(GridMenuID::ID_SHOW_GRID, "&Display Grid");
-    _menuGrid->Append(GridMenuID::ID_SNAP_GRID, "&Snap to Grid");
+    _menuGrid->AppendCheckItem(GridMenuID::ID_SHOW_GRID, "&Display Grid");
+    _menuGrid->AppendCheckItem(GridMenuID::ID_SNAP_GRID, "&Snap to Grid");
     _menuGrid->Append(GridMenuID::ID_SET_GRID_PREFERENCES, "&Set Grid Preferences");
+    _menuGrid->Check(GridMenuID::ID_SHOW_GRID, true);
     
     /* Create the menu listing for the properties option */
     _menuProperties->Append(PropertiesMenuID::ID_MATERIALS, "&Materials\tCtrl-M");
@@ -90,6 +97,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     
     /* Create and display the menu bar */
     SetMenuBar(_menuBar);
+    _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, false);
     CreateStatusBar();
     
     SetStatusText("Omni-FEM Simulator");
@@ -129,13 +137,14 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(ViewMenuID::ID_ZOOM_OUT, enable);
     _menuBar->Enable(ViewMenuID::ID_ZOOM_WINDOW, enable);
     
+    _menuBar->Enable(menubarID::ID_PROBLEM_PREFERNCES, enable);
+    
     _menuBar->Enable(GridMenuID::ID_SET_GRID_PREFERENCES, enable);
     _menuBar->Enable(GridMenuID::ID_SHOW_GRID, enable);
     _menuBar->Enable(GridMenuID::ID_SNAP_GRID, enable);
     
     _menuBar->Enable(PropertiesMenuID::ID_BOUNDARY, enable);
     _menuBar->Enable(PropertiesMenuID::ID_CONDUCTORS, enable);
-    _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, enable);
     _menuBar->Enable(PropertiesMenuID::ID_MATERIAL_LIBRARY, enable);
     _menuBar->Enable(PropertiesMenuID::ID_MATERIALS, enable);
     _menuBar->Enable(PropertiesMenuID::ID_POINT, enable);
@@ -186,6 +195,7 @@ void OmniFEMMainFrame::createProblemChoosingClient()
     this->DestroyChildren();
     this->CreateStatusBar();
     this->SetStatusText("Omni-FEM Simulator");
+    this->SetTitle("Omni-FEM");
     
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     wxArrayString arrayPhysicsProblem;
@@ -243,9 +253,13 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 
 void OmniFEMMainFrame::createModelDefiningClient()
 {
+    wxString appendedTitle = " - ";
     this->DestroyChildren();
     this->CreateStatusBar();
     this->SetStatusText("Omni-FEM Simulator");
+    appendedTitle.append(_problemDefinition.getName());
+    this->SetTitle(this->GetTitle().append(appendedTitle));
+    
     enableToolMenuBar(true);
     createTopToolBar();
     
@@ -347,8 +361,43 @@ void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
 void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
 {
     int temp = _physicsProblemsListBox->GetSelection() + 1;
- //   _model->getProblemParameters()->setPhysicsProblem((physicProblems)temp);
+    _problemDefinition.setPhysicsProblem((physicProblems)(_physicsProblemsListBox->GetSelection() + 1));
 	createModelDefiningClient();
+}
+
+
+
+void OmniFEMMainFrame::onProblemPreferences(wxCommandEvent &event)
+{
+    /* Typically, this function would go in a .cpp file called ProblemMenu.cpp.
+     * However, since this is the only item, it was decided to place the function
+     * in the main Omni-FEM frame .cpp file 
+     */
+    if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+    {
+        preferencesDialog *dialog = new preferencesDialog(_problemDefinition.getElectricalPreferences(), _problemDefinition.getPhysicsProblem());
+        if(dialog->ShowModal() == wxID_OK)
+        {
+            electroStaticPreference temp;
+            dialog->getPreferences(temp);
+            _problemDefinition.setPreferences(temp);
+        }
+    }
+    else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+    {
+        preferencesDialog *dialog = new preferencesDialog(_problemDefinition.getMagneticPreference(), _problemDefinition.getPhysicsProblem());
+        if(dialog->ShowModal() == wxID_OK)
+        {
+            magneticPreference temp;
+            dialog->getPreferences(temp);
+            _problemDefinition.setPreferences(temp);
+        } 
+    }
+    
+    if(_problemDefinition.getElectricalPreferences().getProblemType() == problemTypeEnum::AXISYMMETRIC || _problemDefinition.getMagneticPreference().getProblemType() == problemTypeEnum::AXISYMMETRIC)
+        _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, true);
+    else
+        _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, false);
 }
 
 
@@ -390,6 +439,9 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(ViewMenuID::ID_SHOW_ORPHANS, OmniFEMMainFrame::onOrphans)
     EVT_MENU(ViewMenuID::ID_SHOW_STATUSBAR, OmniFEMMainFrame::onStatusBar)
     EVT_MENU(ViewMenuID::ID_LUA_CONSOLE, OmniFEMMainFrame::onLua)
+    
+    /* This section is for the Problem menu */
+    EVT_MENU(menubarID::ID_PROBLEM_PREFERNCES, OmniFEMMainFrame::onProblemPreferences)
 	
     /* This section is for the Grid menu */
     EVT_MENU(GridMenuID::ID_SHOW_GRID, OmniFEMMainFrame::onDispGrid)
