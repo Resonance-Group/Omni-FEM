@@ -21,6 +21,8 @@ private:
     
     int _tolerance = 2;
     
+    long _firstSelectedNodeIndex = -1;
+    
     // Add in functions that are used to calculate intersection points here
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
@@ -47,24 +49,34 @@ private:
 	double calculateShortestDistance(double p, double q, int segmentIndex, std::vector<node> const &refNodeList, std::vector<edgeLineShape> const &refLineList);
 
 public:
-    std::vector<node> getNodeList()
+    std::vector<node> *getNodeList()
     {
-        return _nodeList;
+        return &_nodeList;
     }
     
-    std::vector<blockLabel> getBlockLabelList()
+    std::vector<blockLabel> *getBlockLabelList()
     {
-        return _blockLabelList;
+        return &_blockLabelList;
     }
     
-    std::vector<edgeLineShape> getLineList()
+    std::vector<edgeLineShape> *getLineList()
     {
-        return _lineList;
+        return &_lineList;
     }
     
-    std::vector<arcShape> getArcList()
+    std::vector<arcShape> *getArcList()
     {
-        return _arcList;
+        return &_arcList;
+    }
+    
+    void setFirstSelectedNodeIndex(long index)
+    {
+        _firstSelectedNodeIndex = index;
+    }
+    
+    long getFirstSelectedNodeIndex()
+    {
+        return _firstSelectedNodeIndex;
     }
     
     void addNode(double xPoint, double yPoint, double distance);

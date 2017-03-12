@@ -2,7 +2,7 @@
 #include <UI/GeometryDialog/BlockPropertyDialog.h>
 
 
-blockPropertyDialog::blockPropertyDialog(std::vector<magneticMaterial> &material, std::vector<circuitProperty> &circuit, blockProperty &property, bool isAxisymmetric) : wxDialog(NULL, wxID_ANY, "Block Property")
+blockPropertyDialog::blockPropertyDialog(std::vector<magneticMaterial> material, std::vector<circuitProperty> circuit, blockProperty property, bool isAxisymmetric) : wxDialog(NULL, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -179,7 +179,7 @@ blockPropertyDialog::blockPropertyDialog(std::vector<magneticMaterial> &material
 
 
 
-blockPropertyDialog::blockPropertyDialog(std::vector<electrostaticMaterial> &material, blockProperty &property, bool isAxisymmetric) : wxDialog(NULL, wxID_ANY, "Block Property")
+blockPropertyDialog::blockPropertyDialog(std::vector<electrostaticMaterial> material, blockProperty property, bool isAxisymmetric) : wxDialog(NULL, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -315,7 +315,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
         {
             if(_problem == physicProblems::PROB_ELECTROSTATIC)
             {
-                if(_electricalMaterialList.at(i - 1).getName() == _materialComboBox->GetString(i))
+                if(_electricalMaterialList.at(i - 1).getName() == _materialComboBox->GetString(_materialComboBox->GetSelection()))
                 {
                     property.setElectricMaterial(_electricalMaterialList.at(i - 1));
                     break;
@@ -323,7 +323,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
             }
             else if(_problem == physicProblems::PROB_MAGNETICS)
             {
-                if(_magneticMaterialList.at(i - 1).getName() == _materialComboBox->GetString(i))
+                if(_magneticMaterialList.at(i - 1).getName() == _materialComboBox->GetString(_materialComboBox->GetSelection()))
                 {
                     property.setMagneticMaterial(_magneticMaterialList.at(i - 1));
                     break;

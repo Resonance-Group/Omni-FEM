@@ -113,6 +113,7 @@ void geometryEditor2D::addLine(int node0, int node1, edgeLineShape *parseSegment
 
 void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 {
+    
     // Hey this is where we add in that dialog
     
         // This function was obtained from CbeladrawDoc::AddArcSegment

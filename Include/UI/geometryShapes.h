@@ -1,14 +1,20 @@
 #ifndef GEOMETRY_SHAPES_H_
 #define GEOMETRY_SHAPES_H_
 
-#include <wx/wx.h>
-#include <wx/glcanvas.h>
-//#include <UI/common.h>
+#include <math.h>
+#include <vector>
+
 #include <freeglut.h>
 #include <gl.h>
 #include <glu.h>
-#include <math.h>
-#include <vector>
+
+#include <wx/wx.h>
+#include <wx/glcanvas.h>
+
+#include <common/GeometryProperties/BlockProperty.h>
+#include <common/GeometryProperties/NodeSettings.h>
+#include <common/GeometryProperties/SegmentProperties.h>
+
 #include <common/Vector.h>
 
 //#include <UI/openGLGeometry.h>
@@ -135,6 +141,9 @@ protected:
 
 class edgeLineShape : public geometry2D
 {
+private:
+    segmentProperty _property;
+    
 public:
 	edgeLineShape();
 	
@@ -154,6 +163,11 @@ public:
     std::string getConductor();
     
     virtual void draw(double node1X, double node1Y, double node2X, double node2Y);
+    
+    segmentProperty *getSegmentProperty()
+    {
+        return &_property;
+    } 
 	
 protected:
 	/*! \brief  A line is composed of 2 nodes.
@@ -203,6 +217,11 @@ public:
 
 class node : public rectangleShape
 {
+private:
+	//! The nodes are stored in array. For quickier accesssing, this will store the index which is associated with the node
+	int nodeIndex;
+    
+    nodeSetting _nodalSettings;
 public:
 	node(double xCenter, double yCenter);
 	node();
@@ -215,19 +234,26 @@ public:
 	void setNodeIndex(int index);
 	
 	int getNodeIndex();
+    
+    void setNodeSettings(nodeSetting setting)
+    {
+        _nodalSettings = setting;
+    }
 	
-private:
-	//! The nodes are stored in array. For quickier accesssing, this will store the index which is associated with the node
-	int nodeIndex;
+    /*! /brief
+    *   This function returns the address of the variable that contains the setting for the node.
+    *   These settings are specificially settings such as nodal properties, material,etc.
+    */ 
+    nodeSetting *getNodeSetting()
+    {
+        return &_nodalSettings;
+    }
 };
 
 
 
 class blockLabel : public rectangleShape
 {
-public:
-	blockLabel();
-	
 private:
 	double maxArea;
 	
@@ -236,6 +262,10 @@ private:
 	bool isExternal;
 	
 	bool isDefault;
+public:
+	blockLabel();
+	
+
 };
 
 
@@ -243,6 +273,29 @@ private:
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
 class arcShape : public edgeLineShape
 {
+private:
+    
+	bool isNormalDirection;
+	
+	bool isHidden;
+	
+	unsigned int numSegments = 3;
+	
+    //! This data is the angle of the arc used in calculations. This should be in degrees
+	double arcAngle = 30;
+    
+    //! The radius of the arc from the center point
+    double radius;
+    
+    bool isCounterClockWise = true;
+    
+    double startNodeXCoordinate;
+    
+    double startNodeYCoordinate;
+    
+    double endNodeXCoordinate;
+    
+    double endNodeYCoordinate;
 public:
 	arcShape();
 	
@@ -250,9 +303,9 @@ public:
 	
 	double getArcAngle();
 	
-	void setNumSegments(double segments);
+	void setNumSegments(unsigned int segments);
 	
-	double getnumSegments();
+	unsigned int getnumSegments();
     
     void draw();
 
@@ -269,29 +322,7 @@ public:
     
     double getArcLength();
     
-private:
-	
-	bool isNormalDirection;
-	
-	bool isHidden;
-	
-	double numSegments;
-	
-    //! This data is the angle of the arc used in calculations. This should be in degrees
-	double arcAngle;
-    
-    //! The radius of the arc from the center point
-    double radius;
-    
-    bool isCounterClockWise = true;
-    
-    double startNodeXCoordinate;
-    
-    double startNodeYCoordinate;
-    
-    double endNodeXCoordinate;
-    
-    double endNodeYCoordinate;
+
 	
 };
 

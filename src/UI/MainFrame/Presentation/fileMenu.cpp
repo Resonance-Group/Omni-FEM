@@ -36,7 +36,6 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 	{
 
 	}
-    
 }
 
 
@@ -52,5 +51,4 @@ void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
         appendedTitle.append(_problemDefinition.getName());
         this->SetTitle(appendedTitle);
 	}
-    
 }

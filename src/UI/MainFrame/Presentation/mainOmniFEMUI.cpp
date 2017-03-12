@@ -269,7 +269,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
  
-    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize());
+    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition);
     
     topSizer->Add(_model, 1, wxALL | wxEXPAND, 6);
     
@@ -360,7 +360,6 @@ void OmniFEMMainFrame::onBackButton(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onFinishButton(wxCommandEvent &event)
 {
-    int temp = _physicsProblemsListBox->GetSelection() + 1;
     _problemDefinition.setPhysicsProblem((physicProblems)(_physicsProblemsListBox->GetSelection() + 1));
 	createModelDefiningClient();
 }

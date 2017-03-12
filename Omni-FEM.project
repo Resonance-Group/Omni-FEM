@@ -52,6 +52,7 @@
           <File Name="src/UI/Geometry/GeometryDialogs/SegmentPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/ArcSegmentDialog.cpp"/>
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <VirtualDirectory Name="Shapes">
@@ -162,8 +163,9 @@
       <File Name="Include/UI/ExteriorRegion.h"/>
       <VirtualDirectory Name="GeometryDialog">
         <File Name="Include/UI/GeometryDialog/SegmentPropertyDialog.h"/>
-        <File Name="Include/common/GeometryProperties/NodalSettingDialog.h"/>
-        <File Name="Include/UI/BlockPropertyDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/BlockPropertyDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/NodalSettingDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/ArcSegmentDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ModelDefinition">
         <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>

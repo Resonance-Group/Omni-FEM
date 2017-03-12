@@ -1,10 +1,12 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
 
 
-modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
+modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
     _geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*_geometryContext);
+    
+    _localDefinition = &definition;
     
     glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     
@@ -179,6 +181,14 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     drawGrid();
     glMatrixMode(GL_MODELVIEW);
     
+    if(_editor.getNodeList()->size() > 0)
+    {
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            nodeIterator->draw();
+        }
+    }
+    
     // Add in the code to draw the different points here
     
     SwapBuffers();
@@ -247,11 +257,11 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
 
 void modelDefinition::onMouseMove(wxMouseEvent &event)
 {
-    int dx = event.GetX() - _mouseXCoordinate;
-    int dy = event.GetY() - _mouseYCoordinate;
+    int dx = event.GetX() - _mouseXPixel;
+    int dy = event.GetY() - _mouseYPixel;
     
-	_mouseXCoordinate = event.GetX();
-	_mouseYCoordinate = event.GetY();
+	_mouseXPixel = event.GetX();
+	_mouseYPixel = event.GetY();
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
@@ -266,28 +276,134 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
 
 void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 {
+    wxGLCanvas::SetCurrent(*_geometryContext);
+    bool nodeSelected = false;
     
+    if(!_createNodes)
+    {
+        // Handle the create of block labels here
+        return;
+    }
+    else if(_editor.getNodeList()->size() == 0)
+	{
+		_editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+		this->Refresh();
+		return;
+	}
+    
+    for(unsigned long i = 0; i < _editor.getLineList()->size(); i++)
+    {
+        
+    }
+    
+    for(unsigned long i = 0; i < _editor.getNodeList()->size(); i++)
+    {
+        if(((convertToXCoordinate(_mouseXPixel) >= _editor.getNodeList()->at(i).getCenterXCoordinate() - 0.01 * _zoomFactor) && (convertToXCoordinate(_mouseXPixel) <= _editor.getNodeList()->at(i).getCenterXCoordinate() + 0.01 * _zoomFactor) && (convertToYCoordinate(_mouseYPixel) <= _editor.getNodeList()->at(i).getCenterYCoordinate() + 0.01 * _zoomFactor) && (convertToYCoordinate(_mouseYPixel) >= _editor.getNodeList()->at(i).getCenterYCoordinate() - 0.01 * _zoomFactor)) && nodeSelected == false)
+        {
+            if(!_createNodes)
+                return;
+            else if(event.ShiftDown())
+            {
+                /*	This section will first chewxMouseEvent &eventck to see if any other shape is selected.
+					If the shape is selected, then toggle the selection.
+					As a last step, the function will then toggle select the selected node */
+				
+				if(_editor.getBlockLabelList()->size() > 0)
+				{
+					for(std::vector<blockLabel>::iterator blockLabelIterator = _editor.getBlockLabelList()->begin(); blockLabelIterator != _editor.getBlockLabelList()->end(); ++blockLabelIterator)
+					{
+                        if(blockLabelIterator->getIsSelectedState())
+                            blockLabelIterator->setSelectState(false);
+					}
+				}
+				
+				if(_editor.getArcList()->size() > 0)
+				{
+                    for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                    {
+                        if(arcIterator->getIsSelectedState())
+                            arcIterator->setSelectState(false);
+                    }
+				}
+				
+				if(_editor.getLineList()->size() > 0)
+				{
+                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    {
+                        if(lineIterator->getIsSelectedState())
+                            lineIterator->setSelectState(false);
+                    }
+				}
+                _editor.getNodeList()->at(i).setSelectState(true);
+                this->Refresh();
+                return;
+            }
+            else if(_editor.getFirstSelectedNodeIndex() == -1)
+            {
+                for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                {
+                    if(nodeIterator->getIsSelectedState())
+                        nodeIterator->setSelectState(false);
+                }
+                
+                _editor.getNodeList()->at(i).setSelectState(true);
+                _editor.setFirstSelectedNodeIndex(i);
+                this->Refresh();
+                return;
+            }
+            else
+            {
+                if(_createLines)
+                {
+                      // Insert the code to create the lines here
+                }
+                else
+                {
+                    //Insert the code to create the arcs here
+                }
+                
+                _editor.getNodeList()->at(_editor.getFirstSelectedNodeIndex()).setSelectState(false);// Not sure if this is suppose to be true or false
+                _editor.setFirstSelectedNodeIndex(-1);
+                this->Refresh();
+                return;
+            }
+        }
+    }
+    
+    _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+    this->Refresh();
 }
 
 
 
 void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
-    std::string combineStringPixel;
-    std::string combineStringCoord = "(";
+    if(event.ControlDown())
+    {
+        std::string combineStringPixel;
+        std::string combineStringCoord = "(";
     
-    combineStringPixel = "(";
-    combineStringPixel.append(std::to_string(_mouseXCoordinate));
-    combineStringPixel.append(", ");
-    combineStringPixel.append(std::to_string(_mouseYCoordinate));
-    combineStringPixel.append(")");
+        combineStringPixel = "(";
+        combineStringPixel.append(std::to_string(_mouseXPixel));
+        combineStringPixel.append(", ");
+        combineStringPixel.append(std::to_string(_mouseYPixel));
+        combineStringPixel.append(")");
     
-    combineStringCoord.append(std::to_string(convertToXCoordinate(_mouseXCoordinate)));
-    combineStringCoord.append(", ");
-    combineStringCoord.append(std::to_string(convertToYCoordinate(_mouseYCoordinate)));
-    combineStringCoord.append(")");
+        combineStringCoord.append(std::to_string(convertToXCoordinate(_mouseXPixel)));
+        combineStringCoord.append(", ");
+        combineStringCoord.append(std::to_string(convertToYCoordinate(_mouseYPixel)));
+        combineStringCoord.append(")");
     
-    wxMessageBox(combineStringCoord);
+        wxMessageBox(combineStringCoord);
+    }
+    else
+    {
+        arcSegmentDialog *test = new arcSegmentDialog(_localDefinition->getElectricalBoundaryList());
+        if(test->ShowModal() == wxID_OK)
+        {
+            
+        }
+    }
 }
 
 

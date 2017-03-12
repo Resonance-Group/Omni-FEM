@@ -21,6 +21,11 @@
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
 
+#include <UI/GeometryDialog/BlockPropertyDialog.h>
+#include <UI/GeometryDialog/NodalSettingDialog.h>
+#include <UI/GeometryDialog/SegmentPropertyDialog.h>
+#include <UI/GeometryDialog/ArcSegmentDialog.h>
+
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
 
@@ -30,10 +35,12 @@ private:
     //! This is the context which will be associated to the class
 	wxGLContext *_geometryContext;
     
-    //! This is an address for the master definition contained in the main frame
-    problemDefinition _localDefinition;
+    //! This is the address for the master definition contained in the main frame
+    problemDefinition *_localDefinition;
     
     gridPreferences _preferences;
+    
+    geometryEditor2D _editor;
     
     double _zoomFactor = 1;
     
@@ -41,9 +48,9 @@ private:
     
     double _cameraY = 0;
     
-    int _mouseXCoordinate = 0;// This is the pixel coordinate
+    int _mouseXPixel = 0;// This is the pixel coordinate
     
-    int _mouseYCoordinate = 0;
+    int _mouseYPixel = 0;
     
     //! This is the variable that will determine to create nodes/block labels
     bool _createNodes = true;
@@ -78,7 +85,7 @@ private:
     }
     
 public:
-    modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size);
+    modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition);
 
     void setGridPreferences(gridPreferences &preferences)
     {

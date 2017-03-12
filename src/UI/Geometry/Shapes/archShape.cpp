@@ -31,22 +31,19 @@ void arcShape::setArcAngle(double angleOfArc)
 
 double arcShape::getArcAngle()
 {
-    if(isCounterClockWise)
-        return -arcAngle;
-    else
-        return arcAngle;
+    return arcAngle;
 }
 
 
 
-void arcShape::setNumSegments(double segments)
+void arcShape::setNumSegments(unsigned int segments)
 {
 	numSegments = segments;
 }
 
 
 	
-double arcShape::getnumSegments()
+unsigned int arcShape::getnumSegments()
 {
 	return numSegments;
 }
@@ -98,7 +95,7 @@ void arcShape::calculate(std::vector<node> &arcNodeList)
     if((startNodeYCoordinate > endNodeYCoordinate && isCounterClockWise) || (startNodeYCoordinate < endNodeYCoordinate && !isCounterClockWise))
     {
         // This will calculate the center that is below the arc.
-        // If the start node is lower then the end node, the logic is reversed. This potion will create
+        // If the start node is lower then the end node, the logic is reversed. This portion will create
         // the center above the arc.
         xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
         yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);

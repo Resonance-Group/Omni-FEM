@@ -106,17 +106,6 @@ void geometryEditorCanvas::onGeometryPaint(wxPaintEvent &event)
         }
     }
     
-	if(nodeList.size() > 0)
-	{
-  //      updateProjection();
-		for(std::vector<node>::iterator nodeIterator = nodeList.begin(); nodeIterator != nodeList.end(); ++nodeIterator)
-		{
-            /* Interestingly, the function does not have to convert the cartesian coordinates into pixels and draw
-             * The reason for this is unknown. 
-             * 
-			nodeIterator->draw();
-		}
-	}
      */ 
 }
 
@@ -268,54 +257,7 @@ void geometryEditorCanvas::onMouseLeftDown(wxMouseEvent &event)
 						This section of the code will calculate many features that make up the arc such as the arc Legnth.
 						The add arcSegment will calculate anything needed for intercestions
 					
-					arcShape arcSegment;
 					
-					/* First, we will create a dialog box so that some basic propeties of the arc can be set by the user 
-					wxDialog *arcSegmentDlg = new wxDialog(NULL, wxID_ANY, "Arc Segment Dialog", wxDefaultPosition, wxSize(269, 205));
-					wxPanel *dialogPanel = new wxPanel(arcSegmentDlg);
-					wxButton *buttonOk = new wxButton(dialogPanel, wxID_OK, "Ok", wxPoint(101, 165), wxSize(75, 23));
-					wxButton *buttonCancel = new wxButton(dialogPanel, wxID_CANCEL, "Cancel", wxPoint(182, 165), wxSize(75, 23));
-					
-					wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-					
-					wxStaticText *arcAngleText = new wxStaticText(dialogPanel, wxID_ANY, "Arc Angle (deg):", wxPoint(12, 38), wxSize(80,13));
-					arcAngleText->SetFont(*font);
-					
-					wxStaticText *maxSegmentText = new wxStaticText(dialogPanel, wxID_ANY, "Max Segment:", wxPoint(12, 83), wxSize(72,13));
-					maxSegmentText->SetFont(*font);
-					
-					wxStaticText *boundaryText = new wxStaticText(dialogPanel, wxID_ANY, "Boundary", wxPoint(12, 125), wxSize(52,13));
-					boundaryText->SetFont(*font);
-					
-					wxTextCtrl *arcAngle = new wxTextCtrl(dialogPanel, wxID_ANY, "35", wxPoint(101, 35), wxSize(156, 20));
-					wxTextCtrl *maxSegment = new wxTextCtrl(dialogPanel, wxID_ANY, "10", wxPoint(101, 80), wxSize(156, 20));
-
-					wxComboBox *boundaryComboBox = new wxComboBox(dialogPanel, wxID_ANY, "<None>", wxPoint(101, 122), wxSize(156, 21), boundaryList);
-					
-					if(arcSegmentDlg->ShowModal() == wxID_OK)
-					{
-						/* If the user clicked on ok to idicate they are done, we will then set the properties to an arc segment and add the segment to the geometry 
-						double arcAngleVal = 0.0;
-						double maxSegmentVal = 0.0;
-						int index = boundaryComboBox->GetSelection();
-						wxString test = boundaryList.Item(index);
-						
-						arcAngle->GetValue().ToDouble(&arcAngleVal);
-						arcSegment.setArcAngle(arcAngleVal);
-						
-						maxSegment->GetValue().ToDouble(&maxSegmentVal);
-						arcSegment.setNumSegments(maxSegmentVal);
-						
-						//arcSegment.setBoundaryMarker(test);
-						arcSegment.setBoundaryMarker(test);
-						
-						arcSegment.setFirstNodeIndex(firstSelectedNodeIndex);
-						arcSegment.setSecondNodeIndex(nodeList[i].getNodeIndex());
-						
-                        arcSegment.calculate(nodeList);
-                        
-						addArcSegment(arcSegment);
-					}
 				}
 				
 				nodeList[firstSelectedNodeIndex].toggleSelect();

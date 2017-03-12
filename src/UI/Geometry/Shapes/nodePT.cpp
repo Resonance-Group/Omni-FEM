@@ -36,7 +36,7 @@ void node::draw()
     glEnd();
     
     glColor3d(1.0, 1.0, 1.0);
-    glPointSize(4.0);
+    glPointSize(5.0);
     
     glBegin(GL_POINTS);
         glVertex2d(xCenterCoordinate, yCenterCoordinate);
