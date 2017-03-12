@@ -13,7 +13,7 @@ zoomWindow::zoomWindow() : wxDialog(NULL, wxID_ANY, "Zoom Window")
     
     wxStaticText *topText = new wxStaticText(this, wxID_ANY, "Top:");
     topText->SetFont(*font);
-    _topTextCtrl->Create(this, wxID_ANY, "10", wxPoint(76, 12), wxSize(100, 20));
+    _topTextCtrl->Create(this, wxID_ANY, "1", wxPoint(76, 12), wxSize(100, 20));
     _topTextCtrl->SetFont(*font);
     
     line1Sizer->Add(topText, 0, wxCENTER | wxALL, 6);
@@ -22,7 +22,7 @@ zoomWindow::zoomWindow() : wxDialog(NULL, wxID_ANY, "Zoom Window")
     
     wxStaticText *bottomText = new wxStaticText(this, wxID_ANY, "Bottom:");
     bottomText->SetFont(*font);
-    _bottomTextCtrl->Create(this, wxID_ANY, "10", wxPoint(76, 38), wxSize(100, 20));
+    _bottomTextCtrl->Create(this, wxID_ANY, "-1", wxPoint(76, 38), wxSize(100, 20));
     _bottomTextCtrl->SetFont(*font);
     
     line2Sizer->Add(bottomText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
@@ -31,7 +31,7 @@ zoomWindow::zoomWindow() : wxDialog(NULL, wxID_ANY, "Zoom Window")
     
     wxStaticText *leftText = new wxStaticText(this, wxID_ANY, "Left:");
     leftText->SetFont(*font);
-    _leftTextCtrl->Create(this, wxID_ANY, "10", wxPoint(76, 64), wxSize(100, 20));
+    _leftTextCtrl->Create(this, wxID_ANY, "-2", wxPoint(76, 64), wxSize(100, 20));
     _leftTextCtrl->SetFont(*font);
     
     line3Sizer->Add(leftText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
@@ -40,7 +40,7 @@ zoomWindow::zoomWindow() : wxDialog(NULL, wxID_ANY, "Zoom Window")
     
     wxStaticText *rightText = new wxStaticText(this, wxID_ANY, "Right:");
     rightText->SetFont(*font);
-    _rightTextCtrl->Create(this, wxID_ANY, "10", wxPoint(76, 90), wxSize(100, 20));
+    _rightTextCtrl->Create(this, wxID_ANY, "2", wxPoint(76, 90), wxSize(100, 20));
     _rightTextCtrl->SetFont(*font);
     
     line4Sizer->Add(rightText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
