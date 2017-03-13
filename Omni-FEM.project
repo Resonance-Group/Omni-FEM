@@ -52,11 +52,8 @@
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <VirtualDirectory Name="Shapes">
           <File Name="src/UI/Geometry/Shapes/archShape.cpp"/>
-          <File Name="src/UI/Geometry/Shapes/edgeLineShape.cpp"/>
           <File Name="src/UI/Geometry/Shapes/geometryAdd.cpp"/>
           <File Name="src/UI/Geometry/Shapes/geometryEditorController.cpp"/>
-          <File Name="src/UI/Geometry/Shapes/nodePT.cpp"/>
-          <File Name="src/UI/Geometry/Shapes/rectangleShape.cpp"/>
         </VirtualDirectory>
         <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
       </VirtualDirectory>

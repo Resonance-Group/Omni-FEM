@@ -21,6 +21,8 @@ private:
     electroStaticPreference _electricalPreference;
     
     magneticPreference _magneticPreference;
+    
+    gridPreferences _preferences;
 
 /* This section is for creating the area for the document settings */
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
@@ -53,7 +55,7 @@ private:
     
     wxCheckBox *_snapGridCheckBox = new wxCheckBox();
     
-    wxCheckBox *_showBlockNamesCheckBox = new wxCheckBox();
+    wxCheckBox *_showBlockNameCheckBox = new wxCheckBox();
     
     wxCheckBox *_reverseMouseZoomCheckBox = new wxCheckBox();
     

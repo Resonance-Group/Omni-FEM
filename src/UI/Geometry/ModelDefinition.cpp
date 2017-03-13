@@ -300,7 +300,16 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
     }
     else if(_editor.getNodeList()->size() == 0)
 	{
-		_editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+		if(_preferences.getSnapGridState())
+        {
+            double tempX = convertToXCoordinate(_mouseXPixel);
+            double tempY = convertToYCoordinate(_mouseYPixel);
+            roundToNearestGrid(tempX, tempY);
+            _editor.addNode(tempX, tempY, 0);
+        }
+        else
+            _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+            
 		this->Refresh();
 		return;
 	}

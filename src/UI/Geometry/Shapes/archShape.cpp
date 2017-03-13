@@ -1,17 +1,14 @@
 #include <UI/geometryShapes.h>
 
-arcShape::arcShape() : edgeLineShape()
+arcShape::arcShape()
 {
-	nodeIndex1 = 0;
-	nodeIndex2 = 0;
+	_nodeIndex1 = 0;
+	_nodeIndex2 = 0;
 	
 	isHidden = false;
 	
 	arcAngle = 90.0d;
-	maxSideLength = 10.0d;
-	
-	boundaryMarker = "<None>";
-	inConductor = "<None>";
+	_maxSideLength = 10.0d;
 	
 	isNormalDirection = true;
 }
@@ -71,11 +68,11 @@ void arcShape::calculate(std::vector<node> &arcNodeList)
     }*/
  //   else
     {
-        startNodeXCoordinate = arcNodeList[nodeIndex1].getCenterXCoordinate();
-        endNodeXCoordinate = arcNodeList[nodeIndex2].getCenterXCoordinate();
+        startNodeXCoordinate = arcNodeList[_nodeIndex1].getCenterXCoordinate();
+        endNodeXCoordinate = arcNodeList[_nodeIndex2].getCenterXCoordinate();
         
-        startNodeYCoordinate = arcNodeList[nodeIndex1].getCenterYCoordinate();
-        endNodeYCoordinate = arcNodeList[nodeIndex2].getCenterYCoordinate();
+        startNodeYCoordinate = arcNodeList[_nodeIndex1].getCenterYCoordinate();
+        endNodeYCoordinate = arcNodeList[_nodeIndex2].getCenterYCoordinate();
     }
     
     distanceSquared = pow(startNodeXCoordinate - endNodeXCoordinate, 2) + pow(startNodeYCoordinate - endNodeYCoordinate, 2);

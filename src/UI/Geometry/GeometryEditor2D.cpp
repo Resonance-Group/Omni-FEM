@@ -7,7 +7,7 @@ void geometryEditor2D::addNode(double xPoint, double yPoint, double distance)
     /* This section will make sure that two nodes are not drawn on top of each other */
 	for(int i = 0; i < _nodeList.size(); i++)
 	{
-		if(_nodeList[i].getDistance(xPoint, yPoint) < 0.0)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 0.0)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
