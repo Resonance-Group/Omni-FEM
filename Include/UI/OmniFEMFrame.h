@@ -12,7 +12,6 @@
 
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
-#include <UI/PropertiesDialog.h>
 
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MaterialsDialog/MaterialsLibrary.h>

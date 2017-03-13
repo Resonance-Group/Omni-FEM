@@ -7,26 +7,7 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-    /*
-    if(controller.getAbstractProblemPhysics() == physicProblems::electrostatics)
-    {
-        static electroStaticPreference test;
-        preferencesDialog *newDiag = new preferencesDialog(test);
-        if(newDiag->ShowModal() == wxID_OK)
-        {
-            newDiag->getPreferences(test);
-        }
-    }
-    else if(controller.getAbstractProblemPhysics() == physicProblems::magnetics)
-    {
-        static magneticPreference test;
-        preferencesDialog *newDiag = new preferencesDialog(test);
-        if(newDiag->ShowModal() == wxID_OK)
-        {
-            newDiag->getPreferences(test);
-        }
-    }
-     */ 
+    
 }
 
 

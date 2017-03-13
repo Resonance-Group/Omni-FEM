@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <string>
+#include <math.h>
 
 #include <freeglut.h>
 #include <gl.h>
@@ -64,7 +65,9 @@ private:
 
     void updateProjection();
     
-    void drawGrid(); 
+    void drawGrid();
+
+    void roundToNearestGrid(double &xCoordinate, double &yCoordinate);
     
     //! This is the event that is fired when the canvas is drawn or re-drawn
 	void onPaintCanvas(wxPaintEvent &event);

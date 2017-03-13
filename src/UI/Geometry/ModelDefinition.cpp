@@ -73,7 +73,7 @@ void modelDefinition::drawGrid()
         * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg
         * 
         */ 
-        glLineStipple(1, 0b0000100001000010);
+        glLineStipple(1, 0b0001100011000110);
     
         glBegin(GL_LINES);
             if(((cornerMaxX - cornerMinX) / _preferences.getGridStep() + (cornerMinY - cornerMaxY) / _preferences.getGridStep() < 200) && ((cornerMaxX - cornerMinX) / _preferences.getGridStep() > 0) && ((cornerMinY - cornerMaxY) / _preferences.getGridStep() > 0))
@@ -83,13 +83,13 @@ void modelDefinition::drawGrid()
                 {
                     if(i % 4 == 0)
                     {
-                        glLineWidth(0.7);
+                        glLineWidth(1.0);
                         glColor3d(0.0, 0.0, 0.0);
                     }
                     else
                     {
                         glLineWidth(0.5);
-                        glColor3d(0.7, 0.7, 0.7);
+                        glColor3d(0.65, 0.65, 0.65);
                     }
                     
                     glVertex2d(i * _preferences.getGridStep(), cornerMinY);
@@ -102,13 +102,13 @@ void modelDefinition::drawGrid()
                 {
                     if(i % 4 == 0)
                     {
-                        glLineWidth(0.7);
+                        glLineWidth(1.0);
                         glColor3d(0.0, 0.0, 0.0);
                     }
                     else
                     {
                         glLineWidth(0.5);
-                        glColor3d(0.5, 0.7, 0.7);
+                        glColor3d(0.65, 0.65, 0.65);
                     }
                     
                     glVertex2d(cornerMinX, i * _preferences.getGridStep());
@@ -138,8 +138,8 @@ void modelDefinition::drawGrid()
     /* This will create a crosshairs to indicate the location of the origin */
     if(_preferences.getShowOriginState())
     {
-        glColor3b(0.0, 0.0, 0.0);
-        glLineWidth(2.5);
+        glColor3d(0.4, 0.4, 0.4);
+        glLineWidth(1.5);
         
         glBegin(GL_LINES);
             glVertex2d(0, -0.25);
@@ -189,7 +189,21 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         }
     }
     
-    // Add in the code to draw the different points here
+    if(_editor.getLineList()->size() > 0)
+    {
+        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            lineIterator->draw(_editor.getNodeList()->at(lineIterator->getFirstNodeIndex()).getCenterXCoordinate(), _editor.getNodeList()->at(lineIterator->getFirstNodeIndex()).getCenterYCoordinate(), _editor.getNodeList()->at(lineIterator->getSecondNodeIndex()).getCenterXCoordinate(), _editor.getNodeList()->at(lineIterator->getSecondNodeIndex()).getCenterYCoordinate());
+        }
+    }
+    
+    if(_editor.getArcList()->size() > 0)
+    {
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            arcIterator->draw();
+        }
+    }
     
     SwapBuffers();
 }
@@ -355,14 +369,42 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             {
                 if(_createLines)
                 {
-                      // Insert the code to create the lines here
+                    double tempXCoor, tempYCoor;
+					for(int k = 0; k < _editor.getLineList()->size(); k++)
+					{
+                        /* In this fucntion, we already have the index to the first node the user selected
+                         * i would be the index of the second node the user selected.
+                         * k is the index to the line segment. The purpose of the fuction
+                         * tempx and tempyCoor are simply temporarl coordinates that are used as a midway.
+                         */ 
+                          
+						if(_editor.getIntersection(_editor.getFirstSelectedNodeIndex(), i, k, tempXCoor, tempYCoor) == true)
+						{
+							_editor.addNode(tempXCoor, tempYCoor, 0.01);
+						}
+					}
+					
+					_editor.addLine(_editor.getFirstSelectedNodeIndex(), _editor.getNodeList()->at(i).getNodeIndex(), NULL);
                 }
                 else
                 {
-                    //Insert the code to create the arcs here
+                    arcSegmentDialog *dialog;
+                    if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                        dialog = new arcSegmentDialog(_localDefinition->getElectricalBoundaryList());
+                    else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+                        dialog = new arcSegmentDialog(_localDefinition->getMagneticBoundaryList());
+                    if(dialog->ShowModal() == wxID_OK)
+                    {
+                        arcShape temp;
+                        dialog->getArcParameter(temp);
+                        temp.setFirstNodeIndex(_editor.getFirstSelectedNodeIndex());
+                        temp.setSecondNodeIndex(_editor.getNodeList()->at(i).getNodeIndex());
+                        temp.calculate(*_editor.getNodeList());
+                        _editor.addArc(temp, 0);
+                    }
                 }
                 
-                _editor.getNodeList()->at(_editor.getFirstSelectedNodeIndex()).setSelectState(false);// Not sure if this is suppose to be true or false
+                _editor.getNodeList()->at(_editor.getFirstSelectedNodeIndex()).setSelectState(false);
                 _editor.setFirstSelectedNodeIndex(-1);
                 this->Refresh();
                 return;
@@ -370,8 +412,77 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         }
     }
     
-    _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+    if(_preferences.getSnapGridState())
+    {
+        double tempX = convertToXCoordinate(_mouseXPixel);
+        double tempY = convertToYCoordinate(_mouseYPixel);
+        roundToNearestGrid(tempX, tempY);
+        _editor.addNode(tempX, tempY, 0);
+    }
+    else
+        _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+        
     this->Refresh();
+}
+
+
+
+void modelDefinition::roundToNearestGrid(double &xCoordinate, double &yCoordinate)
+{
+    /* How to code works. For the sake of the explanianation, imagine we are working with
+     * a 1D problem and that the point is between two grid markings.
+     * So first, we find the modulus of the coordinate / gridStep.
+     * What this tells us is the "distance" from the lower grid makring to the point.
+     * If the point is beyond the half way "mark", te modulus will return a number 
+     * greater then gridStep / 2. If the point is below the halfway "mark",
+     * you can simply take the point coordinate and subtract out the modulus.
+     * If the point is beyond the halfway "mark", you have to add the gridstep to the 
+     * point and then subtract out the modulus.
+     * For example, if a point is at 0.40 and the grid step size is 0.25, then the point 
+     * is between 0.25 and 0.5. The modulus of 0.40 % 0.25 will be 0.15. Since this is 
+     * greater then 0.25 / 2 = 0.125 (the halfway mark), we need to add 0.25 to 0.40 (0.25 + 0.4 = 0.65)
+     * Subtracting the modulus of 0.15 yeilds 0.5. The correct number to round 0.4 up to.
+     */ 
+    double xCoordRemainder = fmod(abs(xCoordinate), _preferences.getGridStep());
+    double yCoordRemainder = fmod(abs(yCoordinate), _preferences.getGridStep());
+    
+    if(xCoordRemainder != 0)
+    {
+        if(xCoordinate < 0)
+        {
+            if(xCoordRemainder <= (_preferences.getGridStep() / 2.0))
+                xCoordinate = -(abs(xCoordinate) - xCoordRemainder); 
+            else
+                xCoordinate = -(abs(xCoordinate) - xCoordRemainder + _preferences.getGridStep()); 
+               
+        }
+        else
+        {
+            if(xCoordRemainder <= (_preferences.getGridStep() / 2.0))
+                xCoordinate -= xCoordRemainder;
+            else
+                xCoordinate = xCoordinate + _preferences.getGridStep() - xCoordRemainder;
+        }
+    }
+    
+    if(yCoordRemainder != 0)
+    {
+        if(yCoordinate < 0)
+        {
+            if(yCoordRemainder <= (_preferences.getGridStep() / 2.0))
+                yCoordinate = -(abs(yCoordinate) - yCoordRemainder); 
+            else
+                yCoordinate = -(abs(yCoordinate) - yCoordRemainder + _preferences.getGridStep()); 
+               
+        }
+        else
+        {
+            if(yCoordRemainder <= (_preferences.getGridStep() / 2.0))
+                yCoordinate -= yCoordRemainder;
+            else
+                yCoordinate = yCoordinate + _preferences.getGridStep() - yCoordRemainder;
+        }
+    }
 }
 
 

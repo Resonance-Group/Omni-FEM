@@ -31,7 +31,7 @@ private:
      * lineSegment is the line segment index that will be checked for an intersection
      * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
      */
-	bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
+	
     
     //! This function will determine the center and the radius of the given arc.
 	void getCircle(arcShape &arc, Vector &center, double &radius);
@@ -49,6 +49,8 @@ private:
 	double calculateShortestDistance(double p, double q, int segmentIndex, std::vector<node> const &refNodeList, std::vector<edgeLineShape> const &refLineList);
 
 public:
+    bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
+
     std::vector<node> *getNodeList()
     {
         return &_nodeList;
