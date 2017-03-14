@@ -2,10 +2,10 @@
 #include <iostream>
 #include <iomanip>
 
-preferencesDialog::preferencesDialog(magneticPreference pref, physicProblems problem) : wxDialog(NULL, wxID_ANY, "Problem Preferences")
+preferencesDialog::preferencesDialog(wxWindow *par, magneticPreference pref) : wxDialog(par, wxID_ANY, "Problem Preferences")
 {
     _magPreference = pref;
-    _problem = problem;
+    _problem = physicProblems::PROB_MAGNETICS;
 
     _acSolverNameArray->Add("Succ. Approx");
     _acSolverNameArray->Add("Newton");
@@ -15,10 +15,10 @@ preferencesDialog::preferencesDialog(magneticPreference pref, physicProblems pro
 
 
 
-preferencesDialog::preferencesDialog(electroStaticPreference pref, physicProblems problem) : wxDialog(NULL, wxID_ANY, "Problem Definition")
+preferencesDialog::preferencesDialog(wxWindow *par, electroStaticPreference pref) : wxDialog(par, wxID_ANY, "Problem Definition")
 {
     _electrPreference = pref;
-    _problem = problem;
+    _problem = physicProblems::PROB_ELECTROSTATIC;
     
     createDialog();
 }

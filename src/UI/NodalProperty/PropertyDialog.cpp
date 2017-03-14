@@ -1,7 +1,7 @@
 #include <UI/NodalProperty/PropertyDialog.h>
 
 
-nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList, physicProblems problem) : wxDialog(NULL, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
+nodalPropertiesDialog::nodalPropertiesDialog(wxWindow *par, std::vector<nodalProperty> nodalPropertyList, physicProblems problem) : wxDialog(par, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -68,7 +68,7 @@ nodalPropertiesDialog::nodalPropertiesDialog(std::vector<nodalProperty> nodalPro
 void nodalPropertiesDialog::onAddProperty(wxCommandEvent &event)
 {
     nodalProperty newNodalProperty;
-    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog();
+    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog(this);
     
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
         nodalPropDialog->createDialog(physicProblems::PROB_ELECTROSTATIC);
@@ -111,7 +111,7 @@ void nodalPropertiesDialog::onDeleteProperty(wxCommandEvent &event)
 void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
 {
     nodalProperty selectedNodalProperty;
-    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog();
+    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog(this);
     
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
         nodalPropDialog->createDialog(physicProblems::PROB_ELECTROSTATIC);

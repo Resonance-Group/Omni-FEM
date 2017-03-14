@@ -51,7 +51,6 @@
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <VirtualDirectory Name="Shapes">
-          <File Name="src/UI/Geometry/Shapes/archShape.cpp"/>
           <File Name="src/UI/Geometry/Shapes/geometryAdd.cpp"/>
           <File Name="src/UI/Geometry/Shapes/geometryEditorController.cpp"/>
         </VirtualDirectory>
@@ -74,7 +73,6 @@
         <File Name="src/UI/NodalProperty/NodalPropertyDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ConductorsDialog">
-        <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/CircuitPropertyDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/ConductorPropertyDialog.cpp"/>
       </VirtualDirectory>
@@ -88,6 +86,7 @@
         <File Name="src/UI/EditMenu/MirrorDialog.cpp"/>
         <File Name="src/UI/EditMenu/MoveCopyDialog.cpp"/>
         <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
+        <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>

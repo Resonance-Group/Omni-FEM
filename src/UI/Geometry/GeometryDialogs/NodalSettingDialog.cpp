@@ -1,7 +1,7 @@
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 
 
-setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings, std::vector<conductorProperty> &conductorPropertyList) : wxDialog(NULL, wxID_ANY, "Nodal Settings")
+setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings, std::vector<conductorProperty> &conductorPropertyList) : wxDialog(par, wxID_ANY, "Nodal Settings")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
      
@@ -111,7 +111,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
  
  
  
-setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings) : wxDialog(NULL, wxID_ANY, "Nodal Settings")
+setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings) : wxDialog(par, wxID_ANY, "Nodal Settings")
 {
      wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
      

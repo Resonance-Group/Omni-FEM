@@ -2,7 +2,7 @@
 
 
 
-arcSegmentDialog::arcSegmentDialog(std::vector<electricalBoundary> list) : wxDialog(NULL, wxID_ANY, "Arc Segment")
+arcSegmentDialog::arcSegmentDialog(wxWindow *par, std::vector<electricalBoundary> list) : wxDialog(par, wxID_ANY, "Arc Segment")
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     
@@ -20,7 +20,7 @@ arcSegmentDialog::arcSegmentDialog(std::vector<electricalBoundary> list) : wxDia
 
 
 
-arcSegmentDialog::arcSegmentDialog(std::vector<magneticBoundary> list) : wxDialog(NULL, wxID_ANY, "Arc Segment")
+arcSegmentDialog::arcSegmentDialog(wxWindow *par, std::vector<magneticBoundary> list) : wxDialog(par, wxID_ANY, "Arc Segment")
 {
     _problem = physicProblems::PROB_MAGNETICS;
     

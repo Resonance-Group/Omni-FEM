@@ -31,9 +31,9 @@ private:
     
     wxComboBox *_conductorsComboBox = new wxComboBox();
 public:
-    setNodalPropertyDialog(std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings, std::vector<conductorProperty> &conductorPropertyList);
+    setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings, std::vector<conductorProperty> &conductorPropertyList);
     
-    setNodalPropertyDialog(std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings);
+    setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings);
     
     void getNodalSettings(nodeSetting &settings);
     

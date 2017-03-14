@@ -73,10 +73,10 @@ private:
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
-    boundaryDialog(std::vector<magneticBoundary> boundaryList);
+    boundaryDialog(wxWindow *par, std::vector<magneticBoundary> boundaryList);
     
     //! This is the constructor for the electricla boundary
-    boundaryDialog(std::vector<electricalBoundary> boundaryList);
+    boundaryDialog(wxWindow *par, std::vector<electricalBoundary> boundaryList);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~boundaryDialog();

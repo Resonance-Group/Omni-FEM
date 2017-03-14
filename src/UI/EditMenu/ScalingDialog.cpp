@@ -1,7 +1,7 @@
 #include <UI/EditMenu/ScalingDialog.h>
 
 
-scaleDialog::scaleDialog(wxPoint &selectedPoint) : wxDialog(NULL, wxID_ANY, "Scale")
+scaleDialog::scaleDialog(wxWindow *par, wxPoint &selectedPoint) : wxDialog(par, wxID_ANY, "Scale")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

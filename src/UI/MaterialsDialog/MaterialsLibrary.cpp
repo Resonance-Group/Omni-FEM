@@ -1,6 +1,6 @@
 #include <UI/MaterialsDialog/MaterialsLibrary.h>
 
-materialLibraryDialog::materialLibraryDialog(std::vector<electrostaticMaterial> &material) : wxDialog(NULL, wxID_ANY, "Material Library")
+materialLibraryDialog::materialLibraryDialog(wxWindow *par, std::vector<electrostaticMaterial> &material) : wxDialog(par, wxID_ANY, "Material Library")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -57,7 +57,7 @@ materialLibraryDialog::materialLibraryDialog(std::vector<electrostaticMaterial> 
 
 
 
-materialLibraryDialog::materialLibraryDialog(std::vector<magneticMaterial> &material) : wxDialog(NULL, wxID_ANY, "Material Library")
+materialLibraryDialog::materialLibraryDialog(wxWindow *par, std::vector<magneticMaterial> &material) : wxDialog(par, wxID_ANY, "Material Library")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

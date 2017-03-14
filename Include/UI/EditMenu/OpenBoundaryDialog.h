@@ -25,7 +25,7 @@ private:
     wxComboBox *_edgeTypeComboBox = new wxComboBox();
     
 public:
-    openBoundaryDialog();
+    openBoundaryDialog(wxWindow *par);
     
     ~openBoundaryDialog();
     

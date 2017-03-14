@@ -40,7 +40,7 @@ private:
     void updateInterface();
 public:
 
-    gridPreferencesDialog();
+    gridPreferencesDialog(wxWindow *par);
     
     ~gridPreferencesDialog();
     

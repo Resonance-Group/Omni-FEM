@@ -75,7 +75,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuProperties->Append(PropertiesMenuID::ID_MATERIALS, "&Materials\tCtrl-M");
     _menuProperties->Append(PropertiesMenuID::ID_BOUNDARY, "&Boundary Conditions\tCtrl-B");
     _menuProperties->Append(PropertiesMenuID::ID_POINT, "&Nodal Properties");
-    _menuProperties->Append(PropertiesMenuID::ID_CONDUCTORS, "&Circuits/Conductors");
+    _menuProperties->Append(PropertiesMenuID::ID_CONDUCTORS, "&Conductors");
     _menuProperties->Append(PropertiesMenuID::ID_EXTERIOR_REGION, "&Exterior Region");
     _menuProperties->AppendSeparator();
     _menuProperties->Append(PropertiesMenuID::ID_MATERIAL_LIBRARY, "&Materials Library\tCtrl-L");
@@ -374,7 +374,7 @@ void OmniFEMMainFrame::onProblemPreferences(wxCommandEvent &event)
      */
     if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
     {
-        preferencesDialog *dialog = new preferencesDialog(_problemDefinition.getElectricalPreferences(), _problemDefinition.getPhysicsProblem());
+        preferencesDialog *dialog = new preferencesDialog(this, _problemDefinition.getElectricalPreferences());
         if(dialog->ShowModal() == wxID_OK)
         {
             electroStaticPreference temp;
@@ -384,7 +384,7 @@ void OmniFEMMainFrame::onProblemPreferences(wxCommandEvent &event)
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
     {
-        preferencesDialog *dialog = new preferencesDialog(_problemDefinition.getMagneticPreference(), _problemDefinition.getPhysicsProblem());
+        preferencesDialog *dialog = new preferencesDialog(this, _problemDefinition.getMagneticPreference());
         if(dialog->ShowModal() == wxID_OK)
         {
             magneticPreference temp;

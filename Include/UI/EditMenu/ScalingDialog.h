@@ -18,7 +18,7 @@ private:
     wxTextCtrl *_baseFactorYTextCtrl = new wxTextCtrl();
     
 public:
-    scaleDialog(wxPoint &selectedPoint);
+    scaleDialog(wxWindow *par, wxPoint &selectedPoint);
     
     ~scaleDialog();
     

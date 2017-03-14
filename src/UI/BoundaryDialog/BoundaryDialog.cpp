@@ -1,6 +1,6 @@
 #include <UI/BoundaryDialog/BoundaryDialog.h>
 
-boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
+boundaryDialog::boundaryDialog(wxWindow *par, std::vector<magneticBoundary> boundaryList) : wxDialog(par, wxID_ANY, "Boundary Definition")
 {
     _problem = physicProblems::PROB_MAGNETICS;
     
@@ -16,7 +16,7 @@ boundaryDialog::boundaryDialog(std::vector<magneticBoundary> boundaryList) : wxD
 
 
 
-boundaryDialog::boundaryDialog(std::vector<electricalBoundary> boundaryList) : wxDialog(NULL, wxID_ANY, "Boundary Definition")
+boundaryDialog::boundaryDialog(wxWindow *par, std::vector<electricalBoundary> boundaryList) : wxDialog(par, wxID_ANY, "Boundary Definition")
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     

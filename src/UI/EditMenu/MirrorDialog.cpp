@@ -1,6 +1,6 @@
 #include <UI/EditMenu/MirrorDialog.h>
 
-mirrorDialog::mirrorDialog() : wxDialog(NULL, wxID_ANY, "Mirror")
+mirrorDialog::mirrorDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Mirror")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

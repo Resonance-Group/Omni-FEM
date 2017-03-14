@@ -1,7 +1,7 @@
 #include <UI/EditMenu/MoveCopyDialog.h>
 
 
-moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
+moveCopyDialog::moveCopyDialog(wxWindow *par, bool isMove) : wxDialog(par, wxID_ANY, "Copy")
 {
     _isMove = isMove;
     

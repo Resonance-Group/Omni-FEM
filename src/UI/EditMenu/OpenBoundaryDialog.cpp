@@ -1,7 +1,7 @@
 #include <UI/EditMenu/OpenBoundaryDialog.h>
 
 
-openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Boundary")
+openBoundaryDialog::openBoundaryDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Open Boundary")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

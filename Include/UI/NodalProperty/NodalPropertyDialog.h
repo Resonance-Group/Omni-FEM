@@ -76,9 +76,9 @@ private:
     
 public:
     
-    nodalPropertyDialog(physicProblems problem);
+    nodalPropertyDialog(wxWindow *par, physicProblems problem);
     
-    nodalPropertyDialog();
+    nodalPropertyDialog(wxWindow *par);
     
     ~nodalPropertyDialog();
     

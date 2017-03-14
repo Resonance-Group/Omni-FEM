@@ -356,40 +356,92 @@ public:
 class arcShape : public edgeLineShape
 {
 private:
-    
-	bool isNormalDirection;
+	bool _isHidden;
 	
-	bool isHidden;
-	
-	unsigned int numSegments = 3;
+	unsigned int _numSegments = 3;
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees
-	double arcAngle = 30;
+	double _arcAngle = 30;
     
     //! The radius of the arc from the center point
-    double radius;
+    double _radius;
     
-    bool isCounterClockWise = true;
-    
-    double startNodeXCoordinate;
-    
-    double startNodeYCoordinate;
-    
-    double endNodeXCoordinate;
-    
-    double endNodeYCoordinate;
+    bool _isCounterClockWise = true;
 public:
-	arcShape();
+	arcShape()
+    {
+        _nodeIndex1 = 0;
+        _nodeIndex2 = 0;
 	
-	void setArcAngle(double angleOfArc);
+        _isHidden = false;
 	
-	double getArcAngle();
+        _arcAngle = 90.0d;
+        _maxSideLength = 10.0d;
+    }
 	
-	void setNumSegments(unsigned int segments);
+	void setArcAngle(double angleOfArc)
+    {
+        _arcAngle = abs(angleOfArc);
+        if(angleOfArc > 0)
+            _isCounterClockWise = true;
+        else
+            _isCounterClockWise = false;
+    }
 	
-	unsigned int getnumSegments();
+	double getArcAngle()
+    {
+        return _arcAngle;
+    }
+
+	
+	void setNumSegments(unsigned int segments)
+    {
+        _numSegments = segments;
+    }
+	
+	unsigned int getnumSegments()
+    {
+        return _numSegments;
+    }
     
-    void draw();
+    
+    void draw()
+    {
+     //   double startAngle = ((atan2(yCenterCoordinate - startNodeYCoordinate, xCenterCoordinate - startNodeXCoordinate) * 180.0) / PI)  - 180.0;
+        /* Computes the start and stop angle for the arc. atan returns in radians. This gets converted to degrees */
+        
+        if(_numSegments == -1)
+        {
+            if(_arcAngle < 10)
+                _numSegments = 10;
+            else
+                _numSegments = _arcAngle / 3.0;
+        }
+        else if(_numSegments < 2)
+            _numSegments = 2;
+        
+        double theta = 0;
+        if(_isCounterClockWise)
+            theta = (_arcAngle) / (double)_numSegments;
+        else
+            theta = (-_arcAngle) / (double)_numSegments;
+            
+        double startAngle = atan2(yCenterCoordinate - _firstNode.getCenterYCoordinate(), xCenterCoordinate - _firstNode.getCenterXCoordinate()) * (180.0 / PI) - 180.0;
+        
+        glBegin(GL_LINE_STRIP);
+            glVertex2d(_firstNode.getCenterXCoordinate(), _firstNode.getCenterYCoordinate());
+            
+            for(int i = 1; i < _numSegments; i++)
+            {
+                double arc = (startAngle + i * theta) * (PI / 180); 
+                double x = _radius * cos(arc);
+                double y = _radius * sin(arc);
+                
+                glVertex2d(xCenterCoordinate + x, yCenterCoordinate + y);
+            }
+            glVertex2d(_secondNode.getCenterXCoordinate(), _secondNode.getCenterYCoordinate());
+        glEnd();
+    }	
 
     /*! \brief  This function will be calculating the radius and center point of the arc
 	 *			The idea is as follows:
@@ -398,11 +450,72 @@ public:
                 where c is the length of the sector through the beginning and starting endpoints and theta is the arc angle
                 Then, we can calculate the 
 	 */
-    void calculate(std::vector<node> &arcNodeList);
+    void calculate(std::vector<node> &arcNodeList)
+    {
+        /* The start node is considered the first node of the arc
+         * the end node is considered the second node of the arc.
+         * This is detictated by the order of the selection
+         */ 
+        double xCenter = 0;
+        double yCenter = 0;
+        double xMid = 0;
+        double yMid = 0;
+        double a = 0; // This variable is the distance from the midpoint of the two end points to the center of the arc
+        double midSlope = 0;
+        double slope = 0;
+        double distanceSquared = 0;
+        
+        // Use this site for reference: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
+     /*   if(arcNodeList[nodeIndex2].getCenterXCoordinate() > arcNodeList[nodeIndex1].getCenterXCoordinate())
+        {
+            startNodeXCoordinate = arcNodeList[nodeIndex2].getCenterXCoordinate();
+            endNodeXCoordinate = arcNodeList[nodeIndex1].getCenterXCoordinate();
+            
+            startNodeYCoordinate = arcNodeList[nodeIndex2].getCenterYCoordinate();
+            endNodeYCoordinate =  arcNodeList[nodeIndex1].getCenterYCoordinate();
+        }*/
+     //   else
+
+        distanceSquared = pow(_firstNode.getCenterXCoordinate() - _secondNode.getCenterXCoordinate(), 2) + pow(_firstNode.getCenterYCoordinate() - _secondNode.getCenterYCoordinate(), 2);
+        
+        _radius = sqrt(distanceSquared / (2.0 * (1.0 - cos(_arcAngle * PI / 180.0))));// Fun fact, the cosine function evaluates in radians
+        
+        xMid = (_firstNode.getCenterXCoordinate() + _secondNode.getCenterXCoordinate()) / 2.0;
+        
+        yMid = (_firstNode.getCenterYCoordinate() + _secondNode.getCenterYCoordinate()) / 2.0;
+        
+        slope = (_firstNode.getCenterYCoordinate() - _secondNode.getCenterYCoordinate()) / (_firstNode.getCenterXCoordinate() - _secondNode.getCenterXCoordinate());
+        
+        midSlope = -1.0 / slope;
+        
+        a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0)); // This is just an intermediate varable to make calculations easier
+        
+        if((_firstNode.getCenterYCoordinate() > _secondNode.getCenterYCoordinate() && _isCounterClockWise) || (_firstNode.getCenterYCoordinate() < _secondNode.getCenterYCoordinate() && !_isCounterClockWise))
+        {
+            // This will calculate the center that is below the arc.
+            // If the start node is lower then the end node, the logic is reversed. This portion will create
+            // the center above the arc.
+            xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+            yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+        }
+        else
+        {
+            // This will calculate the center above the arc
+            xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+            yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+        }
+
+    }
     
-    double getRadius();
+    double getRadius()
+    {
+        return _radius;
+    }	
     
-    double getArcLength();
+    double getArcLength()
+    {
+        return _radius * _arcAngle * (PI / 180.0);
+    }
     
 
 	

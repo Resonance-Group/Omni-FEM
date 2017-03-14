@@ -75,9 +75,9 @@ private:
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
-    materialDialog(std::vector<magneticMaterial> materialList);
+    materialDialog(wxWindow *par, std::vector<magneticMaterial> materialList);
     
-    materialDialog(std::vector<electrostaticMaterial> electroStaticMaterialList);
+    materialDialog(wxWindow *par, std::vector<electrostaticMaterial> electroStaticMaterialList);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~materialDialog();

@@ -1,6 +1,6 @@
 #include <UI/GridPreferencesDialog.h>
 
-gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid Preferences")
+gridPreferencesDialog::gridPreferencesDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Grid Preferences")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

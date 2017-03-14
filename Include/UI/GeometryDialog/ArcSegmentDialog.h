@@ -45,9 +45,9 @@ private:
     void createDialog();
     
 public:
-    arcSegmentDialog(std::vector<electricalBoundary> list);
+    arcSegmentDialog(wxWindow *par, std::vector<electricalBoundary> list);
     
-    arcSegmentDialog(std::vector<magneticBoundary> list);
+    arcSegmentDialog(wxWindow *par, std::vector<magneticBoundary> list);
     
     void clearParameter();
     

@@ -1,6 +1,6 @@
 #include <UI/MaterialsDialog/MaterialDialog.h>
 
-materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxDialog(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
+materialDialog::materialDialog(wxWindow *par, std::vector<magneticMaterial> materialList) : wxDialog(par, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
     _problem = physicProblems::PROB_MAGNETICS;
     
@@ -16,7 +16,7 @@ materialDialog::materialDialog(std::vector<magneticMaterial> materialList) : wxD
 
 
 
-materialDialog::materialDialog(std::vector<electrostaticMaterial> electroStaticMaterialList) : wxDialog(NULL, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
+materialDialog::materialDialog(wxWindow *par, std::vector<electrostaticMaterial> electroStaticMaterialList) : wxDialog(par, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     

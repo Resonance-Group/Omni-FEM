@@ -23,7 +23,7 @@ void OmniFEMMainFrame::onSetGridPreferences(wxCommandEvent &event)
     if(_UIState == systemState::MODEL_DEFINING)
     {
         gridPreferences *temp = _model->getGridPreferences();
-        gridPreferencesDialog *preferencesDia = new gridPreferencesDialog();
+        gridPreferencesDialog *preferencesDia = new gridPreferencesDialog(this);
         preferencesDia->setParameters(*temp);
         if(preferencesDia->ShowModal() == wxID_OK)
         {

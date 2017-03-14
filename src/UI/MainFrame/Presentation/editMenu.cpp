@@ -14,7 +14,7 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCopy(wxCommandEvent &event)
 {
-    moveCopyDialog *test = new moveCopyDialog(false);
+    moveCopyDialog *test = new moveCopyDialog(this, false);
     if(test->ShowModal() == wxID_OK)
     {
         
@@ -25,7 +25,7 @@ void OmniFEMMainFrame::onCopy(wxCommandEvent &event)
 void OmniFEMMainFrame::onScale(wxCommandEvent &event)
 {
     wxPoint test1 = wxPoint(0, 0);
-    scaleDialog *test = new scaleDialog(test1);
+    scaleDialog *test = new scaleDialog(this, test1);
     if(test->ShowModal() == wxID_OK)
     {
         
@@ -36,7 +36,7 @@ void OmniFEMMainFrame::onScale(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onMirror(wxCommandEvent &event)
 {
-    mirrorDialog *test = new mirrorDialog();
+    mirrorDialog *test = new mirrorDialog(this);
     if(test->ShowModal() == wxID_OK)
     {
         
@@ -61,7 +61,7 @@ void OmniFEMMainFrame::onDelete(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onMove(wxCommandEvent &event)
 {
-    moveCopyDialog *test = new moveCopyDialog(true);
+    moveCopyDialog *test = new moveCopyDialog(this, true);
     if(test->ShowModal() == wxID_OK)
     {
         
@@ -79,7 +79,7 @@ void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
 {
-    openBoundaryDialog *test = new openBoundaryDialog();
+    openBoundaryDialog *test = new openBoundaryDialog(this);
     if(test->ShowModal() == wxID_OK)
     {
         

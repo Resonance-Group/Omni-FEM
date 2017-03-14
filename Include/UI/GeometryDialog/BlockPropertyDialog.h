@@ -52,9 +52,9 @@ private:
     void onCheckAutoMesh(wxCommandEvent &event);
     
 public:
-    blockPropertyDialog(std::vector<magneticMaterial> material, std::vector<circuitProperty> circuit, blockProperty property, bool isAxisymmetric);
+    blockPropertyDialog(wxWindow *par, std::vector<magneticMaterial> material, std::vector<circuitProperty> circuit, blockProperty property, bool isAxisymmetric);
     
-    blockPropertyDialog(std::vector<electrostaticMaterial> material, blockProperty property, bool isAxisymmetric);
+    blockPropertyDialog(wxWindow *par, std::vector<electrostaticMaterial> material, blockProperty property, bool isAxisymmetric);
     
     void getBlockProperty(blockProperty &property);
     

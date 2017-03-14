@@ -40,9 +40,9 @@ private:
     void onLocalDrag(wxTreeEvent &event);
 
 public:
-    materialLibraryDialog(std::vector<electrostaticMaterial> &material);
+    materialLibraryDialog(wxWindow *par, std::vector<electrostaticMaterial> &material);
     
-    materialLibraryDialog(std::vector<magneticMaterial> &material);
+    materialLibraryDialog(wxWindow *par, std::vector<magneticMaterial> &material);
     
     void getMagneticLocalMaterialList(std::vector<magneticMaterial> &magneticMaterialList);
     

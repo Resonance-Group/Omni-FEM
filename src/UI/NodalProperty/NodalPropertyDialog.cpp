@@ -2,14 +2,14 @@
 
 
 
-nodalPropertyDialog::nodalPropertyDialog(physicProblems problem) : wxDialog(NULL, wxID_ANY, "Nodal Property")
+nodalPropertyDialog::nodalPropertyDialog(wxWindow *par, physicProblems problem) : wxDialog(par, wxID_ANY, "Nodal Property")
 {
     createDialog(problem);
 }
 
 
 
-nodalPropertyDialog::nodalPropertyDialog() : wxDialog(NULL, wxID_ANY, "Nodal Property")
+nodalPropertyDialog::nodalPropertyDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Nodal Property")
 {
     
 }

@@ -1,7 +1,7 @@
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 
 
-segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &electricalBoundaryList, std::vector<conductorProperty> &conductorList ,segmentProperty &property) : wxDialog(NULL, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> &electricalBoundaryList, std::vector<conductorProperty> &conductorList ,segmentProperty &property) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -134,7 +134,7 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
 
 
 
-segmentPropertyDialog::segmentPropertyDialog(std::vector<magneticBoundary> &magneticBoundayList, segmentProperty &property) : wxDialog(NULL, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> &magneticBoundayList, segmentProperty &property) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

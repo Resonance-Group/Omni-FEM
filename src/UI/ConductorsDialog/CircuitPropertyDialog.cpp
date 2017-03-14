@@ -1,7 +1,7 @@
 
 #include <UI/ConductorsDialog/CircuitPropertyDialog.h>
 
-circuitPropertyDialog::circuitPropertyDialog() : wxDialog(NULL, wxID_ANY, "Circuit Property")
+circuitPropertyDialog::circuitPropertyDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Circuit Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);

@@ -1,7 +1,7 @@
 #include <UI/ExteriorRegion.h>
 
 
-exteriorRegionDialog::exteriorRegionDialog() : wxDialog(NULL, wxID_ANY, "Exterior Region")
+exteriorRegionDialog::exteriorRegionDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Exterior Region")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

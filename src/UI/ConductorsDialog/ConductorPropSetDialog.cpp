@@ -1,6 +1,6 @@
 #include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
-conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProperty> circuitList) : wxDialog(NULL, wxID_ANY, "Conductor Definition")
+conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> circuitList) : wxDialog(par, wxID_ANY, "Conductor Definition")
 {
     _circuitList = circuitList;
  
@@ -16,7 +16,7 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
 
 
 
-conductorPropertySetDialog::conductorPropertySetDialog(std::vector<conductorProperty> conductorList) : wxDialog(NULL, wxID_ANY, "Conductor Definition")
+conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> conductorList) : wxDialog(par, wxID_ANY, "Conductor Definition")
 {
     _conductorList = conductorList;
  
@@ -90,7 +90,7 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
 {
     if(_problem == physicProblems::PROB_MAGNETICS)
     {
-        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog();
+        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);
         circuitProperty newCircuit;
         circuitPropDialog->clearCircuit();
         if(circuitPropDialog->ShowModal() == wxID_OK)
@@ -111,7 +111,7 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
     }
     else if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog();
+        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog(this);
         conductorProperty newConductor;
         conductorPropDialog->clearConductor();
         if(conductorPropDialog->ShowModal() == wxID_OK)
@@ -160,7 +160,7 @@ void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
     if(_circuitList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         circuitProperty selectedCircuitProperty;
-        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog();
+        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);
         int currentSelection = selection->GetSelection();
         selectedCircuitProperty = _circuitList.at(currentSelection);
         circuitPropDialog->setCircuit(selectedCircuitProperty);
@@ -191,7 +191,7 @@ void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
     else if(_conductorList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         conductorProperty selectedConductor;
-        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog();
+        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog(this);
         int currentSelection = selection->GetSelection();
         selectedConductor = _conductorList.at(currentSelection);
         conductorPropDialog->setConductor(selectedConductor);

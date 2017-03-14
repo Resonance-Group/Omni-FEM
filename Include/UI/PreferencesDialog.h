@@ -60,9 +60,9 @@ private:
     
 public:
 
-    preferencesDialog(magneticPreference pref, physicProblems problem);
+    preferencesDialog(wxWindow *par, magneticPreference pref);
     
-    preferencesDialog(electroStaticPreference pref, physicProblems problem);
+    preferencesDialog(wxWindow *par, electroStaticPreference pref);
     
     ~preferencesDialog();
     

@@ -37,7 +37,7 @@ private:
     void onTranslationCheck(wxCommandEvent &event);
     
 public:
-    moveCopyDialog(bool isMove);
+    moveCopyDialog(wxWindow *par, bool isMove);
     
     ~moveCopyDialog();
 
