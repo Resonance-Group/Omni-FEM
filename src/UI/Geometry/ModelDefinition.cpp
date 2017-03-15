@@ -8,6 +8,8 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
     
     _localDefinition = &definition;
     
+    _editor.setZoomFactorAddress(_zoomFactor);
+    
     glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -47,9 +49,11 @@ void modelDefinition::updateProjection()
     
     if(_zoomFactor > 1e6)
         _zoomFactor = 1e6;
-        
+    
+    
+    
     glScaled(_zoomFactor / (this->GetSize().GetWidth() / this->GetSize().GetHeight()), _zoomFactor, 1.0);
-//    glTranslated((float)this->GetSize().GetWidth() / 2.0f, (float)this->GetSize().GetHeight() / 2.0f, 0.0f);
+
     glTranslated(-_cameraX, -_cameraY, 0.0);
 }
 
@@ -181,14 +185,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     drawGrid();
     glMatrixMode(GL_MODELVIEW);
     
-    if(_editor.getNodeList()->size() > 0)
-    {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-        {
-            nodeIterator->draw();
-        }
-    }
-    
+
     if(_editor.getLineList()->size() > 0)
     {
         for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
@@ -202,6 +199,14 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             arcIterator->draw();
+        }
+    }
+    
+    if(_editor.getNodeList()->size() > 0)
+    {
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            nodeIterator->draw();
         }
     }
     
@@ -302,13 +307,13 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 	{
 		if(_preferences.getSnapGridState())
         {
-            double tempX = convertToXCoordinate(_mouseXPixel);
-            double tempY = convertToYCoordinate(_mouseYPixel);
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
             roundToNearestGrid(tempX, tempY);
-            _editor.addNode(tempX, tempY, 0);
+            _editor.addNode(tempX, tempY);
         }
         else
-            _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+            _editor.addNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
             
 		this->Refresh();
 		return;
@@ -389,7 +394,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                           
 						if(_editor.getIntersection(_editor.getFirstSelectedNodeIndex(), i, k, tempXCoor, tempYCoor) == true)
 						{
-							_editor.addNode(tempXCoor, tempYCoor, 0.01);
+							_editor.addNode(tempXCoor, tempYCoor);
 						}
 					}
 					
@@ -398,10 +403,12 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                 else
                 {
                     arcSegmentDialog *dialog;
+                    
                     if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
                         dialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
                     else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
                         dialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+                        
                     if(dialog->ShowModal() == wxID_OK)
                     {
                         arcShape temp;
@@ -426,10 +433,10 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         double tempX = convertToXCoordinate(_mouseXPixel);
         double tempY = convertToYCoordinate(_mouseYPixel);
         roundToNearestGrid(tempX, tempY);
-        _editor.addNode(tempX, tempY, 0);
+        _editor.addNode(tempX, tempY);
     }
     else
-        _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel), 0);
+        _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel));
         
     this->Refresh();
 }

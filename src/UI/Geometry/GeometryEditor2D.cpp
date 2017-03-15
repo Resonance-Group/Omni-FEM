@@ -1,64 +1,78 @@
 #include <UI/GeometryEditor2D.h>
 
-void geometryEditor2D::addNode(double xPoint, double yPoint, double distance)
+void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be the 1/mag which is the zoom factor
 {
+    /* This function was ported from the BOOL CFemmeDoc::AddNode(double x, double y, double d) located in FemmeDoc.cpp */
 	node newNode;
     
     /* This section will make sure that two nodes are not drawn on top of each other */
 	for(int i = 0; i < _nodeList.size(); i++)
 	{
-		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 0.0)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+        // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
+		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
     /* This section will make sure that a node is not drawn ontop of a block label */
 	for(int i = 0; i < _blockLabelList.size(); i++)
 	{
-		if(_blockLabelList[i].getDistance(xPoint, yPoint) < 0.01)
+		if(_blockLabelList[i].getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))
 			return;
 	}
     
     newNode.setCenter(xPoint, yPoint);
 	_nodeList.push_back(newNode);
-    _nodeList[_nodeList.size() - 1].setNodeIndex(_nodeList.size() - 1); // Need to veryify that this function performs as intended which is to make the node index equal to the array index (But is this even needed?)
+    // Consider removing the below function if all of the lines and arc are going to have the node passed into them
+  //  _nodeList[_nodeList.size() - 1].setNodeIndex(_nodeList.size() - 1); // Need to veryify that this function performs as intended which is to make the node index equal to the array index (But is this even needed?)
     
     /* If the node is in between a line, then break the line into 2 lines */
 	for(int i = 0; i < _lineList.size(); i++)
 	{
-		if(calculateShortestDistance(xPoint, yPoint, i, _nodeList, _lineList) < distance)
+		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 100))
 		{
-            edgeLineShape *edgeLine = new edgeLineShape();
+            /* Ok so if the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
+             * Line1 will be set equal to the original line (line0).
+             * For the sake of explanation, the left most node will be considered as node 1 and the right most node will be considered node 2.
+             * So, node 2 of line1 will then be switched to the newly created node and the first node of line0 will be set to the new node 
+             * also. This effectively breaks the line into 2 shorter lines
+             */ 
+            edgeLineShape edgeLine = _lineList.at(i);
             
-			edgeLine = &(_lineList[i]);
-			_lineList[i].setSecondNodeIndex((int)(_nodeList.size() - 1)); // This will set the recently created node to be the second node of the shortend line
-			edgeLine->setFirstNodeIndex((int)(_nodeList.size() - 1)); // This will set the recently created node to be the first node of the new line
-			_lineList.push_back(*(edgeLine));// Add the new line to the array
+            _lineList.at(i).setSecondNode(newNode);// This will set the recently created node to be the second node of the shortend line
+	//		_lineList[i].setSecondNodeIndex((int)(_nodeList.size() - 1)); // Detemine if this line can be deleted
+			
+            edgeLine.setFirstNode(newNode);// This will set the recently created node to be the first node of the new line
+     //       edgeLine.setFirstNodeIndex((int)(_nodeList.size() - 1)); // Detemine if this line can be deleted
+			_lineList.push_back(edgeLine);// Add the new line to the array
 		}
 	} 
     
     /* If the node is in between an arc, then break the arc into 2 */
 	for(int i = 0; i < _arcList.size(); i++)
 	{
-		if(fabs(-5) < distance) // this needs t be looked into more
+        /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
+		if(fabs(-5) < 1 / (*_zoomFactorPointer * 100)) // this needs t be looked into more
 		{
             Vector firstNode, secondNode, thirdNode, center;
-            arcShape *arcSegment = new arcShape();
+            arcShape arcSegment = _arcList.at(i);
             
-			firstNode.Set(_nodeList[_arcList[i].getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[_arcList[i].getFirstNodeIndex()].getCenterYCoordinate());
-			secondNode.Set(_nodeList[_arcList[i].getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[_arcList[i].getSecondNodeIndex()].getCenterYCoordinate());
+            firstNode.Set(_arcList.at(i).getFirstNode().getCenterXCoordinate(), _arcList.at(i).getFirstNode().getCenterYCoordinate());
+	//		firstNode.Set(_nodeList[_arcList[i].getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[_arcList[i].getFirstNodeIndex()].getCenterYCoordinate());
+			secondNode.Set(_arcList.at(i).getSecondNode().getCenterXCoordinate(), _arcList.at(i).getSecondNode().getCenterYCoordinate());
+    //        secondNode.Set(_nodeList[_arcList[i].getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[_arcList[i].getSecondNodeIndex()].getCenterYCoordinate());
 			thirdNode.Set(xPoint, yPoint);
 			
 			//getCircle{arcList[i], center, R);// No idea what this is.... yet
 			
-			arcSegment = &_arcList[i];
+            _arcList.at(i).setSecondNode(newNode);
+	//		_arcList[i].setSecondNodeIndex((int)_nodeList.size() - 1);
+			_arcList.at(i).setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
-			_arcList[i].setSecondNodeIndex((int)_nodeList.size() - 1);
-			_arcList[i].setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
+            arcSegment.setFirstNode(newNode);
+	//		arcSegment->setFirstNodeIndex((int)_nodeList.size() - 1);
+			arcSegment.setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
-			arcSegment->setFirstNodeIndex((int)_nodeList.size() - 1);
-			arcSegment->setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
-			
-			_arcList.push_back(*arcSegment);
+			_arcList.push_back(arcSegment);
 		}
 	}
 }
@@ -171,7 +185,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 		{
 			for(int k = 0; k < j; k++)
 			{
-				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), dist);
+				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent());
 			}
 		}
 	}
@@ -185,7 +199,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 		{
 			for(int k = 0; k < j; k++)
 			{
-				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), dist);
+				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent());
 			}
 		}
 	}
@@ -409,17 +423,17 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
 }
 
 
-
-double geometryEditor2D::calculateShortestDistance(double p, double q, int segmentIndex, std::vector<node> const &refNodeList, std::vector<edgeLineShape> const &refLineList)
+// Consider removing the last two arguments
+double geometryEditor2D::calculateShortestDistance(double p, double q, int segmentIndex)
 {
     // I have no idea what this function does
     double t, xNew[3], wereNew[3];
 	
-    xNew[0] = refNodeList[refLineList[segmentIndex].getFirstNodeIndex()].getCenterXCoordinate();
-	wereNew[0] = refNodeList[refLineList[segmentIndex].getFirstNodeIndex()].getCenterYCoordinate();
+    xNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterXCoordinate();
+	wereNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterYCoordinate();
 	
-	xNew[1] = refNodeList[refLineList[segmentIndex].getSecondNodeIndex()].getCenterXCoordinate();
-	wereNew[1] = refNodeList[refLineList[segmentIndex].getSecondNodeIndex()].getCenterYCoordinate();
+	xNew[1] = _nodeList[_lineList[segmentIndex].getSecondNodeIndex()].getCenterXCoordinate();
+	wereNew[1] = _nodeList[_lineList[segmentIndex].getSecondNodeIndex()].getCenterYCoordinate();
 	
 	t = ((p - xNew[0]) * (xNew[1] - xNew[0]) + (q - wereNew[0]) * (wereNew[1] - wereNew[0])) / ((xNew[1] - xNew[0]) * (xNew[1] - xNew[0]) + (wereNew[1] - wereNew[0]) * (wereNew[1] - wereNew[0]));
 

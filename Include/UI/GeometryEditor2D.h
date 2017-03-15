@@ -23,6 +23,8 @@ private:
     
     long _firstSelectedNodeIndex = -1;
     
+    double *_zoomFactorPointer;
+    
     // Add in functions that are used to calculate intersection points here
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
@@ -46,7 +48,7 @@ private:
 	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
     
     /*! This function is used to calcualte if the shortest distance between a line a node */
-	double calculateShortestDistance(double p, double q, int segmentIndex, std::vector<node> const &refNodeList, std::vector<edgeLineShape> const &refLineList);
+	double calculateShortestDistance(double p, double q, int segmentIndex);
 
 public:
     bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
@@ -81,13 +83,18 @@ public:
         return _firstSelectedNodeIndex;
     }
     
-    void addNode(double xPoint, double yPoint, double distance);
+    void addNode(double xPoint, double yPoint);
     
     void addBlockLabel();
     
     void addLine(int node0, int node1, edgeLineShape *parseSegment);
     
     void addArc(arcShape &arcSeg, double tolerance);
+    
+    void setZoomFactorAddress(double &address)
+    {
+        _zoomFactorPointer = &address;
+    }
 	
 };
 
