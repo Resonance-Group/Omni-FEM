@@ -51,7 +51,7 @@ private:
 	double calculateShortestDistance(double p, double q, int segmentIndex);
 
 public:
-    bool getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint);
+    bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
 
     std::vector<node> *getNodeList()
     {
@@ -85,9 +85,9 @@ public:
     
     void addNode(double xPoint, double yPoint);
     
-    void addBlockLabel();
+    void addBlockLabel(double xPoint, double yPoint);
     
-    void addLine(int node0, int node1, edgeLineShape *parseSegment);
+    void addLine(int node0, int node1);
     
     void addArc(arcShape &arcSeg, double tolerance);
     

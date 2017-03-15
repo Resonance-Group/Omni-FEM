@@ -22,8 +22,6 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
     
     newNode.setCenter(xPoint, yPoint);
 	_nodeList.push_back(newNode);
-    // Consider removing the below function if all of the lines and arc are going to have the node passed into them
-  //  _nodeList[_nodeList.size() - 1].setNodeIndex(_nodeList.size() - 1); // Need to veryify that this function performs as intended which is to make the node index equal to the array index (But is this even needed?)
     
     /* If the node is in between a line, then break the line into 2 lines */
 	for(int i = 0; i < _lineList.size(); i++)
@@ -37,12 +35,9 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
              * also. This effectively breaks the line into 2 shorter lines
              */ 
             edgeLineShape edgeLine = _lineList.at(i);
-            
             _lineList.at(i).setSecondNode(newNode);// This will set the recently created node to be the second node of the shortend line
-	//		_lineList[i].setSecondNodeIndex((int)(_nodeList.size() - 1)); // Detemine if this line can be deleted
 			
             edgeLine.setFirstNode(newNode);// This will set the recently created node to be the first node of the new line
-     //       edgeLine.setFirstNodeIndex((int)(_nodeList.size() - 1)); // Detemine if this line can be deleted
 			_lineList.push_back(edgeLine);// Add the new line to the array
 		}
 	} 
@@ -57,19 +52,15 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
             arcShape arcSegment = _arcList.at(i);
             
             firstNode.Set(_arcList.at(i).getFirstNode().getCenterXCoordinate(), _arcList.at(i).getFirstNode().getCenterYCoordinate());
-	//		firstNode.Set(_nodeList[_arcList[i].getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[_arcList[i].getFirstNodeIndex()].getCenterYCoordinate());
 			secondNode.Set(_arcList.at(i).getSecondNode().getCenterXCoordinate(), _arcList.at(i).getSecondNode().getCenterYCoordinate());
-    //        secondNode.Set(_nodeList[_arcList[i].getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[_arcList[i].getSecondNodeIndex()].getCenterYCoordinate());
 			thirdNode.Set(xPoint, yPoint);
 			
 			//getCircle{arcList[i], center, R);// No idea what this is.... yet
 			
             _arcList.at(i).setSecondNode(newNode);
-	//		_arcList[i].setSecondNodeIndex((int)_nodeList.size() - 1);
 			_arcList.at(i).setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
             arcSegment.setFirstNode(newNode);
-	//		arcSegment->setFirstNodeIndex((int)_nodeList.size() - 1);
 			arcSegment.setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
 			_arcList.push_back(arcSegment);
@@ -79,17 +70,45 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 
 
 
-void geometryEditor2D::addBlockLabel()
+void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
 {
+    /* This code was adapted from the FEMM project. THe code came from FemmeDoc.cpp line 576 */
+    blockLabel newLabel;
     
+    // Make sure that teh block labe is not placed ontop of an existing block label
+    for(int i = 0; _blockLabelList.size(); i++)
+    {
+        if(_blockLabelList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))
+            return;
+    }
+    
+    // MAke sure that the block label is not placed on top of an existing node
+    for(int i = 0; i < _nodeList.size(); i++)
+	{
+        // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
+		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+			return;
+	}
+    
+    // Make sure that the block label is not placed ontop of a line
+    for(int i = 0; i < _lineList.size(); i++)
+	{
+		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 100))
+            return;
+    }
+            
+    /* Later, add in check to make sure that a block node will not be placed on top of a arc */
+    newLabel.setCenterXCoordinate(xPoint);
+    newLabel.setCenterYCoordiante(yPoint);
+    _blockLabelList.push_back(newLabel);
 }
 
 
 
-void geometryEditor2D::addLine(int node0, int node1, edgeLineShape *parseSegment)
+void geometryEditor2D::addLine(int node0, int node1)
 {
-    double nodePointX, nodePointY;
-    edgeLineShape *tempLine = new edgeLineShape();
+    /* This code was adapted from the FEMM project. See line 263 in FemmeDoc.cpp */
+    edgeLineShape newLine;
     
 	if(node0 == node1)
 		return;
@@ -97,19 +116,17 @@ void geometryEditor2D::addLine(int node0, int node1, edgeLineShape *parseSegment
 /* Check to see if the line has already been created */	
 	for(int i = 0; i < _lineList.size(); i++)
 	{
-		if((_lineList[i].getFirstNodeIndex() == node0 && _lineList[i].getSecondNodeIndex() == node1) || (_lineList[i].getFirstNodeIndex() == node0 && _lineList[i].getSecondNodeIndex() == node0))
+		if((_lineList.at(i).getFirstNode() == _nodeList.at(node0) && _lineList.at(i).getSecondNode() == _nodeList.at(node1)) || (_lineList.at(i).getFirstNode() == _nodeList.at(node1) && _lineList.at(i).getSecondNode() == _nodeList.at(node0)))
 			return;
 	}
     
-    if(parseSegment != NULL)
-        tempLine = parseSegment;
-    
-    tempLine->setFirstNodeIndex(node0);
-    tempLine->setSecondNodeIndex(node1);
+    newLine.setFirstNode(_nodeList.at(node0));
+    newLine.setSecondNode(_nodeList.at(node1));
     
     /* This section will check to see if there are any intersections with other segments. If so, create a node at the intersection */
     for(int i = 0; i < _lineList.size(); i++)
     {
+        /* Left off here */
    //     if(true)
    //         addNode(nodePointX, nodePointY, 0);
     }
@@ -120,7 +137,7 @@ void geometryEditor2D::addLine(int node0, int node1, edgeLineShape *parseSegment
         
     }
     
-    _lineList.push_back(*tempLine);// Add the line to the list
+    _lineList.push_back(newLine);// Add the line to the list
 }
 
 
@@ -248,7 +265,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 
 
 
-bool geometryEditor2D::getIntersection(int node0, int node1, int lineSegment, double &intercetionXPoint, double &intercestionYPoint)
+bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint)
 {
     
 }

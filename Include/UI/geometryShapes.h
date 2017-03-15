@@ -171,7 +171,7 @@ public:
     }
 	
 	//! This function will draw the shape
-	void draw()
+	virtual void draw()
     {
         if(isSelected)
             glColor3d(1.0, 0.0, 0.0);
@@ -214,6 +214,14 @@ public:
     nodeSetting *getNodeSetting()
     {
         return &_nodalSettings;
+    }
+    
+    bool operator==(const node &a_node)
+    {
+        if(xCenterCoordinate == a_node.getCenterXCoordinate() && yCenterCoordinate == a_node.getCenterYCoordinate())
+            return true;
+        else
+            return false;
     }
 };
 
@@ -345,7 +353,26 @@ private:
 	
 	bool isDefault;
 public:
-	blockLabel();
+    void draw()
+    {
+        if(isSelected)
+            glColor3d(1.0, 0.0, 0.0);
+        else
+            glColor3d(0.0, 0.0, 1.0);
+    
+        glPointSize(6.0);
+    
+        glBegin(GL_POINTS);
+            glVertex2d(xCenterCoordinate, yCenterCoordinate);
+        glEnd();
+    
+        glColor3d(1.0, 1.0, 1.0);
+        glPointSize(4.25);
+    
+        glBegin(GL_POINTS);
+            glVertex2d(xCenterCoordinate, yCenterCoordinate);
+        glEnd();
+    }
 	
 
 };
@@ -456,8 +483,6 @@ public:
          * the end node is considered the second node of the arc.
          * This is detictated by the order of the selection
          */ 
-        double xCenter = 0;
-        double yCenter = 0;
         double xMid = 0;
         double yMid = 0;
         double a = 0; // This variable is the distance from the midpoint of the two end points to the center of the arc

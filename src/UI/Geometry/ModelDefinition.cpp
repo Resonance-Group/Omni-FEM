@@ -392,13 +392,13 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                          * tempx and tempyCoor are simply temporarl coordinates that are used as a midway.
                          */ 
                           
-						if(_editor.getIntersection(_editor.getFirstSelectedNodeIndex(), i, k, tempXCoor, tempYCoor) == true)
-						{
-							_editor.addNode(tempXCoor, tempYCoor);
-						}
+			//			if(_editor.getIntersection(_editor.getFirstSelectedNodeIndex(), i, k, tempXCoor, tempYCoor) == true)
+			//			{
+			//				_editor.addNode(tempXCoor, tempYCoor);
+			//			}
 					}
 					
-					_editor.addLine(_editor.getFirstSelectedNodeIndex(), _editor.getNodeList()->at(i).getNodeIndex(), NULL);
+			//		_editor.addLine(_editor.getFirstSelectedNodeIndex(), _editor.getNodeList()->at(i).getNodeIndex(), NULL);
                 }
                 else
                 {
