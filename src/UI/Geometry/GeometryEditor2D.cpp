@@ -126,9 +126,9 @@ void geometryEditor2D::addLine(int node0, int node1)
     /* This section will check to see if there are any intersections with other segments. If so, create a node at the intersection */
     for(int i = 0; i < _lineList.size(); i++)
     {
-        /* Left off here */
-   //     if(true)
-   //         addNode(nodePointX, nodePointY, 0);
+        double tempX, tempY;
+        if(getIntersection(newLine, _lineList.at(i), tempX, tempY))
+            addNode(tempX, tempY);
     }
     
     /* This section will check to see if there are any intersections with arcs. If so, create a node at the intersection */
@@ -264,10 +264,50 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 }
 
 
-
+// Talk to Palm about some of these functions
 bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint)
 {
+    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 */
+    Vector pNode0, pNode1, iNode0, iNode1;// These are the nodes on the prospective line (pNode) and the intersectionLine (iNode
+    Vector tempNode0, tempNode1;
+    // First check to see if there are any commmon end points. If so, there is no intersection
+    if(prospectiveLine.getFirstNode() == intersectionLine.getFirstNode() || prospectiveLine.getFirstNode() == intersectionLine.getSecondNode() || prospectiveLine.getSecondNode() == intersectionLine.getFirstNode() || prospectiveLine.getSecondNode() == intersectionLine.getSecondNode())
+        return false;
+        
+    pNode0.Set(prospectiveLine.getFirstNode().getCenterXCoordinate(), prospectiveLine.getFirstNode().getCenterYCoordinate());
+    pNode1.Set(prospectiveLine.getSecondNode().getCenterXCoordinate(), prospectiveLine.getSecondNode().getCenterYCoordinate());
+    iNode0.Set(intersectionLine.getFirstNode().getCenterXCoordinate(), intersectionLine.getFirstNode().getCenterYCoordinate());
+    iNode1.Set(intersectionLine.getSecondNode().getCenterXCoordinate(), intersectionLine.getSecondNode().getCenterYCoordinate());
     
+    tempNode0 = iNode0;
+    tempNode1 = iNode1;
+    
+    double ee = min(Vabs(pNode1 - pNode0), Vabs(iNode1 - iNode0)) * 1.0e-8;
+    
+    iNode0 = (iNode0 - pNode0) / (pNode1 - pNode0);
+    iNode1 = (iNode1 - pNode0) / (pNode1 - pNode0);
+    
+    if(iNode0.getXComponent() <= 0 && iNode1.getXComponent() <= 0)
+        return false
+    else if(iNode0.getXComponent() >= 1.0 && iNode1.getXComponent() >= 1.0)
+        return false;
+    else if(iNode0.getYComponent() <= 0 && iNode1.getYComponent() <= 0)
+        return false;
+    else if(iNode0.getYComponent() >= 0 && iNode1.getYComponent() >= 0)
+        return false;
+        
+    double z = iNode0.getYComponent() / (iNode0 - iNode1).getYComponent();
+    
+    double x = ((1.0 - z) * iNode0 + z * iNode1).getXComponent();
+    if((x < ee) || (x > (1.0 - ee)))
+        return false;
+        
+    pNode0 = (1.0 - z) * tempNode0 + z * tempNode1;
+    
+    intersectionXPoint = pNode0.getXComponent();
+    intersectionYPoint = pNode0.getYComponent();
+    
+    return true;
 }
 
 
