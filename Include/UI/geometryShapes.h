@@ -315,7 +315,7 @@ public:
         return _isHidden;
     }
     
-    virtual void draw(double node1X, double node1Y, double node2X, double node2Y)
+    virtual void draw()
     {
         glLineWidth(2.0);
         glBegin(GL_LINES);
@@ -323,8 +323,8 @@ public:
                 glColor3f(1.0f, 0.0f, 0.0f);
             else
                 glColor3f(0.0f, 0.0f, 0.0f);
-            glVertex2d(node1X, node1Y);
-            glVertex2d(node2X, node2Y);
+            glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+            glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
         glEnd();
         glLineWidth(0.5);
     }

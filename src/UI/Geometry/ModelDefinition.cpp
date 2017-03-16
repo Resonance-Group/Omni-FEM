@@ -208,6 +208,8 @@ void modelDefinition::clearSelection()
                 arcIterator->setSelectState(false);
         }
     }
+    
+    _geometryIsSelected = false;
 }
 
 
@@ -229,7 +231,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     {
         for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
-            lineIterator->draw(_editor.getNodeList()->at(lineIterator->getFirstNodeIndex()).getCenterXCoordinate(), _editor.getNodeList()->at(lineIterator->getFirstNodeIndex()).getCenterYCoordinate(), _editor.getNodeList()->at(lineIterator->getSecondNodeIndex()).getCenterXCoordinate(), _editor.getNodeList()->at(lineIterator->getSecondNodeIndex()).getCenterYCoordinate());
+            lineIterator->draw();
         }
     }
     
@@ -336,7 +338,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
-        if(_createNodes)
+        if(_createNodes && !_geometryIsSelected)
         {
             int lastNodeItemIndex = _editor.getNodeList()->size() - 1;
             // Update the last node entry with new x and y coordinates and round if on snap grid
@@ -379,11 +381,11 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                 if(_editor.setNodeIndex(i))
                 {
                     
-                    if(_createLines)
+                    if(_createLines )
                     {
                         //Create the line
-                        _editor.getNodeList()->at(i).setSelectState(true);
-                         this->Refresh();
+                        _editor.addLine();
+                        this->Refresh();
                         return;
                     }
                     else
@@ -395,8 +397,9 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                 }
                 else
                 {
-                    _editor.getNodeList()->at(i).setSelectState(true);
                     //Toggle the node to be selected
+                    _editor.getNodeList()->at(i).setSelectState(true);
+                    _geometryIsSelected = true;
                     this->Refresh();
                     return;
                 }

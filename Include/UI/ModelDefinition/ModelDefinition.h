@@ -59,6 +59,8 @@ private:
     //! This is the variable that will determine to create lines/arcs
     bool _createLines = true;
     
+    bool _geometryIsSelected = false;
+    
     double convertToXCoordinate(int xPixel);
     
     double convertToYCoordinate(int yPixel);
