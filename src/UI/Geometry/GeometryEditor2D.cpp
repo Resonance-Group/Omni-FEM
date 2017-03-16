@@ -6,17 +6,17 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	node newNode;
     
     /* This section will make sure that two nodes are not drawn on top of each other */
-	for(int i = 0; i < _nodeList.size(); i++)
+	for(unsigned int i = 0; i < _nodeList.size(); i++)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
-    /* This section will make sure that a node is not drawn ontop of a block label */
-	for(int i = 0; i < _blockLabelList.size(); i++)
+    /* This section will make sure that a node is not drawn on top of a block label */
+	for(unsigned int i = 0; i < _blockLabelList.size(); i++)
 	{
-		if(_blockLabelList[i].getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))
+		if(_blockLabelList[i].getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 50))
 			return;
 	}
     
@@ -24,9 +24,9 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	_nodeList.push_back(newNode);
     
     /* If the node is in between a line, then break the line into 2 lines */
-	for(int i = 0; i < _lineList.size(); i++)
+	for(unsigned int i = 0; i < _lineList.size(); i++)
 	{
-		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 100))
+		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 50))
 		{
             /* Ok so if the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
              * Line1 will be set equal to the original line (line0).
@@ -43,7 +43,7 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	} 
     
     /* If the node is in between an arc, then break the arc into 2 */
-	for(int i = 0; i < _arcList.size(); i++)
+	for(unsigned int i = 0; i < _arcList.size(); i++)
 	{
         /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
 		if(fabs(-5) < 1 / (*_zoomFactorPointer * 100)) // this needs t be looked into more
@@ -76,14 +76,14 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     blockLabel newLabel;
     
     // Make sure that teh block labe is not placed ontop of an existing block label
-    for(int i = 0; _blockLabelList.size(); i++)
+    for(unsigned int i = 0; _blockLabelList.size(); i++)
     {
         if(_blockLabelList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))
             return;
     }
     
     // MAke sure that the block label is not placed on top of an existing node
-    for(int i = 0; i < _nodeList.size(); i++)
+    for(unsigned int i = 0; i < _nodeList.size(); i++)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
 		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
@@ -91,7 +91,7 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
 	}
     
     // Make sure that the block label is not placed ontop of a line
-    for(int i = 0; i < _lineList.size(); i++)
+    for(unsigned int i = 0; i < _lineList.size(); i++)
 	{
 		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 100))
             return;
@@ -110,18 +110,31 @@ void geometryEditor2D::addLine(int node0, int node1)
     /* This code was adapted from the FEMM project. See line 263 in FemmeDoc.cpp */
     edgeLineShape newLine;
     
-	if(node0 == node1)
+    int tempNodeIndex1, tempNodeIndex2;
+    
+    if(node0 == -1 && node1 == -1)
+    {
+        tempNodeIndex1 = _nodeIndex1;
+        tempNodeIndex2 = _nodeIndex2;
+    }
+    else
+    {
+        tempNodeIndex1 = node0;
+        tempNodeIndex2 = node1;
+    }
+    
+	if(tempNodeIndex1 == tempNodeIndex2)
 		return;
 	
 /* Check to see if the line has already been created */	
-	for(int i = 0; i < _lineList.size(); i++)
+	for(unsigned int i = 0; i < _lineList.size(); i++)
 	{
-		if((_lineList.at(i).getFirstNode() == _nodeList.at(node0) && _lineList.at(i).getSecondNode() == _nodeList.at(node1)) || (_lineList.at(i).getFirstNode() == _nodeList.at(node1) && _lineList.at(i).getSecondNode() == _nodeList.at(node0)))
+		if((_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex1) && _lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex2)) || (_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex2) && _lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex1)))
 			return;
 	}
     
-    newLine.setFirstNode(_nodeList.at(node0));
-    newLine.setSecondNode(_nodeList.at(node1));
+    newLine.setFirstNode(_nodeList.at(tempNodeIndex1));
+    newLine.setSecondNode(_nodeList.at(tempNodeIndex2));
     
     /* This section will check to see if there are any intersections with other segments. If so, create a node at the intersection */
     for(int i = 0; i < _lineList.size(); i++)
@@ -132,12 +145,53 @@ void geometryEditor2D::addLine(int node0, int node1)
     }
     
     /* This section will check to see if there are any intersections with arcs. If so, create a node at the intersection */
-    for(int i = 0; i < _arcList.size(); i++)
+    for(unsigned int i = 0; i < _arcList.size(); i++)
     {
-        
+        Vector newNodesPoints[2];
+        int j = getLineToArcIntersection(newLine, _arcList.at(i), newNodesPoints);
+        if(j > 0)
+        {
+            for(int k = 0; k < j; k++)
+            {
+                addNode(newNodesPoints[k].getXComponent(), newNodesPoints[k].getYComponent());
+            }
+        }
     }
     
+    /* If things do not work out correctly with adding nodes to the intersection,
+     * we can create a list of nodes that need to be added within the function. 
+     * Then calculate what the distance tolerance should be and call addNode function
+     * with the tolerance value as the tolerance between points. That can be done here.
+     */ 
+
     _lineList.push_back(newLine);// Add the line to the list
+    
+    double shortDistance, dmin;
+    Vector node0Vec, node1Vec, nodeiVec;
+    
+    node0Vec.Set(_nodeList.at(tempNodeIndex1).getCenterXCoordinate(), _nodeList.at(tempNodeIndex1).getCenterYCoordinate());
+    node1Vec.Set(_nodeList.at(tempNodeIndex2).getCenterXCoordinate(), _nodeList.at(tempNodeIndex2).getCenterYCoordinate());
+    
+    dmin = Vabs(node1Vec - node0Vec) * 1.0e-05;
+
+    for(int i = 0; i < _nodeList.size(); i++)
+    {
+        if((i != tempNodeIndex1) && (i != tempNodeIndex2))
+        {
+            nodeiVec.Set(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate());
+            shortDistance = calculateShortestDistance(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate(), _lineList.size() - 1);
+            if((Vabs(nodeiVec - node0Vec) < dmin) || (Vabs(nodeiVec - node1Vec) < dmin))
+                shortDistance = 2.0 * dmin;
+            if(shortDistance < dmin)
+            {
+                _lineList.pop_back();
+                addLine(tempNodeIndex1, i);
+                addLine(i, tempNodeIndex2);
+            }
+            i = _nodeList.size();
+        }
+    }
+    resetIndexs();
 }
 
 
@@ -145,7 +199,7 @@ void geometryEditor2D::addLine(int node0, int node1)
 void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 {
     
-    // Hey this is where we add in that dialog
+    // Hey this is where we add in that dialog?
     
         // This function was obtained from CbeladrawDoc::AddArcSegment
 	edgeLineShape segment;
@@ -261,6 +315,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 			}
 		}
 	}
+    resetIndexs();
 }
 
 
@@ -288,7 +343,7 @@ bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineSh
     iNode1 = (iNode1 - pNode0) / (pNode1 - pNode0);
     
     if(iNode0.getXComponent() <= 0 && iNode1.getXComponent() <= 0)
-        return false
+        return false;
     else if(iNode0.getXComponent() >= 1.0 && iNode1.getXComponent() >= 1.0)
         return false;
     else if(iNode0.getYComponent() <= 0 && iNode1.getYComponent() <= 0)
@@ -371,52 +426,53 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 {
     /* Note: this function has not yet been verified to be working. Logical bugs could still exist */
     // This function was ported from Cbeladraw::GetLineArcIntersection
-	Vector lineSegVec1, lineSegVec2, arcSegVec1, arcSegVec2, tempVec1, tempVec2, tempVec3;
+	Vector lineSegVec1, lineSegVec2, arcSegVec1, arcSegVec2, unitVec1, tempVec2, arcCenterPoint;
 	double distance, length, radius, z;
 	int intersectionCounter = 0;
 
-	lineSegVec1.Set(_nodeList[lineSegment.getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[lineSegment.getFirstNodeIndex()].getCenterYCoordinate());
-	lineSegVec2.Set(_nodeList[lineSegment.getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[lineSegment.getSecondNodeIndex()].getCenterYCoordinate());
+    lineSegVec1.Set(lineSegment.getFirstNode().getCenterXCoordinate(), lineSegment.getFirstNode().getCenterYCoordinate());
+	lineSegVec2.Set(lineSegment.getSecondNode().getCenterXCoordinate(), lineSegment.getSecondNode().getCenterYCoordinate());
 	
-	arcSegVec1.Set(_nodeList[arcSegment.getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[arcSegment.getFirstNodeIndex()].getCenterYCoordinate());
-	arcSegVec2.Set(_nodeList[arcSegment.getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[arcSegment.getSecondNodeIndex()].getCenterYCoordinate());
+	arcSegVec1.Set(arcSegment.getFirstNode().getCenterXCoordinate(), arcSegment.getFirstNode().getCenterYCoordinate());
+	arcSegVec2.Set(arcSegment.getSecondNode().getCenterXCoordinate(), arcSegment.getSecondNode().getCenterYCoordinate());
 	
 	distance = Vabs(arcSegVec2 - arcSegVec1);
 	
-	tempVec1 = (arcSegVec2 - arcSegVec1) / distance;
-	radius = distance / (2.0 * sin(arcSegment.getArcAngle() * PI / 360.));
-	
-	tempVec3 = arcSegVec1 + (distance / 2.0 + J * sqrt(pow(radius, 2) - pow(distance, 2) / 4.0)) * tempVec1;
-	
+    radius = arcSegment.getRadius();
+    arcCenterPoint.Set(arcSegment.getCenterXCoordinate(), arcSegment.getCenterYCoordinate());
+    
+    // Determining the distance between the line and the circle's center
 	distance = Vabs(lineSegVec2 - lineSegVec2);
-	tempVec1 = (lineSegVec2 - lineSegVec2) / distance;
-	tempVec2 = (tempVec3 - lineSegVec1) / distance;
-	tempVec2 = (tempVec3 - lineSegVec1) / tempVec1;
+	unitVec1 = (lineSegVec2 - lineSegVec2) / distance;
+	tempVec2 = (arcCenterPoint - lineSegVec1) / distance;
+	tempVec2 = (arcCenterPoint - lineSegVec1) / unitVec1;
 	
 	if(fabs(tempVec2.getYComponent()) > radius)
 		return 0;
 		
 	length = sqrt(pow(radius, 2) - pow(tempVec2.getYComponent(), 2));
-	
+	// If the line is a tangent, make it a tangent
 	if((length / radius) < 1.0e-05)
 	{
-		pointVec[intersectionCounter] = lineSegVec1 + tempVec2.getXComponent() * tempVec1;
-		radius = ((pointVec[intersectionCounter] - lineSegVec1) / tempVec1).getXComponent();
-		z = Varg((pointVec[intersectionCounter] - tempVec3) / (arcSegVec1 - tempVec3));
+		pointVec[intersectionCounter] = lineSegVec1 + tempVec2.getXComponent() * unitVec1;
+		radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
+		z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
 		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
 			intersectionCounter++;
 		return intersectionCounter;
 	}
 	
-	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * tempVec1;
-	radius = ((pointVec[intersectionCounter] - lineSegVec1) / tempVec1).getXComponent();
-	z = Varg((pointVec[intersectionCounter] - tempVec3) / (arcSegVec1 - tempVec3));
+    // First intersection
+	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
+	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
+	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
 	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
 		intersectionCounter++;
-		
-	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * tempVec1;
-	radius = ((pointVec[intersectionCounter] - lineSegVec1) / tempVec1).getXComponent();
-	z = Varg((pointVec[intersectionCounter] - tempVec3) / (arcSegVec1 - tempVec3));
+    
+    // Second intersection
+	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
+	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
+	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
 	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
 		intersectionCounter++;
 		
@@ -481,6 +537,7 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
 
 
 // Consider removing the last two arguments
+// Maybe the last parameter can be an edgeLineShape
 double geometryEditor2D::calculateShortestDistance(double p, double q, int segmentIndex)
 {
     // I have no idea what this function does

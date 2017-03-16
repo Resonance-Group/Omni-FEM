@@ -172,6 +172,45 @@ double modelDefinition::convertToYCoordinate(int yPixel)
 }
 
 
+
+void modelDefinition::clearSelection()
+{
+    if(_createNodes)
+    {
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+                nodeIterator->setSelectState(false);
+        }
+    }
+    else
+    {
+        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+                blockIterator->setSelectState(false);
+        }
+    }
+    
+    if(_createLines)
+    {
+        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+                lineIterator->setSelectState(false);
+        }
+    }
+    else
+    {
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+                arcIterator->setSelectState(false);
+        }
+    }
+}
+
+
 /* This function gets called everytime a draw routine is needed */
 void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 {
@@ -199,6 +238,14 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             arcIterator->draw();
+        }
+    }
+    
+    if(_editor.getBlockLabelList()->size() > 0)
+    {
+        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            blockIterator->draw();
         }
     }
     
@@ -287,6 +334,30 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
         _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
         _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy / _zoomFactor);
     }
+    else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
+    {
+        if(_createNodes)
+        {
+            int lastNodeItemIndex = _editor.getNodeList()->size() - 1;
+            // Update the last node entry with new x and y coordinates and round if on snap grid
+            if(_preferences.getSnapGridState())
+            {
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                roundToNearestGrid(tempX, tempY);
+                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+            }
+            else
+            {
+                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+            }
+        }
+        else
+        {
+            // Update the last bloc labe with new x and y coordinates and round if on snap grid
+            
+        }
+    }
     
     this->Refresh();
 }
@@ -296,8 +367,65 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
 void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 {
     wxGLCanvas::SetCurrent(*_geometryContext);
-    bool nodeSelected = false;
     
+    clearSelection();
+    
+    if(_createNodes)
+    {
+        for(int i = 0; i < _editor.getNodeList()->size(); i++)
+        {
+            if(_editor.getNodeList()->at(i).getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < 1 / (_zoomFactor * 10))// The multiplier will be some number between 10 and 100
+            {
+                if(_editor.setNodeIndex(i))
+                {
+                    
+                    if(_createLines)
+                    {
+                        //Create the line
+                        _editor.getNodeList()->at(i).setSelectState(true);
+                         this->Refresh();
+                        return;
+                    }
+                    else
+                    {
+                        // Create the arc dialog
+                        // Create the arc
+                        return;
+                    }
+                }
+                else
+                {
+                    _editor.getNodeList()->at(i).setSelectState(true);
+                    //Toggle the node to be selected
+                    this->Refresh();
+                    return;
+                }
+            }
+        }
+        //Create the node at the point of the mouse with grid snapping
+        if(_preferences.getSnapGridState())
+        {
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
+            roundToNearestGrid(tempX, tempY);
+            _editor.addDragNode(tempX, tempY);
+        }
+        else
+            _editor.addDragNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+            
+        this->Refresh();// Draw the node at the mouse location
+        return;
+    }
+    else
+    {
+        
+    }
+    
+    
+    
+    
+    
+    /*
     if(!_createNodes)
     {
         // Handle the create of block labels here
@@ -334,7 +462,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             {
                 /*	This section will first chewxMouseEvent &eventck to see if any other shape is selected.
 					If the shape is selected, then toggle the selection.
-					As a last step, the function will then toggle select the selected node */
+					As a last step, the function will then toggle select the selected node 
 				
 				if(_editor.getBlockLabelList()->size() > 0)
 				{
@@ -383,22 +511,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             {
                 if(_createLines)
                 {
-                    double tempXCoor, tempYCoor;
-					for(int k = 0; k < _editor.getLineList()->size(); k++)
-					{
-                        /* In this fucntion, we already have the index to the first node the user selected
-                         * i would be the index of the second node the user selected.
-                         * k is the index to the line segment. The purpose of the fuction
-                         * tempx and tempyCoor are simply temporarl coordinates that are used as a midway.
-                         */ 
-                          
-			//			if(_editor.getIntersection(_editor.getFirstSelectedNodeIndex(), i, k, tempXCoor, tempYCoor) == true)
-			//			{
-			//				_editor.addNode(tempXCoor, tempYCoor);
-			//			}
-					}
-					
-			//		_editor.addLine(_editor.getFirstSelectedNodeIndex(), _editor.getNodeList()->at(i).getNodeIndex(), NULL);
+					_editor.addLine(_editor.getFirstSelectedNodeIndex(), _editor.getNodeList()->at(i).getNodeIndex(), NULL);
                 }
                 else
                 {
@@ -439,6 +552,46 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel));
         
     this->Refresh();
+     * */
+}
+
+void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
+{
+    // OK so in order to re-validate the node (in order to break lines / arcs up into two pieces and what not), we first have to remove the last item, and then push it back on.
+    if(_createNodes)
+    {
+        node testNode;
+        if(_preferences.getSnapGridState())
+        {
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
+            roundToNearestGrid(tempX, tempY);
+            testNode.setCenter(tempX, tempY);
+        }
+        else
+            testNode.setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+        
+        if(_editor.getNodeList()->back() == testNode)
+        {
+            _editor.getNodeList()->pop_back();
+            
+            if(_preferences.getSnapGridState())
+            {
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                roundToNearestGrid(tempX, tempY);
+                _editor.addNode(tempX, tempY);
+            }
+            else
+                _editor.addNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+        }
+    }
+    else
+    {
+        // Do the same thing for block labels
+    }
+    this->Refresh();
+    return;
 }
 
 
@@ -543,5 +696,6 @@ wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_MOUSEWHEEL(modelDefinition::onMouseWheel)
     EVT_MOTION(modelDefinition::onMouseMove)
     EVT_LEFT_DOWN(modelDefinition::onMouseLeftDown)
+    EVT_LEFT_UP(modelDefinition::onMouseLeftUp)
     EVT_RIGHT_DOWN(modelDefinition::onMouseRightDown)
 wxEND_EVENT_TABLE()

@@ -19,9 +19,11 @@ private:
     
 	std::vector<arcShape> _arcList;
     
-    int _tolerance = 2;
+    long _nodeIndex1 = -1;// This is the index of the first selected node
     
-    long _firstSelectedNodeIndex = -1;
+    long _nodeIndex2 = -1;// This is the index of the second selected node
+    
+    int _tolerance = 2;
     
     double *_zoomFactorPointer;
     
@@ -33,7 +35,7 @@ private:
      * lineSegment is the line segment index that will be checked for an intersection
      * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
      */
-	
+	bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
     
     //! This function will determine the center and the radius of the given arc.
 	void getCircle(arcShape &arc, Vector &center, double &radius);
@@ -51,7 +53,21 @@ private:
 	double calculateShortestDistance(double p, double q, int segmentIndex);
 
 public:
-    bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
+    bool setNodeIndex(unsigned long index)
+    {
+        if(_nodeIndex1 == -1)
+        {
+            _nodeIndex1 = index;
+            return false;
+        }
+        else if(_nodeIndex1 != -1)
+        {
+            _nodeIndex2 = index;
+            return true;
+        }
+        
+        return false;
+    }
 
     std::vector<node> *getNodeList()
     {
@@ -72,28 +88,36 @@ public:
     {
         return &_arcList;
     }
-    
-    void setFirstSelectedNodeIndex(long index)
-    {
-        _firstSelectedNodeIndex = index;
-    }
-    
-    long getFirstSelectedNodeIndex()
-    {
-        return _firstSelectedNodeIndex;
-    }
-    
+
     void addNode(double xPoint, double yPoint);
+    
+    void addDragNode(double xPoint, double yPoint)
+    {
+        node newNode;
+        newNode.setCenter(xPoint, yPoint);
+        _nodeList.push_back(newNode);
+    }
     
     void addBlockLabel(double xPoint, double yPoint);
     
     void addLine(int node0, int node1);
+    
+    void addLine()
+    {
+        addLine(-1, -1);
+    }
     
     void addArc(arcShape &arcSeg, double tolerance);
     
     void setZoomFactorAddress(double &address)
     {
         _zoomFactorPointer = &address;
+    }
+    
+    void resetIndexs()
+    {
+        _nodeIndex1 = -1;
+        _nodeIndex2 = -1;
     }
 	
 };

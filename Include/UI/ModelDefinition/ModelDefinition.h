@@ -62,6 +62,8 @@ private:
     double convertToXCoordinate(int xPixel);
     
     double convertToYCoordinate(int yPixel);
+    
+    void clearSelection();
 
     void updateProjection();
     
@@ -79,6 +81,8 @@ private:
     void onMouseMove(wxMouseEvent &event);
     
     void onMouseLeftDown(wxMouseEvent &event);
+    
+    void onMouseLeftUp(wxMouseEvent &event);
     
     void onMouseRightDown(wxMouseEvent &event);
     
