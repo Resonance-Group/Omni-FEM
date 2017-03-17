@@ -50,7 +50,7 @@ private:
 	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
     
     /*! This function is used to calcualte if the shortest distance between a line a node */
-	double calculateShortestDistance(double p, double q, int segmentIndex);
+	double calculateShortestDistance(double p, double q, edgeLineShape segment);
 
 public:
     bool setNodeIndex(unsigned long index)

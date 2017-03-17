@@ -26,7 +26,9 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
     /* If the node is in between a line, then break the line into 2 lines */
 	for(unsigned int i = 0; i < _lineList.size(); i++)
 	{
-		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 50))
+        edgeLineShape testLine = _lineList.at(i);
+        node testFirstNode = testLine.getFirstNode();
+		if(fabs(calculateShortestDistance(xPoint, yPoint, testLine)) < 1 / (*_zoomFactorPointer * 50))
 		{
             /* Ok so if the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
              * Line1 will be set equal to the original line (line0).
@@ -93,7 +95,7 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     // Make sure that the block label is not placed ontop of a line
     for(unsigned int i = 0; i < _lineList.size(); i++)
 	{
-		if(fabs(calculateShortestDistance(xPoint, yPoint, i)) < 1 / (*_zoomFactorPointer * 100))
+		if(fabs(calculateShortestDistance(xPoint, yPoint, _lineList.at(i))) < 1 / (*_zoomFactorPointer * 100))
             return;
     }
             
@@ -179,7 +181,7 @@ void geometryEditor2D::addLine(int node0, int node1)
         if((i != tempNodeIndex1) && (i != tempNodeIndex2))
         {
             nodeiVec.Set(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate());
-            shortDistance = calculateShortestDistance(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate(), _lineList.size() - 1);
+            shortDistance = calculateShortestDistance(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate(), newLine);
             if((Vabs(nodeiVec - node0Vec) < dmin) || (Vabs(nodeiVec - node1Vec) < dmin))
                 shortDistance = 2.0 * dmin;
             if(shortDistance < dmin)
@@ -538,16 +540,19 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
 
 // Consider removing the last two arguments
 // Maybe the last parameter can be an edgeLineShape
-double geometryEditor2D::calculateShortestDistance(double p, double q, int segmentIndex)
+//double geometryEditor2D::calculateShortestDistance(double p, double q, int segmentIndex)
+double geometryEditor2D::calculateShortestDistance(double p, double q, edgeLineShape segment)
 {
     // I have no idea what this function does
     double t, xNew[3], wereNew[3];
+	node test = segment.getFirstNode();
+    //xNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterXCoordinate();
+    xNew[0] = segment.getFirstNode().getCenterXCoordinate();
+    wereNew[0] = segment.getFirstNode().getCenterYCoordinate();
+	//wereNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterYCoordinate();
 	
-    xNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterXCoordinate();
-	wereNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterYCoordinate();
-	
-	xNew[1] = _nodeList[_lineList[segmentIndex].getSecondNodeIndex()].getCenterXCoordinate();
-	wereNew[1] = _nodeList[_lineList[segmentIndex].getSecondNodeIndex()].getCenterYCoordinate();
+    xNew[1] = segment.getSecondNode().getCenterXCoordinate();
+    wereNew[1] = segment.getSecondNode().getCenterYCoordinate();
 	
 	t = ((p - xNew[0]) * (xNew[1] - xNew[0]) + (q - wereNew[0]) * (wereNew[1] - wereNew[0])) / ((xNew[1] - xNew[0]) * (xNew[1] - xNew[0]) + (wereNew[1] - wereNew[0]) * (wereNew[1] - wereNew[0]));
 
