@@ -390,8 +390,29 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                     }
                     else
                     {
-                        // Create the arc dialog
-                        // Create the arc
+                        arcSegmentDialog *newArcDialog;
+                        if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                        {
+                            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
+                            if(newArcDialog->ShowModal() == wxID_OK)
+                            {
+                                arcShape tempShape;
+                                newArcDialog->getArcParameter(tempShape);
+                                _editor->addArc(tempShape);
+                            }
+                        }
+                        else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+                        {
+                           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+                            if(newArcDialog->ShowModal() == wxID_OK)
+                            {
+                                arcShape tempShape;
+                                newArcDialog->getArcParameter(tempShape);
+                                _editor->addArc(tempShape);
+                            }
+                            delete(newArcDialog);
+                        }
+                        this->Refresh();
                         return;
                     }
                 }

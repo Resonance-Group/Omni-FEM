@@ -477,7 +477,7 @@ public:
                 where c is the length of the sector through the beginning and starting endpoints and theta is the arc angle
                 Then, we can calculate the 
 	 */
-    void calculate(std::vector<node> &arcNodeList)
+    void calculate()
     {
         /* The start node is considered the first node of the arc
          * the end node is considered the second node of the arc.

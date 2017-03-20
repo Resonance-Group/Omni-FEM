@@ -107,7 +107,7 @@ public:
         addLine(-1, -1);
     }
     
-    void addArc(arcShape &arcSeg, double tolerance);
+    void addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
     
     void setZoomFactorAddress(double &address)
     {

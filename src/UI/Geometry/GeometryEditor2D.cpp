@@ -197,25 +197,30 @@ void geometryEditor2D::addLine(int node0, int node1)
 }
 
 
-
-void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
+// Left off but this function still needs updated
+void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected)
 {
-    
-    // Hey this is where we add in that dialog?
-    
         // This function was obtained from CbeladrawDoc::AddArcSegment
 	edgeLineShape segment;
 	arcShape newArc;
 	Vector intersectingNodes[2];
 	Vector centerPoint;
 	double dist, radius, minDistance, shortDistanceFromArc;
-	
-	if(arcSeg.getFirstNodeIndex() == arcSeg.getSecondNodeIndex())
-		return;
+    
+    if(nodesAreSelected && (_nodeList.at(_nodeIndex1) == _nodeList.at(_nodeIndex2)))
+        return;
+    else if(!nodesAreSelected && (arcSeg.getFirstNode() == arcSeg.getSecondNode()))
+        return;
+        
+    if(nodesAreSelected)
+    {
+        arcSeg.setFirstNode(_nodeList.at(_nodeIndex1));
+        arcSeg.setSecondNode(_nodeList.at(_nodeIndex2));
+    }
 		
 	for(int i = 0; i < _arcList.size(); i++)
 	{
-		if((_arcList[i].getFirstNodeIndex() == arcSeg.getFirstNodeIndex()) && (_arcList[i].getSecondNodeIndex() == arcSeg.getSecondNodeIndex()) && (fabs(_arcList[i].getArcAngle() - arcSeg.getArcAngle()) < 1.0e-02))
+		if((_arcList.at(i).getFirstNode() == arcSeg.getFirstNode()) && (_arcList.at(i).getSecondNode() == arcSeg.getSecondNode()) && (fabs(_arcList.at(i).getArcAngle() - arcSeg.getArcAngle()) < 1.0e-02))
 			return;
 	}
 	
@@ -226,21 +231,21 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 		else
 		{
 			Vector vec1, vec2;
-			vec1.Set(_nodeList[0].getCenterXCoordinate(), _nodeList[0].getCenterYCoordinate());
+			vec1.Set(_nodeList.at(0).getCenterXCoordinate(), _nodeList.at(0).getCenterYCoordinate());
 			vec2 = vec1;
 			for(int i = 0; i < _nodeList.size(); i++)
 			{
-				if(_nodeList[i].getCenterXCoordinate() < vec1.getXComponent())
-					vec1.Set(_nodeList[i].getCenterXCoordinate(), vec1.getYComponent());
+				if(_nodeList.at(i).getCenterXCoordinate() < vec1.getXComponent())
+					vec1.Set(_nodeList.at(i).getCenterXCoordinate(), vec1.getYComponent());
 				
 				if(_nodeList[i].getCenterXCoordinate() > vec2.getXComponent())
-					vec2.Set(_nodeList[i].getCenterXCoordinate(), vec2.getYComponent());
+					vec2.Set(_nodeList.at(i).getCenterXCoordinate(), vec2.getYComponent());
 				
-				if(_nodeList[i].getCenterYCoordinate() < vec1.getYComponent())
-					vec1.Set(vec1.getXComponent(), _nodeList[i].getCenterYCoordinate());
+				if(_nodeList.at(i).getCenterYCoordinate() < vec1.getYComponent())
+					vec1.Set(vec1.getXComponent(), _nodeList.at(i).getCenterYCoordinate());
 					
-				if(_nodeList[i].getCenterYCoordinate() > vec2.getYComponent())
-					vec2.Set(vec2.getXComponent(), _nodeList[i].getCenterYCoordinate());
+				if(_nodeList.at(i).getCenterYCoordinate() > vec2.getYComponent())
+					vec2.Set(vec2.getXComponent(), _nodeList.at(i).getCenterYCoordinate());
 			}
 			
 			dist = Vabs(vec1 - vec2) * 1.0e-06;
@@ -252,7 +257,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 	/* This section will check for any intesections with lines and arcs and if so, place a node there */
 	for(int i = 0; i < _lineList.size(); i++)// This will check how many times the existing arc intercests the proposed arc.
 	{
-		int j = getLineToArcIntersection(_lineList[i], arcSeg, intersectingNodes); // Place the function for intersecting here This will be for an arc intersecting a line
+		int j = getLineToArcIntersection(_lineList.at(i), arcSeg, intersectingNodes); // Place the function for intersecting here This will be for an arc intersecting a line
 		
 		if(j > 0)
 		{
@@ -296,9 +301,9 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance)
 			if(shortDistanceFromArc < minDistance)
 			{
 				Vector vec1, vec2, vec3;
-				vec1.Set(_nodeList[arcSeg.getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[arcSeg.getFirstNodeIndex()].getCenterYCoordinate());
-				vec2.Set(_nodeList[arcSeg.getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[arcSeg.getSecondNodeIndex()].getCenterYCoordinate());
-				vec3.Set(_nodeList[loopCounter].getCenterXCoordinate(), _nodeList[loopCounter].getCenterYCoordinate());
+				vec1.Set(arcSeg.getFirstNode().getCenterXCoordinate(), arcSeg.getFirstNode().getCenterYCoordinate());
+				vec2.Set(arcSeg.getSecondNode().getCenterXCoordinate(), arcSeg.getSecondNode().getCenterYCoordinate());
+				vec3.Set(_nodeList.at(loopCounter).getCenterXCoordinate(), _nodeList.at(loopCounter).getCenterYCoordinate());
 				
 				_arcList.pop_back();
 				
