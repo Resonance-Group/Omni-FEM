@@ -216,6 +216,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
     {
         arcSeg.setFirstNode(_nodeList.at(_nodeIndex1));
         arcSeg.setSecondNode(_nodeList.at(_nodeIndex2));
+        arcSeg.calculate();
     }
 		
 	for(int i = 0; i < _arcList.size(); i++)
@@ -295,9 +296,9 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	
 	for(int loopCounter = 0; loopCounter < _nodeList.size(); loopCounter++)
 	{
-		if((loopCounter != arcSeg.getFirstNodeIndex()) && (loopCounter != arcSeg.getSecondNodeIndex()))
+		if((_nodeList.at(loopCounter) != arcSeg.getFirstNode()) && (_nodeList.at(loopCounter) != arcSeg.getSecondNode()))
 		{
-			shortDistanceFromArc = shortestDistanceFromArc(Vector(_nodeList[loopCounter].getCenterXCoordinate(), _nodeList[loopCounter].getCenterYCoordinate()), _arcList[_arcList.size() - 1]);
+			shortDistanceFromArc = shortestDistanceFromArc(Vector(_nodeList.at(loopCounter).getCenterXCoordinate(), _nodeList.at(loopCounter).getCenterYCoordinate()), _arcList.at(_arcList.size() - 1));
 			if(shortDistanceFromArc < minDistance)
 			{
 				Vector vec1, vec2, vec3;
@@ -309,14 +310,14 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 				
 				newArc = arcSeg;
 				
-				newArc.setSecondNodeIndex(loopCounter);
+                newArc.setSecondNode(_nodeList.at(loopCounter));
 				newArc.setArcAngle(Varg((vec3 - centerPoint) / (vec1 - centerPoint)) * 180.0 / PI);
-				addArc(newArc, minDistance);
+				addArc(newArc, minDistance, false);
 				
 				newArc = arcSeg;
-				newArc.setFirstNodeIndex(loopCounter);
+                newArc.setFirstNode(_nodeList.at(loopCounter));
 				newArc.setArcAngle(Varg((vec2 - centerPoint) / (vec3 - centerPoint)) * 180.0 / PI);
-				addArc(newArc, minDistance);
+				addArc(newArc, minDistance, false);
 				
 				loopCounter = _nodeList.size();
 			}
@@ -446,6 +447,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 	distance = Vabs(arcSegVec2 - arcSegVec1);
 	
     radius = arcSegment.getRadius();
+    
     arcCenterPoint.Set(arcSegment.getCenterXCoordinate(), arcSegment.getCenterYCoordinate());
     
     // Determining the distance between the line and the circle's center
