@@ -398,8 +398,11 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             {
                                 arcShape tempShape;
                                 newArcDialog->getArcParameter(tempShape);
-                                _editor->addArc(tempShape);
+                                _editor.addArc(tempShape, (_zoomFactor * 10), true);
                             }
+                            else
+                                _editor.resetIndexs();
+                            delete(newArcDialog);
                         }
                         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
                         {
@@ -408,8 +411,10 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             {
                                 arcShape tempShape;
                                 newArcDialog->getArcParameter(tempShape);
-                                _editor->addArc(tempShape);
+                                _editor.addArc(tempShape, (_zoomFactor * 10), true);
                             }
+                            else
+                                _editor.resetIndexs();
                             delete(newArcDialog);
                         }
                         this->Refresh();

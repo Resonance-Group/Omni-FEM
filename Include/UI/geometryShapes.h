@@ -223,6 +223,14 @@ public:
         else
             return false;
     }
+    
+    bool operator!=(const node &a_node)
+    {
+        if(xCenterCoordinate != a_node.getCenterXCoordinate() && yCenterCoordinate != a_node.getCenterYCoordinate())
+            return true;
+        else
+            return false;
+    }
 };
 
 

@@ -57,7 +57,7 @@ private:
     bool _createNodes = true;
     
     //! This is the variable that will determine to create lines/arcs
-    bool _createLines = true;
+    bool _createLines = false;
     
     bool _geometryIsSelected = false;
     

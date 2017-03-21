@@ -52,12 +52,15 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 		{
             Vector firstNode, secondNode, thirdNode, center;
             arcShape arcSegment = _arcList.at(i);
+            double radius;
             
             firstNode.Set(_arcList.at(i).getFirstNode().getCenterXCoordinate(), _arcList.at(i).getFirstNode().getCenterYCoordinate());
 			secondNode.Set(_arcList.at(i).getSecondNode().getCenterXCoordinate(), _arcList.at(i).getSecondNode().getCenterYCoordinate());
 			thirdNode.Set(xPoint, yPoint);
 			
 			//getCircle{arcList[i], center, R);// No idea what this is.... yet
+            center.Set(_arcList.at(i).getCenterXCoordinate(), _arcList.at(i).getCenterYCoordinate());
+            radius = _arcList.at(i).getRadius();
 			
             _arcList.at(i).setSecondNode(newNode);
 			_arcList.at(i).setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
@@ -285,14 +288,14 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	
 	_arcList.push_back(arcSeg);
 	
-	getCircle(arcSeg, centerPoint, radius);
+//	getCircle(arcSeg, centerPoint, radius);
+    centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());
+    radius = arcSeg.getRadius();
 	
 	if(tolerance == 0)
 		minDistance = fabs(radius * PI * arcSeg.getArcAngle() / 180.0) * 1.0e-05;
 	else
 		minDistance = tolerance;
-	
-	int loopCounter = 0;
 	
 	for(int loopCounter = 0; loopCounter < _nodeList.size(); loopCounter++)
 	{
@@ -380,8 +383,8 @@ void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
     Vector firstNode, secondNode, unitVector;
 	double distance;
 	
-	firstNode.Set(_nodeList[arc.getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[arc.getFirstNodeIndex()].getCenterYCoordinate());
-	secondNode.Set(_nodeList[arc.getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[arc.getSecondNodeIndex()].getCenterYCoordinate());
+	firstNode.Set(arc.getFirstNode().getCenterXCoordinate(), arc.getFirstNode().getCenterYCoordinate());
+	secondNode.Set(arc.getSecondNode().getCenterXCoordinate(), arc.getSecondNode().getCenterYCoordinate());
 	
 	distance = Vabs(firstNode - secondNode);
 	
@@ -396,36 +399,34 @@ void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
 
 double geometryEditor2D::shortestDistanceFromArc(Vector point, arcShape &arcSegment)
 {
-    /*
     double radius, distance, length, z;
-	Vector vec1, vec2, centerVec, tempVec;
-	
-	vec1.Set(nodeList[arcSegment.getFirstNodeIndex()].getCenterXCoordinate(), _nodeList[arcSegment.getFirstNodeIndex()].getCenterYCoordinate());
-	vec2.Set(nodeList[arcSegment.getSecondNodeIndex()].getCenterXCoordinate(), _nodeList[arcSegment.getSecondNodeIndex()].getCenterYCoordinate());
-	getCircle(arcSegment, centerVec, radius);
-	
-	distance = Vabs(pointVec - centerVec);
-	
-	if(distance == 0)
-		return radius;
-	
-	tempVec = (pointVec - centerVec) / distance;
-	
-	length = Vabs(pointVec - centerVec - radius * tempVec);
-	
-	z = Varg(tempVec / (vec1 - centerVec)) * 180 / PI;
-	
-	if((z > 0) && (z < arcSegment.getArcAngle()))
-		return length;
-		
-	z = Vabs(pointVec - vec1);
-	length = Vabs(pointVec - vec1);
-	
-	if(z < 1)
-		return z;
-	else
-		return length;
-         * */
+    Vector arcStartNode, arcEndNode, centerVec, tempVec;
+    
+    arcStartNode.Set(arcSegment.getFirstNode().getCenterXCoordinate(), arcSegment.getFirstNode().getCenterYCoordinate());
+    arcEndNode.Set(arcSegment.getSecondNode().getCenterXCoordinate(), arcSegment.getSecondNode().getCenterYCoordinate());
+    
+    radius = arcSegment.getRadius();
+    centerVec.Set(arcSegment.getCenterXCoordinate(), arcSegment.getCenterYCoordinate());
+    
+    distance = Vabs(point - centerVec);
+    
+    if(distance == 0)
+        return radius;
+        
+    tempVec = (point - centerVec) / distance;
+    length = Vabs(point - centerVec - radius * tempVec);
+    z = Varg(tempVec / (arcStartNode - centerVec)) * 180.0 / PI;
+    
+    if((z > 0.0) && (z < arcSegment.getArcLength()))
+        return length;
+        
+    z = Vabs(point - arcStartNode);
+    length = Vabs(point - arcEndNode);
+    
+    if(z < length)
+        return z;
+    
+    return length;
 }
 
 
@@ -434,6 +435,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 {
     /* Note: this function has not yet been verified to be working. Logical bugs could still exist */
     // This function was ported from Cbeladraw::GetLineArcIntersection
+    
 	Vector lineSegVec1, lineSegVec2, arcSegVec1, arcSegVec2, unitVec1, tempVec2, arcCenterPoint;
 	double distance, length, radius, z;
 	int intersectionCounter = 0;
@@ -452,8 +454,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
     
     // Determining the distance between the line and the circle's center
 	distance = Vabs(lineSegVec2 - lineSegVec2);
-	unitVec1 = (lineSegVec2 - lineSegVec2) / distance;
-	tempVec2 = (arcCenterPoint - lineSegVec1) / distance;
+	unitVec1 = (lineSegVec2 - lineSegVec1) / distance;
 	tempVec2 = (arcCenterPoint - lineSegVec1) / unitVec1;
 	
 	if(fabs(tempVec2.getYComponent()) > radius)
@@ -466,7 +467,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 		pointVec[intersectionCounter] = lineSegVec1 + tempVec2.getXComponent() * unitVec1;
 		radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 		z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
+		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180)))
 			intersectionCounter++;
 		return intersectionCounter;
 	}
@@ -475,14 +476,14 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180)))
 		intersectionCounter++;
     
     // Second intersection
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < arcSegment.getArcAngle() * PI / 180))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180)))
 		intersectionCounter++;
 		
 	return intersectionCounter;
@@ -495,10 +496,10 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     // This function was ported from CbeladrawDoc::GetArcArcIntersection (Please note that the variable names may not be accurate to what they actually are. This is because there is a lack of documentation in FEMM)
     Vector arcCenter1, arcCenter2, arc1StartNode, arc2StartNode, tempVec;
     double distance, arcRadius1, arcRadius2, length, center, arc1Length, arc2Length, z0, z1;
-    int counter;
+    int counter = 0;
     
-    arc1StartNode.Set(_nodeList[arcSegment1.getFirstNodeIndex()].getCenterXCoordinate(), _arcList[arcSegment1.getFirstNodeIndex()].getCenterYCoordinate());
-    arc2StartNode.Set(_nodeList[arcSegment2.getFirstNodeIndex()].getCenterXCoordinate(), _arcList[arcSegment2.getFirstNodeIndex()].getCenterYCoordinate());
+    arc1StartNode.Set(arcSegment1.getFirstNode().getCenterXCoordinate(), arcSegment1.getFirstNode().getCenterYCoordinate());
+    arc2StartNode.Set(arcSegment2.getFirstNode().getCenterXCoordinate(), arcSegment2.getFirstNode().getCenterYCoordinate());
     
     arcRadius1 = arcSegment1.getRadius();
     arcRadius2 = arcSegment2.getRadius();
