@@ -86,9 +86,19 @@ public:
         return &_nodeList;
     }
     
+    void setNodeList(std::vector<node> list)
+    {
+        _nodeList = list;
+    }
+    
     std::vector<blockLabel> *getBlockLabelList()
     {
         return &_blockLabelList;
+    }
+    
+    void setBlockLabelList(std::vector<blockLabel> list)
+    {
+        _blockLabelList = list;
     }
     
     std::vector<edgeLineShape> *getLineList()
@@ -96,9 +106,19 @@ public:
         return &_lineList;
     }
     
+    void setLineList(std::vector<edgeLineShape> list)
+    {
+        _lineList = list;
+    }
+    
     std::vector<arcShape> *getArcList()
     {
         return &_arcList;
+    }
+    
+    void setArcList(std::vector<arcShape> list)
+    {
+        _arcList = list;
     }
 
     void addNode(double xPoint, double yPoint);
@@ -151,6 +171,11 @@ public:
     wxGLStringArray *getBlockNameArray()
     {
         return &_blockLabelNameArray;
+    }
+    
+    void setLabelNameArray(wxGLStringArray stringArray)
+    {
+        _blockLabelNameArray = stringArray;
     }
 	
 };

@@ -109,7 +109,7 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
    
     _blockLabelList.push_back(newLabel);
 
-  //  _blockLabelNameArray.addString(wxT(newLabel.getProperty()->getMaterialName()));
+  //  _blockLabelNameArray.addString(newLabel.getProperty()->getMaterialName());
  //   _blockLabelNameArray.addString(wxT("Test"));
 }
 

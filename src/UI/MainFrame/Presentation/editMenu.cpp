@@ -58,7 +58,7 @@ void OmniFEMMainFrame::onUndo(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onDelete(wxCommandEvent &event)
 {
-    
+    _model->deleteSelection();
 }
 
 

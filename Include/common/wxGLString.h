@@ -199,6 +199,29 @@ public:
      setting up strings, font and color (if necessary), and before rendering.
      The wxDC argument is only used to calculate text extents and will not be rendered on.  */
     void consolidate(wxDC* dc);
+    
+    void removeString(int position)
+    {
+        std::vector<wxGLString> stringsToKeep;
+        for(std::vector<wxGLString>::iterator stringIterator = strings.begin(); stringIterator != strings.end(); ++stringIterator)
+        {
+            if(strings.at(position) != *stringIterator)
+            {
+                stringsToKeep.push_back(*stringIterator);
+            }
+        }
+        strings = stringsToKeep;
+    }
+    
+    void removeString(std::string stringToRemove)
+    {
+        
+    }
+    
+    std::vector<wxGLString> *getStringArray()
+    {
+        return &strings;
+    }
 };
 
 

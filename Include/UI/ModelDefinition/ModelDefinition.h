@@ -21,6 +21,7 @@
 
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
+#include <common/wxGLString.h>
 
 #include <UI/GeometryDialog/BlockPropertyDialog.h>
 #include <UI/GeometryDialog/NodalSettingDialog.h>
@@ -29,6 +30,7 @@
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
+#include <UI/common.h>
 
 class modelDefinition : public wxGLCanvas
 {
@@ -90,6 +92,8 @@ private:
     
     void onMouseRightDown(wxMouseEvent &event);
     
+    void onKeyDown(wxKeyEvent &event);
+    
     void onEnterWindow(wxMouseEvent &event)
     {
         this->SetFocus();
@@ -118,6 +122,8 @@ public:
     {
         _createLines = state;
     }
+    
+    void deleteSelection();
     
     void zoomIn();
     

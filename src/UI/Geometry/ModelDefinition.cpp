@@ -717,10 +717,126 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 
 
 
+void modelDefinition::deleteSelection()
+{
+    if(_editor.getNodeList()->size() > 1)
+    {
+        std::vector<node> nodesToKeep;
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                if(_editor.getLineList()->size() > 0)
+                {
+                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    {
+                        if(lineIterator->getFirstNode() == *nodeIterator || lineIterator->getSecondNode() == *nodeIterator)
+                        {
+                            lineIterator->setSelectState(true);
+                        }
+                    }
+                }
+                    
+                if(_editor.getArcList()->size() > 0)
+                {
+                    for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                    {
+                            // Add in code to remove previousely selected geometry that is different then the one already selected
+                        if(arcIterator->getFirstNode() == *nodeIterator || arcIterator->getSecondNode() == *nodeIterator)
+                        {
+                            arcIterator->setSelectState(true);
+                        }
+                    }
+                }
+            }
+            else
+                nodesToKeep.push_back(*nodeIterator);
+        }
+            
+        _editor.setNodeList(nodesToKeep);
+    }
+    else if(_editor.getNodeList()->size() == 1 && _editor.getNodeList()->at(0).getIsSelectedState())
+    {
+        _editor.getNodeList()->clear();
+    }
+        
+    if(_editor.getLineList()->size() > 1)
+    {
+        std::vector<edgeLineShape> linesToKeep;
+        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(!lineIterator->getIsSelectedState())
+            {
+                linesToKeep.push_back(*lineIterator);
+            }
+        }
+        _editor.setLineList(linesToKeep);
+    }
+    else if(_editor.getLineList()->size() == 1 && _editor.getLineList()->at(0).getIsSelectedState())
+    {
+        _editor.getLineList()->clear();
+    }
+        
+    if(_editor.getArcList()->size() > 1)
+    {
+        std::vector<arcShape> acrsToKeep;
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(!arcIterator->getIsSelectedState())
+            {
+                acrsToKeep.push_back(*arcIterator);
+            }
+        }
+        _editor.setArcList(acrsToKeep);
+    }
+    else if(_editor.getArcList()->size() == 1 && _editor.getArcList()->at(0).getIsSelectedState())
+    {
+        _editor.getArcList()->clear();
+    }
+        
+    if(_editor.getBlockLabelList()->size() > 1)
+    {
+        std::vector<blockLabel> labelsToKeep;
+        wxGLStringArray labelNamesToKeep;
+        int i = 0;
+        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(!blockIterator->getIsSelectedState())
+            {
+                labelsToKeep.push_back(*blockIterator);
+                 //   labelNamesToKeep.addString(_editor.getBlockNameArray()->get(i));
+            }
+        }
+        _editor.setBlockLabelList(labelsToKeep);
+        _editor.setLabelNameArray(labelNamesToKeep);
+    }
+    else if(_editor.getBlockLabelList()->size() == 1 && _editor.getBlockLabelList()->at(0).getIsSelectedState())
+    {
+        _editor.getBlockLabelList()->clear();
+         //   _editor.getBlockNameArray()->getStringArray->clear();
+    }
+        
+    this->Refresh();
+    return;
+}
+
+
+
+void modelDefinition::onKeyDown(wxKeyEvent &event)
+{
+    if(event.GetKeyCode() == DEL_KEY)
+    {
+        deleteSelection();
+    }
+}
+
+
+
 wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_PAINT(modelDefinition::onPaintCanvas)
     EVT_SIZE(modelDefinition::onResize)
     EVT_ENTER_WINDOW(modelDefinition::onEnterWindow)
+    EVT_KEY_DOWN(modelDefinition::onKeyDown)
     /* This section is the event procedure for the mouse controls */
     EVT_MOUSEWHEEL(modelDefinition::onMouseWheel)
     EVT_MOTION(modelDefinition::onMouseMove)
