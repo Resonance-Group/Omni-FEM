@@ -728,6 +728,8 @@ void modelDefinition::deleteSelection()
             {
                 if(_editor.getLineList()->size() > 0)
                 {
+                    /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
+                     * The deletion of the arc/line occurs later in the code*/
                     for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
                     {
                         if(lineIterator->getFirstNode() == *nodeIterator || lineIterator->getSecondNode() == *nodeIterator)
@@ -741,7 +743,6 @@ void modelDefinition::deleteSelection()
                 {
                     for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
                     {
-                            // Add in code to remove previousely selected geometry that is different then the one already selected
                         if(arcIterator->getFirstNode() == *nodeIterator || arcIterator->getSecondNode() == *nodeIterator)
                         {
                             arcIterator->setSelectState(true);
@@ -806,6 +807,7 @@ void modelDefinition::deleteSelection()
                 labelsToKeep.push_back(*blockIterator);
                  //   labelNamesToKeep.addString(_editor.getBlockNameArray()->get(i));
             }
+            i++;
         }
         _editor.setBlockLabelList(labelsToKeep);
         _editor.setLabelNameArray(labelNamesToKeep);
