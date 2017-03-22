@@ -218,6 +218,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 {
     wxGLCanvas::SetCurrent(*_geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
+//    wxDC test(this);
 	
     glMatrixMode(GL_MODELVIEW);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -257,6 +258,24 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         {
             nodeIterator->draw();
         }
+    }
+    
+    bool test1 =  _preferences.getShowBlockNameState();
+    int test2 = _editor.getBlockNameArray()->getNameArraySize();
+    if(test1 && test2 > 0)
+    {
+        glEnable(GL_TEXTURE_2D);
+        if(!_isFirstInitlized)
+        {
+           _editor.getBlockNameArray()->consolidate(&dc);
+           _editor.getBlockNameArray()->setFont(wxFont(8.25, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+           _isFirstInitlized = true;
+        }
+        _editor.getBlockNameArray()->bind();
+        glColor3b(0, 0, 0);
+        
+        _editor.renderBlockNames();
+        glDisable(GL_TEXTURE_2D);
     }
     
     SwapBuffers();
@@ -323,6 +342,25 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
 
 
 
+void modelDefinition::zoomIn()
+{
+    _zoomFactor *= pow(1.2, (300.0) / 150.0);
+
+    this->Refresh();
+}
+
+
+
+
+void modelDefinition::zoomOut()
+{
+    _zoomFactor *= pow(1.2, -(300.0) / 150.0);
+    
+    this->Refresh();
+}
+
+
+
 void modelDefinition::onMouseMove(wxMouseEvent &event)
 {
     int dx = event.GetX() - _mouseXPixel;
@@ -340,7 +378,6 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     {
         if(_createNodes && !_geometryIsSelected)
         {
-            int lastNodeItemIndex = _editor.getNodeList()->size() - 1;
             // Update the last node entry with new x and y coordinates and round if on snap grid
             if(_preferences.getSnapGridState())
             {
@@ -354,10 +391,20 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                 _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
             }
         }
-        else
+        else if(!_createNodes)
         {
             // Update the last bloc labe with new x and y coordinates and round if on snap grid
-            
+            if(_preferences.getSnapGridState())
+            {
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                roundToNearestGrid(tempX, tempY);
+                _editor.getBlockLabelList()->at(_editor.getBlockLabelList()->size() - 1).setCenter(tempX, tempY);
+            }
+            else
+            {
+                _editor.getBlockLabelList()->at(_editor.getBlockLabelList()->size() - 1).setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+            }
         }
     }
     
@@ -447,141 +494,19 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
     }
     else
     {
-        
-    }
-    
-    
-    
-    
-    
-    /*
-    if(!_createNodes)
-    {
-        // Handle the create of block labels here
+        double tempX = convertToXCoordinate(event.GetX());
+        double tempY = convertToYCoordinate(event.GetY());
+        if(_preferences.getSnapGridState())
+            roundToNearestGrid(tempX, tempY);
+            
+        _editor.addDragBlockLabel(tempX, tempY);
+
+        this->Refresh();
         return;
     }
-    else if(_editor.getNodeList()->size() == 0)
-	{
-		if(_preferences.getSnapGridState())
-        {
-            double tempX = convertToXCoordinate(event.GetX());
-            double tempY = convertToYCoordinate(event.GetY());
-            roundToNearestGrid(tempX, tempY);
-            _editor.addNode(tempX, tempY);
-        }
-        else
-            _editor.addNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
-            
-		this->Refresh();
-		return;
-	}
     
-    for(unsigned long i = 0; i < _editor.getLineList()->size(); i++)
-    {
-        
-    }
-    
-    for(unsigned long i = 0; i < _editor.getNodeList()->size(); i++)
-    {
-        if(((convertToXCoordinate(_mouseXPixel) >= _editor.getNodeList()->at(i).getCenterXCoordinate() - 0.01 * _zoomFactor) && (convertToXCoordinate(_mouseXPixel) <= _editor.getNodeList()->at(i).getCenterXCoordinate() + 0.01 * _zoomFactor) && (convertToYCoordinate(_mouseYPixel) <= _editor.getNodeList()->at(i).getCenterYCoordinate() + 0.01 * _zoomFactor) && (convertToYCoordinate(_mouseYPixel) >= _editor.getNodeList()->at(i).getCenterYCoordinate() - 0.01 * _zoomFactor)) && nodeSelected == false)
-        {
-            if(!_createNodes)
-                return;
-            else if(event.ShiftDown())
-            {
-                /*	This section will first chewxMouseEvent &eventck to see if any other shape is selected.
-					If the shape is selected, then toggle the selection.
-					As a last step, the function will then toggle select the selected node 
-				
-				if(_editor.getBlockLabelList()->size() > 0)
-				{
-					for(std::vector<blockLabel>::iterator blockLabelIterator = _editor.getBlockLabelList()->begin(); blockLabelIterator != _editor.getBlockLabelList()->end(); ++blockLabelIterator)
-					{
-                        if(blockLabelIterator->getIsSelectedState())
-                            blockLabelIterator->setSelectState(false);
-					}
-				}
-				
-				if(_editor.getArcList()->size() > 0)
-				{
-                    for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-                    {
-                        if(arcIterator->getIsSelectedState())
-                            arcIterator->setSelectState(false);
-                    }
-				}
-				
-				if(_editor.getLineList()->size() > 0)
-				{
-                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-                    {
-                        if(lineIterator->getIsSelectedState())
-                            lineIterator->setSelectState(false);
-                    }
-				}
-                _editor.getNodeList()->at(i).setSelectState(true);
-                this->Refresh();
-                return;
-            }
-            else if(_editor.getFirstSelectedNodeIndex() == -1)
-            {
-                for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                {
-                    if(nodeIterator->getIsSelectedState())
-                        nodeIterator->setSelectState(false);
-                }
-                
-                _editor.getNodeList()->at(i).setSelectState(true);
-                _editor.setFirstSelectedNodeIndex(i);
-                this->Refresh();
-                return;
-            }
-            else
-            {
-                if(_createLines)
-                {
-					_editor.addLine(_editor.getFirstSelectedNodeIndex(), _editor.getNodeList()->at(i).getNodeIndex(), NULL);
-                }
-                else
-                {
-                    arcSegmentDialog *dialog;
-                    
-                    if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-                        dialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
-                    else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-                        dialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
-                        
-                    if(dialog->ShowModal() == wxID_OK)
-                    {
-                        arcShape temp;
-                        dialog->getArcParameter(temp);
-                        temp.setFirstNodeIndex(_editor.getFirstSelectedNodeIndex());
-                        temp.setSecondNodeIndex(_editor.getNodeList()->at(i).getNodeIndex());
-                        temp.calculate(*_editor.getNodeList());
-                        _editor.addArc(temp, 0);
-                    }
-                }
-                
-                _editor.getNodeList()->at(_editor.getFirstSelectedNodeIndex()).setSelectState(false);
-                _editor.setFirstSelectedNodeIndex(-1);
-                this->Refresh();
-                return;
-            }
-        }
-    }
-    
-    if(_preferences.getSnapGridState())
-    {
-        double tempX = convertToXCoordinate(_mouseXPixel);
-        double tempY = convertToYCoordinate(_mouseYPixel);
-        roundToNearestGrid(tempX, tempY);
-        _editor.addNode(tempX, tempY);
-    }
-    else
-        _editor.addNode(convertToXCoordinate(_mouseXPixel), convertToYCoordinate(_mouseYPixel));
-        
     this->Refresh();
-     * */
+    return;
 }
 
 void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
@@ -617,7 +542,19 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
     }
     else
     {
+        double tempX = convertToXCoordinate(event.GetX());
+        double tempY = convertToYCoordinate(event.GetY());
         // Do the same thing for block labels
+
+        if(_preferences.getSnapGridState())
+            roundToNearestGrid(tempX, tempY);
+
+        if(_editor.getBlockLabelList()->back().getDraggingState())
+        {
+            _editor.getBlockLabelList()->pop_back();
+                
+            _editor.addBlockLabel(tempX, tempY);
+        }
     }
     this->Refresh();
     return;
@@ -687,6 +624,77 @@ void modelDefinition::roundToNearestGrid(double &xCoordinate, double &yCoordinat
 
 void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
+    double xCoordinate = convertToXCoordinate(event.GetX());
+    double yCoordinate = convertToYCoordinate(event.GetY());
+    
+    if(_editor.getNodeList()->size() > 0)
+    {
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
+            {
+                // Add in code to remove previousely selected geometry that is different then the one already selected
+                if(nodeIterator->getIsSelectedState())
+                    nodeIterator->setSelectState(false);
+                else
+                    nodeIterator->setSelectState(true);
+                this->Refresh();
+                return;
+            }
+        }
+    }
+    
+    if(_editor.getBlockLabelList()->size() > 0)
+    {
+        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
+            {
+                // Add in code to remove previousely selected geometry that is different then the one already selected
+                if(blockIterator->getIsSelectedState())
+                    blockIterator->setSelectState(false);
+                else
+                    blockIterator->setSelectState(true);
+                this->Refresh();
+                return;
+            }
+        }
+    }
+    
+    if(_editor.getLineList()->size() > 0)
+    {
+        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < 1 / (_zoomFactor * 10))
+            {
+                // Add in code to remove previousely selected geometry that is different then the one already selected
+                if(lineIterator->getIsSelectedState())
+                    lineIterator->setSelectState(false);
+                else
+                    lineIterator->setSelectState(true);
+                this->Refresh();
+                return;
+            }
+        }
+    }
+    
+    if(_editor.getArcList()->size() > 0)
+    {
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            // Add in code to remove previousely selected geometry that is different then the one already selected
+            if(_editor.calculateShortestDistanceFromArc(*arcIterator, xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
+            {
+                if(arcIterator->getIsSelectedState())
+                    arcIterator->setSelectState(false);
+                else
+                    arcIterator->setSelectState(true);
+                this->Refresh();
+                return;
+            }
+        }
+    }
+    
     if(event.ControlDown())
     {
         std::string combineStringPixel;
@@ -704,14 +712,6 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
         combineStringCoord.append(")");
     
         wxMessageBox(combineStringCoord);
-    }
-    else
-    {
-        arcSegmentDialog *test = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
-        if(test->ShowModal() == wxID_OK)
-        {
-            
-        }
     }
 }
 

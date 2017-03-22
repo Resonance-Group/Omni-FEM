@@ -1,6 +1,8 @@
 #ifndef BLOCKPROPERTY_H_
 #define BLOCKPROPERTY_H_
 
+#include <string>
+
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
 #include <common/CircuitProperty.h>
@@ -11,6 +13,8 @@ class blockProperty
 {
 private:
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
+    
+    std::string _materialName = "None";
     
     electrostaticMaterial _electricMaterial;
     
@@ -47,6 +51,16 @@ public:
     physicProblems getPhysicsProblem()
     {
         return _problem;
+    }
+    
+    void setMaterialName(std::string name)
+    {
+        _materialName = name;
+    }
+    
+    std::string getMaterialName()
+    {
+        return _materialName;
     }
     
     void setElectricMaterial(electrostaticMaterial material)

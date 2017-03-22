@@ -7,14 +7,14 @@
 
 void OmniFEMMainFrame::onZoomIn(wxCommandEvent &event)
 {
-    
+    _model->zoomIn();
 }
 
 
 
 void OmniFEMMainFrame::onZoomOut(wxCommandEvent &event)
 {
-    
+    _model->zoomOut();
 }
 
 

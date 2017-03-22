@@ -4,7 +4,11 @@
 #include <vector>
 #include <math.h>
 
+#include <gl.h>
+#include <glu.h>
+
 #include <common/Vector.h>
+#include <common/wxGLString.h>
 
 #include <UI/geometryShapes.h>
 
@@ -19,6 +23,8 @@ private:
     
 	std::vector<arcShape> _arcList;
     
+    wxGLStringArray _blockLabelNameArray;
+    
     long _nodeIndex1 = -1;// This is the index of the first selected node
     
     long _nodeIndex2 = -1;// This is the index of the second selected node
@@ -27,8 +33,6 @@ private:
     
     double *_zoomFactorPointer;
     
-    // Add in functions that are used to calculate intersection points here
-    
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
      * node0 is the first node that the user selects
      * node1 is the second node that the user selects
@@ -36,9 +40,6 @@ private:
      * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
      */
 	bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
-    
-    //! This function will determine the center and the radius of the given arc.
-	void getCircle(arcShape &arc, Vector &center, double &radius);
     
     /*! This function will calculate the shortest distance from a point to an arc */
 	double shortestDistanceFromArc(Vector point, arcShape &arcSegment);
@@ -49,10 +50,21 @@ private:
 	/*! This function will calculate the number of intersection points where two arcs intersect */
 	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
     
-    /*! This function is used to calcualte if the shortest distance between a line a node */
-	double calculateShortestDistance(double p, double q, edgeLineShape segment);
+    
 
 public:
+
+    /*! This function is used to calcualte if the shortest distance between a line a node */
+	double calculateShortestDistance(double p, double q, edgeLineShape segment);
+    
+    double calculateShortestDistanceFromArc(arcShape arcSegment, double xPoint, double yPoint)
+    {
+        Vector newVector;
+        
+        newVector.Set(xPoint, yPoint);
+        return shortestDistanceFromArc(newVector, arcSegment);
+    }
+    
     bool setNodeIndex(unsigned long index)
     {
         if(_nodeIndex1 == -1)
@@ -100,6 +112,14 @@ public:
     
     void addBlockLabel(double xPoint, double yPoint);
     
+    void addDragBlockLabel(double xPoint, double yPoint)
+    {
+        blockLabel newLabel;
+        newLabel.setCenter(xPoint, yPoint);
+        newLabel.setDraggingState(true);
+        _blockLabelList.push_back(newLabel);
+    }
+    
     void addLine(int node0, int node1);
     
     void addLine()
@@ -118,6 +138,19 @@ public:
     {
         _nodeIndex1 = -1;
         _nodeIndex2 = -1;
+    }
+    
+    void renderBlockNames()
+    {
+        for(int i = 0; i < _blockLabelNameArray.getNameArraySize(); i++)
+        {
+            _blockLabelNameArray.get(i).render(10 + 0.5, 10 + 0.5);
+        }
+    }
+    
+    wxGLStringArray *getBlockNameArray()
+    {
+        return &_blockLabelNameArray;
     }
 	
 };

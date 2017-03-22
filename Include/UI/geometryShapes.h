@@ -136,11 +136,33 @@ public:
     {
         return sqrt(pow((xCenterCoordinate - xp), 2) + pow((yCenterCoordinate - yp), 2));
     }
+    
+    void setCenter(double xCoor, double yCoor)
+    {
+        xCenterCoordinate = xCoor;
+        yCenterCoordinate = yCoor;
+    }
 	
 	//! This is the function that is called in order to draw the rectangle. One thing that is 
 	virtual void draw()
     {
         
+    }
+    
+    bool operator==(const rectangleShape &a_node)
+    {
+        if(xCenterCoordinate == a_node.getCenterXCoordinate() && yCenterCoordinate == a_node.getCenterYCoordinate())
+            return true;
+        else
+            return false;
+    }
+    
+    bool operator!=(const rectangleShape &a_node)
+    {
+        if(xCenterCoordinate != a_node.getCenterXCoordinate() && yCenterCoordinate != a_node.getCenterYCoordinate())
+            return true;
+        else
+            return false;
     }
 };
 
@@ -164,14 +186,10 @@ public:
         
     }
     
-    void setCenter(double xCoor, double yCoor)
-    {
-        xCenterCoordinate = xCoor;
-        yCenterCoordinate = yCoor;
-    }
+    
 	
 	//! This function will draw the shape
-	virtual void draw()
+	void draw()
     {
         if(isSelected)
             glColor3d(1.0, 0.0, 0.0);
@@ -216,21 +234,7 @@ public:
         return &_nodalSettings;
     }
     
-    bool operator==(const node &a_node)
-    {
-        if(xCenterCoordinate == a_node.getCenterXCoordinate() && yCenterCoordinate == a_node.getCenterYCoordinate())
-            return true;
-        else
-            return false;
-    }
     
-    bool operator!=(const node &a_node)
-    {
-        if(xCenterCoordinate != a_node.getCenterXCoordinate() && yCenterCoordinate != a_node.getCenterYCoordinate())
-            return true;
-        else
-            return false;
-    }
 };
 
 
@@ -323,7 +327,7 @@ public:
         return _isHidden;
     }
     
-    virtual void draw()
+    void draw()
     {
         glLineWidth(2.0);
         glBegin(GL_LINES);
@@ -360,15 +364,19 @@ private:
 	bool isExternal;
 	
 	bool isDefault;
+    
+    bool _isDragging = false;
+    
+    blockProperty _property;
 public:
     void draw()
     {
+        glPointSize(6.0);
+        
         if(isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 1.0);
-    
-        glPointSize(6.0);
     
         glBegin(GL_POINTS);
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
@@ -382,6 +390,25 @@ public:
         glEnd();
     }
 	
+    blockProperty *getProperty()
+    {
+        return &_property;
+    }
+    
+    void setPorperty(blockProperty property)
+    {
+        _property = property;
+    }
+    
+    bool getDraggingState()
+    {
+        return _isDragging;
+    }
+    
+    bool setDraggingState(bool state)
+    {
+        _isDragging = state;
+    }
 
 };
 
@@ -445,7 +472,12 @@ public:
      //   double startAngle = ((atan2(yCenterCoordinate - startNodeYCoordinate, xCenterCoordinate - startNodeXCoordinate) * 180.0) / PI)  - 180.0;
         /* Computes the start and stop angle for the arc. atan returns in radians. This gets converted to degrees */
         
-        if(_numSegments == -1)
+        if(isSelected)
+            glColor3d(1.0, 0.0, 0.0);
+        else
+            glColor3d(0.0, 0.0, 1.0);
+        
+        if(_numSegments == -1)// Hey this code needs to be looked at!
         {
             if(_arcAngle < 10)
                 _numSegments = 10;
@@ -456,6 +488,7 @@ public:
             _numSegments = 2;
         
         double theta = 0;
+        
         if(_isCounterClockWise)
             theta = (_arcAngle) / (double)_numSegments;
         else

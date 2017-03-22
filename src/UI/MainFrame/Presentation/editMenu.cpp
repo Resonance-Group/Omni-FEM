@@ -7,7 +7,11 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-    
+    globalPreferencesDialog *test = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getElectricalPreferences());
+    if(test->ShowModal() == wxID_OK)
+    {
+        
+    }
 }
 
 

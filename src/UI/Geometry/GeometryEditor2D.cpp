@@ -1,4 +1,5 @@
 #include <UI/GeometryEditor2D.h>
+#include <string>
 
 void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be the 1/mag which is the zoom factor
 {
@@ -81,9 +82,9 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     blockLabel newLabel;
     
     // Make sure that teh block labe is not placed ontop of an existing block label
-    for(unsigned int i = 0; _blockLabelList.size(); i++)
+    for(unsigned int i = 0; i < _blockLabelList.size(); i++)
     {
-        if(_blockLabelList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))
+        if(_blockLabelList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 25))
             return;
     }
     
@@ -91,7 +92,7 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     for(unsigned int i = 0; i < _nodeList.size(); i++)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 100))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
@@ -105,7 +106,11 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     /* Later, add in check to make sure that a block node will not be placed on top of a arc */
     newLabel.setCenterXCoordinate(xPoint);
     newLabel.setCenterYCoordiante(yPoint);
+   
     _blockLabelList.push_back(newLabel);
+
+  //  _blockLabelNameArray.addString(wxT(newLabel.getProperty()->getMaterialName()));
+ //   _blockLabelNameArray.addString(wxT("Test"));
 }
 
 
@@ -377,7 +382,7 @@ bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineSh
 }
 
 
-
+/* The purpose of this function and neccessicity is being evaluated
 void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
 {
     Vector firstNode, secondNode, unitVector;
@@ -394,6 +399,7 @@ void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
 	
 	center = firstNode + (distance / 2.0 + J * sqrt(pow(radius, 2) - pow(distance, 2) / 4.0)) * unitVector;
 }
+ * */
 
 
 

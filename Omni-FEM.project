@@ -189,6 +189,7 @@
         <File Name="Include/common/GeometryProperties/BlockProperty.h"/>
         <File Name="Include/common/GeometryProperties/NodeSettings.h"/>
       </VirtualDirectory>
+      <File Name="Include/common/wxGLString.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

@@ -66,7 +66,7 @@ private:
 public:
     globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, magneticPreference pref);
     
-    globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, electroStaticPreference pref);
+    globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref);
 };
 
 

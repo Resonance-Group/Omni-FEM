@@ -26,6 +26,7 @@
 #include <UI/EditMenu/ScalingDialog.h>
 #include <UI/EditMenu/MirrorDialog.h>
 #include <UI/EditMenu/OpenBoundaryDialog.h>
+#include <UI/EditMenu/GlobalPreferencesDialog.h>
 
 #include <UI/ViewMenu/ZoomWindow.h>
 #include <UI/ViewMenu/LuaConsole.h>

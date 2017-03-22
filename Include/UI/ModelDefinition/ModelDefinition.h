@@ -53,8 +53,10 @@ private:
     
     int _mouseYPixel = 0;
     
+    bool _isFirstInitlized = false;
+    
     //! This is the variable that will determine to create nodes/block labels
-    bool _createNodes = true;
+    bool _createNodes = false;
     
     //! This is the variable that will determine to create lines/arcs
     bool _createLines = false;
@@ -116,6 +118,10 @@ public:
     {
         _createLines = state;
     }
+    
+    void zoomIn();
+    
+    void zoomOut();
     
 private:
     wxDECLARE_EVENT_TABLE(); 

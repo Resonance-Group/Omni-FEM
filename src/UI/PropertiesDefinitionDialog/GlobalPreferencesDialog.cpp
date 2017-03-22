@@ -11,10 +11,11 @@ globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences 
 
 
 
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, electroStaticPreference pref) : wxPropertySheetDialog(par, wxID_ANY, "Preferences")
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref) : wxPropertySheetDialog(par, wxID_ANY, "Preferences")
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     _electricalPreference = pref;
+    _preferences = *gridPref;
     createDialog();
 }
 
@@ -126,6 +127,9 @@ void globalPreferencesDialog::createDialog()
     gridSettingsSizer->Add(gridSettingLine5);
     gridSettingsSizer->Add(gridSettingLine6);
     
+    panel->SetSizerAndFit(gridSettingsSizer);
+  //  this->GetBookCtrl()->AddPage(panel, "Input Settings");
+  //  this->GetBookCtrl().Add
     CreateButtons(wxOK|wxCANCEL);
     LayoutDialog();
 }  
