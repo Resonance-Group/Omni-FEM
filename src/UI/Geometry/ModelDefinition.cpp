@@ -360,7 +360,7 @@ void modelDefinition::selectGroup(unsigned int groupNumber, bool isNode, bool is
     }
     else if(isLine)
     {
-        _linesAreSelected = true
+        _linesAreSelected = true;
         for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getSegmentProperty().getGroupNumber() == groupNumber)
