@@ -136,6 +136,13 @@ public:
         return _comments;
     }
     
+    bool isAxistmmetric()
+    {
+        if(_probType == AXISYMMETRIC)
+            return true;
+        else
+            return false;
+    }
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define OMNIFEMFrame_H_
 
 #include <string.h>
+#include <algorithm>
 
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>

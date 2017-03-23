@@ -127,6 +127,7 @@ public:
     {
         node newNode;
         newNode.setCenter(xPoint, yPoint);
+        newNode.setDraggingState(true);
         _nodeList.push_back(newNode);
     }
     

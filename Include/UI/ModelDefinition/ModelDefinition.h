@@ -23,10 +23,13 @@
 #include <common/GridPreferences.h>
 #include <common/wxGLString.h>
 
+#include <common/GeometryProperties/NodeSettings.h>
+
 #include <UI/GeometryDialog/BlockPropertyDialog.h>
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 #include <UI/GeometryDialog/ArcSegmentDialog.h>
+#include <UI/GeometryDialog/ArcSegmentPropertyDialog.h>
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
@@ -58,10 +61,18 @@ private:
     bool _isFirstInitlized = false;
     
     //! This is the variable that will determine to create nodes/block labels
-    bool _createNodes = false;
+    bool _createNodes = true;
     
     //! This is the variable that will determine to create lines/arcs
-    bool _createLines = false;
+    bool _createLines = true;
+    
+    bool _nodesAreSelected = false;
+    
+    bool _linesAreSelected = false;
+    
+    bool _arcsAreSelected = false;
+    
+    bool _labelsAreSelected = false;
     
     bool _geometryIsSelected = false;
     
@@ -128,6 +139,9 @@ public:
     void zoomIn();
     
     void zoomOut();
+    
+    //! This will allow the user to edit the settings for the particular node/label/arc/line. It is in this calss because this class has access to the master settings list
+    void editSelection();
     
 private:
     wxDECLARE_EVENT_TABLE(); 

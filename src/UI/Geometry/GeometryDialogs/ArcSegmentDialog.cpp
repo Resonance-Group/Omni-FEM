@@ -147,26 +147,5 @@ void arcSegmentDialog::getArcParameter(arcShape &shape)
     _segmentTextCtrl->GetValue().ToLong(&value2);
     shape.setNumSegments(value2);
     
-    if(_boundaryComboBox->GetSelection() != 0)
-    {
-        for(int i = 1; i < _boundaryComboBox->GetCount(); i++)
-        {
-            if(_problem == physicProblems::PROB_ELECTROSTATIC)
-            {
-                if(_localElectricalBoundaryList.at(i - 1).getBoundaryName() == _boundaryComboBox->GetString(_boundaryComboBox->GetSelection()))
-                {
-                    shape.getSegmentProperty()->setElectricalBoundary(_localElectricalBoundaryList.at(i - 1));
-                    break;
-                }
-            }
-            else if(_problem == physicProblems::PROB_MAGNETICS)
-            {
-                if(_localMagneticBoundaryList.at(i - 1).getBoundaryName() == _boundaryComboBox->GetString(_boundaryComboBox->GetSelection()))
-                {
-                    shape.getSegmentProperty()->setMagneticBoudnary(_localMagneticBoundaryList.at(i - 1));
-                    break;
-                }
-            }
-        }
-    }
+    shape.getSegmentProperty().setBoundaryName(_boundaryComboBox->GetString(_boundaryComboBox->GetSelection()));
 }

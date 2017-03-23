@@ -16,15 +16,11 @@ private:
     
     std::string _materialName = "None";
     
-    electrostaticMaterial _electricMaterial;
-    
-    magneticMaterial _magneticMaterial;
+    std::string _circuitName = "None";
     
     bool _meshSizeIsAuto = true;
     
     double _meshSize = 0;
-    
-    circuitProperty _circuit;
     
     unsigned long _numberOfTurns = 1;
     
@@ -35,12 +31,6 @@ private:
     bool _isExternalRegion = false;
     
     bool _isDefault = false;
-    
-    bool _magneticMaterialIsSet = false;
-    
-    bool _electricMaterialIsSet = false;
-    
-    bool _circuitIsSet = false;
     
 public:
     void setPhysicsProblem(physicProblems problem)
@@ -63,26 +53,14 @@ public:
         return _materialName;
     }
     
-    void setElectricMaterial(electrostaticMaterial material)
+    void setCircuitName(std::string name)
     {
-        _electricMaterial = material;
-        _electricMaterialIsSet = true;
+        _circuitName = name;
     }
     
-    electrostaticMaterial getElectricMaterial()
+    std::string getCircuitName()
     {
-        return _electricMaterial;
-    }
-    
-    void setMagneticMaterial(magneticMaterial material)
-    {
-        _magneticMaterial = material;
-        _magneticMaterialIsSet = true;
-    }
-    
-    magneticMaterial getMagneticMaterial()
-    {
-        return _magneticMaterial;
+        return _circuitName;
     }
     
     void setAutoMeshState(bool state)
@@ -104,17 +82,7 @@ public:
     {
         return _meshSize;
     }
-    
-    void setCircuit(circuitProperty circuit)
-    {
-        _circuit = circuit;
-        _circuitIsSet = true;
-    }
-    
-    circuitProperty getCircuit()
-    {
-        return _circuit;
-    }
+
     
     void setNumberOfTurns(unsigned long turnCount)
     {
@@ -164,21 +132,6 @@ public:
     bool getDefaultState()
     {
         return _isDefault;
-    }
-    
-    bool getMagneticMaterialSetState()
-    {
-        return _magneticMaterialIsSet;
-    }
-    
-    bool getElectricMaterialSetState()
-    {
-        return _electricMaterialIsSet;
-    }
-    
-    bool getCircuitSetState()
-    {
-        return _circuitIsSet;
     }
 };
 

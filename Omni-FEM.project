@@ -51,7 +51,6 @@
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <VirtualDirectory Name="Shapes">
-          <File Name="src/UI/Geometry/Shapes/geometryAdd.cpp"/>
           <File Name="src/UI/Geometry/Shapes/geometryEditorController.cpp"/>
         </VirtualDirectory>
         <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
@@ -158,6 +157,7 @@
         <File Name="Include/UI/GeometryDialog/BlockPropertyDialog.h"/>
         <File Name="Include/UI/GeometryDialog/NodalSettingDialog.h"/>
         <File Name="Include/UI/GeometryDialog/ArcSegmentDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/ArcSegmentPropertyDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ModelDefinition">
         <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>

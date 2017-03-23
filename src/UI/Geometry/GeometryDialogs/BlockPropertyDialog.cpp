@@ -43,7 +43,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     materialText->SetFont(*font);
     _materialComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(207, 21), *materialNameList);
     _materialComboBox->SetFont(*font);
-    if(!property.getMagneticMaterialSetState())
+    if(property.getMaterialName() == "None")
     {
         _materialComboBox->SetSelection(0);
     }
@@ -51,7 +51,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     {
         for(unsigned int i = 0; i < _magneticMaterialList.size(); i++)
         {
-            if(_magneticMaterialList.at(i).getName() == property.getMagneticMaterial().getName())
+            if(_magneticMaterialList.at(i).getName() == property.getMaterialName())
             {
                 _materialComboBox->SetSelection(i + 1);
                 break;
@@ -85,7 +85,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     circuitText->SetFont(*font);
     _circuitComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 23), *circuitNameList);
     _circuitComboBox->SetFont(*font);
-    if(!property.getCircuitSetState())
+    if(property.getCircuitName() == "None")
     {
         _circuitComboBox->SetSelection(0);
     }
@@ -93,7 +93,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     {
         for(unsigned int i = 0; i < _circuitList.size(); i++)
         {
-            if(_circuitList.at(i).getName() == property.getCircuit().getName())
+            if(_circuitList.at(i).getName() == property.getCircuitName())
             {
                 _circuitComboBox->SetSelection(i + 1);
                 break;
@@ -192,7 +192,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
-    _problem = physicProblems::PROB_MAGNETICS;
+    _problem = physicProblems::PROB_ELECTROSTATIC;
     
     _electricalMaterialList = material;
     
@@ -208,7 +208,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     materialText->SetFont(*font);
     _materialComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(207, 21), *materialNameList);
     _materialComboBox->SetFont(*font);
-    if(!property.getElectricMaterialSetState())
+    if(property.getMaterialName() == "None")
     {
         _materialComboBox->SetSelection(0);
     }
@@ -216,7 +216,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     {
         for(unsigned int i = 0; i < _electricalMaterialList.size(); i++)
         {
-            if(_electricalMaterialList.at(i).getName() == property.getElectricMaterial().getName())
+            if(_electricalMaterialList.at(i).getName() == property.getMaterialName())
             {
                 _materialComboBox->SetSelection(i + 1);
                 break;
@@ -309,28 +309,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
     else
         property.setPhysicsProblem(physicProblems::PROB_MAGNETICS);
     
-    if(_materialComboBox->GetSelection() != 0)
-    {
-        for(int i = 1; i < _materialComboBox->GetCount(); i++)
-        {
-            if(_problem == physicProblems::PROB_ELECTROSTATIC)
-            {
-                if(_electricalMaterialList.at(i - 1).getName() == _materialComboBox->GetString(_materialComboBox->GetSelection()))
-                {
-                    property.setElectricMaterial(_electricalMaterialList.at(i - 1));
-                    break;
-                }
-            }
-            else if(_problem == physicProblems::PROB_MAGNETICS)
-            {
-                if(_magneticMaterialList.at(i - 1).getName() == _materialComboBox->GetString(_materialComboBox->GetSelection()))
-                {
-                    property.setMagneticMaterial(_magneticMaterialList.at(i - 1));
-                    break;
-                }
-            }
-        }
-    }
+    property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()));
     
     property.setAutoMeshState(_autoMeshCheckBox->GetValue());
     
@@ -342,17 +321,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
     
     if(_problem == physicProblems::PROB_MAGNETICS)
     {
-        if(_circuitComboBox->GetSelection() != 0)
-        {
-            for(int i = 1; i < _circuitComboBox->GetCount(); i++)
-            {
-                if(_circuitList.at(i - 1).getName() == _circuitComboBox->GetString(i))
-                {
-                    property.setCircuit(_circuitList.at(i - 1));
-                    break;
-                }
-            }  
-        }
+        property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()));
         
         _numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
         property.setNumberOfTurns(value2);

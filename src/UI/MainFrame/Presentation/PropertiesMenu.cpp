@@ -50,18 +50,25 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
 {
     if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
     {
-        nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalList(), physicProblems::PROB_ELECTROSTATIC);
+        nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_ELECTROSTATIC);
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setNodalList(diag->getNodalPropertyList());
+            std::vector<nodalProperty> oldlist = _problemDefinition.getNodalPropertyList();
+            _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
+            /* This is the case if the name was changed */
+            for(int i = 0; i < std::min(oldlist.size(), _problemDefinition.getNodalPropertyList().size()); i++)
+            {
+                
+            }
+            
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
     {
-        nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalList(), physicProblems::PROB_MAGNETICS);
+        nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_MAGNETICS);
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setNodalList(diag->getNodalPropertyList());
+            _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
         }
     }
 }

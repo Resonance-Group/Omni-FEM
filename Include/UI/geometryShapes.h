@@ -27,13 +27,10 @@ class geometry2D
 protected:
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
-	bool isSelected = false;
+	bool _isSelected = false;
     
     //! This is used to indicate if the geometry that is selected is for a group
     bool isGroupSelectedState = false;
-	
-	//! Data type used to store the group number that the shape is associated with
-	int groupNumber = 0;
 
 	//! This data type stroes the center x  position in Cartesian Coordiantes
 	/*! 
@@ -77,29 +74,16 @@ public:
         return yCenterCoordinate;
     }
 
-	
-	//! Function used to set the group that the shape is assocated with
-	void setGroup(int group)
-    {
-        groupNumber = group;
-    }
-	
-	//! Function used to retrieive the group number that the shape is associated with
-	int getGroup()
-    {
-        return groupNumber;
-    }
-	
 	//! the function will be called when the user selects the geomtry shape
 	void setSelectState(bool state)
     {
-        isSelected = state;
+        _isSelected = state;
     }
 	
 	//! This function will return the selected status
 	bool getIsSelectedState()
     {
-        return isSelected;
+        return _isSelected;
     }
     
     void setGroupSelectedState(bool state)
@@ -118,17 +102,20 @@ public:
 
 class rectangleShape : public geometry2D
 {
+private:
+
+    bool _isDragging = false;
+    
 public:
     rectangleShape() : geometry2D()
     {
         
     }
     
-	rectangleShape(double xCenterPoint, double yCenterPoint)
+	rectangleShape(double xCenterPoint, double yCenterPoint) : geometry2D()
     {
         xCenterCoordinate = xCenterPoint;
         yCenterCoordinate = yCenterPoint;
-        isSelected = false;
     }
 	
 	//! This function will get the distance between two points. The first being itself and the second, the input. The values that are taken in are the x and y coordinate of the second point
@@ -141,6 +128,16 @@ public:
     {
         xCenterCoordinate = xCoor;
         yCenterCoordinate = yCoor;
+    }
+    
+    bool getDraggingState()
+    {
+        return _isDragging;
+    }
+    
+    void setDraggingState(bool state)
+    {
+        _isDragging = state;
     }
 	
 	//! This is the function that is called in order to draw the rectangle. One thing that is 
@@ -171,9 +168,6 @@ public:
 class node : public rectangleShape
 {
 private:
-	//! The nodes are stored in array. For quickier accesssing, this will store the index which is associated with the node
-	int _nodeIndex;
-    
     nodeSetting _nodalSettings;
 public:
 	node(double xCenter, double yCenter) : rectangleShape(xCenter, yCenter)
@@ -186,12 +180,10 @@ public:
         
     }
     
-    
-	
 	//! This function will draw the shape
 	void draw()
     {
-        if(isSelected)
+        if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 0.0);
@@ -209,16 +201,6 @@ public:
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
     }
-	
-	void setNodeIndex(int index) 
-    {
-        _nodeIndex = index;
-    }
-	
-	int getNodeIndex() const
-    {
-        return _nodeIndex;
-    }
     
     void setNodeSettings(nodeSetting setting)
     {
@@ -229,9 +211,9 @@ public:
     *   This function returns the address of the variable that contains the setting for the node.
     *   These settings are specificially settings such as nodal properties, material,etc.
     */ 
-    nodeSetting *getNodeSetting()
+    nodeSetting getNodeSetting()
     {
-        return &_nodalSettings;
+        return _nodalSettings;
     }
     
     
@@ -260,9 +242,6 @@ protected:
 	 *			This variables stores the index of second node which connects the line.
 	 */
 	int _nodeIndex2;
-	
-	//! Status to indicate if the line is hidden in the post-Processor
-	bool _isHidden;
 	
 	//! The length of the line?
 	double _maxSideLength;
@@ -316,22 +295,12 @@ public:
     {
         return _nodeIndex2;
     }
-	
-	void setHiddenStatus(bool status)
-    {
-        _isHidden = status;
-    }
-    
-	bool getHiddenStatus()
-    {
-        return _isHidden;
-    }
     
     void draw()
     {
         glLineWidth(2.0);
         glBegin(GL_LINES);
-            if(isSelected)
+            if(_isSelected)
                 glColor3f(1.0f, 0.0f, 0.0f);
             else
                 glColor3f(0.0f, 0.0f, 0.0f);
@@ -341,9 +310,9 @@ public:
         glLineWidth(0.5);
     }
     
-    segmentProperty *getSegmentProperty()
+    segmentProperty getSegmentProperty()
     {
-        return &_property;
+        return _property;
     } 
 	
     void setSegmentProperty(segmentProperty property)
@@ -357,15 +326,7 @@ public:
 class blockLabel : public rectangleShape
 {
 private:
-	double maxArea;
-	
 	std::string blockType;
-	
-	bool isExternal;
-	
-	bool isDefault;
-    
-    bool _isDragging = false;
     
     blockProperty _property;
 public:
@@ -373,7 +334,7 @@ public:
     {
         glPointSize(6.0);
         
-        if(isSelected)
+        if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 1.0);
@@ -390,9 +351,9 @@ public:
         glEnd();
     }
 	
-    blockProperty *getProperty()
+    blockProperty getProperty()
     {
-        return &_property;
+        return _property;
     }
     
     void setPorperty(blockProperty property)
@@ -400,15 +361,7 @@ public:
         _property = property;
     }
     
-    bool getDraggingState()
-    {
-        return _isDragging;
-    }
     
-    bool setDraggingState(bool state)
-    {
-        _isDragging = state;
-    }
 
 };
 
@@ -418,8 +371,6 @@ public:
 class arcShape : public edgeLineShape
 {
 private:
-	bool _isHidden;
-	
 	unsigned int _numSegments = 3;
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees
@@ -432,13 +383,7 @@ private:
 public:
 	arcShape()
     {
-        _nodeIndex1 = 0;
-        _nodeIndex2 = 0;
-	
-        _isHidden = false;
-	
-        _arcAngle = 90.0d;
-        _maxSideLength = 10.0d;
+        
     }
 	
 	void setArcAngle(double angleOfArc)
@@ -472,7 +417,7 @@ public:
      //   double startAngle = ((atan2(yCenterCoordinate - startNodeYCoordinate, xCenterCoordinate - startNodeXCoordinate) * 180.0) / PI)  - 180.0;
         /* Computes the start and stop angle for the arc. atan returns in radians. This gets converted to degrees */
         
-        if(isSelected)
+        if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 1.0);

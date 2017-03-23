@@ -20,7 +20,9 @@
 
 #include <UI/geometryShapes.h>
 
-
+/*! /brief
+ *  This class is useded when a new arc is needed to be created
+ */ 
 class arcSegmentDialog : public wxDialog
 {
 private:

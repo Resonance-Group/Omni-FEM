@@ -1,7 +1,7 @@
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 
 
-segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> &electricalBoundaryList, std::vector<conductorProperty> &conductorList ,segmentProperty &property) : wxDialog(par, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> electricalBoundaryList, std::vector<conductorProperty> conductorList ,segmentProperty property) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -39,7 +39,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     boundaryText->SetFont(*font);
     _boundaryListCombo->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(182, 21), *boundaryNameList);
     _boundaryListCombo->SetFont(*font);
-    if(!property.checkIsBoundarySet())
+    if(property.getBoundaryName() == "None")
     {
         _boundaryListCombo->SetSelection(0);
     }
@@ -47,7 +47,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     {
         for(unsigned int i = 0; i < electricalBoundaryList.size(); i++)
         {
-            if(electricalBoundaryList.at(i).getBoundaryName() == property.getElectricalBoundary().getBoundaryName())
+            if(electricalBoundaryList.at(i).getBoundaryName() == property.getBoundaryName())
             {
                 _boundaryListCombo->SetSelection(i + 1);
                 break;
@@ -80,7 +80,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     conductorText->SetFont(*font);
     _conductorListCombobox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(164, 21), *conductorNameList);
     _conductorListCombobox->SetFont(*font);
-    if(!property.checkIsCircuitSet())
+    if(property.getConductorName() == "None")
     {
         _conductorListCombobox->SetSelection(0);
     }
@@ -88,7 +88,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     {
         for(unsigned int i = 0; i < conductorList.size(); i++)
         {
-            if(conductorList.at(i).getName() == property.getConductor().getName())
+            if(conductorList.at(i).getName() == property.getConductorName())
             {
                 _conductorListCombobox->SetSelection(i + 1);
             }
@@ -134,7 +134,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
 
 
 
-segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> &magneticBoundayList, segmentProperty &property) : wxDialog(par, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> magneticBoundayList, segmentProperty property) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -162,7 +162,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
     boundaryText->SetFont(*font);
     _boundaryListCombo->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(182, 21), *boundaryNameList);
     _boundaryListCombo->SetFont(*font);
-    if(!property.checkIsBoundarySet())
+    if(property.getBoundaryName() == "None")
     {
         _boundaryListCombo->SetSelection(0);
     }
@@ -170,7 +170,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
     {
         for(int i = 0; i < magneticBoundayList.size(); i++)
         {
-            if(magneticBoundayList.at(i).getBoundaryName() == property.getMagneticBoundary().getBoundaryName())
+            if(magneticBoundayList.at(i).getBoundaryName() == property.getBoundaryName())
             {
                 _boundaryListCombo->SetSelection(i + 1);
                 break;
@@ -239,35 +239,9 @@ void segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
     double value;
     long value2;
     
-    if(_problem == physicProblems::PROB_ELECTROSTATIC)
-    {
-        property.setPhysicsProblem(physicProblems::PROB_ELECTROSTATIC);
-    }
-    else
-        property.setPhysicsProblem(physicProblems::PROB_MAGNETICS);
-    
-    if(_boundaryListCombo->GetSelection() != 0)
-    {
-        for(int i = 1; i < _boundaryListCombo->GetCount(); i++)
-        {
-            if(_problem == physicProblems::PROB_ELECTROSTATIC)
-            {
-                if(_electricalBoundaryList.at(i - 1).getBoundaryName() == _boundaryListCombo->GetString(i))
-                {
-                    property.setElectricalBoundary(_electricalBoundaryList.at(i - 1));
-                    break;
-                }
-            }
-            else if(_problem == physicProblems::PROB_MAGNETICS)
-            {
-                if(_magneticBoundayList.at(i - 1).getBoundaryName() == _boundaryListCombo->GetString(i))
-                {
-                    property.setMagneticBoudnary(_magneticBoundayList.at(i - 1));
-                    break;
-                }
-            }
-        }
-    }
+    property.setPhysicsProblem(_problem);
+
+    property.setBoundaryName(_boundaryListCombo->GetString(_boundaryListCombo->GetSelection()));
         
     property.setMeshAutoState(_meshSpacingAutoCheckbox->GetValue());
     
@@ -276,14 +250,7 @@ void segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
         
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        for(int i = 1; i < _conductorListCombobox->GetCount(); i++)
-        {
-            if(_conductorList.at(i - 1).getName() == _conductorListCombobox->GetString(i))
-            {
-                property.setConductor(_conductorList.at(i - 1));
-                break;
-            }
-        }
+        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()));
     }
         
     property.setHiddenState(_hideSegmentCheckbox->GetValue());

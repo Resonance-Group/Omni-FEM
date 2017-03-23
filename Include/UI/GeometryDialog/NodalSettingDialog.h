@@ -31,9 +31,11 @@ private:
     
     wxComboBox *_conductorsComboBox = new wxComboBox();
 public:
-    setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings, std::vector<conductorProperty> &conductorPropertyList);
+    //! This is the constructor for the node property dialog if the problem is electro-statics
+    setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> nodePropertyList, nodeSetting nodeSettings, std::vector<conductorProperty> conductorPropertyList);
     
-    setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings);
+    //! This is the constructor for the node property dialog if the problem is magnetics
+    setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> nodePropertyList, nodeSetting nodeSettings);
     
     void getNodalSettings(nodeSetting &settings);
     

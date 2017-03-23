@@ -13,7 +13,7 @@ class conductorProperty
 {
 private:
     //! This is the name of the property
-    string _conductorName;
+    string _conductorName = "None";
     
     //! Set to True if the conductor is suppose to have a charge value False will be that the COnductor is a Prescribed Voltage
     bool _isTotalCharge = true;
@@ -24,6 +24,14 @@ private:
     //! The value of the charge
     double _charge = 0;
 public:
+    conductorProperty()
+    {
+        _conductorName = "None";
+        _isTotalCharge = true;
+        _value = 0;
+        _charge = 0;
+    }
+
     //! This next sections are the getters/setters for the private variables
     void setName(string name);
     

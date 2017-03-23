@@ -118,12 +118,12 @@ public:
         return _localCircuitList;
     }
     
-    void setNodalList(std::vector<nodalProperty> list)
+    void setNodalPropertyList(std::vector<nodalProperty> list)
     {
         _localNodalList = list;
     }
     
-    std::vector<nodalProperty> getNodalList()
+    std::vector<nodalProperty> getNodalPropertyList()
     {
         return _localNodalList;
     }

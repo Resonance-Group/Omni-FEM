@@ -1,6 +1,8 @@
 #ifndef SEGMENTPROPERTIES_H_
 #define SEGMENTPROPERTIES_H_
 
+#include <string>
+
 #include <common/ElectricalBoundary.h>
 #include <common/MagneticBoundary.h>
 #include <common/enums.h>
@@ -10,24 +12,18 @@ class segmentProperty
 {
 private:
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
-
-    magneticBoundary _magneticBoundaryCondition;
     
-    electricalBoundary _electroStaticBoundaryCondition;
-    
+    std::string _boundaryName = "None";
+       
     bool _meshSpacingIsAuto = true;
     
     double _elementSize = 0;
     
-    conductorProperty _conductor;
+    std::string _conductorName = "None";
     
     bool _segmentIsHidden = false;
     
     unsigned int _groupNumber = 0;
-    
-    bool _boundaryConditionIsSet = false;
-    
-    bool _conductorIsSet = false;
     
 public:
     void setPhysicsProblem(physicProblems problem)
@@ -40,26 +36,25 @@ public:
         return _problem;
     }
     
-    void setMagneticBoudnary(magneticBoundary boundary)
+    void setBoundaryName(std::string name)
     {
-        _magneticBoundaryCondition = boundary;
-        _boundaryConditionIsSet = true;
+        _boundaryName = name;
     }
     
-    magneticBoundary getMagneticBoundary()
+    std::string getBoundaryName()
     {
-        return _magneticBoundaryCondition;
+        return _boundaryName;
     }
     
-    void setElectricalBoundary(electricalBoundary boundary)
+    void setConductorName(std::string name)
     {
-        _electroStaticBoundaryCondition = boundary;
-        _boundaryConditionIsSet = true;
+        _conductorName = name;
     }
     
-    electricalBoundary getElectricalBoundary()
+    
+    std::string getConductorName()
     {
-        return _electroStaticBoundaryCondition;
+        return _conductorName;
     }
     
     void setMeshAutoState(bool state)
@@ -81,17 +76,6 @@ public:
     {
         return _elementSize;
     }
-    
-    void setConductor(conductorProperty conductor)
-    {
-        _conductor = conductor;
-        _conductorIsSet = true;
-    }
-    
-    conductorProperty getConductor()
-    {
-        return _conductor;
-    }
 
     void setHiddenState(bool isHidden)
     {
@@ -111,16 +95,6 @@ public:
     unsigned int getGroupNumber()
     {
         return _groupNumber;
-    }
-    
-    bool checkIsBoundarySet()
-    {
-        return _boundaryConditionIsSet;
-    }
-    
-    bool checkIsCircuitSet()
-    {
-        return _conductorIsSet;
     }
 };
 #endif
