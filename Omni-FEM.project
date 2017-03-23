@@ -157,7 +157,6 @@
         <File Name="Include/UI/GeometryDialog/BlockPropertyDialog.h"/>
         <File Name="Include/UI/GeometryDialog/NodalSettingDialog.h"/>
         <File Name="Include/UI/GeometryDialog/ArcSegmentDialog.h"/>
-        <File Name="Include/UI/GeometryDialog/ArcSegmentPropertyDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ModelDefinition">
         <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>

@@ -29,7 +29,6 @@
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 #include <UI/GeometryDialog/ArcSegmentDialog.h>
-#include <UI/GeometryDialog/ArcSegmentPropertyDialog.h>
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
@@ -142,6 +141,11 @@ public:
     
     //! This will allow the user to edit the settings for the particular node/label/arc/line. It is in this calss because this class has access to the master settings list
     void editSelection();
+    
+    //! If a properties name is changes or if the property is deleted, this will reset the properties
+    void updateProperties(bool nodeProperties, bool lineProperties, bool arcProperties, bool blockLabelProperties);
+    
+    void selectGroup(unsigned int groupNumber, bool isNode, bool isLine, bool isArc, bool isBlockLabel);
     
 private:
     wxDECLARE_EVENT_TABLE(); 

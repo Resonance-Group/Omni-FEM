@@ -30,6 +30,8 @@ private:
     std::vector<electricalBoundary> _electricalBoundaryList;
     
     std::vector<conductorProperty> _conductorList;
+    
+    bool _isArc;
 
     wxTextCtrl *_elementSizeTextCtrl = new wxTextCtrl();
     
@@ -49,9 +51,9 @@ public:
     /* The magnetic boundary list is the global boundary list.
      * The property is the segmentProperty for the line 
      */
-    segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> magneticBoundayList, segmentProperty property);
+    segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> magneticBoundayList, segmentProperty property, bool isArc);
     
-    segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> electricalBoundaryList, std::vector<conductorProperty> conductorList, segmentProperty property);
+    segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> electricalBoundaryList, std::vector<conductorProperty> conductorList, segmentProperty property, bool _isArc);
     
     void getSegmentProperty(segmentProperty &property);
     

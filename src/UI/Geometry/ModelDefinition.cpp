@@ -167,8 +167,9 @@ void modelDefinition::editSelection()
         /* All of the other if statements follow the same logic as displayed here */
         setNodalPropertyDialog *dialog;
         nodeSetting selectedNodeSetting;
-        /* this will grad the first node's nodal setting. What node is selected, it will aloways grab the first one. 
+        /* this will grab the first node's nodal setting. Whichever node is selected, it will aloways grab the first one. 
          * The thinking is this that if there are multiple selections, the user wants to set them all to be the same
+         * so it doesnt really matter if the first, second, third, or fifth node is different because the settings will all be the same
          */ 
         for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
@@ -214,9 +215,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty);
+            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty, false);
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty);
+            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty, false);
             
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -232,16 +233,32 @@ void modelDefinition::editSelection()
     else if(_arcsAreSelected)
     {
         // TODO: SInce the arcs are currently not able to be drawn or selected, this code will need to be tested after the two bugs are fixed
-        arcSegmentPropertyDialog *dialog;
+        segmentPropertyDialog *dialog;
         segmentProperty selectedProperty;
         
-        if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
-            
+            if(arcIterator->getIsSelectedState())
+            {
+                selectedProperty = arcIterator->getSegmentProperty();
+                break;
+            }
         }
+        
+        if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty, true);
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-        {
+            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty, true);
             
+        if(dialog->ShowModal() == wxID_OK)
+        {
+            dialog->getSegmentProperty(selectedProperty);
+            
+            for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(arcIterator->getIsSelectedState())
+                    arcIterator->setSegmentProperty(selectedProperty);
+            }
         }
     }
     else if(_labelsAreSelected)
@@ -249,7 +266,6 @@ void modelDefinition::editSelection()
         blockPropertyDialog *dialog;
         blockProperty selectedBlockLabel;
         
-
         for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getIsSelectedState())
@@ -276,6 +292,108 @@ void modelDefinition::editSelection()
         }
 
     }
+}
+
+
+
+void modelDefinition::updateProperties(bool nodeProperties, bool lineProperties, bool arcProperties, bool blockLabelProperties)
+{
+    if(_editor.getNodeList()->size() > 0 && nodeProperties)
+    {
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            bool nodalPropertyIsPresent = false;
+            bool conductorPropertyIsPresent = false;
+            
+            for(int i = 0; i < _localDefinition->getNodalPropertyList().size(); i++)
+            {
+                if(nodeIterator->getNodeSetting().getNodalPropertyName() == _localDefinition->getNodalPropertyList().at(i).getName() && !nodalPropertyIsPresent)
+                {
+                    nodalPropertyIsPresent = true;
+                    if(_localDefinition->getPhysicsProblem() != physicProblems::PROB_ELECTROSTATIC || conductorPropertyIsPresent)
+                        break;
+                }
+                
+                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC && nodeIterator->getNodeSetting().getConductorPropertyName() == _localDefinition->getConductorList().at(i).getName())
+                {
+                    conductorPropertyIsPresent = true;
+                    if(nodalPropertyIsPresent)
+                        break;
+                }
+            }
+            
+            if(!nodalPropertyIsPresent)
+                nodeIterator->getNodeSetting().setNodalPropertyName("None");
+                
+            if(!conductorPropertyIsPresent && _localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                nodeIterator->getNodeSetting().setConductorPropertyName("None");
+        }
+    }
+    else if(_editor.getLineList()->size() > 0 && lineProperties)
+    {
+        
+    }
+    else if(_editor.getArcList()->size() > 0 && arcProperties)
+    {
+        
+    }
+    else if(_editor.getBlockLabelList()->size() > 0 && blockLabelProperties)
+    {
+        
+    }
+}
+
+
+
+void modelDefinition::selectGroup(unsigned int groupNumber, bool isNode, bool isLine, bool isArc, bool isBlockLabel)
+{
+    if(isNode)
+    {
+        _nodesAreSelected = true;
+        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getNodeSetting().getGroupNumber() == groupNumber)
+            {
+                nodeIterator->setSelectState(true);
+            }
+        }
+    }
+    else if(isLine)
+    {
+        _linesAreSelected = true
+        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getSegmentProperty().getGroupNumber() == groupNumber)
+            {
+                lineIterator->setSelectState(true);
+            }
+        }
+    }
+    else if(isArc)
+    {
+        _arcsAreSelected = true;
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getSegmentProperty().getGroupNumber() == groupNumber)
+            {
+                arcIterator->setSelectState(true);
+            }
+        }
+    }
+    else if(isBlockLabel)
+    {
+        _labelsAreSelected = true;
+        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getProperty().getGroupNumber() == groupNumber)
+            {
+                blockIterator->setSelectState(true);
+            }
+        }
+    }
+    
+    this->Refresh();
+    return;
 }
 
 
