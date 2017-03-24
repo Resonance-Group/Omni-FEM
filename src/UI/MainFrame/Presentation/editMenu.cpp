@@ -77,6 +77,19 @@ void OmniFEMMainFrame::onMove(wxCommandEvent &event)
 void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
 {
     
+}
+
+
+
+void OmniFEMMainFrame::onSelectGroup(wxCommandEvent &event)
+{
+    selectGroupDialog *dialog = new selectGroupDialog(this);
+    if(dialog->ShowModal() == wxID_OK)
+    {
+        unsigned int groupNumber = 0;
+        EditGeometry geometrySelection = dialog->getGroupNumber(groupNumber);
+        _model->selectGroup(geometrySelection, groupNumber);
+    }
 } 
 
 

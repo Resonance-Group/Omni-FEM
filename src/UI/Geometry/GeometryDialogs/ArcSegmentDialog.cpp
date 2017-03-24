@@ -147,5 +147,5 @@ void arcSegmentDialog::getArcParameter(arcShape &shape)
     _segmentTextCtrl->GetValue().ToLong(&value2);
     shape.setNumSegments(value2);
     
-    shape.getSegmentProperty().setBoundaryName(_boundaryComboBox->GetString(_boundaryComboBox->GetSelection()));
+    shape.getSegmentProperty()->setBoundaryName(_boundaryComboBox->GetString(_boundaryComboBox->GetSelection()));
 }

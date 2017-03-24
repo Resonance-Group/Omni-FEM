@@ -211,9 +211,9 @@ public:
     *   This function returns the address of the variable that contains the setting for the node.
     *   These settings are specificially settings such as nodal properties, material,etc.
     */ 
-    nodeSetting getNodeSetting()
+    nodeSetting *getNodeSetting()
     {
-        return _nodalSettings;
+        return &_nodalSettings;
     }
     
     
@@ -310,9 +310,9 @@ public:
         glLineWidth(0.5);
     }
     
-    segmentProperty getSegmentProperty()
+    segmentProperty *getSegmentProperty()
     {
-        return _property;
+        return &_property;
     } 
 	
     void setSegmentProperty(segmentProperty property)

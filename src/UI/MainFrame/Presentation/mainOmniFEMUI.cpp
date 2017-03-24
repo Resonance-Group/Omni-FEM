@@ -46,6 +46,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
     _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
+    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group");
     _menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
 	
@@ -128,6 +129,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(EditMenuID::ID_MOVE, enable);
     _menuBar->Enable(EditMenuID::ID_SCALE, enable);
     _menuBar->Enable(EditMenuID::ID_UNDO, enable);
+    _menuBar->Enable(EditMenuID::ID_SELECT_GROUP, enable);
     
     _menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
     _menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);
@@ -429,6 +431,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_MOVE, OmniFEMMainFrame::onMove)
     EVT_MENU(EditMenuID::ID_CREATE_RADIUS, OmniFEMMainFrame::onCreateRadius)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
+    EVT_MENU(EditMenuID::ID_SELECT_GROUP, OmniFEMMainFrame::onSelectGroup)
 	
 	/* This section is for the View menu */
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)

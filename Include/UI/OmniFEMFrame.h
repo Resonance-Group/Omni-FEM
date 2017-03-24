@@ -28,6 +28,7 @@
 #include <UI/EditMenu/MirrorDialog.h>
 #include <UI/EditMenu/OpenBoundaryDialog.h>
 #include <UI/EditMenu/GlobalPreferencesDialog.h>
+#include <UI/EditMenu/SelectGroupDialog.h>
 
 #include <UI/ViewMenu/ZoomWindow.h>
 #include <UI/ViewMenu/LuaConsole.h>
@@ -134,6 +135,7 @@ private:
     void onMove(wxCommandEvent &event);
     void onCreateRadius(wxCommandEvent &event);
     void onCreateOpenBoundary(wxCommandEvent &event);
+    void onSelectGroup(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
     void onZoomIn(wxCommandEvent &event);

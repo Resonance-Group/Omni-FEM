@@ -10,6 +10,7 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
         if(materialDiag->ShowModal() == wxID_OK)
         {
             _problemDefinition.setMaterialList(materialDiag->getElectroMaterialList());
+            _model->updateProperties(false, false, false, true, false);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -18,6 +19,7 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
         if(materialDiag->ShowModal() == wxID_OK)
         {
             _problemDefinition.setMaterialList(materialDiag->getMagenticMaterialList());
+            _model->updateProperties(false, false, false, true, false);
         }
     }
 }
@@ -32,6 +34,7 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
         if(boundaryDia->ShowModal() == wxID_OK)
         {
             _problemDefinition.setBoundaryList(boundaryDia->getElectrostaticBoundaryList());
+            _model->updateProperties(false, false, true, false, false);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -40,6 +43,7 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
         if(boundaryDia->ShowModal() == wxID_OK)
         {
             _problemDefinition.setBoundaryList(boundaryDia->getMagneticBoundaryList());
+            _model->updateProperties(false, false, true, false, false);
         }
     }
 }
@@ -53,14 +57,8 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
         nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_ELECTROSTATIC);
         if(diag->ShowModal() == wxID_OK)
         {
-            std::vector<nodalProperty> oldlist = _problemDefinition.getNodalPropertyList();
             _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
-            /* This is the case if the name was changed */
-            for(int i = 0; i < std::min(oldlist.size(), _problemDefinition.getNodalPropertyList().size()); i++)
-            {
-                
-            }
-            
+            _model->updateProperties(false, true, false, false, false);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -69,6 +67,7 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
         if(diag->ShowModal() == wxID_OK)
         {
             _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
+            _model->updateProperties(false, true, false, false, false);
         }
     }
 }
@@ -83,6 +82,7 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
         if(diag->ShowModal() == wxID_OK)
         {
             _problemDefinition.setConductorList(diag->getConductorList());
+            _model->updateProperties(true, false, false, false, false);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -91,6 +91,7 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
         if(diag->ShowModal() == wxID_OK)
         {
             _problemDefinition.setCircuitList(diag->getCircuitList());
+            _model->updateProperties(false, false, false, false, true);
         }
     }
 }

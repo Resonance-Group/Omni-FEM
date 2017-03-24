@@ -143,9 +143,9 @@ public:
     void editSelection();
     
     //! If a properties name is changes or if the property is deleted, this will reset the properties
-    void updateProperties(bool nodeProperties, bool lineProperties, bool arcProperties, bool blockLabelProperties);
+    void updateProperties(bool scanConductorProperty, bool scanNodalProperty, bool scanBoundaryProperty, bool scanMaterialProperty, bool scanCircuitProperty);
     
-    void selectGroup(unsigned int groupNumber, bool isNode, bool isLine, bool isArc, bool isBlockLabel);
+    void selectGroup(EditGeometry geometry, unsigned int groupNumber);
     
 private:
     wxDECLARE_EVENT_TABLE(); 

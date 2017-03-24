@@ -36,7 +36,8 @@ enum EditMenuID
     ID_MIRROR,
     ID_CREATE_RADIUS,
     ID_CREATE_OPEN_BOUNDARY,
-    ID_PREFERENCES
+    ID_PREFERENCES, 
+    ID_SELECT_GROUP
 };
 
 
@@ -277,6 +278,15 @@ enum OpenBoundaryEdge
     NO_BOUNDARY_DEFINED,
     DIRICHLET,
     NEUMANN
+};
+
+enum EditGeometry
+{
+    EDIT_NONE,
+    EDIT_NODES,
+    EDIT_LINES,
+    EDIT_ARCS,
+    EDIT_LABELS
 };
 
 
