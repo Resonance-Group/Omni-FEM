@@ -356,6 +356,11 @@ public:
         return _property;
     }
     
+    blockProperty *getAddressProperty()
+    {
+        return &_property;
+    }
+    
     void setPorperty(blockProperty property)
     {
         _property = property;

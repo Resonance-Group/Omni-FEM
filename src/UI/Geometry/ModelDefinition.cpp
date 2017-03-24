@@ -198,6 +198,7 @@ void modelDefinition::editSelection()
                 }
             }
         }
+        delete(dialog);
     }
     else if(_linesAreSelected)
     {
@@ -229,6 +230,7 @@ void modelDefinition::editSelection()
                     lineIterator->setSegmentProperty(selectedProperty);
             }
         }
+        delete(dialog);
     }
     else if(_arcsAreSelected)
     {
@@ -260,6 +262,7 @@ void modelDefinition::editSelection()
                     arcIterator->setSegmentProperty(selectedProperty);
             }
         }
+        delete(dialog);
     }
     else if(_labelsAreSelected)
     {
@@ -290,14 +293,18 @@ void modelDefinition::editSelection()
                     blockIterator->setPorperty(selectedBlockLabel);
             }
         }
-
+        delete(dialog);
     }
 }
 
 
-
+// TODO: Test this function
 void modelDefinition::updateProperties(bool nodeProperties, bool lineProperties, bool arcProperties, bool blockLabelProperties)
 {
+    /* This function will compare the name that is set in each geometry shape of the property against the master list. THis comparison will check
+     * to ensure that the property is continueing to exist. If the property no longer exists through a name change or deletion, this
+     * function will reset the name of the property within the geometry shape to be none
+     */ 
     if(_editor.getNodeList()->size() > 0 && nodeProperties)
     {
         for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
@@ -305,41 +312,216 @@ void modelDefinition::updateProperties(bool nodeProperties, bool lineProperties,
             bool nodalPropertyIsPresent = false;
             bool conductorPropertyIsPresent = false;
             
-            for(int i = 0; i < _localDefinition->getNodalPropertyList().size(); i++)
+            if(nodeIterator->getNodeSetting().getNodalPropertyName() != "None")
             {
-                if(nodeIterator->getNodeSetting().getNodalPropertyName() == _localDefinition->getNodalPropertyList().at(i).getName() && !nodalPropertyIsPresent)
+                for(int i = 0; i < _localDefinition->getNodalPropertyList().size(); i++)
                 {
-                    nodalPropertyIsPresent = true;
-                    if(_localDefinition->getPhysicsProblem() != physicProblems::PROB_ELECTROSTATIC || conductorPropertyIsPresent)
+                    // THis section will take the nodeIterator object and comapre it against each property that is related to the node. It will only compare against the name
+                    // IF the problem is electrostatics, we will also compare against the conductor property.
+                    // IF the property name is found in the master list, the loop will break and move onto the next node object.
+                    // If not, then the property name within the node object will be changed back to none.
+                    // This logic continues for the other geometry shape cases
+                    if(nodeIterator->getNodeSetting().getNodalPropertyName() == _localDefinition->getNodalPropertyList().at(i).getName() && !nodalPropertyIsPresent)
+                    {
+                        nodalPropertyIsPresent = true;
                         break;
+                    }
                 }
                 
-                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC && nodeIterator->getNodeSetting().getConductorPropertyName() == _localDefinition->getConductorList().at(i).getName())
-                {
-                    conductorPropertyIsPresent = true;
-                    if(nodalPropertyIsPresent)
-                        break;
-                }
+                if(!nodalPropertyIsPresent)
+                    nodeIterator->getNodeSetting().setNodalPropertyName("None");
             }
             
-            if(!nodalPropertyIsPresent)
-                nodeIterator->getNodeSetting().setNodalPropertyName("None");
-                
-            if(!conductorPropertyIsPresent && _localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-                nodeIterator->getNodeSetting().setConductorPropertyName("None");
+            if(nodeIterator->getNodeSetting().getConductorPropertyName() != "None")
+            {
+                for(int i = 0; i < _localDefinition->getConductorList().size(); i++)
+                {
+                    if(nodeIterator->getNodeSetting().getConductorPropertyName() == _localDefinition->getConductorList().at(i).getName())
+                    {
+                        conductorPropertyIsPresent = true;
+                        break;
+                    }
+                }
+                if(!conductorPropertyIsPresent)
+                    nodeIterator->getNodeSetting().setConductorPropertyName("None");
+            }
         }
     }
     else if(_editor.getLineList()->size() > 0 && lineProperties)
     {
-        
+        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            bool boundaryIsPresent = false;
+            bool conductorIsPresent = false;
+            
+            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+            {
+                if(lineIterator->getSegmentProperty().getBoundaryName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getElectricalBoundaryList().size(); i++)
+                    {
+                        if(lineIterator->getSegmentProperty().getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName() && !boundaryIsPresent)
+                        {
+                            boundaryIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!boundaryIsPresent)
+                        lineIterator->getSegmentProperty().setBoundaryName("None");
+                }
+                
+                if(lineIterator->getSegmentProperty().getConductorName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getConductorList().size(); i++)
+                    {
+                        if(lineIterator->getSegmentProperty().getConductorName() == _localDefinition->getConductorList().at(i).getName() && !conductorIsPresent)
+                        {
+                            conductorIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!conductorIsPresent)
+                        lineIterator->getSegmentProperty().setConductorName("None");
+                }
+            }
+            else if (_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+            {
+                bool boundaryIsPresent = false;
+                if(lineIterator->getSegmentProperty().getBoundaryName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getMagneticBoundaryList().size(); i++)
+                    {
+                        if(lineIterator->getSegmentProperty().getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName())
+                        {
+                            boundaryIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!boundaryIsPresent)
+                        lineIterator->getSegmentProperty().setBoundaryName("None");
+                }
+            }
+        }
     }
     else if(_editor.getArcList()->size() > 0 && arcProperties)
     {
-        
+        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            bool boundaryIsPresent = false;
+            bool conductorIsPresent = false;
+            
+            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+            {
+                if(arcIterator->getSegmentProperty().getBoundaryName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getElectricalBoundaryList().size(); i++)
+                    {
+                        if(arcIterator->getSegmentProperty().getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName() && !boundaryIsPresent)
+                        {
+                            boundaryIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!boundaryIsPresent)
+                        arcIterator->getSegmentProperty().setBoundaryName("None");
+                }
+                
+                if(arcIterator->getSegmentProperty().getConductorName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getConductorList().size(); i++)
+                    {
+                        if(arcIterator->getSegmentProperty().getConductorName() == _localDefinition->getConductorList().at(i).getName() && !conductorIsPresent)
+                        {
+                            conductorIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!conductorIsPresent)
+                        arcIterator->getSegmentProperty().setConductorName("None");
+                }
+            }
+            else if (_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+            {
+                bool boundaryIsPresent = false;
+                if(arcIterator->getSegmentProperty().getBoundaryName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getMagneticBoundaryList().size(); i++)
+                    {
+                        if(arcIterator->getSegmentProperty().getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName())
+                        {
+                            boundaryIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!boundaryIsPresent)
+                        arcIterator->getSegmentProperty().setBoundaryName("None");
+                }
+            }
+        }
     }
     else if(_editor.getBlockLabelList()->size() > 0 && blockLabelProperties)
     {
-        
+        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            bool materialIsPresent = false;
+            bool circuitIsPresent = false;
+            
+            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+            {
+                if(blockIterator->getAddressProperty()->getMaterialName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getElectricalMaterialList().size(); i++)
+                    {
+                        if(blockIterator->getAddressProperty()->getMaterialName() == _localDefinition->getElectricalMaterialList().at(i).getName())
+                        {
+                            materialIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!materialIsPresent)
+                        blockIterator->getAddressProperty()->setMaterialName("None");
+                }
+            }
+            else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+            {
+                if(blockIterator->getAddressProperty()->getMaterialName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getMagnetMaterialList().size(); i++)
+                    {
+                        if(blockIterator->getAddressProperty()->getMaterialName() == _localDefinition->getMagnetMaterialList().at(i).getName())
+                        {
+                            materialIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!materialIsPresent)
+                        blockIterator->getAddressProperty()->setMaterialName("None");
+                }
+                
+                if(blockIterator->getAddressProperty()->getCircuitName() != "None")
+                {
+                    for(int i = 0; i < _localDefinition->getCircuitList().size(); i++)
+                    {
+                        if(blockIterator->getAddressProperty()->getCircuitName() == _localDefinition->getCircuitList().at(i).getName())
+                        {
+                            circuitIsPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!circuitIsPresent)
+                        blockIterator->getAddressProperty()->setCircuitName("None");
+                }
+            }
+        } 
     }
 }
 
