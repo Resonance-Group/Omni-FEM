@@ -741,7 +741,7 @@ void modelDefinition::clearSelection()
                 nodeIterator->setSelectState(false);
         }
     }
-    elseif(!_createNodes || _labelsAreSelected)
+    else if(!_createNodes || _labelsAreSelected)
     {
         for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
