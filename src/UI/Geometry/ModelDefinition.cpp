@@ -202,7 +202,6 @@ void modelDefinition::editSelection()
     }
     else if(_linesAreSelected)
     {
-        /* TODO: Sicne the lines are currently not able to be selected, this code will need to be tested after the bug for selecting the lines is fixed */
         segmentPropertyDialog *dialog;
         segmentProperty selectedProperty;
         
@@ -1063,30 +1062,43 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
     // OK so in order to re-validate the node (in order to break lines / arcs up into two pieces and what not), we first have to remove the last item, and then push it back on.
     if(_createNodes)
     {
-        double tempX = convertToXCoordinate(event.GetX());
-        double tempY = convertToYCoordinate(event.GetY());
-        
-        if(_preferences.getSnapGridState())
-            roundToNearestGrid(tempX, tempY);
-
-        if(_editor.getNodeList()->back().getDraggingState())
+        /* Bug fix here. A bug where if an empty canvas would get resized to full screen by double clicking on the top bar of the form, the program would sometimes crash
+         * The issue was that the program was checking to see if the last node (or block label) was in a dragging state.
+         * However, the last node doesn't exist.
+         * The form would reload so quickly that sometimes the canvas would be able to detect the user on the releasing the left mouse.
+         * The fix, check to make sure that the size of the array (vector) is greater then 0 to ensure the program does not check an empty 
+         * position
+         */ 
+        if(_editor.getNodeList()->size() > 0)
         {
-            _editor.getNodeList()->pop_back();
-            _editor.addNode(tempX, tempY);
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
+            
+            if(_preferences.getSnapGridState())
+                roundToNearestGrid(tempX, tempY);
+
+            if(_editor.getNodeList()->back().getDraggingState())
+            {
+                _editor.getNodeList()->pop_back();
+                _editor.addNode(tempX, tempY);
+            }
         }
     }
     else
     {
-        double tempX = convertToXCoordinate(event.GetX());
-        double tempY = convertToYCoordinate(event.GetY());
-
-        if(_preferences.getSnapGridState())
-            roundToNearestGrid(tempX, tempY);
-
-        if(_editor.getBlockLabelList()->back().getDraggingState())
+        if(_editor.getBlockLabelList()->size() > 0)
         {
-            _editor.getBlockLabelList()->pop_back(); 
-            _editor.addBlockLabel(tempX, tempY);
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
+
+            if(_preferences.getSnapGridState())
+                roundToNearestGrid(tempX, tempY);
+
+            if(_editor.getBlockLabelList()->back().getDraggingState())
+            {
+                _editor.getBlockLabelList()->pop_back(); 
+                _editor.addBlockLabel(tempX, tempY);
+            }
         }
     }
     this->Refresh();
