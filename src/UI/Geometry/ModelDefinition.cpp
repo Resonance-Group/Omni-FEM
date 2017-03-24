@@ -741,7 +741,7 @@ void modelDefinition::clearSelection()
                 nodeIterator->setSelectState(false);
         }
     }
-    else
+    elseif(!_createNodes || _labelsAreSelected)
     {
         for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
@@ -758,7 +758,7 @@ void modelDefinition::clearSelection()
                 lineIterator->setSelectState(false);
         }
     }
-    else
+    else if(!_createLines || _arcsAreSelected)
     {
         for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
@@ -766,6 +766,11 @@ void modelDefinition::clearSelection()
                 arcIterator->setSelectState(false);
         }
     }
+    
+    _nodesAreSelected = false;
+    _linesAreSelected = false;
+    _arcsAreSelected = false;
+    _labelsAreSelected = false;
 }
 
 
