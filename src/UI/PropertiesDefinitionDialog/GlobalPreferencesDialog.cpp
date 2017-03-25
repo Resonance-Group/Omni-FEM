@@ -2,10 +2,11 @@
 
 
 
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, magneticPreference pref)
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref)
 {
     _problem = physicProblems::PROB_MAGNETICS;
     _magneticPreference = pref;
+    _preferences = gridPref;
     createDialog(par);
 }
 
@@ -15,7 +16,7 @@ globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences 
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     _electricalPreference = pref;
-    _preferences = *gridPref;
+    _preferences = gridPref;
     createDialog(par);
 }
 
@@ -87,7 +88,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _gridStepTextCtrl->SetFont(*font);
     std::ostream gridSizeStream(_gridStepTextCtrl);
     gridSizeStream << std::setprecision(15);
-    gridSizeStream << _preferences.getGridStep();
+    gridSizeStream << _preferences->getGridStep();
     
     gridSettingLine1->Add(gridText, 0, wxCENTER | wxALL, 6);
     gridSettingLine1->Add(12, 0, 0);
@@ -97,39 +98,39 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     coordianteText->SetFont(*font);
     _coordinateComboBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(79, 64), wxSize(121, 21), coordianteNameArray);
     _coordinateComboBox->SetFont(*font);
-    _coordinateComboBox->SetSelection(0);
+    _coordinateComboBox->SetSelection((int)_preferences->getCoordinateSystem());
     
     gridSettingLine2->Add(coordianteText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     gridSettingLine2->Add(_coordinateComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showGridCheckBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Show Grid");
-    _showGridCheckBox->SetValue(_preferences.getShowGridState());
+    _showGridCheckBox->SetValue(_preferences->getShowGridState());
     _showGridCheckBox->SetFont(*font);
     _showOriginCheckBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Show Origin");
     _showOriginCheckBox->SetFont(*font);
-    _showOriginCheckBox->SetValue(_preferences.getShowOriginState());
+    _showOriginCheckBox->SetValue(_preferences->getShowOriginState());
     
     gridSettingLine3->Add(_showGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     gridSettingLine3->Add(_showOriginCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _snapGridCheckBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Snap Grid");
     _snapGridCheckBox->SetFont(*font);
-    _snapGridCheckBox->SetValue(_preferences.getSnapGridState());
+    _snapGridCheckBox->SetValue(_preferences->getSnapGridState());
     _showGridAxisCheckBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Show Grid Axis");
     _showGridAxisCheckBox->SetFont(*font);
-    _showGridAxisCheckBox->SetValue(_preferences.getShowAxisState());
+    _showGridAxisCheckBox->SetValue(_preferences->getShowAxisState());
     
     gridSettingLine4->Add(_snapGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     gridSettingLine4->Add(_showGridAxisCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showBlockNameCheckBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Show Block Names");
-    _showBlockNameCheckBox->SetValue(_preferences.getShowBlockNameState());
+    _showBlockNameCheckBox->SetValue(_preferences->getShowBlockNameState());
     _showBlockNameCheckBox->SetFont(*font);
     
     gridSettingLine5->Add(_showBlockNameCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     
     _reverseMouseZoomCheckBox->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Reverse Mouse Zoom Direction");
-    _reverseMouseZoomCheckBox->SetValue(_preferences.getMouseZoomReverseState());
+    _reverseMouseZoomCheckBox->SetValue(_preferences->getMouseZoomReverseState());
     _reverseMouseZoomCheckBox->SetFont(*font);
     
     gridSettingLine6->Add(_reverseMouseZoomCheckBox, 0, wxCENTER | wxRIGHT | wxLEFT | wxBOTTOM, 6);
@@ -145,47 +146,49 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     gridSettingPanel->SetSizerAndFit(gridSettingsSizer);
     
     base->AddPage(gridSettingPanel, "Grid Settings");
+    base->AddPage(physicsProblemPreferencesPanel, "Problem Settings");
     
     LayoutDialog();
 }
 
 
 
-void globalPreferencesDialog::getPreferences(gridPreferences &gridPref, electroStaticPreference &electricPref)
+void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPref)
 {
     double value;
     
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
-    gridPref.setGridStep(value);
+    _preferences->setGridStep(value);
     
-    gridPref.setCoordinateSystem(_coordinateComboBox->GetSelection());
+    _preferences->setCoordinateSystem((planarCoordinateEnum)_coordinateComboBox->GetSelection());
 
-    gridPref.setShowGridState(_showGridCheckBox->GetValue());
-    gridPref.setShowOriginState(_showOriginCheckBox->GetValue());
-    gridPref.setSnapGridState(_snapGridCheckBox->GetValue());
-    gridPref.setShowAxisState(_showGridAxisCheckBox->GetValue());
-    gridPref.setShowBlockNameState(_showBlockNameCheckBox->GetValue());
-    gridPref.setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
+    _preferences->setShowGridState(_showGridCheckBox->GetValue());
+    _preferences->setShowOriginState(_showOriginCheckBox->GetValue());
+    _preferences->setSnapGridState(_snapGridCheckBox->GetValue());
+    _preferences->setShowAxisState(_showGridAxisCheckBox->GetValue());
+    _preferences->setShowBlockNameState(_showBlockNameCheckBox->GetValue());
+    _preferences->setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
 }
 
 
 
-void globalPreferencesDialog::getPreferences(gridPreferences &gridPref, magneticPreference &magneticPref)
+void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref)
 {
     double value;
     
+    /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
-    gridPref.setGridStep(value);
+    _preferences->setGridStep(value);
     
-    gridPref.setCoordinateSystem(_coordinateComboBox->GetSelection());
+    _preferences->setCoordinateSystem((planarCoordinateEnum)_coordinateComboBox->GetSelection());
 
-    gridPref.setShowGridState(_showGridCheckBox->GetValue());
-    gridPref.setShowOriginState(_showOriginCheckBox->GetValue());
-    gridPref.setSnapGridState(_snapGridCheckBox->GetValue());
-    gridPref.setShowAxisState(_showGridAxisCheckBox->GetValue());
-    gridPref.setShowBlockNameState(_showBlockNameCheckBox->GetValue());
-    gridPref.setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
+    _preferences->setShowGridState(_showGridCheckBox->GetValue());
+    _preferences->setShowOriginState(_showOriginCheckBox->GetValue());
+    _preferences->setSnapGridState(_snapGridCheckBox->GetValue());
+    _preferences->setShowAxisState(_showGridAxisCheckBox->GetValue());
+    _preferences->setShowBlockNameState(_showBlockNameCheckBox->GetValue());
+    _preferences->setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
 }      
 
 

@@ -12,10 +12,9 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
         globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getElectricalPreferences());
         if(globalPreference->ShowModal() == wxID_OK)
         {
-            gridPreferences newPreferences;
             electroStaticPreference newElectriclPreferences;
-            globalPreference->getPreferences(newPreferences, newElectriclPreferences);
-            _model.setGridPreferences(newPreferences);
+            globalPreference->getPreferences(newElectriclPreferences);
+            _model->Refresh();
             _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
             _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());
             _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, _model->getGridPreferences()->getShowBlockNameState());
@@ -26,10 +25,9 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
         globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getMagneticPreference());
         if(globalPreference->ShowModal() == wxID_OK)
         {
-            gridPreferences newPreferences;
             magneticPreference newMagneticPreferences;
-            globalPreference->getPreferences(newPreferences, newMagneticPreferences);
-            _model.setGridPreferences(newPreferences);
+            globalPreference->getPreferences(newMagneticPreferences);
+            _model->Refresh();
             _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
             _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());
             _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, _model->getGridPreferences()->getShowBlockNameState());

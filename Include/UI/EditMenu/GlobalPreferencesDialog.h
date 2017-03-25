@@ -29,7 +29,7 @@ private:
     
     magneticPreference _magneticPreference;
     
-    gridPreferences _preferences;
+    gridPreferences *_preferences;
 
 /* This section is for creating the area for the document settings */
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
@@ -71,13 +71,13 @@ private:
     void createDialog(wxWindow *par);
     
 public:
-    globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, magneticPreference pref);
+    globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref);
     
     globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref);
     
-    void getPreferences(gridPreferences &gridPref, electroStaticPreference &electricPref);
+    void getPreferences(electroStaticPreference &electricPref);
     
-    void getPreferences(gridPreferences &gridPref, magneticPreference &magneticPref);
+    void getPreferences(magneticPreference &magneticPref);
 };
 
 
