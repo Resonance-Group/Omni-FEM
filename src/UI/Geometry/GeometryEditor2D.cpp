@@ -25,10 +25,10 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	_nodeList.push_back(newNode);
     
     /* If the node is in between a line, then break the line into 2 lines */
-	for(unsigned int i = 0; i < _lineList.size(); i++)
+	for(std::deque<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
-        edgeLineShape testLine = _lineList.at(i);
-        node testFirstNode = testLine.getFirstNode();
+        edgeLineShape testLine = *lineIterator;
+        node testFirstNode = *(testLine.getFirstNode());
 		if(fabs(calculateShortestDistance(xPoint, yPoint, testLine)) < 1 / (*_zoomFactorPointer * 50))
 		{
             /* Ok so if the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
@@ -37,8 +37,8 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
              * So, node 2 of line1 will then be switched to the newly created node and the first node of line0 will be set to the new node 
              * also. This effectively breaks the line into 2 shorter lines
              */ 
-            edgeLineShape edgeLine = _lineList.at(i);
-            _lineList.at(i).setSecondNode(newNode);// This will set the recently created node to be the second node of the shortend line
+            edgeLineShape edgeLine = *lineIterator;
+            lineIterator->setSecondNode(newNode);// This will set the recently created node to be the second node of the shortend line
 			
             edgeLine.setFirstNode(newNode);// This will set the recently created node to be the first node of the new line
 			_lineList.push_back(edgeLine);// Add the new line to the array
@@ -55,11 +55,10 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
             arcShape arcSegment = _arcList.at(i);
             double radius;
             
-            firstNode.Set(_arcList.at(i).getFirstNode().getCenterXCoordinate(), _arcList.at(i).getFirstNode().getCenterYCoordinate());
-			secondNode.Set(_arcList.at(i).getSecondNode().getCenterXCoordinate(), _arcList.at(i).getSecondNode().getCenterYCoordinate());
+            firstNode.Set(_arcList.at(i).getFirstNode()->getCenterXCoordinate(), _arcList.at(i).getFirstNode()->getCenterYCoordinate());
+			secondNode.Set(_arcList.at(i).getSecondNode()->getCenterXCoordinate(), _arcList.at(i).getSecondNode()->getCenterYCoordinate());
 			thirdNode.Set(xPoint, yPoint);
 			
-			//getCircle{arcList[i], center, R);// No idea what this is.... yet
             center.Set(_arcList.at(i).getCenterXCoordinate(), _arcList.at(i).getCenterYCoordinate());
             radius = _arcList.at(i).getRadius();
 			
@@ -139,7 +138,7 @@ void geometryEditor2D::addLine(int node0, int node1)
 /* Check to see if the line has already been created */	
 	for(unsigned int i = 0; i < _lineList.size(); i++)
 	{
-		if((_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex1) && _lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex2)) || (_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex2) && _lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex1)))
+		if((*_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex1) && *_lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex2)) || (*_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex2) && *_lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex1)))
 			return;
 	}
     
@@ -304,14 +303,14 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	
 	for(int loopCounter = 0; loopCounter < _nodeList.size(); loopCounter++)
 	{
-		if((_nodeList.at(loopCounter) != arcSeg.getFirstNode()) && (_nodeList.at(loopCounter) != arcSeg.getSecondNode()))
+		if((_nodeList.at(loopCounter) != *arcSeg.getFirstNode()) && (_nodeList.at(loopCounter) != *arcSeg.getSecondNode()))
 		{
 			shortDistanceFromArc = shortestDistanceFromArc(Vector(_nodeList.at(loopCounter).getCenterXCoordinate(), _nodeList.at(loopCounter).getCenterYCoordinate()), _arcList.at(_arcList.size() - 1));
 			if(shortDistanceFromArc < minDistance)
 			{
 				Vector vec1, vec2, vec3;
-				vec1.Set(arcSeg.getFirstNode().getCenterXCoordinate(), arcSeg.getFirstNode().getCenterYCoordinate());
-				vec2.Set(arcSeg.getSecondNode().getCenterXCoordinate(), arcSeg.getSecondNode().getCenterYCoordinate());
+				vec1.Set(arcSeg.getFirstNode()->getCenterXCoordinate(), arcSeg.getFirstNode()->getCenterYCoordinate());
+				vec2.Set(arcSeg.getSecondNode()->getCenterXCoordinate(), arcSeg.getSecondNode()->getCenterYCoordinate());
 				vec3.Set(_nodeList.at(loopCounter).getCenterXCoordinate(), _nodeList.at(loopCounter).getCenterYCoordinate());
 				
 				_arcList.pop_back();
@@ -345,10 +344,10 @@ bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineSh
     if(prospectiveLine.getFirstNode() == intersectionLine.getFirstNode() || prospectiveLine.getFirstNode() == intersectionLine.getSecondNode() || prospectiveLine.getSecondNode() == intersectionLine.getFirstNode() || prospectiveLine.getSecondNode() == intersectionLine.getSecondNode())
         return false;
         
-    pNode0.Set(prospectiveLine.getFirstNode().getCenterXCoordinate(), prospectiveLine.getFirstNode().getCenterYCoordinate());
-    pNode1.Set(prospectiveLine.getSecondNode().getCenterXCoordinate(), prospectiveLine.getSecondNode().getCenterYCoordinate());
-    iNode0.Set(intersectionLine.getFirstNode().getCenterXCoordinate(), intersectionLine.getFirstNode().getCenterYCoordinate());
-    iNode1.Set(intersectionLine.getSecondNode().getCenterXCoordinate(), intersectionLine.getSecondNode().getCenterYCoordinate());
+    pNode0.Set(prospectiveLine.getFirstNode()->getCenterXCoordinate(), prospectiveLine.getFirstNode()->getCenterYCoordinate());
+    pNode1.Set(prospectiveLine.getSecondNode()->getCenterXCoordinate(), prospectiveLine.getSecondNode()->getCenterYCoordinate());
+    iNode0.Set(intersectionLine.getFirstNode()->getCenterXCoordinate(), intersectionLine.getFirstNode()->getCenterYCoordinate());
+    iNode1.Set(intersectionLine.getSecondNode()->getCenterXCoordinate(), intersectionLine.getSecondNode()->getCenterYCoordinate());
     
     tempNode0 = iNode0;
     tempNode1 = iNode1;
@@ -408,8 +407,8 @@ double geometryEditor2D::shortestDistanceFromArc(Vector point, arcShape &arcSegm
     double radius, distance, length, z;
     Vector arcStartNode, arcEndNode, centerVec, tempVec;
     
-    arcStartNode.Set(arcSegment.getFirstNode().getCenterXCoordinate(), arcSegment.getFirstNode().getCenterYCoordinate());
-    arcEndNode.Set(arcSegment.getSecondNode().getCenterXCoordinate(), arcSegment.getSecondNode().getCenterYCoordinate());
+    arcStartNode.Set(arcSegment.getFirstNode()->getCenterXCoordinate(), arcSegment.getFirstNode()->getCenterYCoordinate());
+    arcEndNode.Set(arcSegment.getSecondNode()->getCenterXCoordinate(), arcSegment.getSecondNode()->getCenterYCoordinate());
     
     radius = arcSegment.getRadius();
     centerVec.Set(arcSegment.getCenterXCoordinate(), arcSegment.getCenterYCoordinate());
@@ -446,11 +445,11 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 	double distance, length, radius, z;
 	int intersectionCounter = 0;
 
-    lineSegVec1.Set(lineSegment.getFirstNode().getCenterXCoordinate(), lineSegment.getFirstNode().getCenterYCoordinate());
-	lineSegVec2.Set(lineSegment.getSecondNode().getCenterXCoordinate(), lineSegment.getSecondNode().getCenterYCoordinate());
+    lineSegVec1.Set(lineSegment.getFirstNode()->getCenterXCoordinate(), lineSegment.getFirstNode()->getCenterYCoordinate());
+	lineSegVec2.Set(lineSegment.getSecondNode()->getCenterXCoordinate(), lineSegment.getSecondNode()->getCenterYCoordinate());
 	
-	arcSegVec1.Set(arcSegment.getFirstNode().getCenterXCoordinate(), arcSegment.getFirstNode().getCenterYCoordinate());
-	arcSegVec2.Set(arcSegment.getSecondNode().getCenterXCoordinate(), arcSegment.getSecondNode().getCenterYCoordinate());
+	arcSegVec1.Set(arcSegment.getFirstNode()->getCenterXCoordinate(), arcSegment.getFirstNode()->getCenterYCoordinate());
+	arcSegVec2.Set(arcSegment.getSecondNode()->getCenterXCoordinate(), arcSegment.getSecondNode()->getCenterYCoordinate());
 	
 	distance = Vabs(arcSegVec2 - arcSegVec1);
 	
@@ -504,8 +503,8 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     double distance, arcRadius1, arcRadius2, length, center, arc1Length, arc2Length, z0, z1;
     int counter = 0;
     
-    arc1StartNode.Set(arcSegment1.getFirstNode().getCenterXCoordinate(), arcSegment1.getFirstNode().getCenterYCoordinate());
-    arc2StartNode.Set(arcSegment2.getFirstNode().getCenterXCoordinate(), arcSegment2.getFirstNode().getCenterYCoordinate());
+    arc1StartNode.Set(arcSegment1.getFirstNode()->getCenterXCoordinate(), arcSegment1.getFirstNode()->getCenterYCoordinate());
+    arc2StartNode.Set(arcSegment2.getFirstNode()->getCenterXCoordinate(), arcSegment2.getFirstNode()->getCenterYCoordinate());
     
     arcRadius1 = arcSegment1.getRadius();
     arcRadius2 = arcSegment2.getRadius();
@@ -559,14 +558,14 @@ double geometryEditor2D::calculateShortestDistance(double p, double q, edgeLineS
 {
     // I have no idea what this function does
     double t, xNew[3], wereNew[3];
-	node test = segment.getFirstNode();
+	node test = *segment.getFirstNode();
     //xNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterXCoordinate();
-    xNew[0] = segment.getFirstNode().getCenterXCoordinate();
-    wereNew[0] = segment.getFirstNode().getCenterYCoordinate();
+    xNew[0] = segment.getFirstNode()->getCenterXCoordinate();
+    wereNew[0] = segment.getFirstNode()->getCenterYCoordinate();
 	//wereNew[0] = _nodeList[_lineList[segmentIndex].getFirstNodeIndex()].getCenterYCoordinate();
 	
-    xNew[1] = segment.getSecondNode().getCenterXCoordinate();
-    wereNew[1] = segment.getSecondNode().getCenterYCoordinate();
+    xNew[1] = segment.getSecondNode()->getCenterXCoordinate();
+    wereNew[1] = segment.getSecondNode()->getCenterYCoordinate();
 	
 	t = ((p - xNew[0]) * (xNew[1] - xNew[0]) + (q - wereNew[0]) * (wereNew[1] - wereNew[0])) / ((xNew[1] - xNew[0]) * (xNew[1] - xNew[0]) + (wereNew[1] - wereNew[0]) * (wereNew[1] - wereNew[0]));
 

@@ -50,9 +50,6 @@
           <File Name="src/UI/Geometry/GeometryDialogs/ArcSegmentDialog.cpp"/>
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
-        <VirtualDirectory Name="Shapes">
-          <File Name="src/UI/Geometry/Shapes/geometryEditorController.cpp"/>
-        </VirtualDirectory>
         <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
@@ -117,7 +114,6 @@
       <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>
       <File Name="Include/UI/wxGLString.h"/>
-      <File Name="Include/UI/geometryEditorController.h"/>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>

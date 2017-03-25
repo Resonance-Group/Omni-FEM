@@ -46,10 +46,24 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCopy(wxCommandEvent &event)
 {
-    moveCopyDialog *test = new moveCopyDialog(this, false);
-    if(test->ShowModal() == wxID_OK)
+    moveCopyDialog *copyDialog = new moveCopyDialog(this, false);
+    if(copyDialog->ShowModal() == wxID_OK)
     {
-        
+        if(copyDialog->rotationIsSelected())
+        {
+            unsigned int copies;
+            wxPoint point;
+            double angle;
+            copyDialog->getRotationCopy(point, angle, copies);
+            _model->copyRotateSelection(angle, point, copies);
+        }
+        else
+        {
+            unsigned int copies;
+            double xShift, yShift;
+            copyDialog->getTranslationCopy(xShift, yShift, copies);
+            _model->copyTranslateSelection(xShift, yShift, copies);
+        }
     }
 }
 
@@ -93,10 +107,22 @@ void OmniFEMMainFrame::onDelete(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onMove(wxCommandEvent &event)
 {
-    moveCopyDialog *test = new moveCopyDialog(this, true);
-    if(test->ShowModal() == wxID_OK)
+    moveCopyDialog *moveDialog = new moveCopyDialog(this, true);
+    if(moveDialog->ShowModal() == wxID_OK)
     {
-        
+        if(moveDialog->rotationIsSelected())
+        {
+            wxPoint point;
+            double angle = 0;
+            moveDialog->getRotationMove(point, angle);
+            _model->moveRotateSelection(angle, point);
+        }
+        else
+        {
+            double xShift, yShift;
+            moveDialog->getTranslationMove(xShift, yShift);
+            _model->moveTranslateSelection(xShift, yShift);
+        }
     }
 }
 

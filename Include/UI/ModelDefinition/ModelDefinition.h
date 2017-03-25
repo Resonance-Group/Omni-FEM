@@ -10,6 +10,8 @@
 #define MODELDEFINITION_H_
 
 #include <vector>
+#include <list>
+#include <deque>
 #include <string>
 #include <math.h>
 
@@ -146,6 +148,18 @@ public:
     void updateProperties(bool scanConductorProperty, bool scanNodalProperty, bool scanBoundaryProperty, bool scanMaterialProperty, bool scanCircuitProperty);
     
     void selectGroup(EditGeometry geometry, unsigned int groupNumber);
+    
+    void moveTranslateSelection(double horizontalShift, double verticalShift);
+    
+    void moveRotateSelection(double angularShift, wxPoint aboutPoint);
+    
+    void scaleSelection(double scalingFactor, wxPoint basePoint);
+    
+    void mirrorSelection(wxPoint pointOne, wxPoint pointTwo);
+    
+    void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
+    
+    void copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberofCopies);
     
 private:
     wxDECLARE_EVENT_TABLE(); 

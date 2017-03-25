@@ -227,28 +227,13 @@ private:
     segmentProperty _property;
     
 protected:
-	/*! \brief  A line is composed of 2 nodes.
-	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
-	 *			How do we tell the object which node the line connects to?
-	 *			We differenatiate by using the index of the array.
-	 *			This variables stores the index of first node which connects the line.
-	 */	
-	int _nodeIndex1;
-	
-	/*! \brief  A line is composed of 2 nodes.
-	 *			The nodes are stored in a vector array (which is a dynamically allocated array)
-	 *			How do we tell the object which node the line connects to?
-	 *			We differenatiate by using the index of the array.
-	 *			This variables stores the index of second node which connects the line.
-	 */
-	int _nodeIndex2;
 	
 	//! The length of the line?
 	double _maxSideLength;
     
-    node _firstNode;
+    node *_firstNode;
     
-    node _secondNode;
+    node *_secondNode;
     
 public:
 	edgeLineShape()
@@ -258,42 +243,22 @@ public:
     
     void setFirstNode(node &a_Node)
     {
-        _firstNode = a_Node;
+        _firstNode = &a_Node;
     }
     
-    node getFirstNode()
+    node *getFirstNode()
     {
         return _firstNode;
     }
     
     void setSecondNode(node &a_node)
     {
-        _secondNode = a_node;
+        _secondNode = &a_node;
     }
     
-    node getSecondNode()
+    node *getSecondNode()
     {
         return _secondNode;
-    }
-	
-	void setFirstNodeIndex(int index)
-    {
-        _nodeIndex1 = index;
-    }
-    
-	void setSecondNodeIndex(int index)
-    {
-        _nodeIndex2 = index;
-    }
-	
-	int getFirstNodeIndex() const
-    {
-        return _nodeIndex1;
-    }
-    
-	int getSecondNodeIndex() const
-    {
-        return _nodeIndex2;
     }
     
     void draw()
@@ -304,8 +269,8 @@ public:
                 glColor3f(1.0f, 0.0f, 0.0f);
             else
                 glColor3f(0.0f, 0.0f, 0.0f);
-            glVertex2d(_firstNode.getCenterXCoordinate(), _firstNode.getCenterYCoordinate());
-            glVertex2d(_secondNode.getCenterXCoordinate(), _secondNode.getCenterYCoordinate());
+            glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+            glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
         glEnd();
         glLineWidth(0.5);
     }
@@ -444,10 +409,10 @@ public:
         else
             theta = (-_arcAngle) / (double)_numSegments;
             
-        double startAngle = atan2(yCenterCoordinate - _firstNode.getCenterYCoordinate(), xCenterCoordinate - _firstNode.getCenterXCoordinate()) * (180.0 / PI) - 180.0;
+        double startAngle = atan2(yCenterCoordinate - _firstNode->getCenterYCoordinate(), xCenterCoordinate - _firstNode->getCenterXCoordinate()) * (180.0 / PI) - 180.0;
         
         glBegin(GL_LINE_STRIP);
-            glVertex2d(_firstNode.getCenterXCoordinate(), _firstNode.getCenterYCoordinate());
+            glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
             
             for(int i = 1; i < _numSegments; i++)
             {
@@ -457,7 +422,7 @@ public:
                 
                 glVertex2d(xCenterCoordinate + x, yCenterCoordinate + y);
             }
-            glVertex2d(_secondNode.getCenterXCoordinate(), _secondNode.getCenterYCoordinate());
+            glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
         glEnd();
     }	
 
@@ -492,21 +457,21 @@ public:
         }*/
      //   else
 
-        distanceSquared = pow(_firstNode.getCenterXCoordinate() - _secondNode.getCenterXCoordinate(), 2) + pow(_firstNode.getCenterYCoordinate() - _secondNode.getCenterYCoordinate(), 2);
+        distanceSquared = pow(_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate(), 2) + pow(_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate(), 2);
         
         _radius = sqrt(distanceSquared / (2.0 * (1.0 - cos(_arcAngle * PI / 180.0))));// Fun fact, the cosine function evaluates in radians
         
-        xMid = (_firstNode.getCenterXCoordinate() + _secondNode.getCenterXCoordinate()) / 2.0;
+        xMid = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
         
-        yMid = (_firstNode.getCenterYCoordinate() + _secondNode.getCenterYCoordinate()) / 2.0;
+        yMid = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
         
-        slope = (_firstNode.getCenterYCoordinate() - _secondNode.getCenterYCoordinate()) / (_firstNode.getCenterXCoordinate() - _secondNode.getCenterXCoordinate());
+        slope = (_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate());
         
         midSlope = -1.0 / slope;
         
         a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0)); // This is just an intermediate varable to make calculations easier
         
-        if((_firstNode.getCenterYCoordinate() > _secondNode.getCenterYCoordinate() && _isCounterClockWise) || (_firstNode.getCenterYCoordinate() < _secondNode.getCenterYCoordinate() && !_isCounterClockWise))
+        if((_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate() && _isCounterClockWise) || (_firstNode->getCenterYCoordinate() < _secondNode->getCenterYCoordinate() && !_isCounterClockWise))
         {
             // This will calculate the center that is below the arc.
             // If the start node is lower then the end node, the logic is reversed. This portion will create

@@ -37,8 +37,8 @@ void modelDefinition::deleteSelection()
 {
     if(_editor.getNodeList()->size() > 1)
     {
-        std::vector<node> nodesToKeep;
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        std::deque<node> nodesToKeep;
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -47,9 +47,9 @@ void modelDefinition::deleteSelection()
                     /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
                      * The deletion of the arc/line occurs later in the code*/
                     
-                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
                     {
-                        if(lineIterator->getFirstNode() == *nodeIterator || lineIterator->getSecondNode() == *nodeIterator)
+                        if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
                         {
                             lineIterator->setSelectState(true);
                         }
@@ -58,9 +58,9 @@ void modelDefinition::deleteSelection()
                     
                 if(_editor.getArcList()->size() > 0)
                 {
-                    for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                    for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
                     {
-                        if(arcIterator->getFirstNode() == *nodeIterator || arcIterator->getSecondNode() == *nodeIterator)
+                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
                         {
                             arcIterator->setSelectState(true);
                         }
@@ -80,8 +80,8 @@ void modelDefinition::deleteSelection()
         
     if(_editor.getLineList()->size() > 1)
     {
-        std::vector<edgeLineShape> linesToKeep;
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        std::deque<edgeLineShape> linesToKeep;
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(!lineIterator->getIsSelectedState())
             {
@@ -97,8 +97,8 @@ void modelDefinition::deleteSelection()
         
     if(_editor.getArcList()->size() > 1)
     {
-        std::vector<arcShape> acrsToKeep;
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        std::deque<arcShape> acrsToKeep;
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(!arcIterator->getIsSelectedState())
             {
@@ -114,10 +114,10 @@ void modelDefinition::deleteSelection()
         
     if(_editor.getBlockLabelList()->size() > 1)
     {
-        std::vector<blockLabel> labelsToKeep;
+        std::deque<blockLabel> labelsToKeep;
         wxGLStringArray labelNamesToKeep;
         int i = 0;
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(!blockIterator->getIsSelectedState())
             {
@@ -171,7 +171,7 @@ void modelDefinition::editSelection()
          * The thinking is this that if there are multiple selections, the user wants to set them all to be the same
          * so it doesnt really matter if the first, second, third, or fifth node is different because the settings will all be the same
          */ 
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -190,7 +190,7 @@ void modelDefinition::editSelection()
             dialog->getNodalSettings(selectedNodeSetting);// Might as well use the existing nodeSetting object
             
             /* THis will loop through all of the nodes and set the nodes to the new nodal settings if the nodes were the selected ones. */
-            for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
                 if(nodeIterator->getIsSelectedState())
                 {
@@ -205,7 +205,7 @@ void modelDefinition::editSelection()
         segmentPropertyDialog *dialog;
         segmentProperty selectedProperty;
         
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
             {
@@ -223,7 +223,7 @@ void modelDefinition::editSelection()
         {
             dialog->getSegmentProperty(selectedProperty);
             
-            for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
                 if(lineIterator->getIsSelectedState())
                     lineIterator->setSegmentProperty(selectedProperty);
@@ -237,7 +237,7 @@ void modelDefinition::editSelection()
         segmentPropertyDialog *dialog;
         segmentProperty selectedProperty;
         
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(arcIterator->getIsSelectedState())
             {
@@ -255,7 +255,7 @@ void modelDefinition::editSelection()
         {
             dialog->getSegmentProperty(selectedProperty);
             
-            for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
                 if(arcIterator->getIsSelectedState())
                     arcIterator->setSegmentProperty(selectedProperty);
@@ -268,7 +268,7 @@ void modelDefinition::editSelection()
         blockPropertyDialog *dialog;
         blockProperty selectedBlockLabel;
         
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getIsSelectedState())
             {
@@ -286,7 +286,7 @@ void modelDefinition::editSelection()
         {
             dialog->getBlockProperty(selectedBlockLabel);
             
-            for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
                 if(blockIterator->getIsSelectedState())
                     blockIterator->setPorperty(selectedBlockLabel);
@@ -302,7 +302,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
 {
     if(scanConductorProperty)
     {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             bool conductorPropertyIsPresent = false;
             if(nodeIterator->getNodeSetting()->getConductorPropertyName() != "None")
@@ -320,7 +320,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
             }
         }
         
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             bool conductorPropertyIsPresent = false;
             if(lineIterator->getSegmentProperty()->getConductorName() != "None")
@@ -339,7 +339,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
             }
         }
         
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             bool conductorPropertyIsPresent = false;
             if(arcIterator->getSegmentProperty()->getConductorName() != "None")
@@ -360,7 +360,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
     }
     else if(scanNodalProperty)
     {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             bool nodalPropertyIsPresent = false;
             if(nodeIterator->getNodeSetting()->getNodalPropertyName() != "None")
@@ -386,7 +386,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
     }
     else if(scanBoundaryProperty)
     {
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             bool boundaryIsPresent = false;
             if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
@@ -426,7 +426,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
             }
         }
         
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             bool boundaryIsPresent = false;
             if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
@@ -468,7 +468,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
     }
     else if(scanMaterialProperty)
     {
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             bool materialIsPresent = false;
             
@@ -510,7 +510,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
     }
     else if(scanCircuitProperty)
     {
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             bool circuitIsPresent = false;
             if(blockIterator->getAddressProperty()->getCircuitName() != "None")
@@ -540,7 +540,7 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     if(geometry == EditGeometry::EDIT_NODES)
     {
         _nodesAreSelected = true;
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getNodeSetting()->getGroupNumber() == groupNumber)
             {
@@ -551,7 +551,7 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     else if(geometry == EditGeometry::EDIT_LINES)
     {
         _linesAreSelected = true;
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
             {
@@ -562,7 +562,7 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     else if(geometry == EditGeometry::EDIT_ARCS)
     {
         _arcsAreSelected = true;
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(arcIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
             {
@@ -573,7 +573,7 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     else if(geometry == EditGeometry::EDIT_LABELS)
     {
         _labelsAreSelected = true;
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getProperty().getGroupNumber() == groupNumber)
             {
@@ -586,6 +586,106 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     return;
 }
 
+
+
+void modelDefinition::moveTranslateSelection(double horizontalShift, double verticalShift)
+{
+    if(_nodesAreSelected)
+    {
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            
+            if(nodeIterator->getIsSelectedState())
+            {
+                node oldNode = *nodeIterator;
+                // Update the node with the translated coordinates
+                nodeIterator->setCenter(nodeIterator->getCenterXCoordinate() + horizontalShift, nodeIterator->getCenterYCoordinate() + verticalShift);
+                
+                // For all the arcs and lines, update the first/second node with the corresponding new node
+                for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                {
+                    if(*lineIterator->getFirstNode() == oldNode)
+                        lineIterator->setFirstNode(*nodeIterator);
+                    else if(*lineIterator->getSecondNode() == oldNode)
+                        lineIterator->setSecondNode(*nodeIterator);
+                }
+                
+                for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                {
+                    if(*arcIterator->getFirstNode() == oldNode)
+                        arcIterator->setFirstNode(*nodeIterator);
+                    else if(*arcIterator->getSecondNode() == oldNode)
+                        arcIterator->setSecondNode(*nodeIterator);
+                }
+            }
+        }
+    }
+    else if(_labelsAreSelected)
+    {
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+                blockIterator->setCenter(blockIterator->getCenterXCoordinate() + horizontalShift, blockIterator->getCenterYCoordinate() + verticalShift);
+        }
+    }
+    else if(_linesAreSelected)
+    {
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+            {
+                
+            }
+        }
+    }
+    else if(_arcsAreSelected)
+    {
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                
+            }
+        } 
+    }
+    
+    this->Refresh();
+    return;
+}
+
+
+
+void modelDefinition::moveRotateSelection(double angularShift, wxPoint aboutPoint)
+{
+    
+}
+
+
+
+void modelDefinition::scaleSelection(double scalingFactor, wxPoint basePoint)
+{
+    
+}
+
+
+
+void modelDefinition::mirrorSelection(wxPoint pointOne, wxPoint pointTwo)
+{
+    
+}
+
+
+
+void modelDefinition::copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies)
+{
+    
+}
+
+
+void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberofCopies)
+{
+    
+}
 
 
 
@@ -734,7 +834,7 @@ void modelDefinition::clearSelection()
 {
     if(_createNodes)
     {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
                 nodeIterator->setSelectState(false);
@@ -742,7 +842,7 @@ void modelDefinition::clearSelection()
     }
     else if(!_createNodes || _labelsAreSelected)
     {
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getIsSelectedState())
                 blockIterator->setSelectState(false);
@@ -751,7 +851,7 @@ void modelDefinition::clearSelection()
     
     if(_createLines)
     {
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
                 lineIterator->setSelectState(false);
@@ -759,7 +859,7 @@ void modelDefinition::clearSelection()
     }
     else if(!_createLines || _arcsAreSelected)
     {
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(arcIterator->getIsSelectedState())
                 arcIterator->setSelectState(false);
@@ -790,7 +890,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 
     if(_editor.getLineList()->size() > 0)
     {
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             lineIterator->draw();
         }
@@ -798,7 +898,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
     if(_editor.getArcList()->size() > 0)
     {
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             arcIterator->draw();
         }
@@ -806,7 +906,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
     if(_editor.getBlockLabelList()->size() > 0)
     {
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             blockIterator->draw();
         }
@@ -814,7 +914,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
     if(_editor.getNodeList()->size() > 0)
     {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             nodeIterator->draw();
         }
@@ -932,11 +1032,11 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
             if(_preferences.getSnapGridState())
             {
                 roundToNearestGrid(tempX, tempY);
-                _editor.getNodeList()->back().setCenter(tempX, tempY);
+                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
             }
             else
             {
-                _editor.getNodeList()->back().setCenter(tempX, tempY);
+                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
             }
         }
         else if(!_createNodes)
@@ -1184,14 +1284,14 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 
     if(_editor.getNodeList()->size() > 0)
     {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
             {
                 // Add in code to remove previousely selected geometry that is different then the one already selected
                 if(_linesAreSelected)
                 {
-                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
                     {
                         lineIterator->setSelectState(false);
                         linesSelected = 0;
@@ -1199,7 +1299,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_arcsAreSelected)
                 {
-                   for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                   for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
                     {
                         arcIterator->setSelectState(false);
                         arcsSelected = 0;
@@ -1207,7 +1307,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_labelsAreSelected)
                 {
-                   for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                   for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
                     {
                         blockIterator->setSelectState(false);
                         labelsSelected = 0;
@@ -1232,13 +1332,13 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     
     if(_editor.getBlockLabelList()->size() > 0)
     {
-        for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
             {
                 if(_nodesAreSelected)
                 {
-                    for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         nodeIterator->setSelectState(false);
                         nodesSeleted = 0;
@@ -1246,7 +1346,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_arcsAreSelected)
                 {
-                   for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                   for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
                     {
                         arcIterator->setSelectState(false);
                         arcsSelected = 0;
@@ -1254,7 +1354,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_linesAreSelected)
                 {
-                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
                     {
                         lineIterator->setSelectState(false);
                         linesSelected = 0;
@@ -1282,13 +1382,13 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     
     if(_editor.getLineList()->size() > 0)
     {
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < 1 / (_zoomFactor * 10))
             {
                 if(_nodesAreSelected)
                 {
-                    for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         nodeIterator->setSelectState(false);
                         nodesSeleted = 0;
@@ -1296,7 +1396,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_arcsAreSelected)
                 {
-                   for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                   for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
                     {
                         arcIterator->setSelectState(false);
                         arcsSelected = 0;
@@ -1304,7 +1404,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_labelsAreSelected)
                 {
-                   for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                   for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
                     {
                         blockIterator->setSelectState(false);
                         labelsSelected = 0;
@@ -1332,13 +1432,13 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     
     if(_editor.getArcList()->size() > 0)
     {
-        for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(_editor.calculateShortestDistanceFromArc(*arcIterator, xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
             {
                 if(_nodesAreSelected)
                 {
-                    for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         nodeIterator->setSelectState(false);
                         nodesSeleted = 0;
@@ -1346,7 +1446,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_linesAreSelected)
                 {
-                    for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
                     {
                         lineIterator->setSelectState(false);
                         linesSelected = 0;
@@ -1354,7 +1454,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 }
                 else if(_labelsAreSelected)
                 {
-                   for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                   for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
                     {
                         blockIterator->setSelectState(false);
                         labelsSelected = 0;
@@ -1383,7 +1483,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     /* This section is for if the user clicks on empty white space */
     if(_nodesAreSelected)
     {
-        for(std::vector<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             nodeIterator->setSelectState(false);
         }
@@ -1394,7 +1494,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     }
     else if(_linesAreSelected)
     {
-        for(std::vector<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             lineIterator->setSelectState(false);
         }
@@ -1405,7 +1505,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     }
     else if(_labelsAreSelected)
     {
-       for(std::vector<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+       for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             blockIterator->setSelectState(false);
         }
@@ -1416,7 +1516,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     }
     else if(_arcsAreSelected)
     {
-       for(std::vector<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+       for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             arcIterator->setSelectState(false);
         }

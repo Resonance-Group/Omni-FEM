@@ -2,6 +2,8 @@
 #define GEOMETRYEDITOR2D_H_
 
 #include <vector>
+#include <list>
+#include <deque>
 #include <math.h>
 
 #include <gl.h>
@@ -15,13 +17,23 @@
 class geometryEditor2D
 {
 private:
-    std::vector<node> _nodeList;
+    /*! /brief
+     *  So you might be thinking, why use a deque instead of a vector or a list?
+     *  It is simple, a for a vector, when something is added or removed, the vector
+     *  copies all of of the contents from one memory location to another. In some datatypes,
+     *  we are storing the address of the node. If the address changes everytime we add or remove soemthing from
+     *  the vector, this can create a number of issues.
+     *  For a list, everything was already coded using vectors when the vector issue was discover. The
+     *  deque contains many functions similiar to that of the vector and so the deque datatype was 
+     *  the prefered choice
+     */ 
+    std::deque<node> _nodeList;
     
-	std::vector<blockLabel> _blockLabelList;
+	std::deque<blockLabel> _blockLabelList;
     
-	std::vector<edgeLineShape> _lineList;
+	std::deque<edgeLineShape> _lineList;
     
-	std::vector<arcShape> _arcList;
+	std::deque<arcShape> _arcList;
     
     wxGLStringArray _blockLabelNameArray;
     
@@ -81,42 +93,42 @@ public:
         return false;
     }
 
-    std::vector<node> *getNodeList()
+    std::deque<node> *getNodeList()
     {
         return &_nodeList;
     }
     
-    void setNodeList(std::vector<node> list)
+    void setNodeList(std::deque<node> list)
     {
         _nodeList = list;
     }
     
-    std::vector<blockLabel> *getBlockLabelList()
+    std::deque<blockLabel> *getBlockLabelList()
     {
         return &_blockLabelList;
     }
     
-    void setBlockLabelList(std::vector<blockLabel> list)
+    void setBlockLabelList(std::deque<blockLabel> list)
     {
         _blockLabelList = list;
     }
     
-    std::vector<edgeLineShape> *getLineList()
+    std::deque<edgeLineShape> *getLineList()
     {
         return &_lineList;
     }
     
-    void setLineList(std::vector<edgeLineShape> list)
+    void setLineList(std::deque<edgeLineShape> list)
     {
         _lineList = list;
     }
     
-    std::vector<arcShape> *getArcList()
+    std::deque<arcShape> *getArcList()
     {
         return &_arcList;
     }
     
-    void setArcList(std::vector<arcShape> list)
+    void setArcList(std::deque<arcShape> list)
     {
         _arcList = list;
     }
