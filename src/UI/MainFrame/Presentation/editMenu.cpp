@@ -14,6 +14,7 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
         {
             electroStaticPreference newElectriclPreferences;
             globalPreference->getPreferences(newElectriclPreferences);
+            _problemDefinition.setPreferences(newElectriclPreferences);
             _model->Refresh();
             _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
             _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());
@@ -27,6 +28,7 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
         {
             magneticPreference newMagneticPreferences;
             globalPreference->getPreferences(newMagneticPreferences);
+            _problemDefinition.setPreferences(newMagneticPreferences);
             _model->Refresh();
             _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
             _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());

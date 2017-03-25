@@ -2,7 +2,7 @@
 
 
 
-magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Magnetic Boundary Property")
+magneticBoundaryDialog::magneticBoundaryDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Magnetic Boundary Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -31,15 +31,15 @@ magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Mag
     _magneticBoundary.setSigma(0);
     
     /* This first section is for the header of the dialog */
-    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:", wxPoint(12, 9), wxSize(38, 13));
+    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");
     name->SetFont(*font);
-    nameTextCtrl->Create(this, wxID_ANY, _magneticBoundary.getBoundaryName(),wxPoint(69, 6), wxSize(289, 20));
+    nameTextCtrl->Create(this, wxID_ANY, _magneticBoundary.getBoundaryName(), wxDefaultPosition, wxSize(289, 20));
     nameTextCtrl->SetFont(*font);
     headerSizer->Add(name, 0, wxCENTER | wxLEFT | wxRIGHT | wxTOP | wxBOTTOM, 6);
-    headerSizer->Add(14, 0, 0);
+    headerSizer->Add(10, 0, 0);
     headerSizer->Add(nameTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    wxStaticText *BCTypeName = new wxStaticText(this, wxID_ANY, "BC Type:", wxPoint(12, 35), wxSize(51, 13));
+    wxStaticText *BCTypeName = new wxStaticText(this, wxID_ANY, "BC Type:");
     BCTypeName->SetFont(*font);
     
     BCNameArray->Add("Prescribed A");
@@ -49,7 +49,7 @@ magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Mag
     BCNameArray->Add("Periodic");
     BCNameArray->Add("Anti-Periodic");
     
-    BCComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(69, 32), wxSize(289, 20), *BCNameArray);
+    BCComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(289, 22), *BCNameArray);
     BCComboBox->SetFont(*font);
     BCComboBox->SetSelection(0);
     bcTypeSizer->Add(BCTypeName, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
@@ -58,19 +58,19 @@ magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Mag
     /* This second part is for creating the Small skin Depth group box area */
     wxBoxSizer *uRelativeSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *sigSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxStaticText *uRelativeText = new wxStaticText(ssdpSizer->GetStaticBox(), wxID_ANY, wxT("μ relative:"), wxPoint(6, 8), wxSize(56, 13));
+    wxStaticText *uRelativeText = new wxStaticText(ssdpSizer->GetStaticBox(), wxID_ANY, wxT("μ relative:"));
     uRelativeText->SetFont(*font);
-    wxStaticText *sigText = new wxStaticText(ssdpSizer->GetStaticBox(), wxID_ANY, wxT("σ MS/m:"), wxPoint(6, 34), wxSize(55, 13));
+    wxStaticText *sigText = new wxStaticText(ssdpSizer->GetStaticBox(), wxID_ANY, wxT("σ MS/m:"));
     sigText->SetFont(*font);
-    uRelativeTextCtrl->Create(ssdpSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getMu()), wxPoint(86, 5), wxSize(88, 20));
+    uRelativeTextCtrl->Create(ssdpSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getMu()), wxDefaultPosition, wxSize(88, 20));
     uRelativeTextCtrl-SetFont(*font);
-    sigTextCtrl->Create(ssdpSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getSigma()), wxPoint(86, 31), wxSize(88, 20));
+    sigTextCtrl->Create(ssdpSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getSigma()), wxDefaultPosition, wxSize(88, 20));
     sigTextCtrl->SetFont(*font);
     uRelativeSizer->Add(uRelativeText, 0, wxCENTER | wxALL, 6);
     uRelativeSizer->Add(24, 0, 0);
     uRelativeSizer->Add(uRelativeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     sigSizer->Add(sigText, 0, wxCENTER | wxRIGHT | wxBOTTOM | wxLEFT, 6);
-    sigSizer->Add(24, 0, 0);
+    sigSizer->Add(35, 0, 0);
     sigSizer->Add(sigTextCtrl, 0, wxBOTTOM | wxCENTER | wxRIGHT, 6);
     ssdpSizer->Add(uRelativeSizer);
     ssdpSizer->Add(sigSizer);
@@ -78,13 +78,13 @@ magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Mag
     /* The third section is for the Mixed BC Parameters */
     wxBoxSizer *c0Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *c1Sizer = new wxBoxSizer(wxHORIZONTAL);
-    wxStaticText *c0Text = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, wxT("C0 Coefficient:"), wxPoint(6, 8), wxSize(80, 13));
+    wxStaticText *c0Text = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, wxT("C0 Coefficient:"));
     c0Text->SetFont(*font);
-    wxStaticText *c1Text = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, wxT("C1 Coefficient:"), wxPoint(6, 34), wxSize(80, 13));
+    wxStaticText *c1Text = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, wxT("C1 Coefficient:"));
     c1Text->SetFont(*font);
-    c1TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getC0Value()), wxPoint(86, 5), wxSize(88, 20));
+    c1TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getC0Value()), wxDefaultPosition, wxSize(88, 20));
     c1TextCtrl-SetFont(*font);
-    c0TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getC1Value()), wxPoint(86, 31), wxSize(88, 20));
+    c0TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getC1Value()), wxDefaultPosition, wxSize(88, 20));
     c0TextCtrl->SetFont(*font);
     c0Sizer->Add(c0Text, 0, wxCENTER | wxALL, 6);
     c0Sizer->Add(c0TextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -101,21 +101,21 @@ magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Mag
     wxBoxSizer *A1Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *A2Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *phiSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxStaticText *A0Text = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("A0:"), wxPoint(6, 8), wxSize(23, 13));
+    wxStaticText *A0Text = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("A0:"));
     A0Text->SetFont(*font);
-    wxStaticText *A1Text = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("A1:"), wxPoint(6, 43), wxSize(23, 13));
+    wxStaticText *A1Text = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("A1:"));
     A1Text->SetFont(*font);
-    wxStaticText *A2Text = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("A2:"), wxPoint(6, 78), wxSize(23, 13));
+    wxStaticText *A2Text = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("A2:"));
     A2Text->SetFont(*font);
-    wxStaticText *phiText = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("ϕ deg:"), wxPoint(6, 114), wxSize(40, 13));
+    wxStaticText *phiText = new wxStaticText(prescribedASizer->GetStaticBox(), wxID_ANY, wxT("ϕ deg:"));
     phiText->SetFont(*font);
-    A0TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA0()), wxPoint(57, 5), wxSize(88, 20));
+    A0TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA0()), wxDefaultPosition, wxSize(88, 20));
     A0TextCtrl-SetFont(*font);
-    A1TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA1()), wxPoint(57, 40), wxSize(88, 20));
+    A1TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA1()), wxDefaultPosition, wxSize(88, 20));
     A1TextCtrl->SetFont(*font);
-    A2TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA2()), wxPoint(57, 75), wxSize(88, 20));
+    A2TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA2()), wxDefaultPosition, wxSize(88, 20));
     A2TextCtrl->SetFont(*font);
-    phiTextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getPhi()), wxPoint(57, 111), wxSize(88, 20));
+    phiTextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getPhi()), wxDefaultPosition, wxSize(88, 20));
     phiTextCtrl->SetFont(*font);
     
     A0Sizer->Add(A0Text, 0, wxCENTER | wxALL, 6);
@@ -145,10 +145,10 @@ magneticBoundaryDialog::magneticBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Mag
     allBCSizer->Add(intermediateSizer, 0, wxRIGHT | wxLEFT, 6);
     allBCSizer->Add(prescribedASizer, 0, wxRIGHT, 6);
     
-    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(202, 219), wxSize(75, 23));
+    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(283, 219), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxDefaultPosition, wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -271,7 +271,7 @@ void magneticBoundaryDialog::clearBoundary()
     _magneticBoundary.setPhi(0);
     _magneticBoundary.setSigma(0);
     
-    setTextBox();
+    updateInterface();
 }
 
 
@@ -280,12 +280,12 @@ void magneticBoundaryDialog::setBoundaryCondition(magneticBoundary &boundary)
 {
     _magneticBoundary = boundary;
     
-    setTextBox();
+    updateInterface();
 }
 
 
 
-void magneticBoundaryDialog::setTextBox()
+void magneticBoundaryDialog::updateInterface()
 {
     std::ostream relativeStream(uRelativeTextCtrl);
     std::ostream sigStream(sigTextCtrl);

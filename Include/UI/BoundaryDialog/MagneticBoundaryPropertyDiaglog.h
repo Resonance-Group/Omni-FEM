@@ -11,6 +11,7 @@
 #include <wx/arrstr.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
+#include <wx/valnum.h>
 
 #include <common/enums.h>
 #include <common/BoundaryConditions.h>
@@ -51,11 +52,11 @@ private:
     
     void onBCComboChange(wxCommandEvent &event);
     
-    void setTextBox();
+    void updateInterface();
     
 public:
     //! The constructor for the class
-    magneticBoundaryDialog();
+    magneticBoundaryDialog(wxWindow *par);
     
     //! The desctrutor for the class
     ~magneticBoundaryDialog();

@@ -66,11 +66,6 @@ private:
     
     void makeDialog();
     
-    //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
-    magneticBoundaryDialog *_magBoundaryDialog = new magneticBoundaryDialog();
-    
-    electricalStaticBoundaryDialog *_estaticBoundaryDialog = new electricalStaticBoundaryDialog();
-    
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
     boundaryDialog(wxWindow *par, std::vector<magneticBoundary> boundaryList);

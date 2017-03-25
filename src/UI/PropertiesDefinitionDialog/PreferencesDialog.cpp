@@ -29,6 +29,12 @@ void preferencesDialog::createDialog()
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
+    wxFloatingPointValidator<double> greaterThenZero(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
+    greaterThenZero.SetMin(0);
+    
+    wxFloatingPointValidator<double> angleValidator(15);
+    angleValidator.SetRange(0, 360);
+    
     wxBoxSizer *probTypeSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *lengthSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *freqSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -49,47 +55,48 @@ void preferencesDialog::createDialog()
     _lengthUnitsNameArray->Add("Mils");
     _lengthUnitsNameArray->Add("Micrometers");
     
-    wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:", wxPoint(12, 15), wxSize(90, 13));
+    wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:");
     probTypeText->SetFont(*font);
-    _problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), *_probTypeNameArray);
+    _problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_probTypeNameArray);
     _problemTypeComboBox->SetFont(*font);
     probTypeSizer->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
-    probTypeSizer->Add(7, 0, 0);
+    probTypeSizer->Add(20, 0, 0);
     probTypeSizer->Add(_problemTypeComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
    
-    wxStaticText *lengthUnitsText = new wxStaticText(this, wxID_ANY, "Length Units:", wxPoint(12, 42), wxSize(90, 13));
+    wxStaticText *lengthUnitsText = new wxStaticText(this, wxID_ANY, "Length Units:");
     lengthUnitsText->SetFont(*font);
-    _lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 39), wxSize(121, 21), *_lengthUnitsNameArray);
+    _lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_lengthUnitsNameArray);
     _lengthUnitsComboBox->SetFont(*font);
     lengthSizer->Add(lengthUnitsText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    lengthSizer->Add(7, 0, 0);
+    lengthSizer->Add(23, 0, 0);
     lengthSizer->Add(_lengthUnitsComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    
     if(_problem == physicProblems::PROB_MAGNETICS)
     {
-        wxStaticText *acSolverText = new wxStaticText(this, wxID_ANY, "AC Solver:", wxPoint(12, 69), wxSize(60, 13));
+        wxStaticText *acSolverText = new wxStaticText(this, wxID_ANY, "AC Solver:");
         acSolverText->SetFont(*font);
-        _acSolverComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 65), wxSize(121, 21), *_acSolverNameArray);
+        _acSolverComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_acSolverNameArray);
         _acSolverComboBox->SetFont(*font);
         _acSolverComboBox->SetSelection((int)_magPreference.getACSolver());
         acSolverSizer->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-        acSolverSizer->Add(37, 0, 0);
+        acSolverSizer->Add(41, 0, 0);
         acSolverSizer->Add(_acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 
-        wxStaticText *freqText = new wxStaticText(this, wxID_ANY, "Frequency (Hz):", wxPoint(12, 95), wxSize(90, 13));
+        wxStaticText *freqText = new wxStaticText(this, wxID_ANY, "Frequency (Hz):");
         freqText->SetFont(*font);
-        _frequencyTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 92), wxSize(121, 20));
+        _frequencyTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
         std::ostream freqStream(_frequencyTextCtrl);
-        freqStream << std::setprecision(3);
+        freqStream << std::setprecision(4);
         freqStream << _magPreference.getFrequency();
         _frequencyTextCtrl->SetFont(*font);
         freqSizer->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-        freqSizer->Add(7, 0, 0);
+        freqSizer->Add(11, 0, 0);
         freqSizer->Add(_frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     }
    
     wxStaticText *depthText = new wxStaticText(this, wxID_ANY, "Depth:");
     depthText->SetFont(*font);
-    _depthTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 118), wxSize(121, 20));
+    _depthTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
     std::ostream dStream(_depthTextCtrl);
     dStream << std::setprecision(4);
     _depthTextCtrl->SetFont(*font);
@@ -99,7 +106,7 @@ void preferencesDialog::createDialog()
    
     wxStaticText *solverPrecisionText = new wxStaticText(this, wxID_ANY, "Solver Precision:");
     solverPrecisionText->SetFont(*font);
-    _solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 144), wxSize(121, 20));
+    _solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
     std::ostream spStream(_solverPrecisionTextCtrl);
     spStream << std::setprecision(4);
     _solverPrecisionTextCtrl->SetFont(*font);
@@ -109,9 +116,9 @@ void preferencesDialog::createDialog()
    
     wxStaticText *minAngleText = new wxStaticText(this, wxID_ANY, "Min Angle (deg):");
     minAngleText->SetFont(*font);
-    _minAngleTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 170), wxSize(121, 20));
+    _minAngleTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, angleValidator);
     std::ostream minAngleStream(_minAngleTextCtrl);
-    minAngleStream << std::setprecision(4);
+    minAngleStream << std::setprecision(15);
     _minAngleTextCtrl->SetFont(*font);
     minAngleSizer->Add(minAngleText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     minAngleSizer->Add(7, 0, 0);
@@ -119,9 +126,9 @@ void preferencesDialog::createDialog()
     
     wxStaticBoxSizer *commentSizer = new wxStaticBoxSizer(wxVERTICAL, this, "Comments");
     commentSizer->GetStaticBox()->SetFont(*font);
-    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(6, 19), wxSize(192, 87), wxTE_MULTILINE);
+    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(192, 87), wxTE_MULTILINE);
     _commentsTextCtrl->SetFont(*font);
-    commentSizer->Add(_commentsTextCtrl);
+    commentSizer->Add(_commentsTextCtrl, 0, wxALL, 6);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);

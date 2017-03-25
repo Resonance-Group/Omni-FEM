@@ -40,6 +40,8 @@ private:
     
     wxTextCtrl *_minAngleTextCtrl = new wxTextCtrl();
     
+    wxTextCtrl *_commentsTextCtrl = new wxTextCtrl();
+    
     wxComboBox *_lengthComboBox = new wxComboBox();
     
     wxComboBox *_problemTypeComboBox = new wxComboBox();
