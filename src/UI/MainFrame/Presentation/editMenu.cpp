@@ -7,11 +7,39 @@
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
-    globalPreferencesDialog *test = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getElectricalPreferences());
-    if(test->ShowModal() == wxID_OK)
+    if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
     {
-        
+        globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getElectricalPreferences());
+        if(globalPreference->ShowModal() == wxID_OK)
+        {
+            gridPreferences newPreferences;
+            electroStaticPreference newElectriclPreferences;
+            globalPreference->getPreferences(newPreferences, newElectriclPreferences);
+            _model.setGridPreferences(newPreferences);
+            _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
+            _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());
+            _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, _model->getGridPreferences()->getShowBlockNameState());
+        }
     }
+    else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+    {
+        globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getMagneticPreference());
+        if(globalPreference->ShowModal() == wxID_OK)
+        {
+            gridPreferences newPreferences;
+            magneticPreference newMagneticPreferences;
+            globalPreference->getPreferences(newPreferences, newMagneticPreferences);
+            _model.setGridPreferences(newPreferences);
+            _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
+            _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());
+            _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, _model->getGridPreferences()->getShowBlockNameState());
+        }
+    }
+    
+    if(_problemDefinition.getElectricalPreferences().getProblemType() == problemTypeEnum::AXISYMMETRIC || _problemDefinition.getMagneticPreference().getProblemType() == problemTypeEnum::AXISYMMETRIC)
+        _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, true);
+    else
+        _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, false);
 }
 
 

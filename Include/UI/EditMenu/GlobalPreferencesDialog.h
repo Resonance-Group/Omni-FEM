@@ -1,6 +1,10 @@
 #ifndef GLOBAL_PREFERENCES_DIALOG_H_
 #define GLOBAL_PREFERENCES_DIALOG_H_
 
+#include <string>
+#include <iostream>
+#include <iomanip>
+
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -9,6 +13,9 @@
 #include <wx/string.h>
 #include <wx/checkbox.h>
 #include <wx/propdlg.h>
+#include <wx/bookctrl.h>
+#include <wx/validate.h>
+#include <wx/valnum.h>
 
 #include <common/enums.h>
 #include <common/GridPreferences.h>
@@ -61,12 +68,16 @@ private:
     
     void updateInterface();
     
-    void createDialog();
+    void createDialog(wxWindow *par);
     
 public:
     globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, magneticPreference pref);
     
     globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref);
+    
+    void getPreferences(gridPreferences &gridPref, electroStaticPreference &electricPref);
+    
+    void getPreferences(gridPreferences &gridPref, magneticPreference &magneticPref);
 };
 
 

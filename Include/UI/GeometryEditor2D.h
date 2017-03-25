@@ -161,12 +161,53 @@ public:
         _nodeIndex2 = -1;
     }
     
-    void renderBlockNames()
+    void renderBlockNames(wxPaintDC *dc)
     {
-        for(int i = 0; i < _blockLabelNameArray.getNameArraySize(); i++)
+        static wxGLString my_message;
+        static wxGLStringArray my_messages;
+        static wxGLNumberRenderer number;
+        
+        static bool first_time = true;
+
+        // init them the first time only
+        if(first_time)
+        {
+            my_message = wxString( "Hello world !!!");
+            my_message.setFont( wxFont( 50, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD) );
+            my_message.consolidate(dc);
+
+            my_messages.addString( wxT("wxGLString can") );
+            my_messages.addString( wxT("render strings in") );
+            my_messages.addString( wxT("OpenGL easily!! ") );
+            my_messages.addString( wxT("And with Unicode : \x1414 \x1562 \x1593") );
+            my_messages.consolidate(dc);
+
+            number.consolidate(dc);
+            first_time = false;
+        }
+
+
+        // render string everytime
+        my_message.bind();
+        my_message.rotate(30);
+        glColor3f(1,0,0);
+        my_message.render(80,10);
+
+        my_messages.bind();
+        glColor3f(0,0.6,0);     my_messages.get(0).render(5,200);
+        glColor3f(0,0,0.6);     my_messages.get(1).render(55,225);
+        glColor3f(0,0.6,0.6);   my_messages.get(2).render(105,250);
+        glColor3f(0.6,0.6,0);   my_messages.get(3).render(155,275);
+
+        number.bind();
+        glColor3f(0,0,0);
+        number.renderNumber( -3.141591f, 250, 50 );
+        
+      /*  for(int i = 0; i < _blockLabelNameArray.getNameArraySize(); i++)
         {
             _blockLabelNameArray.get(i).render(10 + 0.5, 10 + 0.5);
         }
+         */ 
     }
     
     wxGLStringArray *getBlockNameArray()

@@ -13,13 +13,16 @@ gridPreferencesDialog::gridPreferencesDialog(wxWindow *par) : wxDialog(par, wxID
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
+    wxFloatingPointValidator<double> greaterThenZero(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
+    greaterThenZero.SetMin(0);
+    
     wxArrayString *selectionArray = new wxArrayString();
     selectionArray->Add("Cartesian");
     selectionArray->Add("Polar");
     
     wxStaticText *gridText = new wxStaticText(this, wxID_ANY, "Grid Step:");
     gridText->SetFont(*font);
-    _gridSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString);
+    _gridSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
     _gridSizeTextCtrl->SetFont(*font);
     
     line1Sizer->Add(gridText, 0, wxCENTER | wxALL, 6);

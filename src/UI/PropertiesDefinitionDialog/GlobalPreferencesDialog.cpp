@@ -2,30 +2,39 @@
 
 
 
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, magneticPreference pref) : wxPropertySheetDialog(par, wxID_ANY, "Preferences")
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences gridPref, magneticPreference pref)
 {
     _problem = physicProblems::PROB_MAGNETICS;
     _magneticPreference = pref;
-    createDialog();
+    createDialog(par);
 }
 
 
 
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref) : wxPropertySheetDialog(par, wxID_ANY, "Preferences")
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref)
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     _electricalPreference = pref;
     _preferences = *gridPref;
-    createDialog();
+    createDialog(par);
 }
 
 
 
-void globalPreferencesDialog::createDialog()
+void globalPreferencesDialog::createDialog(wxWindow *par)
 {
+    this->Create(par, wxID_ANY, "Preferences");
+    this->CreateButtons();
+    
+    wxBookCtrlBase *base = GetBookCtrl();
+    
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
-    wxPanel *panel = new wxPanel(this);
+    this->SetFont(*font);
+    base->SetFont(*font);
+    
+    wxPanel *gridSettingPanel = new wxPanel(base);
+    wxPanel *physicsProblemPreferencesPanel = new wxPanel(base);
   //  GetBookCtrl()->AddPage(panel, "Input Settings");
     
     wxArrayString lengthName;
@@ -49,8 +58,8 @@ void globalPreferencesDialog::createDialog()
     acSovlerNameArray.Add("Succ. Approx");
     acSovlerNameArray.Add("Newton");
     
-    wxStaticBoxSizer *documentSettingsSizer = new wxStaticBoxSizer(wxVERTICAL, panel);
-    wxStaticBoxSizer *gridSettingsSizer = new wxStaticBoxSizer(wxVERTICAL, panel);
+    wxStaticBoxSizer *documentSettingsSizer = new wxStaticBoxSizer(wxVERTICAL, physicsProblemPreferencesPanel);
+    wxStaticBoxSizer *gridSettingsSizer = new wxStaticBoxSizer(wxVERTICAL, gridSettingPanel);
     
     wxBoxSizer *documentSettingLine1 = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *documentSettingLine2 = new wxBoxSizer(wxHORIZONTAL);
@@ -67,12 +76,18 @@ void globalPreferencesDialog::createDialog()
     wxBoxSizer *gridSettingLine4 = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *gridSettingLine5 = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *gridSettingLine6 = new wxBoxSizer(wxHORIZONTAL);
+    
+    wxFloatingPointValidator<double> greaterThenZero(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
+    greaterThenZero.SetMin(0);
 
 /* The frist section will be creating everything for the grid preferences */
     wxStaticText *gridText = new wxStaticText(gridSettingsSizer->GetStaticBox(), wxID_ANY, "Grid Step:");
     gridText->SetFont(*font);
-    _gridStepTextCtrl->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, wxEmptyString);
+    _gridStepTextCtrl->Create(gridSettingsSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
     _gridStepTextCtrl->SetFont(*font);
+    std::ostream gridSizeStream(_gridStepTextCtrl);
+    gridSizeStream << std::setprecision(15);
+    gridSizeStream << _preferences.getGridStep();
     
     gridSettingLine1->Add(gridText, 0, wxCENTER | wxALL, 6);
     gridSettingLine1->Add(12, 0, 0);
@@ -127,12 +142,51 @@ void globalPreferencesDialog::createDialog()
     gridSettingsSizer->Add(gridSettingLine5);
     gridSettingsSizer->Add(gridSettingLine6);
     
-    panel->SetSizerAndFit(gridSettingsSizer);
-  //  this->GetBookCtrl()->AddPage(panel, "Input Settings");
-  //  this->GetBookCtrl().Add
-    CreateButtons(wxOK|wxCANCEL);
+    gridSettingPanel->SetSizerAndFit(gridSettingsSizer);
+    
+    base->AddPage(gridSettingPanel, "Grid Settings");
+    
     LayoutDialog();
-}  
+}
+
+
+
+void globalPreferencesDialog::getPreferences(gridPreferences &gridPref, electroStaticPreference &electricPref)
+{
+    double value;
+    
+    /* This section will get the values for the grid preferences */
+    _gridStepTextCtrl->GetValue().ToDouble(&value);
+    gridPref.setGridStep(value);
+    
+    gridPref.setCoordinateSystem(_coordinateComboBox->GetSelection());
+
+    gridPref.setShowGridState(_showGridCheckBox->GetValue());
+    gridPref.setShowOriginState(_showOriginCheckBox->GetValue());
+    gridPref.setSnapGridState(_snapGridCheckBox->GetValue());
+    gridPref.setShowAxisState(_showGridAxisCheckBox->GetValue());
+    gridPref.setShowBlockNameState(_showBlockNameCheckBox->GetValue());
+    gridPref.setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
+}
+
+
+
+void globalPreferencesDialog::getPreferences(gridPreferences &gridPref, magneticPreference &magneticPref)
+{
+    double value;
+    
+    _gridStepTextCtrl->GetValue().ToDouble(&value);
+    gridPref.setGridStep(value);
+    
+    gridPref.setCoordinateSystem(_coordinateComboBox->GetSelection());
+
+    gridPref.setShowGridState(_showGridCheckBox->GetValue());
+    gridPref.setShowOriginState(_showOriginCheckBox->GetValue());
+    gridPref.setSnapGridState(_snapGridCheckBox->GetValue());
+    gridPref.setShowAxisState(_showGridAxisCheckBox->GetValue());
+    gridPref.setShowBlockNameState(_showBlockNameCheckBox->GetValue());
+    gridPref.setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
+}      
 
 
 

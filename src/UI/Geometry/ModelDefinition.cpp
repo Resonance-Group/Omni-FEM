@@ -820,6 +820,10 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         }
     }
     
+    if(_preferences.getShowBlockNameState())
+    {
+        _editor.renderBlockNames(&dc);
+    }
 
   //  if(_preferences.getShowBlockNameState() && _editor.getBlockNameArray()->getNameArraySize() > 0)
   //  {
@@ -928,11 +932,11 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
             if(_preferences.getSnapGridState())
             {
                 roundToNearestGrid(tempX, tempY);
-                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                _editor.getNodeList()->back().setCenter(tempX, tempY);
             }
             else
             {
-                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                _editor.getNodeList()->back().setCenter(tempX, tempY);
             }
         }
         else if(!_createNodes)
@@ -943,11 +947,11 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                 double tempX = convertToXCoordinate(event.GetX());
                 double tempY = convertToYCoordinate(event.GetY());
                 roundToNearestGrid(tempX, tempY);
-                _editor.getBlockLabelList()->at(_editor.getBlockLabelList()->size() - 1).setCenter(tempX, tempY);
+                _editor.getBlockLabelList()->back().setCenter(tempX, tempY);
             }
             else
             {
-                _editor.getBlockLabelList()->at(_editor.getBlockLabelList()->size() - 1).setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+                _editor.getBlockLabelList()->back().setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
             }
         }
     }

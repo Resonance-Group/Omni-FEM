@@ -12,6 +12,7 @@
 #include <wx/combobox.h>
 #include <wx/sizer.h>
 #include <wx/arrstr.h>
+#include <wx/valnum.h>
 
 #include <common/GridPreferences.h>
 
