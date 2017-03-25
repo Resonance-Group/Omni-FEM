@@ -14,6 +14,7 @@ globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences 
 
 globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref)
 {
+    // A comment
     _problem = physicProblems::PROB_ELECTROSTATIC;
     _electricalPreference = pref;
     _preferences = gridPref;
