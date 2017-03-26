@@ -594,29 +594,10 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
     {
         for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
-            
             if(nodeIterator->getIsSelectedState())
             {
-                node oldNode = *nodeIterator;
                 // Update the node with the translated coordinates
-                nodeIterator->setCenter(nodeIterator->getCenterXCoordinate() + horizontalShift, nodeIterator->getCenterYCoordinate() + verticalShift);
-                
-                // For all the arcs and lines, update the first/second node with the corresponding new node
-                for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-                {
-                    if(*lineIterator->getFirstNode() == oldNode)
-                        lineIterator->setFirstNode(*nodeIterator);
-                    else if(*lineIterator->getSecondNode() == oldNode)
-                        lineIterator->setSecondNode(*nodeIterator);
-                }
-                
-                for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-                {
-                    if(*arcIterator->getFirstNode() == oldNode)
-                        arcIterator->setFirstNode(*nodeIterator);
-                    else if(*arcIterator->getSecondNode() == oldNode)
-                        arcIterator->setSecondNode(*nodeIterator);
-                }
+                nodeIterator->moveCenter(horizontalShift, verticalShift);
             }
         }
     }
@@ -625,7 +606,7 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
         for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getIsSelectedState())
-                blockIterator->setCenter(blockIterator->getCenterXCoordinate() + horizontalShift, blockIterator->getCenterYCoordinate() + verticalShift);
+                blockIterator->moveCenter(horizontalShift, verticalShift);
         }
     }
     else if(_linesAreSelected)
@@ -634,7 +615,17 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
         {
             if(lineIterator->getIsSelectedState())
             {
+                if(!lineIterator->getFirstNode()->getIsSelectedState())
+                {
+                    lineIterator->getFirstNode()->moveCenter(horizontalShift, verticalShift);
+                    lineIterator->getFirstNode()->setSelectState(true);
+                }
                 
+                if(!lineIterator->getSecondNode()->getIsSelectedState())
+                {
+                    lineIterator->getSecondNode()->moveCenter(horizontalShift, verticalShift);
+                    lineIterator->getSecondNode()->setSelectState(true);
+                }
             }
         }
     }
@@ -644,20 +635,122 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
         {
             if(arcIterator->getIsSelectedState())
             {
+                if(!arcIterator->getFirstNode()->getIsSelectedState())
+                {
+                    arcIterator->getFirstNode()->moveCenter(horizontalShift, verticalShift);
+                    arcIterator->getFirstNode()->setSelectState(true);
+                }
                 
+                if(!arcIterator->getSecondNode()->getIsSelectedState())
+                {
+                    arcIterator->getSecondNode()->moveCenter(horizontalShift, verticalShift);
+                    arcIterator->getSecondNode()->setSelectState(true);
+                }
+                
+                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after it is moved
             }
         } 
     }
     
+    if(_nodesAreSelected || _linesAreSelected || _arcsAreSelected)
+    {
+        
+    }
+    
+    clearSelection();
     this->Refresh();
     return;
 }
 
 
-
+// TODO: Test the functionality for the arcs once these are coded in
 void modelDefinition::moveRotateSelection(double angularShift, wxPoint aboutPoint)
 {
+    if(_nodesAreSelected)
+    {
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                // Calculate the radius and the new position of the node
+                double radius = nodeIterator->getDistance(aboutPoint);
+                double horizontalShift = aboutPoint.x + (radius * cos(angularShift * PI / 180.0));
+                double verticalShift = aboutPoint.y + (radius * sin(angularShift * PI / 180.0));
+                // Update the node with the translated coordinates
+                nodeIterator->setCenter(horizontalShift, verticalShift);
+            }
+        }
+    }
+    else if(_labelsAreSelected)
+    {
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                double radius = blockIterator->getDistance(aboutPoint);
+                double horizontalShift = aboutPoint.x + (radius * cos(angularShift * PI / 180.0));
+                double verticalShift = aboutPoint.y + (radius * sin(angularShift * PI / 180.0));
+                blockIterator->setCenter(horizontalShift, verticalShift);
+            }   
+        }
+    }
+    else if(_linesAreSelected)
+    {
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+            { 
+                double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+                
+                double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+                
+                if(!lineIterator->getFirstNode()->getIsSelectedState())
+                {
+                    lineIterator->getFirstNode()->setCenter(horizontalShift1, verticalShift1);
+                    lineIterator->getFirstNode()->setSelectState(true);
+                }
+                
+                if(!lineIterator->getSecondNode()->getIsSelectedState())
+                {
+                    lineIterator->getSecondNode()->setCenter(horizontalShift2, verticalShift2);
+                    lineIterator->getSecondNode()->setSelectState(true);
+                }
+            }
+        }
+    }
+    else if(_arcsAreSelected)
+    {
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+                
+                double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+                
+                if(!arcIterator->getFirstNode()->getIsSelectedState())
+                {
+                    arcIterator->getFirstNode()->setCenter(horizontalShift1, verticalShift1);
+                    arcIterator->getFirstNode()->setSelectState(true);
+                }
+                
+                if(!arcIterator->getSecondNode()->getIsSelectedState())
+                {
+                    arcIterator->getSecondNode()->setCenter(horizontalShift2, verticalShift2);
+                    arcIterator->getSecondNode()->setSelectState(true);
+                }
+                arcIterator->calculate();
+            }
+        }
+    }
     
+    clearSelection();
+    this->Refresh();
+    return;
 }
 
 
@@ -678,13 +771,213 @@ void modelDefinition::mirrorSelection(wxPoint pointOne, wxPoint pointTwo)
 
 void modelDefinition::copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies)
 {
+    if(_nodesAreSelected)
+    {
+        std::vector<node> selectedNodes;
+        // Load up the list of nodes that are selected
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                selectedNodes.push_back(*nodeIterator);
+            }
+        }
+        
+        // Make copies of those nodes
+        for(std::vector<node>::iterator nodeIterator = selectedNodes.begin(); nodeIterator != selectedNodes.end(); ++nodeIterator)
+        {
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                _editor.addNode(nodeIterator->getCenterXCoordinate() + i * horizontalShift, nodeIterator->getCenterYCoordinate() + i * verticalShift);
+                _editor.getNodeList()->back().setNodeSettings(*nodeIterator->getNodeSetting());
+            }
+        }
+    }
+    else if(_labelsAreSelected)
+    {
+        std::vector<blockLabel> selectedLabels;
+        
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+                selectedLabels.push_back(*blockIterator);
+        }
+        
+        for(std::vector<blockLabel>::iterator blockIterator = selectedLabels.begin(); blockIterator != selectedLabels.end(); ++blockIterator)
+        {
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                _editor.addBlockLabel(blockIterator->getCenterXCoordinate() + i * horizontalShift, blockIterator->getCenterYCoordinate() + i * verticalShift);
+                _editor.getBlockLabelList()->back().setPorperty(blockIterator->getProperty());
+            }
+        }
+    }
+    else if(_linesAreSelected)
+    {
+        std::deque<edgeLineShape> selectedLines;
+        
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+                selectedLines.push_back(*lineIterator);
+        }
+        
+        for(std::deque<edgeLineShape>::iterator lineIterator = selectedLines.begin(); lineIterator != selectedLines.end(); ++lineIterator)
+        {
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                _editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
+                _editor.getNodeList()->back().setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+               
+                _editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                _editor.getNodeList()->back().setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                
+                _editor.setNodeIndex(_editor.getNodeList()->size() - 1);
+                _editor.setNodeIndex(_editor.getNodeList()->size() - 2);
+                
+                _editor.addLine();
+                _editor.getLineList()->back().setSegmentProperty(*lineIterator->getSegmentProperty());
+            }
+        }
+    }
+    else if(_arcsAreSelected)
+    {
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+                {
+                    _editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
+                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                   
+                    _editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+
+                    arcIterator->setFirstNode(_editor.getNodeList()->back());
+                    arcIterator->setSecondNode(_editor.getNodeList()->at(_editor.getNodeList()->size() - 2));
+                    
+                    _editor.addArc(*arcIterator, 0, false);
+                    
+              //      _editor.getLineList()->back().setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
+                    _editor.getArcList()->back().calculate();
+                }
+            }
+        }
+    }
     
+    clearSelection();
+    this->Refresh();
+    return;
 }
 
 
-void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberofCopies)
+void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberOfCopies)
 {
+    if(_nodesAreSelected)
+    {
+        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                double radius = nodeIterator->getDistance(aboutPoint);
+                
+                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+                {
+                   // Calculate the radius and the new position of the node
+                    double horizontalShift = aboutPoint.x + (radius * cos(i * angularShift * PI / 180.0));
+                    double verticalShift = aboutPoint.y + (radius * sin(i * angularShift * PI / 180.0));
+                    // Update the node with the translated coordinates
+                    _editor.addNode(horizontalShift, verticalShift);
+                    _editor.getNodeList()->back().setNodeSettings(*nodeIterator->getNodeSetting());
+                }
+                
+            }
+        }
+    }
+    else if(_labelsAreSelected)
+    {
+        for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                double radius = blockIterator->getDistance(aboutPoint);
+                
+                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+                {
+                    double horizontalShift = aboutPoint.x + (radius * cos(i * angularShift * PI / 180.0));
+                    double verticalShift = aboutPoint.y + (radius * sin(i * angularShift * PI / 180.0));
+                    _editor.addBlockLabel(horizontalShift, verticalShift);
+                    _editor.getBlockLabelList()->back().setPorperty(blockIterator->getProperty());
+                }
+                
+            }
+        } 
+    }
+    else if(_linesAreSelected)
+    {
+        for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+            {
+                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+                {
+                    double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    
+                    double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                
+                    _editor.addNode(horizontalShift1, verticalShift1);
+                    _editor.getNodeList()->back().setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                   
+                    _editor.addNode(horizontalShift2, verticalShift2);
+                    _editor.getNodeList()->back().setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    
+                    _editor.setNodeIndex(_editor.getNodeList()->size() - 1);
+                    _editor.setNodeIndex(_editor.getNodeList()->size() - 2);
+                    
+                    _editor.addLine();
+                    _editor.getLineList()->back().setSegmentProperty(*lineIterator->getSegmentProperty());
+                }
+            }
+        }
+    }
+    else if(_arcsAreSelected)
+    {
+        for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+                {
+                    double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    
+                    double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    
+                    _editor.addNode(horizontalShift1, verticalShift1);
+                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                   
+                    _editor.addNode(horizontalShift2, verticalShift2);
+                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+
+                    arcIterator->setFirstNode(_editor.getNodeList()->back());
+                    arcIterator->setSecondNode(_editor.getNodeList()->at(_editor.getNodeList()->size() - 2));
+                    
+                    _editor.addArc(*arcIterator, 0, false);
+                    
+              //      _editor.getLineList()->back().setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
+                    _editor.getArcList()->back().calculate();
+                }
+            }
+        }
+    }
     
+    clearSelection();
+    this->Refresh();
+    return;
 }
 
 

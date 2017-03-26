@@ -9,7 +9,7 @@ moveCopyDialog::moveCopyDialog(wxWindow *par, bool isMove) : wxDialog(par, wxID_
     copiesValidator.SetRange(0, 65535);
     
     wxFloatingPointValidator<double> angleValidator(15);
-    angleValidator.SetRange(0, 360);
+    angleValidator.SetRange(-360, 360);
     
     if(isMove)
         this->SetTitle("Move");

@@ -124,10 +124,21 @@ public:
         return sqrt(pow((xCenterCoordinate - xp), 2) + pow((yCenterCoordinate - yp), 2));
     }
     
+    double getDistance(wxPoint point)
+    {
+        return sqrt(pow((xCenterCoordinate - point.x), 2) + pow((yCenterCoordinate - point.y), 2));
+    }
+    
     void setCenter(double xCoor, double yCoor)
     {
         xCenterCoordinate = xCoor;
         yCenterCoordinate = yCoor;
+    }
+    
+    void moveCenter(double xCoor, double yCoor)
+    {
+        xCenterCoordinate += xCoor;
+        yCenterCoordinate += yCoor;
     }
     
     bool getDraggingState()

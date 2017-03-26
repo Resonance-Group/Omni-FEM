@@ -159,7 +159,7 @@ public:
     
     void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
     
-    void copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberofCopies);
+    void copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberOfCopies);
     
 private:
     wxDECLARE_EVENT_TABLE(); 
