@@ -114,7 +114,7 @@ void boundaryDialog::onAddProperty(wxCommandEvent &event)
     else if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
         electricalBoundary estaticBC;
-        electricalStaticBoundaryDialog *estaticBoundaryDialog = new electricalStaticBoundaryDialog();
+        electricalStaticBoundaryDialog *estaticBoundaryDialog = new electricalStaticBoundaryDialog(this);
         estaticBoundaryDialog->clearBoundary();
         if(estaticBoundaryDialog->ShowModal() == wxID_OK)
         {
@@ -192,7 +192,7 @@ void boundaryDialog::onModifyProperty(wxCommandEvent &event)
     else if(_electricalBoundaryList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         int currentSelection = selection->GetSelection();
-        electricalStaticBoundaryDialog *estaticBoundaryDialog = new electricalStaticBoundaryDialog();
+        electricalStaticBoundaryDialog *estaticBoundaryDialog = new electricalStaticBoundaryDialog(this);
         electricalBoundary selectedBoundary = _electricalBoundaryList.at(currentSelection);
         estaticBoundaryDialog->setBoundaryCondition(selectedBoundary);
         if(estaticBoundaryDialog->ShowModal() == wxID_OK)

@@ -39,7 +39,7 @@ private:
     void updateInterface();
     
 public:
-    electricalStaticBoundaryDialog();
+    electricalStaticBoundaryDialog(wxWindow *par);
     
     ~electricalStaticBoundaryDialog();
     

@@ -69,7 +69,7 @@ private:
     //! This contains the dialog that is used to edit and add the magnetic materials to/from the list
     
     
-    blockPropertyDialogElectrostatic *_eStaticMaterialDialog = new blockPropertyDialogElectrostatic();
+    
     
     void makeDialog();
     

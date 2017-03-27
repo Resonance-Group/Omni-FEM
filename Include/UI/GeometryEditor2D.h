@@ -173,20 +173,23 @@ public:
         _nodeIndex2 = -1;
     }
     
-    void renderBlockNames(wxPaintDC *dc)
+    void renderBlockNames(wxPaintDC *dc, double zoomFactor)
     {
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        
         static wxGLString my_message;
         static wxGLStringArray my_messages;
         static wxGLNumberRenderer number;
-        
         static bool first_time = true;
-
         // init them the first time only
         if(first_time)
         {
-            my_message = wxString( "Hello world !!!");
-            my_message.setFont( wxFont( 50, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD) );
-            my_message.consolidate(dc);
+            my_message = wxString( wxT("Hello world !!!") );
+            my_message.setFont( wxFont( 8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL) );
+            
 
             my_messages.addString( wxT("wxGLString can") );
             my_messages.addString( wxT("render strings in") );
@@ -197,15 +200,24 @@ public:
             number.consolidate(dc);
             first_time = false;
         }
+        my_message.scale(zoomFactor);
+        my_message.consolidate(dc);
 
 
         // render string everytime
         my_message.bind();
-        my_message.rotate(30);
+        my_message.rotate(0);
+        my_message.setFlip(false, true);
+        
         glColor3f(1,0,0);
-        my_message.render(80,10);
+        my_message.render(0,0);
 
         my_messages.bind();
+        my_messages.get(0).setFlip(false, true);
+        my_messages.get(1).setFlip(false, true);
+        my_messages.get(2).setFlip(false, true);
+        my_messages.get(3).setFlip(false, true);
+        
         glColor3f(0,0.6,0);     my_messages.get(0).render(5,200);
         glColor3f(0,0,0.6);     my_messages.get(1).render(55,225);
         glColor3f(0,0.6,0.6);   my_messages.get(2).render(105,250);
@@ -213,7 +225,10 @@ public:
 
         number.bind();
         glColor3f(0,0,0);
+        number.setFlip(false, true);
         number.renderNumber( -3.141591f, 250, 50 );
+        
+        glDisable(GL_BLEND);
         
       /*  for(int i = 0; i < _blockLabelNameArray.getNameArraySize(); i++)
         {
