@@ -238,6 +238,14 @@ void OmniFEMMainFrame::createProblemChoosingClient()
     {
         this->SetMinSize(problemSelectPanel->GetSize() + (this->GetSize() - this->GetClientSize()));
         this->SetMaxSize(this->GetMinSize());
+        /* Bug fix. There was a bug where if the user wanted to create a new model, the program would crash on the resize.
+         * This was becuase the state that the UI was in was MODEL_DEFINING. In this state, if there is a resize of the window,
+         * the event procedure for the resize event of the main form would be called in order to resize the client area. As it should
+         * However, in this funtion, the children are destoryed at the beginning of the code which, when the resize event fires,
+         * the pointer is pointing to nothing. So, the program crashes.
+         * The solution is to change the state of the UI before the resize event occurs
+         */ 
+        _UIState = systemState::PHYSICS_CHOOSING;
         this->SetClientSize(problemSelectPanel->GetSize());
     }
     else
