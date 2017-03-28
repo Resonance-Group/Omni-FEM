@@ -272,8 +272,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     appendedTitle.append(_problemDefinition.getName());
     this->SetTitle(this->GetTitle().append(appendedTitle));
     
-    enableToolMenuBar(true);
-    createTopToolBar();
+    
     
     this->SetMaxSize(wxSize(-1, -1));
     this->SetSize(wxSize(960, 544));
@@ -282,6 +281,9 @@ void OmniFEMMainFrame::createModelDefiningClient()
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
  
     _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition);
+    
+    enableToolMenuBar(true);
+    createTopToolBar();
     
     topSizer->Add(_model, 1, wxALL | wxEXPAND, 6);
     
@@ -356,31 +358,30 @@ void OmniFEMMainFrame::createTopToolBar()
     wxBitmap computeBitMap(computePNG);
     wxBitmap viewResultsBitMap(viewResultsPNG);
     
-
-	
 	/* This section will add the tool to the toolbar */
-	mainFrameToolBar->AddTool(menubarID::ID_menubarNew, "New File", newFileBitMap, "New File");
-    mainFrameToolBar->AddTool(menubarID::ID_menubarSave, "Save", saveBitMap, "Save File");
-    mainFrameToolBar->AddTool(menubarID::ID_menubarSaveAs, "Save As", saveAsBitMap, "Save File As");
-    mainFrameToolBar->AddTool(menubarID::ID_menubarOpen, "Open File", openFileBitMap, "Open File");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_NEW_FILE, "New File", newFileBitMap, "New File");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_SAVE_FILE, "Save", saveBitMap, "Save File");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_SAVE_FILE_AS, "Save As", saveAsBitMap, "Save File As");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_OPEN_FILE, "Open File", openFileBitMap, "Open File");
     mainFrameToolBar->AddSeparator();
-    mainFrameToolBar->AddTool(ViewMenuID::ID_ZOOM_IN, "Zoom In", zoomInBitMap, "Zoom In");
-    mainFrameToolBar->AddTool(ViewMenuID::ID_ZOOM_OUT, "Zoom Out", zoomOutBitMap, "Zoom Out");
-    mainFrameToolBar->AddTool(EditMenuID::ID_EDIT_PROPERTY, "Edit Property", editPropertiesBitMap, "Edit Property");
-    mainFrameToolBar->AddTool(EditMenuID::ID_DELETE, "Delete Selected", deleteSelectionBitMap, "Delete Selection");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_ZOOM_IN, "Zoom In", zoomInBitMap, "Zoom In");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_ZOOM_OUT, "Zoom Out", zoomOutBitMap, "Zoom Out");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_EDIT_PROPERTY, "Edit Property", editPropertiesBitMap, "Edit Property");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_DELETE, "Delete Selected", deleteSelectionBitMap, "Delete Selection");
     mainFrameToolBar->AddSeparator();
-    mainFrameToolBar->AddTool(ToolBarID::ID_TOGGLE_NODE, "Toggle Node/Block label draw", drawNodeBitMap, "Toggle Node/Block label draw");
-    mainFrameToolBar->AddTool(ToolBarID::ID_TOGGLE_LINE, "Toggle Line/Arc draw", drawLineBitMap, "Toggle Line/Arc draw");
+    mainFrameToolBar->AddCheckTool(ToolBarID::ID_TOGGLE_NODE, "Toggle Node/Block label draw", drawNodeBitMap, wxNullBitmap, "Toggle Node/Block label draw");
+    mainFrameToolBar->AddCheckTool(ToolBarID::ID_TOGGLE_LINE, "Toggle Line/Arc draw", drawLineBitMap, wxNullBitmap, "Toggle Line/Arc draw");
+    mainFrameToolBar->ToggleTool(ToolBarID::ID_TOGGLE_NODE, _model->getCreateNodeState());
+    mainFrameToolBar->ToggleTool(ToolBarID::ID_TOGGLE_LINE, _model->getCreateLineState());
     mainFrameToolBar->AddSeparator();
-    mainFrameToolBar->AddTool(MeshMenuID::ID_SHOW_MESH, "Compute Mesh", meshComputeBitMap, "Compute Mesh");
-    mainFrameToolBar->AddTool(ToolBarID::ID_SOLVE, "Solve Physics", computeBitMap, "Solve Physics Problem");
-    mainFrameToolBar->AddTool(AnalysisMenuID::ID_VIEW_RESULTS, "View Results", viewResultsBitMap, "View Results");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_CREATE_MESH, "Compute Mesh", meshComputeBitMap, "Compute Mesh");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_SOLVE, "Solve Physics", computeBitMap, "Solve Physics Problem");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_VIEW_RESULTS, "View Results", viewResultsBitMap, "View Results");
 	
 	
 	/* Enable the tooolbar and associate it with the main frame */
 	mainFrameToolBar->Realize();
 	this->SetToolBar(mainFrameToolBar);
-
 }
 
 
@@ -540,10 +541,21 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	/*************************
 	* ToolBar Event Handling *
 	**************************/	
-	
-/*	EVT_TOOL(toolbarID::ID_ToolBarNew, OmniFEMMainFrame::onNewFile)
-	EVT_TOOL(toolbarID::ID_ToolBarOpen, OmniFEMMainFrame::onOpenFile)
-	EVT_TOOL(toolbarID::ID_ToolBarSave, OmniFEMMainFrame::OnSave)*/
+    	
+    
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_NEW_FILE, OmniFEMMainFrame::onNewFile)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_SAVE_FILE, OmniFEMMainFrame::OnSave)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_SAVE_FILE_AS, OmniFEMMainFrame::onSaveAs)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_OPEN_FILE, OmniFEMMainFrame::onOpenFile)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_ZOOM_IN, OmniFEMMainFrame::onZoomIn)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_ZOOM_OUT, OmniFEMMainFrame::onZoomOut)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_DELETE, OmniFEMMainFrame::onDelete)
+    EVT_TOOL(ToolBarID::ID_TOGGLE_NODE, OmniFEMMainFrame::onToggleNodeCreation)
+    EVT_TOOL(ToolBarID::ID_TOGGLE_LINE, OmniFEMMainFrame::onToggleLineCreation)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_CREATE_MESH, OmniFEMMainFrame::onCreateMesh)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_SOLVE, OmniFEMMainFrame::onSolveProblem)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_VIEW_RESULTS, OmniFEMMainFrame::onDisplayResults)
 	
 	/********
 	* Other *

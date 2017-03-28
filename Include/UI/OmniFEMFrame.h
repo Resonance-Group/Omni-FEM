@@ -183,7 +183,34 @@ private:
     
 	//! Event called to view the manual
     void OnExit(wxCommandEvent &event);
+    
+    //! Event that is called when the user wants to toggle between node and block label creation
+    void onToggleNodeCreation(wxCommandEvent &event)
+    {
+        if(_UIState == systemState::MODEL_DEFINING)
+        {
+            _model->setCreateNodeState(!_model->getCreateNodeState());
+        }
+    }
+    
+    //! Event that is called when the user wants to toggle between line and arc label creation
+    void onToggleLineCreation(wxCommandEvent &event)
+    {
+        if(_UIState == systemState::MODEL_DEFINING)
+        {
+            _model->setCreateLinesState(!_model->getCreateLineState());
+        }
+    }
+    
+    void onSolveProblem(wxCommandEvent &event)
+    {
+        return;
+    }
 	
+    void onDisplayResults(wxCommandEvent &event)
+    {
+        return;
+    }
 
  	/*****************************
 	* Prototypes for client area *

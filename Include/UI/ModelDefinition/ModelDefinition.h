@@ -135,6 +135,16 @@ public:
         _createLines = state;
     }
     
+    bool getCreateNodeState()
+    {
+        return _createNodes;
+    }
+    
+    bool getCreateLineState()
+    {
+        return _createLines;
+    }
+    
     void deleteSelection();
     
     void zoomIn();

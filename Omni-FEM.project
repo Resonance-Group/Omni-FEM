@@ -29,17 +29,11 @@
           <File Name="src/UI/MainFrame/Presentation/mainOmniFEMUI.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/meshMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/problemMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/save.png"/>
           <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
           <File Name="src/UI/MainFrame/Presentation/AnalysisMenu.cpp"/>
-        </VirtualDirectory>
-        <VirtualDirectory Name="resources">
-          <File Name="src/UI/MainFrame/resources/save.png"/>
-          <File Name="src/UI/MainFrame/resources/Open.png"/>
-          <File Name="src/UI/MainFrame/resources/new_file.png"/>
         </VirtualDirectory>
       </VirtualDirectory>
       <VirtualDirectory Name="Geometry">
