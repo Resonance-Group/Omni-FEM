@@ -22,19 +22,17 @@
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="UI">
       <VirtualDirectory Name="MainFrame">
-        <VirtualDirectory Name="Presentation">
-          <File Name="src/UI/MainFrame/Presentation/editMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/fileMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/helpMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/mainOmniFEMUI.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/meshMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/problemMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/AnalysisMenu.cpp"/>
-        </VirtualDirectory>
+        <File Name="src/UI/MainFrame/AnalysisMenu.cpp"/>
+        <File Name="src/UI/MainFrame/editMenu.cpp"/>
+        <File Name="src/UI/MainFrame/ExteriorRegion.cpp"/>
+        <File Name="src/UI/MainFrame/fileMenu.cpp"/>
+        <File Name="src/UI/MainFrame/GridMenu.cpp"/>
+        <File Name="src/UI/MainFrame/helpMenu.cpp"/>
+        <File Name="src/UI/MainFrame/mainOmniFEMUI.cpp"/>
+        <File Name="src/UI/MainFrame/meshMenu.cpp"/>
+        <File Name="src/UI/MainFrame/problemMenu.cpp"/>
+        <File Name="src/UI/MainFrame/PropertiesMenu.cpp"/>
+        <File Name="src/UI/MainFrame/viewMenu.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="Geometry">
         <VirtualDirectory Name="GeometryDialogs">
