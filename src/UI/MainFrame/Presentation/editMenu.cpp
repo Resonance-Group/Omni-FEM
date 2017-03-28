@@ -134,6 +134,15 @@ void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
 }
 
 
+void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
+{
+    openBoundaryDialog *test = new openBoundaryDialog(this);
+    if(test->ShowModal() == wxID_OK)
+    {
+        
+    }
+}
+
 
 void OmniFEMMainFrame::onSelectGroup(wxCommandEvent &event)
 {
@@ -148,14 +157,13 @@ void OmniFEMMainFrame::onSelectGroup(wxCommandEvent &event)
 
 
 
-void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
+
+void OmniFEMMainFrame::onEditProperty(wxCommandEvent &event)
 {
-    openBoundaryDialog *test = new openBoundaryDialog(this);
-    if(test->ShowModal() == wxID_OK)
-    {
-        
-    }
+    _model->editSelection();
 }
+
+
 
 
 void OmniFEMMainFrame::onLuaRun(wxCommandEvent &event)

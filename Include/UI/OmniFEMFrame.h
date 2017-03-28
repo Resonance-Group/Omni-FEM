@@ -136,6 +136,7 @@ private:
     void onCreateRadius(wxCommandEvent &event);
     void onCreateOpenBoundary(wxCommandEvent &event);
     void onSelectGroup(wxCommandEvent &event);
+    void onEditProperty(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
     void onZoomIn(wxCommandEvent &event);

@@ -47,6 +47,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
     _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group");
+    _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property");
     _menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
 	
@@ -130,6 +131,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(EditMenuID::ID_SCALE, enable);
     _menuBar->Enable(EditMenuID::ID_UNDO, enable);
     _menuBar->Enable(EditMenuID::ID_SELECT_GROUP, enable);
+    _menuEdit->Enable(EditMenuID::ID_EDIT_PROPERTY, enable);
     
     _menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
     _menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);
@@ -310,28 +312,70 @@ void OmniFEMMainFrame::createTopToolBar()
     std::string test10 = path.GetTempDir().ToStdString();
     std::string test11 = path.GetUserConfigDir().ToStdString();
     std::string test12 = path.GetUserDataDir().ToStdString();
-    std::string test13 = path.GetUserLocalDataDir().ToStdString();*/
-	std::string resourcesDirectory = path.GetUserConfigDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");// equilivant to ~ in command line. This is for the path for the source code of the resources
+    std::string test13 = path.GetUserLocalDataDir().ToStdString();
+	std::string resourcesDirectory = path.GetUserConfigDir().ToStdString() + std::string("/GitHub/Omni-FEM/src/UI/MainFrame/resources/");*/
+    
+    // This will go to /usr/share/icons/default.kde4 folder
+    std::string actionIcons = std::string("/usr/share/icons/default.kde4/22x22/actions/");
     
     wxToolBar *mainFrameToolBar = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_TOP | wxNO_BORDER);
 
 	/* This section will need to load the images into memory */
-	wxImage *saveImage = new wxImage(resourcesDirectory + "save.png", wxBITMAP_TYPE_PNG);
-    saveImage->Rescale(16, 16);
-	wxImage *openImage = new wxImage(resourcesDirectory + "Open.png", wxBITMAP_TYPE_PNG);
-    openImage->Rescale(16, 16);
-	wxImage *newFileImage = new wxImage(resourcesDirectory + "new_file.png", wxBITMAP_TYPE_PNG);
-	newFileImage->Rescale(16, 16);
+    wxImage newFilePNG(actionIcons + "document-new.png", wxBITMAP_TYPE_PNG);
+    wxImage savePNG(actionIcons + "document-save.png", wxBITMAP_TYPE_PNG);
+    wxImage saveAsPNG(actionIcons + "document-save-as.png", wxBITMAP_TYPE_PNG);
+    wxImage openFilePNG(actionIcons + "document-open.png", wxBITMAP_TYPE_PNG);
+    
+    wxImage zoomInPNG(actionIcons + "zoom-in.png", wxBITMAP_TYPE_PNG);
+    wxImage zoomOutPNG(actionIcons + "zoom-out.png", wxBITMAP_TYPE_PNG);
+    wxImage editPropertiesPNG(actionIcons + "story-editor.png", wxBITMAP_TYPE_PNG);
+    wxImage deletePNG(actionIcons + "edit-delete.png", wxBITMAP_TYPE_PNG);
+    
+    wxImage drawNodePNG(actionIcons + "draw-rectangle.png", wxBITMAP_TYPE_PNG);
+    wxImage drawLinePNG(actionIcons + "draw-path.png", wxBITMAP_TYPE_PNG);
+    
+    wxImage meshComputePNG(actionIcons + "run-build.png", wxBITMAP_TYPE_PNG);
+    wxImage computePNG(actionIcons + "../apps/accessories-calculator.png", wxBITMAP_TYPE_PNG);
+    wxImage viewResultsPNG(actionIcons + "edit-find.png", wxBITMAP_TYPE_PNG);
     
 	/* This section will convert the images into bitmaps */
-	wxBitmap saveBitmap(*saveImage);
-	wxBitmap openImageBitmap(*openImage);
-	wxBitmap newFileBitmap(*newFileImage);
+	wxBitmap newFileBitMap(newFilePNG);
+    wxBitmap saveBitMap(savePNG);
+    wxBitmap saveAsBitMap(saveAsPNG);
+    wxBitmap openFileBitMap(openFilePNG);
+    
+    wxBitmap zoomInBitMap(zoomInPNG);
+    wxBitmap zoomOutBitMap(zoomOutPNG);
+    wxBitmap editPropertiesBitMap(editPropertiesPNG);
+    wxBitmap deleteSelectionBitMap(deletePNG);
+    
+    wxBitmap drawNodeBitMap(drawNodePNG);
+    wxBitmap drawLineBitMap(drawLinePNG);
+    
+    wxBitmap meshComputeBitMap(meshComputePNG);
+    wxBitmap computeBitMap(computePNG);
+    wxBitmap viewResultsBitMap(viewResultsPNG);
+    
+
 	
 	/* This section will add the tool to the toolbar */
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarNew, "New File", newFileBitmap);
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarOpen, "Open", openImageBitmap);
-	mainFrameToolBar->AddTool(toolbarID::ID_ToolBarSave, "Save", saveBitmap);
+	mainFrameToolBar->AddTool(menubarID::ID_menubarNew, "New File", newFileBitMap, "New File");
+    mainFrameToolBar->AddTool(menubarID::ID_menubarSave, "Save", saveBitMap, "Save File");
+    mainFrameToolBar->AddTool(menubarID::ID_menubarSaveAs, "Save As", saveAsBitMap, "Save File As");
+    mainFrameToolBar->AddTool(menubarID::ID_menubarOpen, "Open File", openFileBitMap, "Open File");
+    mainFrameToolBar->AddSeparator();
+    mainFrameToolBar->AddTool(ViewMenuID::ID_ZOOM_IN, "Zoom In", zoomInBitMap, "Zoom In");
+    mainFrameToolBar->AddTool(ViewMenuID::ID_ZOOM_OUT, "Zoom Out", zoomOutBitMap, "Zoom Out");
+    mainFrameToolBar->AddTool(EditMenuID::ID_EDIT_PROPERTY, "Edit Property", editPropertiesBitMap, "Edit Property");
+    mainFrameToolBar->AddTool(EditMenuID::ID_DELETE, "Delete Selected", deleteSelectionBitMap, "Delete Selection");
+    mainFrameToolBar->AddSeparator();
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOGGLE_NODE, "Toggle Node/Block label draw", drawNodeBitMap, "Toggle Node/Block label draw");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOGGLE_LINE, "Toggle Line/Arc draw", drawLineBitMap, "Toggle Line/Arc draw");
+    mainFrameToolBar->AddSeparator();
+    mainFrameToolBar->AddTool(MeshMenuID::ID_SHOW_MESH, "Compute Mesh", meshComputeBitMap, "Compute Mesh");
+    mainFrameToolBar->AddTool(ToolBarID::ID_SOLVE, "Solve Physics", computeBitMap, "Solve Physics Problem");
+    mainFrameToolBar->AddTool(AnalysisMenuID::ID_VIEW_RESULTS, "View Results", viewResultsBitMap, "View Results");
+	
 	
 	/* Enable the tooolbar and associate it with the main frame */
 	mainFrameToolBar->Realize();
@@ -497,9 +541,9 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	* ToolBar Event Handling *
 	**************************/	
 	
-	EVT_TOOL(toolbarID::ID_ToolBarNew, OmniFEMMainFrame::onNewFile)
+/*	EVT_TOOL(toolbarID::ID_ToolBarNew, OmniFEMMainFrame::onNewFile)
 	EVT_TOOL(toolbarID::ID_ToolBarOpen, OmniFEMMainFrame::onOpenFile)
-	EVT_TOOL(toolbarID::ID_ToolBarSave, OmniFEMMainFrame::OnSave)
+	EVT_TOOL(toolbarID::ID_ToolBarSave, OmniFEMMainFrame::OnSave)*/
 	
 	/********
 	* Other *

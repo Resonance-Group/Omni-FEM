@@ -22,7 +22,15 @@ enum menubarID
     ID_menubarShowGrid,
     ID_menubarSnapGrid,
     ID_menubarDispLuaConsole,
-    ID_PROBLEM_PREFERNCES
+    ID_PROBLEM_PREFERNCES,
+};
+
+//! Enum for the tool bar
+enum ToolBarID
+{
+	ID_TOGGLE_NODE,
+	ID_TOGGLE_LINE,
+	ID_SOLVE
 };
 
 enum EditMenuID
@@ -37,7 +45,8 @@ enum EditMenuID
     ID_CREATE_RADIUS,
     ID_CREATE_OPEN_BOUNDARY,
     ID_PREFERENCES, 
-    ID_SELECT_GROUP
+    ID_SELECT_GROUP,
+    ID_EDIT_PROPERTY
 };
 
 

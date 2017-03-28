@@ -63,13 +63,7 @@
 
 
 
-//! Enum for the tool bar
-enum toolbarID
-{
-	ID_ToolBarNew = 1,
-	ID_ToolBarOpen = 2,
-	ID_ToolBarSave = 3
-};
+
 
 
 
