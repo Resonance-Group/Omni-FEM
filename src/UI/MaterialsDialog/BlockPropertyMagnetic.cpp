@@ -72,10 +72,10 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This section is for the header */
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");
     name->SetFont(*font);
-    nameTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl1, _magneticMaterial.getName(), wxDefaultPosition, wxSize(373, 20));
+    nameTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl1, _magneticMaterial.getName(), wxDefaultPosition, wxSize(364, 20));
     nameTextCtrl->SetFont(*font);
     headerSizer->Add(name, 0, wxCENTER | wxALL, 6);
-    headerSizer->Add(23, 0, 0);
+    headerSizer->Add(17, 0, 0);
     headerSizer->Add(nameTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM , 6);
     
     /* This section is for the BH Curve infomation */
@@ -83,7 +83,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     BHCurve->SetFont(*font);
     BHCurveComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(165, 21), *BHSettingsArray);
     BHCurveComboBox->SetFont(*font);
-    jilesAthertonButton->Create(this, wxID_EDIT, "Edit Jiles-Atherton Parameters", wxDefaultPosition, wxSize(202, 23));
+    jilesAthertonButton->Create(this, wxID_EDIT, "Edit Jiles-Atherton Parameters", wxDefaultPosition, wxSize(193, 23));
     jilesAthertonButton->SetFont(*font);
     BHCurveSizer->Add(BHCurve, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     BHCurveSizer->Add(BHCurveComboBox, 0, wxCENTER | wxRIGHT | wxBOTTOM, 6);
@@ -119,18 +119,18 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     lpLine1->Add(relativeUxTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     lpLine1->Add(60, 0, 0);
     lpLine1->Add(relativeUy, 0, wxCENTER | wxALL, 6);
-    lpLine1->Add(12, 0, 0);
+   // lpLine1->Add(12, 0, 0);
     lpLine1->Add(relativeUyTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     lpLine2->Add(phiX, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-    lpLine2->Add(31, 0, 0);
+    lpLine2->Add(36, 0, 0);
     lpLine2->Add(phiXTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     lpLine2->Add(deg1, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    lpLine2->Add(35, 0, 0);
+    lpLine2->Add(40, 0, 0);
     lpLine2->Add(phiY, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    lpLine2->Add(39, 0, 0);
+    lpLine2->Add(35, 0, 0);
     lpLine2->Add(phiYTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    lpLine2->Add(deg2, 0, wxCENTER | wxBOTTOM, 6);
+    lpLine2->Add(deg2, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     linearPropertiesSizer->Add(lpLine1);
     linearPropertiesSizer->Add(lpLine2);
@@ -152,13 +152,13 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     eConductivitySizer->Add(eConductivityTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     intermediateSizer->Add(coercivitySizer);
-    intermediateSizer->Add(40, 0, 0);
+    intermediateSizer->Add(43, 0, 0);
     intermediateSizer->Add(eConductivitySizer);
     
     /* This part is for the source current density */
     wxStaticText *currentDesnityLabel = new wxStaticText(currentDensitySizer->GetStaticBox(), wxID_ANY, "J (MA/m2):");
     currentDesnityLabel->SetFont(*font);
-    currentDensityTextCtrl->Create(currentDensitySizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl9, wxEmptyString, wxDefaultPosition, wxSize(358, 20));
+    currentDensityTextCtrl->Create(currentDensitySizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl9, wxEmptyString, wxDefaultPosition, wxSize(352, 20));
     currentDensityTextCtrl->SetFont(*font);
     currentDensitySizer->Add(currentDesnityLabel, 0, wxCENTER | wxALL, 6);
     currentDensitySizer->Add(currentDensityTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -202,9 +202,9 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     
     specialAttriLine2Sizer->Add(numStrandsLabel, 0, wxCENTER | wxALL, 6);
     specialAttriLine2Sizer->Add(numStrandsTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-    specialAttriLine2Sizer->Add(25, 0, 0);
+    specialAttriLine2Sizer->Add(20, 0, 0);
     specialAttriLine2Sizer->Add(strandDiaLabel, 0, wxCENTER | wxALL, 6);
-    specialAttriLine2Sizer->Add(22, 0, 0);
+    specialAttriLine2Sizer->Add(20, 0, 0);
     specialAttriLine2Sizer->Add(strandDiaTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     specialAttriLine2Sizer->Add(mmLabel2, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     

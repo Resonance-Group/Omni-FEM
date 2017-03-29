@@ -330,7 +330,11 @@ void OmniFEMMainFrame::createTopToolBar()
     
     wxImage zoomInPNG(actionIcons + "zoom-in.png", wxBITMAP_TYPE_PNG);
     wxImage zoomOutPNG(actionIcons + "zoom-out.png", wxBITMAP_TYPE_PNG);
+    
     wxImage editPropertiesPNG(actionIcons + "story-editor.png", wxBITMAP_TYPE_PNG);
+    wxImage movePNG(actionIcons + "transform-move.png", wxBITMAP_TYPE_PNG);
+    wxImage copyPNG(actionIcons + "edit-copy.png", wxBITMAP_TYPE_PNG);
+    wxImage scalePNG(actionIcons + "transform-scale.png", wxBITMAP_TYPE_PNG);
     wxImage deletePNG(actionIcons + "edit-delete.png", wxBITMAP_TYPE_PNG);
     
     wxImage drawNodePNG(actionIcons + "draw-rectangle.png", wxBITMAP_TYPE_PNG);
@@ -348,7 +352,11 @@ void OmniFEMMainFrame::createTopToolBar()
     
     wxBitmap zoomInBitMap(zoomInPNG);
     wxBitmap zoomOutBitMap(zoomOutPNG);
+    
     wxBitmap editPropertiesBitMap(editPropertiesPNG);
+    wxBitmap moveBitMap(movePNG);
+    wxBitmap copyBitMap(copyPNG);
+    wxBitmap scaleBitMap(scalePNG);
     wxBitmap deleteSelectionBitMap(deletePNG);
     
     wxBitmap drawNodeBitMap(drawNodePNG);
@@ -366,7 +374,11 @@ void OmniFEMMainFrame::createTopToolBar()
     mainFrameToolBar->AddSeparator();
     mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_ZOOM_IN, "Zoom In", zoomInBitMap, "Zoom In");
     mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_ZOOM_OUT, "Zoom Out", zoomOutBitMap, "Zoom Out");
+    mainFrameToolBar->AddSeparator();
     mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_EDIT_PROPERTY, "Edit Property", editPropertiesBitMap, "Edit Property");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_MOVE, "Move Selection", moveBitMap, "Move Selection");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_COPY, "Copy Selection", copyBitMap, "Copy Selection");
+    mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_SCALE, "Scale Selection", scaleBitMap, "Scale Selection");
     mainFrameToolBar->AddTool(ToolBarID::ID_TOOLBAR_DELETE, "Delete Selected", deleteSelectionBitMap, "Delete Selection");
     mainFrameToolBar->AddSeparator();
     mainFrameToolBar->AddCheckTool(ToolBarID::ID_TOGGLE_NODE, "Toggle Node/Block label draw", drawNodeBitMap, wxNullBitmap, "Toggle Node/Block label draw");
@@ -550,6 +562,9 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_ZOOM_IN, OmniFEMMainFrame::onZoomIn)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_ZOOM_OUT, OmniFEMMainFrame::onZoomOut)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_MOVE, OmniFEMMainFrame::onMove)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_COPY, OmniFEMMainFrame::onCopy)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_SCALE, OmniFEMMainFrame::onScale)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_DELETE, OmniFEMMainFrame::onDelete)
     EVT_TOOL(ToolBarID::ID_TOGGLE_NODE, OmniFEMMainFrame::onToggleNodeCreation)
     EVT_TOOL(ToolBarID::ID_TOGGLE_LINE, OmniFEMMainFrame::onToggleLineCreation)

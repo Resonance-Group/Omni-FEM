@@ -42,6 +42,9 @@ void modelDefinition::deleteSelection()
         {
             if(nodeIterator->getIsSelectedState())
             {
+                
+                _editor.getNodeList()->erase(nodeIterator);
+                
                 if(_editor.getLineList()->size() > 0)
                 {
                     /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
@@ -71,7 +74,7 @@ void modelDefinition::deleteSelection()
                 nodesToKeep.push_back(*nodeIterator);
         }
             
-        _editor.setNodeList(nodesToKeep);
+   //     _editor.setNodeList(nodesToKeep);
     }
     else if(_editor.getNodeList()->size() == 1 && _editor.getNodeList()->at(0).getIsSelectedState())
     {
@@ -1321,34 +1324,41 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
-        if(_createNodes && !_geometryIsSelected && _editor.getNodeList()->back().getDraggingState())
+        if(_createNodes && !_geometryIsSelected)
         {
-            double tempX = convertToXCoordinate(event.GetX());
-            double tempY = convertToYCoordinate(event.GetY());
-            // Update the last node entry with new x and y coordinates and round if on snap grid
-            if(_preferences.getSnapGridState())
+            if(_editor.getNodeList()->size() > 0 && _editor.getNodeList()->back().getDraggingState())
             {
-                roundToNearestGrid(tempX, tempY);
-                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
-            }
-            else
-            {
-                _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                // Update the last node entry with new x and y coordinates and round if on snap grid
+                if(_preferences.getSnapGridState())
+                {
+                    roundToNearestGrid(tempX, tempY);
+                    _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                }
+                else
+                {
+                    _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                }
             }
         }
         else if(!_createNodes)
         {
-            // Update the last bloc labe with new x and y coordinates and round if on snap grid
-            if(_preferences.getSnapGridState())
+            if(_editor.getBlockLabelList()->size() > 0 && _editor.getBlockLabelList()->back().getDraggingState())
             {
-                double tempX = convertToXCoordinate(event.GetX());
-                double tempY = convertToYCoordinate(event.GetY());
-                roundToNearestGrid(tempX, tempY);
-                _editor.getBlockLabelList()->back().setCenter(tempX, tempY);
-            }
-            else
-            {
-                _editor.getBlockLabelList()->back().setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+                // Update the last bloc labe with new x and y coordinates and round if on snap grid
+                if(_preferences.getSnapGridState())
+                {
+                    double tempX = convertToXCoordinate(event.GetX());
+                    double tempY = convertToYCoordinate(event.GetY());
+                    roundToNearestGrid(tempX, tempY);
+                    _editor.getBlockLabelList()->back().setCenter(tempX, tempY);
+                }
+                else
+                {
+                    _editor.getBlockLabelList()->back().setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+                }
+                
             }
         }
     }

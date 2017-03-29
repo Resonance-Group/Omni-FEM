@@ -20,3 +20,5 @@ This will get the OpenGL libraries. Double check compiler settings to make sure 
 To install wxwidgets, follow these instructions:
 http://codelite.org/LiteEditor/WxWidgets30Binaries
 
+The icons that are used by the UI are the default kde4 icons that are suppose to be located in the folder /usr/share/icons
+

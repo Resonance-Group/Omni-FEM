@@ -3,24 +3,28 @@
 
 
 
-
-//! Enum for the tool bar
-enum ToolBarID
+//! Enum for the menus of the menu bar
+enum menubarID
 {
-    ID_TOOLBAR_NEW_FILE,
-    ID_TOOLBAR_SAVE_FILE,
-    ID_TOOLBAR_SAVE_FILE_AS,
-    ID_TOOLBAR_OPEN_FILE,
-    ID_TOOLBAR_ZOOM_IN,
-    ID_TOOLBAR_ZOOM_OUT,
-    ID_TOOLBAR_EDIT_PROPERTY,
-    ID_TOOLBAR_DELETE,
-	ID_TOGGLE_NODE,
-	ID_TOGGLE_LINE,
-	ID_TOOLBAR_CREATE_MESH,
-    ID_TOOLBAR_SOLVE,
-    ID_TOOLBAR_VIEW_RESULTS
+    ID_menubarNew,
+    ID_menubarSave,
+    ID_menubarSaveAs,
+    ID_menubarPreferences,
+    ID_menubarManual,
+    ID_menubarLicense,
+	ID_menubarViewResults,
+	ID_menubarCreateMesh,
+	ID_menubarShowMesh,
+	ID_menubarDeleteMesh,
+	ID_menubarPrecision,
+	ID_menubarOpen,
+	ID_menubarLUASCRIPT,
+    ID_menubarShowGrid,
+    ID_menubarSnapGrid,
+    ID_menubarDispLuaConsole,
+    ID_PROBLEM_PREFERNCES,
 };
+
 
 enum EditMenuID
 {
@@ -92,26 +96,27 @@ enum AnalysisMenuID
     ID_VIEW_RESULTS
 };
 
-//! Enum for the menus of the menu bar
-enum menubarID
+
+
+//! Enum for the tool bar
+enum ToolBarID
 {
-    ID_menubarNew = 700,
-    ID_menubarSave,
-    ID_menubarSaveAs,
-    ID_menubarPreferences,
-    ID_menubarManual,
-    ID_menubarLicense,
-	ID_menubarViewResults,
-	ID_menubarCreateMesh,
-	ID_menubarShowMesh,
-	ID_menubarDeleteMesh,
-	ID_menubarPrecision,
-	ID_menubarOpen,
-	ID_menubarLUASCRIPT,
-    ID_menubarShowGrid,
-    ID_menubarSnapGrid,
-    ID_menubarDispLuaConsole,
-    ID_PROBLEM_PREFERNCES,
+    ID_TOOLBAR_NEW_FILE = 700,
+    ID_TOOLBAR_SAVE_FILE,
+    ID_TOOLBAR_SAVE_FILE_AS,
+    ID_TOOLBAR_OPEN_FILE,
+    ID_TOOLBAR_ZOOM_IN,
+    ID_TOOLBAR_ZOOM_OUT,
+    ID_TOOLBAR_EDIT_PROPERTY,
+    ID_TOOLBAR_MOVE,
+    ID_TOOLBAR_COPY,
+    ID_TOOLBAR_SCALE,
+    ID_TOOLBAR_DELETE,
+	ID_TOGGLE_NODE,
+	ID_TOGGLE_LINE,
+	ID_TOOLBAR_CREATE_MESH,
+    ID_TOOLBAR_SOLVE,
+    ID_TOOLBAR_VIEW_RESULTS
 };
 
 
