@@ -35,14 +35,15 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 
 void modelDefinition::deleteSelection()
 {
+    
     if(_editor.getNodeList()->size() > 1 && _nodesAreSelected)
     {
         plf::colony<node>::iterator stopIterator = _editor.getNodeList()->end();
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != stopIterator; ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end();)
         {
             if(nodeIterator->getIsSelectedState())
             {
-                if(_editor.getLineList()->size() > 0)
+                if(_editor.getLineList()->size() > 1)
                 {
                     /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
                      * The deletion of the arc/line occurs later in the code*/
@@ -55,6 +56,7 @@ void modelDefinition::deleteSelection()
                         }
                     }
                 }
+
                     
                 if(_editor.getArcList()->size() > 0)
                 {
@@ -66,9 +68,18 @@ void modelDefinition::deleteSelection()
                         }
                     }
                 }
-                
-                _editor.getNodeList()->erase(nodeIterator);
+                /* Bug Fix: This applies for all of the other geometry shapes
+                 * At first, the for loop was for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                 * This creates issue at this line because orginally, the line was _editor.getNodeList()->erase(nodeIterator);. For the plf::colony class, when
+                 * an element is erased, it invalidates the element. For the iterators, since the iterator is pointing to the element that was just erased, nodeIterator is now
+                 * pointing to an invalidated element in the colony object.
+                 * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
+                 * This way the nodeIterator will never be pointing to an invalidated element.
+                 */ 
+               _editor.getNodeList()->erase(nodeIterator++);     
             }
+            else
+                nodeIterator++;
         }
     }
     else if(_editor.getNodeList()->size() == 1 && _editor.getNodeList()->begin()->getIsSelectedState())
@@ -78,20 +89,14 @@ void modelDefinition::deleteSelection()
         
     if(_editor.getLineList()->size() > 1)
     {
-        /* Bug fix:
-         * For the data structure, the way that it is set up is that it will redetermine the end iterator everytime a resize occurs
-         * A resize can occur if an element is inserted or erased.
-         * THe major issue with this is what if all of the lines what to be deleted? If the data structure is constantly changing
-         * itself, then the for loop will go out of bounds crashing the program.
-         * The stopIterator variable will give the for loop a definitive stop
-         */ 
-        plf::colony<edgeLineShape>::iterator stopIterator = _editor.getLineList()->end();
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != stopIterator; ++lineIterator)
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end();)
         {
             if(lineIterator->getIsSelectedState())
             {
-                _editor.getLineList()->erase(lineIterator);
+                _editor.getLineList()->erase(lineIterator++);
             }
+            else
+                lineIterator++;
         }
     }
     else if(_editor.getLineList()->size() == 1)
@@ -101,13 +106,14 @@ void modelDefinition::deleteSelection()
         
     if(_editor.getArcList()->size() > 1)
     {
-        plf::colony<arcShape>::iterator stopIterator = _editor.getArcList()->end();
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end();)
         {
             if(arcIterator->getIsSelectedState())
             {
-                _editor.getArcList()->erase(arcIterator);
+                _editor.getArcList()->erase(arcIterator++);
             }
+            else
+                arcIterator++;
         }
     }
     else if(_editor.getArcList()->size() == 1 && _editor.getArcList()->begin()->getIsSelectedState())
@@ -119,14 +125,15 @@ void modelDefinition::deleteSelection()
     {
         wxGLStringArray labelNamesToKeep;
         int i = 0;
-        plf::colony<blockLabel>::iterator stopIterator = _editor.getBlockLabelList()->end();
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != stopIterator; ++blockIterator)
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end();)
         {
-            if(!blockIterator->getIsSelectedState())
+            if(blockIterator->getIsSelectedState())
             {
-                _editor.getBlockLabelList()->erase(blockIterator);
+                _editor.getBlockLabelList()->erase(blockIterator++);
                  //   labelNamesToKeep.addString(_editor.getBlockNameArray()->get(i));
             }
+            else
+                blockIterator++;
             i++;
         }
         _editor.setLabelNameArray(labelNamesToKeep);
