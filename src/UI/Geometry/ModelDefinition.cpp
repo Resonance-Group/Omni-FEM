@@ -37,12 +37,10 @@ void modelDefinition::deleteSelection()
 {
     if(_editor.getNodeList()->size() > 1)
     {
-        std::deque<node> nodesToKeep;
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
-                
                 _editor.getNodeList()->erase(nodeIterator);
                 
                 if(_editor.getLineList()->size() > 0)
@@ -70,69 +68,59 @@ void modelDefinition::deleteSelection()
                     }
                 }
             }
-            else
-                nodesToKeep.push_back(*nodeIterator);
         }
-            
-   //     _editor.setNodeList(nodesToKeep);
     }
-    else if(_editor.getNodeList()->size() == 1 && _editor.getNodeList()->at(0).getIsSelectedState())
+    else if(_editor.getNodeList()->size() == 1 && _editor.getNodeList()->begin()->getIsSelectedState())
     {
         _editor.getNodeList()->clear();
     }
         
     if(_editor.getLineList()->size() > 1)
     {
-        std::deque<edgeLineShape> linesToKeep;
         for(std::deque<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(!lineIterator->getIsSelectedState())
             {
-                linesToKeep.push_back(*lineIterator);
+                _editor.getLineList()->erase(lineIterator);
             }
         }
-        _editor.setLineList(linesToKeep);
     }
-    else if(_editor.getLineList()->size() == 1 && _editor.getLineList()->at(0).getIsSelectedState())
+    else if(_editor.getLineList()->size() == 1)
     {
         _editor.getLineList()->clear();
     }
         
     if(_editor.getArcList()->size() > 1)
     {
-        std::deque<arcShape> acrsToKeep;
         for(std::deque<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(!arcIterator->getIsSelectedState())
             {
-                acrsToKeep.push_back(*arcIterator);
+                _editor.getArcList()->erase(arcIterator);
             }
         }
-        _editor.setArcList(acrsToKeep);
     }
-    else if(_editor.getArcList()->size() == 1 && _editor.getArcList()->at(0).getIsSelectedState())
+    else if(_editor.getArcList()->size() == 1 && _editor.getArcList()->begin()->getIsSelectedState())
     {
         _editor.getArcList()->clear();
     }
         
     if(_editor.getBlockLabelList()->size() > 1)
     {
-        std::deque<blockLabel> labelsToKeep;
         wxGLStringArray labelNamesToKeep;
         int i = 0;
         for(std::deque<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(!blockIterator->getIsSelectedState())
             {
-                labelsToKeep.push_back(*blockIterator);
+                _editor.getBlockLabelList()->erase(blockIterator);
                  //   labelNamesToKeep.addString(_editor.getBlockNameArray()->get(i));
             }
             i++;
         }
-        _editor.setBlockLabelList(labelsToKeep);
         _editor.setLabelNameArray(labelNamesToKeep);
     }
-    else if(_editor.getBlockLabelList()->size() == 1 && _editor.getBlockLabelList()->at(0).getIsSelectedState())
+    else if(_editor.getBlockLabelList()->size() == 1 && _editor.getBlockLabelList()->begin()->getIsSelectedState())
     {
         _editor.getBlockLabelList()->clear();
          //   _editor.getBlockNameArray()->getStringArray->clear();
@@ -174,7 +162,7 @@ void modelDefinition::editSelection()
          * The thinking is this that if there are multiple selections, the user wants to set them all to be the same
          * so it doesnt really matter if the first, second, third, or fifth node is different because the settings will all be the same
          */ 
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -193,7 +181,7 @@ void modelDefinition::editSelection()
             dialog->getNodalSettings(selectedNodeSetting);// Might as well use the existing nodeSetting object
             
             /* THis will loop through all of the nodes and set the nodes to the new nodal settings if the nodes were the selected ones. */
-            for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
                 if(nodeIterator->getIsSelectedState())
                 {
@@ -305,7 +293,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
 {
     if(scanConductorProperty)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             bool conductorPropertyIsPresent = false;
             if(nodeIterator->getNodeSetting()->getConductorPropertyName() != "None")
@@ -363,7 +351,7 @@ void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNoda
     }
     else if(scanNodalProperty)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             bool nodalPropertyIsPresent = false;
             if(nodeIterator->getNodeSetting()->getNodalPropertyName() != "None")
@@ -543,7 +531,7 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     if(geometry == EditGeometry::EDIT_NODES)
     {
         _nodesAreSelected = true;
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getNodeSetting()->getGroupNumber() == groupNumber)
             {
@@ -595,7 +583,7 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 {
     if(_nodesAreSelected)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -671,7 +659,7 @@ void modelDefinition::moveRotateSelection(double angularShift, wxPoint aboutPoin
 {
     if(_nodesAreSelected)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -778,7 +766,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
     {
         std::vector<node> selectedNodes;
         // Load up the list of nodes that are selected
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -792,7 +780,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
             for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
             {
                 _editor.addNode(nodeIterator->getCenterXCoordinate() + i * horizontalShift, nodeIterator->getCenterYCoordinate() + i * verticalShift);
-                _editor.getNodeList()->back().setNodeSettings(*nodeIterator->getNodeSetting());
+                _editor.getNodeList()->end()->setNodeSettings(*nodeIterator->getNodeSetting());
             }
         }
     }
@@ -830,13 +818,17 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
             for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
             {
                 _editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
-                _editor.getNodeList()->back().setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                _editor.getNodeList()->end()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                
                 _editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                _editor.getNodeList()->back().setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                _editor.getNodeList()->end()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                 
-                _editor.setNodeIndex(_editor.getNodeList()->size() - 1);
-                _editor.setNodeIndex(_editor.getNodeList()->size() - 2);
+                plf::colony<node>::iterator lastItem = _editor.getNodeList()->end();
+                --lastItem;
+                _editor.setNodeIndex(*lastItem);
+                
+                --lastItem;
+                _editor.setNodeIndex(*lastItem);
                 
                 _editor.addLine();
                 _editor.getLineList()->back().setSegmentProperty(*lineIterator->getSegmentProperty());
@@ -852,17 +844,21 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     _editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                    
                     _editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
 
-                    arcIterator->setFirstNode(_editor.getNodeList()->back());
-                    arcIterator->setSecondNode(_editor.getNodeList()->at(_editor.getNodeList()->size() - 2));
+                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->end();
+                    --lastItem;
+                    _editor.setNodeIndex(*lastItem);
+                    
+                    --lastItem;
+                    _editor.setNodeIndex(*lastItem);
                     
                     _editor.addArc(*arcIterator, 0, false);
                     
-              //      _editor.getLineList()->back().setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
+                    _editor.getLineList()->back().setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
                     _editor.getArcList()->back().calculate();
                 }
             }
@@ -879,7 +875,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
 {
     if(_nodesAreSelected)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
             {
@@ -892,7 +888,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
                     double verticalShift = aboutPoint.y + (radius * sin(i * angularShift * PI / 180.0));
                     // Update the node with the translated coordinates
                     _editor.addNode(horizontalShift, verticalShift);
-                    _editor.getNodeList()->back().setNodeSettings(*nodeIterator->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
                 
             }
@@ -932,13 +928,17 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
                     double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
                 
                     _editor.addNode(horizontalShift1, verticalShift1);
-                    _editor.getNodeList()->back().setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                    
                     _editor.addNode(horizontalShift2, verticalShift2);
-                    _editor.getNodeList()->back().setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                     
-                    _editor.setNodeIndex(_editor.getNodeList()->size() - 1);
-                    _editor.setNodeIndex(_editor.getNodeList()->size() - 2);
+                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->end();
+                    --lastItem;
+                    _editor.setNodeIndex(*lastItem);
+                    
+                    --lastItem;
+                    _editor.setNodeIndex(*lastItem);
                     
                     _editor.addLine();
                     _editor.getLineList()->back().setSegmentProperty(*lineIterator->getSegmentProperty());
@@ -961,17 +961,21 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
                     double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
                     
                     _editor.addNode(horizontalShift1, verticalShift1);
-                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                    
                     _editor.addNode(horizontalShift2, verticalShift2);
-                    _editor.getNodeList()->back().setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    _editor.getNodeList()->end()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
 
-                    arcIterator->setFirstNode(_editor.getNodeList()->back());
-                    arcIterator->setSecondNode(_editor.getNodeList()->at(_editor.getNodeList()->size() - 2));
+                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->end();
+                    --lastItem;
+                    _editor.setNodeIndex(*lastItem);
+                
+                    --lastItem;
+                    _editor.setNodeIndex(*lastItem);
                     
                     _editor.addArc(*arcIterator, 0, false);
                     
-              //      _editor.getLineList()->back().setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
+                    _editor.getLineList()->back().setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
                     _editor.getArcList()->back().calculate();
                 }
             }
@@ -1002,8 +1006,6 @@ void modelDefinition::updateProjection()
     
     if(_zoomFactor > 1e6)
         _zoomFactor = 1e6;
-    
-    
     
     glScaled(_zoomFactor / (this->GetSize().GetWidth() / this->GetSize().GetHeight()), _zoomFactor, 1.0);
 
@@ -1130,7 +1132,7 @@ void modelDefinition::clearSelection()
 {
     if(_createNodes)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getIsSelectedState())
                 nodeIterator->setSelectState(false);
@@ -1209,7 +1211,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
     if(_editor.getNodeList()->size() > 0)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             nodeIterator->draw();
         }
@@ -1326,7 +1328,10 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     {
         if(_createNodes && !_geometryIsSelected)
         {
-            if(_editor.getNodeList()->size() > 0 && _editor.getNodeList()->back().getDraggingState())
+        
+            plf::colony<node>::iterator lastItem = _editor.getNodeList()->end()
+            --lastItem;
+            if(_editor.getNodeList()->size() > 1 && lastItem->getDraggingState())
             {
                 double tempX = convertToXCoordinate(event.GetX());
                 double tempY = convertToYCoordinate(event.GetY());
@@ -1334,11 +1339,26 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                 if(_preferences.getSnapGridState())
                 {
                     roundToNearestGrid(tempX, tempY);
-                    _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                    lastItem->setCenter(tempX, tempY);
                 }
                 else
                 {
-                    _editor.getNodeList()->at(_editor.getNodeList()->size() - 1).setCenter(tempX, tempY);
+                    lastItem->setCenter(tempX, tempY);
+                }
+            }
+            else if(_editor.getNodeList()->begin()->getDraggingState())
+            {
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                // Update the last node entry with new x and y coordinates and round if on snap grid
+                if(_preferences.getSnapGridState())
+                {
+                    roundToNearestGrid(tempX, tempY);
+                    _editor.getNodeList()->begin()->setCenter(tempX, tempY);
+                }
+                else
+                {
+                    _editor.getNodeList()->begin()->setCenter(tempX, tempY);
                 }
             }
         }
@@ -1364,6 +1384,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     }
     
     this->Refresh();
+    return;
 }
 
 
@@ -1376,14 +1397,14 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
     
     if(_createNodes)
     {
-        for(int i = 0; i < _editor.getNodeList()->size(); i++)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
-            if(_editor.getNodeList()->at(i).getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < 1 / (_zoomFactor * 10))// The multiplier will be some number between 10 and 100
+            if(nodeIterator->getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < 1 / (_zoomFactor * 10))// The multiplier will be some number between 10 and 100
             {
-                if(_editor.setNodeIndex(i))
+                if(_editor.setNodeIndex(*nodeIterator))
                 {
                     
-                    if(_createLines )
+                    if(_createLines)
                     {
                         //Create the line
                         _editor.addLine();
@@ -1428,7 +1449,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                 else
                 {
                     //Toggle the node to be selected
-                    _editor.getNodeList()->at(i).setSelectState(true);
+                    nodeIterator->setSelectState(true);
                     _geometryIsSelected = true;
                     this->Refresh();
                     return;
@@ -1487,10 +1508,13 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
             
             if(_preferences.getSnapGridState())
                 roundToNearestGrid(tempX, tempY);
-
-            if(_editor.getNodeList()->back().getDraggingState())
+                
+            plf::colony<node>::iterator lastItem = _editor.getNodeList()->end();
+            --lastItem;
+                
+            if(lastItem->getDraggingState())
             {
-                _editor.getNodeList()->pop_back();
+                _editor.getNodeList()->erase(lastItem);
                 _editor.addNode(tempX, tempY);
             }
         }
@@ -1591,7 +1615,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 
     if(_editor.getNodeList()->size() > 0)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             if(nodeIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
             {
@@ -1645,7 +1669,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
             {
                 if(_nodesAreSelected)
                 {
-                    for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         nodeIterator->setSelectState(false);
                         nodesSeleted = 0;
@@ -1695,7 +1719,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
             {
                 if(_nodesAreSelected)
                 {
-                    for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         nodeIterator->setSelectState(false);
                         nodesSeleted = 0;
@@ -1745,7 +1769,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
             {
                 if(_nodesAreSelected)
                 {
-                    for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         nodeIterator->setSelectState(false);
                         nodesSeleted = 0;
@@ -1790,7 +1814,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     /* This section is for if the user clicks on empty white space */
     if(_nodesAreSelected)
     {
-        for(std::deque<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
             nodeIterator->setSelectState(false);
         }

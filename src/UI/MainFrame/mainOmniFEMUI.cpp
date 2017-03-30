@@ -540,6 +540,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
 	EVT_SIZE(OmniFEMMainFrame::onResize)
+    EVT_ENTER_WINDOW(OmniFEMMainFrame::onEnterWindow)
 	
 	/************************
 	* Button Event Handling *

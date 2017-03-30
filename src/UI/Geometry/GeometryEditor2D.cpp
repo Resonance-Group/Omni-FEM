@@ -7,10 +7,10 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	node newNode;
     
     /* This section will make sure that two nodes are not drawn on top of each other */
-	for(unsigned int i = 0; i < _nodeList.size(); i++)
+	for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
@@ -22,7 +22,7 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	}
     
     newNode.setCenter(xPoint, yPoint);
-	_nodeList.push_back(newNode);
+	_nodeList.insert(newNode);
     
     /* If the node is in between a line, then break the line into 2 lines */
 	for(std::deque<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
@@ -88,10 +88,10 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     }
     
     // MAke sure that the block label is not placed on top of an existing node
-    for(unsigned int i = 0; i < _nodeList.size(); i++)
+    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(_nodeList.at(i).getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
@@ -114,50 +114,45 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
 
 
 
-void geometryEditor2D::addLine(int node0, int node1)
+void geometryEditor2D::addLine(node *firstNode, node *secondNode)
 {
     /* This code was adapted from the FEMM project. See line 263 in FemmeDoc.cpp */
     edgeLineShape newLine;
     
-    int tempNodeIndex1, tempNodeIndex2;
     
-    if(node0 == -1 && node1 == -1)
+    if(firstNode != nullptr && secondNode != nullptr)
     {
-        tempNodeIndex1 = _nodeIndex1;
-        tempNodeIndex2 = _nodeIndex2;
-    }
-    else
-    {
-        tempNodeIndex1 = node0;
-        tempNodeIndex2 = node1;
+        _nodeInterator1 = firstNode;
+        _nodeInterator2 = secondNode;
     }
     
-	if(tempNodeIndex1 == tempNodeIndex2)
+	if(*_nodeInterator1 == *_nodeInterator2)
 		return;
 	
 /* Check to see if the line has already been created */	
-	for(unsigned int i = 0; i < _lineList.size(); i++)
+
+	for(std::deque<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
-		if((*_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex1) && *_lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex2)) || (*_lineList.at(i).getFirstNode() == _nodeList.at(tempNodeIndex2) && *_lineList.at(i).getSecondNode() == _nodeList.at(tempNodeIndex1)))
+		if((*lineIterator->getFirstNode() == *_nodeInterator1 && *lineIterator->getSecondNode() == *_nodeInterator2) || (*lineIterator->getFirstNode() == *_nodeInterator2 && *lineIterator->getSecondNode() == *_nodeInterator1))
 			return;
 	}
     
-    newLine.setFirstNode(_nodeList.at(tempNodeIndex1));
-    newLine.setSecondNode(_nodeList.at(tempNodeIndex2));
+    newLine.setFirstNode(*_nodeInterator1);
+    newLine.setSecondNode(*_nodeInterator2);
     
     /* This section will check to see if there are any intersections with other segments. If so, create a node at the intersection */
-    for(int i = 0; i < _lineList.size(); i++)
+    for(std::deque<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
     {
         double tempX, tempY;
-        if(getIntersection(newLine, _lineList.at(i), tempX, tempY))
+        if(getIntersection(newLine, *lineIterator, tempX, tempY))
             addNode(tempX, tempY);
     }
     
     /* This section will check to see if there are any intersections with arcs. If so, create a node at the intersection */
-    for(unsigned int i = 0; i < _arcList.size(); i++)
+    for(std::deque<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
     {
         Vector newNodesPoints[2];
-        int j = getLineToArcIntersection(newLine, _arcList.at(i), newNodesPoints);
+        int j = getLineToArcIntersection(newLine, *arcIterator, newNodesPoints);
         if(j > 0)
         {
             for(int k = 0; k < j; k++)
@@ -178,26 +173,27 @@ void geometryEditor2D::addLine(int node0, int node1)
     double shortDistance, dmin;
     Vector node0Vec, node1Vec, nodeiVec;
     
-    node0Vec.Set(_nodeList.at(tempNodeIndex1).getCenterXCoordinate(), _nodeList.at(tempNodeIndex1).getCenterYCoordinate());
-    node1Vec.Set(_nodeList.at(tempNodeIndex2).getCenterXCoordinate(), _nodeList.at(tempNodeIndex2).getCenterYCoordinate());
+    node0Vec.Set(_nodeInterator1->getCenterXCoordinate(), _nodeInterator1->getCenterYCoordinate());
+    node1Vec.Set(_nodeInterator2->getCenterXCoordinate(), _nodeInterator2->getCenterYCoordinate());
     
     dmin = Vabs(node1Vec - node0Vec) * 1.0e-05;
 
-    for(int i = 0; i < _nodeList.size(); i++)
+    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
     {
-        if((i != tempNodeIndex1) && (i != tempNodeIndex2))
+        if((*nodeIterator != *_nodeInterator1) && (*nodeIterator != *_nodeInterator2))
         {
-            nodeiVec.Set(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate());
-            shortDistance = calculateShortestDistance(_nodeList.at(i).getCenterXCoordinate(), _nodeList.at(i).getCenterYCoordinate(), newLine);
+            nodeiVec.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
+            shortDistance = calculateShortestDistance(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), newLine);
             if((Vabs(nodeiVec - node0Vec) < dmin) || (Vabs(nodeiVec - node1Vec) < dmin))
                 shortDistance = 2.0 * dmin;
             if(shortDistance < dmin)
             {
                 _lineList.pop_back();
-                addLine(tempNodeIndex1, i);
-                addLine(i, tempNodeIndex2);
+                addLine(_nodeInterator1, *nodeIterator);
+                addLine(*nodeIterator, _nodeInterator2);
             }
-            i = _nodeList.size();
+            nodeIterator = _nodeList.end();
+            --nodeIterator;
         }
     }
     resetIndexs();
@@ -214,15 +210,15 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	Vector centerPoint;
 	double dist, radius, minDistance, shortDistanceFromArc;
     
-    if(nodesAreSelected && (_nodeList.at(_nodeIndex1) == _nodeList.at(_nodeIndex2)))
+    if(nodesAreSelected && (*_nodeInterator1 == *_nodeInterator2))
         return;
     else if(!nodesAreSelected && (arcSeg.getFirstNode() == arcSeg.getSecondNode()))
         return;
         
     if(nodesAreSelected)
     {
-        arcSeg.setFirstNode(_nodeList.at(_nodeIndex1));
-        arcSeg.setSecondNode(_nodeList.at(_nodeIndex2));
+        arcSeg.setFirstNode(*_nodeInterator1);
+        arcSeg.setSecondNode(*_nodeInterator2);
         arcSeg.calculate();
     }
 		
@@ -239,21 +235,21 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		else
 		{
 			Vector vec1, vec2;
-			vec1.Set(_nodeList.at(0).getCenterXCoordinate(), _nodeList.at(0).getCenterYCoordinate());
+			vec1.Set(_nodeList.begin()->getCenterXCoordinate(), _nodeList.begin()->getCenterYCoordinate());
 			vec2 = vec1;
-			for(int i = 0; i < _nodeList.size(); i++)
+			for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 			{
-				if(_nodeList.at(i).getCenterXCoordinate() < vec1.getXComponent())
-					vec1.Set(_nodeList.at(i).getCenterXCoordinate(), vec1.getYComponent());
+				if(nodeIterator->getCenterXCoordinate() < vec1.getXComponent())
+					vec1.Set(nodeIterator->getCenterXCoordinate(), vec1.getYComponent());
 				
-				if(_nodeList[i].getCenterXCoordinate() > vec2.getXComponent())
-					vec2.Set(_nodeList.at(i).getCenterXCoordinate(), vec2.getYComponent());
+				if(nodeIterator->getCenterXCoordinate() > vec2.getXComponent())
+					vec2.Set(nodeIterator->getCenterXCoordinate(), vec2.getYComponent());
 				
-				if(_nodeList.at(i).getCenterYCoordinate() < vec1.getYComponent())
-					vec1.Set(vec1.getXComponent(), _nodeList.at(i).getCenterYCoordinate());
+				if(nodeIterator->getCenterYCoordinate() < vec1.getYComponent())
+					vec1.Set(vec1.getXComponent(), nodeIterator->getCenterYCoordinate());
 					
-				if(_nodeList.at(i).getCenterYCoordinate() > vec2.getYComponent())
-					vec2.Set(vec2.getXComponent(), _nodeList.at(i).getCenterYCoordinate());
+				if(nodeIterator->getCenterYCoordinate() > vec2.getYComponent())
+					vec2.Set(vec2.getXComponent(), nodeIterator->getCenterYCoordinate());
 			}
 			
 			dist = Vabs(vec1 - vec2) * 1.0e-06;
@@ -301,32 +297,33 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	else
 		minDistance = tolerance;
 	
-	for(int loopCounter = 0; loopCounter < _nodeList.size(); loopCounter++)
+	for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
-		if((_nodeList.at(loopCounter) != *arcSeg.getFirstNode()) && (_nodeList.at(loopCounter) != *arcSeg.getSecondNode()))
+		if((*nodeIterator != *arcSeg.getFirstNode()) && (*nodeIterator != *arcSeg.getSecondNode()))
 		{
-			shortDistanceFromArc = shortestDistanceFromArc(Vector(_nodeList.at(loopCounter).getCenterXCoordinate(), _nodeList.at(loopCounter).getCenterYCoordinate()), _arcList.at(_arcList.size() - 1));
+			shortDistanceFromArc = shortestDistanceFromArc(Vector(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate()), _arcList.at(_arcList.size() - 1));
 			if(shortDistanceFromArc < minDistance)
 			{
 				Vector vec1, vec2, vec3;
 				vec1.Set(arcSeg.getFirstNode()->getCenterXCoordinate(), arcSeg.getFirstNode()->getCenterYCoordinate());
 				vec2.Set(arcSeg.getSecondNode()->getCenterXCoordinate(), arcSeg.getSecondNode()->getCenterYCoordinate());
-				vec3.Set(_nodeList.at(loopCounter).getCenterXCoordinate(), _nodeList.at(loopCounter).getCenterYCoordinate());
+				vec3.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
 				
 				_arcList.pop_back();
 				
 				newArc = arcSeg;
 				
-                newArc.setSecondNode(_nodeList.at(loopCounter));
+                newArc.setSecondNode(*nodeIterator);
 				newArc.setArcAngle(Varg((vec3 - centerPoint) / (vec1 - centerPoint)) * 180.0 / PI);
 				addArc(newArc, minDistance, false);
 				
 				newArc = arcSeg;
-                newArc.setFirstNode(_nodeList.at(loopCounter));
+                newArc.setFirstNode(*nodeIterator);
 				newArc.setArcAngle(Varg((vec2 - centerPoint) / (vec3 - centerPoint)) * 180.0 / PI);
 				addArc(newArc, minDistance, false);
 				
-				loopCounter = _nodeList.size();
+                nodeIterator = _nodeList.end();
+				--nodeIterator;
 			}
 		}
 	}

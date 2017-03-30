@@ -211,6 +211,11 @@ private:
     {
         return;
     }
+    
+    void onEnterWindow(wxMouseEvent &event)
+    {
+        this->SetFocus();
+    }
 
  	/*****************************
 	* Prototypes for client area *

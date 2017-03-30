@@ -10,6 +10,7 @@
 #include <glu.h>
 
 #include <common/Vector.h>
+#include <common/plfcolony.h>
 #include <common/wxGLString.h>
 
 #include <UI/geometryShapes.h>
@@ -17,7 +18,15 @@
 class geometryEditor2D
 {
 private:
+    
     /*! /brief
+     *  This custom class was choosen because the list is much slower and this 
+     *  class has been proven to be mcuh faster. It functions similiar to a list
+     *  and you have many of the benefits of using a list but with the added speed bonus
+     */ 
+    plf::colony<node> _nodeList;
+    
+   /*! /brief
      *  So you might be thinking, why use a deque instead of a vector or a list?
      *  It is simple, a for a vector, when something is added or removed, the vector
      *  copies all of of the contents from one memory location to another. In some datatypes,
@@ -25,9 +34,10 @@ private:
      *  the vector, this can create a number of issues.
      *  For a list, everything was already coded using vectors when the vector issue was discover. The
      *  deque contains many functions similiar to that of the vector and so the deque datatype was 
-     *  the prefered choice
+     *  the prefered choice. It has also bee researched that the list is very much slower compared
+     *  to the deque. However, the speed is noticeable after 10,000 elements are present.
+     *  Still, deque was choosen due to its overall speed.
      */ 
-    std::deque<node> _nodeList;
     
 	std::deque<blockLabel> _blockLabelList;
     
@@ -37,9 +47,9 @@ private:
     
     wxGLStringArray _blockLabelNameArray;
     
-    long _nodeIndex1 = -1;// This is the index of the first selected node
+    node *_nodeInterator1;// This is the index of the first selected node
     
-    long _nodeIndex2 = -1;// This is the index of the second selected node
+    node *_nodeInterator2;// This is the index of the second selected node
     
     int _tolerance = 2;
     
@@ -77,28 +87,28 @@ public:
         return shortestDistanceFromArc(newVector, arcSegment);
     }
     
-    bool setNodeIndex(unsigned long index)
+    bool setNodeIndex(node &iterator)
     {
-        if(_nodeIndex1 == -1)
+        if(_nodeInterator1 == nullptr)
         {
-            _nodeIndex1 = index;
+            _nodeInterator1 = &iterator;
             return false;
         }
-        else if(_nodeIndex1 != -1)
+        else if(_nodeInterator2 == nullptr)
         {
-            _nodeIndex2 = index;
+            _nodeInterator2 = &iterator;
             return true;
         }
         
         return false;
     }
 
-    std::deque<node> *getNodeList()
+    plf::colony<node> *getNodeList()
     {
         return &_nodeList;
     }
     
-    void setNodeList(std::deque<node> list)
+    void setNodeList(plf::colony<node> list)
     {
         _nodeList = list;
     }
@@ -140,7 +150,7 @@ public:
         node newNode;
         newNode.setCenter(xPoint, yPoint);
         newNode.setDraggingState(true);
-        _nodeList.push_back(newNode);
+        _nodeList.insert(newNode);
     }
     
     void addBlockLabel(double xPoint, double yPoint);
@@ -153,11 +163,21 @@ public:
         _blockLabelList.push_back(newLabel);
     }
     
-    void addLine(int node0, int node1);
+    void addLine(node *firstNode, node *secondNode);
+    
+    void addLine(node &firstNode, node *secondNode)
+    {
+        addLine(&firstNode, secondNode);
+    }
+    
+    void addLine(node *firstNode, node &secondNode)
+    {
+        addLine(firstNode, &secondNode);
+    }
     
     void addLine()
     {
-        addLine(-1, -1);
+        addLine(nullptr, nullptr);
     }
     
     void addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
@@ -169,8 +189,8 @@ public:
     
     void resetIndexs()
     {
-        _nodeIndex1 = -1;
-        _nodeIndex2 = -1;
+        _nodeInterator1 = nullptr;
+        _nodeInterator2 = nullptr;
     }
     
     void renderBlockNames(wxPaintDC *dc, double zoomFactor)
