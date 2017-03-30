@@ -39,11 +39,11 @@ private:
      *  Still, deque was choosen due to its overall speed.
      */ 
     
-	std::deque<blockLabel> _blockLabelList;
+	plf::colony<blockLabel> _blockLabelList;
     
-	std::deque<edgeLineShape> _lineList;
+	plf::colony<edgeLineShape> _lineList;
     
-	std::deque<arcShape> _arcList;
+	plf::colony<arcShape> _arcList;
     
     wxGLStringArray _blockLabelNameArray;
     
@@ -113,32 +113,32 @@ public:
         _nodeList = list;
     }
     
-    std::deque<blockLabel> *getBlockLabelList()
+    plf::colony<blockLabel> *getBlockLabelList()
     {
         return &_blockLabelList;
     }
     
-    void setBlockLabelList(std::deque<blockLabel> list)
+    void setBlockLabelList(plf::colony<blockLabel> list)
     {
         _blockLabelList = list;
     }
     
-    std::deque<edgeLineShape> *getLineList()
+    plf::colony<edgeLineShape> *getLineList()
     {
         return &_lineList;
     }
     
-    void setLineList(std::deque<edgeLineShape> list)
+    void setLineList(plf::colony<edgeLineShape> list)
     {
         _lineList = list;
     }
     
-    std::deque<arcShape> *getArcList()
+    plf::colony<arcShape> *getArcList()
     {
         return &_arcList;
     }
     
-    void setArcList(std::deque<arcShape> list)
+    void setArcList(plf::colony<arcShape> list)
     {
         _arcList = list;
     }
@@ -160,7 +160,7 @@ public:
         blockLabel newLabel;
         newLabel.setCenter(xPoint, yPoint);
         newLabel.setDraggingState(true);
-        _blockLabelList.push_back(newLabel);
+        _blockLabelList.insert(newLabel);
     }
     
     void addLine(node *firstNode, node *secondNode);

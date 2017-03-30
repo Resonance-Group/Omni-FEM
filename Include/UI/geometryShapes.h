@@ -327,9 +327,9 @@ public:
         glEnd();
     }
 	
-    blockProperty getProperty()
+    blockProperty *getProperty()
     {
-        return _property;
+        return &_property;
     }
     
     blockProperty *getAddressProperty()

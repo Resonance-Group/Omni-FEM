@@ -1447,14 +1447,14 @@ public:
 
     inline PLF_COLONY_FORCE_INLINE iterator back() PLF_COLONY_NOEXCEPT
 	{
-		return --end_iterator;
+        return (--end());
 	}
     
     
     
     inline PLF_COLONY_FORCE_INLINE const iterator & back() const PLF_COLONY_NOEXCEPT
 	{
-		return --end_iterator;
+        return (--end());
 	}
 
 
