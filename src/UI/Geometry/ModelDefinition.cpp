@@ -38,9 +38,9 @@ void modelDefinition::deleteSelection()
     
     if(_editor.getNodeList()->size() > 1 && _nodesAreSelected)
     {
-        plf::colony<node>::iterator stopIterator = _editor.getNodeList()->end();
         for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end();)
         {
+            plf::colony<node>::iterator endTest = _editor.getNodeList()->end();
             if(nodeIterator->getIsSelectedState())
             {
                 if(_editor.getLineList()->size() > 1)
@@ -76,7 +76,10 @@ void modelDefinition::deleteSelection()
                  * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
                  * This way the nodeIterator will never be pointing to an invalidated element.
                  */ 
-               _editor.getNodeList()->erase(nodeIterator++);     
+               _editor.getNodeList()->erase(nodeIterator++);
+
+                if(_editor.getNodeList()->size() == 0)
+                    break;
             }
             else
                 nodeIterator++;
@@ -94,6 +97,9 @@ void modelDefinition::deleteSelection()
             if(lineIterator->getIsSelectedState())
             {
                 _editor.getLineList()->erase(lineIterator++);
+                
+                if(_editor.getLineList()->size() == 0)
+                    break;
             }
             else
                 lineIterator++;
@@ -111,6 +117,9 @@ void modelDefinition::deleteSelection()
             if(arcIterator->getIsSelectedState())
             {
                 _editor.getArcList()->erase(arcIterator++);
+                
+                if(_editor.getArcList()->size() == 0)
+                    break;
             }
             else
                 arcIterator++;
@@ -130,6 +139,9 @@ void modelDefinition::deleteSelection()
             if(blockIterator->getIsSelectedState())
             {
                 _editor.getBlockLabelList()->erase(blockIterator++);
+                
+                if(_editor.getBlockLabelList()->size() == 0)
+                    break;
                  //   labelNamesToKeep.addString(_editor.getBlockNameArray()->get(i));
             }
             else
