@@ -20,24 +20,21 @@ class geometryEditor2D
 private:
     
     /*! /brief
-     *  This custom class was choosen because the list is much slower and this 
-     *  class has been proven to be mcuh faster. It functions similiar to a list
-     *  and you have many of the benefits of using a list but with the added speed bonus
+     *  So you might be thinking, why use a colony instead of a vector or a list or a deque?
+     *  It is simple, for a vector, when something is added or removed, the vector
+     *  copies all of of the contents from one memory location to another. This can cause significant speed issues
+     *  with a large amount of data. Also, in some datatypes, we are storing the address of the node.
+     *  If the address changes everytime we add or remove soemthing from
+     *  the vector, this can create a number of issues.
+     *  For a list, everything was already coded using vectors when the vector issue was discover which results
+     *  in a preference for using a deque since it contains many functions similiar to that of the vector and so the deque datatype was
+     *  the prefered choice. The list is also much slower then a deque. However, it was discovered that when an element 
+     *  was added or removed for the deque, the addresses became invalidated.A hybrid was needed between the 
+     *  list's ability to keep all of the addresses validated when changing the list but have the speed of a deque.
+     *  Further research found the plf::colony class. It functions similiar to a list
+     *  and you have many of the benefits of using a list but with the added speed bonus of a deque
      */ 
     plf::colony<node> _nodeList;
-    
-   /*! /brief
-     *  So you might be thinking, why use a deque instead of a vector or a list?
-     *  It is simple, a for a vector, when something is added or removed, the vector
-     *  copies all of of the contents from one memory location to another. In some datatypes,
-     *  we are storing the address of the node. If the address changes everytime we add or remove soemthing from
-     *  the vector, this can create a number of issues.
-     *  For a list, everything was already coded using vectors when the vector issue was discover. The
-     *  deque contains many functions similiar to that of the vector and so the deque datatype was 
-     *  the prefered choice. It has also bee researched that the list is very much slower compared
-     *  to the deque. However, the speed is noticeable after 10,000 elements are present.
-     *  Still, deque was choosen due to its overall speed.
-     */ 
     
 	plf::colony<blockLabel> _blockLabelList;
     
