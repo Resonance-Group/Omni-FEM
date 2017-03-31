@@ -1,6 +1,6 @@
 #include <UI/EditMenu/MirrorDialog.h>
 
-mirrorDialog::mirrorDialog() : wxDialog(NULL, wxID_ANY, "Mirror")
+mirrorDialog::mirrorDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Mirror")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -32,7 +32,7 @@ mirrorDialog::mirrorDialog() : wxDialog(NULL, wxID_ANY, "Mirror")
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(76, 135), wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxButton *cancelButton = new wxButton(this, wxID_OK, "Cancel", wxPoint(76, 135), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(76, 135), wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);

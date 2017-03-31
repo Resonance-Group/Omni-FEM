@@ -1,9 +1,15 @@
 #include <UI/EditMenu/MoveCopyDialog.h>
 
 
-moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
+moveCopyDialog::moveCopyDialog(wxWindow *par, bool isMove) : wxDialog(par, wxID_ANY, "Copy")
 {
     _isMove = isMove;
+    
+    wxIntegerValidator<unsigned int> copiesValidator;
+    copiesValidator.SetRange(0, 65535);
+    
+    wxFloatingPointValidator<double> angleValidator(15);
+    angleValidator.SetRange(-360, 360);
     
     if(isMove)
         this->SetTitle("Move");
@@ -25,7 +31,7 @@ moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
-    _rotationCheckBox->Create(this, generalFrameButton::ID_RadioButton1, "Rotation", wxPoint(12, 12), wxSize(75, 17));
+    _rotationCheckBox->Create(this, generalFrameButton::ID_RadioButton1, "Rotation");
     _rotationCheckBox->SetFont(*font);
     _rotationCheckBox->SetValue(true);
     headerSizer->Add(_rotationCheckBox, 0, wxALL, 6);
@@ -34,7 +40,7 @@ moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
     shiftText->SetFont(*font);
     wxStaticText *aboutPointText = new wxStaticText(rotationSizer->GetStaticBox(), wxID_ANY, "About Point (x, y):", wxPoint(6, 48), wxSize(105, 13));
     aboutPointText->SetFont(*font);
-    _angularShiftTextCtrl->Create(rotationSizer->GetStaticBox(), wxID_ANY, "0", wxPoint(107, 19), wxSize(100, 20));
+    _angularShiftTextCtrl->Create(rotationSizer->GetStaticBox(), wxID_ANY, "0", wxPoint(107, 19), wxSize(100, 20), 0, angleValidator);
     _angularShiftTextCtrl->SetFont(*font);
     _aboutPointXTextCtrl->Create(rotationSizer->GetStaticBox(), wxID_ANY, "0", wxPoint(107, 45), wxSize(100, 20));
     _aboutPointXTextCtrl->SetFont(*font);
@@ -53,7 +59,7 @@ moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
     rotationSizer->Add(RSLine2);
     rotationSizer->Add(RSLine3, 0, wxALIGN_RIGHT);
     
-    _translationCheckBox->Create(this, generalFrameButton::ID_RadioButton2, "Translation", wxPoint(12, 143), wxSize(90, 17));
+    _translationCheckBox->Create(this, generalFrameButton::ID_RadioButton2, "Translation");
     _translationCheckBox->SetFont(*font);
     _translationCheckBox->SetValue(false);
     translationCheckBoxSizer->Add(_translationCheckBox, 0, wxALL, 6);
@@ -82,9 +88,9 @@ moveCopyDialog::moveCopyDialog(bool isMove) : wxDialog(NULL, wxID_ANY, "Copy")
     
     if(!isMove)
     {
-        wxStaticText *copiesText = new wxStaticText(this, wxID_ANY, "Number of Copies:", wxPoint(9, 253), wxSize(105, 13));
+        wxStaticText *copiesText = new wxStaticText(this, wxID_ANY, "Number of Copies:");
         copiesText->SetFont(*font);
-        _numberCopiesTextCtrl->Create(this, wxID_ANY, "0", wxPoint(119, 250), wxSize(100, 20));
+        _numberCopiesTextCtrl->Create(this, wxID_ANY, "0", wxPoint(119, 250), wxSize(100, 20), 0, copiesValidator);
         _numberCopiesTextCtrl->SetFont(*font);
     
         numCopiesSizer->Add(copiesText, 0, wxCENTER | wxALL, 6);
@@ -124,7 +130,7 @@ bool moveCopyDialog::rotationIsSelected()
 
 
 
-void moveCopyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, long &numberCopies)
+void moveCopyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, unsigned int &numberCopies)
 {
     double value1, value2;
     long numCopies;
@@ -134,12 +140,20 @@ void moveCopyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, 
     _aboutPointXTextCtrl->GetValue().ToDouble(&value1);
     _aboutPointYTextCtrl->GetValue().ToDouble(&value2);
     
+    if(!_isMove)
+    {
+        _numberCopiesTextCtrl->GetValue().ToLong(&numCopies);
+        numberCopies = (unsigned int)numCopies;
+    }
+    else
+        numberCopies = 0;
+    
     aboutPoint = wxPoint(value1, value2);
 }
 
 
 
-void moveCopyDialog::getTranslationCopy(double &horizontalShift, double &verticalShift, long &numberCopies)
+void moveCopyDialog::getTranslationCopy(double &horizontalShift, double &verticalShift, unsigned int &numberCopies)
 {
     double value;
     long numCopies;
@@ -152,7 +166,7 @@ void moveCopyDialog::getTranslationCopy(double &horizontalShift, double &vertica
     if(!_isMove)
     {
         _numberCopiesTextCtrl->GetValue().ToLong(&numCopies);
-        numberCopies = numCopies;
+        numberCopies = (unsigned int)numCopies;
     }
     else
         numberCopies = 0;

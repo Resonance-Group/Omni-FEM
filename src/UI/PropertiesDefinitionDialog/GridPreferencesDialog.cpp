@@ -1,6 +1,6 @@
 #include <UI/GridPreferencesDialog.h>
 
-gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid Preferences")
+gridPreferencesDialog::gridPreferencesDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Grid Preferences")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -13,27 +13,21 @@ gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid 
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
+    wxFloatingPointValidator<double> greaterThenZero(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
+    greaterThenZero.SetMin(0);
+    
     wxArrayString *selectionArray = new wxArrayString();
     selectionArray->Add("Cartesian");
     selectionArray->Add("Polar");
     
-    wxStaticText *ppuText = new wxStaticText(this, wxID_ANY, "Pixels/Unit:");
-    ppuText->SetFont(*font);
-    _ppuTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(79, 12), wxSize(121, 20));
-    _ppuTextCtrl->SetFont(*font);
-    
-    line1Sizer->Add(ppuText, 0, wxCENTER | wxALL, 6);
-    line1Sizer->Add(3, 0, 0);
-    line1Sizer->Add(_ppuTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-    
-    wxStaticText *gridText = new wxStaticText(this, wxID_ANY, "Grid Size:");
+    wxStaticText *gridText = new wxStaticText(this, wxID_ANY, "Grid Step:");
     gridText->SetFont(*font);
-    _gridSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(79, 38), wxSize(121, 20));
+    _gridSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
     _gridSizeTextCtrl->SetFont(*font);
     
-    line2Sizer->Add(gridText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-    line2Sizer->Add(12, 0, 0);
-    line2Sizer->Add(_gridSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    line1Sizer->Add(gridText, 0, wxCENTER | wxALL, 6);
+    line1Sizer->Add(12, 0, 0);
+    line1Sizer->Add(_gridSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxTOP, 6);
     
     wxStaticText *coordianteText = new wxStaticText(this, wxID_ANY, "Coordinate:");
     coordianteText->SetFont(*font);
@@ -41,31 +35,45 @@ gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid 
     _coordinateComboBox->SetFont(*font);
     _coordinateComboBox->SetSelection(0);
     
-    line3Sizer->Add(coordianteText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-    line3Sizer->Add(_coordinateComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    line2Sizer->Add(coordianteText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+    line2Sizer->Add(_coordinateComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
-    _showGridCheckBox->Create(this, wxID_ANY, "Show Grid", wxPoint(15, 64), wxSize(80, 17));
+    _showGridCheckBox->Create(this, wxID_ANY, "Show Grid");
+    _showGridCheckBox->SetValue(_preferences.getShowGridState());
     _showGridCheckBox->SetFont(*font);
-    _showOriginCheckBox->Create(this, wxID_ANY, "Show Origin", wxPoint(102, 64), wxSize(90, 17));
+    _showOriginCheckBox->Create(this, wxID_ANY, "Show Origin");
     _showOriginCheckBox->SetFont(*font);
+    _showOriginCheckBox->SetValue(_preferences.getShowOriginState());
     
-    line4Sizer->Add(_showGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
-    line4Sizer->Add(_showOriginCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    line3Sizer->Add(_showGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+    line3Sizer->Add(_showOriginCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
-    _snapGridCheckBox->Create(this, wxID_ANY, "Snap Grid", wxPoint(15, 87), wxSize(80, 17));
+    _snapGridCheckBox->Create(this, wxID_ANY, "Snap Grid");
     _snapGridCheckBox->SetFont(*font);
+    _snapGridCheckBox->SetValue(_preferences.getSnapGridState());
+    _showGridAxisCheckBox->Create(this, wxID_ANY, "Show Grid Axis");
+    _showGridAxisCheckBox->SetFont(*font);
+    _showGridAxisCheckBox->SetValue(_preferences.getShowAxisState());
     
-    line5Sizer->Add(_snapGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+    line4Sizer->Add(_snapGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+    line4Sizer->Add(_showGridAxisCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
-    _showBlockNameCheckBox->Create(this, wxID_ANY, "Show Block Names", wxPoint(15, 110), wxSize(135, 17));
+    _showBlockNameCheckBox->Create(this, wxID_ANY, "Show Block Names");
+    _showBlockNameCheckBox->SetValue(_preferences.getShowBlockNameState());
     _showBlockNameCheckBox->SetFont(*font);
     
-    line6Sizer->Add(_showBlockNameCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+    line5Sizer->Add(_showBlockNameCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     
-    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(23, 133), wxSize(75, 23));
+    _reverseMouseZoomCheckBox->Create(this, wxID_ANY, "Reverse Mouse Zoom Direction");
+    _reverseMouseZoomCheckBox->SetValue(_preferences.getMouseZoomReverseState());
+    _reverseMouseZoomCheckBox->SetFont(*font);
+    
+    line6Sizer->Add(_reverseMouseZoomCheckBox, 0, wxCENTER | wxRIGHT | wxLEFT | wxBOTTOM, 6);
+    
+    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(104, 133), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxDefaultPosition, wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
@@ -73,8 +81,8 @@ gridPreferencesDialog::gridPreferencesDialog() : wxDialog(NULL, wxID_ANY, "Grid 
     
     topSizer->Add(line1Sizer);
     topSizer->Add(line2Sizer);
-    topSizer->Add(line3Sizer);
     topSizer->Add(0, 10, 0);
+    topSizer->Add(line3Sizer);
     topSizer->Add(line4Sizer);
     topSizer->Add(line5Sizer);
     topSizer->Add(line6Sizer);
@@ -92,11 +100,8 @@ void gridPreferencesDialog::getParameters(gridPreferences &preferences)
     double value;
     int temp;
     
-    _ppuTextCtrl->GetValue().ToDouble(&value);
-    preferences.setPPU(value);
-    
     _gridSizeTextCtrl->GetValue().ToDouble(&value);
-    preferences.setGridSize(value);
+    preferences.setGridStep(value);
     
     temp = _coordinateComboBox->GetSelection() + 1;
     preferences.setCoordinateSystem((planarCoordinateEnum)temp);
@@ -105,6 +110,8 @@ void gridPreferencesDialog::getParameters(gridPreferences &preferences)
     preferences.setSnapGridState(_snapGridCheckBox->GetValue());
     preferences.setShowOriginState(_showOriginCheckBox->GetValue());
     preferences.setShowBlockNameState(_showBlockNameCheckBox->GetValue());
+    preferences.setShowAxisState(_showGridAxisCheckBox->GetValue());
+    preferences.setMouseZoomReverseState(_reverseMouseZoomCheckBox->GetValue());
 }
 
 
@@ -119,16 +126,11 @@ void gridPreferencesDialog::setParameters(gridPreferences &preferences)
 
 void gridPreferencesDialog::updateInterface()
 {
-    std::ostream ppuStream(_ppuTextCtrl);
     std::ostream gridSizeStream(_gridSizeTextCtrl);
-    
-    _ppuTextCtrl->SetValue(wxEmptyString);
-    ppuStream << std::setprecision(3);
-    ppuStream << _preferences.getPPU();
     
     _gridSizeTextCtrl->SetValue(wxEmptyString);
     gridSizeStream << std::setprecision(3);
-    gridSizeStream << _preferences.getGridSize();
+    gridSizeStream << _preferences.getGridStep();
     
     if(_preferences.getCoordinateSystem() != planarCoordinateEnum::NO_COORDINATE_DEFINED)
         _coordinateComboBox->SetSelection((int)_preferences.getCoordinateSystem() - 1);
@@ -139,6 +141,8 @@ void gridPreferencesDialog::updateInterface()
     _showOriginCheckBox->SetValue(_preferences.getShowOriginState());
     _snapGridCheckBox->SetValue(_preferences.getSnapGridState());
     _showBlockNameCheckBox->SetValue(_preferences.getShowBlockNameState());
+    _showGridAxisCheckBox->SetValue(_preferences.getShowAxisState());
+    _reverseMouseZoomCheckBox->SetValue(_preferences.getMouseZoomReverseState());
 }
 
 

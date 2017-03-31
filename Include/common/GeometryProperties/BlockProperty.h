@@ -1,6 +1,8 @@
 #ifndef BLOCKPROPERTY_H_
 #define BLOCKPROPERTY_H_
 
+#include <string>
+
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
 #include <common/CircuitProperty.h>
@@ -12,15 +14,13 @@ class blockProperty
 private:
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
     
-    electrostaticMaterial _electricMaterial;
+    std::string _materialName = "None";
     
-    magneticMaterial _magneticMaterial;
+    std::string _circuitName = "None";
     
     bool _meshSizeIsAuto = true;
     
     double _meshSize = 0;
-    
-    circuitProperty _circuit;
     
     unsigned long _numberOfTurns = 1;
     
@@ -31,12 +31,6 @@ private:
     bool _isExternalRegion = false;
     
     bool _isDefault = false;
-    
-    bool _magneticMaterialIsSet = false;
-    
-    bool _electricMaterialIsSet = false;
-    
-    bool _circuitIsSet = false;
     
 public:
     void setPhysicsProblem(physicProblems problem)
@@ -49,26 +43,24 @@ public:
         return _problem;
     }
     
-    void setElectricMaterial(electrostaticMaterial material)
+    void setMaterialName(std::string name)
     {
-        _electricMaterial = material;
-        _electricMaterialIsSet = true;
+        _materialName = name;
     }
     
-    electrostaticMaterial getElectricMaterial()
+    std::string getMaterialName()
     {
-        return _electricMaterial;
+        return _materialName;
     }
     
-    void setMagneticMaterial(magneticMaterial material)
+    void setCircuitName(std::string name)
     {
-        _magneticMaterial = material;
-        _magneticMaterialIsSet = true;
+        _circuitName = name;
     }
     
-    magneticMaterial getMagneticMaterial()
+    std::string getCircuitName()
     {
-        return _magneticMaterial;
+        return _circuitName;
     }
     
     void setAutoMeshState(bool state)
@@ -90,17 +82,7 @@ public:
     {
         return _meshSize;
     }
-    
-    void setCircuit(circuitProperty circuit)
-    {
-        _circuit = circuit;
-        _circuitIsSet = true;
-    }
-    
-    circuitProperty getCircuit()
-    {
-        return _circuit;
-    }
+
     
     void setNumberOfTurns(unsigned long turnCount)
     {
@@ -150,21 +132,6 @@ public:
     bool getDefaultState()
     {
         return _isDefault;
-    }
-    
-    bool getMagneticMaterialSetState()
-    {
-        return _magneticMaterialIsSet;
-    }
-    
-    bool getElectricMaterialSetState()
-    {
-        return _electricMaterialIsSet;
-    }
-    
-    bool getCircuitSetState()
-    {
-        return _circuitIsSet;
     }
 };
 

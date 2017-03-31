@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <wx/string.h>
+
 #include <common/ElectricalBoundary.h>
 #include <common/ElectroStaticMaterial.h>
 #include <common/ElectrostaticPreference.h>
@@ -12,6 +14,7 @@
 #include <common/MagneticBoundary.h>
 #include <common/MagneticMaterial.h>
 #include <common/MagneticPreference.h>
+
 #include <common/NodalProperty.h>
 
 
@@ -27,42 +30,164 @@ class problemDefinition
 	*************/
 private:
     //! This list contains all of the boundary conditions that the user sets. THis is the most generic form such that it holds BC for both the magnetic domain and the electrical
-  //  std::vector<boundaryCondition> _boundaryConditionList;
+    std::vector<electricalBoundary> _localElectricalBoundaryConditionList;
     
     //! This list is the global list for all of the materials that will be used in the problem
-  //  std::vector<materialProperty> _materialList;
+    std::vector<magneticBoundary> _localMagneticBoundaryConditionList;
+    
+    std::vector<conductorProperty> _localConductorList;
+    
+    std::vector<circuitProperty> _localCircuitList;
+    
+    std::vector<magneticMaterial> _localMagneticMaterialList;
+    
+    std::vector<electrostaticMaterial> _localElectrialMaterialList;
+    
+    std::vector<nodalProperty> _localNodalList;
+    
+    electroStaticPreference _localElectricalPreference;
+    
+    magneticPreference _localMagneticPreference;
+    
+    physicProblems _phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
+    
+    wxString _problemName = "Untitled";
     
     /**********
     * Methods *
 	***********/
 public:
-    //! This first function will add a single boundary condition to the list
-    void addBoundaryCondition(boundaryCondition condition);
+    void setPhysicsProblem(physicProblems prob)
+    {
+        _phycisProblem = prob;
+    }
     
-    //! This function will take a list and add the input list to the one in the problem Definition class
-    void addBoundaryConditionList(std::vector<boundaryCondition> conditionList);
-    
-    //! This function will copy the conditionList into the current data type
-    void copyBoundaryCondition(std::vector<boundaryCondition> conditionList);
-    
-    //! This function will return the boundary condition list
-    std::vector<boundaryCondition> getBoundaryConditionList();
-    
-    //! This function will add a single material into the global list
-    void addMaterial(materialProperty material);
-    
-    //! This function will combine the input list with the global list
-    void addMaterialList(std::vector<materialProperty> materialList);
-    
-    //! THis function will copy the input list to the global list
-    void copyMaterialList(std::vector<materialProperty> materialList);
-    
-    //! This function will return the global list
-    std::vector<materialProperty> getMaterialList();
-    
-    
-};
+    physicProblems getPhysicsProblem()
+    {
+        return _phycisProblem;
+    }
 
+    //! This first function will add a single boundary condition to the list
+    void addBoundaryCondition(magneticBoundary condition)
+    {
+        _localMagneticBoundaryConditionList.push_back(condition);
+    }
+    
+    void addBoundaryCondition(electricalBoundary condition)
+    {
+        _localElectricalBoundaryConditionList.push_back(condition);
+    }
+    
+    void setBoundaryList(std::vector<magneticBoundary> list)
+    {
+        _localMagneticBoundaryConditionList = list;
+    }
+    
+    void setBoundaryList(std::vector<electricalBoundary> list)
+    {
+        _localElectricalBoundaryConditionList = list;
+    }
+    
+    std::vector<magneticBoundary> getMagneticBoundaryList()
+    {
+        return _localMagneticBoundaryConditionList;
+    }
+    
+    std::vector<electricalBoundary> getElectricalBoundaryList()
+    {
+        return _localElectricalBoundaryConditionList;
+    }
+    
+    void setConductorList(std::vector<conductorProperty> list)
+    {
+        _localConductorList = list;
+    }
+    
+    std::vector<conductorProperty> getConductorList()
+    {
+        return _localConductorList;
+    }
+    
+    void setCircuitList(std::vector<circuitProperty> list)
+    {
+        _localCircuitList = list;
+    }
+    
+    std::vector<circuitProperty> getCircuitList()
+    {
+        return _localCircuitList;
+    }
+    
+    void setNodalPropertyList(std::vector<nodalProperty> list)
+    {
+        _localNodalList = list;
+    }
+    
+    std::vector<nodalProperty> getNodalPropertyList()
+    {
+        return _localNodalList;
+    }
+    
+    void setMaterialList(std::vector<magneticMaterial> list)
+    {
+        _localMagneticMaterialList = list;
+    }
+    
+    void setMaterialList(std::vector<electrostaticMaterial> list)
+    {
+        _localElectrialMaterialList = list;
+    }
+    
+    std::vector<magneticMaterial> getMagnetMaterialList()
+    {
+        return _localMagneticMaterialList;
+    }
+    
+    std::vector<electrostaticMaterial> getElectricalMaterialList()
+    {
+        return _localElectrialMaterialList;
+    }
+    
+    void setName(wxString name)
+    {
+        _problemName = name;
+    }
+    
+    wxString getName()
+    {
+        return _problemName;
+    }
+    
+    void setPreferences(electroStaticPreference preference)
+    {
+        _localElectricalPreference = preference;
+    }
+    
+    void setPreferences(magneticPreference preference)
+    {
+        _localMagneticPreference = preference;
+    }
+    
+    electroStaticPreference getElectricalPreferences()
+    {
+        return _localElectricalPreference;
+    }
+    
+    magneticPreference getMagneticPreference()
+    {
+        return _localMagneticPreference;
+    }
+    
+    void setProblemName(wxString name)
+    {
+        _problemName = name;
+    }
+    
+    wxString getProblemName()
+    {
+        return _problemName;
+    }
+};
 
 #endif
 

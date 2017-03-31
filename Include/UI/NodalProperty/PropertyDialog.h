@@ -55,7 +55,7 @@ private:
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
-    nodalPropertiesDialog(std::vector<nodalProperty> nodalPropertyList, physicProblems problem);
+    nodalPropertiesDialog(wxWindow *par, std::vector<nodalProperty> nodalPropertyList, physicProblems problem);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~nodalPropertiesDialog();

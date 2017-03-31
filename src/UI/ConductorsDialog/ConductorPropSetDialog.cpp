@@ -1,10 +1,10 @@
 #include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
-conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProperty> circuitList) : wxDialog(NULL, wxID_ANY, "Conductor Definition")
+conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> circuitList) : wxDialog(par, wxID_ANY, "Conductor Definition")
 {
     _circuitList = circuitList;
  
-    _problem = physicProblems::magnetics;
+    _problem = physicProblems::PROB_MAGNETICS;
    
     for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
     {
@@ -16,11 +16,11 @@ conductorPropertySetDialog::conductorPropertySetDialog(std::vector<circuitProper
 
 
 
-conductorPropertySetDialog::conductorPropertySetDialog(std::vector<conductorProperty> conductorList) : wxDialog(NULL, wxID_ANY, "Conductor Definition")
+conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> conductorList) : wxDialog(par, wxID_ANY, "Conductor Definition")
 {
     _conductorList = conductorList;
  
-    _problem = physicProblems::electrostatics;
+    _problem = physicProblems::PROB_ELECTROSTATIC;
    
     for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList.begin(); conductorIterator != _conductorList.end(); ++conductorIterator)
     {
@@ -66,21 +66,21 @@ void conductorPropertySetDialog::makeDialog()
     propertySizer->Add(0, 6, 0);
     propertySizer->Add(deletePropertyButton, 0, wxALIGN_CENTER | wxLEFT, 6);
     propertySizer->Add(0, 6, 0);
-    propertySizer->Add(modifyPropertyButton, 0, wxALIGN_BOTTOM | wxDOWN | wxLEFT, 6);
+    propertySizer->Add(modifyPropertyButton, 0, wxDOWN | wxLEFT, 6);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "OK", wxPoint(120, 101), wxSize(75, 23));
     okButton->SetFont(*font);
     
     okSizer->Add(0, 68, 0);
-    okSizer->Add(okButton, 0, wxALIGN_BOTTOM | wxDOWN | wxRIGHT, 6);
+    okSizer->Add(okButton, 0, wxDOWN | wxRIGHT, 6);
     
     intermediateSizer->Add(propertySizer, 0, wxALIGN_LEFT);
     intermediateSizer->Add(6, 0, 0);
-    intermediateSizer->Add(okSizer, 0, wxALIGN_RIGHT);
+    intermediateSizer->Add(okSizer);
     
     topSizer->Add(headerSizer, 0, wxALIGN_TOP);
     topSizer->Add(0, 10, 0);
-    topSizer->Add(intermediateSizer, 0, wxALIGN_BOTTOM);
+    topSizer->Add(intermediateSizer);
     
     SetSizerAndFit(topSizer);
 }
@@ -88,9 +88,9 @@ void conductorPropertySetDialog::makeDialog()
 
 void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
 {
-    if(_problem == physicProblems::magnetics)
+    if(_problem == physicProblems::PROB_MAGNETICS)
     {
-        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog();
+        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);
         circuitProperty newCircuit;
         circuitPropDialog->clearCircuit();
         if(circuitPropDialog->ShowModal() == wxID_OK)
@@ -109,9 +109,9 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
             selection->SetSelection(0);
         }
     }
-    else if(_problem == physicProblems::electrostatics)
+    else if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog();
+        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog(this);
         conductorProperty newConductor;
         conductorPropDialog->clearConductor();
         if(conductorPropDialog->ShowModal() == wxID_OK)
@@ -136,14 +136,14 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
 
 void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_circuitList.size() > 0 && _problem == physicProblems::magnetics)
+    if(_circuitList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         int currentSelection = selection->GetCurrentSelection();
         _circuitList.erase(_circuitList.begin() + currentSelection);
         selection->Delete(currentSelection);
         selection->SetSelection(0);
     }
-    else if(_conductorList.size() > 0 && _problem == physicProblems::electrostatics)
+    else if(_conductorList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         int currentSelection = selection->GetCurrentSelection();
         _conductorList.erase(_conductorList.begin() + currentSelection);
@@ -157,10 +157,10 @@ void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
 void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
 {
     
-    if(_circuitList.size() > 0 && _problem == physicProblems::magnetics)
+    if(_circuitList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
     {
         circuitProperty selectedCircuitProperty;
-        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog();
+        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);
         int currentSelection = selection->GetSelection();
         selectedCircuitProperty = _circuitList.at(currentSelection);
         circuitPropDialog->setCircuit(selectedCircuitProperty);
@@ -188,10 +188,10 @@ void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
             selection->SetSelection(0);
         }
     }
-    else if(_conductorList.size() > 0 && _problem == physicProblems::electrostatics)
+    else if(_conductorList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
         conductorProperty selectedConductor;
-        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog();
+        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog(this);
         int currentSelection = selection->GetSelection();
         selectedConductor = _conductorList.at(currentSelection);
         conductorPropDialog->setConductor(selectedConductor);

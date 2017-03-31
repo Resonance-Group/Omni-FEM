@@ -22,61 +22,27 @@
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="UI">
       <VirtualDirectory Name="MainFrame">
-        <VirtualDirectory Name="Presentation">
-          <File Name="src/UI/MainFrame/Presentation/editMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/fileMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/helpMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/mainOmniFEMUI.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/meshMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/problemMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/save.png"/>
-          <File Name="src/UI/MainFrame/Presentation/viewMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/mainFrameButtons.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/PropertiesMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/PropertiesDialog.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/GridMenu.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/ExteriorRegion.cpp"/>
-          <File Name="src/UI/MainFrame/Presentation/AnalysisMenu.cpp"/>
-        </VirtualDirectory>
-        <VirtualDirectory Name="resources">
-          <File Name="src/UI/MainFrame/resources/save.png"/>
-          <File Name="src/UI/MainFrame/resources/Open.png"/>
-          <File Name="src/UI/MainFrame/resources/new_file.png"/>
-        </VirtualDirectory>
-        <VirtualDirectory Name="Abstraction">
-          <File Name="src/UI/MainFrame/Abstraction/OmniFEMMainFrameAbstraction.cpp"/>
-          <File Name="src/UI/MainFrame/Abstraction/ProblemDefinition.cpp"/>
-        </VirtualDirectory>
-        <VirtualDirectory Name="Controller">
-          <File Name="src/UI/MainFrame/Controller/OmniFEMMainFrameController.cpp"/>
-        </VirtualDirectory>
+        <File Name="src/UI/MainFrame/AnalysisMenu.cpp"/>
+        <File Name="src/UI/MainFrame/editMenu.cpp"/>
+        <File Name="src/UI/MainFrame/ExteriorRegion.cpp"/>
+        <File Name="src/UI/MainFrame/fileMenu.cpp"/>
+        <File Name="src/UI/MainFrame/GridMenu.cpp"/>
+        <File Name="src/UI/MainFrame/helpMenu.cpp"/>
+        <File Name="src/UI/MainFrame/mainOmniFEMUI.cpp"/>
+        <File Name="src/UI/MainFrame/meshMenu.cpp"/>
+        <File Name="src/UI/MainFrame/problemMenu.cpp"/>
+        <File Name="src/UI/MainFrame/PropertiesMenu.cpp"/>
+        <File Name="src/UI/MainFrame/viewMenu.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="Geometry">
-        <VirtualDirectory Name="2D">
-          <VirtualDirectory Name="Presentation">
-            <File Name="src/UI/Geometry/2D/Presentation/geometry2DPresentation.cpp"/>
-            <File Name="src/UI/Geometry/2D/Presentation/geometryEditorCanvas.cpp"/>
-            <File Name="src/UI/Geometry/2D/Presentation/openGLFunctions.cpp"/>
-          </VirtualDirectory>
-          <VirtualDirectory Name="Controller">
-            <File Name="src/UI/Geometry/2D/Controller/geometry2DController.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/geometry2D.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/archShape.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/rectangleShape.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/nodePT.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/edgeLineShape.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/geometryAdd.cpp"/>
-            <File Name="src/UI/Geometry/2D/Controller/geometryEditorController.cpp"/>
-          </VirtualDirectory>
-          <VirtualDirectory Name="Abstraction">
-            <File Name="src/UI/Geometry/2D/Abstraction/geometry2DAbstraction.cpp"/>
-          </VirtualDirectory>
-        </VirtualDirectory>
         <VirtualDirectory Name="GeometryDialogs">
           <File Name="src/UI/Geometry/GeometryDialogs/SegmentPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/ArcSegmentDialog.cpp"/>
         </VirtualDirectory>
+        <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
+        <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
@@ -95,19 +61,21 @@
         <File Name="src/UI/NodalProperty/NodalPropertyDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ConductorsDialog">
-        <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/CircuitPropertyDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/ConductorPropertyDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="PropertiesDefinitionDialog">
         <File Name="src/UI/PropertiesDefinitionDialog/PreferencesDialog.cpp"/>
         <File Name="src/UI/PropertiesDefinitionDialog/GridPreferencesDialog.cpp"/>
+        <File Name="src/UI/PropertiesDefinitionDialog/GlobalPreferencesDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="EditMenu">
         <File Name="src/UI/EditMenu/ScalingDialog.cpp"/>
         <File Name="src/UI/EditMenu/MirrorDialog.cpp"/>
         <File Name="src/UI/EditMenu/MoveCopyDialog.cpp"/>
         <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
+        <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
+        <File Name="src/UI/EditMenu/SelectGroupDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>
@@ -115,7 +83,6 @@
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
-      <File Name="src/common/ProblemDefinition.cpp"/>
       <File Name="src/common/wxGLString.cpp"/>
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
@@ -135,16 +102,10 @@
   <VirtualDirectory Name="Include">
     <VirtualDirectory Name="UI">
       <File Name="Include/UI/OmniFEMFrame.h"/>
-      <File Name="Include/UI/problemDefinition.h"/>
-      <File Name="Include/UI/geometryEditor2D.h"/>
       <File Name="Include/UI/common.h"/>
       <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>
       <File Name="Include/UI/wxGLString.h"/>
-      <File Name="Include/UI/geometryEditorController.h"/>
-      <File Name="Include/UI/PropertiesDialog.h"/>
-      <File Name="Include/UI/MainFrameAbstraction.h"/>
-      <File Name="Include/UI/MainFrameController.h"/>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>
@@ -172,6 +133,8 @@
         <File Name="Include/UI/EditMenu/MirrorDialog.h"/>
         <File Name="Include/UI/EditMenu/MoveCopyDialog.h"/>
         <File Name="Include/UI/EditMenu/OpenBoundaryDialog.h"/>
+        <File Name="Include/UI/EditMenu/GlobalPreferencesDialog.h"/>
+        <File Name="Include/UI/EditMenu/SelectGroupDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="Include/UI/ViewMenu/ZoomWindow.h"/>
@@ -181,9 +144,14 @@
       <File Name="Include/UI/ExteriorRegion.h"/>
       <VirtualDirectory Name="GeometryDialog">
         <File Name="Include/UI/GeometryDialog/SegmentPropertyDialog.h"/>
-        <File Name="Include/common/GeometryProperties/NodalSettingDialog.h"/>
-        <File Name="Include/UI/BlockPropertyDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/BlockPropertyDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/NodalSettingDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/ArcSegmentDialog.h"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="ModelDefinition">
+        <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>
+      </VirtualDirectory>
+      <File Name="Include/UI/GeometryEditor2D.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -210,6 +178,8 @@
         <File Name="Include/common/GeometryProperties/BlockProperty.h"/>
         <File Name="Include/common/GeometryProperties/NodeSettings.h"/>
       </VirtualDirectory>
+      <File Name="Include/common/wxGLString.h"/>
+      <File Name="Include/common/plfcolony.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
@@ -226,15 +196,15 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-O;-std=c++14;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-O0;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-O;-std=c++14;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="/usr/local/include/wx-3.1"/>
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
         <IncludePath Value="/usr/include/GL"/>
         <IncludePath Value="/usr/include/wx-3.0"/>
       </Compiler>
-      <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes"/>
+      <Linker Options="-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="yes" IsEnabled="yes"/>
-      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -273,7 +243,6 @@
       <Linker Options="-s;$(shell wx-config --debug=no --libs --unicode=yes)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>

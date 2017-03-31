@@ -39,7 +39,7 @@ private:
     void setTextBox();
 public:
     
-    circuitPropertyDialog();
+    circuitPropertyDialog(wxWindow *par);
     
     ~circuitPropertyDialog();
     

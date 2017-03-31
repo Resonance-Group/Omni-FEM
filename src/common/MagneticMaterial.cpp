@@ -154,14 +154,14 @@ double magneticMaterial::getLaminationThickness()
 
 
 
-void magneticMaterial::setNumberStrands(double value)
+void magneticMaterial::setNumberStrands(unsigned int value)
 {
     _numStrands = value;
 }
 
 
 
-double magneticMaterial::getNumberStrands()
+unsigned int magneticMaterial::getNumberStrands()
 {
     return _numStrands;
 }

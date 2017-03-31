@@ -6,15 +6,13 @@
 
 void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
-    systemState currentState = controller.getOmniFEMState();
-    if(currentState == systemState::problemDefining || currentState == systemState::dimensionChoosing || currentState == systemState::problemChooseing || currentState == systemState::viewingResults)
+    if(_UIState == systemState::MODEL_DEFINING || _UIState == systemState::PHYSICS_CHOOSING || _UIState == systemState::SIMULATING || _UIState == systemState::VIEWING_RESULTS)
     {
-        /* Create a message box confirming that the user would like to create a new file */
+        // Create a message box confirming that the user would like to create a new file 
         if(wxMessageBox("Create New File?", "New File", wxOK | wxCANCEL | wxICON_QUESTION) == wxCANCEL)
             return;
     }
-    
-    createDimensionClient();
+    createProblemChoosingClient();
 }
 
 
@@ -35,20 +33,21 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 	
 	if(saveFileDialog.ShowModal() != wxID_CANCEL)
 	{
-		wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
+
 	}
-    
 }
 
 
 
 void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
 {
-	wxFileDialog saveFileDialog(this, "Save File", "", "", "", wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR);
+	wxFileDialog saveFileDialog(this, "Save File As", "", "", "", wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR);
 	
 	if(saveFileDialog.ShowModal() != wxID_CANCEL)
 	{
-		wxMessageBox("Work saved", "Save", wxOK | wxICON_INFORMATION);
+        wxString appendedTitle = "Omni-FEM - ";
+		_problemDefinition.setName(saveFileDialog.GetFilename());
+        appendedTitle.append(_problemDefinition.getName());
+        this->SetTitle(appendedTitle);
 	}
-    
 }

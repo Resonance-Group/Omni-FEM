@@ -2,6 +2,7 @@
 #define OMNIFEMFrame_H_
 
 #include <string.h>
+#include <algorithm>
 
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
@@ -10,28 +11,34 @@
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
 
-#include <UI/geometryEditor2D.h>
+#include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
-#include <UI/PropertiesDialog.h>
-#include <UI/MainFrameAbstraction.h>
+
 #include <UI/MaterialsDialog/MaterialDialog.h>
 #include <UI/MaterialsDialog/MaterialsLibrary.h>
-#include <UI/MainFrameController.h>
-#include <UI/PreferencesDialog.h>
+#include <UI/BoundaryDialog/BoundaryDialog.h>
+#include <UI/NodalProperty/PropertyDialog.h>
+#include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
+#include <UI/PreferencesDialog.h>
 #include <UI/ExteriorRegion.h>
 
 #include <UI/EditMenu/MoveCopyDialog.h>
 #include <UI/EditMenu/ScalingDialog.h>
 #include <UI/EditMenu/MirrorDialog.h>
 #include <UI/EditMenu/OpenBoundaryDialog.h>
+#include <UI/EditMenu/GlobalPreferencesDialog.h>
+#include <UI/EditMenu/SelectGroupDialog.h>
 
 #include <UI/ViewMenu/ZoomWindow.h>
 #include <UI/ViewMenu/LuaConsole.h>
 
 #include <UI/GridPreferencesDialog.h>
 
+#include <UI/ModelDefinition/ModelDefinition.h>
+
 #include <common/enums.h>
+
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -59,8 +66,54 @@ class OmniFEMApp : public wxApp
 class OmniFEMMainFrame : public wxFrame
 {
 public:
-    OmniFEMMainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+    OmniFEMMainFrame(const wxString &title, const wxPoint &pos);
 private:
+
+    /************
+	* Variables *
+	*************/
+	
+    modelDefinition *_model;
+    
+    problemDefinition _problemDefinition;
+    
+    bool _displayStatusMenu = true;
+	
+	//! The menu bar for the main window
+	wxMenuBar *_menuBar = new wxMenuBar;
+	
+	//! This would be the file menu in the menu bar
+    wxMenu *_menuFile = new wxMenu;
+	
+	//! This would be the edit menu in the menu bar
+    wxMenu *_menuEdit = new wxMenu;
+	
+	//! This would be the view menu in the menu bar
+    wxMenu *_menuView = new wxMenu;
+	
+	//! This would be the problem menu in the menu bar
+    wxMenu *_menuProblem = new wxMenu;
+	
+    //! The Grid menu in the menu bar
+    wxMenu *_menuGrid = new wxMenu;
+    
+    //! The properties menu in the menu bar
+    wxMenu *_menuProperties = new wxMenu;
+    
+    //! This would be the mesh menu in the menu bar
+    wxMenu *_menuMesh = new wxMenu;
+    
+    //! This is the menu entry for hte analsis
+    wxMenu *_analysisMenu = new wxMenu;
+    
+	//! This would be the help menu in the menu bar
+    wxMenu *_menuHelp = new wxMenu;
+    
+    wxListBox *_physicsProblemsListBox;
+    
+    systemState _UIState = systemState::ON_START_UP_STATE;
+
+
 	/***********************************
 	* Prototypes for creating the menu *
 	************************************/
@@ -82,6 +135,8 @@ private:
     void onMove(wxCommandEvent &event);
     void onCreateRadius(wxCommandEvent &event);
     void onCreateOpenBoundary(wxCommandEvent &event);
+    void onSelectGroup(wxCommandEvent &event);
+    void onEditProperty(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
     void onZoomIn(wxCommandEvent &event);
@@ -91,6 +146,9 @@ private:
     void onOrphans(wxCommandEvent &event);
     void onStatusBar(wxCommandEvent &event);
     void onLua(wxCommandEvent &event);
+    
+    /* This section is for the Problem Menu */
+    void onProblemPreferences(wxCommandEvent &event);
 	
     /* This section is for the Grid Menu */
     void onDispGrid(wxCommandEvent &event);
@@ -125,18 +183,38 @@ private:
     
 	//! Event called to view the manual
     void OnExit(wxCommandEvent &event);
+    
+    //! Event that is called when the user wants to toggle between node and block label creation
+    void onToggleNodeCreation(wxCommandEvent &event)
+    {
+        if(_UIState == systemState::MODEL_DEFINING)
+        {
+            _model->setCreateNodeState(!_model->getCreateNodeState());
+        }
+    }
+    
+    //! Event that is called when the user wants to toggle between line and arc label creation
+    void onToggleLineCreation(wxCommandEvent &event)
+    {
+        if(_UIState == systemState::MODEL_DEFINING)
+        {
+            _model->setCreateLinesState(!_model->getCreateLineState());
+        }
+    }
+    
+    void onSolveProblem(wxCommandEvent &event)
+    {
+        return;
+    }
 	
+    void onDisplayResults(wxCommandEvent &event)
+    {
+        return;
+    }
 
  	/*****************************
 	* Prototypes for client area *
 	******************************/   
-    
-	//! Function that is called to begin the creating a new simulation
-	/*
-		This will be called in order for the user to choose the dimesnion of the simulation
-	*/
-    void createDimensionClient();
-	
 	
 	//! Function that is called to create the initial client area
 	void createInitialStartupClient();
@@ -170,9 +248,6 @@ private:
     /*************************
 	* Prototypes for buttons *
 	**************************/
-    
-	//! Function called when the user chooses the two dim button
-    void onTwoDimButton(wxCommandEvent &event);
 	
 	//! Function called when the back button is pressed 
 	void onBackButton(wxCommandEvent &event);
@@ -188,94 +263,7 @@ private:
 	
 	//! This is a function that will be for the initial state of Omni-FEM. With items on the toolbar greyed out and menus not accessible
 	void enableToolMenuBar(bool enable);
-	
-	//! This is the function that is called when the combox box is clicked for choosing a physics problem
-	void physicsProblemComboBox(wxCommandEvent &event);
-	
-	/************
-	* Variables *
-	*************/
-	
-	//! Stores the client size of the main window in the x direction
-	int clientSizeWidth;
-	
-	//! Stores the client size of the main window in the y direction
-	int clientSizeLength;
-	
-	//! The menu bar for the main window
-	wxMenuBar *menuBar = new wxMenuBar;
-	
-	wxBoxSizer *groupOneSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxBoxSizer *vertBoxSizer = new wxBoxSizer(wxVERTICAL);
-	
-	//! This would be the file menu in the menu bar
-    wxMenu *menuFile = new wxMenu;
-	
-	//! This would be the edit menu in the menu bar
-    wxMenu *menuEdit = new wxMenu;
-	
-	//! This would be the view menu in the menu bar
-    wxMenu *menuView = new wxMenu;
-	
-	//! This would be the problem menu in the menu bar
-    wxMenu *menuProblem = new wxMenu;
-	
-    //! The Grid menu in the menu bar
-    wxMenu *menuGrid = new wxMenu;
-    
-    //! The properties menu in the menu bar
-    wxMenu *menuProperties = new wxMenu;
-    
-    //! This would be the mesh menu in the menu bar
-    wxMenu *menuMesh = new wxMenu;
-    
-    //! This is the menu entry for hte analsis
-    wxMenu *analysisMenu = new wxMenu;
-    
-	//! This would be the help menu in the menu bar
-    wxMenu *menuHelp = new wxMenu;
-	
-	//! This is the object for the toolbar of the main window
-	wxToolBar *mainFrameToolBar = new wxToolBar();
-	
-	//! Creates the panel for the first screen
-	wxPanel *initialStartPanel = new wxPanel();
-	
-	//! Panel for selecting the dimension
-	wxPanel *dimSelectPanel;
-	
-	//! Panel for selecting the physics problem
-	wxPanel *problemSelectPanel;
-	
-	//! This panel will be used in the model builder window. The purpose is to display status messages
-	wxPanel *statusInfoPanel;
-	
-	//! This panel will be used in the problem defining state
-	/*
-		This object will be a list listing commonly acessed parameters. Such as listing
-		the materials used, the geometry along with the different simualtions associated with teh project
-	*/
-	wxPanel *modelBuilderTreePanel;
-	
-	//! This panel will be used to draw the geometry on 
-	wxPanel *geometryBuilderPanel;
-	
-	//! This panel will be used to dispaly settings that are selected
-	wxPanel *settingsPanel;
-	
-	wxPanel *viewResultsPanel;
-	
-	//! Sets the mininimum size that the window for OMni-FEM is allowed to have
-	wxSize minSize = wxSize(450, 340);
-	
-	OmniFEMMainFrameController controller;
-	
-	wxTreeCtrl *modelbuilderTreeCtrl;
-	
-	geometryEditor2DPresentation *twoDimGeometryEditor;
-    
-    wxListBox *physicsProblems = new wxListBox();
-	
+
     wxDECLARE_EVENT_TABLE();
 };
 

@@ -2,8 +2,39 @@
 #include <iostream>
 #include <iomanip>
 
-preferencesDialog::preferencesDialog(magneticPreference &pref) : wxDialog(NULL, wxID_ANY, "Problem Preferences")
+preferencesDialog::preferencesDialog(wxWindow *par, magneticPreference pref) : wxDialog(par, wxID_ANY, "Problem Preferences")
 {
+    _magPreference = pref;
+    _problem = physicProblems::PROB_MAGNETICS;
+
+    _acSolverNameArray->Add("Succ. Approx");
+    _acSolverNameArray->Add("Newton");
+   
+    createDialog();
+}
+
+
+
+preferencesDialog::preferencesDialog(wxWindow *par, electroStaticPreference pref) : wxDialog(par, wxID_ANY, "Problem Definition")
+{
+    _electrPreference = pref;
+    _problem = physicProblems::PROB_ELECTROSTATIC;
+    
+    createDialog();
+}
+
+
+
+void preferencesDialog::createDialog()
+{
+    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    
+    wxFloatingPointValidator<double> greaterThenZero(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
+    greaterThenZero.SetMin(0);
+    
+    wxFloatingPointValidator<double> angleValidator(15);
+    angleValidator.SetRange(0, 360);
+    
     wxBoxSizer *probTypeSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *lengthSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *freqSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -14,249 +45,159 @@ preferencesDialog::preferencesDialog(magneticPreference &pref) : wxDialog(NULL, 
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     
-    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    _probTypeNameArray->Add("Planar");
+    _probTypeNameArray->Add("Axisymmetric");
+   
+    _lengthUnitsNameArray->Add("Inches");
+    _lengthUnitsNameArray->Add("Millimeters");
+    _lengthUnitsNameArray->Add("Centimeters");
+    _lengthUnitsNameArray->Add("Meters");
+    _lengthUnitsNameArray->Add("Mils");
+    _lengthUnitsNameArray->Add("Micrometers");
     
-    _magPreference = pref;
-    
-    probTypeNameArray->Add("Planar");
-    probTypeNameArray->Add("Axisymmetric");
-   
-    lengthUnitsNameArray->Add("Inches");
-    lengthUnitsNameArray->Add("Millimeters");
-    lengthUnitsNameArray->Add("Centimeters");
-    lengthUnitsNameArray->Add("Meters");
-    lengthUnitsNameArray->Add("Mils");
-    lengthUnitsNameArray->Add("Micrometers");
-   
-    acSolverNameArray->Add("Succ. Approx");
-    acSolverNameArray->Add("Newton");
-   
-    wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:", wxPoint(12, 15), wxSize(90, 13));
+    wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:");
     probTypeText->SetFont(*font);
-    problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), *probTypeNameArray);
-    problemTypeComboBox->SetFont(*font);
-    problemTypeComboBox->SetSelection((int)_magPreference.getProblemType());
+    _problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_probTypeNameArray);
+    _problemTypeComboBox->SetFont(*font);
     probTypeSizer->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
-    probTypeSizer->Add(8, 0, 0);
-    probTypeSizer->Add(problemTypeComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+    probTypeSizer->Add(20, 0, 0);
+    probTypeSizer->Add(_problemTypeComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
    
-    wxStaticText *lengthUnitsText = new wxStaticText(this, wxID_ANY, "Length Units:", wxPoint(12, 42), wxSize(90, 13));
+    wxStaticText *lengthUnitsText = new wxStaticText(this, wxID_ANY, "Length Units:");
     lengthUnitsText->SetFont(*font);
-    lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 39), wxSize(121, 21), *lengthUnitsNameArray);
-    lengthUnitsComboBox->SetFont(*font);
-    lengthUnitsComboBox->SetSelection((int)_magPreference.getUnitLength());
+    _lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_lengthUnitsNameArray);
+    _lengthUnitsComboBox->SetFont(*font);
     lengthSizer->Add(lengthUnitsText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    lengthSizer->Add(8, 0, 0);
-    lengthSizer->Add(lengthUnitsComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    lengthSizer->Add(23, 0, 0);
+    lengthSizer->Add(_lengthUnitsComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    
+    if(_problem == physicProblems::PROB_MAGNETICS)
+    {
+        wxStaticText *acSolverText = new wxStaticText(this, wxID_ANY, "AC Solver:");
+        acSolverText->SetFont(*font);
+        _acSolverComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_acSolverNameArray);
+        _acSolverComboBox->SetFont(*font);
+        _acSolverComboBox->SetSelection((int)_magPreference.getACSolver());
+        acSolverSizer->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
+        acSolverSizer->Add(41, 0, 0);
+        acSolverSizer->Add(_acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+
+        wxStaticText *freqText = new wxStaticText(this, wxID_ANY, "Frequency (Hz):");
+        freqText->SetFont(*font);
+        _frequencyTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
+        std::ostream freqStream(_frequencyTextCtrl);
+        freqStream << std::setprecision(4);
+        freqStream << _magPreference.getFrequency();
+        _frequencyTextCtrl->SetFont(*font);
+        freqSizer->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
+        freqSizer->Add(11, 0, 0);
+        freqSizer->Add(_frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    }
    
-    wxStaticText *acSolverText = new wxStaticText(this, wxID_ANY, "AC Solver:", wxPoint(12, 69), wxSize(60, 13));
-    acSolverText->SetFont(*font);
-    acSolverComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 65), wxSize(121, 21), *acSolverNameArray);
-    acSolverComboBox->SetFont(*font);
-    acSolverComboBox->SetSelection((int)_magPreference.getACSolver());
-    acSolverSizer->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    acSolverSizer->Add(38, 0, 0);
-    acSolverSizer->Add(acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-   
-    wxStaticText *freqText = new wxStaticText(this, wxID_ANY, "Frequency (Hz):", wxPoint(12, 95), wxSize(90, 13));
-    freqText->SetFont(*font);
-    frequencyTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 92), wxSize(121, 20));
-    std::ostream freqStream(frequencyTextCtrl);
-    freqStream << std::setprecision(3);
-    freqStream << _magPreference.getFrequency();
-    frequencyTextCtrl->SetFont(*font);
-    freqSizer->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    freqSizer->Add(8, 0, 0);
-    freqSizer->Add(frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-   
-    wxStaticText *depthText = new wxStaticText(this, wxID_ANY, "Depth:", wxPoint(12, 121), wxSize(39, 13));
+    wxStaticText *depthText = new wxStaticText(this, wxID_ANY, "Depth:");
     depthText->SetFont(*font);
-    depthTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 118), wxSize(121, 20));
-    std::ostream dStream(depthTextCtrl);
+    _depthTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
+    std::ostream dStream(_depthTextCtrl);
     dStream << std::setprecision(4);
-    dStream << _magPreference.getDepth();
-    depthTextCtrl->SetFont(*font);
+    _depthTextCtrl->SetFont(*font);
     depthSizer->Add(depthText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     depthSizer->Add(59, 0, 0);
-    depthSizer->Add(depthTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    depthSizer->Add(_depthTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
    
-    wxStaticText *solverPrecisionText = new wxStaticText(this, wxID_ANY, "Solver Precision:", wxPoint(12, 147), wxSize(98, 13));
+    wxStaticText *solverPrecisionText = new wxStaticText(this, wxID_ANY, "Solver Precision:");
     solverPrecisionText->SetFont(*font);
-    solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 144), wxSize(121, 20));
-    std::ostream spStream(solverPrecisionTextCtrl);
+    _solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
+    std::ostream spStream(_solverPrecisionTextCtrl);
     spStream << std::setprecision(4);
-    spStream << _magPreference.getPrecision();
-    solverPrecisionTextCtrl->SetFont(*font);
+    _solverPrecisionTextCtrl->SetFont(*font);
     solverPreSizer->Add(solverPrecisionText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    solverPreSizer->Add(solverPrecisionTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    solverPreSizer->Add(6, 0, 0);
+    solverPreSizer->Add(_solverPrecisionTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
    
-    wxStaticText *minAngleText = new wxStaticText(this, wxID_ANY, "Min Angle (deg):", wxPoint(12, 173), wxSize(90, 13));
+    wxStaticText *minAngleText = new wxStaticText(this, wxID_ANY, "Min Angle (deg):");
     minAngleText->SetFont(*font);
-    minAngleTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 170), wxSize(121, 20));
-    std::ostream minAngleStream(minAngleTextCtrl);
-    minAngleStream << std::setprecision(4);
-    minAngleStream << _magPreference.getMinAngle();
-    minAngleTextCtrl->SetFont(*font);
+    _minAngleTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, angleValidator);
+    std::ostream minAngleStream(_minAngleTextCtrl);
+    minAngleStream << std::setprecision(15);
+    _minAngleTextCtrl->SetFont(*font);
     minAngleSizer->Add(minAngleText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     minAngleSizer->Add(7, 0, 0);
-    minAngleSizer->Add(minAngleTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    minAngleSizer->Add(_minAngleTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticBoxSizer *commentSizer = new wxStaticBoxSizer(wxVERTICAL, this, "Comments");
     commentSizer->GetStaticBox()->SetFont(*font);
-    commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(6, 19), wxSize(192, 87), wxTE_MULTILINE);
-    commentsTextCtrl->SetFont(*font);
-    commentsTextCtrl->SetValue(_magPreference.getComments());
-    commentSizer->Add(commentsTextCtrl);
+    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(192, 87), wxTE_MULTILINE);
+    _commentsTextCtrl->SetFont(*font);
+    commentSizer->Add(_commentsTextCtrl, 0, wxALL, 6);
     
-    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(63, 330), wxSize(75, 23));
+    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(144, 330), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxDefaultPosition, wxSize(75, 23));
     cancelButton->SetFont(*font);
     footerSizer->Add(okButton, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
     footerSizer->Add(cancelButton, 0, wxRIGHT | wxBOTTOM | wxTOP, 6);
     
     topSizer->Add(probTypeSizer);
     topSizer->Add(lengthSizer);
-    topSizer->Add(acSolverSizer);
-    topSizer->Add(freqSizer);
+    
+    if(_problem == physicProblems::PROB_MAGNETICS)
+    {
+        topSizer->Add(acSolverSizer);
+        topSizer->Add(freqSizer);
+    }
+    
     topSizer->Add(depthSizer);
     topSizer->Add(solverPreSizer);
     topSizer->Add(minAngleSizer);
     topSizer->Add(commentSizer, 0, wxLEFT | wxRIGHT | wxCENTER, 6);
     
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
+    
+    if(_problem == physicProblems::PROB_ELECTROSTATIC)
+    {
+        _problemTypeComboBox->SetSelection((int)_electrPreference.getProblemType());
+        _lengthUnitsComboBox->SetSelection((int)_electrPreference.getUnitLength());
+        dStream << _electrPreference.getDepth();
+        spStream << _electrPreference.getPrecision();
+        minAngleStream << _electrPreference.getMinAngle();
+        _commentsTextCtrl->SetValue(_electrPreference.getComments());
+    }
+    else if(_problem == physicProblems::PROB_MAGNETICS)
+    {
+        _problemTypeComboBox->SetSelection((int)_magPreference.getProblemType());
+        _lengthUnitsComboBox->SetSelection((int)_magPreference.getUnitLength());
+        dStream << _magPreference.getDepth();
+        spStream << _magPreference.getPrecision();
+        minAngleStream << _magPreference.getMinAngle();
+        _commentsTextCtrl->SetValue(_magPreference.getComments());
+    }
     
     SetSizerAndFit(topSizer);
+    
 }
-
-
-
-preferencesDialog::preferencesDialog(electroStaticPreference &pref) : wxDialog(NULL, wxID_ANY, "Problem Definition")
-{
-    wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
-    wxBoxSizer *probTypeSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *lengthSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *depthSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *solverPreSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *minAngleSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
-    
-    _electrPreference = pref;
-    
-    probTypeNameArray->Add("Planar");
-    probTypeNameArray->Add("Axisymmetric");
-   
-    lengthUnitsNameArray->Add("Inches");
-    lengthUnitsNameArray->Add("Millimeters");
-    lengthUnitsNameArray->Add("Centimeters");
-    lengthUnitsNameArray->Add("Meters");
-    lengthUnitsNameArray->Add("Mils");
-    lengthUnitsNameArray->Add("Micrometers");
-   
-    acSolverNameArray->Add("Succ. Approx");
-    acSolverNameArray->Add("Newton");
-   
-    wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:", wxPoint(12, 15), wxSize(90, 13));
-    probTypeText->SetFont(*font);
-    problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), *probTypeNameArray);
-    problemTypeComboBox->SetFont(*font);
-    problemTypeComboBox->SetSelection((int)_electrPreference.getProblemType());
-    probTypeSizer->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
-    probTypeSizer->Add(8, 0, 0);
-    probTypeSizer->Add(problemTypeComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-   
-    wxStaticText *lengthUnitsText = new wxStaticText(this, wxID_ANY, "Length Units:", wxPoint(12, 42), wxSize(90, 13));
-    lengthUnitsText->SetFont(*font);
-    lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 39), wxSize(121, 21), *lengthUnitsNameArray);
-    lengthUnitsComboBox->SetFont(*font);
-    lengthUnitsComboBox->SetSelection((int)_electrPreference.getUnitLength());
-    lengthSizer->Add(lengthUnitsText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    lengthSizer->Add(8, 0, 0);
-    lengthSizer->Add(lengthUnitsComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-   
-    wxStaticText *depthText = new wxStaticText(this, wxID_ANY, "Depth:", wxPoint(12, 121), wxSize(39, 13));
-    depthText->SetFont(*font);
-    depthTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 118), wxSize(121, 20));
-    std::ostream dStream(depthTextCtrl);
-    dStream << std::setprecision(4);
-    dStream << _electrPreference.getDepth();
-    depthTextCtrl->SetFont(*font);
-    depthSizer->Add(depthText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    depthSizer->Add(59, 0, 0);
-    depthSizer->Add(depthTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-   
-    wxStaticText *solverPrecisionText = new wxStaticText(this, wxID_ANY, "Solver Precision:", wxPoint(12, 147), wxSize(98, 13));
-    solverPrecisionText->SetFont(*font);
-    solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 144), wxSize(121, 20));
-    std::ostream spStream(solverPrecisionTextCtrl);
-    spStream << std::setprecision(4);
-    spStream << _electrPreference.getPrecision();
-    solverPrecisionTextCtrl->SetFont(*font);
-    solverPreSizer->Add(solverPrecisionText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    solverPreSizer->Add(solverPrecisionTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-   
-    wxStaticText *minAngleText = new wxStaticText(this, wxID_ANY, "Min Angle (deg):", wxPoint(12, 173), wxSize(90, 13));
-    minAngleText->SetFont(*font);
-    minAngleTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(98, 170), wxSize(121, 20));
-    std::ostream minAngleStream(minAngleTextCtrl);
-    minAngleStream << std::setprecision(4);
-    minAngleStream << _electrPreference.getMinAngle();
-    minAngleTextCtrl->SetFont(*font);
-    minAngleSizer->Add(minAngleText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    minAngleSizer->Add(7, 0, 0);
-    minAngleSizer->Add(minAngleTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    
-    wxStaticBoxSizer *commentSizer = new wxStaticBoxSizer(wxVERTICAL, this, "Comments");
-    commentSizer->GetStaticBox()->SetFont(*font);
-    commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(6, 19), wxSize(192, 87), wxTE_MULTILINE);
-    commentsTextCtrl->SetFont(*font);
-    commentsTextCtrl->SetValue(_electrPreference.getComments());
-    commentSizer->Add(commentsTextCtrl);
-    
-    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(63, 330), wxSize(75, 23));
-    okButton->SetFont(*font);
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(144, 330), wxSize(75, 23));
-    cancelButton->SetFont(*font);
-    footerSizer->Add(okButton, 0, wxTOP | wxBOTTOM | wxRIGHT, 6);
-    footerSizer->Add(cancelButton, 0, wxRIGHT | wxBOTTOM | wxTOP, 6);
-    
-    topSizer->Add(probTypeSizer);
-    topSizer->Add(lengthSizer);
-    topSizer->Add(depthSizer);
-    topSizer->Add(solverPreSizer);
-    topSizer->Add(minAngleSizer);
-    topSizer->Add(commentSizer, 0, wxLEFT | wxRIGHT | wxCENTER, 6);
-    
-    topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
-    
-    SetSizerAndFit(topSizer);    
-}
-
 
 
 void preferencesDialog::getPreferences(magneticPreference &settings)
 {
     double value;
     
-    settings.setProblemType((problemTypeEnum)problemTypeComboBox->GetSelection());
-    settings.setUnitLength((unitLengthEnum)lengthUnitsComboBox->GetSelection());
-    settings.setACSolver((acSolverEnum)acSolverComboBox->GetSelection());
+    settings.setProblemType((problemTypeEnum)_problemTypeComboBox->GetSelection());
+    settings.setUnitLength((unitLengthEnum)_lengthUnitsComboBox->GetSelection());
+    settings.setACSolver((acSolverEnum)_acSolverComboBox->GetSelection());
     
-    frequencyTextCtrl->GetValue().ToDouble(&value);
+    _frequencyTextCtrl->GetValue().ToDouble(&value);
     settings.setFrequency(value);
     
-    depthTextCtrl->GetValue().ToDouble(&value);
+    _depthTextCtrl->GetValue().ToDouble(&value);
     settings.setDepth(value);
     
-    solverPrecisionTextCtrl->GetValue().ToDouble(&value);
+    _solverPrecisionTextCtrl->GetValue().ToDouble(&value);
     settings.setPrecision(value);
     
-    minAngleTextCtrl->GetValue().ToDouble(&value);
+    _minAngleTextCtrl->GetValue().ToDouble(&value);
     settings.setMinAngle(value);
     
-    settings.setComments(commentsTextCtrl->GetValue());
+    settings.setComments(_commentsTextCtrl->GetValue());
 }
 
 
@@ -265,19 +206,19 @@ void preferencesDialog::getPreferences(electroStaticPreference &settings)
 {
     double value;
     
-    settings.setProblemType((problemTypeEnum)problemTypeComboBox->GetSelection());
-    settings.setUnitLength((unitLengthEnum)lengthUnitsComboBox->GetSelection());
+    settings.setProblemType((problemTypeEnum)_problemTypeComboBox->GetSelection());
+    settings.setUnitLength((unitLengthEnum)_lengthUnitsComboBox->GetSelection());
     
-    depthTextCtrl->GetValue().ToDouble(&value);
+    _depthTextCtrl->GetValue().ToDouble(&value);
     settings.setDepth(value);
     
-    solverPrecisionTextCtrl->GetValue().ToDouble(&value);
+    _solverPrecisionTextCtrl->GetValue().ToDouble(&value);
     settings.setPrecision(value);
     
-    minAngleTextCtrl->GetValue().ToDouble(&value);
+    _minAngleTextCtrl->GetValue().ToDouble(&value);
     settings.setMinAngle(value);
     
-    settings.setComments(commentsTextCtrl->GetValue());
+    settings.setComments(_commentsTextCtrl->GetValue());
 }
 
 

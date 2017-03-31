@@ -12,6 +12,7 @@
 #include <wx/combobox.h>
 #include <wx/sizer.h>
 #include <wx/arrstr.h>
+#include <wx/valnum.h>
 
 #include <common/GridPreferences.h>
 
@@ -20,8 +21,6 @@ class gridPreferencesDialog : public wxDialog
 {
 private:
     gridPreferences _preferences;
-
-    wxTextCtrl *_ppuTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *_gridSizeTextCtrl = new wxTextCtrl();
     
@@ -32,13 +31,17 @@ private:
     wxCheckBox *_showOriginCheckBox = new wxCheckBox(); 
     
     wxCheckBox *_showBlockNameCheckBox = new wxCheckBox();
+    
+    wxCheckBox *_showGridAxisCheckBox = new wxCheckBox();
+    
+    wxCheckBox *_reverseMouseZoomCheckBox = new wxCheckBox();
 
     wxComboBox *_coordinateComboBox = new wxComboBox();
     
     void updateInterface();
 public:
 
-    gridPreferencesDialog();
+    gridPreferencesDialog(wxWindow *par);
     
     ~gridPreferencesDialog();
     

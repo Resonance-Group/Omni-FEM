@@ -9,6 +9,7 @@
 #include <wx/textctrl.h>
 #include <wx/combobox.h>
 #include <wx/sizer.h>
+#include <wx/valnum.h>
 
 #include <common/enums.h>
 #include <common/MagneticPreference.h>
@@ -24,41 +25,45 @@ private:
     //! This is the local copy of the electrostatic settings that are to be edited for the electrostatic simulation
     electroStaticPreference _electrPreference;
     
+    physicProblems _problem;
+    
     //! The combo box for specifing the problem type for Magnetic Simulations
-    wxComboBox *problemTypeComboBox = new wxComboBox();
+    wxComboBox *_problemTypeComboBox = new wxComboBox();
     
     //! The combo box for specifing the units of length for hte simulation
-    wxComboBox *lengthUnitsComboBox = new wxComboBox();
+    wxComboBox *_lengthUnitsComboBox = new wxComboBox();
     
     //! The combo box for specifiying the AC solver of the problem
-    wxComboBox *acSolverComboBox = new wxComboBox();
+    wxComboBox *_acSolverComboBox = new wxComboBox();
     
     //! THe text box for setting the AC frequency
-    wxTextCtrl *frequencyTextCtrl = new wxTextCtrl();
+    wxTextCtrl *_frequencyTextCtrl = new wxTextCtrl();
     
     //! The text box for setting the depth of the problem
-    wxTextCtrl *depthTextCtrl = new wxTextCtrl();
+    wxTextCtrl *_depthTextCtrl = new wxTextCtrl();
     
     //! The text box for setting the solver precision
-    wxTextCtrl *solverPrecisionTextCtrl = new wxTextCtrl();
+    wxTextCtrl *_solverPrecisionTextCtrl = new wxTextCtrl();
     
     //! The text box for specifiing the min angle of the problem
-    wxTextCtrl *minAngleTextCtrl = new wxTextCtrl();
+    wxTextCtrl *_minAngleTextCtrl = new wxTextCtrl();
     
     //! The text box for adding comments
-    wxTextCtrl *commentsTextCtrl = new wxTextCtrl();
+    wxTextCtrl *_commentsTextCtrl = new wxTextCtrl();
     
-    wxArrayString *probTypeNameArray = new wxArrayString();
+    wxArrayString *_probTypeNameArray = new wxArrayString();
     
-    wxArrayString *lengthUnitsNameArray = new wxArrayString();
+    wxArrayString *_lengthUnitsNameArray = new wxArrayString();
     
-    wxArrayString *acSolverNameArray = new wxArrayString();
+    wxArrayString *_acSolverNameArray = new wxArrayString();
+    
+    void createDialog();
     
 public:
 
-    preferencesDialog(magneticPreference &pref);
+    preferencesDialog(wxWindow *par, magneticPreference pref);
     
-    preferencesDialog(electroStaticPreference &pref);
+    preferencesDialog(wxWindow *par, electroStaticPreference pref);
     
     ~preferencesDialog();
     

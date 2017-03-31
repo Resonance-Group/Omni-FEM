@@ -21,7 +21,7 @@ private:
     wxTextCtrl *_radiusInteriorTextCtrl = new wxTextCtrl();
     
 public:
-    exteriorRegionDialog();
+    exteriorRegionDialog(wxWindow *par);
     
     ~exteriorRegionDialog();
     

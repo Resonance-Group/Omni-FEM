@@ -18,7 +18,7 @@ private:
     wxTextCtrl *_secondPointYTextCtrl = new wxTextCtrl();
     
 public:
-    mirrorDialog();
+    mirrorDialog(wxWindow *par);
 
     ~mirrorDialog();
     

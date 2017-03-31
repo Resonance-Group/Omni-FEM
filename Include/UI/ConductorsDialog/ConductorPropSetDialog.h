@@ -68,9 +68,9 @@ private:
     
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
-    conductorPropertySetDialog(std::vector<circuitProperty> circuitList);
+    conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> circuitList);
     
-    conductorPropertySetDialog(std::vector<conductorProperty> conductorList);
+    conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> conductorList);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~conductorPropertySetDialog();

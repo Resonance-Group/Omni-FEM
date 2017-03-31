@@ -1,4 +1,4 @@
-#include "UI/wxGLString.h"
+#include <common/wxGLString.h>
 #include <iostream>
 
 #ifdef __WXMAC__

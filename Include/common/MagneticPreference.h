@@ -34,26 +34,8 @@ private:
     //! This 
     problemTypeEnum _probType = PLANAR;
     
-    //! THis will determine how large grid spacing will be 
-    double _gridSize = 0.25;
-    
-    //! This will turn on/off the grid
-    bool _showGrid = true;
-    
-    //! This will turn on/off the marking for the origin
-    bool _showOrigin = false;
-    
-    //! This will turn on/off the block label name
-    bool _showBlockNames = false;
-    
-    // Not too sure at this time
-    double _pixelsUnit = 100;
-    
     //! This sets what type of solver Omni-FEM will use to solve the ac problems
     acSolverEnum _acSolver = SUCCAPPROX;
-    
-    //! This will deteremine what type of wire Omni-FEM is working with when solving the circuit component
-    lamWireEnum _wireType = NOT_LAMINATED_OR_STRANDED;
     
     wxString _comments;
     
@@ -134,56 +116,6 @@ public:
         return _probType;
     }
     
-    void setGridSize(double &size)
-    {
-        _gridSize = size;
-    }
-    
-    double getGridSize()
-    {
-        return _gridSize;
-    }
-    
-    void setShowGridState(bool &state)
-    {
-        _showGrid = state;
-    }
-    
-    bool getShowGridState()
-    {
-        return _showGrid;
-    }
-    
-    void setShowOriginState(bool &state)
-    {
-        _showOrigin = state;
-    }
-    
-    bool getShowOriginState()
-    {
-        return _showOrigin;
-    }
-    
-    void setShowBlockNameState(bool &state)
-    {
-        _showBlockNames = state;
-    }
-    
-    bool getShowBlockNameState()
-    {
-        return _showBlockNames;
-    }
-    
-    void setPPU(double &ppu)
-    {
-        _pixelsUnit = ppu;
-    }
-    
-    double getPPU()
-    {
-        return _pixelsUnit;
-    }
-    
     void setACSolver(acSolverEnum solver)
     {
         _acSolver = solver;
@@ -192,16 +124,6 @@ public:
     acSolverEnum getACSolver()
     {
         return _acSolver;
-    }
-    
-    void setLamWireType(lamWireEnum &wireType)
-    {
-        _wireType = wireType;
-    }
-    
-    lamWireEnum getLamWireType()
-    {
-        return _wireType;
     }
     
     void setComments(wxString comments)
@@ -214,6 +136,13 @@ public:
         return _comments;
     }
     
+    bool isAxistmmetric()
+    {
+        if(_probType == AXISYMMETRIC)
+            return true;
+        else
+            return false;
+    }
 };
 
 #endif

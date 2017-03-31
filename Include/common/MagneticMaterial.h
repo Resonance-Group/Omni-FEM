@@ -46,7 +46,7 @@ private:
     double _lamThickness = 0;
     
     //! The number of strands for the wire
-    double _numStrands = 0;
+    unsigned int _numStrands = 0;
     
     //! The lamination fill factor for the material
     double _lamFF = 0;
@@ -121,10 +121,10 @@ public:
     double getLaminationThickness();
     
     //! This will set the number of strands in the wire.
-    void setNumberStrands(double value);
+    void setNumberStrands(unsigned int value);
     
     //! This will get the number of strands in the wire.
-    double getNumberStrands();
+    unsigned int getNumberStrands();
     
     //! This will set the lamination fill factor (if any) of the material.
     void setLaminationFillFactor(double value);

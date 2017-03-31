@@ -7,14 +7,14 @@
 
 void OmniFEMMainFrame::onZoomIn(wxCommandEvent &event)
 {
-    
+    _model->zoomIn();
 }
 
 
 
 void OmniFEMMainFrame::onZoomOut(wxCommandEvent &event)
 {
-    
+    _model->zoomOut();
 }
 
 
@@ -32,7 +32,8 @@ void OmniFEMMainFrame::onZoomWindow(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onBlockName(wxCommandEvent &event)
 {
-    
+    _model->getGridPreferences()->setShowBlockNameState(_menuView->IsChecked(ViewMenuID::ID_SHOW_BLOCK_NAMES));
+    _model->Refresh();
 }
 
 
@@ -57,5 +58,14 @@ void OmniFEMMainFrame::onLua(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onStatusBar(wxCommandEvent &event)
 {
+    _displayStatusMenu = _menuView->IsChecked(ViewMenuID::ID_SHOW_STATUSBAR);
     
+    if(_displayStatusMenu)
+    {
+        this->SetStatusText("Omni-FEM Simulator");
+    }
+    else
+    {
+        this->SetStatusText(wxEmptyString);
+    }
 }

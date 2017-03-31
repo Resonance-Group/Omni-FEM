@@ -42,7 +42,7 @@ private:
     
 public:
 
-    conductorPropertyDialog();
+    conductorPropertyDialog(wxWindow *par);
     
     ~conductorPropertyDialog();
     

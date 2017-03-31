@@ -6,6 +6,7 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/radiobut.h>
+#include <wx/valnum.h>
 
 #include <common/enums.h>
 
@@ -37,15 +38,34 @@ private:
     void onTranslationCheck(wxCommandEvent &event);
     
 public:
-    moveCopyDialog(bool isMove);
+    moveCopyDialog(wxWindow *par, bool isMove);
     
     ~moveCopyDialog();
 
     bool rotationIsSelected();
     
-    void getRotationCopy(wxPoint &aboutPoint, double &angularShift, long &numberCopies);
+    void getRotationMove(wxPoint &aboutPoint, double &angularShift)
+    {
+        double temp1;
+        wxPoint temp2;
+        unsigned int deleteMe = 0;
+        getRotationCopy(temp2, temp1, deleteMe);
+        aboutPoint = temp2;
+        angularShift = temp1;
+    }
     
-    void getTranslationCopy(double &horizontalShift, double &veriticalShift, long &numberCopies);
+    void getRotationCopy(wxPoint &aboutPoint, double &angularShift, unsigned int &numberCopies);
+    
+    void getTranslationMove(double &horizontalShift, double &veriticalShift)
+    {
+        double temp1, temp2;
+        unsigned int deleteMe = 0;
+        getTranslationCopy(temp1, temp2, deleteMe);
+        horizontalShift = temp1;
+        veriticalShift = temp2;
+    }
+    
+    void getTranslationCopy(double &horizontalShift, double &veriticalShift, unsigned int &numberCopies);
     
 private:
     wxDECLARE_EVENT_TABLE();

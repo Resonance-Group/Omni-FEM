@@ -6,10 +6,8 @@
 class gridPreferences
 {
 private:
-
-    double _ppu = 100;
     
-    double _gridSize = 0.25;
+    double _gridStep = 0.25;
     
     planarCoordinateEnum _coordinateSystem;
     
@@ -17,30 +15,24 @@ private:
     
     bool _isSnapGrid = false;
     
-    bool _isShowOrigin = true;
+    bool _isShowOrigin = false;
     
     bool _isShowBlockName = true;
     
+    bool _isShowAxis = true;
+    
+    bool _reverseMouseZoom = false;
+    
 public:
-
-    void setPPU(double ppu)
+    
+    void setGridStep(double size)
     {
-        _ppu = ppu;
+        _gridStep = size;
     }
     
-    double getPPU()
+    double getGridStep()
     {
-        return _ppu;
-    }
-    
-    void setGridSize(double size)
-    {
-        _gridSize = size;
-    }
-    
-    double getGridSize()
-    {
-        return _gridSize;
+        return _gridStep;
     }
     
     void setCoordinateSystem(planarCoordinateEnum system)
@@ -91,6 +83,26 @@ public:
     bool getShowBlockNameState()
     {
         return _isShowBlockName;
+    }
+    
+    void setShowAxisState(bool state)
+    {
+        _isShowAxis = state;
+    }
+    
+    bool getShowAxisState()
+    {
+        return _isShowAxis;
+    }
+    
+    void setMouseZoomReverseState(bool state)
+    {
+        _reverseMouseZoom = state;
+    }
+    
+    bool getMouseZoomReverseState()
+    {
+        return _reverseMouseZoom;
     }
 };
     

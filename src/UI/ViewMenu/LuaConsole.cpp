@@ -8,12 +8,12 @@ luaConsole::luaConsole() : wxDialog(NULL, wxID_ANY, "Lua Console")
     wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *footerSizer1 = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *footerSizer2 = new wxBoxSizer(wxHORIZONTAL);
-    
+
     _outputConsole->Create(this, wxID_ANY, wxEmptyString, wxPoint(12, 12), wxSize(373, 98), wxTE_MULTILINE);
     _outputConsole->SetFont(*font);
     _outputConsole->Enable(false);
     
-    _inputConsole->Create(this, wxID_ANY, wxEmptyString, wxPoint(12, 116), wxSize(373, 98), wxTE_MULTILINE);
+    _inputConsole->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(373, 98), wxTE_MULTILINE);
     _inputConsole->SetFont(*font);
     
     wxButton *clearInputButton = new wxButton(this, generalFrameButton::ID_BUTTON1, "Clear Input", wxPoint(12, 242), wxSize(75, 23));
@@ -32,9 +32,9 @@ luaConsole::luaConsole() : wxDialog(NULL, wxID_ANY, "Lua Console")
     
     intermediateSizer->Add(footerSizer1, 0, wxALIGN_LEFT);
     intermediateSizer->Add(137, 0, 0);
-    intermediateSizer->Add(evaluateButton, 0, wxALIGN_RIGHT | wxCENTER);
+    intermediateSizer->Add(footerSizer2, 0, wxCENTER);
     
-    topSizer->Add(_outputConsole, 0, wxALL, 6);
+    topSizer->Add(_outputConsole, wxSizerFlags(0).Border(wxALL, 6));
     topSizer->Add(_inputConsole, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
     topSizer->Add(0, 20, 0);
     topSizer->Add(intermediateSizer);

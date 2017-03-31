@@ -19,16 +19,6 @@ private:
     
     double _precision = powf(10, -8);
     
-    double _gridSize = 0.25;
-    
-    bool _showGridState = true;
-    
-    bool _showOriginState = false;
-    
-    bool _showBlockNamesState = true;
-    
-    double _pixelperunit = 100;
-    
     double _minAngle = 30;
     
     wxString _comments;
@@ -59,56 +49,6 @@ public:
     double getPrecision()
     {
         return _precision;
-    }
-    
-    void setGridSize(double size)
-    {
-        _gridSize = size;
-    }
-    
-    double getGridSize()
-    {
-        return _gridSize;
-    }
-    
-    void setShowGridState(bool willShowGrid)
-    {
-        _showGridState = willShowGrid;
-    }
-    
-    bool getShowGridState()
-    {
-        return _showGridState;
-    }
-    
-    void setShowOriginState(bool willShowOrigin)
-    {
-        _showOriginState = willShowOrigin;
-    }
-    
-    bool getShowOriginState()
-    {
-        return _showOriginState;
-    }
-    
-    void setShowBlockNamesState(bool willShowBlockName)
-    {
-        _showBlockNamesState = willShowBlockName;
-    }
-    
-    bool getShowBlockNamesState()
-    {
-        return _showBlockNamesState;
-    }
-    
-    void setPPU(double ppu)
-    {
-        _pixelperunit = ppu;
-    }
-    
-    double getPPU()
-    {
-        return _pixelperunit;
     }
     
     void setCoordinateType(planarCoordinateEnum coordianteSystem)
@@ -159,6 +99,14 @@ public:
     wxString getComments()
     {
         return _comments;
+    }
+    
+    bool isAxistmmetric()
+    {
+        if(_probType == AXISYMMETRIC)
+            return true;
+        else
+            return false;
     }
  
 };

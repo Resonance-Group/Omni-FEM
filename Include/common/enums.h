@@ -21,9 +21,10 @@ enum menubarID
 	ID_menubarLUASCRIPT,
     ID_menubarShowGrid,
     ID_menubarSnapGrid,
-    
-    ID_menubarDispLuaConsole
+    ID_menubarDispLuaConsole,
+    ID_PROBLEM_PREFERNCES,
 };
+
 
 enum EditMenuID
 {
@@ -36,7 +37,9 @@ enum EditMenuID
     ID_MIRROR,
     ID_CREATE_RADIUS,
     ID_CREATE_OPEN_BOUNDARY,
-    ID_PREFERENCES
+    ID_PREFERENCES, 
+    ID_SELECT_GROUP,
+    ID_EDIT_PROPERTY
 };
 
 
@@ -94,17 +97,26 @@ enum AnalysisMenuID
 };
 
 
-//! Enum contianing the dimension of the problem
-/*! 
-	Please note that Omni-FEM does not support all of these dimensions.
-	Some are placed here as a place holder for future releases
-*/
-enum class problemDimension
+
+//! Enum for the tool bar
+enum ToolBarID
 {
-	zero_Dimension,
-	one_dimension,
-	two_dimension,
-	three_dimension
+    ID_TOOLBAR_NEW_FILE = 700,
+    ID_TOOLBAR_SAVE_FILE,
+    ID_TOOLBAR_SAVE_FILE_AS,
+    ID_TOOLBAR_OPEN_FILE,
+    ID_TOOLBAR_ZOOM_IN,
+    ID_TOOLBAR_ZOOM_OUT,
+    ID_TOOLBAR_EDIT_PROPERTY,
+    ID_TOOLBAR_MOVE,
+    ID_TOOLBAR_COPY,
+    ID_TOOLBAR_SCALE,
+    ID_TOOLBAR_DELETE,
+	ID_TOGGLE_NODE,
+	ID_TOGGLE_LINE,
+	ID_TOOLBAR_CREATE_MESH,
+    ID_TOOLBAR_SOLVE,
+    ID_TOOLBAR_VIEW_RESULTS
 };
 
 
@@ -121,8 +133,6 @@ enum class problemDimension
 enum class physicProblems
 {
     NO_PHYSICS_DEFINED,
-	electrostatics,
-	magnetics,
     PROB_ELECTROSTATIC,
     PROB_MAGNETICS
 };
@@ -130,12 +140,12 @@ enum class physicProblems
 
 enum class systemState
 {
-	initialStartUp,
-	dimensionChoosing,
-	problemChooseing,
-	problemDefining,
-	simulatingProblem,
-	viewingResults
+    ON_START_UP_STATE,
+    INITIAL_START_UP,
+    PHYSICS_CHOOSING,
+    MODEL_DEFINING,
+    SIMULATING,
+    VIEWING_RESULTS
 };
 
 //! This enum is used to set the AC SOlver that Omni-FEM will use
@@ -256,7 +266,8 @@ enum generalFrameButton
     ID_BUTTON2,
     ID_BUTTON3,
     ID_TREECTRL1,
-    ID_TREECTRL2
+    ID_TREECTRL2,
+    ID_LISTBOX
 };
 
 enum magneticBlockPropertyDiag
@@ -276,12 +287,32 @@ enum magneticBlockPropertyDiag
     ID_TextControl13
 };
 
+//! Enum for the buttons
+enum buttonID
+{
+    ID_NO_BUTTON,
+	ID_buttonTwoDim,
+	ID_buttonBack,
+	ID_buttonNew,
+	ID_buttonOpen,
+	ID_buttonFinish
+};
+
 
 enum OpenBoundaryEdge
 {
     NO_BOUNDARY_DEFINED,
     DIRICHLET,
     NEUMANN
+};
+
+enum EditGeometry
+{
+    EDIT_NONE,
+    EDIT_NODES,
+    EDIT_LINES,
+    EDIT_ARCS,
+    EDIT_LABELS
 };
 
 

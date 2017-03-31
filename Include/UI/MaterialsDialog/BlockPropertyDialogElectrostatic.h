@@ -30,7 +30,7 @@ private:
     void setTextBox();
 
 public:
-    blockPropertyDialogElectrostatic();
+    blockPropertyDialogElectrostatic(wxWindow *par);
     
     ~blockPropertyDialogElectrostatic();
     

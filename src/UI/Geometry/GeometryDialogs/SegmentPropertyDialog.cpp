@@ -1,8 +1,10 @@
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 
 
-segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &electricalBoundaryList, std::vector<conductorProperty> &conductorList ,segmentProperty &property) : wxDialog(NULL, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> electricalBoundaryList, std::vector<conductorProperty> conductorList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
 {
+    _isArc = isArc;
+    
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -39,7 +41,7 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
     boundaryText->SetFont(*font);
     _boundaryListCombo->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(182, 21), *boundaryNameList);
     _boundaryListCombo->SetFont(*font);
-    if(!property.checkIsBoundarySet())
+    if(property.getBoundaryName() == "None")
     {
         _boundaryListCombo->SetSelection(0);
     }
@@ -47,7 +49,7 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
     {
         for(unsigned int i = 0; i < electricalBoundaryList.size(); i++)
         {
-            if(electricalBoundaryList.at(i).getBoundaryName() == property.getElectricalBoundary().getBoundaryName())
+            if(electricalBoundaryList.at(i).getBoundaryName() == property.getBoundaryName())
             {
                 _boundaryListCombo->SetSelection(i + 1);
                 break;
@@ -64,23 +66,28 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
     
     line2Sizer->Add(_meshSpacingAutoCheckbox, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     
-    wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
-    elementSizeText->SetFont(*font);
-    _elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
-    _elementSizeTextCtrl->SetFont(*font);
-    _elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
-    std::ostream elementSizeStream(_elementSizeTextCtrl);
-    elementSizeStream << std::setprecision(4);
-    elementSizeStream << property.getElementSizeAlongLine();
-    
-    line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-    line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    if(!_isArc)
+    {
+        wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
+        elementSizeText->SetFont(*font);
+        _elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
+        _elementSizeTextCtrl->SetFont(*font);
+        _elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
+        std::ostream elementSizeStream(_elementSizeTextCtrl);
+        elementSizeStream << std::setprecision(4);
+        elementSizeStream << property.getElementSizeAlongLine();
+        
+        line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+        line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    }
+    else
+        this->SetTitle("Arc Segment Properties");
     
     wxStaticText *conductorText = new wxStaticText(this, wxID_ANY, "In Conductor:");
     conductorText->SetFont(*font);
     _conductorListCombobox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(164, 21), *conductorNameList);
     _conductorListCombobox->SetFont(*font);
-    if(!property.checkIsCircuitSet())
+    if(property.getConductorName() == "None")
     {
         _conductorListCombobox->SetSelection(0);
     }
@@ -88,7 +95,7 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
     {
         for(unsigned int i = 0; i < conductorList.size(); i++)
         {
-            if(conductorList.at(i).getName() == property.getConductor().getName())
+            if(conductorList.at(i).getName() == property.getConductorName())
             {
                 _conductorListCombobox->SetSelection(i + 1);
             }
@@ -123,7 +130,8 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
     
     topSizer->Add(line1Sizer);
     topSizer->Add(line2Sizer);
-    topSizer->Add(line3Sizer);
+    if(!_isArc)
+        topSizer->Add(line3Sizer);
     topSizer->Add(line4Sizer);
     topSizer->Add(line5Sizer);
     topSizer->Add(line6Sizer);
@@ -134,8 +142,10 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<electricalBoundary> &el
 
 
 
-segmentPropertyDialog::segmentPropertyDialog(std::vector<magneticBoundary> &magneticBoundayList, segmentProperty &property) : wxDialog(NULL, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> magneticBoundayList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
 {
+    _isArc = isArc;
+    
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -162,7 +172,7 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<magneticBoundary> &magn
     boundaryText->SetFont(*font);
     _boundaryListCombo->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(182, 21), *boundaryNameList);
     _boundaryListCombo->SetFont(*font);
-    if(!property.checkIsBoundarySet())
+    if(property.getBoundaryName() == "None")
     {
         _boundaryListCombo->SetSelection(0);
     }
@@ -170,7 +180,7 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<magneticBoundary> &magn
     {
         for(int i = 0; i < magneticBoundayList.size(); i++)
         {
-            if(magneticBoundayList.at(i).getBoundaryName() == property.getMagneticBoundary().getBoundaryName())
+            if(magneticBoundayList.at(i).getBoundaryName() == property.getBoundaryName())
             {
                 _boundaryListCombo->SetSelection(i + 1);
                 break;
@@ -187,17 +197,22 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<magneticBoundary> &magn
     
     line2Sizer->Add(_meshSpacingAutoCheckbox, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     
-    wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
-    elementSizeText->SetFont(*font);
-    _elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
-    _elementSizeTextCtrl->SetFont(*font);
-    _elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
-    std::ostream elementSizeStream(_elementSizeTextCtrl);
-    elementSizeStream << std::setprecision(4);
-    elementSizeStream << property.getElementSizeAlongLine();
-    
-    line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-    line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    if(!_isArc)
+    {
+        wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
+        elementSizeText->SetFont(*font);
+        _elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
+        _elementSizeTextCtrl->SetFont(*font);
+        _elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
+        std::ostream elementSizeStream(_elementSizeTextCtrl);
+        elementSizeStream << std::setprecision(4);
+        elementSizeStream << property.getElementSizeAlongLine();
+        
+        line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+        line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    }
+    else
+        this->SetTitle("Arc Segment Properties");
     
     _hideSegmentCheckbox->Create(this, wxID_ANY, "Hide Segment in Postprocessor", wxDefaultPosition, wxSize(200, 17));
     _hideSegmentCheckbox->SetFont(*font);
@@ -224,7 +239,8 @@ segmentPropertyDialog::segmentPropertyDialog(std::vector<magneticBoundary> &magn
     
     topSizer->Add(line1Sizer);
     topSizer->Add(line2Sizer);
-    topSizer->Add(line3Sizer);
+    if(!_isArc)
+        topSizer->Add(line3Sizer);
     topSizer->Add(line4Sizer);
     topSizer->Add(line5Sizer);
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
@@ -239,51 +255,21 @@ void segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
     double value;
     long value2;
     
-    if(_problem == physicProblems::PROB_ELECTROSTATIC)
-    {
-        property.setPhysicsProblem(physicProblems::PROB_ELECTROSTATIC);
-    }
-    else
-        property.setPhysicsProblem(physicProblems::PROB_MAGNETICS);
-    
-    if(_boundaryListCombo->GetSelection() != 0)
-    {
-        for(int i = 1; i < _boundaryListCombo->GetCount(); i++)
-        {
-            if(_problem == physicProblems::PROB_ELECTROSTATIC)
-            {
-                if(_electricalBoundaryList.at(i - 1).getBoundaryName() == _boundaryListCombo->GetString(i))
-                {
-                    property.setElectricalBoundary(_electricalBoundaryList.at(i - 1));
-                    break;
-                }
-            }
-            else if(_problem == physicProblems::PROB_MAGNETICS)
-            {
-                if(_magneticBoundayList.at(i - 1).getBoundaryName() == _boundaryListCombo->GetString(i))
-                {
-                    property.setMagneticBoudnary(_magneticBoundayList.at(i - 1));
-                    break;
-                }
-            }
-        }
-    }
+    property.setPhysicsProblem(_problem);
+
+    property.setBoundaryName(_boundaryListCombo->GetString(_boundaryListCombo->GetSelection()));
         
     property.setMeshAutoState(_meshSpacingAutoCheckbox->GetValue());
     
-    _elementSizeTextCtrl->GetValue().ToDouble(&value);
-    property.setElementSizeAlongLine(value);
+    if(!_isArc)
+    {
+        _elementSizeTextCtrl->GetValue().ToDouble(&value);
+        property.setElementSizeAlongLine(value);
+    }
         
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        for(int i = 1; i < _conductorListCombobox->GetCount(); i++)
-        {
-            if(_conductorList.at(i - 1).getName() == _conductorListCombobox->GetString(i))
-            {
-                property.setConductor(_conductorList.at(i - 1));
-                break;
-            }
-        }
+        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()));
     }
         
     property.setHiddenState(_hideSegmentCheckbox->GetValue());

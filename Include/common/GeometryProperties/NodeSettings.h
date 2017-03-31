@@ -1,6 +1,8 @@
 #ifndef NODESETTING_H_
 #define NODESETTING_H_
 
+#include <string>
+
 #include <common/NodalProperty.h>
 #include <common/ConductorProperty.h>
 #include <common/enums.h>
@@ -15,18 +17,22 @@
 class nodeSetting
 {
 private:
-    physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
-
-    nodalProperty _nodeProperty;
+    physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;// Is this needed?
+    
+    //! This will store the name of the nodal property the the node is assigned to.
+    std::string _nodalPropertyName = "None";
+    
+    std::string _conductorPropertyName = "None";
     
     unsigned int _groupNumber = 0;
     
-    conductorProperty _conductorProperty;
-    
-    bool _nodePropertyIsSet = false;
-    
-    bool _conductorPropertyIsSet = false;
 public:
+    nodeSetting()
+    {
+        _problem = physicProblems::NO_PHYSICS_DEFINED;
+        _groupNumber = 0;
+    }
+
     void setPhysicsProblem(physicProblems problem)
     {
         _problem = problem;
@@ -36,18 +42,27 @@ public:
     {
         return _problem;
     }
+    
+    void setNodalPropertyName(std::string name)
+    {
+        _nodalPropertyName = name;
+    }
+    
+    std::string getNodalPropertyName()
+    {
+        return _nodalPropertyName;
+    }
+    
+    void setConductorPropertyName(std::string name)
+    {
+        _conductorPropertyName = name;
+    }
+    
+    std::string getConductorPropertyName()
+    {
+        return _conductorPropertyName;
+    }
 
-    void setNodalProperty(nodalProperty property)
-    {
-        _nodeProperty = property;
-        _nodePropertyIsSet = true;
-    }
-    
-    nodalProperty getNodalProperty()
-    {
-        return _nodeProperty;
-    }
-    
     void setGroupNumber(unsigned int number)
     {
         _groupNumber = number;
@@ -57,28 +72,6 @@ public:
     {
         return _groupNumber;
     }
-    
-    void setConductorProperty(conductorProperty property)
-    {
-        _conductorProperty = property;
-        _conductorPropertyIsSet = true;
-    }
-    
-    conductorProperty getConductorProperty()
-    {
-        return _conductorProperty;
-    }
-    
-    bool getNodePropertyState()
-    {
-        return _nodePropertyIsSet;
-    }
-    
-    bool getConductorPropertyState()
-    {
-        return _conductorPropertyIsSet;
-    }
-    
 };
 
 

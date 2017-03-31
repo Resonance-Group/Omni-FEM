@@ -1,7 +1,7 @@
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 
 
-setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings, std::vector<conductorProperty> &conductorPropertyList) : wxDialog(NULL, wxID_ANY, "Nodal Settings")
+setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> nodePropertyList, nodeSetting nodeSettings, std::vector<conductorProperty> conductorPropertyList) : wxDialog(par, wxID_ANY, "Nodal Settings")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
      
@@ -36,7 +36,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
     nodalName->SetFont(*font);
     _nodePropertyComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(156, 21), *nodePropertyNameArray);
     _nodePropertyComboBox->SetFont(*font);
-    if(!_nodeSetting.getNodePropertyState())
+    if(_nodeSetting.getNodalPropertyName() == "None")
     {
         _nodePropertyComboBox->SetSelection(0);
     }
@@ -48,7 +48,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
          */ 
         for(int i = 0; i < _nodalList.size(); i++)
         {
-            if(_nodalList.at(i).getName() == _nodeSetting.getNodalProperty().getName())
+            if(_nodalList.at(i).getName() == _nodeSetting.getNodalPropertyName())
             {
                 _nodePropertyComboBox->SetSelection(i + 1);
                 break;
@@ -72,7 +72,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
     conductorText->SetFont(*font);
     _conductorsComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(156, 21), *conductorPropertyNameArray);
     _conductorsComboBox->SetFont(*font);
-    if(!_nodeSetting.getConductorPropertyState())
+    if(_nodeSetting.getConductorPropertyName() == "None")
     {
         _conductorsComboBox->SetSelection(0);
     }
@@ -80,7 +80,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
     {
         for(int i = 0; i < _conductorList.size(); i++)
         {
-            if(_conductorList.at(i).getName() == _nodeSetting.getConductorProperty().getName())
+            if(_conductorList.at(i).getName() == _nodeSetting.getConductorPropertyName())
             {
                 _conductorsComboBox->SetSelection(i + 1);
                 break;
@@ -111,7 +111,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
  
  
  
-setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodePropertyList, nodeSetting &nodeSettings) : wxDialog(NULL, wxID_ANY, "Nodal Settings")
+setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> nodePropertyList, nodeSetting nodeSettings) : wxDialog(par, wxID_ANY, "Nodal Settings")
 {
      wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
      
@@ -136,7 +136,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
     nodalName->SetFont(*font);
     _nodePropertyComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(156, 21), *nodePropertyNameArray);
     _nodePropertyComboBox->SetFont(*font);
-    if(!_nodeSetting.getNodePropertyState())
+    if(_nodeSetting.getNodalPropertyName() == "None")
     {
         _nodePropertyComboBox->SetSelection(0);
     }
@@ -148,7 +148,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(std::vector<nodalProperty> &nodeP
          */ 
         for(int i = 0; i < _nodalList.size(); i++)
         {
-            if(_nodalList.at(i).getName() == _nodeSetting.getNodalProperty().getName())
+            if(_nodalList.at(i).getName() == _nodeSetting.getNodalPropertyName())
             {
                 _nodePropertyComboBox->SetSelection(i + 1);
                 break;
@@ -192,34 +192,14 @@ void setNodalPropertyDialog::getNodalSettings(nodeSetting &settings)
     
     settings.setPhysicsProblem(_nodeSetting.getPhysicsProblem());
     
-    if(_nodePropertyComboBox->GetSelection() != 0)
-    {
-        for(int i = 1; i < _nodePropertyComboBox->GetCount(); i++)
-        {
-            if(_nodalList.at(i - 1).getName() == _nodePropertyComboBox->GetString(_nodePropertyComboBox->GetSelection()))
-            {
-                settings.setNodalProperty(_nodalList.at(i - 1));
-                break;
-            }
-        }
-    }
-    
+    settings.setNodalPropertyName(_nodePropertyComboBox->GetString(_nodePropertyComboBox->GetSelection()));
+
     _groupTextCtrl->GetValue().ToLong(&value);
     settings.setGroupNumber((unsigned int)value);
     
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        if(_conductorsComboBox->GetSelection() != 0)
-        {
-           for(int i = 1; i < _conductorsComboBox->GetCount(); i++)
-            {
-                if(_conductorList.at(i - 1).getName() == _conductorsComboBox->GetString(_conductorsComboBox->GetSelection()))
-                {
-                    settings.setConductorProperty(_conductorList.at(i - 1));
-                    break;
-                }
-            } 
-        }
+        settings.setConductorPropertyName(_conductorsComboBox->GetString(_conductorsComboBox->GetSelection()));
     }
 }
 

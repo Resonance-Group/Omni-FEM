@@ -32,7 +32,7 @@ public:
 	
 private:
     //! This is the event that is fired when the canvas is drawn or re-drawn
-	void onGeometryPaint(wxPaintEvent &event);
+	void onGeometryPaint(wxPaintEvent &event);//! This is the event that is fired when the canvas is drawn or re-drawn
 	
 	//! This function will convert a xpoint (pixel) to an x-coordinate value
 	/*

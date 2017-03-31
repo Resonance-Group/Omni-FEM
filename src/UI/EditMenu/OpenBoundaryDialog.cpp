@@ -1,7 +1,7 @@
 #include <UI/EditMenu/OpenBoundaryDialog.h>
 
 
-openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Boundary")
+openBoundaryDialog::openBoundaryDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Open Boundary")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -22,7 +22,7 @@ openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Bounda
     _numberLayersTextCtrl->Create(this, wxID_ANY, "0", wxPoint(111, 12), wxSize(100, 20));
     _numberLayersTextCtrl->SetFont(*font);
     line1->Add(numLayersText, 0, wxCENTER | wxALL, 6);
-    line1->Add(_numberLayersTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT | wxALIGN_RIGHT, 6);
+    line1->Add(_numberLayersTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticText *radiusText = new wxStaticText(this, wxID_ANY, "Radius:");
     radiusText->SetFont(*font);
@@ -31,7 +31,7 @@ openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Bounda
     
     line2->Add(radiusText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     line2->Add(59, 0, 0);
-    line2->Add(_radiusTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxALIGN_RIGHT, 6);
+    line2->Add(_radiusTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticText *horizontalCenterText = new wxStaticText(this, wxID_ANY, "Horizontal Center:");
     horizontalCenterText->SetFont(*font);
@@ -40,7 +40,7 @@ openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Bounda
     
     line3->Add(horizontalCenterText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     line3->Add(1, 0, 0);
-    line3->Add(_horizontalCenterTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxALIGN_RIGHT, 6);
+    line3->Add(_horizontalCenterTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticText *verticalText = new wxStaticText(this, wxID_ANY, "Vertical Center:");
     verticalText->SetFont(*font);
@@ -49,7 +49,7 @@ openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Bounda
     
     line4->Add(verticalText, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     line4->Add(11, 0, 0);
-    line4->Add(_verticalCenterTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT | wxALIGN_RIGHT, 6);
+    line4->Add(_verticalCenterTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
     
     wxStaticText *edgeTypeText = new wxStaticText(this, wxID_ANY, "Edge Type:");
     edgeTypeText->SetFont(*font);
@@ -59,12 +59,12 @@ openBoundaryDialog::openBoundaryDialog() : wxDialog(NULL, wxID_ANY, "Open Bounda
     
     line5->Add(edgeTypeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     line5->Add(34, 0, 0);
-    line5->Add(_edgeTypeComboBox, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT | wxALIGN_RIGHT, 6);
+    line5->Add(_edgeTypeComboBox, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     
     wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(55, 143), wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxButton *cancelButton = new wxButton(this, wxID_ANY, "Cancel", wxPoint(136, 143), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(136, 143), wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);

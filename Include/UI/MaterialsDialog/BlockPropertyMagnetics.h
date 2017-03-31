@@ -9,6 +9,7 @@
 #include <wx/arrstr.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
+#include <wx/valnum.h>
 
 #include <common/enums.h>
 #include <common/MaterialProperty.h>
@@ -94,7 +95,7 @@ private:
     
 public:
     
-    blockPropertyMagnetic();
+    blockPropertyMagnetic(wxWindow *par);
     
     ~blockPropertyMagnetic();
     
