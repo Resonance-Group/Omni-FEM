@@ -20,11 +20,10 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glOrtho(-1.0, 1.0, -1.0, .0, -1.0, 1.0);
     GLenum error = glGetError();
 	if(error != GL_NO_ERROR)
 	{
-	//	wxMessageBox("Error - " + gluErrorString(error));
 		return;
 	}
     
@@ -1002,14 +1001,19 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
 
 void modelDefinition::updateProjection()
 {
-    // First, load the projection matrix and reset the view to a default view
+        // First, load the projection matrix and reset the view to a default view
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    
+    glOrtho(-_zoomFactor, _zoomFactor, -_zoomFactor, _zoomFactor, -1.0, 1.0);
+    
+    glMatrixMode(GL_MODELVIEW);
     
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     /* This section will handle the translation (panning) and scaled (zooming). 
      * Needs to be called each time a draw occurs in order to update the placement of all the components */
     if(_zoomFactor < 1e-9)
@@ -1018,8 +1022,6 @@ void modelDefinition::updateProjection()
     if(_zoomFactor > 1e6)
         _zoomFactor = 1e6;
     
-    glScaled(_zoomFactor / (this->GetSize().GetWidth() / this->GetSize().GetHeight()), _zoomFactor, 1.0);
-
     glTranslated(-_cameraX, -_cameraY, 0.0);
 }
 
@@ -1127,14 +1129,14 @@ void modelDefinition::drawGrid()
 
 double modelDefinition::convertToXCoordinate(int xPixel)
 {
-    return (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
+    return _zoomFactor * (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
 }
 
 
 
 double modelDefinition::convertToYCoordinate(int yPixel)
 {
-    return (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / _zoomFactor + _cameraY;
+    return _zoomFactor * (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0 + _cameraY;
 }
 
 
@@ -1288,8 +1290,8 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
     {
         /* This section of the code was adapted from Agro2D */
         
-        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomFactor;
         
         if(!_preferences.getMouseZoomReverseState())
         {
@@ -1309,8 +1311,8 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
         /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
          * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
         
-        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomFactor;
     }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -1332,8 +1334,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
-        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy / _zoomFactor);
+        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy * _zoomFactor);
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
