@@ -26,27 +26,29 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     wxBoxSizer *valueSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+    wxStaticBoxSizer *boxSizer1;
+    wxStaticBoxSizer *boxSizer2;
     
     _nodalProperty.setName("New Point Property");
     _nodalProperty.setValue(0);
     
     /* This first part is for the header */
-    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:", wxPoint(12, 9), wxSize(38, 13));
+    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");
     name->SetFont(*font);
-    nameTextCtrl->Create(this, wxID_ANY, _nodalProperty.getName(), wxPoint(50, 6), wxSize(165, 20));
+    nameTextCtrl->Create(this, wxID_ANY, _nodalProperty.getName(), wxDefaultPosition, wxSize(171, 20));
     nameTextCtrl->SetFont(*font);
     
     headerSizer->Add(name, 0, wxCENTER | wxALL , 6);
     headerSizer->Add(nameTextCtrl, 0, wxCenter | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     /* Adding in the radio buttons */
-    radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Specified Potential Property", wxPoint(50, 32), wxSize(176, 19));
+    radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Specified Potential Property");
     radioButton1->SetFont(*font);
     radioButton1->SetValue(true);
     if(_problem == physicProblems::PROB_MAGNETICS)
-        radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Current Property", wxPoint(50, 55), wxSize(144, 19));
+        radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Current Property");
     else
-        radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Charge Density Property", wxPoint(50, 55), wxSize(190, 19));
+        radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Point Charge Density Property");
     radioButton2->SetFont(*font);
     radioButton2->SetValue(false);
     
@@ -55,29 +57,32 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     
     /*Creating the group boxes */
     if(_problem == physicProblems::PROB_MAGNETICS)
-        groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (Wb/m)", wxPoint(15, 78), wxSize(210, 49));
+        boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Vector Potential (Wb/m)");
     else
-        groupBox1->Create(this, wxID_ANY, "Specified Vector Potential (V)", wxPoint(15, 78), wxSize(210, 49));
-    groupBox1->SetFont(*font);
-    textCtrl1->Create(groupBox1, wxID_ANY, std::to_string(0.0), wxPoint(6, 5), wxSize(198, 20));
+        boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Vector Potential (V)");
+    boxSizer1->GetStaticBox()->SetFont(*font);
+    textCtrl1->Create(boxSizer1->GetStaticBox(), wxID_ANY, std::to_string(0.0), wxDefaultPosition, wxSize(198, 20));
     textCtrl1->SetFont(*font);
     textCtrl1->Enable(true);
     if(_problem == physicProblems::PROB_MAGNETICS)
-        groupBox2->Create(this, wxID_ANY, "Point Current (Amps)", wxPoint(15, 133), wxSize(210, 49));
+        boxSizer2 = new wxStaticBoxSizer(wxVERTICAL, this, "Point Current (Amps)");
     else
-        groupBox2->Create(this, wxID_ANY, "Point Charge Density (C/m)", wxPoint(15, 133), wxSize(210, 49));
-    groupBox2->SetFont(*font);
-    textCtrl2->Create(groupBox2, wxID_ANY, std::to_string(0.0), wxPoint(6, 5), wxSize(198, 20));
+        boxSizer2 = new wxStaticBoxSizer(wxVERTICAL, this, "Point Charge Density (C/m)");
+    boxSizer2->GetStaticBox()->SetFont(*font);
+    textCtrl2->Create(boxSizer2->GetStaticBox(), wxID_ANY, std::to_string(0.0), wxDefaultPosition, wxSize(198, 20));
     textCtrl2->SetFont(*font);
     textCtrl2->Enable(false);
     
-    valueSizer->Add(groupBox1, 0, wxALL, 6);
-    valueSizer->Add(groupBox2, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
+    boxSizer1->Add(textCtrl1, 0, wxALL, 6);
+    boxSizer2->Add(textCtrl2, 0, wxALL, 6);
+    
+    valueSizer->Add(boxSizer1, 0, wxALL, 6);
+    valueSizer->Add(boxSizer2, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
     
     /* The buttons */
-    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(69, 188), wxSize(75, 23));
+    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(150, 188), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxDefaultPosition, wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);

@@ -31,40 +31,40 @@ electricalStaticBoundaryDialog::electricalStaticBoundaryDialog(wxWindow *par) : 
     _boundary.setSigma(0);
     _boundary.setVoltage(0);
     
-    wxStaticText *nameText = new wxStaticText(this, wxID_ANY, "Name:", wxPoint(12, 15), wxSize(38, 13));
+    wxStaticText *nameText = new wxStaticText(this, wxID_ANY, "Name:");
     nameText->SetFont(*font);
-    nameTextCtrl->Create(this, wxID_ANY, "New Boundary", wxPoint(69, 12), wxSize(168, 20));
+    nameTextCtrl->Create(this, wxID_ANY, "New Boundary", wxDefaultPosition, wxSize(169, 20));
     nameTextCtrl->SetFont(*font);
     headerSizer->Add(nameText, 0, wxCENTER | wxALL, 6);
     headerSizer->Add(14, 0, 0);
     headerSizer->Add(nameTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    wxStaticText *bcName = new wxStaticText(this, wxID_ANY, "BC Type:", wxPoint(12, 41), wxSize(51, 13));
+    wxStaticText *bcName = new wxStaticText(this, wxID_ANY, "BC Type:");
     bcName->SetFont(*font);
-    BCComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(69, 38), wxSize(170, 21), *BCNameArray);
+    BCComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(173, 21), *BCNameArray);
     BCComboBox->SetFont(*font);
     BCComboBox->SetSelection(0);
     bcSizer->Add(bcName, 0, wxCENTER | wxRIGHT | wxBOTTOM | wxLEFT, 6);
     bcSizer->Add(BCComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
-    fixedVoltageTextCtrl->Create(fixedVoltageSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(6, 19), wxSize(210, 20));
+    fixedVoltageTextCtrl->Create(fixedVoltageSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(210, 20));
     fixedVoltageTextCtrl->SetFont(*font);
     fixedVoltageSizer->Add(fixedVoltageTextCtrl, 0, wxCENTER | wxALL, 6);
     
-    surfaceChargeTextCtrl->Create(surfaceChargeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(6, 19), wxSize(210, 20));
+    surfaceChargeTextCtrl->Create(surfaceChargeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(210, 20));
     surfaceChargeTextCtrl->SetFont(*font);
     surfaceChargeSizer->Add(surfaceChargeTextCtrl, 0, wxCENTER | wxALL, 6);
     
-    wxStaticText *c0Name = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, "C0 Coefficient:", wxPoint(6, 25), wxSize(82, 13));
+    wxStaticText *c0Name = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, "C0 Coefficient:");
     c0Name->SetFont(*font);
-    c0TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(90, 22), wxSize(122, 20));
+    c0TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(123, 20));
     c0TextCtrl->SetFont(*font);
     c0Sizer->Add(c0Name, 0, wxCENTER | wxALL, 6);
     c0Sizer->Add(c0TextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    wxStaticText *c1Name = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, "C1 Coefficient:", wxPoint(6, 51), wxSize(82, 13));
+    wxStaticText *c1Name = new wxStaticText(mixedBCSizer->GetStaticBox(), wxID_ANY, "C1 Coefficient:");
     c1Name->SetFont(*font);
-    c1TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxPoint(90, 48), wxSize(122, 20));
+    c1TextCtrl->Create(mixedBCSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(123, 20));
     c1TextCtrl->SetFont(*font);
     c1Sizer->Add(c1Name, 0, wxCENTER | wxALL, 6);
     c1Sizer->Add(c1TextCtrl, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
@@ -72,10 +72,10 @@ electricalStaticBoundaryDialog::electricalStaticBoundaryDialog(wxWindow *par) : 
     mixedBCSizer->Add(c0Sizer);
     mixedBCSizer->Add(c1Sizer);
     
-    wxButton *okButton  = new wxButton(this, wxID_OK, "Ok", wxPoint(59, 278), wxSize(75, 23));
+    wxButton *okButton  = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);
     
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(140, 278), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxDefaultPosition, wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxALL, 6);

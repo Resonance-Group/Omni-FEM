@@ -5,9 +5,9 @@ conductorPropertyDialog::conductorPropertyDialog(wxWindow *par) : wxDialog(par, 
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *radioSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *totalChargeSize = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *inputSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *voltageSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
@@ -16,44 +16,44 @@ conductorPropertyDialog::conductorPropertyDialog(wxWindow *par) : wxDialog(par, 
     _conductorProperty.setName("New Conductor");
     
     /* Creating the header of the windows */
-    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 15), wxSize(38, 13));
+    wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ");
     name->SetFont(*font);
-    nameTextCtrl->Create(this, wxID_ANY, _conductorProperty.getName(), wxPoint(56, 12), wxSize(274, 20));
+    nameTextCtrl->Create(this, wxID_ANY, _conductorProperty.getName(), wxDefaultPosition, wxSize(226, 20));
     nameTextCtrl->SetFont(*font);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxTOP | wxLEFT | wxRIGHT, 6);
     headerSizer->Add(nameTextCtrl, 0, wxALIGN_CENTER | wxTOP | wxRIGHT, 6);
     
-    radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Total Charge (C):", wxPoint(15, 51), wxSize(115, 17));
+    radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Total Charge (C):");
     radioButton1->SetFont(*font);
     radioButton1->SetValue(true);
-    radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Prescribed Voltage (V):", wxPoint(15, 77), wxSize(150, 17));
+    radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Prescribed Voltage (V):");
     radioButton2->SetFont(*font);
     radioButton2->SetValue(false);
-    radioSizer->Add(radioButton1, 0, wxALIGN_TOP | wxALL, 6);
-    radioSizer->Add(0, 4, 0);
-    radioSizer->Add(radioButton2, 0, wxLEFT | wxRIGHT, 6);
     
-    chargeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(138, 50), wxSize(156, 20));
+    chargeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(116, 20));
     chargeTextCtrl->SetFont(*font);
-    voltageTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxPoint(138, 76), wxSize(156, 20));
+    voltageTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(116, 20));
     voltageTextCtrl->SetFont(*font);
-    inputSizer->Add(chargeTextCtrl, 0, wxCENTER | wxALL, 6);
-    inputSizer->Add(voltageTextCtrl, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
     
-    intermediateSizer->Add(radioSizer);
-    intermediateSizer->Add(inputSizer);
+    totalChargeSize->Add(radioButton1, 0, wxCENTER | wxALL, 6);
+    totalChargeSize->Add(33, 0, 0);
+    totalChargeSize->Add(chargeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxPoint(138, 102), wxSize(75, 23));
+    voltageSizer->Add(radioButton2, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+    voltageSizer->Add(voltageTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+    
+    wxButton *okButton = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(*font);
-    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxPoint(219, 102), wxSize(75, 23));
+    wxButton *cancelButton = new wxButton(this, wxID_CANCEL, "Cancel", wxDefaultPosition, wxSize(75, 23));
     cancelButton->SetFont(*font);
     
     footerSizer->Add(okButton, 0, wxLEFT, 6);
     footerSizer->Add(cancelButton);
     
     topSizer->Add(headerSizer);
-    topSizer->Add(intermediateSizer);
+    topSizer->Add(totalChargeSize);
+    topSizer->Add(voltageSizer);
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     
     updateInterface();

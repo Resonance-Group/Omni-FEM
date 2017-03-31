@@ -13,7 +13,7 @@ blockPropertyDialogElectrostatic::blockPropertyDialogElectrostatic(wxWindow *par
     
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");
     name->SetFont(*font);
-    _name->Create(this, wxID_ANY, _material.getName(), wxPoint(56, 12), wxSize(165, 20));
+    _name->Create(this, wxID_ANY, _material.getName(), wxPoint(56, 12), wxSize(156, 20));
     _name->SetFont(*font);
     
     headerSizer->Add(name, 0, wxCENTER | wxLEFT | wxRIGHT | wxTOP | wxBOTTOM, 6);
@@ -27,7 +27,7 @@ blockPropertyDialogElectrostatic::blockPropertyDialogElectrostatic(wxWindow *par
     relativeXStream << _material.getEpsilonX();
     _relativeEpiXTextCtrl->SetFont(*font);
     relativeXSizer->Add(relativeXText, 0, wxLEFT | wxTOP | wxBOTTOM | wxRIGHT | wxCENTER, 6);
-    relativeXSizer->Add(24, 0, 0);
+    relativeXSizer->Add(17, 0, 0);
     relativeXSizer->Add(_relativeEpiXTextCtrl, 0, wxLEFT | wxTOP | wxBOTTOM | wxRIGHT | wxCENTER, 6);
     
     wxStaticText *relativeYText = new wxStaticText(this, wxID_ANY, wxT("Relative εy:"));
@@ -38,7 +38,7 @@ blockPropertyDialogElectrostatic::blockPropertyDialogElectrostatic(wxWindow *par
     relativeYStream << _material.getEpsilonY();
     _relativeEpiYTextCtrl->SetFont(*font);
     relativeYSizer->Add(relativeYText, 0, wxLEFT | wxBOTTOM | wxRIGHT | wxCENTER, 6);
-    relativeYSizer->Add(29, 0, 0);
+    relativeYSizer->Add(24, 0, 0);
     relativeYSizer->Add(_relativeEpiYTextCtrl, 0, wxBOTTOM | wxRIGHT | wxCENTER, 6);
     
     wxStaticText *chargeDensityName = new wxStaticText(this, wxID_ANY, "Charge Density:");

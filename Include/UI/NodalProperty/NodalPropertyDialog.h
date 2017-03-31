@@ -64,10 +64,6 @@ private:
      */
     wxRadioButton *radioButton2 = new wxRadioButton();
     
-    wxStaticBox *groupBox1 = new wxStaticBox();
-    
-    wxStaticBox *groupBox2 = new wxStaticBox();
-    
     void onRadioButton1Cllick(wxCommandEvent &event);
     
     void onRadioButton2Cllick(wxCommandEvent &event);

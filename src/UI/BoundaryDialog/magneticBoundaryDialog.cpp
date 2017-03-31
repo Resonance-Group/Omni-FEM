@@ -19,6 +19,9 @@ magneticBoundaryDialog::magneticBoundaryDialog(wxWindow *par) : wxDialog(par, wx
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
+    wxFloatingPointValidator<double> angleValidator(15);
+    angleValidator.SetRange(0, 360);
+    
     _magneticBoundary.setA0(0);
     _magneticBoundary.setA1(0);
     _magneticBoundary.setA2(0);
@@ -115,7 +118,7 @@ magneticBoundaryDialog::magneticBoundaryDialog(wxWindow *par) : wxDialog(par, wx
     A1TextCtrl->SetFont(*font);
     A2TextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getA2()), wxDefaultPosition, wxSize(88, 20));
     A2TextCtrl->SetFont(*font);
-    phiTextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getPhi()), wxDefaultPosition, wxSize(88, 20));
+    phiTextCtrl->Create(prescribedASizer->GetStaticBox(), wxID_ANY, std::to_string(_magneticBoundary.getPhi()), wxDefaultPosition, wxSize(88, 20), 0, angleValidator);
     phiTextCtrl->SetFont(*font);
     
     A0Sizer->Add(A0Text, 0, wxCENTER | wxALL, 6);

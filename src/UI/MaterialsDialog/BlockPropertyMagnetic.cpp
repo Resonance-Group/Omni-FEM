@@ -40,6 +40,9 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     wxIntegerValidator<unsigned int> intValidator;
     intValidator.SetRange(1, 65535);
     
+    wxFloatingPointValidator<double> angleValidator(15);
+    angleValidator.SetRange(0, 360);
+    
     
     _magneticMaterial.setCoercivity(0);
     _magneticMaterial.setName("New Material");
@@ -102,12 +105,12 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     
     wxStaticText *phiX = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxT("ϕ hx:"));
     phiX->SetFont(*font);
-    phiXTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl3, wxEmptyString, wxDefaultPosition, wxSize(87, 20));
+    phiXTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl3, wxEmptyString, wxDefaultPosition, wxSize(87, 20), 0, angleValidator);
     phiXTextCtrl->SetFont(*font);
     
     wxStaticText *phiY = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxT("ϕ hy:"));
     phiY->SetFont(*font);
-    phiYTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl5, wxEmptyString, wxDefaultPosition, wxSize(87, 20));
+    phiYTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl5, wxEmptyString, wxDefaultPosition, wxSize(87, 20), 0, angleValidator);
     phiYTextCtrl->SetFont(*font);
     
     wxStaticText *deg1 = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, "deg");
