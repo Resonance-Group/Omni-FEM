@@ -47,12 +47,14 @@ void modelDefinition::deleteSelection()
                     /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
                      * The deletion of the arc/line occurs later in the code*/
                     
-                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); )
                     {
                         if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
                         {
                             lineIterator->setSelectState(true);
                         }
+                        
+                        ++lineIterator;
                     }
                 }
 
@@ -67,15 +69,24 @@ void modelDefinition::deleteSelection()
                         }
                     }
                 }
-                /* Bug Fix: This applies for all of the other geometry shapes
-                 * At first, the for loop was for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                 * This creates issue at this line because orginally, the line was _editor.getNodeList()->erase(nodeIterator);. For the plf::colony class, when
-                 * an element is erased, it invalidates the element. For the iterators, since the iterator is pointing to the element that was just erased, nodeIterator is now
-                 * pointing to an invalidated element in the colony object.
-                 * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
-                 * This way the nodeIterator will never be pointing to an invalidated element.
-                 */ 
-               _editor.getNodeList()->erase(nodeIterator++);
+                
+                if(nodeIterator == _editor.getNodeList()->back())
+                {
+                    _editor.getNodeList()->erase(nodeIterator);
+                    break;
+                }
+                else
+                {
+                    /* Bug Fix: This applies for all of the other geometry shapes
+                    * At first, the for loop was for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    * This creates issue at this line because orginally, the line was _editor.getNodeList()->erase(nodeIterator);. For the plf::colony class, when
+                    * an element is erased, it invalidates the element. For the iterators, since the iterator is pointing to the element that was just erased, nodeIterator is now
+                    * pointing to an invalidated element in the colony object.
+                    * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
+                    * This way the nodeIterator will never be pointing to an invalidated element.
+                    */ 
+                    _editor.getNodeList()->erase(nodeIterator++);
+                }
 
                 if(_editor.getNodeList()->size() == 0)
                     break;
@@ -95,7 +106,19 @@ void modelDefinition::deleteSelection()
         {
             if(lineIterator->getIsSelectedState())
             {
-                _editor.getLineList()->erase(lineIterator++);
+                /* Bug fix: At first the code did not check if the line iterator was on the back
+                 * This causes problems becuase if the last iterator was deleted, then we are incrementing an invalidated iterator
+                 * which creates another invalidated iterator that is not equal to the end iterator of the list.
+                 * When you erase an invalidated iterator, the program crashes.
+                 * The same logic applies for the other geometry shapes
+                 */ 
+                if(lineIterator == _editor.getLineList()->back())
+                {
+                    _editor.getLineList()->erase(lineIterator);
+                    break;
+                }
+                else
+                    _editor.getLineList()->erase(lineIterator++);
                 
                 if(_editor.getLineList()->size() == 0)
                     break;
@@ -115,7 +138,13 @@ void modelDefinition::deleteSelection()
         {
             if(arcIterator->getIsSelectedState())
             {
-                _editor.getArcList()->erase(arcIterator++);
+                if(arcIterator == _editor.getArcList()->back())
+                {
+                    _editor.getArcList()->erase(arcIterator);
+                    break;
+                }
+                else
+                    _editor.getArcList()->erase(arcIterator++);
                 
                 if(_editor.getArcList()->size() == 0)
                     break;
@@ -137,7 +166,13 @@ void modelDefinition::deleteSelection()
         {
             if(blockIterator->getIsSelectedState())
             {
-                _editor.getBlockLabelList()->erase(blockIterator++);
+                if(blockIterator == _editor.getBlockLabelList()->back())
+                {
+                    _editor.getBlockLabelList()->erase(blockIterator);
+                    break;
+                }
+                else
+                    _editor.getBlockLabelList()->erase(blockIterator++);
                 
                 if(_editor.getBlockLabelList()->size() == 0)
                     break;
