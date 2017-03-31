@@ -20,11 +20,10 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glOrtho(-1.0, 1.0, -1.0, .0, -1.0, 1.0);
     GLenum error = glGetError();
 	if(error != GL_NO_ERROR)
 	{
-	//	wxMessageBox("Error - " + gluErrorString(error));
 		return;
 	}
     
@@ -48,12 +47,14 @@ void modelDefinition::deleteSelection()
                     /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
                      * The deletion of the arc/line occurs later in the code*/
                     
-                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); )
                     {
                         if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
                         {
                             lineIterator->setSelectState(true);
                         }
+                        
+                        ++lineIterator;
                     }
                 }
 
@@ -68,15 +69,24 @@ void modelDefinition::deleteSelection()
                         }
                     }
                 }
-                /* Bug Fix: This applies for all of the other geometry shapes
-                 * At first, the for loop was for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                 * This creates issue at this line because orginally, the line was _editor.getNodeList()->erase(nodeIterator);. For the plf::colony class, when
-                 * an element is erased, it invalidates the element. For the iterators, since the iterator is pointing to the element that was just erased, nodeIterator is now
-                 * pointing to an invalidated element in the colony object.
-                 * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
-                 * This way the nodeIterator will never be pointing to an invalidated element.
-                 */ 
-               _editor.getNodeList()->erase(nodeIterator++);
+                
+                if(nodeIterator == _editor.getNodeList()->back())
+                {
+                    _editor.getNodeList()->erase(nodeIterator);
+                    break;
+                }
+                else
+                {
+                    /* Bug Fix: This applies for all of the other geometry shapes
+                    * At first, the for loop was for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    * This creates issue at this line because orginally, the line was _editor.getNodeList()->erase(nodeIterator);. For the plf::colony class, when
+                    * an element is erased, it invalidates the element. For the iterators, since the iterator is pointing to the element that was just erased, nodeIterator is now
+                    * pointing to an invalidated element in the colony object.
+                    * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
+                    * This way the nodeIterator will never be pointing to an invalidated element.
+                    */ 
+                    _editor.getNodeList()->erase(nodeIterator++);
+                }
 
                 if(_editor.getNodeList()->size() == 0)
                     break;
@@ -96,7 +106,19 @@ void modelDefinition::deleteSelection()
         {
             if(lineIterator->getIsSelectedState())
             {
-                _editor.getLineList()->erase(lineIterator++);
+                /* Bug fix: At first the code did not check if the line iterator was on the back
+                 * This causes problems becuase if the last iterator was deleted, then we are incrementing an invalidated iterator
+                 * which creates another invalidated iterator that is not equal to the end iterator of the list.
+                 * When you erase an invalidated iterator, the program crashes.
+                 * The same logic applies for the other geometry shapes
+                 */ 
+                if(lineIterator == _editor.getLineList()->back())
+                {
+                    _editor.getLineList()->erase(lineIterator);
+                    break;
+                }
+                else
+                    _editor.getLineList()->erase(lineIterator++);
                 
                 if(_editor.getLineList()->size() == 0)
                     break;
@@ -116,7 +138,13 @@ void modelDefinition::deleteSelection()
         {
             if(arcIterator->getIsSelectedState())
             {
-                _editor.getArcList()->erase(arcIterator++);
+                if(arcIterator == _editor.getArcList()->back())
+                {
+                    _editor.getArcList()->erase(arcIterator);
+                    break;
+                }
+                else
+                    _editor.getArcList()->erase(arcIterator++);
                 
                 if(_editor.getArcList()->size() == 0)
                     break;
@@ -138,7 +166,13 @@ void modelDefinition::deleteSelection()
         {
             if(blockIterator->getIsSelectedState())
             {
-                _editor.getBlockLabelList()->erase(blockIterator++);
+                if(blockIterator == _editor.getBlockLabelList()->back())
+                {
+                    _editor.getBlockLabelList()->erase(blockIterator);
+                    break;
+                }
+                else
+                    _editor.getBlockLabelList()->erase(blockIterator++);
                 
                 if(_editor.getBlockLabelList()->size() == 0)
                     break;
@@ -1002,14 +1036,19 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
 
 void modelDefinition::updateProjection()
 {
-    // First, load the projection matrix and reset the view to a default view
+        // First, load the projection matrix and reset the view to a default view
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    
+    glOrtho(-_zoomFactor, _zoomFactor, -_zoomFactor, _zoomFactor, -1.0, 1.0);
+    
+    glMatrixMode(GL_MODELVIEW);
     
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     /* This section will handle the translation (panning) and scaled (zooming). 
      * Needs to be called each time a draw occurs in order to update the placement of all the components */
     if(_zoomFactor < 1e-9)
@@ -1018,8 +1057,6 @@ void modelDefinition::updateProjection()
     if(_zoomFactor > 1e6)
         _zoomFactor = 1e6;
     
-    glScaled(_zoomFactor / (this->GetSize().GetWidth() / this->GetSize().GetHeight()), _zoomFactor, 1.0);
-
     glTranslated(-_cameraX, -_cameraY, 0.0);
 }
 
@@ -1127,14 +1164,14 @@ void modelDefinition::drawGrid()
 
 double modelDefinition::convertToXCoordinate(int xPixel)
 {
-    return (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
+    return _zoomFactor * (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
 }
 
 
 
 double modelDefinition::convertToYCoordinate(int yPixel)
 {
-    return (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / _zoomFactor + _cameraY;
+    return _zoomFactor * (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0 + _cameraY;
 }
 
 
@@ -1288,8 +1325,8 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
     {
         /* This section of the code was adapted from Agro2D */
         
-        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomFactor;
         
         if(!_preferences.getMouseZoomReverseState())
         {
@@ -1309,8 +1346,8 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
         /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
          * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
         
-        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) / _zoomFactor;
+        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomFactor;
     }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -1332,8 +1369,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
-        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx / _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy / _zoomFactor);
+        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy * _zoomFactor);
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {

@@ -50,7 +50,9 @@ private:
     
     geometryEditor2D _editor;
     
-    double _zoomFactor = 1;
+    double _zoomFactor = 1.0;
+    
+    double _otherZoom = 2.0;
     
     double _cameraX = 0;
     
