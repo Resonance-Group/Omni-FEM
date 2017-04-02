@@ -99,7 +99,7 @@ void modelDefinition::deleteSelection()
     {
         _editor.getNodeList()->clear();
     }
-        
+
     if(_editor.getLineList()->size() > 1)
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end();)
@@ -864,17 +864,60 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
             {
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
-                    _editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                   
-                    _editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    /* Bug Fix:
+                     * The issue was that if two or more lines were connected to a common node, then on the copy,
+                     * some of the copied lines would not be connected to the propery node.
+                     * The main issue behind this is that the program never checked to see if the node
+                     * that was being copied was already copied.
+                     * The fix is to iterate through the entire node list to ensure that the first node was not
+                     * already copied. It would be compared against a test node. If it was already copied,
+                     * then add the iterator to the class (for accessing when the line is ready to be drawn).
+                     * Since this can occur for either the first or second node, we have to do this again to the
+                     * second node. If the node does not exist, then create the node adn set the iterator in the 
+                     * geometry editor class for line creation.
+                     * The same logic applies to arcs
+                     */ 
+                    node testNode;
+                    bool doesExist = false;
+                    testNode.setCenter(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
                     
-                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->back();
-                    --lastItem;
-                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            doesExist = true;
+                            break;
+                        }
+                    }
                     
-                    _editor.setNodeIndex(*lastItem);
+                    if(!doesExist)
+                    {
+                        _editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
+                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back()); 
+                    }
+                    else
+                        doesExist = false;
+                        
+                    testNode.setCenter(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                    
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            doesExist = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!doesExist)
+                    {
+                        _editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
                     
                     _editor.addLine();
                     _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
@@ -890,17 +933,47 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
             {
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
-                    _editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                   
-                    _editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-
-                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->back();
-                    _editor.setNodeIndex(*lastItem);
+                    node testNode;
+                    bool doesExist = false;
+                    testNode.setCenter(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
                     
-                    --lastItem;
-                    _editor.setNodeIndex(*lastItem);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            doesExist = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!doesExist)
+                    {
+                        _editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back()); 
+                    }
+                    else
+                        doesExist = false;
+                        
+                    testNode.setCenter(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                    
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            doesExist = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!doesExist)
+                    {
+                        _editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
                     
                     _editor.addArc(*arcIterator, 0, false);
                     
