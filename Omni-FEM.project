@@ -43,6 +43,7 @@
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
+        <File Name="src/UI/Geometry/glText.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
@@ -150,6 +151,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="ModelDefinition">
         <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>
+        <File Name="Include/UI/ModelDefinition/glText.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/GeometryEditor2D.h"/>
     </VirtualDirectory>
@@ -201,6 +203,7 @@
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
         <IncludePath Value="/usr/include/GL"/>
         <IncludePath Value="/usr/include/wx-3.0"/>
+        <IncludePath Value="/usr/include/freetype2"/>
       </Compiler>
       <Linker Options="-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>

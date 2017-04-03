@@ -22,6 +22,8 @@
 #include <common/MagneticPreference.h>
 #include <common/ElectrostaticPreference.h>
 
+
+
 class globalPreferencesDialog : public wxPropertySheetDialog
 {
 private:

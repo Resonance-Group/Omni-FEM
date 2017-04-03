@@ -217,7 +217,7 @@ public:
             number.consolidate(dc);
             first_time = false;
         }
-        my_message.scale(zoomFactor);
+        my_message.scale(1);
         my_message.consolidate(dc);
 
 
@@ -226,7 +226,7 @@ public:
         my_message.rotate(0);
         my_message.setFlip(false, true);
         
-        glColor3f(1,0,0);
+        glColor3f(0,0,0);
         my_message.render(0,0);
 
         my_messages.bind();
