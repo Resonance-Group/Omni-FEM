@@ -6,6 +6,7 @@
 
 #include <common/enums.h>
 #include <common/GeometryProperties/BlockProperty.h>
+#include <UI/geometryShapes.h>
 
 #include <freeglut.h>
 #include <gl.h>
@@ -50,7 +51,9 @@ private:
 public:
     glText(physicProblems problem);
 
-    void renderBlockLabelText(blockProperty &labelproperty);
+    void renderBlockLabelText(blockLabel &label);
+    
+    void renderBlockLabelText();
 
 };
 

@@ -37,6 +37,8 @@
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
 
+#include <UI/ModelDefinition/glText.h>
+
 class modelDefinition : public wxGLCanvas
 {
 private:
@@ -49,6 +51,8 @@ private:
     gridPreferences _preferences;
     
     geometryEditor2D _editor;
+    
+    glText *_textRendering;
     
     double _zoomFactor = 1.0;
     
