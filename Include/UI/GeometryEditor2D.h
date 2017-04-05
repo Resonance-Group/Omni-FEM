@@ -6,9 +6,12 @@
 #include <deque>
 #include <math.h>
 
+#include <glew.h>
+#include <freeglut.h>
+/*
 #include <gl.h>
 #include <glu.h>
-
+*/
 #include <common/Vector.h>
 #include <common/plfcolony.h>
 #include <common/wxGLString.h>

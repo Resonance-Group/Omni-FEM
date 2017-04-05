@@ -15,11 +15,15 @@
 #include <string>
 #include <math.h>
 
+#include <glew.h>
+#include <freeglut.h>
+/*
 #include <freeglut.h>
 #include <gl.h>
 #include <glu.h>
-
+*/
 #include <wx/wx.h>
+#include <wx/gdicmn.h>
 
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
@@ -66,6 +70,8 @@ private:
     
     int _mouseYPixel = 0;
     
+    bool _doZoomWindow = false;
+    
     bool _isFirstInitlized = false;
     
     //! This is the variable that will determine to create nodes/block labels
@@ -83,6 +89,10 @@ private:
     bool _labelsAreSelected = false;
     
     bool _geometryIsSelected = false;
+    
+    wxRealPoint _windowZoomStartPoint;
+    
+    wxRealPoint _windowZoomEndPoint;
     
     double convertToXCoordinate(int xPixel);
     
@@ -118,6 +128,8 @@ private:
       //  this->SetFocus();
     }
     
+    void doZoomWindow();
+    
 public:
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition);
 
@@ -152,6 +164,16 @@ public:
         return _createLines;
     }
     
+    void setZoomWindow(bool state)
+    {
+        _doZoomWindow = state;
+    }
+    
+    bool getZoomWindow()
+    {
+        return _doZoomWindow;
+    }
+    
     void deleteSelection();
     
     void zoomIn();
@@ -177,6 +199,8 @@ public:
     void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
     
     void copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberOfCopies);
+    
+    
     
 private:
     wxDECLARE_EVENT_TABLE(); 

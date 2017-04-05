@@ -5,6 +5,7 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 {
     _geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*_geometryContext);
+    wxPaintDC dc(this);
     
     _localDefinition = &definition;
     
@@ -1111,6 +1112,34 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
 }
 
 
+void modelDefinition::doZoomWindow()
+{
+  /*      if (fabs(end.x-start.x) < EPS_ZERO || fabs(end.y-start.y) < EPS_ZERO)
+        return;
+
+    Point rulersAreaScreen = rulersAreaSize();
+
+    double sceneWidth = end.x - start.x;
+    double sceneHeight = end.y - start.y;
+
+    double w = (Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? width() - rulersAreaScreen.x : width();
+    double h = (Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? height() - rulersAreaScreen.y : height();
+    double maxScene = ((w / h) < (sceneWidth / sceneHeight)) ? sceneWidth/aspect() : sceneHeight;
+
+    if (maxScene > 0.0)
+        m_scale2d = 1.8/maxScene;
+
+    Point rulersArea(2.0/width()*rulersAreaScreen.x/m_scale2d*aspect(),
+                     2.0/height()*rulersAreaScreen.y/m_scale2d);
+
+    m_offset2d.x = ((Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? start.x + end.x - rulersArea.x : start.x + end.x) / 2.0;
+    m_offset2d.y = ((Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? start.y + end.y - rulersArea.y : start.y + end.y) / 2.0;
+
+    setZoom(0);
+     */ 
+}
+
+
 
 void modelDefinition::updateProjection()
 {
@@ -1350,6 +1379,38 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         _textRendering->renderBlockLabelText();
     }
     
+    if(_doZoomWindow)
+    {
+                /* The code for drawing the grid was adapted from the Agros2D project */
+        glLineWidth(3.0);
+        glEnable(GL_LINE_STIPPLE);
+        /* 
+        * The binary form is able to display the concept of glLineStipple for 
+        * new users better then the Hex form. Although, the function is able to accept Hex
+        * For an idea of how glLineStipple work, refer to the following link
+        * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg
+        * 
+        */ 
+        glLineStipple(1, 0b0001100011000110);
+    
+        glBegin(GL_LINES);
+            glColor3d(0.0, 0.0, 0.0);
+            glVertex2d(_windowZoomStartPoint.x, _windowZoomStartPoint.y);
+            glVertex2d(_windowZoomStartPoint.x, _windowZoomEndPoint.y);
+            
+            glVertex2d(_windowZoomStartPoint.x, _windowZoomEndPoint.y);
+            glVertex2d(_windowZoomEndPoint.x, _windowZoomEndPoint.y);
+            
+            glVertex2d(_windowZoomEndPoint.x, _windowZoomEndPoint.y);
+            glVertex2d(_windowZoomEndPoint.x, _windowZoomStartPoint.y);
+            
+            glVertex2d(_windowZoomEndPoint.x, _windowZoomStartPoint.y);
+            glVertex2d(_windowZoomStartPoint.x, _windowZoomStartPoint.y);
+              
+        glEnd();
+        glDisable(GL_LINE_STIPPLE);
+    }
+    
     
     
 
@@ -1452,42 +1513,49 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
-        if(_createNodes && !_geometryIsSelected)
+        if(!_doZoomWindow)
         {
-            if(_editor.getNodeList()->size() > 0 && _editor.getNodeList()->back()->getDraggingState())
+            if(_createNodes && !_geometryIsSelected)
             {
-                double tempX = convertToXCoordinate(event.GetX());
-                double tempY = convertToYCoordinate(event.GetY());
-                // Update the last node entry with new x and y coordinates and round if on snap grid
-                if(_preferences.getSnapGridState())
-                {
-                    roundToNearestGrid(tempX, tempY);
-                    _editor.getNodeList()->back()->setCenter(tempX, tempY);
-                }
-                else
-                {
-                    _editor.getNodeList()->back()->setCenter(tempX, tempY);
-                }
-            }
-        }
-        else if(!_createNodes)
-        {
-            if(_editor.getBlockLabelList()->size() > 0 && _editor.getBlockLabelList()->back()->getDraggingState())
-            {
-                // Update the last bloc labe with new x and y coordinates and round if on snap grid
-                if(_preferences.getSnapGridState())
+                if(_editor.getNodeList()->size() > 0 && _editor.getNodeList()->back()->getDraggingState())
                 {
                     double tempX = convertToXCoordinate(event.GetX());
                     double tempY = convertToYCoordinate(event.GetY());
-                    roundToNearestGrid(tempX, tempY);
-                    _editor.getBlockLabelList()->back()->setCenter(tempX, tempY);
+                    // Update the last node entry with new x and y coordinates and round if on snap grid
+                    if(_preferences.getSnapGridState())
+                    {
+                        roundToNearestGrid(tempX, tempY);
+                        _editor.getNodeList()->back()->setCenter(tempX, tempY);
+                    }
+                    else
+                    {
+                        _editor.getNodeList()->back()->setCenter(tempX, tempY);
+                    }
                 }
-                else
-                {
-                    _editor.getBlockLabelList()->back()->setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
-                }
-                
             }
+            else if(!_createNodes)
+            {
+                if(_editor.getBlockLabelList()->size() > 0 && _editor.getBlockLabelList()->back()->getDraggingState())
+                {
+                    // Update the last bloc labe with new x and y coordinates and round if on snap grid
+                    if(_preferences.getSnapGridState())
+                    {
+                        double tempX = convertToXCoordinate(event.GetX());
+                        double tempY = convertToYCoordinate(event.GetY());
+                        roundToNearestGrid(tempX, tempY);
+                        _editor.getBlockLabelList()->back()->setCenter(tempX, tempY);
+                    }
+                    else
+                    {
+                        _editor.getBlockLabelList()->back()->setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+                    }
+                    
+                }
+            }
+        }
+        else
+        {
+            _windowZoomEndPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
         }
     }
     
@@ -1503,94 +1571,102 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
     
     clearSelection();
     
-    if(_createNodes)
-    {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+    if(!_doZoomWindow)
+    {    
+        if(_createNodes)
         {
-            if(nodeIterator->getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < 1 / (_zoomFactor * 10))// The multiplier will be some number between 10 and 100
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
-                if(_editor.setNodeIndex(*nodeIterator))
+                if(nodeIterator->getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < 1 / (_zoomFactor * 10))// The multiplier will be some number between 10 and 100
                 {
-                    
-                    if(_createLines)
+                    if(_editor.setNodeIndex(*nodeIterator))
                     {
-                        //Create the line
-                        _editor.addLine();
-                        _geometryIsSelected = false;
-                        this->Refresh();
-                        return;
+                        
+                        if(_createLines)
+                        {
+                            //Create the line
+                            _editor.addLine();
+                            _geometryIsSelected = false;
+                            this->Refresh();
+                            return;
+                        }
+                        else
+                        {
+                            arcSegmentDialog *newArcDialog;
+                            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                            {
+                                arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
+                                if(newArcDialog->ShowModal() == wxID_OK)
+                                {
+                                    arcShape tempShape;
+                                    newArcDialog->getArcParameter(tempShape);
+                                    _editor.addArc(tempShape, (_zoomFactor * 10), true);
+                                }
+                                else
+                                    _editor.resetIndexs();
+                                delete(newArcDialog);
+                            }
+                            else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+                            {
+                               arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+                                if(newArcDialog->ShowModal() == wxID_OK)
+                                {
+                                    arcShape tempShape;
+                                    newArcDialog->getArcParameter(tempShape);
+                                    _editor.addArc(tempShape, (_zoomFactor * 10), true);
+                                }
+                                else
+                                    _editor.resetIndexs();
+                                delete(newArcDialog);
+                            }
+                            _geometryIsSelected = false;
+                            this->Refresh();
+                            return;
+                        }
                     }
                     else
                     {
-                        arcSegmentDialog *newArcDialog;
-                        if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-                        {
-                            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
-                            if(newArcDialog->ShowModal() == wxID_OK)
-                            {
-                                arcShape tempShape;
-                                newArcDialog->getArcParameter(tempShape);
-                                _editor.addArc(tempShape, (_zoomFactor * 10), true);
-                            }
-                            else
-                                _editor.resetIndexs();
-                            delete(newArcDialog);
-                        }
-                        else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-                        {
-                           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
-                            if(newArcDialog->ShowModal() == wxID_OK)
-                            {
-                                arcShape tempShape;
-                                newArcDialog->getArcParameter(tempShape);
-                                _editor.addArc(tempShape, (_zoomFactor * 10), true);
-                            }
-                            else
-                                _editor.resetIndexs();
-                            delete(newArcDialog);
-                        }
-                        _geometryIsSelected = false;
+                        //Toggle the node to be selected
+                        nodeIterator->setSelectState(true);
+                        _geometryIsSelected = true;
                         this->Refresh();
                         return;
                     }
                 }
-                else
-                {
-                    //Toggle the node to be selected
-                    nodeIterator->setSelectState(true);
-                    _geometryIsSelected = true;
-                    this->Refresh();
-                    return;
-                }
             }
+            //Create the node at the point of the mouse with grid snapping
+            if(_preferences.getSnapGridState())
+            {
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                roundToNearestGrid(tempX, tempY);
+                _editor.addDragNode(tempX, tempY);
+            }
+            else
+                _editor.addDragNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+            
+            _geometryIsSelected = false;
+            _editor.resetIndexs();
+            this->Refresh();// Draw the node at the mouse location
+            return;
         }
-        //Create the node at the point of the mouse with grid snapping
-        if(_preferences.getSnapGridState())
+        else
         {
             double tempX = convertToXCoordinate(event.GetX());
             double tempY = convertToYCoordinate(event.GetY());
-            roundToNearestGrid(tempX, tempY);
-            _editor.addDragNode(tempX, tempY);
+            if(_preferences.getSnapGridState())
+                roundToNearestGrid(tempX, tempY);
+                
+            _editor.addDragBlockLabel(tempX, tempY);
+
+            this->Refresh();
+            return;
         }
-        else
-            _editor.addDragNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
-        
-        _geometryIsSelected = false;
-        _editor.resetIndexs();
-        this->Refresh();// Draw the node at the mouse location
-        return;
     }
     else
     {
-        double tempX = convertToXCoordinate(event.GetX());
-        double tempY = convertToYCoordinate(event.GetY());
-        if(_preferences.getSnapGridState())
-            roundToNearestGrid(tempX, tempY);
-            
-        _editor.addDragBlockLabel(tempX, tempY);
-
-        this->Refresh();
-        return;
+        _windowZoomStartPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+        _windowZoomEndPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
     }
     
     this->Refresh();
@@ -1599,48 +1675,60 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 
 void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
 {
-    // OK so in order to re-validate the node (in order to break lines / arcs up into two pieces and what not), we first have to remove the last item, and then push it back on.
-    if(_createNodes)
+    if(!_doZoomWindow)
     {
-        /* Bug fix here. A bug where if an empty canvas would get resized to full screen by double clicking on the top bar of the form, the program would sometimes crash
-         * The issue was that the program was checking to see if the last node (or block label) was in a dragging state.
-         * However, the last node doesn't exist.
-         * The form would reload so quickly that sometimes the canvas would be able to detect the user on the releasing the left mouse.
-         * The fix, check to make sure that the size of the array (vector) is greater then 0 to ensure the program does not check an empty 
-         * position
-         */ 
-        if(_editor.getNodeList()->size() > 0)
+        // OK so in order to re-validate the node (in order to break lines / arcs up into two pieces and what not), we first have to remove the last item, and then push it back on.
+        if(_createNodes)
         {
-            double tempX = convertToXCoordinate(event.GetX());
-            double tempY = convertToYCoordinate(event.GetY());
-            
-            if(_preferences.getSnapGridState())
-                roundToNearestGrid(tempX, tempY);
-            
-            if(_editor.getNodeList()->back()->getDraggingState())
+            /* Bug fix here. A bug where if an empty canvas would get resized to full screen by double clicking on the top bar of the form, the program would sometimes crash
+             * The issue was that the program was checking to see if the last node (or block label) was in a dragging state.
+             * However, the last node doesn't exist.
+             * The form would reload so quickly that sometimes the canvas would be able to detect the user on the releasing the left mouse.
+             * The fix, check to make sure that the size of the array (vector) is greater then 0 to ensure the program does not check an empty 
+             * position
+             */ 
+            if(_editor.getNodeList()->size() > 0)
             {
-                _editor.getNodeList()->erase(_editor.getNodeList()->back());
-                _editor.addNode(tempX, tempY);
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+                
+                if(_preferences.getSnapGridState())
+                    roundToNearestGrid(tempX, tempY);
+                
+                if(_editor.getNodeList()->back()->getDraggingState())
+                {
+                    _editor.getNodeList()->erase(_editor.getNodeList()->back());
+                    _editor.addNode(tempX, tempY);
+                }
+            }
+        }
+        else
+        {
+            if(_editor.getBlockLabelList()->size() > 0)
+            {
+                double tempX = convertToXCoordinate(event.GetX());
+                double tempY = convertToYCoordinate(event.GetY());
+
+                if(_preferences.getSnapGridState())
+                    roundToNearestGrid(tempX, tempY);
+
+                if(_editor.getBlockLabelList()->back()->getDraggingState())
+                {
+                    _editor.getBlockLabelList()->erase(_editor.getBlockLabelList()->back()); 
+                    _editor.addBlockLabel(tempX, tempY);
+                }
             }
         }
     }
     else
     {
-        if(_editor.getBlockLabelList()->size() > 0)
-        {
-            double tempX = convertToXCoordinate(event.GetX());
-            double tempY = convertToYCoordinate(event.GetY());
-
-            if(_preferences.getSnapGridState())
-                roundToNearestGrid(tempX, tempY);
-
-            if(_editor.getBlockLabelList()->back()->getDraggingState())
-            {
-                _editor.getBlockLabelList()->erase(_editor.getBlockLabelList()->back()); 
-                _editor.addBlockLabel(tempX, tempY);
-            }
-        }
+        _doZoomWindow = !_doZoomWindow;
+        _windowZoomStartPoint = wxRealPoint(0, 0);
+        _windowZoomEndPoint = wxRealPoint(0, 0);
+        doZoomWindow();
+        
     }
+    
     this->Refresh();
     return;
 }

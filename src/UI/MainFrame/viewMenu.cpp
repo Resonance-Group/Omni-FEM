@@ -21,10 +21,9 @@ void OmniFEMMainFrame::onZoomOut(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onZoomWindow(wxCommandEvent &event)
 {
-    zoomWindow *test = new zoomWindow();
-    if(test->ShowModal() == wxID_OK)
+    if(_UIState == systemState::MODEL_DEFINING)
     {
-        
+        _model->setZoomWindow(!_model->getZoomWindow());
     }
 }
 

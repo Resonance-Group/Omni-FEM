@@ -8,9 +8,8 @@
 #include <common/GeometryProperties/BlockProperty.h>
 #include <UI/geometryShapes.h>
 
+#include <glew.h>
 #include <freeglut.h>
-#include <gl.h>
-#include <glu.h>
 
 #include <wx/wx.h>
 
