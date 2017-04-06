@@ -53,7 +53,7 @@ private:
     
     int _tolerance = 2;
     
-    double *_zoomFactorPointer;
+    double _zoomFactorPointer = 1.0;
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
      * node0 is the first node that the user selects
@@ -181,11 +181,6 @@ public:
     }
     
     void addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
-    
-    void setZoomFactorAddress(double &address)
-    {
-        _zoomFactorPointer = &address;
-    }
     
     void resetIndexs()
     {

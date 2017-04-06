@@ -9,8 +9,6 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
     
     _localDefinition = &definition;
     
-    _editor.setZoomFactorAddress(_zoomFactor);
-    
     glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -21,7 +19,7 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     
-    glOrtho(-1.0, 1.0, -1.0, .0, -1.0, 1.0);
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
     GLenum error = glGetError();
 	if(error != GL_NO_ERROR)
 	{
@@ -199,25 +197,6 @@ void modelDefinition::deleteSelection()
     this->Refresh();
     return;
 }
-
-
-
-void modelDefinition::zoomIn()
-{
-    _zoomFactor *= pow(1.2, (300.0) / 150.0);
-
-    this->Refresh();
-}
-
-
-
-void modelDefinition::zoomOut()
-{
-    _zoomFactor *= pow(1.2, -(300.0) / 150.0);
-    
-    this->Refresh();
-}
-
 
 
 
@@ -735,8 +714,8 @@ void modelDefinition::moveRotateSelection(double angularShift, wxPoint aboutPoin
             {
                 // Calculate the radius and the new position of the node
                 double radius = nodeIterator->getDistance(aboutPoint);
-                double horizontalShift = aboutPoint.x + (radius * cos(angularShift * PI / 180.0));
-                double verticalShift = aboutPoint.y + (radius * sin(angularShift * PI / 180.0));
+                double horizontalShift = nodeIterator->getCenterXCoordinate() + (radius * cos(angularShift * PI / 180.0));
+                double verticalShift = nodeIterator->getCenterYCoordinate() + (radius * sin(angularShift * PI / 180.0));
                 // Update the node with the translated coordinates
                 nodeIterator->setCenter(horizontalShift, verticalShift);
             }
@@ -1114,29 +1093,25 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
 
 void modelDefinition::doZoomWindow()
 {
-  /*      if (fabs(end.x-start.x) < EPS_ZERO || fabs(end.y-start.y) < EPS_ZERO)
+    if(fabs(_windowZoomEndPoint.x - _windowZoomStartPoint.x) == 0 || fabs(_windowZoomEndPoint.y - _windowZoomStartPoint.y) == 0)
         return;
-
-    Point rulersAreaScreen = rulersAreaSize();
-
-    double sceneWidth = end.x - start.x;
-    double sceneHeight = end.y - start.y;
-
-    double w = (Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? width() - rulersAreaScreen.x : width();
-    double h = (Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? height() - rulersAreaScreen.y : height();
-    double maxScene = ((w / h) < (sceneWidth / sceneHeight)) ? sceneWidth/aspect() : sceneHeight;
-
-    if (maxScene > 0.0)
-        m_scale2d = 1.8/maxScene;
-
-    Point rulersArea(2.0/width()*rulersAreaScreen.x/m_scale2d*aspect(),
-                     2.0/height()*rulersAreaScreen.y/m_scale2d);
-
-    m_offset2d.x = ((Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? start.x + end.x - rulersArea.x : start.x + end.x) / 2.0;
-    m_offset2d.y = ((Agros2D::configComputer()->value(Config::Config_ShowRulers).toBool()) ? start.y + end.y - rulersArea.y : start.y + end.y) / 2.0;
-
-    setZoom(0);
-     */ 
+    
+    double centerX = (_windowZoomEndPoint.x + _windowZoomStartPoint.x) / 2.0;
+    double centerY = (_windowZoomEndPoint.y + _windowZoomStartPoint.y) / 2.0;
+    
+    /* These numbers calculate the distance between the center of the zoom window and the endpoints */
+    double num1 = centerX - _windowZoomStartPoint.x;
+    double num2 = _windowZoomEndPoint.x - centerX;
+    double num3 = _windowZoomStartPoint.y - centerY;
+    double num4 = centerY - _windowZoomEndPoint.y;
+    
+    _zoomX = fabs(std::max(num1, num2));
+    _zoomY = fabs(std::max(num3, num4));
+    
+    _cameraX = centerX;
+    _cameraY = centerY;
+    
+    return;
 }
 
 
@@ -1147,7 +1122,7 @@ void modelDefinition::updateProjection()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     
-    glOrtho(-_zoomFactor, _zoomFactor, -_zoomFactor, _zoomFactor, -1.0, 1.0);
+    glOrtho(-_zoomX, _zoomX, -_zoomY, _zoomY, -1.0, 1.0);
     
     glMatrixMode(GL_MODELVIEW);
     
@@ -1158,11 +1133,17 @@ void modelDefinition::updateProjection()
     glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     /* This section will handle the translation (panning) and scaled (zooming). 
      * Needs to be called each time a draw occurs in order to update the placement of all the components */
-    if(_zoomFactor < 1e-9)
-        _zoomFactor = 1e-9;
+    if(_zoomX < 1e-9 || _zoomY < 1e-9)
+    {
+        _zoomX = 1e-9;
+        _zoomY = _zoomX;
+    }
     
-    if(_zoomFactor > 1e6)
-        _zoomFactor = 1e6;
+    if(_zoomX > 1e6 || _zoomY > 1e6)
+    {
+        _zoomX = 1e6;
+        _zoomY = _zoomX;
+    }
     
     glTranslated(-_cameraX, -_cameraY, 0.0);
 }
@@ -1265,20 +1246,6 @@ void modelDefinition::drawGrid()
     }
     
     glLineWidth(0.5);// Resets the line width back to the default
-}
-
-
-
-double modelDefinition::convertToXCoordinate(int xPixel)
-{
-    return _zoomFactor * (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
-}
-
-
-
-double modelDefinition::convertToYCoordinate(int yPixel)
-{
-    return _zoomFactor * (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0 + _cameraY;
 }
 
 
@@ -1464,29 +1431,57 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
     {
         /* This section of the code was adapted from Agro2D */
         
-        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomFactor;
+        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomX) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomY;
         
         if(!_preferences.getMouseZoomReverseState())
         {
             if(event.GetWheelRotation() > 0)
-                _zoomFactor *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+            {
+                _zoomX *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+                _zoomY *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+                if(_zoomX > _zoomY)
+                    _zoomY = _zoomX;
+                else if(_zoomY > _zoomX)
+                    _zoomX = _zoomY;
+            }
             else
-                _zoomFactor *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+            {
+                _zoomX *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+                _zoomY *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+                if(_zoomX > _zoomY)
+                    _zoomY = _zoomX;
+                else if(_zoomY > _zoomX)
+                    _zoomX = _zoomY;
+            }
         }
         else
         {
             if(event.GetWheelRotation() < 0)
-                _zoomFactor *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+            {
+                _zoomX *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+                _zoomY *= pow(1.2, -(event.GetWheelDelta()) / 150.0);
+                if(_zoomX > _zoomY)
+                    _zoomY = _zoomX;
+                else if(_zoomY > _zoomX)
+                    _zoomX = _zoomY;
+            }
             else
-                _zoomFactor *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+            {
+                _zoomX *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+                _zoomY *= pow(1.2, (event.GetWheelDelta()) / 150.0);
+                if(_zoomX > _zoomY)
+                    _zoomY = _zoomX;
+                else if(_zoomY > _zoomX)
+                    _zoomX = _zoomY;
+            }
         }
         
         /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
          * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
         
-        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomFactor;
+        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomX) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomY;
     }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
@@ -1508,8 +1503,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
-        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx * _zoomFactor) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy * _zoomFactor);
+        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx * _zoomX) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
+        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy * _zoomY);
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
@@ -1577,7 +1572,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         {
             for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
-                if(nodeIterator->getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < 1 / (_zoomFactor * 10))// The multiplier will be some number between 10 and 100
+                if(nodeIterator->getDistance(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY())) < getTolerance())// The multiplier will be some number between 10 and 100
                 {
                     if(_editor.setNodeIndex(*nodeIterator))
                     {
@@ -1600,7 +1595,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                                 {
                                     arcShape tempShape;
                                     newArcDialog->getArcParameter(tempShape);
-                                    _editor.addArc(tempShape, (_zoomFactor * 10), true);
+                                    _editor.addArc(tempShape, getTolerance(), true);
                                 }
                                 else
                                     _editor.resetIndexs();
@@ -1613,7 +1608,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                                 {
                                     arcShape tempShape;
                                     newArcDialog->getArcParameter(tempShape);
-                                    _editor.addArc(tempShape, (_zoomFactor * 10), true);
+                                    _editor.addArc(tempShape, getTolerance(), true);
                                 }
                                 else
                                     _editor.resetIndexs();
@@ -1723,10 +1718,9 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
     else
     {
         _doZoomWindow = !_doZoomWindow;
+        doZoomWindow();
         _windowZoomStartPoint = wxRealPoint(0, 0);
         _windowZoomEndPoint = wxRealPoint(0, 0);
-        doZoomWindow();
-        
     }
     
     this->Refresh();
@@ -1810,7 +1804,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
-            if(nodeIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
+            if(nodeIterator->getDistance(xCoordinate, yCoordinate) < getTolerance())
             {
                 // Add in code to remove previousely selected geometry that is different then the one already selected
                 if(_linesAreSelected)
@@ -1858,7 +1852,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
-            if(blockIterator->getDistance(xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
+            if(blockIterator->getDistance(xCoordinate, yCoordinate) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {
@@ -1908,7 +1902,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
-            if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < 1 / (_zoomFactor * 10))
+            if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {
@@ -1958,7 +1952,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
-            if(_editor.calculateShortestDistanceFromArc(*arcIterator, xCoordinate, yCoordinate) < 1 / (_zoomFactor * 10))
+            if(_editor.calculateShortestDistanceFromArc(*arcIterator, xCoordinate, yCoordinate) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {

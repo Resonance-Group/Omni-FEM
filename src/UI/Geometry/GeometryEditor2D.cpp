@@ -10,14 +10,14 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
     /* This section will make sure that a node is not drawn on top of a block label */
 	for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
 	{
-		if(blockIterator->getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 50))
+		if(blockIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 50))
 			return;
 	}
     
@@ -29,7 +29,7 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	{
         edgeLineShape testLine = *lineIterator;
         node testFirstNode = *(testLine.getFirstNode());
-		if(fabs(calculateShortestDistance(xPoint, yPoint, testLine)) < 1 / (*_zoomFactorPointer * 50))
+		if(fabs(calculateShortestDistance(xPoint, yPoint, testLine)) < 1 / (_zoomFactorPointer * 50))
 		{
             /* Ok so if the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
              * Line1 will be set equal to the original line (line0).
@@ -49,7 +49,7 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
 	{
         /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
-		if(fabs(-5) < 1 / (*_zoomFactorPointer * 100)) // this needs t be looked into more
+		if(fabs(-5) < 1 / (_zoomFactorPointer * 100)) // this needs t be looked into more
 		{
             Vector firstNode, secondNode, thirdNode, center;
             arcShape arcSegment = *arcIterator;
@@ -83,7 +83,7 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     // Make sure that teh block labe is not placed ontop of an existing block label
     for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
     {
-        if(blockIterator->getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 25))
+        if(blockIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 25))
             return;
     }
     
@@ -91,14 +91,14 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (*_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return;
 	}
     
     // Make sure that the block label is not placed ontop of a line
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
-		if(fabs(calculateShortestDistance(xPoint, yPoint, *lineIterator)) < 1 / (*_zoomFactorPointer * 100))
+		if(fabs(calculateShortestDistance(xPoint, yPoint, *lineIterator)) < 1 / (_zoomFactorPointer * 100))
             return;
     }
             

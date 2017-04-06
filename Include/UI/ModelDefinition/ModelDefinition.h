@@ -10,8 +10,7 @@
 #define MODELDEFINITION_H_
 
 #include <vector>
-#include <list>
-#include <deque>
+#include <algorithm>
 #include <string>
 #include <math.h>
 
@@ -58,9 +57,9 @@ private:
     
     glText *_textRendering;
     
-    double _zoomFactor = 1.0;
+    double _zoomX = 1.0;
     
-    double _otherZoom = 2.0;
+    double _zoomY = 1.0;
     
     double _cameraX = 0;
     
@@ -94,9 +93,20 @@ private:
     
     wxRealPoint _windowZoomEndPoint;
     
-    double convertToXCoordinate(int xPixel);
+    double convertToXCoordinate(int xPixel)
+    {
+        return _zoomX * (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
+    }
     
-    double convertToYCoordinate(int yPixel);
+    double convertToYCoordinate(int yPixel)
+    {
+        return _zoomY * (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0 + _cameraY;
+    }
+    
+    double getTolerance()
+    {
+        return (1 / (((_zoomX + _zoomY) / 2.0) * 50));
+    }
     
     void clearSelection();
 
@@ -174,11 +184,33 @@ public:
         return _doZoomWindow;
     }
     
+    void zoomIn()
+    {
+        _zoomX *= pow(1.2, -(300.0) / 150.0);
+        _zoomY *= pow(1.2, -(300.0) / 150.0);
+        
+        if(_zoomX > _zoomY)
+            _zoomY = _zoomX;
+        else if(_zoomY > _zoomX)
+            _zoomX = _zoomY;
+
+        this->Refresh();
+    }
+    
+    void zoomOut()
+    {
+        _zoomX *= pow(1.2, (300.0) / 150.0);
+        _zoomY *= pow(1.2, (300.0) / 150.0);
+        
+        if(_zoomX > _zoomY)
+            _zoomY = _zoomX;
+        else if(_zoomY > _zoomX)
+            _zoomX = _zoomY;
+        
+        this->Refresh();
+    }
+    
     void deleteSelection();
-    
-    void zoomIn();
-    
-    void zoomOut();
     
     //! This will allow the user to edit the settings for the particular node/label/arc/line. It is in this calss because this class has access to the master settings list
     void editSelection();
