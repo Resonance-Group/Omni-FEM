@@ -226,7 +226,7 @@ public:
     
     void scaleSelection(double scalingFactor, wxPoint basePoint);
     
-    void mirrorSelection(wxPoint pointOne, wxPoint pointTwo);
+    void mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo);
     
     void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
     

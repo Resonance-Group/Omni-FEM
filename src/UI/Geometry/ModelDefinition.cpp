@@ -802,9 +802,72 @@ void modelDefinition::scaleSelection(double scalingFactor, wxPoint basePoint)
 
 
 
-void modelDefinition::mirrorSelection(wxPoint pointOne, wxPoint pointTwo)
+void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo)
 {
+    if(pointOne == pointTwo)
+        return;
+        
+    if(_nodesAreSelected)
+    {
+        // This is the slope of the mirror line
+        double slope = (pointOne.y - pointTwo.y) / (pointOne.x - pointTwo.x);
+        
+        // This is the case for if the mirror line is a horizontol line
+        if(slope == 0)
+        {
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(nodeIterator->getIsSelectedState())
+                {
+                    double distance = nodeIterator->getCenterYCoordinate() - pointOne.y;
+                    
+                    _editor.addNode(nodeIterator->getCenterXCoordinate(), pointOne.y - distance);
+                }
+            }
+            this->Refresh();
+            return;
+        }
+        else if(slope == INFINITY || slope == -INFINITY)
+        {
+            // This is the case for if the mirror line is a vertical line
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(nodeIterator->getIsSelectedState())
+                {
+                    double distance = pointOne.x - nodeIterator->getCenterXCoordinate();
+                    
+                    _editor.addNode(pointOne.x + distance, nodeIterator->getCenterYCoordinate());
+                }
+            }
+            this->Refresh();
+            return;
+        }
+        
+        // This is the y-intercept of the mirror line
+        double b1 = pointOne.y - slope * pointOne.x;
+        
+        // This is the slope for the perpendicular line
+        double perpSlope = -1.0 / slope;
+        
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                // This is the y-intercept for the line that the mirrored point will be on
+                double b2 = nodeIterator->getCenterYCoordinate() - perpSlope * nodeIterator->getCenterXCoordinate();
+                
+                // This is the point where the mirror line and the line that the mirrored point is on intercet at
+                double intersectionPointx = (b1 - b2) / (perpSlope - slope);
+                
+                double intersectionPointy = slope * intersectionPointx + b1;
+                
+                _editor.addNode(2 * intersectionPointx - nodeIterator->getCenterXCoordinate(), 2 * intersectionPointy - nodeIterator->getCenterYCoordinate());
+            }
+        }
+    }
     
+    this->Refresh();
+    return;
 }
 
 

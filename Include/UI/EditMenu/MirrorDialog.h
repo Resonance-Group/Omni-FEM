@@ -22,7 +22,7 @@ public:
 
     ~mirrorDialog();
     
-    void getPoints(wxPoint &firstPoint, wxPoint &secondPoint);
+    void getPoints(wxRealPoint &firstPoint, wxRealPoint &secondPoint);
 };
 
 

@@ -82,10 +82,12 @@ void OmniFEMMainFrame::onScale(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onMirror(wxCommandEvent &event)
 {
-    mirrorDialog *test = new mirrorDialog(this);
-    if(test->ShowModal() == wxID_OK)
+    mirrorDialog *mirrorSelect = new mirrorDialog(this);
+    if(mirrorSelect->ShowModal() == wxID_OK)
     {
-        
+        wxRealPoint point1, point2;
+        mirrorSelect->getPoints(point1, point2);
+        _model->mirrorSelection(point1, point2);
     }
 }
 
