@@ -143,7 +143,7 @@ public:
         _arcList = list;
     }
 
-    void addNode(double xPoint, double yPoint);
+    bool addNode(double xPoint, double yPoint);
     
     void addDragNode(double xPoint, double yPoint)
     {
@@ -153,7 +153,7 @@ public:
         _nodeList.insert(newNode);
     }
     
-    void addBlockLabel(double xPoint, double yPoint);
+    bool addBlockLabel(double xPoint, double yPoint);
     
     void addDragBlockLabel(double xPoint, double yPoint)
     {
@@ -163,24 +163,24 @@ public:
         _blockLabelList.insert(newLabel);
     }
     
-    void addLine(node *firstNode, node *secondNode);
+    bool addLine(node *firstNode, node *secondNode);
     
-    void addLine(node &firstNode, node *secondNode)
+    bool addLine(node &firstNode, node *secondNode)
     {
-        addLine(&firstNode, secondNode);
+        return addLine(&firstNode, secondNode);
     }
     
-    void addLine(node *firstNode, node &secondNode)
+    bool addLine(node *firstNode, node &secondNode)
     {
-        addLine(firstNode, &secondNode);
+        return addLine(firstNode, &secondNode);
     }
     
-    void addLine()
+    bool addLine()
     {
-        addLine(nullptr, nullptr);
+        return addLine(nullptr, nullptr);
     }
     
-    void addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
+    bool addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
     
     void resetIndexs()
     {

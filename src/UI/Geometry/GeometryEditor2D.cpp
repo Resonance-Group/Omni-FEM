@@ -1,7 +1,7 @@
 #include <UI/GeometryEditor2D.h>
 #include <string>
 
-void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be the 1/mag which is the zoom factor
+bool geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be the 1/mag which is the zoom factor
 {
     /* This function was ported from the BOOL CFemmeDoc::AddNode(double x, double y, double d) located in FemmeDoc.cpp */
 	node newNode;
@@ -11,14 +11,14 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
 		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
-			return;
+			return false;
 	}
     
     /* This section will make sure that a node is not drawn on top of a block label */
 	for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
 	{
 		if(blockIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 50))
-			return;
+			return false;
 	}
     
     newNode.setCenter(xPoint, yPoint);
@@ -71,11 +71,13 @@ void geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 			_arcList.insert(arcSegment);
 		}
 	}
+    
+    return true;
 }
 
 
 
-void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
+bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
 {
     /* This code was adapted from the FEMM project. THe code came from FemmeDoc.cpp line 576 */
     blockLabel newLabel;
@@ -84,7 +86,7 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
     {
         if(blockIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 25))
-            return;
+            return false;
     }
     
     // MAke sure that the block label is not placed on top of an existing node
@@ -92,14 +94,14 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
 		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
-			return;
+			return false;
 	}
     
     // Make sure that the block label is not placed ontop of a line
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
 		if(fabs(calculateShortestDistance(xPoint, yPoint, *lineIterator)) < 1 / (_zoomFactorPointer * 100))
-            return;
+            return false;
     }
             
     /* Later, add in check to make sure that a block node will not be placed on top of a arc */
@@ -110,11 +112,12 @@ void geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
 
   //  _blockLabelNameArray.addString(newLabel.getProperty()->getMaterialName());
  //   _blockLabelNameArray.addString(wxT("Test"));
+    return true;
 }
 
 
 
-void geometryEditor2D::addLine(node *firstNode, node *secondNode)
+bool geometryEditor2D::addLine(node *firstNode, node *secondNode)
 {
     /* This code was adapted from the FEMM project. See line 263 in FemmeDoc.cpp */
     edgeLineShape newLine;
@@ -126,15 +129,22 @@ void geometryEditor2D::addLine(node *firstNode, node *secondNode)
         _nodeInterator2 = secondNode;
     }
     
-	if(*_nodeInterator1 == *_nodeInterator2)
-		return;
+	if(*_nodeInterator1 == *_nodeInterator2 || (_nodeInterator1 == nullptr || _nodeInterator2 == nullptr))
+    {
+        resetIndexs();
+		return false;
+    }
+        
 	
 /* Check to see if the line has already been created */	
 
 	for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
 		if((*lineIterator->getFirstNode() == *_nodeInterator1 && *lineIterator->getSecondNode() == *_nodeInterator2) || (*lineIterator->getFirstNode() == *_nodeInterator2 && *lineIterator->getSecondNode() == *_nodeInterator1))
-			return;
+        {
+            resetIndexs();
+            return false;
+        }
 	}
     
     newLine.setFirstNode(*_nodeInterator1);
@@ -196,11 +206,12 @@ void geometryEditor2D::addLine(node *firstNode, node *secondNode)
         }
     }
     resetIndexs();
+    return true;
 }
 
 
-// Left off but this function still needs updated
-void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected)
+
+bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected)
 {
         // This function was obtained from CbeladrawDoc::AddArcSegment
 	edgeLineShape segment;
@@ -210,9 +221,15 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	double dist, radius, minDistance, shortDistanceFromArc;
     
     if(nodesAreSelected && (*_nodeInterator1 == *_nodeInterator2))
-        return;
+    {
+        resetIndexs();
+        return false;
+    }
     else if(!nodesAreSelected && (arcSeg.getFirstNode() == arcSeg.getSecondNode()))
-        return;
+    {
+        resetIndexs();
+        return false;
+    }
         
     if(nodesAreSelected)
     {
@@ -224,7 +241,10 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
 	{
 		if((arcIterator->getFirstNode() == arcSeg.getFirstNode()) && (arcIterator->getSecondNode() == arcSeg.getSecondNode()) && (fabs(arcIterator->getArcAngle() - arcSeg.getArcAngle()) < 1.0e-02))
-			return;
+        {
+            resetIndexs();
+            return false;
+        }
 	}
 	
 	if(tolerance == 0)
@@ -326,6 +346,7 @@ void geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		}
 	}
     resetIndexs();
+    return true;
 }
 
 
