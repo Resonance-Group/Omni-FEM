@@ -443,6 +443,12 @@ public:
             
         double startAngle = atan2(yCenterCoordinate - _firstNode->getCenterYCoordinate(), xCenterCoordinate - _firstNode->getCenterXCoordinate()) * (180.0 / PI) - 180.0;
         
+        if(_property.getHiddenState())
+        {
+            glEnable(GL_LINE_STIPPLE);
+            glLineStipple(1, 0b0001100011000110);
+        }
+            
         glBegin(GL_LINE_STRIP);
             glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
             
@@ -456,6 +462,8 @@ public:
             }
             glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
         glEnd();
+        
+        glDisable(GL_LINE_STIPPLE);
     }	
 
     /*! \brief  This function will be calculating the radius and center point of the arc
