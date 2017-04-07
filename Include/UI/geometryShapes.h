@@ -277,16 +277,34 @@ public:
     
     void draw()
     {
-        glLineWidth(2.0);
-        glBegin(GL_LINES);
-            if(_isSelected)
-                glColor3f(1.0f, 0.0f, 0.0f);
-            else
-                glColor3f(0.0f, 0.0f, 0.0f);
-            glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
-            glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
-        glEnd();
-        glLineWidth(0.5);
+        if(!_property.getHiddenState())
+        {
+            glLineWidth(2.0);
+            glBegin(GL_LINES);
+                if(_isSelected)
+                    glColor3f(1.0f, 0.0f, 0.0f);
+                else
+                    glColor3f(0.0f, 0.0f, 0.0f);
+                glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+                glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
+            glEnd();
+            glLineWidth(0.5);
+        }
+        else
+        {
+            glLineWidth(2.0);
+            glEnable(GL_LINE_STIPPLE);
+            glLineStipple(1, 0b0001100011000110);
+            glBegin(GL_LINES);
+                if(_isSelected)
+                    glColor3f(1.0f, 0.0f, 0.0f);
+                else
+                    glColor3f(0.0f, 0.0f, 0.0f);
+                glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+                glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
+            glEnd();
+            glDisable(GL_LINE_STIPPLE);
+        }
     }
     
     segmentProperty *getSegmentProperty()
