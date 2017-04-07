@@ -1063,14 +1063,14 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
         
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
+            // This is the y-intercept of the mirror line
+            double b1 = pointOne.y - slope * pointOne.x;
+            
+            // This is the slope for the perpendicular line
+            double perpSlope = -1.0 / slope;
+            
             if(lineIterator->getIsSelectedState())
             {
-                // This is the y-intercept of the mirror line
-                double b1 = pointOne.y - slope * pointOne.x;
-                
-                // This is the slope for the perpendicular line
-                double perpSlope = -1.0 / slope;
-                
                 double b2 = lineIterator->getFirstNode()->getCenterYCoordinate() - perpSlope * lineIterator->getFirstNode()->getCenterXCoordinate();
                 
                 double intersectionPointx = (b1 - b2) / (perpSlope - slope);
@@ -1109,7 +1109,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 else
                 {
                     node testNode;
-                    testNode.setCenter(2 * intersectionPointx - lineIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getFirstNode()->getCenterYCoordinate());
+                    testNode.setCenter(2 * intersectionPointx - lineIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getSecondNode()->getCenterYCoordinate());
                     for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         // TODO: This if statement will also need to check to see if the node is within the tolerance also
@@ -1128,6 +1128,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
     }
     else if(_arcsAreSelected)
     {
+        /* TODO: test the code for arcs */
     // This is the slope of the mirror line
         double slope = (pointOne.y - pointTwo.y) / (pointOne.x - pointTwo.x);
         
@@ -1262,13 +1263,15 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
         
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
+            // This is the y-intercept of the mirror line
+            double b1 = pointOne.y - slope * pointOne.x;
+            
+            // This is the slope for the perpendicular line
+            double perpSlope = -1.0 / slope;
+                
             if(arcIterator->getIsSelectedState())
             {
-                // This is the y-intercept of the mirror line
-                double b1 = pointOne.y - slope * pointOne.x;
                 
-                // This is the slope for the perpendicular line
-                double perpSlope = -1.0 / slope;
                 
                 double b2 = arcIterator->getFirstNode()->getCenterYCoordinate() - perpSlope * arcIterator->getFirstNode()->getCenterXCoordinate();
                 
@@ -1308,7 +1311,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 else
                 {
                     node testNode;
-                    testNode.setCenter(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate());
+                    testNode.setCenter(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate());
                     for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                     {
                         // TODO: This if statement will also need to check to see if the node is within the tolerance also
