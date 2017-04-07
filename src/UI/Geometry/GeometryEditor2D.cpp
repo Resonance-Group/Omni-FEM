@@ -129,7 +129,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode)
         _nodeInterator2 = secondNode;
     }
     
-	if(*_nodeInterator1 == *_nodeInterator2 || (_nodeInterator1 == nullptr || _nodeInterator2 == nullptr))
+	if((_nodeInterator1 == nullptr || _nodeInterator2 == nullptr) || (*_nodeInterator1 == *_nodeInterator2))
     {
         resetIndexs();
 		return false;

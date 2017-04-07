@@ -948,13 +948,13 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double distance = lineIterator->getFirstNode()->getCenterYCoordinate() - pointOne.y;
                     
                     // First, we attempt to create a node at the mirrored spot. The function will return false if another node is already present
-                    // or, if a block label is present. In the event of a node already present, then we need to find out which node it is
+                    // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
                     // If a block label is present, we will have to ignore the creation of line.
                     // The same logic applies for the second node of the line
                     if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*lineIterator->getFirstNode());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
                     }
                     else
                     {
@@ -976,7 +976,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*lineIterator->getSecondNode());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
                     }
                     else
                     {
@@ -1003,6 +1003,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
         }
         else if(slope == INFINITY || slope == -INFINITY)
         {
+            /* THis is the case for it the mirror line is vertical */
             for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
                 if(lineIterator->getIsSelectedState())
@@ -1012,7 +1013,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     if(_editor.addNode(pointOne.x + distance, lineIterator->getFirstNode()->getCenterYCoordinate()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*lineIterator->getFirstNode());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
                     }
                     else
                     {
@@ -1034,7 +1035,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     if(_editor.addNode(pointOne.x + distance, lineIterator->getSecondNode()->getCenterYCoordinate()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*lineIterator->getSecondNode());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
                     }
                     else
                     {
@@ -1127,7 +1128,205 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
     }
     else if(_arcsAreSelected)
     {
+    // This is the slope of the mirror line
+        double slope = (pointOne.y - pointTwo.y) / (pointOne.x - pointTwo.x);
         
+        // This is the case for if the mirror line is a horizontol line
+        if(slope == 0)
+        {
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(arcIterator->getIsSelectedState())
+                {
+                    double distance = arcIterator->getFirstNode()->getCenterYCoordinate() - pointOne.y;
+                    
+                    // First, we attempt to create a node at the mirrored spot. The function will return false if another node is already present
+                    // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
+                    // If a block label is present, we will have to ignore the creation of line.
+                    // The same logic applies for the second node of the line
+                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance);
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            // TODO: This if statement will also need to check to see if the node is within the tolerance also
+                            if(testNode == *nodeIterator)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    distance = arcIterator->getSecondNode()->getCenterYCoordinate() - pointOne.y;
+                    
+                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance);
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            // TODO: This if statement will also need to check to see if the node is within the tolerance also
+                            if(testNode == *nodeIterator)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if(_editor.addArc(*arcIterator, getTolerance(), true))
+                    {
+                        _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty());
+                        _editor.getArcList()->back()->calculate();
+                    }
+                }
+            }
+
+            this->Refresh();
+            return;
+        }
+        else if(slope == INFINITY || slope == -INFINITY)
+        {
+            /* THis is the case for it the mirror line is vertical */
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(arcIterator->getIsSelectedState())
+                {
+                    double distance = pointOne.x - arcIterator->getFirstNode()->getCenterXCoordinate();
+                    
+                    if(_editor.addNode(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate()))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate());
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            // TODO: This if statement will also need to check to see if the node is within the tolerance also
+                            if(testNode == *nodeIterator)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    distance = pointOne.x - arcIterator->getSecondNode()->getCenterXCoordinate();
+                    
+                    if(_editor.addNode(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate()))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate());
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            // TODO: This if statement will also need to check to see if the node is within the tolerance also
+                            if(testNode == *nodeIterator)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if(_editor.addArc(*arcIterator, getTolerance(), true))
+                    {
+                        _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty());
+                        _editor.getArcList()->back()->calculate();
+                    }
+                }
+            }
+            
+            this->Refresh();
+            return;
+        }
+        
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                // This is the y-intercept of the mirror line
+                double b1 = pointOne.y - slope * pointOne.x;
+                
+                // This is the slope for the perpendicular line
+                double perpSlope = -1.0 / slope;
+                
+                double b2 = arcIterator->getFirstNode()->getCenterYCoordinate() - perpSlope * arcIterator->getFirstNode()->getCenterXCoordinate();
+                
+                double intersectionPointx = (b1 - b2) / (perpSlope - slope);
+                double intersectionPointy = slope * intersectionPointx + b1;
+                
+                if(_editor.addNode(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate()))
+                {
+                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate());
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        // TODO: This if statement will also need to check to see if the node is within the tolerance also
+                        if(testNode == *nodeIterator)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                // Re-calculate some of the parameters for the second node of the line
+                b2 = arcIterator->getSecondNode()->getCenterYCoordinate() - perpSlope * arcIterator->getSecondNode()->getCenterXCoordinate();
+                intersectionPointx = (b1 - b2) / (perpSlope - slope);
+                intersectionPointy = slope * intersectionPointx + b1;
+                
+                if(_editor.addNode(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate()))
+                {
+                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate());
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        // TODO: This if statement will also need to check to see if the node is within the tolerance also
+                        if(testNode == *nodeIterator)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                if(_editor.addArc(*arcIterator, getTolerance(), true))
+                {
+                    _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty());
+                    _editor.getArcList()->back()->calculate();
+                }                
+            }
+        }
     }
     
     this->Refresh();
@@ -1289,7 +1488,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     
                     _editor.addArc(*arcIterator, 0, false);
                     
-                    _editor.getLineList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
+                    _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
                     _editor.getArcList()->back()->calculate();
                 }
             }
