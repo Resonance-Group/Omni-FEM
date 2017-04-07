@@ -704,7 +704,7 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 
 
 // TODO: Test the functionality for the arcs once these are coded in
-void modelDefinition::moveRotateSelection(double angularShift, wxPoint aboutPoint)
+void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint aboutPoint)
 {
     if(_nodesAreSelected)
     {
@@ -795,7 +795,7 @@ void modelDefinition::moveRotateSelection(double angularShift, wxPoint aboutPoin
 
 
 
-void modelDefinition::scaleSelection(double scalingFactor, wxPoint basePoint)
+void modelDefinition::scaleSelection(double scalingFactor, wxRealPoint basePoint)
 {
     
 }
@@ -1504,7 +1504,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
 }
 
 
-void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberOfCopies)
+void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies)
 {
     if(_nodesAreSelected)
     {
@@ -1619,20 +1619,54 @@ void modelDefinition::copyRotateSelection(double angularShift, wxPoint aboutPoin
     return;
 }
 
+void modelDefinition::displayOpenBoundary()
+{
+    clearSelection();
+    
+    _nodesAreSelected = true;
+    
+    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+    {
+        int numberOfConnectedLines = 0;
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                numberOfConnectedLines++;
+        }
+        
+        if(numberOfConnectedLines <= 1)
+        {
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                    numberOfConnectedLines++;
+            }
+        }
+        
+        // If we only have a node connected to 1 arc or line, then we have a dangling node */
+        if(numberOfConnectedLines <= 1)
+            nodeIterator->setSelectState(true);
+    }
+    
+    this->Refresh();
+    return;
+}
+
 
 void modelDefinition::doZoomWindow()
 {
-    if(fabs(_windowZoomEndPoint.x - _windowZoomStartPoint.x) == 0 || fabs(_windowZoomEndPoint.y - _windowZoomStartPoint.y) == 0)
+    if(fabs(_endPoint.x - _startPoint.x) == 0 || fabs(_endPoint.y - _startPoint.y) == 0)
         return;
     
-    double centerX = (_windowZoomEndPoint.x + _windowZoomStartPoint.x) / 2.0;
-    double centerY = (_windowZoomEndPoint.y + _windowZoomStartPoint.y) / 2.0;
+    double centerX = (_endPoint.x + _startPoint.x) / 2.0;
+    double centerY = (_endPoint.y + _startPoint.y) / 2.0;
     
     /* These numbers calculate the distance between the center of the zoom window and the endpoints */
-    double num1 = centerX - _windowZoomStartPoint.x;
-    double num2 = _windowZoomEndPoint.x - centerX;
-    double num3 = _windowZoomStartPoint.y - centerY;
-    double num4 = centerY - _windowZoomEndPoint.y;
+    double num1 = centerX - _startPoint.x;
+    double num2 = _endPoint.x - centerX;
+    double num3 = _startPoint.y - centerY;
+    double num4 = centerY - _endPoint.y;
     
     _zoomX = fabs(std::max(num1, num2));
     _zoomY = fabs(std::max(num3, num4));
@@ -1893,23 +1927,35 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
         glBegin(GL_LINES);
             glColor3d(0.0, 0.0, 0.0);
-            glVertex2d(_windowZoomStartPoint.x, _windowZoomStartPoint.y);
-            glVertex2d(_windowZoomStartPoint.x, _windowZoomEndPoint.y);
+            glVertex2d(_startPoint.x, _startPoint.y);
+            glVertex2d(_startPoint.x, _endPoint.y);
             
-            glVertex2d(_windowZoomStartPoint.x, _windowZoomEndPoint.y);
-            glVertex2d(_windowZoomEndPoint.x, _windowZoomEndPoint.y);
+            glVertex2d(_startPoint.x, _endPoint.y);
+            glVertex2d(_endPoint.x, _endPoint.y);
             
-            glVertex2d(_windowZoomEndPoint.x, _windowZoomEndPoint.y);
-            glVertex2d(_windowZoomEndPoint.x, _windowZoomStartPoint.y);
+            glVertex2d(_endPoint.x, _endPoint.y);
+            glVertex2d(_endPoint.x, _startPoint.y);
             
-            glVertex2d(_windowZoomEndPoint.x, _windowZoomStartPoint.y);
-            glVertex2d(_windowZoomStartPoint.x, _windowZoomStartPoint.y);
-              
+            glVertex2d(_endPoint.x, _startPoint.y);
+            glVertex2d(_startPoint.x, _startPoint.y);
         glEnd();
         glDisable(GL_LINE_STIPPLE);
     }
     
-    
+    if(_doMirrorLine)
+    {
+        glLineWidth(3.0);
+        glEnable(GL_LINE_STIPPLE);
+        
+        glLineStipple(1, 0b0001100011000110);
+        
+        glBegin(GL_LINES);
+            glColor3d(0.0, 0.0, 0.0);
+            glVertex2d(_startPoint.x, _startPoint.y);
+            glVertex2d(_endPoint.x, _endPoint.y);
+        glEnd();
+        glDisable(GL_LINE_STIPPLE);
+    }
     
 
   //  if(_preferences.getShowBlockNameState() && _editor.getBlockNameArray()->getNameArraySize() > 0)
@@ -2039,7 +2085,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
-        if(!_doZoomWindow)
+        if(!_doZoomWindow && !_doMirrorLine)
         {
             if(_createNodes && !_geometryIsSelected)
             {
@@ -2079,9 +2125,14 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                 }
             }
         }
-        else
+        else if(_doZoomWindow || _doMirrorLine)
         {
-            _windowZoomEndPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
+            if(_preferences.getSnapGridState())
+                roundToNearestGrid(tempX, tempY);
+                
+            _endPoint = wxRealPoint(tempX, tempY);
         }
     }
     
@@ -2097,7 +2148,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
     
     clearSelection();
     
-    if(!_doZoomWindow)
+    if(!_doZoomWindow && !_doMirrorLine)
     {    
         if(_createNodes)
         {
@@ -2191,10 +2242,16 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             return;
         }
     }
-    else
+    else if(_doZoomWindow || _doMirrorLine)
     {
-        _windowZoomStartPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
-        _windowZoomEndPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+        double tempX = convertToXCoordinate(event.GetX());
+        double tempY = convertToYCoordinate(event.GetY());
+        
+        if(_preferences.getSnapGridState())
+            roundToNearestGrid(tempX, tempY);
+            
+        _startPoint = wxRealPoint(tempX, tempY);
+        _endPoint = wxRealPoint(tempX, tempY);
     }
     
     this->Refresh();
@@ -2203,7 +2260,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 
 void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
 {
-    if(!_doZoomWindow)
+    if(!_doZoomWindow && !_doMirrorLine)
     {
         // OK so in order to re-validate the node (in order to break lines / arcs up into two pieces and what not), we first have to remove the last item, and then push it back on.
         if(_createNodes)
@@ -2248,12 +2305,19 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
             }
         }
     }
-    else
+    else if(_doZoomWindow && !_doMirrorLine)
     {
         _doZoomWindow = !_doZoomWindow;
         doZoomWindow();
-        _windowZoomStartPoint = wxRealPoint(0, 0);
-        _windowZoomEndPoint = wxRealPoint(0, 0);
+        _startPoint = wxRealPoint(0, 0);
+        _endPoint = wxRealPoint(0, 0);
+    }
+    else if(!_doZoomWindow && _doMirrorLine)
+    {
+        _doMirrorLine = !_doMirrorLine;
+        mirrorSelection(_startPoint, _endPoint);
+        _startPoint = wxRealPoint(0, 0);
+        _endPoint = wxRealPoint(0, 0);
     }
     
     this->Refresh();

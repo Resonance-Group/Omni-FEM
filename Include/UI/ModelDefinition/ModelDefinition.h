@@ -71,6 +71,8 @@ private:
     
     bool _doZoomWindow = false;
     
+    bool _doMirrorLine = false;
+    
     bool _isFirstInitlized = false;
     
     //! This is the variable that will determine to create nodes/block labels
@@ -89,9 +91,9 @@ private:
     
     bool _geometryIsSelected = false;
     
-    wxRealPoint _windowZoomStartPoint;
+    wxRealPoint _startPoint;
     
-    wxRealPoint _windowZoomEndPoint;
+    wxRealPoint _endPoint;
     
     double convertToXCoordinate(int xPixel)
     {
@@ -222,17 +224,17 @@ public:
     
     void moveTranslateSelection(double horizontalShift, double verticalShift);
     
-    void moveRotateSelection(double angularShift, wxPoint aboutPoint);
+    void moveRotateSelection(double angularShift, wxRealPoint aboutPoint);
     
-    void scaleSelection(double scalingFactor, wxPoint basePoint);
+    void scaleSelection(double scalingFactor, wxRealPoint basePoint);
     
     void mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo);
     
     void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
     
-    void copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberOfCopies);
+    void copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies);
     
-    
+    void displayOpenBoundary();
     
 private:
     wxDECLARE_EVENT_TABLE(); 

@@ -58,7 +58,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuView->AppendSeparator();
     _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
     _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, true);
-	_menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
+	_menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Open Boundaries");
     _menuView->AppendSeparator();
     _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
     _menuView->Check(ViewMenuID::ID_SHOW_STATUSBAR, true);
