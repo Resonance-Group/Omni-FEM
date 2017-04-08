@@ -186,6 +186,16 @@ public:
         return _doZoomWindow;
     }
     
+    void setMirrorLineState(bool state)
+    {
+        _doMirrorLine = state;
+    }
+    
+    bool getMirrorLineState()
+    {
+        return _doMirrorLine;
+    }
+    
     void zoomIn()
     {
         _zoomX *= pow(1.2, -(300.0) / 150.0);
@@ -235,6 +245,8 @@ public:
     void copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies);
     
     void displayOpenBoundary();
+    
+    
     
 private:
     wxDECLARE_EVENT_TABLE(); 
