@@ -1,7 +1,7 @@
 #include <UI/GeometryEditor2D.h>
 #include <string>
 
-bool geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be the 1/mag which is the zoom factor
+bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode)// Could distance be the 1/mag which is the zoom factor
 {
     /* This function was ported from the BOOL CFemmeDoc::AddNode(double x, double y, double d) located in FemmeDoc.cpp */
 	node newNode;
@@ -10,14 +10,14 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 50))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < distanceNode)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return false;
 	}
     
     /* This section will make sure that a node is not drawn on top of a block label */
 	for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
 	{
-		if(blockIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 50))
+		if(blockIterator->getDistance(xPoint, yPoint) < distanceNode)
 			return false;
 	}
     
@@ -29,7 +29,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
 	{
         edgeLineShape testLine = *lineIterator;
         node testFirstNode = *(testLine.getFirstNode());
-		if(fabs(calculateShortestDistance(xPoint, yPoint, testLine)) < 1 / (_zoomFactorPointer * 50))
+		if(fabs(calculateShortestDistance(xPoint, yPoint, testLine)) < distanceNode)
 		{
             /* Ok so if the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
              * Line1 will be set equal to the original line (line0).
@@ -48,8 +48,10 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint)// Could distance be
     /* If the node is in between an arc, then break the arc into 2 */
 	for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
 	{
+        Vector nodeVector;
+        nodeVector.Set(xPoint, yPoint);
         /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
-		if(fabs(-5) < 1 / (_zoomFactorPointer * 100)) // this needs t be looked into more
+		if(fabs(shortestDistanceFromArc(nodeVector, *arcIterator)) < distanceNode) // this needs t be looked into more
 		{
             Vector firstNode, secondNode, thirdNode, center;
             arcShape arcSegment = *arcIterator;
@@ -155,7 +157,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode)
     {
         double tempX, tempY;
         if(getIntersection(newLine, *lineIterator, tempX, tempY))
-            addNode(tempX, tempY);
+            addNode(tempX, tempY, 0.001);
     }
     
     /* This section will check to see if there are any intersections with arcs. If so, create a node at the intersection */
@@ -167,7 +169,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode)
         {
             for(int k = 0; k < j; k++)
             {
-                addNode(newNodesPoints[k].getXComponent(), newNodesPoints[k].getYComponent());
+                addNode(newNodesPoints[k].getXComponent(), newNodesPoints[k].getYComponent(), 0.001);
             }
         }
     }
@@ -286,7 +288,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		{
 			for(int k = 0; k < j; k++)
 			{
-				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent());
+				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), 0.01);
 			}
 		}
 	}
@@ -300,7 +302,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		{
 			for(int k = 0; k < j; k++)
 			{
-				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent());
+				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), 0.01);
 			}
 		}
 	}
@@ -308,7 +310,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	_arcList.insert(arcSeg);
 	
 //	getCircle(arcSeg, centerPoint, radius);
-    centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());
+/*    centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());
     radius = arcSeg.getRadius();
 	
 	if(tolerance == 0)
@@ -344,7 +346,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
                 nodeIterator = _nodeList.back();
 			}
 		}
-	}
+	}*/
     resetIndexs();
     return true;
 }

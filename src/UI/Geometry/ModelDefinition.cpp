@@ -821,7 +821,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = nodeIterator->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addNode(nodeIterator->getCenterXCoordinate(), pointOne.y - distance))
+                    if(_editor.addNode(nodeIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                         _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
             }
@@ -837,7 +837,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = pointOne.x - nodeIterator->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, nodeIterator->getCenterYCoordinate()))
+                    if(_editor.addNode(pointOne.x + distance, nodeIterator->getCenterYCoordinate(), getTolerance()))
                         _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
             }
@@ -862,7 +862,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                 double intersectionPointy = slope * intersectionPointx + b1;
                 
-                if(_editor.addNode(2 * intersectionPointx - nodeIterator->getCenterXCoordinate(), 2 * intersectionPointy - nodeIterator->getCenterYCoordinate()))
+                if(_editor.addNode(2 * intersectionPointx - nodeIterator->getCenterXCoordinate(), 2 * intersectionPointy - nodeIterator->getCenterYCoordinate(), getTolerance()))
                     _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
             }
         }
@@ -922,7 +922,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                 double intersectionPointy = slope * intersectionPointx + b1;
                 
-                if(_editor.addNode(2 * intersectionPointx - blockIterator->getCenterXCoordinate(), 2 * intersectionPointy - blockIterator->getCenterYCoordinate()))
+                if(_editor.addNode(2 * intersectionPointx - blockIterator->getCenterXCoordinate(), 2 * intersectionPointy - blockIterator->getCenterYCoordinate(), getTolerance()))
                     _editor.getBlockLabelList()->back()->setPorperty(*blockIterator->getProperty());
             }
         }
@@ -951,7 +951,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
                     // If a block label is present, we will have to ignore the creation of line.
                     // The same logic applies for the second node of the line
-                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance))
+                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -973,7 +973,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = lineIterator->getSecondNode()->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance))
+                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1010,7 +1010,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = pointOne.x - lineIterator->getFirstNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, lineIterator->getFirstNode()->getCenterYCoordinate()))
+                    if(_editor.addNode(pointOne.x + distance, lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1032,7 +1032,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = pointOne.x - lineIterator->getSecondNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, lineIterator->getSecondNode()->getCenterYCoordinate()))
+                    if(_editor.addNode(pointOne.x + distance, lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1076,7 +1076,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                 double intersectionPointy = slope * intersectionPointx + b1;
                 
-                if(_editor.addNode(2 * intersectionPointx - lineIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getFirstNode()->getCenterYCoordinate()))
+                if(_editor.addNode(2 * intersectionPointx - lineIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                 {
                     _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                     _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1101,7 +1101,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 intersectionPointx = (b1 - b2) / (perpSlope - slope);
                 intersectionPointy = slope * intersectionPointx + b1;
                 
-                if(_editor.addNode(2 * intersectionPointx - lineIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getSecondNode()->getCenterYCoordinate()))
+                if(_editor.addNode(2 * intersectionPointx - lineIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                 {
                     _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                     _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1145,7 +1145,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
                     // If a block label is present, we will have to ignore the creation of line.
                     // The same logic applies for the second node of the line
-                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance))
+                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1167,7 +1167,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = arcIterator->getSecondNode()->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance))
+                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1207,7 +1207,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = pointOne.x - arcIterator->getFirstNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate()))
+                    if(_editor.addNode(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1229,7 +1229,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = pointOne.x - arcIterator->getSecondNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate()))
+                    if(_editor.addNode(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1278,7 +1278,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                 double intersectionPointy = slope * intersectionPointx + b1;
                 
-                if(_editor.addNode(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate()))
+                if(_editor.addNode(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                 {
                     _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                     _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1303,7 +1303,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 intersectionPointx = (b1 - b2) / (perpSlope - slope);
                 intersectionPointy = slope * intersectionPointx + b1;
                 
-                if(_editor.addNode(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate()))
+                if(_editor.addNode(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                 {
                     _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                     _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1349,7 +1349,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
             {
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
-                    _editor.addNode(nodeIterator->getCenterXCoordinate() + i * horizontalShift, nodeIterator->getCenterYCoordinate() + i * verticalShift);
+                    _editor.addNode(nodeIterator->getCenterXCoordinate() + i * horizontalShift, nodeIterator->getCenterYCoordinate() + i * verticalShift, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
             }
@@ -1392,7 +1392,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                      * geometry editor class for line creation.
                      * The same logic applies to arcs
                      */
-                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift))
+                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back()); 
@@ -1413,7 +1413,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     }
                     
                     
-                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift))
+                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1448,7 +1448,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     
-                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift))
+                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back()); 
@@ -1470,7 +1470,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     
                     
                     
-                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift))
+                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
                         _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getNodeList()->back());
@@ -1479,11 +1479,14 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     {
                         node testNode;
                         testNode.setCenter(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                        // TODO: This if statement will need to check if the node is within tolerance
-                        if(*nodeIterator == testNode)
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
                         {
-                            _editor.setNodeIndex(*nodeIterator);
-                            break;
+                            // TODO: This if statement will need to check if the node is within tolerance
+                            if(*nodeIterator == testNode)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
                         }
                     }
                     
@@ -1519,7 +1522,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     double horizontalShift = aboutPoint.x + (radius * cos(i * angularShift * PI / 180.0));
                     double verticalShift = aboutPoint.y + (radius * sin(i * angularShift * PI / 180.0));
                     // Update the node with the translated coordinates
-                    _editor.addNode(horizontalShift, verticalShift);
+                    _editor.addNode(horizontalShift, verticalShift, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
                 
@@ -1561,10 +1564,10 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
                     double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
                 
-                    _editor.addNode(horizontalShift1, verticalShift1);
+                    _editor.addNode(horizontalShift1, verticalShift1, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                    
-                    _editor.addNode(horizontalShift2, verticalShift2);
+                    _editor.addNode(horizontalShift2, verticalShift2, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                     
                     plf::colony<node>::iterator lastItem = _editor.getNodeList()->back();
@@ -1593,10 +1596,10 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
                     double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
                     
-                    _editor.addNode(horizontalShift1, verticalShift1);
+                    _editor.addNode(horizontalShift1, verticalShift1, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                    
-                    _editor.addNode(horizontalShift2, verticalShift2);
+                    _editor.addNode(horizontalShift2, verticalShift2, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
 
                     plf::colony<node>::iterator lastItem = _editor.getNodeList()->back();
@@ -2287,7 +2290,7 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_editor.getNodeList()->back()->getDraggingState())
                 {
                     _editor.getNodeList()->erase(_editor.getNodeList()->back());
-                    _editor.addNode(tempX, tempY);
+                    _editor.addNode(tempX, tempY, getTolerance());
                 }
             }
         }

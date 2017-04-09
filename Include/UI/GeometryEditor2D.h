@@ -143,7 +143,7 @@ public:
         _arcList = list;
     }
 
-    bool addNode(double xPoint, double yPoint);
+    bool addNode(double xPoint, double yPoint, double distanceNode);
     
     void addDragNode(double xPoint, double yPoint)
     {
