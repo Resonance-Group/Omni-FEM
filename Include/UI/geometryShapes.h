@@ -488,7 +488,7 @@ public:
                     for(int i = 1; i < _numSegments; i++)
                     {
                         // This converts that angle from deg to radians. startAngle and theta are both in degs.
-                        double angle = (180.0 - (startAngle + i * theta)) * (PI / 180.0);
+                        double angle = (180.0 - (startAngle - i * theta)) * (PI / 180.0);
                         double xPoint = xCenterCoordinate + (_radius * cos(angle));
                         double yPoint = yCenterCoordinate + (_radius * sin(angle));
                         glVertex2d(xPoint, yPoint);
@@ -550,15 +550,52 @@ public:
             // These are the cases for if the center is above the arc (Or if the center is above the first endpoint of the arc)
             if(xCenterCoordinate < _firstNode->getCenterXCoordinate() && xCenterCoordinate < _secondNode->getCenterXCoordinate())
             {
+                // This is the case for if the center point is to the right of both endpoints
                 // This start angle needs to be negative. Draw it out on paper and you will see
-                startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);
+                startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (xCenterCoordinate - _firstNode->getCenterXCoordinate())) * (180.0 / PI);
                 glBegin(GL_LINE_STRIP);
                     glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
                     
                     for(int i = 1; i < _numSegments; i++)
                     {
                         // This converts that angle from deg to radians. startAngle and theta are both in degs.
-                        double angle = (startAngle + i * theta) * (PI / 180.0);
+                        double angle = (180.0 - (startAngle + i * theta)) * (PI / 180.0);
+                        double xPoint = xCenterCoordinate - (_radius * cos(angle));
+                        double yPoint = yCenterCoordinate - (_radius * sin(angle));
+                        glVertex2d(xPoint, yPoint);
+                    }
+                    glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
+                glEnd();
+            }
+            else if(xCenterCoordinate < _firstNode->getCenterXCoordinate() && xCenterCoordinate > _secondNode->getCenterXCoordinate())
+            {
+                // This is the case for if the center node is in between the two endpoints
+                startAngle = atan((yCenterCoordinate - _firstNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);// THis must be negative
+                glBegin(GL_LINE_STRIP);
+                    glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+                    
+                    for(int i = 1; i < _numSegments; i++)
+                    {
+                        // This converts that angle from deg to radians. startAngle and theta are both in degs.
+                        double angle = ((startAngle  + i * theta)) * (PI / 180.0);
+                        double xPoint = xCenterCoordinate + (_radius * cos(angle));
+                        double yPoint = yCenterCoordinate + (_radius * sin(angle));
+                        glVertex2d(xPoint, yPoint);
+                    }
+                    glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
+                glEnd();
+            }
+            else if(xCenterCoordinate > _firstNode->getCenterXCoordinate() && xCenterCoordinate < _secondNode->getCenterXCoordinate())
+            {
+                startAngle = atan((yCenterCoordinate - _firstNode->getCenterYCoordinate()) / (xCenterCoordinate - _firstNode->getCenterXCoordinate())) * (180.0 / PI);
+                
+                glBegin(GL_LINE_STRIP);
+                    glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+                    
+                    for(int i = 1; i < _numSegments; i++)
+                    {
+                        // This converts that angle from deg to radians. startAngle and theta are both in degs.
+                        double angle = (180.0 + (startAngle + i * theta)) * (PI / 180.0);
                         double xPoint = xCenterCoordinate + (_radius * cos(angle));
                         double yPoint = yCenterCoordinate + (_radius * sin(angle));
                         glVertex2d(xPoint, yPoint);
@@ -568,14 +605,14 @@ public:
             }
             else if(xCenterCoordinate < _firstNode->getCenterXCoordinate() && xCenterCoordinate > _secondNode->getCenterXCoordinate())
             {
-                startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);// THis must be negative
+                startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (xCenterCoordinate - _firstNode->getCenterXCoordinate())) * (180.0 / PI);
                 glBegin(GL_LINE_STRIP);
                     glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
                     
                     for(int i = 1; i < _numSegments; i++)
                     {
                         // This converts that angle from deg to radians. startAngle and theta are both in degs.
-                        double angle = (startAngle - i * theta) * (PI / 180.0);
+                        double angle = ((startAngle  + i * theta)) * (PI / 180.0);
                         double xPoint = xCenterCoordinate + (_radius * cos(angle));
                         double yPoint = yCenterCoordinate + (_radius * sin(angle));
                         glVertex2d(xPoint, yPoint);
@@ -612,16 +649,6 @@ public:
         double distanceSquared = 0;
         
         // Use this site for reference: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
-     /*   if(arcNodeList[nodeIndex2].getCenterXCoordinate() > arcNodeList[nodeIndex1].getCenterXCoordinate())
-        {
-            startNodeXCoordinate = arcNodeList[nodeIndex2].getCenterXCoordinate();
-            endNodeXCoordinate = arcNodeList[nodeIndex1].getCenterXCoordinate();
-            
-            startNodeYCoordinate = arcNodeList[nodeIndex2].getCenterYCoordinate();
-            endNodeYCoordinate =  arcNodeList[nodeIndex1].getCenterYCoordinate();
-        }*/
-     //   else
-
         distanceSquared = pow(_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate(), 2) + pow(_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate(), 2);
         
         _radius = sqrt(distanceSquared / (2.0 * (1.0 - cos(_arcAngle * PI / 180.0))));// Fun fact, the cosine function evaluates in radians
@@ -635,10 +662,10 @@ public:
         a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0)); // This is just an intermediate varable to make calculations easier
         
         // We need two cases here. One for if the line between the first and second node has a slope of 0 and the other case being if the line is vertical
-        if(slope == 0 || slope < 1e-9)
+        if(slope >= 0 && slope <= 1e-9)
         {
             // TOD: Come up with new logic here
-            if((_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate() && _isCounterClockWise) || (_firstNode->getCenterYCoordinate() < _secondNode->getCenterYCoordinate() && !_isCounterClockWise))
+            if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
             {
                 // This will calculate the center that is below the arc.
                 // If the start node is lower then the end node, the logic is reversed. This portion will create
@@ -650,14 +677,14 @@ public:
             {
                 // This will calculate the center above the arc
                 xCenterCoordinate = xMid;
-                yCenterCoordinate = yMid + a;
+                yCenterCoordinate = yMid - a;
             }
             
             return;
         }
-        else if(slope == INFINITY || slope == -INFINITY)
+        else if(slope == INFINITY)
         {
-            if((_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate() && _isCounterClockWise) || (_firstNode->getCenterYCoordinate() < _secondNode->getCenterYCoordinate() && !_isCounterClockWise))
+            if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
             {
                 // This will calculate the center that is below the arc.
                 // If the start node is lower then the end node, the logic is reversed. This portion will create
@@ -674,22 +701,61 @@ public:
             
             return;
         }
+        else if(slope == -INFINITY)
+        {
+            if((!(_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate()) != (!_isCounterClockWise)))
+            {
+                // This will calculate the center that is below the arc.
+                // If the start node is lower then the end node, the logic is reversed. This portion will create
+                // the center above the arc.
+                xCenterCoordinate = xMid - a;
+                yCenterCoordinate = yMid;
+            }
+            else
+            {
+                // This will calculate the center above the arc
+                xCenterCoordinate = xMid + a;
+                yCenterCoordinate = yMid;
+            }
+            
+            return;
+        }
         
         midSlope = -1.0 / slope;
         
-        if((_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate() && _isCounterClockWise) || (_firstNode->getCenterYCoordinate() < _secondNode->getCenterYCoordinate() && !_isCounterClockWise))
+        if(slope > 0)
         {
-            // This will calculate the center that is below the arc.
-            // If the start node is lower then the end node, the logic is reversed. This portion will create
-            // the center above the arc.
-            xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
-            yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+            if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
+            {
+                // This will calculate the center that is above the arc.
+                // If the start node is lower then the end node, the logic is reversed. This portion will create
+                // the center above the arc.
+                xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+                yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+            }
+            else
+            {
+                // This will calculate the center below the arc
+                xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+                yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+            }
         }
-        else
+        else if(slope < 0)
         {
-            // This will calculate the center above the arc
-            xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
-            yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+            if(!(!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
+            {
+                // This will calculate the center that is above the arc.
+                // If the start node is lower then the end node, the logic is reversed. This portion will create
+                // the center above the arc.
+                xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+                yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+            }
+            else
+            {
+                // This will calculate the center below the arc
+                xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+                yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+            }
         }
         
         return;
