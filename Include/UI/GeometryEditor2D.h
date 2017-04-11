@@ -75,7 +75,8 @@ private:
     
 
 public:
-
+    //! This function will get the angle from the aboutPoint to the node point. This angle is always positive and is in reference to CCW being positive
+    double getAngle(wxRealPoint aboutPoint, node toPoint);
     /*! This function is used to calcualte if the shortest distance between a line a node */
 	double calculateShortestDistance(double p, double q, edgeLineShape segment);
     

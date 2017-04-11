@@ -1,6 +1,45 @@
 #include <UI/GeometryEditor2D.h>
 #include <string>
 
+double geometryEditor2D::getAngle(wxRealPoint aboutPoint, node toPoint)
+{
+    if(fabs(aboutPoint.y - toPoint.getCenterYCoordinate()) <= 1e-9)
+    {
+        if(toPoint.getCenterXCoordinate() > aboutPoint.x)
+            return 0.0;
+        else
+            return 180.0;
+    }
+    else if(fabs(aboutPoint.x - toPoint.getCenterXCoordinate()) <= 1e-9)
+    {
+        if(toPoint.getCenterYCoordinate() > aboutPoint.y)
+            return 90.0;
+        else
+            return 270.0;
+    }
+    
+    if(toPoint.getCenterXCoordinate() > aboutPoint.x && toPoint.getCenterYCoordinate() > aboutPoint.y)
+    {
+        return (atan((toPoint.getCenterYCoordinate() - aboutPoint.y) / (toPoint.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
+    }
+    else if(toPoint.getCenterXCoordinate() < aboutPoint.x && toPoint.getCenterYCoordinate() > aboutPoint.y)
+    {
+        return 90.0 + (atan((toPoint.getCenterYCoordinate() - aboutPoint.y) / (aboutPoint.x - toPoint.getCenterXCoordinate())) * 180.0 / PI);
+    }
+    else if(toPoint.getCenterXCoordinate() < aboutPoint.x && toPoint.getCenterYCoordinate() < aboutPoint.y)
+    {
+        return 180.0 + (atan((aboutPoint.y - toPoint.getCenterYCoordinate()) / (aboutPoint.x - toPoint.getCenterXCoordinate())) * 180.0 / PI);
+    }
+    else if(toPoint.getCenterXCoordinate() > aboutPoint.x && toPoint.getCenterYCoordinate() < aboutPoint.y)
+    {
+        return 270.0 + (atan((aboutPoint.y - toPoint.getCenterYCoordinate()) / (toPoint.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
+    }
+    
+    return 0.0;
+}
+
+
+
 bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode)// Could distance be the 1/mag which is the zoom factor
 {
     /* This function was ported from the BOOL CFemmeDoc::AddNode(double x, double y, double d) located in FemmeDoc.cpp */

@@ -713,9 +713,10 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
             if(nodeIterator->getIsSelectedState())
             {
                 // Calculate the radius and the new position of the node
+                double angle = angularShift + _editor.getAngle(aboutPoint, *nodeIterator);
                 double radius = nodeIterator->getDistance(aboutPoint);
-                double horizontalShift = nodeIterator->getCenterXCoordinate() + (radius * cos(angularShift * PI / 180.0));
-                double verticalShift = nodeIterator->getCenterYCoordinate() + (radius * sin(angularShift * PI / 180.0));
+                double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
+                double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
                 // Update the node with the translated coordinates
                 nodeIterator->setCenter(horizontalShift, verticalShift);
             }
@@ -727,9 +728,10 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
         {
             if(blockIterator->getIsSelectedState())
             {
+                double angle = angularShift + _editor.getAngle(aboutPoint, *blockIterator);
                 double radius = blockIterator->getDistance(aboutPoint);
-                double horizontalShift = aboutPoint.x + (radius * cos(angularShift * PI / 180.0));
-                double verticalShift = aboutPoint.y + (radius * sin(angularShift * PI / 180.0));
+                double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
+                double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
                 blockIterator->setCenter(horizontalShift, verticalShift);
             }   
         }
@@ -739,7 +741,9 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
-            { 
+            {
+                double angleOne = angularShift + _editor.getAngle(aboutPoint, *lineIterator->getFirstNode());
+                double angleTwo = angularShift + _editor.getAngle(aboutPoint, *lineIterator->getSecondNode());
                 double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
                 double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
                 

@@ -52,7 +52,7 @@ void OmniFEMMainFrame::onCopy(wxCommandEvent &event)
         if(copyDialog->rotationIsSelected())
         {
             unsigned int copies;
-            wxPoint point;
+            wxRealPoint point;
             double angle;
             copyDialog->getRotationCopy(point, angle, copies);
             _model->copyRotateSelection(angle, point, copies);
@@ -83,15 +83,6 @@ void OmniFEMMainFrame::onScale(wxCommandEvent &event)
 void OmniFEMMainFrame::onMirror(wxCommandEvent &event)
 {
     _model->setMirrorLineState(!_model->getMirrorLineState());
-    /*
-    mirrorDialog *mirrorSelect = new mirrorDialog(this);
-    if(mirrorSelect->ShowModal() == wxID_OK)
-    {
-        wxRealPoint point1, point2;
-        mirrorSelect->getPoints(point1, point2);
-        _model->mirrorSelection(point1, point2);
-    }
-     * */
 }
 
 
@@ -117,7 +108,7 @@ void OmniFEMMainFrame::onMove(wxCommandEvent &event)
     {
         if(moveDialog->rotationIsSelected())
         {
-            wxPoint point;
+            wxRealPoint point;
             double angle = 0;
             moveDialog->getRotationMove(point, angle);
             _model->moveRotateSelection(angle, point);
