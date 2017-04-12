@@ -640,6 +640,15 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
                 nodeIterator->moveCenter(horizontalShift, verticalShift);
             }
         }
+        
+        // After moving the nodes, we need to then make sure all of the arcs have been updated with the new node positions
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getFirstNode()->getIsSelectedState() || arcIterator->getSecondNode()->getIsSelectedState())
+            {
+                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
+            }
+        } 
     }
     else if(_labelsAreSelected)
     {
@@ -694,7 +703,7 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
     
     if(_nodesAreSelected || _linesAreSelected || _arcsAreSelected)
     {
-        
+        // This function will serve to check if there are any intersections of the three and handle accordingly
     }
     
     clearSelection();
@@ -721,6 +730,15 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
                 nodeIterator->setCenter(horizontalShift, verticalShift);
             }
         }
+        
+        // After moving the nodes, we need to then make sure all of the arcs have been updated with the new node positions
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getFirstNode()->getIsSelectedState() || arcIterator->getSecondNode()->getIsSelectedState())
+            {
+                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
+            }
+        } 
     }
     else if(_labelsAreSelected)
     {
@@ -742,8 +760,7 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
         {
             if(lineIterator->getIsSelectedState())
             {
-                double angleOne = angularShift + _editor.getAngle(aboutPoint, *lineIterator->getFirstNode());
-                double angleTwo = angularShift + _editor.getAngle(aboutPoint, *lineIterator->getSecondNode());
+                /* This code was inspired by the following post: http://stackoverflow.com/questions/14842090/rotate-line-around-center-point-given-two-vertices */      
                 double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
                 double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
                 
@@ -949,11 +966,11 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
             {
                 if(lineIterator->getIsSelectedState())
                 {
-                    double distance = lineIterator->getFirstNode()->getCenterYCoordinate() - pointOne.y;
+                    double distance = lineIterator->getFirstNode()->getCenterYCoordinate() - pointOne.y;// THis is the distance between the mirror and the node
                     
                     // First, we attempt to create a node at the mirrored spot. The function will return false if another node is already present
                     // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
-                    // If a block label is present, we will have to ignore the creation of line.
+                    // If a block label is present, we will have to ignore the creation of line. BUt we will still place the other node
                     // The same logic applies for the second node of the line
                     if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
@@ -1191,11 +1208,12 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                         }
                     }
                     
-                    if(_editor.addArc(*arcIterator, getTolerance(), true))
-                    {
-                        _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty());
-                        _editor.getArcList()->back()->calculate();
-                    }
+                    arcShape tempArc;
+                    tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                    tempArc.setArcAngle(arcIterator->getArcAngle());
+                    tempArc.setNumSegments(arcIterator->getnumSegments());
+                    
+                    _editor.addArc(tempArc, 0, true);
                 }
             }
 
@@ -1253,11 +1271,12 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                         }
                     }
                     
-                    if(_editor.addArc(*arcIterator, getTolerance(), true))
-                    {
-                        _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty());
-                        _editor.getArcList()->back()->calculate();
-                    }
+                    arcShape tempArc;
+                    tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                    tempArc.setArcAngle(arcIterator->getArcAngle());
+                    tempArc.setNumSegments(arcIterator->getnumSegments());
+                    _editor.switchIndex();
+                    _editor.addArc(tempArc, 0, true);
                 }
             }
             
@@ -1275,7 +1294,6 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 
             if(arcIterator->getIsSelectedState())
             {
-                
                 
                 double b2 = arcIterator->getFirstNode()->getCenterYCoordinate() - perpSlope * arcIterator->getFirstNode()->getCenterXCoordinate();
                 
@@ -1327,11 +1345,12 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     }
                 }
                 
-                if(_editor.addArc(*arcIterator, getTolerance(), true))
-                {
-                    _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty());
-                    _editor.getArcList()->back()->calculate();
-                }                
+                arcShape tempArc;
+                tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                tempArc.setArcAngle(arcIterator->getArcAngle());
+                tempArc.setNumSegments(arcIterator->getnumSegments());
+                _editor.switchIndex();
+                _editor.addArc(tempArc, 0, true);               
             }
         }
     }
@@ -1494,11 +1513,12 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                         }
                     }
                     
-                    if(_editor.addArc(*arcIterator, 0, true))
-                    {
-                       _editor.getArcList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
-                        _editor.getArcList()->back()->calculate(); 
-                    }
+                    arcShape tempArc;
+                    tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                    tempArc.setArcAngle(arcIterator->getArcAngle());
+                    tempArc.setNumSegments(arcIterator->getnumSegments());
+                    
+                    _editor.addArc(tempArc, 0, true);
                 }
             }
         }
@@ -1522,9 +1542,10 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                 
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
+                    double angle = i * angularShift + _editor.getAngle(aboutPoint, *nodeIterator);
                    // Calculate the radius and the new position of the node
-                    double horizontalShift = aboutPoint.x + (radius * cos(i * angularShift * PI / 180.0));
-                    double verticalShift = aboutPoint.y + (radius * sin(i * angularShift * PI / 180.0));
+                    double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
+                    double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
                     // Update the node with the translated coordinates
                     _editor.addNode(horizontalShift, verticalShift, getTolerance());
                     _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
@@ -1543,9 +1564,10 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                 
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
+                    double angle = i * angularShift + _editor.getAngle(aboutPoint, *blockIterator);
                     blockProperty transfer = *blockIterator->getProperty();
-                    double horizontalShift = aboutPoint.x + (radius * cos(i * angularShift * PI / 180.0));
-                    double verticalShift = aboutPoint.y + (radius * sin(i * angularShift * PI / 180.0));
+                    double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
+                    double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
                     _editor.addBlockLabel(horizontalShift, verticalShift);
                     _editor.getBlockLabelList()->back()->setPorperty(transfer);
                 }
@@ -1556,66 +1578,125 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
     // TODO: Debug the logic in this area. Also be sure to add in the code for handeling failed adding nodes
     else if(_linesAreSelected)
     {
+        double tempShift = -angularShift;// I am not sure why this is necessary but for some reason, the program does not like a -i in the loop.
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
             {
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
-                    double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
                     
-                    double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
                 
-                    _editor.addNode(horizontalShift1, verticalShift1, getTolerance());
-                    _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                    if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance()))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back()); 
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(horizontalShift1, verticalShift1);
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            if(*nodeIterator == testNode)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
+                    
                    
-                    _editor.addNode(horizontalShift2, verticalShift2, getTolerance());
-                    _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance()))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());  
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(horizontalShift2, verticalShift2);
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            if(*nodeIterator == testNode)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
                     
-                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->back();
-                    _editor.setNodeIndex(*lastItem);
-                    
-                    --lastItem;
-                    _editor.setNodeIndex(*lastItem);
-                    
-                    _editor.addLine();
-                    _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
+
+                    if(_editor.addLine())
+                        _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
         }
     }
     else if(_arcsAreSelected)
     {
+        double tempShift = -angularShift;
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(arcIterator->getIsSelectedState())
             {
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
-                    double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
                     
-                    double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-i * angularShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-i * angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-i * angularShift * PI / 180.0) + aboutPoint.y;
+                    double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                    double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
                     
-                    _editor.addNode(horizontalShift1, verticalShift1, getTolerance());
-                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance()))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(horizontalShift1, verticalShift1);
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            if(*nodeIterator == testNode)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
+                    
                    
-                    _editor.addNode(horizontalShift2, verticalShift2, getTolerance());
-                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance()))
+                    {
+                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    }
+                    else
+                    {
+                        node testNode;
+                        testNode.setCenter(horizontalShift2, verticalShift2);
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            if(*nodeIterator == testNode)
+                            {
+                                _editor.setNodeIndex(*nodeIterator);
+                                break;
+                            }
+                        }
+                    }
 
-                    plf::colony<node>::iterator lastItem = _editor.getNodeList()->back();
-                    _editor.setNodeIndex(*lastItem);
-                
-                    --lastItem;
-                    _editor.setNodeIndex(*lastItem);
+                    arcShape tempArc;
+                    tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                    tempArc.setArcAngle(arcIterator->getArcAngle());
+                    tempArc.setNumSegments(arcIterator->getnumSegments());
                     
-                    _editor.addArc(*arcIterator, 0, false);
-                    
-                    _editor.getLineList()->back()->setSegmentProperty(*arcIterator->getSegmentProperty()); // This line may not be necessary but once arcs can be drawn and selected, this needs testing
-                    _editor.getArcList()->back()->calculate();
+                    _editor.addArc(tempArc, 0, true);
                 }
             }
         }
@@ -1794,7 +1875,7 @@ void modelDefinition::drawGrid()
     {
         /* Create the center axis */    
         glColor3d(0.0, 0.0, 0.0);
-        glLineWidth(1.5);
+        glLineWidth(0.5);
     
         glBegin(GL_LINES);
             glVertex2d(0, cornerMinY);

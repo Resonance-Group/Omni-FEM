@@ -600,11 +600,7 @@ public:
             }
             else if(xCenterCoordinate < _firstNode->getCenterXCoordinate() && xCenterCoordinate > _secondNode->getCenterXCoordinate())
             {
-                // This is the case for if the center node is in between the two endpoints
-                if(theta > 0)
-                    startAngle = atan((yCenterCoordinate - _firstNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);// THis must be negative
-                else
-                    startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);// THis must be negative 
+                startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);// THis must be negative 
                 glBegin(GL_LINE_STRIP);
                     glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
                     

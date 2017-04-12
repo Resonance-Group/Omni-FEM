@@ -40,6 +40,45 @@ double geometryEditor2D::getAngle(wxRealPoint aboutPoint, node toPoint)
 
 
 
+double geometryEditor2D::getAngle(wxRealPoint aboutPoint, blockLabel label)
+{
+    if(fabs(aboutPoint.y - label.getCenterYCoordinate()) <= 1e-9)
+    {
+        if(label.getCenterXCoordinate() > aboutPoint.x)
+            return 0.0;
+        else
+            return 180.0;
+    }
+    else if(fabs(aboutPoint.x - label.getCenterXCoordinate()) <= 1e-9)
+    {
+        if(label.getCenterYCoordinate() > aboutPoint.y)
+            return 90.0;
+        else
+            return 270.0;
+    }
+    
+    if(label.getCenterXCoordinate() > aboutPoint.x && label.getCenterYCoordinate() > aboutPoint.y)
+    {
+        return (atan((label.getCenterYCoordinate() - aboutPoint.y) / (label.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
+    }
+    else if(label.getCenterXCoordinate() < aboutPoint.x && label.getCenterYCoordinate() > aboutPoint.y)
+    {
+        return 90.0 + (atan((label.getCenterYCoordinate() - aboutPoint.y) / (aboutPoint.x - label.getCenterXCoordinate())) * 180.0 / PI);
+    }
+    else if(label.getCenterXCoordinate() < aboutPoint.x && label.getCenterYCoordinate() < aboutPoint.y)
+    {
+        return 180.0 + (atan((aboutPoint.y - label.getCenterYCoordinate()) / (aboutPoint.x - label.getCenterXCoordinate())) * 180.0 / PI);
+    }
+    else if(label.getCenterXCoordinate() > aboutPoint.x && label.getCenterYCoordinate() < aboutPoint.y)
+    {
+        return 270.0 + (atan((aboutPoint.y - label.getCenterYCoordinate()) / (label.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
+    }
+    
+    return 0.0;
+}
+
+
+
 bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode)// Could distance be the 1/mag which is the zoom factor
 {
     /* This function was ported from the BOOL CFemmeDoc::AddNode(double x, double y, double d) located in FemmeDoc.cpp */
@@ -61,7 +100,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 	}
     
     newNode.setCenter(xPoint, yPoint);
-	_nodeList.insert(newNode);
+	_lastNodeAdded = _nodeList.insert(newNode);
     
     /* If the node is in between a line, then break the line into 2 lines */
 	for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)

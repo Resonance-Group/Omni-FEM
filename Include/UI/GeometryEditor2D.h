@@ -51,6 +51,8 @@ private:
     
     node *_nodeInterator2;// This is the index of the second selected node
     
+    node *_lastNodeAdded;
+    
     int _tolerance = 2;
     
     double _zoomFactorPointer = 1.0;
@@ -77,6 +79,8 @@ private:
 public:
     //! This function will get the angle from the aboutPoint to the node point. This angle is always positive and is in reference to CCW being positive
     double getAngle(wxRealPoint aboutPoint, node toPoint);
+    
+    double getAngle(wxRealPoint aboutPoint, blockLabel label);
     /*! This function is used to calcualte if the shortest distance between a line a node */
 	double calculateShortestDistance(double p, double q, edgeLineShape segment);
     
@@ -261,6 +265,18 @@ public:
     void setLabelNameArray(wxGLStringArray stringArray)
     {
         _blockLabelNameArray = stringArray;
+    }
+    
+    void switchIndex()
+    {
+        node *temp = _nodeInterator1;
+        _nodeInterator1 = _nodeInterator2;
+        _nodeInterator2 = temp;
+    }
+    
+    void *getLastNodeAdd()
+    {
+        return _lastNodeAdded;
     }
 	
 };
