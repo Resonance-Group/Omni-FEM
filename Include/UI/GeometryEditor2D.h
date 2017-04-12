@@ -51,7 +51,13 @@ private:
     
     node *_nodeInterator2;// This is the index of the second selected node
     
-    node *_lastNodeAdded;
+    plf::colony<node>::iterator _lastNodeAdded;
+    
+    plf::colony<edgeLineShape>::iterator _lastLineAdded;
+    
+    plf::colony<arcShape>::iterator _lastArcAdded;
+    
+    plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
     
     int _tolerance = 2;
     
@@ -155,7 +161,7 @@ public:
         node newNode;
         newNode.setCenter(xPoint, yPoint);
         newNode.setDraggingState(true);
-        _nodeList.insert(newNode);
+        _lastNodeAdded = _nodeList.insert(newNode);
     }
     
     bool addBlockLabel(double xPoint, double yPoint);
@@ -165,7 +171,7 @@ public:
         blockLabel newLabel;
         newLabel.setCenter(xPoint, yPoint);
         newLabel.setDraggingState(true);
-        _blockLabelList.insert(newLabel);
+        _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
     }
     
     bool addLine(node *firstNode, node *secondNode);
@@ -274,9 +280,24 @@ public:
         _nodeInterator2 = temp;
     }
     
-    void *getLastNodeAdd()
+    plf::colony<node>::iterator getLastNodeAdd()
     {
         return _lastNodeAdded;
+    }
+    
+    plf::colony<edgeLineShape>::iterator getLastLineAdded()
+    {
+        return _lastLineAdded;
+    }
+    
+    plf::colony<arcShape>::iterator getLastArcAdded()
+    {
+        return _lastArcAdded;
+    }
+    
+    plf::colony<blockLabel>::iterator getLastBlockLabelAdded()
+    {
+        return _lastBlockLabelAdded;
     }
 	
 };

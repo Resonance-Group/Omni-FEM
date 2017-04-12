@@ -273,7 +273,6 @@ void modelDefinition::editSelection()
     }
     else if(_arcsAreSelected)
     {
-        // TODO: SInce the arcs are currently not able to be drawn or selected, this code will need to be tested after the two bugs are fixed
         segmentPropertyDialog *dialog;
         segmentProperty selectedProperty;
         
@@ -337,7 +336,7 @@ void modelDefinition::editSelection()
 }
 
 
-// TODO: Test the functionality of the arcs and lines when the bugs are fixed in these two objects
+
 void modelDefinition::updateProperties(bool scanConductorProperty, bool scanNodalProperty, bool scanBoundaryProperty, bool scanMaterialProperty, bool scanCircuitProperty)
 {
     if(scanConductorProperty)
@@ -712,7 +711,7 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 }
 
 
-// TODO: Test the functionality for the arcs once these are coded in
+
 void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint aboutPoint)
 {
     if(_nodesAreSelected)
@@ -843,7 +842,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double distance = nodeIterator->getCenterYCoordinate() - pointOne.y;
                     
                     if(_editor.addNode(nodeIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
-                        _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
+                        _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
             }
             this->Refresh();
@@ -859,7 +858,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double distance = pointOne.x - nodeIterator->getCenterXCoordinate();
                     
                     if(_editor.addNode(pointOne.x + distance, nodeIterator->getCenterYCoordinate(), getTolerance()))
-                        _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
+                        _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
             }
             this->Refresh();
@@ -884,7 +883,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 double intersectionPointy = slope * intersectionPointx + b1;
                 
                 if(_editor.addNode(2 * intersectionPointx - nodeIterator->getCenterXCoordinate(), 2 * intersectionPointy - nodeIterator->getCenterYCoordinate(), getTolerance()))
-                    _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
+                    _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
             }
         }
     }
@@ -903,7 +902,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double distance = blockIterator->getCenterYCoordinate() - pointOne.y;
                     
                     if(_editor.addBlockLabel(blockIterator->getCenterXCoordinate(), pointOne.y - distance))
-                        _editor.getBlockLabelList()->back()->setPorperty(*blockIterator->getProperty());
+                        _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
                 }
             }
             this->Refresh();
@@ -919,7 +918,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double distance = pointOne.x - blockIterator->getCenterXCoordinate();
                     
                     if(_editor.addBlockLabel(pointOne.x + distance, blockIterator->getCenterYCoordinate()))
-                        _editor.getBlockLabelList()->back()->setPorperty(*blockIterator->getProperty());
+                        _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
                 }
             }
             this->Refresh();
@@ -944,7 +943,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 double intersectionPointy = slope * intersectionPointx + b1;
                 
                 if(_editor.addNode(2 * intersectionPointx - blockIterator->getCenterXCoordinate(), 2 * intersectionPointy - blockIterator->getCenterYCoordinate(), getTolerance()))
-                    _editor.getBlockLabelList()->back()->setPorperty(*blockIterator->getProperty());
+                    _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
             }
         }
     }
@@ -974,8 +973,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     // The same logic applies for the second node of the line
                     if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -996,8 +995,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1015,7 +1014,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     }
                     
                     if(_editor.addLine())
-                        _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
+                        _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
 
@@ -1033,8 +1032,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     if(_editor.addNode(pointOne.x + distance, lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1055,8 +1054,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     if(_editor.addNode(pointOne.x + distance, lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1074,7 +1073,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     }
                     
                     if(_editor.addLine())
-                        _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
+                        _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
             
@@ -1099,8 +1098,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 
                 if(_editor.addNode(2 * intersectionPointx - lineIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                 {
-                    _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
                 }
                 else
                 {
@@ -1124,8 +1123,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 
                 if(_editor.addNode(2 * intersectionPointx - lineIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                 {
-                    _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
                 }
                 else
                 {
@@ -1143,7 +1142,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 }
                 
                 if(_editor.addLine())
-                    _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());                
+                    _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());                
             }
         }
     }
@@ -1168,8 +1167,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     // The same logic applies for the second node of the line
                     if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1190,8 +1189,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1212,7 +1211,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
                     tempArc.setArcAngle(arcIterator->getArcAngle());
                     tempArc.setNumSegments(arcIterator->getnumSegments());
-                    
+                    _editor.switchIndex();
                     _editor.addArc(tempArc, 0, true);
                 }
             }
@@ -1231,8 +1230,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     if(_editor.addNode(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1253,8 +1252,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     if(_editor.addNode(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1302,8 +1301,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 
                 if(_editor.addNode(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance()))
                 {
-                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
                 }
                 else
                 {
@@ -1327,8 +1326,8 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 
                 if(_editor.addNode(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance()))
                 {
-                    _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                    _editor.setNodeIndex(*_editor.getNodeList()->back());
+                    _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
                 }
                 else
                 {
@@ -1373,7 +1372,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     _editor.addNode(nodeIterator->getCenterXCoordinate() + i * horizontalShift, nodeIterator->getCenterYCoordinate() + i * verticalShift, getTolerance());
-                    _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
+                    _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
             }
         }
@@ -1388,7 +1387,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                 {
                     blockProperty copy = *blockIterator->getProperty();
                     _editor.addBlockLabel(blockIterator->getCenterXCoordinate() + i * horizontalShift, blockIterator->getCenterYCoordinate() + i * verticalShift);
-                    _editor.getBlockLabelList()->back()->setPorperty(copy);
+                    _editor.getLastBlockLabelAdded()->setPorperty(copy);
                 }
             }
         }
@@ -1417,8 +1416,8 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                      */
                     if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back()); 
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
                     }
                     else
                     {
@@ -1438,8 +1437,8 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     
                     if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1457,7 +1456,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     }
 
                     if(_editor.addLine())
-                        _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
+                        _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
         }
@@ -1473,8 +1472,8 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     
                     if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back()); 
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
                     }
                     else
                     {
@@ -1495,8 +1494,8 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                     
                     if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1547,8 +1546,8 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
                     double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
                     // Update the node with the translated coordinates
-                    _editor.addNode(horizontalShift, verticalShift, getTolerance());
-                    _editor.getNodeList()->back()->setNodeSettings(*nodeIterator->getNodeSetting());
+                    if(_editor.addNode(horizontalShift, verticalShift, getTolerance()))
+                        _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
                 }
                 
             }
@@ -1568,8 +1567,8 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     blockProperty transfer = *blockIterator->getProperty();
                     double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
                     double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
-                    _editor.addBlockLabel(horizontalShift, verticalShift);
-                    _editor.getBlockLabelList()->back()->setPorperty(transfer);
+                    if(_editor.addBlockLabel(horizontalShift, verticalShift))
+                        _editor.getLastBlockLabelAdded()->setPorperty(transfer);
                 }
                 
             }
@@ -1593,8 +1592,8 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                 
                     if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back()); 
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
                     }
                     else
                     {
@@ -1613,8 +1612,8 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                    
                     if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());  
+                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());  
                     }
                     else
                     {
@@ -1632,7 +1631,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     
 
                     if(_editor.addLine())
-                        _editor.getLineList()->back()->setSegmentProperty(*lineIterator->getSegmentProperty());
+                        _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
         }
@@ -1654,8 +1653,8 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     
                     if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -1674,8 +1673,8 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                    
                     if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance()))
                     {
-                        _editor.getNodeList()->back()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getNodeList()->back());
+                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
                     }
                     else
                     {
@@ -2180,7 +2179,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
         {
             if(_createNodes && !_geometryIsSelected)
             {
-                if(_editor.getNodeList()->size() > 0 && _editor.getNodeList()->back()->getDraggingState())
+                if(_editor.getNodeList()->size() > 0 && _editor.getLastNodeAdd()->getDraggingState())
                 {
                     double tempX = convertToXCoordinate(event.GetX());
                     double tempY = convertToYCoordinate(event.GetY());
@@ -2188,17 +2187,17 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                     if(_preferences.getSnapGridState())
                     {
                         roundToNearestGrid(tempX, tempY);
-                        _editor.getNodeList()->back()->setCenter(tempX, tempY);
+                        _editor.getLastNodeAdd()->setCenter(tempX, tempY);
                     }
                     else
                     {
-                        _editor.getNodeList()->back()->setCenter(tempX, tempY);
+                        _editor.getLastNodeAdd()->setCenter(tempX, tempY);
                     }
                 }
             }
             else if(!_createNodes)
             {
-                if(_editor.getBlockLabelList()->size() > 0 && _editor.getBlockLabelList()->back()->getDraggingState())
+                if(_editor.getBlockLabelList()->size() > 0 && _editor.getLastBlockLabelAdded()->getDraggingState())
                 {
                     // Update the last bloc labe with new x and y coordinates and round if on snap grid
                     if(_preferences.getSnapGridState())
@@ -2206,11 +2205,11 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                         double tempX = convertToXCoordinate(event.GetX());
                         double tempY = convertToYCoordinate(event.GetY());
                         roundToNearestGrid(tempX, tempY);
-                        _editor.getBlockLabelList()->back()->setCenter(tempX, tempY);
+                        _editor.getLastBlockLabelAdded()->setCenter(tempX, tempY);
                     }
                     else
                     {
-                        _editor.getBlockLabelList()->back()->setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
+                        _editor.getLastBlockLabelAdded()->setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
                     }
                     
                 }
@@ -2372,9 +2371,9 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_preferences.getSnapGridState())
                     roundToNearestGrid(tempX, tempY);
                 
-                if(_editor.getNodeList()->back()->getDraggingState())
+                if(_editor.getLastNodeAdd()->getDraggingState())
                 {
-                    _editor.getNodeList()->erase(_editor.getNodeList()->back());
+                    _editor.getNodeList()->erase(_editor.getLastNodeAdd());
                     _editor.addNode(tempX, tempY, getTolerance());
                 }
             }
@@ -2389,9 +2388,9 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_preferences.getSnapGridState())
                     roundToNearestGrid(tempX, tempY);
 
-                if(_editor.getBlockLabelList()->back()->getDraggingState())
+                if(_editor.getLastBlockLabelAdded()->getDraggingState())
                 {
-                    _editor.getBlockLabelList()->erase(_editor.getBlockLabelList()->back()); 
+                    _editor.getBlockLabelList()->erase(_editor.getLastBlockLabelAdded()); 
                     _editor.addBlockLabel(tempX, tempY);
                 }
             }

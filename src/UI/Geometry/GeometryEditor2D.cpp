@@ -119,7 +119,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
             lineIterator->setSecondNode(newNode);// This will set the recently created node to be the second node of the shortend line
 			
             edgeLine.setFirstNode(newNode);// This will set the recently created node to be the first node of the new line
-			_lineList.insert(edgeLine);// Add the new line to the array
+			_lastLineAdded = _lineList.insert(edgeLine);// Add the new line to the array
 		}
 	} 
     
@@ -148,7 +148,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
             arcSegment.setFirstNode(newNode);
 			arcSegment.setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
-			_arcList.insert(arcSegment);
+            _lastArcAdded = _arcList.insert(arcSegment);
 		}
 	}
     
@@ -188,7 +188,7 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     newLabel.setCenterXCoordinate(xPoint);
     newLabel.setCenterYCoordiante(yPoint);
    
-    _blockLabelList.insert(newLabel);
+    _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
 
   //  _blockLabelNameArray.addString(newLabel.getProperty()->getMaterialName());
  //   _blockLabelNameArray.addString(wxT("Test"));
@@ -258,7 +258,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode)
      * with the tolerance value as the tolerance between points. That can be done here.
      */ 
 
-    _lineList.insert(newLine);// Add the line to the list
+    _lastLineAdded = _lineList.insert(newLine);// Add the line to the list
     
     double shortDistance, dmin;
     Vector node0Vec, node1Vec, nodeiVec;
@@ -278,7 +278,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode)
                 shortDistance = 2.0 * dmin;
             if(shortDistance < dmin)
             {
-                _lineList.erase(_lineList.back());
+                _lineList.erase(_lastLineAdded);
                 addLine(_nodeInterator1, *nodeIterator);
                 addLine(*nodeIterator, _nodeInterator2);
             }
@@ -385,7 +385,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		}
 	}
 	
-	_arcList.insert(arcSeg);
+	_lastArcAdded = _arcList.insert(arcSeg);
 	
 //	getCircle(arcSeg, centerPoint, radius);
 /*    centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());
@@ -408,7 +408,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 				vec2.Set(arcSeg.getSecondNode()->getCenterXCoordinate(), arcSeg.getSecondNode()->getCenterYCoordinate());
 				vec3.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
 				
-				_arcList.erase(_arcList.back());
+				_arcList.erase(_lastArcAdded);
 				
 				newArc = arcSeg;
 				
