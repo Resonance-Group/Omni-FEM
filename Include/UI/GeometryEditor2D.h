@@ -47,9 +47,17 @@ private:
     
     wxGLStringArray _blockLabelNameArray;
     
-    node *_nodeInterator1;// This is the index of the first selected node
+    /*! The reason that these two variables are initilized to nullptr on first go around is this,
+     *  There have been cases where the gcc compiler did not initilize these two variables as null
+     *  and they were pointing to something. Which is an issue which occurs when you first select
+     *  a node to be used for arc or line creation. The program will skip the first nodeIterator
+     *  and move on to the second (or skip the second and never set it). Then, when you
+     *  go to add the line or arc, one of these two pointers are pointing to something other 
+     *  then the selected node
+     */ 
+    node *_nodeInterator1 = nullptr;// This is the index of the first selected node
     
-    node *_nodeInterator2;// This is the index of the second selected node
+    node *_nodeInterator2 = nullptr;// This is the index of the second selected node
     
     plf::colony<node>::iterator _lastNodeAdded;
     

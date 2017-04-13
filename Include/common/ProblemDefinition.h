@@ -143,9 +143,19 @@ public:
         return _localMagneticMaterialList;
     }
     
+    std::vector<magneticMaterial> *modifyMagnetMaterialList()
+    {
+        return &_localMagneticMaterialList;
+    }
+    
     std::vector<electrostaticMaterial> getElectricalMaterialList()
     {
         return _localElectrialMaterialList;
+    }
+    
+    std::vector<electrostaticMaterial> *modifyElectricalMaterialList()
+    {
+        return &_localElectrialMaterialList;
     }
     
     void setName(wxString name)

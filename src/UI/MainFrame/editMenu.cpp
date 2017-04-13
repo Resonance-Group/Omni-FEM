@@ -5,6 +5,7 @@
 #include "UI/OmniFEMFrame.h"
 #include <common/MagneticPreference.h>
 
+
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
     if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
@@ -132,10 +133,59 @@ void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
 {
-    openBoundaryDialog *test = new openBoundaryDialog(this);
-    if(test->ShowModal() == wxID_OK)
+    openBoundaryDialog *boundary = new openBoundaryDialog(this);
+    if(boundary->ShowModal() == wxID_OK)
     {
-        
+        long layerNumber;
+        double radius;
+        double centerX;
+        double centerY;
+        wxRealPoint centerPoint;
+        OpenBoundaryEdge boundaryEdge;
+        boundary->getParameters(layerNumber, radius, centerX, centerY, boundaryEdge);
+        centerPoint.x = centerX;
+        centerPoint.y = centerY;
+        if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+        {
+            /* It is expected that the user only places one of these withing a problem.
+             * If more then one is used, then we will have duplicates on this matter
+             */ 
+            for(long i = 0; i < layerNumber; i++)
+            {
+                electrostaticMaterial material;
+                wxString baseString = "e";
+                baseString.append(std::to_string(i + 1));
+                material.setName(baseString.ToStdString());
+                _problemDefinition.modifyElectricalMaterialList()->push_back(material);
+            }
+            
+            if(boundaryEdge == OpenBoundaryEdge::DIRICHLET)
+            {
+                electricalBoundary boundary;
+                boundary.setBoundaryName("V=0");
+                _problemDefinition.addBoundaryCondition(boundary);
+            }
+        }
+        else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+        {
+           for(long i = 0; i < layerNumber; i++)
+            {
+                magneticMaterial material;
+                wxString baseString = "u";
+                baseString.append(std::to_string(i + 1));
+                material.setName(baseString.ToStdString());
+                _problemDefinition.modifyMagnetMaterialList()->push_back(material);
+            }
+            
+            if(boundaryEdge == OpenBoundaryEdge::DIRICHLET)
+            {
+                magneticBoundary boundary;
+                boundary.setBoundaryName("A=0");
+                _problemDefinition.addBoundaryCondition(boundary);
+            } 
+        }
+        // First create the different block properties and boundary conditions needed for the open bounary to work
+        _model->createOpenBoundary((unsigned int)layerNumber, radius, centerPoint, boundaryEdge);
     }
 }
 

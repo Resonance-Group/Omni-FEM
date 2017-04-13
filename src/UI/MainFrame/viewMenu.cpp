@@ -39,7 +39,7 @@ void OmniFEMMainFrame::onBlockName(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onOrphans(wxCommandEvent &event)
 {
-    _model->displayOpenBoundary();
+    _model->displayDanglingNodes();
 }
 
 

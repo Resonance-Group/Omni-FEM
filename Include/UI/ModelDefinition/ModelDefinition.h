@@ -244,9 +244,9 @@ public:
     
     void copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies);
     
-    void displayOpenBoundary();
+    void displayDanglingNodes();
     
-    
+    void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
 private:
     wxDECLARE_EVENT_TABLE(); 

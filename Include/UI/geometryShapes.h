@@ -132,6 +132,11 @@ public:
         return sqrt(pow((xCenterCoordinate - point.x), 2) + pow((yCenterCoordinate - point.y), 2));
     }
     
+    double getDistance(rectangleShape testNode)
+    {
+        return sqrt(pow(xCenterCoordinate - testNode.getCenterXCoordinate(), 2) + pow(yCenterCoordinate - testNode.getCenterYCoordinate(), 2));
+    }
+    
     void setCenter(double xCoor, double yCoor)
     {
         xCenterCoordinate = xCoor;

@@ -275,7 +275,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     
     this->SetMaxSize(wxSize(-1, -1));
-    this->SetSize(wxSize(960, 544));
+    this->SetSize(wxSize(650, 650));
     this->SetMinSize(wxSize(1, 1));
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);

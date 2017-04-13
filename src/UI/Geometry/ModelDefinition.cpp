@@ -1708,7 +1708,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
 
 
 
-void modelDefinition::displayOpenBoundary()
+void modelDefinition::displayDanglingNodes()
 {
     clearSelection();
     
@@ -1738,6 +1738,103 @@ void modelDefinition::displayOpenBoundary()
             nodeIterator->setSelectState(true);
     }
     
+    this->Refresh();
+    return;
+}
+
+
+
+void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType)
+{
+    for(unsigned int i = 0; i < numberLayers + 1; i++)
+    {
+        // These guys are used to make sure that we can add another arc in the same process since the add arc function will reset the indexes.
+        plf::colony<node>::iterator tempIteratorOne, tempIteratorTwo;
+        
+        if(_editor.addNode(radius + i * 0.125, centerPoint.y, getTolerance()))
+        {
+            // Add in any node properties here
+            tempIteratorOne = _editor.getLastNodeAdd();
+            _editor.setNodeIndex(*tempIteratorOne);
+        }
+        else
+        {
+            node testNode;
+            testNode.setCenter(radius + i * 0.125, centerPoint.y);
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(*nodeIterator == testNode || nodeIterator->getDistance(testNode) < getTolerance())
+                {
+                    _editor.setNodeIndex(*nodeIterator);
+                    tempIteratorOne = nodeIterator;
+                    break;
+                }
+            }
+        }
+        
+        if(_editor.addNode(-radius - i * 0.125, centerPoint.y, getTolerance()))
+        {
+            // Add in any node properties here
+            tempIteratorTwo = _editor.getLastNodeAdd();
+            _editor.setNodeIndex(*tempIteratorTwo);
+        }
+        else
+        {
+            node testNode;
+            testNode.setCenter(-radius - i * 0.125, centerPoint.y);
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(*nodeIterator == testNode || nodeIterator->getDistance(testNode) < getTolerance())
+                {
+                    _editor.setNodeIndex(*nodeIterator);
+                    tempIteratorTwo = nodeIterator;
+                    break;
+                }
+            }
+        }
+        
+        arcShape tempArcOne, tempArcTwo;
+        tempArcOne.setArcAngle(180.0);
+        tempArcOne.setNumSegments(50);
+        if(_editor.addArc(tempArcOne, getTolerance(), true))
+        {
+            //Add some code to set the boundary conditions if the arc does not exist
+       //     continue;
+        }
+        
+        _editor.setNodeIndex(*tempIteratorOne);
+        _editor.setNodeIndex(*tempIteratorTwo);
+        
+        tempArcTwo.setArcAngle(-180.0);
+        tempArcTwo.setNumSegments(50);
+        
+        if(_editor.addArc(tempArcTwo, getTolerance(), true) && boundaryType == OpenBoundaryEdge::DIRICHLET)
+        {
+            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                _editor.getLastArcAdded()->getSegmentProperty()->setBoundaryName("V=0");
+            else
+                _editor.getLastArcAdded()->getSegmentProperty()->setBoundaryName("A=0");
+        }
+        
+        if(i < numberLayers)
+        {
+            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.0625 + i * 0.125) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.0625 + i * 0.125) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0))/*, getTolerance()*/))
+            {
+                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                {
+                    wxString baseString = "e";
+                    baseString.append(std::to_string(i + 1));
+                    _editor.getLastBlockLabelAdded()->getProperty()->setMaterialName(baseString.ToStdString());
+                }
+                else
+                {
+                    wxString baseString = "u";
+                    baseString.append(std::to_string(i + 1));
+                    _editor.getLastBlockLabelAdded()->getProperty()->setMaterialName(baseString.ToStdString());
+                }
+            }
+        }
+    }
     this->Refresh();
     return;
 }

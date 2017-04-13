@@ -165,7 +165,7 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     // Make sure that teh block labe is not placed ontop of an existing block label
     for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
     {
-        if(blockIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 25))
+        if(blockIterator->getDistance(xPoint, yPoint) < 0.00001)
             return false;
     }
     
@@ -173,7 +173,7 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(nodeIterator->getDistance(xPoint, yPoint) < 1 / (_zoomFactorPointer * 10))// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < 0.00001)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return false;
 	}
     
@@ -300,6 +300,12 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	Vector centerPoint;
 	double dist, radius, minDistance, shortDistanceFromArc;
     
+    if(_nodeInterator1 == nullptr || _nodeInterator2 == nullptr)
+    {
+        resetIndexs();
+        return false;
+    }
+
     if(nodesAreSelected && (*_nodeInterator1 == *_nodeInterator2))
     {
         resetIndexs();
