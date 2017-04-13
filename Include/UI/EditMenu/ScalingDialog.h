@@ -18,11 +18,11 @@ private:
     wxTextCtrl *_baseFactorYTextCtrl = new wxTextCtrl();
     
 public:
-    scaleDialog(wxWindow *par, wxPoint &selectedPoint);
+    scaleDialog(wxWindow *par, wxRealPoint &selectedPoint);
     
     ~scaleDialog();
     
-    void getScalingParameters(double &scalingFactor, wxPoint &baseFactor);
+    void getScalingParameters(double &scalingFactor, wxRealPoint &baseFactor);
 };
 
 #endif

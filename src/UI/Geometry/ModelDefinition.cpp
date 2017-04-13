@@ -817,7 +817,83 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
 
 void modelDefinition::scaleSelection(double scalingFactor, wxRealPoint basePoint)
 {
+    // This function was based off of the FEMM function located in CbeladrawDoc::ScaleMove
+    if(_nodesAreSelected)
+    {
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                nodeIterator->setCenter(basePoint.x + scalingFactor * (nodeIterator->getCenterXCoordinate() - basePoint.x), basePoint.y + scalingFactor * (nodeIterator->getCenterYCoordinate() - basePoint.y));
+            }
+        }
+        
+        if(_arcsAreSelected)
+        {
+            // After moving the nodes, we need to then make sure all of the arcs have been updated with the new node positions
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(arcIterator->getFirstNode()->getIsSelectedState() || arcIterator->getSecondNode()->getIsSelectedState())
+                {
+                    arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
+                }
+            } 
+        }
+        
+        // TODO: insert a function to check for any intersections and valid points here
+        
+        clearSelection();
+        this->Refresh();
+        return;
+    }
+    else if(_labelsAreSelected)
+    {
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                blockIterator->setCenter(basePoint.x + scalingFactor * (blockIterator->getCenterXCoordinate() - basePoint.x), basePoint.y + scalingFactor * (blockIterator->getCenterYCoordinate() - basePoint.y));
+            }
+        }
+        
+        // TODO: insert a function to check for any intersections and valid points here
+        
+        clearSelection();
+        this->Refresh();
+        return;
+    }
+    else if(_linesAreSelected)
+    {
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+            {
+                lineIterator->getFirstNode()->setSelectState(true);
+                lineIterator->getSecondNode()->setSelectState(true);
+            }
+        } 
+        
+        _nodesAreSelected = true;
+        scaleSelection(scalingFactor, basePoint); // Yeah recusive!
+        return;
+    }
+    else if(_arcsAreSelected)
+    {
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                arcIterator->getFirstNode()->setSelectState(true);
+                arcIterator->getSecondNode()->setSelectState(true);
+            }
+        }
+        
+        _nodesAreSelected = true;
+        scaleSelection(scalingFactor, basePoint); // Yeah recusive!
+        return;
+    }
     
+    return;
 }
 
 
@@ -1836,6 +1912,131 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         }
     }
     this->Refresh();
+    return;
+}
+
+
+
+void modelDefinition::getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo)
+{
+    if(_nodesAreSelected && _editor.getNodeList()->size() > 0)
+    {
+        pointOne.x = _editor.getNodeList()->begin()->getCenterXCoordinate();
+        pointOne.y = _editor.getNodeList()->begin()->getCenterYCoordinate();
+        
+        pointTwo.x = _editor.getNodeList()->begin()->getCenterXCoordinate();
+        pointTwo.y = _editor.getNodeList()->begin()->getCenterYCoordinate();
+        
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                if(nodeIterator->getCenterXCoordinate() < pointOne.x)
+                    pointOne.x = nodeIterator->getCenterXCoordinate();
+                else if(nodeIterator->getCenterXCoordinate() > pointTwo.x)
+                    pointTwo.x = nodeIterator->getCenterXCoordinate();
+                
+                if(nodeIterator->getCenterYCoordinate() > pointOne.y)
+                    pointOne.y = nodeIterator->getCenterYCoordinate();
+                else if(nodeIterator->getCenterYCoordinate() < pointTwo.y)
+                    pointTwo.y = nodeIterator->getCenterYCoordinate();
+            }
+        }
+    }
+    else if(_labelsAreSelected)
+    {
+        pointOne.x = _editor.getBlockLabelList()->begin()->getCenterXCoordinate();
+        pointOne.y = _editor.getBlockLabelList()->begin()->getCenterYCoordinate();
+        
+        pointTwo.x = _editor.getBlockLabelList()->begin()->getCenterXCoordinate();
+        pointTwo.y = _editor.getBlockLabelList()->begin()->getCenterYCoordinate();
+        
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                if(blockIterator->getCenterXCoordinate() < pointOne.x)
+                    pointOne.x = blockIterator->getCenterXCoordinate();
+                else if(blockIterator->getCenterXCoordinate() > pointTwo.x)
+                    pointTwo.x = blockIterator->getCenterXCoordinate();
+                
+                if(blockIterator->getCenterYCoordinate() > pointOne.y)
+                    pointOne.y = blockIterator->getCenterYCoordinate();
+                else if(blockIterator->getCenterYCoordinate() < pointTwo.y)
+                    pointTwo.y = blockIterator->getCenterYCoordinate();
+            }
+        } 
+    }
+    else if(_linesAreSelected)
+    {
+        pointOne.x = _editor.getLineList()->begin()->getFirstNode()->getCenterXCoordinate();
+        pointOne.y = _editor.getLineList()->begin()->getFirstNode()->getCenterYCoordinate();
+        
+        pointTwo.x = _editor.getLineList()->begin()->getSecondNode()->getCenterXCoordinate();
+        pointTwo.y = _editor.getLineList()->begin()->getSecondNode()->getCenterYCoordinate();
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+            {
+                if(lineIterator->getFirstNode()->getCenterXCoordinate() < fabs(pointOne.x))
+                    pointOne.x = lineIterator->getFirstNode()->getCenterXCoordinate();
+                else if(lineIterator->getFirstNode()->getCenterXCoordinate() > pointTwo.x)
+                    pointTwo.x = lineIterator->getFirstNode()->getCenterXCoordinate();
+                
+                if(lineIterator->getFirstNode()->getCenterYCoordinate() > pointOne.y)
+                    pointOne.y = lineIterator->getFirstNode()->getCenterYCoordinate();
+                else if(lineIterator->getFirstNode()->getCenterYCoordinate() < pointTwo.y)
+                    pointTwo.y = lineIterator->getFirstNode()->getCenterYCoordinate();
+                
+                
+                if(lineIterator->getSecondNode()->getCenterXCoordinate() < pointOne.x)
+                    pointOne.x = lineIterator->getSecondNode()->getCenterXCoordinate();
+                else if(fabs(lineIterator->getSecondNode()->getCenterXCoordinate()) > pointTwo.x)
+                    pointTwo.x = lineIterator->getSecondNode()->getCenterXCoordinate();
+                
+                if(lineIterator->getSecondNode()->getCenterYCoordinate() > pointOne.y)
+                    pointOne.y = lineIterator->getSecondNode()->getCenterYCoordinate();
+                else if(lineIterator->getSecondNode()->getCenterYCoordinate() < pointTwo.y)
+                    pointTwo.y = lineIterator->getSecondNode()->getCenterYCoordinate();
+            }
+        }
+    }
+    else if(_arcsAreSelected)
+    {
+        pointOne.x = _editor.getArcList()->begin()->getFirstNode()->getCenterXCoordinate();
+        pointOne.y = _editor.getArcList()->begin()->getFirstNode()->getCenterYCoordinate();
+        
+        pointTwo.x = _editor.getArcList()->begin()->getSecondNode()->getCenterXCoordinate();
+        pointTwo.y = _editor.getArcList()->begin()->getSecondNode()->getCenterYCoordinate();
+        
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                if(arcIterator->getFirstNode()->getCenterXCoordinate() < pointOne.x)
+                    pointOne.x = arcIterator->getFirstNode()->getCenterXCoordinate();
+                else if(fabs(arcIterator->getFirstNode()->getCenterXCoordinate()) > fabs(pointTwo.x))
+                    pointTwo.x = arcIterator->getFirstNode()->getCenterXCoordinate();
+                
+                if(arcIterator->getFirstNode()->getCenterYCoordinate() > pointOne.y)
+                    pointOne.y = arcIterator->getFirstNode()->getCenterYCoordinate();
+                else if(arcIterator->getFirstNode()->getCenterYCoordinate() < pointTwo.y)
+                    pointTwo.y = arcIterator->getFirstNode()->getCenterYCoordinate();
+                
+                if(arcIterator->getSecondNode()->getCenterXCoordinate() < pointOne.x)
+                    pointOne.x = arcIterator->getSecondNode()->getCenterXCoordinate();
+                else if(arcIterator->getSecondNode()->getCenterXCoordinate() > pointTwo.x)
+                    pointTwo.x = arcIterator->getSecondNode()->getCenterXCoordinate();
+                
+                if(arcIterator->getSecondNode()->getCenterYCoordinate() > pointOne.y)
+                    pointOne.y = arcIterator->getSecondNode()->getCenterYCoordinate();
+                else if(arcIterator->getSecondNode()->getCenterYCoordinate() < pointTwo.y)
+                    pointTwo.y = arcIterator->getSecondNode()->getCenterYCoordinate();
+            }
+        }
+    }
+    
     return;
 }
 

@@ -71,11 +71,20 @@ void OmniFEMMainFrame::onCopy(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onScale(wxCommandEvent &event)
 {
-    wxPoint test1 = wxPoint(0, 0);
-    scaleDialog *test = new scaleDialog(this, test1);
-    if(test->ShowModal() == wxID_OK)
+    wxRealPoint topPoint, bottomPoint, centerPoint, scalingPoint;
+    
+    double sf;
+    
+    _model->getBoundingBox(topPoint, bottomPoint);
+    
+    centerPoint.x = (topPoint.x + bottomPoint.x) / 2.0;
+    centerPoint.y = (topPoint.y + bottomPoint.y) / 2.0;
+    
+    scaleDialog *scaleDlg = new scaleDialog(this, centerPoint);
+    if(scaleDlg->ShowModal() == wxID_OK)
     {
-        
+        scaleDlg->getScalingParameters(sf, scalingPoint);
+        _model->scaleSelection(sf, scalingPoint);
     }
 }
 

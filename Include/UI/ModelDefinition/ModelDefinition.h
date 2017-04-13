@@ -248,6 +248,8 @@ public:
     
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
+    void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
+    
 private:
     wxDECLARE_EVENT_TABLE(); 
 };
