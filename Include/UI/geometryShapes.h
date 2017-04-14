@@ -175,7 +175,7 @@ public:
     
     bool operator!=(const rectangleShape &a_node)
     {
-        if(xCenterCoordinate != a_node.getCenterXCoordinate() && yCenterCoordinate != a_node.getCenterYCoordinate())
+        if(!(xCenterCoordinate == a_node.getCenterXCoordinate() && yCenterCoordinate == a_node.getCenterYCoordinate()))
             return true;
         else
             return false;

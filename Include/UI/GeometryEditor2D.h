@@ -95,8 +95,12 @@ public:
     double getAngle(wxRealPoint aboutPoint, node toPoint);
     
     double getAngle(wxRealPoint aboutPoint, blockLabel label);
+    
     /*! This function is used to calcualte if the shortest distance between a line a node */
-	double calculateShortestDistance(double p, double q, edgeLineShape segment);
+	double calculateShortestDistance(node selectedNode, edgeLineShape segment);
+    
+    /*! This function is used to calcualte if the shortest distance between a line a node */
+	double calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment);
     
     double calculateShortestDistanceFromArc(arcShape arcSegment, double xPoint, double yPoint)
     {
@@ -182,21 +186,33 @@ public:
         _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
     }
     
-    bool addLine(node *firstNode, node *secondNode);
+    bool addLine(plf::colony<node>::iterator firstNodeIterator, plf::colony<node>::iterator secondNodeIterator, double tolerance);
     
-    bool addLine(node &firstNode, node *secondNode)
+    bool addLine(node &firstNode, node &secondNode, double tolerance)
     {
-        return addLine(&firstNode, secondNode);
+        return addLine(&firstNode, &secondNode, tolerance);
     }
     
-    bool addLine(node *firstNode, node &secondNode)
+    bool addLine(node *firstNode, node *secondNode, double tolerance = 0);
+    
+    bool addLine(node &firstNode, node *secondNode, double tolerance)
     {
-        return addLine(firstNode, &secondNode);
+        return addLine(&firstNode, secondNode, tolerance);
+    }
+    
+    bool addLine(node *firstNode, node &secondNode, double tolerance)
+    {
+        return addLine(firstNode, &secondNode, tolerance);
     }
     
     bool addLine()
     {
         return addLine(nullptr, nullptr);
+    }
+    
+    bool addLine(double tolerance)
+    {
+        return addLine(nullptr, nullptr, tolerance);
     }
     
     bool addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);

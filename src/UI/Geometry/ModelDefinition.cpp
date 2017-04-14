@@ -1089,7 +1089,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                         }
                     }
                     
-                    if(_editor.addLine())
+                    if(_editor.addLine(getTolerance()))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
@@ -1148,7 +1148,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                         }
                     }
                     
-                    if(_editor.addLine())
+                    if(_editor.addLine(getTolerance()))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
@@ -1217,7 +1217,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     }
                 }
                 
-                if(_editor.addLine())
+                if(_editor.addLine(getTolerance()))
                     _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());                
             }
         }
@@ -1531,7 +1531,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                         }
                     }
 
-                    if(_editor.addLine())
+                    if(_editor.addLine(getTolerance()))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
@@ -1706,7 +1706,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     }
                     
 
-                    if(_editor.addLine())
+                    if(_editor.addLine(getTolerance()))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                 }
             }
@@ -2888,7 +2888,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
-            if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < getTolerance())
+          /*  if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {
@@ -2930,7 +2930,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 
                 this->Refresh();
                 return;
-            }
+            }*/
         }
     }
     
