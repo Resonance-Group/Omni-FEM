@@ -107,7 +107,7 @@ private:
     
     double getTolerance()
     {
-        return (1 / (((_zoomX + _zoomY) / 2.0) * 50));
+        return ((((_zoomX + _zoomY) / 2.0) /  50));
     }
     
     void clearSelection();

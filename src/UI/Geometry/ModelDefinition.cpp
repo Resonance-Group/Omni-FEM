@@ -333,6 +333,9 @@ void modelDefinition::editSelection()
         }
         delete(dialog);
     }
+    
+    this->Refresh();
+    return;
 }
 
 
@@ -2779,6 +2782,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
     double xCoordinate = convertToXCoordinate(event.GetX());
     double yCoordinate = convertToYCoordinate(event.GetY());
+    wxRealPoint mousePointer = wxRealPoint(xCoordinate, yCoordinate);
     
     /* these nodes are only meant to keep track of the number of shapes selected and to assist with setting the boolean _(geometryName)isSelected */
     static unsigned int nodesSeleted = 0;
@@ -2790,7 +2794,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
-            if(nodeIterator->getDistance(xCoordinate, yCoordinate) < getTolerance())
+            if(fabs(nodeIterator->getDistance(xCoordinate, yCoordinate)) < getTolerance())
             {
                 // Add in code to remove previousely selected geometry that is different then the one already selected
                 if(_linesAreSelected)
@@ -2838,7 +2842,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
-            if(blockIterator->getDistance(xCoordinate, yCoordinate) < getTolerance())
+            if(fabs(blockIterator->getDistance(xCoordinate, yCoordinate)) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {
@@ -2888,7 +2892,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
-          /*  if(_editor.calculateShortestDistance(xCoordinate, yCoordinate, *lineIterator) < getTolerance())
+            if(fabs(_editor.calculateShortestDistance(mousePointer, *lineIterator)) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {
@@ -2930,7 +2934,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
                 
                 this->Refresh();
                 return;
-            }*/
+            }
         }
     }
     
@@ -2938,7 +2942,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
-            if(_editor.calculateShortestDistanceFromArc(*arcIterator, xCoordinate, yCoordinate) < getTolerance())
+            if(fabs(_editor.calculateShortestDistanceFromArc(mousePointer, *arcIterator)) < getTolerance())
             {
                 if(_nodesAreSelected)
                 {

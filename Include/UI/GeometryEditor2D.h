@@ -80,7 +80,7 @@ private:
 	bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
     
     /*! This function will calculate the shortest distance from a point to an arc */
-	double shortestDistanceFromArc(Vector point, arcShape &arcSegment);
+	double shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment);
 	
 	/*! This function will get the number of instersection points where a line and an arc intersect */
 	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
@@ -99,14 +99,16 @@ public:
     /*! This function is used to calcualte if the shortest distance between a line a node */
 	double calculateShortestDistance(node selectedNode, edgeLineShape segment);
     
-    /*! This function is used to calcualte if the shortest distance between a line a node */
+    /*! This function is used to calcualte if the distance between a line a node */
 	double calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment);
     
-    double calculateShortestDistanceFromArc(arcShape arcSegment, double xPoint, double yPoint)
+    double calculateShortestDistance(wxRealPoint selectedPoint, edgeLineShape segment);
+    
+    double calculateShortestDistanceFromArc(wxRealPoint selectedPoint, arcShape arcSegment)
     {
         Vector newVector;
         
-        newVector.Set(xPoint, yPoint);
+        newVector.Set(selectedPoint.x, selectedPoint.y);
         return shortestDistanceFromArc(newVector, arcSegment);
     }
     
@@ -185,8 +187,6 @@ public:
         newLabel.setDraggingState(true);
         _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
     }
-    
-    bool addLine(plf::colony<node>::iterator firstNodeIterator, plf::colony<node>::iterator secondNodeIterator, double tolerance);
     
     bool addLine(node &firstNode, node &secondNode, double tolerance)
     {

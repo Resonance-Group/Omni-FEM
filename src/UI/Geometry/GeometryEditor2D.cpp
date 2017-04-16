@@ -338,128 +338,6 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
 }
 
 
-bool geometryEditor2D::addLine(plf::colony<node>::iterator firstNodeIterator, plf::colony<node>::iterator secondNodeIterator, double tolerance)
-{
-    /* This code was adapted from the FEMM project. See line 263 in FemmeDoc.cpp */
-    edgeLineShape newLine;
-    double tempTolerance;
-
-    
-    if(*firstNodeIterator == *secondNodeIterator)
-    {
-        return false;
-    }
-    
-/* Check to see if the line has already been created */	
-
-	for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
-	{
-		if((*lineIterator->getFirstNode() == *firstNodeIterator && *lineIterator->getSecondNode() == *secondNodeIterator) || (*lineIterator->getFirstNode() == *secondNodeIterator && *lineIterator->getSecondNode() == *firstNodeIterator))
-        {
-            resetIndexs();
-            return false;
-        }
-	}
-    
-    newLine.setFirstNode(*firstNodeIterator);
-    newLine.setSecondNode(*secondNodeIterator);
-    
-    if(tolerance == 0)
-    {
-        if(_nodeList.size() < 2)
-            tempTolerance = 1.0e-08;
-        else
-        {
-            Vector tempVecOne, tempVecTwo;
-            tempVecOne.Set(_nodeList.begin()->getCenterXCoordinate(), _nodeList.begin()->getCenterYCoordinate());
-            tempVecTwo = tempVecOne;
-            for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
-            {
-                if(nodeIterator->getCenterXCoordinate() < tempVecOne.getXComponent())
-                    tempVecOne.Set(nodeIterator->getCenterXCoordinate(), tempVecOne.getYComponent());
-                    
-                if(nodeIterator->getCenterXCoordinate() > tempVecTwo.getXComponent())
-                    tempVecTwo.Set(nodeIterator->getCenterXCoordinate(), tempVecTwo.getYComponent());
-                
-                if(nodeIterator->getCenterYCoordinate() < tempVecOne.getYComponent())
-                    tempVecOne.Set(tempVecOne.getXComponent(), nodeIterator->getCenterYCoordinate());
-                    
-                if(nodeIterator->getCenterYCoordinate() > tempVecTwo.getYComponent())
-                    tempVecTwo.Set(tempVecTwo.getXComponent(), nodeIterator->getCenterYCoordinate());
-            }
-            
-            tempTolerance = Vabs(tempVecTwo - tempVecOne) * 1.0e-06;
-        }
-    }
-    else
-        tempTolerance = tolerance;
-    
-    /* This section will check to see if there are any intersections with other segments. If so, create a node at the intersection */
-    for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
-    {
-        double tempX, tempY;
-        if(getIntersection(newLine, *lineIterator, tempX, tempY))
-            addNode(tempX, tempY, tempTolerance);
-    }
-    
-    /* This section will check to see if there are any intersections with arcs. If so, create a node at the intersection */
-    for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
-    {
-        Vector newNodesPoints[2];
-        int j = getLineToArcIntersection(newLine, *arcIterator, newNodesPoints);
-        if(j > 0)
-        {
-            for(int k = 0; k < j; k++)
-            {
-                addNode(newNodesPoints[k].getXComponent(), newNodesPoints[k].getYComponent(), tempTolerance);
-            }
-        }
-    }
-    
-    /* If things do not work out correctly with adding nodes to the intersection,
-     * we can create a list of nodes that need to be added within the function. 
-     * Then calculate what the distance tolerance should be and call addNode function
-     * with the tolerance value as the tolerance between points. That can be done here.
-     */ 
-
-    _lastLineAdded = _lineList.insert(newLine);// Add the line to the list
-    
-    double shortDistance, dmin;
-    Vector node0Vec, node1Vec, nodeiVec;
-    
-    if(tolerance == 0)
-    {
-        node0Vec.Set(firstNodeIterator->getCenterXCoordinate(), firstNodeIterator->getCenterYCoordinate());
-        node1Vec.Set(secondNodeIterator->getCenterXCoordinate(), secondNodeIterator->getCenterYCoordinate());
-        
-        dmin = Vabs(node1Vec - node0Vec) * 1.0e-05;
-    }
-    else
-        dmin = tolerance; 
-    
-    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
-    {
-        if((*nodeIterator != *firstNodeIterator) && (*nodeIterator != *secondNodeIterator))
-        {
-            nodeiVec.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
-            shortDistance = calculateShortestDistance(*nodeIterator, newLine);
-            if((Vabs(nodeiVec - node0Vec) < dmin) || (Vabs(nodeiVec - node1Vec) < dmin))
-                shortDistance = 2.0 * dmin;
-            if(shortDistance < dmin)
-            {
-                _lineList.erase(_lastLineAdded);
-                addLine(firstNodeIterator, nodeIterator, dmin);
-                addLine(nodeIterator, secondNodeIterator, dmin);
-                nodeIterator = _nodeList.back();
-            }
-        }
-    }
-    resetIndexs();
-    return true;    
-}
-
-
-
 bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected)
 {
         // This function was obtained from CbeladrawDoc::AddArcSegment
@@ -673,8 +551,9 @@ void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
 
 
 
-double geometryEditor2D::shortestDistanceFromArc(Vector point, arcShape &arcSegment)
+double geometryEditor2D::shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment)
 {
+    // This function was adapted from CbeladrawDoc::ShortestDistanceFromArc
     double radius, distance, length, z;
     Vector arcStartNode, arcEndNode, centerVec, tempVec;
     
@@ -684,20 +563,20 @@ double geometryEditor2D::shortestDistanceFromArc(Vector point, arcShape &arcSegm
     radius = arcSegment.getRadius();
     centerVec.Set(arcSegment.getCenterXCoordinate(), arcSegment.getCenterYCoordinate());
     
-    distance = Vabs(point - centerVec);
+    distance = Vabs(vectorPoint - centerVec);
     
     if(distance == 0)
         return radius;
         
-    tempVec = (point - centerVec) / distance;
-    length = Vabs(point - centerVec - radius * tempVec);
+    tempVec = (vectorPoint - centerVec) / distance;
+    length = Vabs(vectorPoint - centerVec - radius * tempVec);
     z = Varg(tempVec / (arcStartNode - centerVec)) * 180.0 / PI;
     
     if((z > 0.0) && (z < arcSegment.getArcLength()))
         return length;
         
-    z = Vabs(point - arcStartNode);
-    length = Vabs(point - arcEndNode);
+    z = Vabs(vectorPoint - arcStartNode);
+    length = Vabs(vectorPoint - arcEndNode);
     
     if(z < length)
         return z;
@@ -824,12 +703,10 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
 
 // Consider removing the last two arguments
 // Maybe the last parameter can be an edgeLineShape
-//double geometryEditor2D::calculateShortestDistance(double p, double q, int segmentIndex)
 double geometryEditor2D::calculateShortestDistance(node selectedNode, edgeLineShape segment)
 {
-    // I have no idea what this function does
-    double t1, x[3], y[3];
-    double t, test, test2;
+    // This function was adapted from the CbeladrawDoc::ShortestDistance function
+    double t, x[3], y[3];
 
     x[0] = segment.getFirstNode()->getCenterXCoordinate();
     y[0] = segment.getFirstNode()->getCenterYCoordinate();
@@ -837,10 +714,7 @@ double geometryEditor2D::calculateShortestDistance(node selectedNode, edgeLineSh
     x[1] = segment.getSecondNode()->getCenterXCoordinate();
     y[1] = segment.getSecondNode()->getCenterYCoordinate();
 	
-	t1 = ((selectedNode.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedNode.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
-    
-    t=((selectedNode.getCenterXCoordinate()-x[0])*(x[1]-x[0]) + (selectedNode.getCenterYCoordinate()-y[0])*(y[1]-y[0]))/
-	  ((x[1]-x[0])*(x[1]-x[0]) + (y[1]-y[0])*(y[1]-y[0]));
+	t = ((selectedNode.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedNode.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
       
 	if(t > 1)
 		t = 1.0;
@@ -849,9 +723,6 @@ double geometryEditor2D::calculateShortestDistance(node selectedNode, edgeLineSh
 		
 	x[2] = x[0] + t * (x[1] - x[0]);
 	y[2] = y[0] + t * (y[1] - y[0]);
-	
-    test = sqrt((selectedNode.getCenterXCoordinate()-x[2])*(selectedNode.getCenterXCoordinate()-x[2]) + (selectedNode.getCenterYCoordinate()-y[2])*(selectedNode.getCenterYCoordinate()-y[2]));
-    test2 = sqrt((selectedNode.getCenterXCoordinate() - x[2]) * (selectedNode.getCenterXCoordinate() - x[2]) + (selectedNode.getCenterYCoordinate() - y[2]) * (selectedNode.getCenterYCoordinate() - y[2]));
     
 	return sqrt((selectedNode.getCenterXCoordinate() - x[2]) * (selectedNode.getCenterXCoordinate() - x[2]) + (selectedNode.getCenterYCoordinate() - y[2]) * (selectedNode.getCenterYCoordinate() - y[2]));  
 }
@@ -860,24 +731,48 @@ double geometryEditor2D::calculateShortestDistance(node selectedNode, edgeLineSh
 
 double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment)
 {
-    // I have no idea what this function does
-    double t, xNew[3], wereNew[3];
+    double t, x[3], y[3];
 
-    xNew[0] = segment.getFirstNode()->getCenterXCoordinate();
-    wereNew[0] = segment.getFirstNode()->getCenterYCoordinate();
+    x[0] = segment.getFirstNode()->getCenterXCoordinate();
+    y[0] = segment.getFirstNode()->getCenterYCoordinate();
 	
-    xNew[1] = segment.getSecondNode()->getCenterXCoordinate();
-    wereNew[1] = segment.getSecondNode()->getCenterYCoordinate();
+    x[1] = segment.getSecondNode()->getCenterXCoordinate();
+    y[1] = segment.getSecondNode()->getCenterYCoordinate();
 	
-	t = ((selectedNode.getCenterXCoordinate() - xNew[0]) * (xNew[1] - xNew[0]) + (selectedNode.getCenterYCoordinate() - wereNew[0]) * (wereNew[1] - wereNew[0])) / ((xNew[1] - xNew[0]) * (xNew[1] - xNew[0]) + (wereNew[1] - wereNew[0]) * (wereNew[1] - wereNew[0]));
-
+	t = ((selectedNode.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedNode.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
+      
 	if(t > 1)
 		t = 1.0;
-	else
+	else if(t < 0.0)
 		t = 0.0;
 		
-	xNew[2] = xNew[0] + t * (xNew[1] - xNew[0]);
-	wereNew[2] = wereNew[0] + t * (wereNew[1] - wereNew[0]);
+	x[2] = x[0] + t * (x[1] - x[0]);
+	y[2] = y[0] + t * (y[1] - y[0]);
+    
+	return sqrt((selectedNode.getCenterXCoordinate() - x[2]) * (selectedNode.getCenterXCoordinate() - x[2]) + (selectedNode.getCenterYCoordinate() - y[2]) * (selectedNode.getCenterYCoordinate() - y[2]));   
+}
+
+
+
+double geometryEditor2D::calculateShortestDistance(wxRealPoint selectedPoint, edgeLineShape segment)
+{
+    double t, x[3], y[3];
+
+    x[0] = segment.getFirstNode()->getCenterXCoordinate();
+    y[0] = segment.getFirstNode()->getCenterYCoordinate();
 	
-	return sqrt((selectedNode.getCenterXCoordinate() - xNew[2]) * (selectedNode.getCenterXCoordinate() - xNew[2]) + (selectedNode.getCenterYCoordinate() - wereNew[2]) * (selectedNode.getCenterYCoordinate() - wereNew[2]));  
+    x[1] = segment.getSecondNode()->getCenterXCoordinate();
+    y[1] = segment.getSecondNode()->getCenterYCoordinate();
+	
+	t = ((selectedPoint.x - x[0]) * (x[1] - x[0]) + (selectedPoint.y - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
+      
+	if(t > 1)
+		t = 1.0;
+	else if(t < 0.0)
+		t = 0.0;
+		
+	x[2] = x[0] + t * (x[1] - x[0]);
+	y[2] = y[0] + t * (y[1] - y[0]);
+    
+	return sqrt((selectedPoint.x - x[2]) * (selectedPoint.x - x[2]) + (selectedPoint.y - y[2]) * (selectedPoint.y - y[2]));    
 }
