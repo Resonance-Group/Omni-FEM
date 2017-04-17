@@ -178,7 +178,7 @@ public:
         _lastNodeAdded = _nodeList.insert(newNode);
     }
     
-    bool addBlockLabel(double xPoint, double yPoint);
+    bool addBlockLabel(double xPoint, double yPoint, double tolerance);
     
     void addDragBlockLabel(double xPoint, double yPoint)
     {

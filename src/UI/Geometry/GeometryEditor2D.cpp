@@ -116,10 +116,11 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
              * also. This effectively breaks the line into 2 shorter lines
              */ 
             edgeLineShape edgeLine = *lineIterator;
-            lineIterator->setSecondNode(newNode);// This will set the recently created node to be the second node of the shortend line
+            lineIterator->setSecondNode(*_lastNodeAdded);// This will set the recently created node to be the second node of the shortend line
 			
-            edgeLine.setFirstNode(newNode);// This will set the recently created node to be the first node of the new line
+            edgeLine.setFirstNode(*_lastNodeAdded);// This will set the recently created node to be the first node of the new line
 			_lastLineAdded = _lineList.insert(edgeLine);// Add the new line to the array
+            break;
 		}
 	} 
     
@@ -142,13 +143,14 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
             center.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
             radius = arcIterator->getRadius();
 			
-            arcIterator->setSecondNode(newNode);
+            arcIterator->setSecondNode(*_lastNodeAdded);
 			arcIterator->setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
-            arcSegment.setFirstNode(newNode);
+            arcSegment.setFirstNode(*_lastNodeAdded);
 			arcSegment.setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
 			
             _lastArcAdded = _arcList.insert(arcSegment);
+            break;
 		}
 	}
     
@@ -157,7 +159,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 
 
 
-bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
+bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint, double tolerance)
 {
     /* This code was adapted from the FEMM project. THe code came from FemmeDoc.cpp line 576 */
     blockLabel newLabel;
@@ -165,7 +167,7 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     // Make sure that teh block labe is not placed ontop of an existing block label
     for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
     {
-        if(blockIterator->getDistance(xPoint, yPoint) < 0.00001)
+        if(blockIterator->getDistance(xPoint, yPoint) < tolerance)
             return false;
     }
     
@@ -173,14 +175,14 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint)
     for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
-		if(nodeIterator->getDistance(xPoint, yPoint) < 0.00001)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
+		if(nodeIterator->getDistance(xPoint, yPoint) < tolerance)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
 			return false;
 	}
     
     // Make sure that the block label is not placed ontop of a line
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
-		if(fabs(calculateShortestDistance(newLabel, *lineIterator)) < 1 / (_zoomFactorPointer * 100))
+		if(fabs(calculateShortestDistance(newLabel, *lineIterator)) < tolerance)
             return false;
     }
             
@@ -427,7 +429,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	/* This section is for the proposed arc intersecting another arc */
 	for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
 	{
-		int j = 0; // This will be for an arc intersecting an arc
+		int j = getArcToArcIntersection(*arcIterator, arcSeg, intersectingNodes); // This will be for an arc intersecting an arc
 		
 		if(j > 0)
 		{
@@ -608,7 +610,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
     arcCenterPoint.Set(arcSegment.getCenterXCoordinate(), arcSegment.getCenterYCoordinate());
     
     // Determining the distance between the line and the circle's center
-	distance = Vabs(lineSegVec2 - lineSegVec2);
+	distance = Vabs(lineSegVec2 - lineSegVec1);
 	unitVec1 = (lineSegVec2 - lineSegVec1) / distance;
 	tempVec2 = (arcCenterPoint - lineSegVec1) / unitVec1;
 	
@@ -622,7 +624,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 		pointVec[intersectionCounter] = lineSegVec1 + tempVec2.getXComponent() * unitVec1;
 		radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 		z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180)))
+		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < fabs((arcSegment.getArcAngle() * PI / 180.0))))
 			intersectionCounter++;
 		return intersectionCounter;
 	}
@@ -631,15 +633,21 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180)))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < fabs((arcSegment.getArcAngle() * PI / 180.0))))
+    {
 		intersectionCounter++;
+        return intersectionCounter;
+    }
     
     // Second intersection
-	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
+	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() - length) * unitVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180)))
+	if((radius > 0) && (radius < distance) && (fabs(z) > 0.0) && (fabs(z) < fabs((arcSegment.getArcAngle() * PI / 180.0))))
+    {
 		intersectionCounter++;
+        return intersectionCounter;
+    }
 		
 	return intersectionCounter;
 }

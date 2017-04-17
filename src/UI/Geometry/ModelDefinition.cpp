@@ -980,7 +980,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = blockIterator->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addBlockLabel(blockIterator->getCenterXCoordinate(), pointOne.y - distance))
+                    if(_editor.addBlockLabel(blockIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance()))
                         _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
                 }
             }
@@ -996,7 +996,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = pointOne.x - blockIterator->getCenterXCoordinate();
                     
-                    if(_editor.addBlockLabel(pointOne.x + distance, blockIterator->getCenterYCoordinate()))
+                    if(_editor.addBlockLabel(pointOne.x + distance, blockIterator->getCenterYCoordinate(), getTolerance()))
                         _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
                 }
             }
@@ -1465,7 +1465,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     blockProperty copy = *blockIterator->getProperty();
-                    _editor.addBlockLabel(blockIterator->getCenterXCoordinate() + i * horizontalShift, blockIterator->getCenterYCoordinate() + i * verticalShift);
+                    _editor.addBlockLabel(blockIterator->getCenterXCoordinate() + i * horizontalShift, blockIterator->getCenterYCoordinate() + i * verticalShift, getTolerance());
                     _editor.getLastBlockLabelAdded()->setPorperty(copy);
                 }
             }
@@ -1646,7 +1646,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                     blockProperty transfer = *blockIterator->getProperty();
                     double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
                     double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
-                    if(_editor.addBlockLabel(horizontalShift, verticalShift))
+                    if(_editor.addBlockLabel(horizontalShift, verticalShift, getTolerance()))
                         _editor.getLastBlockLabelAdded()->setPorperty(transfer);
                 }
                 
@@ -1897,7 +1897,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         
         if(i < numberLayers)
         {
-            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.0625 + i * 0.125) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.0625 + i * 0.125) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0))/*, getTolerance()*/))
+            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.0625 + i * 0.125) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.0625 + i * 0.125) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0)), getTolerance()))
             {
                 if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
                 {
@@ -2692,7 +2692,7 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_editor.getLastBlockLabelAdded()->getDraggingState())
                 {
                     _editor.getBlockLabelList()->erase(_editor.getLastBlockLabelAdded()); 
-                    _editor.addBlockLabel(tempX, tempY);
+                    _editor.addBlockLabel(tempX, tempY, getTolerance());
                 }
             }
         }
