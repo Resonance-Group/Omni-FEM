@@ -89,14 +89,33 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
 		if(nodeIterator->getDistance(xPoint, yPoint) < distanceNode)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
-			return false;
+        {
+            /*
+             * Bug Fix:
+             * There is a case where if the user tries to select a node after a node failed to be placed, the program would crash
+             * That is because the function, addDragNode, would insert a node into the colony for dragging. The iterator of the added node would then be saved
+             * to the last node added variable.
+             * However, on the up button release, the program would try to earse this node at the iterator.
+             * But, if the node failed to be created, then the iterator is now pointing to nothing.
+             * SO, when the program first checks to see if the node is in dragging mode (since it is pointing to a 
+             * random block of data, it is anyone's guess as to what the value is. Most of the time, the boolean is true)
+             * The program then attempts to erase the node but this crashs the program since the iterator is pointing to some random data.
+             * The fix is that when the node fails to be created, set the last node added variable equal to the beginning list
+             */
+            _lastNodeAdded = _nodeList.begin();
+            return false;
+        }
+	
 	}
     
     /* This section will make sure that a node is not drawn on top of a block label */
 	for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
 	{
 		if(blockIterator->getDistance(xPoint, yPoint) < distanceNode)
-			return false;
+		{
+            _lastNodeAdded = _nodeList.begin();
+            return false;
+        }
 	}
     
     newNode.setCenter(xPoint, yPoint);
@@ -130,7 +149,8 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
         Vector nodeVector;
         nodeVector.Set(xPoint, yPoint);
         /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
-		if(fabs(shortestDistanceFromArc(nodeVector, *arcIterator)) < distanceNode) // this needs t be looked into more
+        double dis = fabs(shortestDistanceFromArc(nodeVector, *arcIterator));
+		if(dis < distanceNode) // this needs t be looked into more
 		{
             Vector firstNode, secondNode, thirdNode, center;
             arcShape arcSegment = *arcIterator;
@@ -144,11 +164,17 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
             radius = arcIterator->getRadius();
 			
             arcIterator->setSecondNode(*_lastNodeAdded);
-			arcIterator->setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
+            
+            double angle = Varg((thirdNode - center) / (firstNode - center)) * (180.0 / PI);
+			arcIterator->setArcAngle(angle);
+            arcIterator->calculate();
 			
             arcSegment.setFirstNode(*_lastNodeAdded);
-			arcSegment.setArcAngle((((firstNode - center) / (secondNode - center)) * 180.0 / PI).Arg());
-			
+            angle = Varg((secondNode - center) / (thirdNode - center)) * (180.0 / PI);
+			arcSegment.setArcAngle(angle);
+            arcSegment.setNumSegments(20);
+			arcSegment.calculate();
+            
             _lastArcAdded = _arcList.insert(arcSegment);
             break;
 		}
@@ -168,7 +194,10 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint, double tolera
     for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
     {
         if(blockIterator->getDistance(xPoint, yPoint) < tolerance)
+        {
+            _lastBlockLabelAdded = _blockLabelList.begin();
             return false;
+        } 
     }
     
     // MAke sure that the block label is not placed on top of an existing node
@@ -176,14 +205,20 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint, double tolera
 	{
         // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
 		if(nodeIterator->getDistance(xPoint, yPoint) < tolerance)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
-			return false;
+		{
+            _lastBlockLabelAdded = _blockLabelList.begin();
+            return false;
+        } 
 	}
     
     // Make sure that the block label is not placed ontop of a line
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
 		if(fabs(calculateShortestDistance(newLabel, *lineIterator)) < tolerance)
+        {
+            _lastBlockLabelAdded = _blockLabelList.begin();
             return false;
+        } 
     }
             
     /* Later, add in check to make sure that a block node will not be placed on top of a arc */
@@ -347,9 +382,11 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	arcShape newArc;
 	Vector intersectingNodes[2];
 	Vector centerPoint;
+//    node *tempNodeOne;
+//    node *tempNodeTwo;
 	double dist, radius, minDistance, shortDistanceFromArc;
     
-    if(_nodeInterator1 == nullptr || _nodeInterator2 == nullptr)
+    if((_nodeInterator1 == nullptr || _nodeInterator2 == nullptr) && nodesAreSelected)
     {
         resetIndexs();
         return false;
@@ -429,7 +466,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	/* This section is for the proposed arc intersecting another arc */
 	for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
 	{
-		int j = getArcToArcIntersection(*arcIterator, arcSeg, intersectingNodes); // This will be for an arc intersecting an arc
+		int j = getArcToArcIntersection(arcSeg, *arcIterator, intersectingNodes); // This will be for an arc intersecting an arc
 		
 		if(j > 0)
 		{
@@ -443,7 +480,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	_lastArcAdded = _arcList.insert(arcSeg);
 	
 //	getCircle(arcSeg, centerPoint, radius);
-/*    centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());
+    centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());
     radius = arcSeg.getRadius();
 	
 	if(tolerance == 0)
@@ -455,7 +492,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	{
 		if((*nodeIterator != *arcSeg.getFirstNode()) && (*nodeIterator != *arcSeg.getSecondNode()))
 		{
-			shortDistanceFromArc = shortestDistanceFromArc(Vector(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate()), *_arcList.back());
+			shortDistanceFromArc = shortestDistanceFromArc(Vector(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate()), *_lastArcAdded);
 			if(shortDistanceFromArc < minDistance)
 			{
 				Vector vec1, vec2, vec3;
@@ -476,10 +513,10 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 				newArc.setArcAngle(Varg((vec2 - centerPoint) / (vec3 - centerPoint)) * 180.0 / PI);
 				addArc(newArc, minDistance, false);
 				
-                nodeIterator = _nodeList.back();
+                break;
 			}
 		}
-	}*/
+	}
     resetIndexs();
     return true;
 }
@@ -556,7 +593,7 @@ void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
 double geometryEditor2D::shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment)
 {
     // This function was adapted from CbeladrawDoc::ShortestDistanceFromArc
-    double radius, distance, length, z;
+    double radius, distance, length, z, arcLength;
     Vector arcStartNode, arcEndNode, centerVec, tempVec;
     
     arcStartNode.Set(arcSegment.getFirstNode()->getCenterXCoordinate(), arcSegment.getFirstNode()->getCenterYCoordinate());
@@ -573,10 +610,10 @@ double geometryEditor2D::shortestDistanceFromArc(Vector vectorPoint, arcShape &a
     tempVec = (vectorPoint - centerVec) / distance;
     length = Vabs(vectorPoint - centerVec - radius * tempVec);
     z = Varg(tempVec / (arcStartNode - centerVec)) * 180.0 / PI;
-    
-    if((z > 0.0) && (z < arcSegment.getArcLength()))
+    arcLength = fabs(arcSegment.getArcAngle());
+    if((z < arcLength))
         return length;
-        
+     
     z = Vabs(vectorPoint - arcStartNode);
     length = Vabs(vectorPoint - arcEndNode);
     
@@ -681,8 +718,8 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     
     tempVec = (arcCenter2 - arcCenter1) / distance;
     
-    arc1Length = arcSegment1.getArcLength();
-    arc2Length = arcSegment2.getArcLength();
+    arc1Length = arcSegment1.getArcAngle() * PI / 180.0;
+    arc2Length = arcSegment2.getArcAngle() * PI / 180.0;
     
     point[counter] = arcCenter1 + (center * distance / 2.0 + J * length) * tempVec;
     
@@ -695,6 +732,7 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     if(fabs(distance - arcRadius1 + arcRadius2) / (arcRadius1 + arcRadius2) < 1.0e-05)
     {
         point[counter] = arcCenter1 + center * distance * (tempVec / 2.0);
+        counter++;
         return counter;
     }
     
@@ -702,7 +740,7 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     z0 = Varg((point[counter] - arc1StartNode) / (arc1StartNode - arcCenter1));
     z1 = Varg((point[counter] - arc2StartNode) / (arc2StartNode - arcCenter2));
     
-    if((z0 > 0.0) && (z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
+    if((z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
         counter++;
         
     return counter;    

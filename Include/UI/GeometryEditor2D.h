@@ -106,10 +106,7 @@ public:
     
     double calculateShortestDistanceFromArc(wxRealPoint selectedPoint, arcShape arcSegment)
     {
-        Vector newVector;
-        
-        newVector.Set(selectedPoint.x, selectedPoint.y);
-        return shortestDistanceFromArc(newVector, arcSegment);
+        return shortestDistanceFromArc(Vector(selectedPoint.x, selectedPoint.y), arcSegment);
     }
     
     bool setNodeIndex(node &iterator)

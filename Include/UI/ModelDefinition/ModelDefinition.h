@@ -107,7 +107,7 @@ private:
     
     double getTolerance()
     {
-        return ((((_zoomX + _zoomY) / 2.0) /  50.0));
+        return ((((_zoomX + _zoomY) / 2.0) /  25.0));
     }
     
     void clearSelection();
@@ -249,6 +249,8 @@ public:
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
     void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
+    
+    // Create Radius is found on CcdrawDoc::CreateRadius
     
 private:
     wxDECLARE_EVENT_TABLE(); 

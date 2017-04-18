@@ -2664,19 +2664,16 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
              * The fix, check to make sure that the size of the array (vector) is greater then 0 to ensure the program does not check an empty 
              * position
              */ 
-            if(_editor.getNodeList()->size() > 0)
+            if(_editor.getNodeList()->size() > 0 && _editor.getLastNodeAdd()->getDraggingState())
             {
                 double tempX = convertToXCoordinate(event.GetX());
                 double tempY = convertToYCoordinate(event.GetY());
                 
                 if(_preferences.getSnapGridState())
                     roundToNearestGrid(tempX, tempY);
-                
-                if(_editor.getLastNodeAdd()->getDraggingState())
-                {
-                    _editor.getNodeList()->erase(_editor.getLastNodeAdd());
-                    _editor.addNode(tempX, tempY, getTolerance());
-                }
+                    
+                _editor.getNodeList()->erase(_editor.getLastNodeAdd());
+                _editor.addNode(tempX, tempY, getTolerance());
             }
         }
         else
@@ -2942,6 +2939,7 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     {
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
+            double tolerance = getTolerance();
             if(fabs(_editor.calculateShortestDistanceFromArc(mousePointer, *arcIterator)) < getTolerance())
             {
                 if(_nodesAreSelected)
