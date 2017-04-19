@@ -1830,7 +1830,8 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         // These guys are used to make sure that we can add another arc in the same process since the add arc function will reset the indexes.
         plf::colony<node>::iterator tempIteratorOne, tempIteratorTwo;
         
-        if(_editor.addNode(radius + i * 0.125, centerPoint.y, getTolerance()))
+        // Attempt to add in the first node
+        if(_editor.addNode(radius + i * 0.125, centerPoint.y, 0))
         {
             // Add in any node properties here
             tempIteratorOne = _editor.getLastNodeAdd();
@@ -1851,7 +1852,8 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
             }
         }
         
-        if(_editor.addNode(-radius - i * 0.125, centerPoint.y, getTolerance()))
+        // Attempt to add in the second node of the arc
+        if(_editor.addNode(-radius - i * 0.125, centerPoint.y, 0))
         {
             // Add in any node properties here
             tempIteratorTwo = _editor.getLastNodeAdd();
@@ -1873,7 +1875,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         }
         
         arcShape tempArcOne, tempArcTwo;
-        tempArcOne.setArcAngle(180.0);
+        tempArcOne.setArcAngle(180.0);// Create the arc with the arc in a positive direction
         tempArcOne.setNumSegments(50);
         if(_editor.addArc(tempArcOne, getTolerance(), true))
         {
@@ -1881,10 +1883,12 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
        //     continue;
         }
         
-        _editor.setNodeIndex(*tempIteratorOne);
+        // Reverse the selected nodes (since all angles of the arc need to be positive)
         _editor.setNodeIndex(*tempIteratorTwo);
+        _editor.setNodeIndex(*tempIteratorOne);
         
-        tempArcTwo.setArcAngle(-180.0);
+        // Set some basic arc properties
+        tempArcTwo.setArcAngle(180.0);
         tempArcTwo.setNumSegments(50);
         
         if(_editor.addArc(tempArcTwo, getTolerance(), true) && boundaryType == OpenBoundaryEdge::DIRICHLET)
@@ -1897,7 +1901,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         
         if(i < numberLayers)
         {
-            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.0625 + i * 0.125) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.0625 + i * 0.125) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0)), getTolerance()))
+            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.0625 + i * 0.125) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.0625 + i * 0.125) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0)), 0))
             {
                 if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
                 {

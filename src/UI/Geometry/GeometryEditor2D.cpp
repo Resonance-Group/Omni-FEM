@@ -87,7 +87,6 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
     /* This section will make sure that two nodes are not drawn on top of each other */
 	for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
 	{
-        // The program FEMM would start the zoom factor at 100. We are starting at 1. The process by which FEMM creates the nodes is very good. Therefor, we multiply our results by 100
 		if(nodeIterator->getDistance(xPoint, yPoint) < distanceNode)// This will compare against 1/mag where mag is the scaling function for zooming. However, it is currently being hardcoded to 0.01
         {
             /*
@@ -384,7 +383,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	Vector centerPoint;
 //    node *tempNodeOne;
 //    node *tempNodeTwo;
-	double dist, radius, minDistance, shortDistanceFromArc;
+	double distanceTolerance, radius, minDistance, shortDistanceFromArc;
     
     if((_nodeInterator1 == nullptr || _nodeInterator2 == nullptr) && nodesAreSelected)
     {
@@ -401,6 +400,12 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
     {
         resetIndexs();
         return false;
+    }
+    
+    if(arcSeg.getArcAngle() < 1.0)
+    {
+        // I mean, you might as well add in a line
+       return addLine(nullptr, nullptr, tolerance); 
     }
         
     if(nodesAreSelected)
@@ -422,7 +427,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	if(tolerance == 0)
 	{
 		if(_nodeList.size() < 2)
-			dist = 1.0e-08;
+			distanceTolerance = 1.0e-08;
 		else
 		{
 			Vector vec1, vec2;
@@ -443,11 +448,11 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 					vec2.Set(vec2.getXComponent(), nodeIterator->getCenterYCoordinate());
 			}
 			
-			dist = Vabs(vec1 - vec2) * 1.0e-06;
+			distanceTolerance = Vabs(vec1 - vec2) * 1.0e-06;
 		}
 	}
 	else
-		dist = tolerance;
+		distanceTolerance = tolerance;
 	
 	/* This section will check for any intesections with lines and arcs and if so, place a node there */
 	for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)// This will check how many times the existing arc intercests the proposed arc.
@@ -458,7 +463,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		{
 			for(int k = 0; k < j; k++)
 			{
-				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), 0.01);
+				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), distanceTolerance);
 			}
 		}
 	}
@@ -466,13 +471,15 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	/* This section is for the proposed arc intersecting another arc */
 	for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
 	{
-		int j = getArcToArcIntersection(arcSeg, *arcIterator, intersectingNodes); // This will be for an arc intersecting an arc
+        // THis finds the number of points where intercetion occurs.
+        // The point values are stored in the variable intersectiongNodes.
+		int j = getArcToArcIntersection(*arcIterator, arcSeg,  intersectingNodes); // This will be for an arc intersecting an arc
 		
 		if(j > 0)
 		{
 			for(int k = 0; k < j; k++)
 			{
-				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), 0.01);
+				addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), distanceTolerance);
 			}
 		}
 	}
@@ -569,31 +576,11 @@ bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineSh
 }
 
 
-/* The purpose of this function and neccessicity is being evaluated
-void geometryEditor2D::getCircle(arcShape &arc, Vector &center, double &radius)
-{
-    Vector firstNode, secondNode, unitVector;
-	double distance;
-	
-	firstNode.Set(arc.getFirstNode().getCenterXCoordinate(), arc.getFirstNode().getCenterYCoordinate());
-	secondNode.Set(arc.getSecondNode().getCenterXCoordinate(), arc.getSecondNode().getCenterYCoordinate());
-	
-	distance = Vabs(firstNode - secondNode);
-	
-	unitVector = (firstNode - secondNode) / distance;
-	
-	radius = distance / (2.0 * sin(arc.getArcAngle() * PI / 360.0));
-	
-	center = firstNode + (distance / 2.0 + J * sqrt(pow(radius, 2) - pow(distance, 2) / 4.0)) * unitVector;
-}
- * */
-
-
 
 double geometryEditor2D::shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment)
 {
     // This function was adapted from CbeladrawDoc::ShortestDistanceFromArc
-    double radius, distance, length, z, arcLength;
+    double radius, distance, length, z;
     Vector arcStartNode, arcEndNode, centerVec, tempVec;
     
     arcStartNode.Set(arcSegment.getFirstNode()->getCenterXCoordinate(), arcSegment.getFirstNode()->getCenterYCoordinate());
@@ -610,8 +597,7 @@ double geometryEditor2D::shortestDistanceFromArc(Vector vectorPoint, arcShape &a
     tempVec = (vectorPoint - centerVec) / distance;
     length = Vabs(vectorPoint - centerVec - radius * tempVec);
     z = Varg(tempVec / (arcStartNode - centerVec)) * 180.0 / PI;
-    arcLength = fabs(arcSegment.getArcAngle());
-    if((z < arcLength))
+    if((z > 0.0) && (z < arcSegment.getArcAngle()))
         return length;
      
     z = Vabs(vectorPoint - arcStartNode);
@@ -628,7 +614,7 @@ double geometryEditor2D::shortestDistanceFromArc(Vector vectorPoint, arcShape &a
 int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec)
 {
     /* Note: this function has not yet been verified to be working. Logical bugs could still exist */
-    // This function was ported from Cbeladraw::GetLineArcIntersection
+    // This function was ported from CbeladrawDoc::GetLineArcIntersection
     
 	Vector lineSegVec1, lineSegVec2, arcSegVec1, arcSegVec2, unitVec1, tempVec2, arcCenterPoint;
 	double distance, length, radius, z;
@@ -661,7 +647,7 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 		pointVec[intersectionCounter] = lineSegVec1 + tempVec2.getXComponent() * unitVec1;
 		radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 		z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < fabs((arcSegment.getArcAngle() * PI / 180.0))))
+		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180.0)))
 			intersectionCounter++;
 		return intersectionCounter;
 	}
@@ -670,20 +656,18 @@ int geometryEditor2D::getLineToArcIntersection(edgeLineShape &lineSegment, arcSh
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() + length) * unitVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < fabs((arcSegment.getArcAngle() * PI / 180.0))))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180.0)))
     {
 		intersectionCounter++;
-        return intersectionCounter;
     }
     
     // Second intersection
 	pointVec[intersectionCounter] = lineSegVec1 + (tempVec2.getXComponent() - length) * unitVec1;
 	radius = ((pointVec[intersectionCounter] - lineSegVec1) / unitVec1).getXComponent();
 	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (fabs(z) > 0.0) && (fabs(z) < fabs((arcSegment.getArcAngle() * PI / 180.0))))
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (arcSegment.getArcAngle() * PI / 180.0)))
     {
 		intersectionCounter++;
-        return intersectionCounter;
     }
 		
 	return intersectionCounter;
@@ -737,10 +721,10 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     }
     
     point[counter] = arcCenter1 + (center * distance / 2.0 - J * length) * tempVec;
-    z0 = Varg((point[counter] - arc1StartNode) / (arc1StartNode - arcCenter1));
-    z1 = Varg((point[counter] - arc2StartNode) / (arc2StartNode - arcCenter2));
+    z0 = Varg((point[counter] - arcCenter1) / (arc1StartNode - arcCenter1));
+    z1 = Varg((point[counter] - arcCenter2) / (arc2StartNode - arcCenter2));
     
-    if((z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
+    if((z0 > 0.0) && (z0 < arc1Length) && (z1 > 0.0) && (z1 < arc2Length))
         counter++;
         
     return counter;    

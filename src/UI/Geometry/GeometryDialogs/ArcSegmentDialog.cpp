@@ -66,7 +66,7 @@ void arcSegmentDialog::createDialog()
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
     wxFloatingPointValidator<double> angleValidator(3, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
-    angleValidator.SetRange(-180, 180);
+    angleValidator.SetRange(0, 180);
     
     wxIntegerValidator<int> segmentValidator;
     segmentValidator.SetMax(100);
