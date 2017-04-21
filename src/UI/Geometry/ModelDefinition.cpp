@@ -1831,7 +1831,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         plf::colony<node>::iterator tempIteratorOne, tempIteratorTwo;
         
         // Attempt to add in the first node
-        if(_editor.addNode(radius + i * 0.125, centerPoint.y, 0))
+        if(_editor.addNode(radius + i * 0.5, centerPoint.y, 0))
         {
             // Add in any node properties here
             tempIteratorOne = _editor.getLastNodeAdd();
@@ -1840,7 +1840,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         else
         {
             node testNode;
-            testNode.setCenter(radius + i * 0.125, centerPoint.y);
+            testNode.setCenter(radius + i * 0.5, centerPoint.y);
             for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
                 if(*nodeIterator == testNode || nodeIterator->getDistance(testNode) < getTolerance())
@@ -1853,7 +1853,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         }
         
         // Attempt to add in the second node of the arc
-        if(_editor.addNode(-radius - i * 0.125, centerPoint.y, 0))
+        if(_editor.addNode(-radius - i * 0.5, centerPoint.y, 0))
         {
             // Add in any node properties here
             tempIteratorTwo = _editor.getLastNodeAdd();
@@ -1862,7 +1862,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         else
         {
             node testNode;
-            testNode.setCenter(-radius - i * 0.125, centerPoint.y);
+            testNode.setCenter(-radius - i * 0.5, centerPoint.y);
             for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
                 if(*nodeIterator == testNode || nodeIterator->getDistance(testNode) < getTolerance())
@@ -1877,7 +1877,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         arcShape tempArcOne, tempArcTwo;
         tempArcOne.setArcAngle(180.0);// Create the arc with the arc in a positive direction
         tempArcOne.setNumSegments(50);
-        if(_editor.addArc(tempArcOne, getTolerance(), true))
+        if(_editor.addArc(tempArcOne, 0, true))
         {
             //Add some code to set the boundary conditions if the arc does not exist
        //     continue;
@@ -1891,7 +1891,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         tempArcTwo.setArcAngle(180.0);
         tempArcTwo.setNumSegments(50);
         
-        if(_editor.addArc(tempArcTwo, getTolerance(), true) && boundaryType == OpenBoundaryEdge::DIRICHLET)
+        if(_editor.addArc(tempArcTwo, 0, true) && boundaryType == OpenBoundaryEdge::DIRICHLET)
         {
             if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
                 _editor.getLastArcAdded()->getSegmentProperty()->setBoundaryName("V=0");
@@ -1901,7 +1901,7 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         
         if(i < numberLayers)
         {
-            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.0625 + i * 0.125) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.0625 + i * 0.125) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0)), 0))
+            if(_editor.addBlockLabel(centerPoint.x + ((radius + 0.25 + i * 0.5) * cos(i * (90.0 / (double)numberLayers) * PI / 180.0)), centerPoint.y + ((radius + 0.25 + i * 0.5) * sin(i * (90.0 / (double)numberLayers) * PI / 180.0)), 0))
             {
                 if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
                 {
