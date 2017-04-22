@@ -323,6 +323,8 @@ public:
     
     //! If nodes/lines/arcs are moved, then this function needs to be called in order to check if the displaced geometry intercets with other geometries
     void checkIntersections(EditGeometry editedGeometry, double tolerance);
+    
+    bool createSoftEdge(double radius);
 };
 
 #endif

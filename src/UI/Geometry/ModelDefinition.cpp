@@ -650,7 +650,9 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
             {
                 arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
             }
-        } 
+        }
+
+        _editor.checkIntersections(EditGeometry::EDIT_NODES, getTolerance());
     }
     else if(_labelsAreSelected)
     {
@@ -679,6 +681,8 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
                 }
             }
         }
+        
+        _editor.checkIntersections(EditGeometry::EDIT_LINES, getTolerance());
     }
     else if(_arcsAreSelected)
     {
@@ -700,12 +704,9 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
                 
                 arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after it is moved
             }
-        } 
-    }
-    
-    if(_nodesAreSelected || _linesAreSelected || _arcsAreSelected)
-    {
-        // This function will serve to check if there are any intersections of the three and handle accordingly
+        }
+
+        _editor.checkIntersections(EditGeometry::EDIT_ARCS, getTolerance());
     }
     
     clearSelection();
@@ -740,7 +741,9 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
             {
                 arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
             }
-        } 
+        }
+
+        _editor.checkIntersections(EditGeometry::EDIT_NODES, getTolerance()); 
     }
     else if(_labelsAreSelected)
     {
@@ -782,6 +785,8 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
                 }
             }
         }
+        
+        _editor.checkIntersections(EditGeometry::EDIT_LINES, getTolerance());
     }
     else if(_arcsAreSelected)
     {
@@ -809,6 +814,8 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
                 arcIterator->calculate();
             }
         }
+        
+        _editor.checkIntersections(EditGeometry::EDIT_ARCS, getTolerance());
     }
     
     clearSelection();

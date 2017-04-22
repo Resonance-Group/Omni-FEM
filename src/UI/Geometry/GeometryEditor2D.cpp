@@ -386,12 +386,9 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
 bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected)
 {
         // This function was obtained from CbeladrawDoc::AddArcSegment
-//	edgeLineShape segment;
 	arcShape newArc;
 	Vector intersectingNodes[2];
 	Vector centerPoint;
-//    node *tempNodeOne;
-//    node *tempNodeTwo;
 	double distanceTolerance, radius, minDistance, shortDistanceFromArc;
     
     if((_nodeInterator1 == nullptr || _nodeInterator2 == nullptr) && nodesAreSelected)
@@ -411,11 +408,11 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
         return false;
     }
     
- /*   if(arcSeg.getArcAngle() < 1.0)
+    if(arcSeg.getArcAngle() < 1.0)
     {
         // I mean, you might as well add in a line
        return addLine(nullptr, nullptr, tolerance); 
-    }*/
+    }
         
     if(nodesAreSelected)
     {
@@ -543,8 +540,9 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
         for(plf::colony<node>::iterator nodeIterator1 = _nodeList.begin(); nodeIterator1 != _nodeList.end(); ++nodeIterator1)
         {
             bool nodeIsConfigured = false;
+            plf::colony<node>::iterator tempNodeIterator = nodeIterator1;
             /* Iterate through all of the nodes to see if a node is on top of another node and if so, move all of the lines/arcs to one of the nodes 8*/
-            for(plf::colony<node>::iterator nodeIterator2 = ++nodeIterator1; nodeIterator2 != _nodeList.end(); ++nodeIterator2)
+            for(plf::colony<node>::iterator nodeIterator2 = ++tempNodeIterator; nodeIterator2 != _nodeList.end(); ++nodeIterator2)
             {
                 if(nodeIterator2 == _nodeList.end())
                     break;
@@ -557,9 +555,9 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
                     {
                         if(*lineIterator->getFirstNode() == *nodeIterator2)
-                            lineIterator->setFirstNode(*nodeIterator2);
+                            lineIterator->setFirstNode(*nodeIterator1);
                         else if(*lineIterator->getSecondNode() == *nodeIterator2)
-                            lineIterator->setSecondNode(*nodeIterator2);
+                            lineIterator->setSecondNode(*nodeIterator1);
                     }
                     
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
@@ -570,6 +568,9 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                             arcIterator->setSecondNode(*nodeIterator2);
                     }
                     
+                    if(*_lastNodeAdded == *nodeIterator2)
+                        _lastNodeAdded = _nodeList.begin();
+                        
                     _nodeList.erase(nodeIterator2);
                     nodeIsConfigured = true;// A node being ontop of another node will only happen once and it will not be ontop of a line or an arc
                     break;
@@ -646,25 +647,81 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
         {
+            plf::colony<edgeLineShape>::iterator tempLineIterator =  ++lineIterator;
+            
             //TODO: Check if there is ever a case where one line iterator can intesect a node/line/arc
             if(editedGeometry == EditGeometry::EDIT_LINES)
             {
+                
                 for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
                 {
-                    // TODO: Add in case for if the line was moved ontop of a node
+                    if(fabs(calculateShortestDistance(*nodeIterator, *lineIterator)) < tolerance)
+                    {
+                        /* If the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
+                         * Line1 will be set equal to the original line (line0).
+                         * For the sake of explanation, the left most node will be considered as node 1 and the right most node will be considered node 2.
+                         * So, node 2 of line1 will then be switched to the newly created node and the first node of line0 will be set to the new node 
+                         * also. This effectively breaks the line into 2 shorter lines
+                         */ 
+                        edgeLineShape edgeLine = *lineIterator;
+                        lineIterator->setSecondNode(*nodeIterator);
+                        
+                        edgeLine.setFirstNode(*nodeIterator);
+                        _lastLineAdded = _lineList.insert(edgeLine);// Add the new line to the array
+                    }
                 }
             }
             
-            for(plf::colony<edgeLineShape>::iterator lineIterator2 = ++lineIterator; lineIterator2 != _lineList.end(); ++lineIterator2)
+            for(plf::colony<edgeLineShape>::iterator lineIterator2 = tempLineIterator; lineIterator2 != _lineList.end(); ++lineIterator2)
             {
-                // TODO: Add in code to get line-line intercetion
+                double tempX, tempY;
+                
+                if(lineIterator2 == _lineList.end())
+                    break;
+                // If a line is placed on top of another line, then we will have to transfer any lines/arcs connecting to the nodes of the line to the other line 
+                if((*lineIterator->getFirstNode() == *lineIterator2->getFirstNode() && *lineIterator->getSecondNode() == *lineIterator2->getSecondNode()) || (*lineIterator->getFirstNode() == *lineIterator2->getSecondNode() && *lineIterator->getSecondNode() == *lineIterator2->getFirstNode()))
+                {
+                    for(plf::colony<edgeLineShape>::iterator lineIterator3 = _lineList.begin(); lineIterator3 != _lineList.end(); ++lineIterator3)
+                    {
+                        if(*lineIterator3->getFirstNode() == *lineIterator->getFirstNode())
+                            lineIterator3->setFirstNode(*lineIterator->getFirstNode());
+                        else if(*lineIterator3->getFirstNode() == *lineIterator->getSecondNode())
+                            lineIterator3->setSecondNode(*lineIterator->getSecondNode());
+                    }
+                    
+                    for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
+                    {
+                        if(*arcIterator->getFirstNode() == *lineIterator->getFirstNode())
+                            arcIterator->setFirstNode(*lineIterator->getFirstNode());
+                        else if(*arcIterator->getFirstNode() == *lineIterator->getSecondNode())
+                            arcIterator->setSecondNode(*lineIterator->getSecondNode());
+                    }
+                    
+                    // As the last item, we need to delete the two nodes and the line from the list
+                    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == *lineIterator2->getFirstNode() || *nodeIterator == *lineIterator2->getSecondNode())
+                            _nodeList.erase(nodeIterator--);
+                    }
+                    
+                    _lineList.erase(lineIterator2--);
+                }    
+                else if(getIntersection(*lineIterator, *lineIterator2, tempX, tempY))
+                    addNode(tempX, tempY, tolerance);
             }
             
             for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
             {
-                // TODO: Add in code to handle line-arc intercetion
+                Vector newNodesPoints[2];
+                int j = getLineToArcIntersection(*lineIterator, *arcIterator, newNodesPoints);
+                if(j > 0)
+                {
+                    for(int k = 0; k < j; k++)
+                    {
+                        addNode(newNodesPoints[k].getXComponent(), newNodesPoints[k].getYComponent(), tolerance);
+                    }
+                }
             }
-            
         }
     }
     
@@ -678,12 +735,51 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                 {
                     // TODO: Add in case for if the arc was moved ontop of a node
                 }
+                
+                for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+                {
+                    Vector newNodesPoints[2];
+                    int j = getLineToArcIntersection(*lineIterator, *arcIterator, newNodesPoints);
+                    if(j > 0)
+                    {
+                        for(int k = 0; k < j; k++)
+                        {
+                            addNode(newNodesPoints[k].getXComponent(), newNodesPoints[k].getYComponent(), tolerance);
+                        }
+                    }
+                }
             }
             
             for(plf::colony<arcShape>::iterator arcIterator2 = ++arcIterator; arcIterator != _arcList.end(); ++arcIterator)
             {
-                // TODO: Add in code to handle arc-arc intercetion
+                Vector intersectingNodes[2];
+                int j = getArcToArcIntersection(*arcIterator, *arcIterator2,  intersectingNodes); // This will be for an arc intersecting an arc
+		
+                if(j > 0)
+                {
+                    for(int k = 0; k < j; k++)
+                    {
+                        addNode(intersectingNodes[k].getXComponent(), intersectingNodes[k].getYComponent(), tolerance);
+                    }
+                }
             }
+        }
+    }
+}
+
+
+
+
+bool geometryEditor2D::createSoftEdge(double radius)
+{
+    if(radius <= 0)
+        return false;
+        
+    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
+    {
+        if(nodeIterator->getIsSelectedState())
+        {
+            
         }
     }
 }
