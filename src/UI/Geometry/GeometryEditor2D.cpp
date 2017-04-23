@@ -772,6 +772,8 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
 
 bool geometryEditor2D::createSoftEdge(double radius)
 {
+    bool willReturn = false;
+    // This code is being adapted from CcdrawDoc::CreateRadius located in femm/CDRAWDOC.CPP
     if(radius <= 0)
         return false;
         
@@ -779,9 +781,403 @@ bool geometryEditor2D::createSoftEdge(double radius)
     {
         if(nodeIterator->getIsSelectedState())
         {
+            unsigned int numberOfLines = 0;
+            unsigned int numberOfArcs = 0;
             
+            // Tally up the number of lines connected to the node
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+            {
+                if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                    numberOfLines++;
+            }
+            
+            // Tally up the number of arcs connected to the node
+            for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
+            {
+                if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                    numberOfArcs++;
+            }
+            
+            if((numberOfLines + numberOfArcs > 2) || (numberOfLines == 1 && numberOfArcs == 0) || (numberOfLines == 0 && numberOfArcs == 1) || (numberOfLines + numberOfArcs) == 0)
+                continue;// Move to the next node if there are too many lines/arcs connecting to the node (Or not enough of either type)
+                
+            switch(numberOfLines - numberOfArcs)
+            {
+                case 0:// This is the case for if we have one arc and one line at the node
+                {
+                    plf::colony<arcShape>::iterator connectedArc;
+                    plf::colony<edgeLineShape>::iterator connectedLine;
+                    arcShape addedArc;
+                    Vector centerPoint, lineEndpointOne, lineEndpointTwo, unitVectorAlongLine, q, p[4], v[8], I1[8], I2[8];
+                    double arcRadius, R[4], angle;
+                    int j = 0;
+                    int m = 0;
+                    int k = 0;
+                    
+                    // First we need to grab some information about the arc that the node is connected to
+                    for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
+                    {
+                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                        {
+                            addedArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                            addedArc.setNumSegments(arcIterator->getnumSegments());
+                            centerPoint.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
+                            arcRadius = arcIterator->getRadius();
+                            connectedArc = arcIterator;
+                        }
+                    }
+                    
+                    // Next, we need to grab some information about the line that the node is connected to
+                    for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+                    {
+                        if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                        {
+                            lineEndpointOne.Set(lineIterator->getFirstNode()->getCenterXCoordinate(), lineIterator->getFirstNode()->getCenterYCoordinate());
+                            lineEndpointTwo.Set(lineIterator->getSecondNode()->getCenterXCoordinate(), lineIterator->getSecondNode()->getCenterYCoordinate());
+                            connectedLine = lineIterator;
+                        }
+                    }
+                    
+                    unitVectorAlongLine = (lineEndpointTwo - lineEndpointOne) / Vabs(lineEndpointTwo - lineEndpointOne); // Determine the unit vector along the line
+                    
+                    q = lineEndpointOne + unitVectorAlongLine * ((centerPoint - lineEndpointOne) / unitVectorAlongLine).getXComponent();// q is the closest point on the line to the center of the circle
+                    
+                    unitVectorAlongLine = J * unitVectorAlongLine;
+                    
+                    p[0] = q + radius * unitVectorAlongLine;
+                    p[1] = q - radius * unitVectorAlongLine;
+                    p[2] = q + radius * unitVectorAlongLine;
+                    p[3] = q - radius * unitVectorAlongLine;
+                    
+                    R[0] = arcRadius + radius;
+                    R[1] = arcRadius + radius;
+                    R[2] = arcRadius - radius;
+                    R[3] = arcRadius - radius;
+                    
+                    for(j = 0, k = 0; k < 4; k++)
+                    {
+                        double b = pow(R[k], 2) - pow(Vabs(p[k] - centerPoint), 2);
+                        if(b >= 0)
+                        {
+                            b = sqrt(b);
+                            v[j++] = p[k] + J * b * (p[k] - centerPoint) / Vabs(p[k] - centerPoint);
+                            v[j++] = p[k] - J * b * (p[k] - centerPoint) / Vabs(p[k] - centerPoint);
+                        }
+                    }
+                    
+                    unitVectorAlongLine = (lineEndpointTwo - lineEndpointOne) / Vabs(lineEndpointTwo - lineEndpointOne);
+                    
+                    for(m = 0, k = 0; k < j; k++)
+                    {
+                        I1[m] = lineEndpointOne + unitVectorAlongLine * ((v[k] - lineEndpointOne) / unitVectorAlongLine).getXComponent();
+                        I2[m] = centerPoint + arcRadius * (v[k] - centerPoint) / Vabs(v[k] - centerPoint);
+                        v[m] = v[k];
+     
+                        if(shortestDistanceFromArc(I2[m], *connectedArc) < (radius / 10000.0) && calculateShortestDistance(wxRealPoint(I1[m].getXComponent(), I1[m].getYComponent()), *connectedLine) < (radius / 10000.0) && Vabs(I1[m] - I2[m]) > (radius / 10000.0))
+                        {
+                            m++;
+                            if(m == 2)
+                                break;
+                        }
+                    }
+                    
+                    if(m == 0)
+                        break;
+                    else if(m > 1)
+                    {
+                        if(Vabs(v[0] - lineEndpointOne) < Vabs(v[1] - lineEndpointOne))
+                            j = 0;
+                        else
+                            j = 1;
+                    }
+                    else
+                        j =0;
+                    
+                    double lineListSize = _lineList.size();
+                    
+                    if(addNode(I1[j].getXComponent(), I1[j].getYComponent(), radius / 10000.0))
+                    {
+                        setNodeIndex(*_lastNodeAdded);
+                        if(_lineList.size() > lineListSize)
+                        {
+                            _lineList.erase(_lastLineAdded);
+                            _lastLineAdded = _lineList.begin();
+                        }
+                        else if(_lineList.size() == lineListSize)
+                        {
+                            _arcList.erase(_lastArcAdded);
+                            _lastArcAdded = _arcList.begin();
+                        }
+                    }  
+                    else
+                        break;// This means there is something interfering with the node and this should be dealt with properly
+                    
+                    lineListSize = _lineList.size();
+                    if(addNode(I2[j].getXComponent(), I2[j].getYComponent(), radius / 10000.0))
+                    {
+                        setNodeIndex(*_lastNodeAdded);
+                        if(_lineList.size() > lineListSize)
+                        {
+                            _lineList.erase(_lastLineAdded);
+                            _lastLineAdded = _lineList.begin();
+                        }
+                        else if(_lineList.size() == lineListSize)// Another arc was probably added
+                        {
+                            _arcList.erase(_lastArcAdded);
+                            _lastArcAdded = _arcList.begin();
+                        }
+                    }
+                    else
+                        break;
+                        
+                    _nodeList.erase(nodeIterator--);// TODO: This could cause issues. Throughly test this guy here
+                    
+                    angle = Varg((I2[j] - v[j])/(I1[j] - v[j]));
+                    
+                    if(angle < 0)
+                    {
+                        centerPoint = I2[j];
+                        I2[j] = I1[j];
+                        I1[j] = centerPoint;
+                        angle = fabs(angle);
+                    }
+                    
+                    addedArc.setArcAngle(angle * (180.0 / PI));
+                    
+                    if(addArc(addedArc, 0, true));
+                        willReturn = true;
+
+                    break;
+                }
+                case 2:// This is the case for if we have two lines
+                {
+                    Vector commonNode, endPointLine1, endPointLine2;
+                    bool firstLineFound = false;
+                    bool secondLineFound = false;
+                    double angle, length;
+                    arcShape lineAddedArc;
+                    
+                    lineAddedArc.setNumSegments(20);
+                    
+                    commonNode.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
+                    
+                    for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+                    {
+                        if(!firstLineFound && (*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator))
+                        {
+                            if(*lineIterator->getFirstNode() == *nodeIterator)
+                                endPointLine1.Set(lineIterator->getSecondNode()->getCenterXCoordinate(), lineIterator->getSecondNode()->getCenterYCoordinate());
+                            else
+                                endPointLine1.Set(lineIterator->getFirstNode()->getCenterXCoordinate(), lineIterator->getFirstNode()->getCenterYCoordinate());
+                            
+                            lineAddedArc.setSegmentProperty(*lineIterator->getSegmentProperty());
+                            
+                            firstLineFound = true;
+                        }
+                        else if(!secondLineFound && (*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator))
+                        {
+                            if(*lineIterator->getFirstNode() == *nodeIterator)
+                                endPointLine2.Set(lineIterator->getSecondNode()->getCenterXCoordinate(), lineIterator->getSecondNode()->getCenterYCoordinate());
+                            else
+                                endPointLine2.Set(lineIterator->getFirstNode()->getCenterXCoordinate(), lineIterator->getFirstNode()->getCenterYCoordinate());
+                                
+                            secondLineFound = true;
+                        }
+                    }
+                    
+                    angle = Varg((endPointLine2 - commonNode) / (endPointLine1 - commonNode));// Angle here is currently in radians
+                    
+                    if(fabs(angle) > PI)
+                        break;
+                    
+                    if(angle < 0)
+                    {
+                        commonNode = endPointLine1;
+                        endPointLine1 = endPointLine2;
+                        endPointLine2 = commonNode;
+                        commonNode.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
+                        angle = fabs(angle);
+                    }
+                    
+                    length = radius / tan(angle / 2.0);
+                    
+                    // If the radius is too big to fit
+                    if((Vabs(endPointLine1 - commonNode) < length) || Vabs(endPointLine2 - commonNode) < length)
+                        break;
+                    
+                    // Compute the locations of the tangent points
+                    endPointLine1 = length * (endPointLine1 - commonNode) / Vabs(endPointLine1 - commonNode) + commonNode;
+                    endPointLine2 = length * (endPointLine2 - commonNode) / Vabs(endPointLine2 - commonNode) + commonNode;
+                    
+                    if(addNode(endPointLine1.getXComponent(), endPointLine1.getYComponent(), length / 10000.0))
+                    {
+                        setNodeIndex(*_lastNodeAdded);
+                        _lineList.erase(_lastLineAdded);
+                        _lastLineAdded = _lineList.begin();// Used to make sure that the variable is still set to a valid iterator
+                    }
+                        
+                    else
+                        break;
+                        
+                    if(addNode(endPointLine2.getXComponent(), endPointLine2.getYComponent(), length / 10000.0))
+                    {
+                        setNodeIndex(*_lastNodeAdded);
+                        _lineList.erase(_lastLineAdded);
+                        _lastLineAdded = _lineList.begin();// Used to make sure that the variable is still set to a valid iterator
+                    }
+                    else
+                        break;
+                    
+                    _nodeList.erase(nodeIterator--); /// TODO: Check here for issues with iterators
+                    
+                    lineAddedArc.setArcAngle(180.0 - angle * (180.0 / PI));
+                    
+                    if(addArc(lineAddedArc, 0, true))
+                        willReturn = true;
+                    
+                    break;
+                    
+                }
+                case -2:// This is the case for if we have two arcs
+                {
+                    int j;
+                    Vector arcCenter1, arcCenter2, commonNode, p[8], arcI1[8], arcI2[8];
+                    double angle, radius1, radius2, centerDistance, a[8], b[8], d[8], x[8];
+                    bool firstArcFound = false;
+                    bool secondArcFound = false;
+                    plf::colony<arcShape>::iterator firstArc;
+                    plf::colony<arcShape>::iterator secondArc;
+                    arcShape arcAddArc;
+                    
+                    for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
+                    {
+                        if(!firstArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator))
+                        {
+                            arcCenter1.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
+                            radius1 = arcIterator->getRadius(); 
+                            arcAddArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                            arcAddArc.setNumSegments(arcIterator->getnumSegments());
+                            firstArcFound = true;
+                        }
+                        else if(!secondArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator))
+                        {
+                            arcCenter2.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
+                            radius2 = arcIterator->getRadius(); 
+                            secondArcFound = true;
+                        }
+                    }
+                    
+                    centerDistance = Vabs(arcCenter2 - arcCenter1);
+                    
+                    a[0] = radius1 + radius; 
+                    b[0] = radius2 + radius;
+                    
+                    a[1] = radius1 + radius; 
+                    b[1] = radius2 + radius;
+                    
+                    a[2] = radius1 - radius; 
+                    b[2] = radius2 - radius;
+                    
+                    a[3] = radius1 - radius; 
+                    b[3] = radius2 - radius;
+                    
+                    a[4] = radius1 - radius; 
+                    b[4] = radius2 + radius;
+                    
+                    a[5] = radius1 - radius; 
+                    b[5] = radius2 + radius;
+                    
+                    a[6] = radius1 + radius; 
+                    b[6] = radius2 - radius;
+                    
+                    a[7] = radius1 + radius; 
+                    b[7] = radius2 - radius;
+                    
+                    for(int k = 0; k < 8; k++)
+                    {
+                        x[k] = (pow(b[k], 2) + pow(centerDistance, 2) - pow(a[k], 2)) / (2.0 * pow(centerDistance, 2));
+                        d[k] = sqrt(pow(b[k], 2) - pow(x[k], 2) * pow(centerDistance, 2));
+                    }
+                    
+                    for(int k = 0; k < 8; k += 2)
+                    {
+                        // solve for the center point of the radius for each solution.
+                        p[k] = ((1 - x[k]) * centerDistance + J * d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
+                        p[k + 1] = ((1 - x[k]) * centerDistance - J * d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
+                    }
+                    
+                    for(int k = 0, j = 0; k < 8; k++)
+                    {
+                        arcI1[j] = arcCenter1 + radius1 * (p[k] - arcCenter1) / Vabs(p[k] - arcCenter1);
+                        arcI2[j] = arcCenter2 + radius2 * (p[k] - arcCenter2) / Vabs(p[k] - arcCenter2);
+                        p[j] = p[k];
+                        
+                        if(shortestDistanceFromArc(arcI1[j], *firstArc) < (radius / 10000.0) && shortestDistanceFromArc(arcI2[j], *secondArc) < (radius / 10000.0) && Vabs(arcI1[j] - arcI2[j]) > (radius / 10000.0))
+                        {
+                            j++;
+                            if(j == 2)
+                                break;
+                        }
+                    }
+                    
+                    if(j > 1)
+                        break;
+                    else if(j > 1)
+                    {
+                        if(Vabs(p[0] - commonNode) < Vabs(p[1] - commonNode))
+                            j = 0;
+                        else
+                            j = 1;
+                    }
+                    else 
+                        j = 0;
+                        
+                    if(addNode(arcI1[j].getXComponent(), arcI1[j].getYComponent(), centerDistance / 10000.0))
+                    {
+                        setNodeIndex(*_lastNodeAdded);
+                        _arcList.erase(_lastArcAdded);
+                        _lastArcAdded = _arcList.begin();// used to make sure that the _lastArcAdded variable is set to a valid iterator
+                    }
+                    else
+                        break;
+                        
+                    if(addNode(arcI2[j].getXComponent(), arcI2[j].getYComponent(), centerDistance / 10000.0))
+                    {
+                        setNodeIndex(*_lastNodeAdded);
+                        _arcList.erase(_lastArcAdded);
+                        _lastArcAdded = _arcList.begin();// used to make sure that the _lastArcAdded variable is set to a valid iterator
+                    }
+                        
+                    else
+                        break;
+                        
+                    _nodeList.erase(nodeIterator--);/// TODO: Check here for any iterator issues
+                    
+                    angle = Varg((arcI2[j] - p[j]) / (arcI1[j] - p[j]));
+                    if(angle < 0)
+                    {
+                        commonNode = arcI2[j];
+                        arcI2[j] = arcI1[j];
+                        arcI1[j] = commonNode;
+                        angle = fabs(angle);
+                    }
+                    
+                    arcAddArc.setArcAngle(angle * 180.0 / PI);
+                    
+                    if(addArc(arcAddArc, 0, true))
+                        willReturn = true;
+
+                    break;
+                    
+                }
+                default:// For everything else
+                    continue;
+                    
+            }
         }
     }
+    
+    return willReturn;
 }
 
 

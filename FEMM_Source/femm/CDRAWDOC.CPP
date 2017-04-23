@@ -2491,11 +2491,15 @@ BOOL CcdrawDoc::CreateRadius(int n, double r)
 			double phi,len;
 			CArcSegment ar;
 			
-			if (linelist[seg[0]].n0==n) p1=nodelist[linelist[seg[0]].n1].CC();
-			else p1=nodelist[linelist[seg[0]].n0].CC();
+			if (linelist[seg[0]].n0==n) 
+				p1=nodelist[linelist[seg[0]].n1].CC();
+			else 
+				p1=nodelist[linelist[seg[0]].n0].CC();
 
-			if (linelist[seg[1]].n0==n) p2=nodelist[linelist[seg[1]].n1].CC();
-			else p2=nodelist[linelist[seg[1]].n0].CC();
+			if (linelist[seg[1]].n0==n) 
+				p2=nodelist[linelist[seg[1]].n1].CC();
+			else 
+				p2=nodelist[linelist[seg[1]].n0].CC();
 			
 			p0=nodelist[n].CC();
 
