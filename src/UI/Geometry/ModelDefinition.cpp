@@ -39,11 +39,10 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 void modelDefinition::deleteSelection()
 {
     
-    if(_editor.getNodeList()->size() > 1 && _nodesAreSelected)
+    if(_nodesAreSelected)
     {
         for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end();)
         {
-            plf::colony<node>::iterator endTest = _editor.getNodeList()->end();
             if(nodeIterator->getIsSelectedState())
             {
                 if(_editor.getLineList()->size() > 1)
@@ -99,12 +98,7 @@ void modelDefinition::deleteSelection()
                 nodeIterator++;
         }
     }
-    else if(_editor.getNodeList()->size() == 1 && _editor.getNodeList()->begin()->getIsSelectedState())
-    {
-        _editor.getNodeList()->clear();
-    }
-
-    if(_editor.getLineList()->size() > 1)
+    else if(_linesAreSelected)
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end();)
         {
@@ -131,12 +125,7 @@ void modelDefinition::deleteSelection()
                 lineIterator++;
         }
     }
-    else if(_editor.getLineList()->size() == 1)
-    {
-        _editor.getLineList()->clear();
-    }
-        
-    if(_editor.getArcList()->size() > 1)
+    else if(_arcsAreSelected)
     {
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end();)
         {
@@ -157,15 +146,8 @@ void modelDefinition::deleteSelection()
                 arcIterator++;
         }
     }
-    else if(_editor.getArcList()->size() == 1 && _editor.getArcList()->begin()->getIsSelectedState())
+    else if(_labelsAreSelected)
     {
-        _editor.getArcList()->clear();
-    }
-        
-    if(_editor.getBlockLabelList()->size() > 1)
-    {
-        wxGLStringArray labelNamesToKeep;
-        int i = 0;
         for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end();)
         {
             if(blockIterator->getIsSelectedState())
@@ -180,18 +162,150 @@ void modelDefinition::deleteSelection()
                 
                 if(_editor.getBlockLabelList()->size() == 0)
                     break;
-                 //   labelNamesToKeep.addString(_editor.getBlockNameArray()->get(i));
             }
             else
                 blockIterator++;
-            i++;
         }
-        _editor.setLabelNameArray(labelNamesToKeep);
     }
-    else if(_editor.getBlockLabelList()->size() == 1 && _editor.getBlockLabelList()->begin()->getIsSelectedState())
+    else if(_geometryGroupIsSelected)
     {
-        _editor.getBlockLabelList()->clear();
-         //   _editor.getBlockNameArray()->getStringArray->clear();
+        /* This section is for deleting all of the arcs */
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end();)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                if(arcIterator == _editor.getArcList()->back())
+                {
+                    _editor.getArcList()->erase(arcIterator);
+                    break;
+                }
+                else
+                    _editor.getArcList()->erase(arcIterator++);
+                
+                if(_editor.getArcList()->size() == 0)
+                    break;
+            }
+            else
+                arcIterator++;
+        }
+        
+        /* This section is for deleting all of the lines */
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end();)
+        {
+            if(lineIterator->getIsSelectedState())
+            {
+                /* Bug fix: At first the code did not check if the line iterator was on the back
+                 * This causes problems becuase if the last iterator was deleted, then we are incrementing an invalidated iterator
+                 * which creates another invalidated iterator that is not equal to the end iterator of the list.
+                 * When you erase an invalidated iterator, the program crashes.
+                 * The same logic applies for the other geometry shapes
+                 */ 
+                if(lineIterator == _editor.getLineList()->back())
+                {
+                    _editor.getLineList()->erase(lineIterator);
+                    break;
+                }
+                else
+                    _editor.getLineList()->erase(lineIterator++);
+                
+                if(_editor.getLineList()->size() == 0)
+                    break;
+            }
+            else
+                lineIterator++;
+        }
+        
+        /* This section is for deleting all of the labels */
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end();)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                if(blockIterator == _editor.getBlockLabelList()->back())
+                {
+                    _editor.getBlockLabelList()->erase(blockIterator);
+                    break;
+                }
+                else
+                    _editor.getBlockLabelList()->erase(blockIterator++);
+                
+                if(_editor.getBlockLabelList()->size() == 0)
+                    break;
+            }
+            else
+                blockIterator++;
+        }
+        
+        /* This section is for iterating through all of the nodes */
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end();)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
+                 * The deletion of the arc/line occurs later in the code*/
+                
+                for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end();)
+                {
+                    if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                    {
+                        if(lineIterator == _editor.getLineList()->back())
+                        {
+                            _editor.getLineList()->erase(lineIterator);
+                            break;
+                        }
+                        else
+                            _editor.getLineList()->erase(lineIterator++);
+                        
+                        if(_editor.getLineList()->size() == 0)
+                            break;
+                    }
+                    else
+                        ++lineIterator;
+                }
+
+                for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end();)
+                {
+                    if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                    {
+                        if(arcIterator == _editor.getArcList()->back())
+                        {
+                            _editor.getArcList()->erase(arcIterator);
+                            break;
+                        }
+                        else
+                            _editor.getArcList()->erase(arcIterator++);
+                        
+                        if(_editor.getArcList()->size() == 0)
+                            break;
+                    }
+                    else
+                        ++arcIterator;
+                }
+                
+                if(nodeIterator == _editor.getNodeList()->back())
+                {
+                    _editor.getNodeList()->erase(nodeIterator);
+                    break;
+                }
+                else
+                {
+                    /* Bug Fix: This applies for all of the other geometry shapes
+                    * At first, the for loop was for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    * This creates issue at this line because orginally, the line was _editor.getNodeList()->erase(nodeIterator);. For the plf::colony class, when
+                    * an element is erased, it invalidates the element. For the iterators, since the iterator is pointing to the element that was just erased, nodeIterator is now
+                    * pointing to an invalidated element in the colony object.
+                    * The fix is to have the nodeIterator be incremented first and then pass in the value of nodeIterator before the increment.
+                    * This way the nodeIterator will never be pointing to an invalidated element.
+                    */ 
+                    _editor.getNodeList()->erase(nodeIterator++);
+                }
+
+                if(_editor.getNodeList()->size() == 0)
+                    break;
+            }
+            else
+                nodeIterator++;
+                
+        }
     }
         
     this->Refresh();
@@ -380,6 +494,7 @@ void modelDefinition::editSelection()
             }
         }
     }
+    
     
     this->Refresh();
     return;
@@ -3333,7 +3448,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
             }
         }
     }
-    else if(_endPoint.y < _startPoint.y && _endPoint.x < _startPoint.x)// This case is if teh endpoint is to the right of the start point and down. In this case, the user would like to select all of the arcs/lines within the area
+    else if(_endPoint.y < _startPoint.y && _endPoint.x < _startPoint.x)// This case is if teh endpoint is to the left of the start point and down. In this case, the user would like to select all of the arcs/lines within the area
     {
         // First, make sure to clear out everything else
         if(_nodesAreSelected || _geometryGroupIsSelected)
@@ -3429,7 +3544,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
                 {
                     arcIterator->setSelectState(true);
                     _arcsAreSelected = true;
-                    _arcsAreSelected++;
+                    arcsSelected++;
                     _geometryGroupIsSelected = false;
                 }    
             }
@@ -3479,7 +3594,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
             {
                 nodeIterator->setSelectState(true);
                 nodesSeleted++;
-                _geometryGroupIsSelected = true;;
+                _geometryGroupIsSelected = true;
             }
         }
         
@@ -3510,9 +3625,8 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
             if(arcIterator->getFirstNode()->getIsSelectedState() && arcIterator->getSecondNode()->getIsSelectedState())
             {
                 arcIterator->setSelectState(true);
-                _arcsAreSelected = true;
-                _arcsAreSelected++;
-                _geometryGroupIsSelected = false;
+                arcsSelected++;
+                _geometryGroupIsSelected = true;
             }    
         }
     }
