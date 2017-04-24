@@ -251,6 +251,7 @@ public:
     
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
+    //! pointOne is the point that for the boundaing box that is the highest left most point. Pointtwo is hte lowest right most point 
     void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
     
     void createFillet(double filletRadius);
