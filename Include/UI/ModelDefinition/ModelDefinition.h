@@ -16,11 +16,7 @@
 
 #include <glew.h>
 #include <freeglut.h>
-/*
-#include <freeglut.h>
-#include <gl.h>
-#include <glu.h>
-*/
+
 #include <wx/wx.h>
 #include <wx/gdicmn.h>
 
@@ -35,6 +31,7 @@
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 #include <UI/GeometryDialog/ArcSegmentDialog.h>
+#include <UI/GeometryDialog/EditGroupDialog.h>
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>

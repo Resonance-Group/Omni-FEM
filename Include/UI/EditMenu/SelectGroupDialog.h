@@ -22,6 +22,8 @@ private:
     
     wxRadioButton *_labelRadioButton = new wxRadioButton();
     
+    wxRadioButton *_allRadioButton = new wxRadioButton();
+    
     wxTextCtrl *_groupNumberSelect = new wxTextCtrl();
 public:
     selectGroupDialog(wxWindow *par);

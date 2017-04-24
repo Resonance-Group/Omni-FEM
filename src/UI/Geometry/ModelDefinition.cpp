@@ -335,7 +335,50 @@ void modelDefinition::editSelection()
     }
     else if(_geometryGroupIsSelected)
     {
-        // TODO: Create a dialog which will only allow the user to change the group number of all selected geometry
+        unsigned int groupNumber;
+        editGroupNumberDialog *dialog;
+        // Create a dialog which will only allow the user to change the group number of all selected geometry
+        // The nodes are selected as the geometry to get the group number becuase if lines/arcs are seleted, then their two nodes need to be selected as well
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+            {
+                groupNumber = nodeIterator->getNodeSetting()->getGroupNumber();
+                break;
+            }
+        }
+        
+        dialog = new editGroupNumberDialog(this, groupNumber);
+        
+        if(dialog->ShowModal() == wxID_OK)
+        {
+            groupNumber = dialog->getGroupNumber();
+            
+            // Iterate through everything that is selected and set the group number to the one that the user selected
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(nodeIterator->getIsSelectedState())
+                    nodeIterator->getNodeSetting()->setGroupNumber(groupNumber);
+            }
+            
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                if(blockIterator->getIsSelectedState())
+                    blockIterator->getProperty()->setGroupNumber(groupNumber);
+            }
+            
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(arcIterator->getIsSelectedState())
+                    arcIterator->getSegmentProperty()->setGroupNumber(groupNumber);
+            }
+            
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                if(lineIterator->getIsSelectedState())
+                    lineIterator->getSegmentProperty()->setGroupNumber(groupNumber);
+            }
+        }
     }
     
     this->Refresh();
@@ -583,50 +626,91 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
 {
     clearSelection();
     
-    if(geometry == EditGeometry::EDIT_NODES)
+    switch(geometry)
     {
-        _nodesAreSelected = true;
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-        {
-            if(nodeIterator->getNodeSetting()->getGroupNumber() == groupNumber)
+        case EditGeometry::EDIT_NODES:
+            _nodesAreSelected = true;
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
-                nodeIterator->setSelectState(true);
+                if(nodeIterator->getNodeSetting()->getGroupNumber() == groupNumber)
+                {
+                    nodeIterator->setSelectState(true);
+                }
             }
-        }
-    }
-    else if(geometry == EditGeometry::EDIT_LINES)
-    {
-        _linesAreSelected = true;
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-        {
-            if(lineIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
+            break;
+            
+        case EditGeometry::EDIT_LINES:
+            _linesAreSelected = true;
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
-                lineIterator->setSelectState(true);
+                if(lineIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
+                {
+                    lineIterator->setSelectState(true);
+                }
             }
-        }
-    }
-    else if(geometry == EditGeometry::EDIT_ARCS)
-    {
-        _arcsAreSelected = true;
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            if(arcIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
+            break;
+            
+        case EditGeometry::EDIT_ARCS:
+            _arcsAreSelected = true;
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
-                arcIterator->setSelectState(true);
+                if(arcIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
+                {
+                    arcIterator->setSelectState(true);
+                }
             }
-        }
-    }
-    else if(geometry == EditGeometry::EDIT_LABELS)
-    {
-        _labelsAreSelected = true;
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            if(blockIterator->getProperty()->getGroupNumber() == groupNumber)
+            break;
+        
+        case EditGeometry::EDIT_LABELS:
+           _labelsAreSelected = true;
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
-                blockIterator->setSelectState(true);
+                if(blockIterator->getProperty()->getGroupNumber() == groupNumber)
+                {
+                    blockIterator->setSelectState(true);
+                }
+            }             
+            break;
+
+        case EditGeometry::EDIT_ALL:
+            _geometryGroupIsSelected = true;
+            
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(nodeIterator->getNodeSetting()->getGroupNumber() == groupNumber)
+                {
+                    nodeIterator->setSelectState(true);
+                }
             }
-        }
+            
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                if(lineIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
+                {
+                    lineIterator->setSelectState(true);
+                }
+            }
+            
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(arcIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
+                {
+                    arcIterator->setSelectState(true);
+                }
+            }
+            
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                if(blockIterator->getProperty()->getGroupNumber() == groupNumber)
+                {
+                    blockIterator->setSelectState(true);
+                }
+            } 
+            break;
+        default:
+            break;
     }
+
     
     this->Refresh();
     return;
@@ -2264,10 +2348,38 @@ void modelDefinition::clearSelection()
         }
     }
     
+    if(_geometryGroupIsSelected)
+    {
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if(nodeIterator->getIsSelectedState())
+                nodeIterator->setSelectState(false);
+        }
+        
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+                blockIterator->setSelectState(false);
+        }
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+                lineIterator->setSelectState(false);
+        }
+        
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+                arcIterator->setSelectState(false);
+        }
+    }
+    
     _nodesAreSelected = false;
     _linesAreSelected = false;
     _arcsAreSelected = false;
     _labelsAreSelected = false;
+    _geometryGroupIsSelected = false;
 }
 
 
