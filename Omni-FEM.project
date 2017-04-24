@@ -77,6 +77,7 @@
         <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
         <File Name="src/UI/EditMenu/SelectGroupDialog.cpp"/>
+        <File Name="src/UI/EditMenu/CreateRadiusDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>
@@ -136,6 +137,7 @@
         <File Name="Include/UI/EditMenu/OpenBoundaryDialog.h"/>
         <File Name="Include/UI/EditMenu/GlobalPreferencesDialog.h"/>
         <File Name="Include/UI/EditMenu/SelectGroupDialog.h"/>
+        <File Name="Include/UI/EditMenu/CreateRadiusDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="Include/UI/ViewMenu/ZoomWindow.h"/>

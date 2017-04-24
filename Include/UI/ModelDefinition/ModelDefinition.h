@@ -73,6 +73,8 @@ private:
     
     bool _doMirrorLine = false;
     
+    bool _doSelectionWindow = false;
+    
     bool _isFirstInitlized = false;
     
     //! This is the variable that will determine to create nodes/block labels
@@ -90,6 +92,8 @@ private:
     bool _labelsAreSelected = false;
     
     bool _geometryIsSelected = false;
+    
+    bool _geometryGroupIsSelected = false;
     
     wxRealPoint _startPoint;
     
@@ -132,6 +136,8 @@ private:
     void onMouseLeftUp(wxMouseEvent &event);
     
     void onMouseRightDown(wxMouseEvent &event);
+    
+    void onMouseRightUp(wxMouseEvent &event);
     
     void onKeyDown(wxKeyEvent &event);
     
@@ -249,6 +255,8 @@ public:
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
     void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
+    
+    void createFillet(double filletRadius);
     
     // Create Radius is found on CcdrawDoc::CreateRadius
     

@@ -4,6 +4,7 @@
 
 #include "UI/OmniFEMFrame.h"
 #include <common/MagneticPreference.h>
+#include <UI/EditMenu/CreateRadiusDialog.h>
 
 
 void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
@@ -136,7 +137,12 @@ void OmniFEMMainFrame::onMove(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onCreateRadius(wxCommandEvent &event)
 {
-    
+    createRadiusDialog *radiusDialog = new createRadiusDialog(this);
+    if(radiusDialog->ShowModal() == wxID_OK)
+    {
+        double radiusValue = radiusDialog->getRadius();
+        _model->createFillet(radiusValue);
+    }
 }
 
 

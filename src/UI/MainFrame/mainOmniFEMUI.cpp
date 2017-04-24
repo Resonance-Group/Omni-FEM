@@ -497,6 +497,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_CREATE_RADIUS, OmniFEMMainFrame::onCreateRadius)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
     EVT_MENU(EditMenuID::ID_SELECT_GROUP, OmniFEMMainFrame::onSelectGroup)
+    EVT_MENU(EditMenuID::ID_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
 	
 	/* This section is for the View menu */
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)

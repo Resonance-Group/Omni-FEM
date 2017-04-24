@@ -333,6 +333,10 @@ void modelDefinition::editSelection()
         }
         delete(dialog);
     }
+    else if(_geometryGroupIsSelected)
+    {
+        // TODO: Create a dialog which will only allow the user to change the group number of all selected geometry
+    }
     
     this->Refresh();
     return;
@@ -2056,6 +2060,13 @@ void modelDefinition::getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTw
 
 
 
+void modelDefinition::createFillet(double filletRadius)
+{
+    _editor.createSoftEdge(filletRadius);
+}
+
+
+
 void modelDefinition::doZoomWindow()
 {
     if(fabs(_endPoint.x - _startPoint.x) == 0 || fabs(_endPoint.y - _startPoint.y) == 0)
@@ -2313,18 +2324,10 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         _textRendering->renderBlockLabelText();
     }
     
-    if(_doZoomWindow)
+    if(_doZoomWindow || _doSelectionWindow)// We are going to be drawing the same thing for this one
     {
-                /* The code for drawing the grid was adapted from the Agros2D project */
         glLineWidth(3.0);
         glEnable(GL_LINE_STIPPLE);
-        /* 
-        * The binary form is able to display the concept of glLineStipple for 
-        * new users better then the Hex form. Although, the function is able to accept Hex
-        * For an idea of how glLineStipple work, refer to the following link
-        * http://images.slideplayer.com/16/4964597/slides/slide_9.jpg
-        * 
-        */ 
         glLineStipple(1, 0b0001100011000110);
     
         glBegin(GL_LINES);
@@ -2528,6 +2531,18 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
             }
         }
         else if(_doZoomWindow || _doMirrorLine)
+        {
+            double tempX = convertToXCoordinate(event.GetX());
+            double tempY = convertToYCoordinate(event.GetY());
+            if(_preferences.getSnapGridState())
+                roundToNearestGrid(tempX, tempY);
+                
+            _endPoint = wxRealPoint(tempX, tempY);
+        }
+    }
+    else if(event.ButtonIsDown(wxMOUSE_BTN_RIGHT))
+    {
+        if(_doSelectionWindow)
         {
             double tempX = convertToXCoordinate(event.GetX());
             double tempY = convertToYCoordinate(event.GetY());
@@ -2790,260 +2805,11 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
     double xCoordinate = convertToXCoordinate(event.GetX());
     double yCoordinate = convertToYCoordinate(event.GetY());
-    wxRealPoint mousePointer = wxRealPoint(xCoordinate, yCoordinate);
+    _startPoint = wxRealPoint(xCoordinate, yCoordinate);
+    _endPoint = _startPoint;
+    _doSelectionWindow = true;
     
-    /* these nodes are only meant to keep track of the number of shapes selected and to assist with setting the boolean _(geometryName)isSelected */
-    static unsigned int nodesSeleted = 0;
-    static unsigned int labelsSelected = 0;
-    static unsigned int linesSelected = 0;
-    static unsigned int arcsSelected = 0;
-
-    if(_editor.getNodeList()->size() > 0)
-    {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-        {
-            if(fabs(nodeIterator->getDistance(xCoordinate, yCoordinate)) < getTolerance())
-            {
-                // Add in code to remove previousely selected geometry that is different then the one already selected
-                if(_linesAreSelected)
-                {
-                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-                    {
-                        lineIterator->setSelectState(false);
-                        linesSelected = 0;
-                    }
-                }
-                else if(_arcsAreSelected)
-                {
-                   for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-                    {
-                        arcIterator->setSelectState(false);
-                        arcsSelected = 0;
-                    } 
-                }
-                else if(_labelsAreSelected)
-                {
-                   for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-                    {
-                        blockIterator->setSelectState(false);
-                        labelsSelected = 0;
-                    } 
-                }
-                
-                nodeIterator->setSelectState(!nodeIterator->getIsSelectedState());
-                _nodesAreSelected = true;
-                if(nodeIterator->getIsSelectedState())
-                    nodesSeleted++;
-                else
-                {
-                    nodesSeleted--;
-                    if(nodesSeleted == 0)
-                        _nodesAreSelected = false;
-                }
-                this->Refresh();
-                return;
-            }
-        }
-    }
-    
-    if(_editor.getBlockLabelList()->size() > 0)
-    {
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            if(fabs(blockIterator->getDistance(xCoordinate, yCoordinate)) < getTolerance())
-            {
-                if(_nodesAreSelected)
-                {
-                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                    {
-                        nodeIterator->setSelectState(false);
-                        nodesSeleted = 0;
-                    }
-                }
-                else if(_arcsAreSelected)
-                {
-                   for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-                    {
-                        arcIterator->setSelectState(false);
-                        arcsSelected = 0;
-                    } 
-                }
-                else if(_linesAreSelected)
-                {
-                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-                    {
-                        lineIterator->setSelectState(false);
-                        linesSelected = 0;
-                    }
-                }
-                
-                _labelsAreSelected = true;
-                blockIterator->setSelectState(!blockIterator->getIsSelectedState());
-                
-                if(blockIterator->getIsSelectedState())
-                    labelsSelected++;
-                else
-                {
-                    labelsSelected--;
-                    if(labelsSelected == 0)
-                        _labelsAreSelected = false;
-                }
-                
-                
-                this->Refresh();
-                return;
-            }
-        }
-    }
-    
-    if(_editor.getLineList()->size() > 0)
-    {
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-        {
-            if(fabs(_editor.calculateShortestDistance(mousePointer, *lineIterator)) < getTolerance())
-            {
-                if(_nodesAreSelected)
-                {
-                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                    {
-                        nodeIterator->setSelectState(false);
-                        nodesSeleted = 0;
-                    }
-                }
-                else if(_arcsAreSelected)
-                {
-                   for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-                    {
-                        arcIterator->setSelectState(false);
-                        arcsSelected = 0;
-                    } 
-                }
-                else if(_labelsAreSelected)
-                {
-                   for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-                    {
-                        blockIterator->setSelectState(false);
-                        labelsSelected = 0;
-                    } 
-                }
-                
-                _linesAreSelected = true;
-                
-                lineIterator->setSelectState(!lineIterator->getIsSelectedState());
-                
-                if(lineIterator->getIsSelectedState())
-                    linesSelected++;
-                else
-                {
-                    linesSelected--;
-                    if(linesSelected == 0)
-                        _linesAreSelected = false;
-                }
-                
-                this->Refresh();
-                return;
-            }
-        }
-    }
-    
-    if(_editor.getArcList()->size() > 0)
-    {
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            double tolerance = getTolerance();
-            if(fabs(_editor.calculateShortestDistanceFromArc(mousePointer, *arcIterator)) < getTolerance())
-            {
-                if(_nodesAreSelected)
-                {
-                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                    {
-                        nodeIterator->setSelectState(false);
-                        nodesSeleted = 0;
-                    }
-                }
-                else if(_linesAreSelected)
-                {
-                    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-                    {
-                        lineIterator->setSelectState(false);
-                        linesSelected = 0;
-                    }
-                }
-                else if(_labelsAreSelected)
-                {
-                   for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-                    {
-                        blockIterator->setSelectState(false);
-                        labelsSelected = 0;
-                    } 
-                }
-                
-                _arcsAreSelected = true;
-                
-                arcIterator->setSelectState(!arcIterator->getIsSelectedState());
-                
-                if(arcIterator->getIsSelectedState())
-                    arcsSelected++;
-                else
-                {
-                    arcsSelected--;
-                    if(arcsSelected == 0)
-                        _arcsAreSelected = false;
-                }
-                
-                this->Refresh();
-                return;
-            }
-        }
-    }
-    
-    /* This section is for if the user clicks on empty white space */
-    if(_nodesAreSelected)
-    {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-        {
-            nodeIterator->setSelectState(false);
-        }
-        nodesSeleted = 0;
-        _nodesAreSelected = false;
-        this->Refresh();
-        return;
-    }
-    else if(_linesAreSelected)
-    {
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-        {
-            lineIterator->setSelectState(false);
-        }
-        linesSelected = 0;
-        _linesAreSelected = false;
-        this->Refresh();
-        return;
-    }
-    else if(_labelsAreSelected)
-    {
-       for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            blockIterator->setSelectState(false);
-        }
-        labelsSelected = 0;
-        _labelsAreSelected = false;
-        this->Refresh();
-        return; 
-    }
-    else if(_arcsAreSelected)
-    {
-       for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            arcIterator->setSelectState(false);
-        }
-        arcsSelected = 0;
-        _arcsAreSelected = false;
-        this->Refresh();
-        return;
-    }
-    
-    if(event.ControlDown())
+ /*   if(event.ControlDown())
     {
         std::string combineStringPixel;
         std::string combineStringCoord = "(";
@@ -3061,6 +2827,578 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     
         wxMessageBox(combineStringCoord);
     }
+     */ 
+}
+
+
+
+void modelDefinition::onMouseRightUp(wxMouseEvent &event)
+{
+    /* these nodes are only meant to keep track of the number of shapes selected and to assist with setting the boolean _(geometryName)isSelected */
+    static unsigned int nodesSeleted = 0;
+    static unsigned int labelsSelected = 0;
+    static unsigned int linesSelected = 0;
+    static unsigned int arcsSelected = 0;
+        
+    if(_startPoint == _endPoint)
+    {
+        if(_editor.getNodeList()->size() > 0)
+        {
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if(fabs(nodeIterator->getDistance(_startPoint.x, _startPoint.y)) < getTolerance())
+                {
+                    // First, if there is any geometry selected, we need to remove it
+                    if(_linesAreSelected || _geometryGroupIsSelected)
+                    {
+                        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                        {
+                            lineIterator->setSelectState(false);
+                            linesSelected = 0;
+                        }
+                    }
+                    
+                    if(_arcsAreSelected || _geometryGroupIsSelected)
+                    {
+                       for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                        {
+                            arcIterator->setSelectState(false);
+                            arcsSelected = 0;
+                            
+                        } 
+                    }
+                    
+                    if(_labelsAreSelected || _geometryGroupIsSelected)
+                    {
+                       for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                        {
+                            blockIterator->setSelectState(false);
+                            labelsSelected = 0;
+                        } 
+                    }
+                    
+                    nodeIterator->setSelectState(!nodeIterator->getIsSelectedState());
+                    _nodesAreSelected = true;
+                    
+                    /* I placed this inside of the if statement for every iteration because if there is one, then this is valid. But, if the user did not click on one, then this logic beecomes invalid */
+                    _linesAreSelected = false;
+                    _arcsAreSelected = false;
+                    _labelsAreSelected = false;
+                    _geometryIsSelected = false;
+                    
+                    if(nodeIterator->getIsSelectedState())
+                        nodesSeleted++;
+                    else
+                    {
+                        nodesSeleted--;
+                        if(nodesSeleted == 0)
+                            _nodesAreSelected = false;
+                    }
+                    this->Refresh();
+                    return;
+                }
+            }
+        }
+        
+        if(_editor.getBlockLabelList()->size() > 0)
+        {
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                if(fabs(blockIterator->getDistance(_startPoint.x, _startPoint.y)) < getTolerance())
+                {
+                    if(_nodesAreSelected || _geometryGroupIsSelected)
+                    {
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            nodeIterator->setSelectState(false);
+                            nodesSeleted = 0;
+                        }
+                    }
+                    
+                    if(_arcsAreSelected || _geometryGroupIsSelected)
+                    {
+                       for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                        {
+                            arcIterator->setSelectState(false);
+                            arcsSelected = 0;
+                        } 
+                    }
+                    
+                    if(_linesAreSelected || _geometryGroupIsSelected)
+                    {
+                        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                        {
+                            lineIterator->setSelectState(false);
+                            linesSelected = 0;
+                        }
+                    }
+                    
+                    _labelsAreSelected = true;
+                    _nodesAreSelected = false;
+                    _linesAreSelected = false;
+                    _arcsAreSelected = false;
+                    _geometryIsSelected = false;
+                    
+                    blockIterator->setSelectState(!blockIterator->getIsSelectedState());
+                    
+                    if(blockIterator->getIsSelectedState())
+                        labelsSelected++;
+                    else
+                    {
+                        labelsSelected--;
+                        if(labelsSelected == 0)
+                            _labelsAreSelected = false;
+                    }
+                    
+                    
+                    this->Refresh();
+                    return;
+                }
+            }
+        }
+        
+        if(_editor.getLineList()->size() > 0)
+        {
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                if(fabs(_editor.calculateShortestDistance(_endPoint, *lineIterator)) < getTolerance())
+                {
+                    if(_nodesAreSelected || _geometryGroupIsSelected)
+                    {
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            nodeIterator->setSelectState(false);
+                            nodesSeleted = 0;
+                        }
+                    }
+                    
+                    if(_arcsAreSelected || _geometryGroupIsSelected)
+                    {
+                       for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                        {
+                            arcIterator->setSelectState(false);
+                            arcsSelected = 0;
+                        } 
+                    }
+                    
+                    if(_labelsAreSelected || _geometryGroupIsSelected)
+                    {
+                       for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                        {
+                            blockIterator->setSelectState(false);
+                            labelsSelected = 0;
+                        } 
+                    }
+                    
+                    _linesAreSelected = true;
+                    _nodesAreSelected = false;
+                    _labelsAreSelected = false;
+                    _arcsAreSelected = false;
+                    _geometryIsSelected = false;
+                    
+                    lineIterator->setSelectState(!lineIterator->getIsSelectedState());
+                    
+                    if(lineIterator->getIsSelectedState())
+                        linesSelected++;
+                    else
+                    {
+                        linesSelected--;
+                        if(linesSelected == 0)
+                            _linesAreSelected = false;
+                    }
+                    
+                    this->Refresh();
+                    return;
+                }
+            }
+        }
+        
+        if(_editor.getArcList()->size() > 0)
+        {
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                if(fabs(_editor.calculateShortestDistanceFromArc(_endPoint, *arcIterator)) < getTolerance())
+                {
+                    if(_nodesAreSelected || _geometryGroupIsSelected)
+                    {
+                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                        {
+                            nodeIterator->setSelectState(false);
+                            nodesSeleted = 0;
+                        }
+                    }
+                    else if(_linesAreSelected || _geometryGroupIsSelected)
+                    {
+                        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                        {
+                            lineIterator->setSelectState(false);
+                            linesSelected = 0;
+                        }
+                    }
+                    else if(_labelsAreSelected || _geometryGroupIsSelected)
+                    {
+                       for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                        {
+                            blockIterator->setSelectState(false);
+                            labelsSelected = 0;
+                        } 
+                    }
+                    
+                    _arcsAreSelected = true;
+                    _nodesAreSelected = false;
+                    _labelsAreSelected = false;
+                    _linesAreSelected = false;
+                    _geometryIsSelected = false;
+                    
+                    arcIterator->setSelectState(!arcIterator->getIsSelectedState());
+                    
+                    if(arcIterator->getIsSelectedState())
+                        arcsSelected++;
+                    else
+                    {
+                        arcsSelected--;
+                        if(arcsSelected == 0)
+                            _arcsAreSelected = false;
+                    }
+                    
+                    this->Refresh();
+                    return;
+                }
+            }
+        }
+        // basically, if nothing is selected, then we should clear everyhing
+        /* This section is for if the user clicks on empty white space */
+        if(_nodesAreSelected || _geometryGroupIsSelected)
+        {
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                nodeIterator->setSelectState(false);
+            }
+            nodesSeleted = 0;
+            _nodesAreSelected = false;
+        }
+        
+        if(_linesAreSelected || _geometryGroupIsSelected)
+        {
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                lineIterator->setSelectState(false);
+            }
+            linesSelected = 0;
+            _linesAreSelected = false;
+        }
+        
+        if(_labelsAreSelected || _geometryGroupIsSelected)
+        {
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                blockIterator->setSelectState(false);
+            }
+            labelsSelected = 0;
+            _labelsAreSelected = false;
+        }
+        
+        if(_arcsAreSelected || _geometryGroupIsSelected)
+        {
+           for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                arcIterator->setSelectState(false);
+            }
+            arcsSelected = 0;
+            _arcsAreSelected = false;
+        }
+        
+        _geometryGroupIsSelected = false;
+        this->Refresh();
+        return;
+    }
+    else if(_endPoint.y > _startPoint.y && _endPoint.x < _startPoint.x)
+    {
+        // Make sure to clear out everything else first
+        if(_arcsAreSelected || _geometryGroupIsSelected)
+        {
+           for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                arcIterator->setSelectState(false);
+            }
+            arcsSelected = 0;
+            _arcsAreSelected = false;
+        }
+        
+        if(_linesAreSelected || _geometryGroupIsSelected)
+        {
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                lineIterator->setSelectState(false);
+            }
+            linesSelected = 0;
+            _linesAreSelected = false;
+        }
+        
+        if(_createNodes)
+        {
+            // This is the case for if the user wants to select all of the nodes within the window
+            
+            if(_labelsAreSelected || _geometryGroupIsSelected)
+            {
+                // Clear out any selected labels
+                for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                {
+                    blockIterator->setSelectState(false);
+                }
+                labelsSelected = 0;
+                _labelsAreSelected = false;
+            }
+            
+
+            // If the control key is not down (meaning that it is up) then this means that the user only wants to select a specific block of nodes (or lines/arcs/labels for their respective sections)
+            if(!event.ControlDown())
+            {
+                for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                {
+                    nodeIterator->setSelectState(false);
+                }
+                nodesSeleted = 0;
+                _nodesAreSelected = false;
+            }
+            
+            
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                if((nodeIterator->getCenterXCoordinate() >= _endPoint.x && nodeIterator->getCenterXCoordinate() <= _startPoint.x) && (nodeIterator->getCenterYCoordinate() <= _endPoint.y && nodeIterator->getCenterYCoordinate() >= _startPoint.y))
+                {
+                    nodeIterator->setSelectState(true);
+                    _nodesAreSelected = true;
+                    nodesSeleted++;
+                    _geometryGroupIsSelected = false;
+                }
+            }
+        }
+        else
+        {
+            // This is case for if the user has the create labels toggeled
+            if(_nodesAreSelected || _geometryGroupIsSelected)
+            {
+                for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                {
+                    nodeIterator->setSelectState(false);
+                }
+                nodesSeleted = 0;
+                _nodesAreSelected = false;
+            }
+            
+            if(!event.ControlDown())
+            {
+                for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                {
+                    blockIterator->setSelectState(false);
+                }
+                labelsSelected = 0;
+                _labelsAreSelected = false;
+            }
+            
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                if((blockIterator->getCenterXCoordinate() >= _endPoint.x && blockIterator->getCenterXCoordinate() <= _startPoint.x) && (blockIterator->getCenterYCoordinate() <= _endPoint.y && blockIterator->getCenterYCoordinate() >= _startPoint.y))
+                {
+                    blockIterator->setSelectState(true);
+                    _labelsAreSelected = true;
+                    labelsSelected++;
+                    _geometryGroupIsSelected = false;
+                }
+            }
+        }
+    }
+    else if(_endPoint.y < _startPoint.y && _endPoint.x < _startPoint.x)// This case is if teh endpoint is to the right of the start point and down. In this case, the user would like to select all of the arcs/lines within the area
+    {
+        // First, make sure to clear out everything else
+        if(_nodesAreSelected || _geometryGroupIsSelected)
+        {
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                nodeIterator->setSelectState(false);
+            }
+            nodesSeleted = 0;
+            _nodesAreSelected = false;
+        }
+        
+        if(_labelsAreSelected || _geometryGroupIsSelected)
+        {
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                blockIterator->setSelectState(false);
+            }
+            labelsSelected = 0;
+            _labelsAreSelected = false;
+        }
+        
+        if(_createLines)
+        {
+            // This case is for if the user has selected to edit the lines
+            if(_arcsAreSelected || _geometryGroupIsSelected)
+            {
+                for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                {
+                    arcIterator->setSelectState(false);
+                }
+                arcsSelected = 0;
+                _arcsAreSelected = false;
+            }
+            
+            // IF the control button is up, make sure to clear out any selected lines
+            if(!event.ControlDown())
+            {
+                for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                {
+                    lineIterator->setSelectState(false);
+                }
+                linesSelected = 0;
+                _linesAreSelected = false;
+            }
+            
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                // In order to prevent a really long if statement, the logic for the selection of the line is pulled out for readability
+                bool firstNodeIsSelected = (lineIterator->getFirstNode()->getCenterXCoordinate() >= _endPoint.x && lineIterator->getFirstNode()->getCenterXCoordinate() <= _startPoint.x) && (lineIterator->getFirstNode()->getCenterYCoordinate() >= _endPoint.y && lineIterator->getFirstNode()->getCenterYCoordinate() <= _startPoint.y);
+                bool secondNodeIsSelected = (lineIterator->getSecondNode()->getCenterXCoordinate() >= _endPoint.x && lineIterator->getSecondNode()->getCenterXCoordinate() <= _startPoint.x) && (lineIterator->getSecondNode()->getCenterYCoordinate() >= _endPoint.y && lineIterator->getSecondNode()->getCenterYCoordinate() <= _startPoint.y);
+                if(firstNodeIsSelected || secondNodeIsSelected)
+                {
+                    lineIterator->setSelectState(true);
+                    _linesAreSelected = true;
+                    linesSelected++;
+                    _geometryGroupIsSelected = false;
+                }   
+            }
+        }
+        else
+        {
+            // This case if for if the user has selected to edit the arcs
+            if(_linesAreSelected || _geometryGroupIsSelected)
+            {
+                // If there are any lines selected, make sure the clear these guys out also
+                for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+                {
+                    lineIterator->setSelectState(false);
+                }
+                linesSelected = 0;
+                _linesAreSelected = false;
+                
+            }
+            
+            // IF the control button is up, make sure to clear out any selected arcs
+            if(!event.ControlDown())
+            {
+                for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+                {
+                    arcIterator->setSelectState(false);
+                }
+                arcsSelected = 0;
+                _arcsAreSelected = false;
+            }
+            
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                // In order to prevent a really long if statement, the logic for the selection of the line is pulled out for readability
+                bool firstNodeIsSelected = (arcIterator->getFirstNode()->getCenterXCoordinate() >= _endPoint.x && arcIterator->getFirstNode()->getCenterXCoordinate() <= _startPoint.x) && (arcIterator->getFirstNode()->getCenterYCoordinate() >= _endPoint.y && arcIterator->getFirstNode()->getCenterYCoordinate() <= _startPoint.y);
+                bool secondNodeIsSelected = (arcIterator->getSecondNode()->getCenterXCoordinate() >= _endPoint.x && arcIterator->getSecondNode()->getCenterXCoordinate() <= _startPoint.x) && (arcIterator->getSecondNode()->getCenterYCoordinate() >= _endPoint.y && arcIterator->getSecondNode()->getCenterYCoordinate() <= _startPoint.y);
+                if(firstNodeIsSelected || secondNodeIsSelected)
+                {
+                    arcIterator->setSelectState(true);
+                    _arcsAreSelected = true;
+                    _arcsAreSelected++;
+                    _geometryGroupIsSelected = false;
+                }    
+            }
+        }
+    }
+    else if(_endPoint.x > _startPoint.x)
+    {
+        /* For all geometry selection, we dont' neccessarily need to deselect everything first */
+        _nodesAreSelected = false;
+        _labelsAreSelected = false;
+        _linesAreSelected = false;
+        _arcsAreSelected = false;
+        
+        // This is the case for if the user wants to select all of the geometry
+        if(!event.ControlDown())
+        {
+            // If the control button is still up, clear out all of the selected geometry
+            for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+            {
+                nodeIterator->setSelectState(false);
+            }
+            nodesSeleted = 0;
+            
+            for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+            {
+                blockIterator->setSelectState(false);
+            }
+            labelsSelected = 0;
+            
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                lineIterator->setSelectState(false);
+            }
+            linesSelected = 0;
+            
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+            {
+                arcIterator->setSelectState(false);
+            }
+            arcsSelected = 0;
+        }
+        
+        // Now we check to see what geometry is in the window
+        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        {
+            if((nodeIterator->getCenterXCoordinate() <= _endPoint.x && nodeIterator->getCenterXCoordinate() >= _startPoint.x) && (fabs(_endPoint.y - _startPoint.y) > fabs(nodeIterator->getCenterYCoordinate() - _startPoint.y)))
+            {
+                nodeIterator->setSelectState(true);
+                nodesSeleted++;
+                _geometryGroupIsSelected = true;;
+            }
+        }
+        
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if((blockIterator->getCenterXCoordinate() <= _endPoint.x && blockIterator->getCenterXCoordinate() >= _startPoint.x) && (fabs(_endPoint.y - _startPoint.y) > fabs(blockIterator->getCenterYCoordinate() - _startPoint.y)))
+            {
+                blockIterator->setSelectState(true);
+                labelsSelected++;
+                _geometryGroupIsSelected = true;
+            }
+        }
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            // In order to prevent a really long if statement, the logic for the selection of the line is pulled out for readability
+            if(lineIterator->getFirstNode()->getIsSelectedState() && lineIterator->getSecondNode()->getIsSelectedState())
+            {
+                lineIterator->setSelectState(true);
+                linesSelected++;
+                _geometryGroupIsSelected = true;
+            }   
+        }
+        
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            // In order to prevent a really long if statement, the logic for the selection of the line is pulled out for readability
+            if(arcIterator->getFirstNode()->getIsSelectedState() && arcIterator->getSecondNode()->getIsSelectedState())
+            {
+                arcIterator->setSelectState(true);
+                _arcsAreSelected = true;
+                _arcsAreSelected++;
+                _geometryGroupIsSelected = false;
+            }    
+        }
+    }
+    
+    // Make sure to reset these two guys 
+    _startPoint = wxRealPoint(0, 0);
+    _endPoint = _startPoint;
+    _doSelectionWindow = false;
+    this->Refresh();
+    return;
 }
 
 
@@ -3095,4 +3433,5 @@ wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_LEFT_DOWN(modelDefinition::onMouseLeftDown)
     EVT_LEFT_UP(modelDefinition::onMouseLeftUp)
     EVT_RIGHT_DOWN(modelDefinition::onMouseRightDown)
+    EVT_RIGHT_UP(modelDefinition::onMouseRightUp)
 wxEND_EVENT_TABLE()
