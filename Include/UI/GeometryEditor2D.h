@@ -53,7 +53,7 @@ private:
      *  a node to be used for arc or line creation. The program will skip the first nodeIterator
      *  and move on to the second (or skip the second and never set it). Then, when you
      *  go to add the line or arc, one of these two pointers are pointing to something other 
-     *  then the selected node
+     *  then the selected node. Thus causing the program to crash
      */ 
     node *_nodeInterator1 = nullptr;// This is the index of the first selected node
     
@@ -91,10 +91,6 @@ private:
     
 
 public:
-    //! This function will get the angle from the aboutPoint to the node point. This angle is always positive and is in reference to CCW being positive
-    double getAngle(wxRealPoint aboutPoint, node toPoint);
-    
-    double getAngle(wxRealPoint aboutPoint, blockLabel label);
     
     /*! This function is used to calcualte if the shortest distance between a line a node */
 	double calculateShortestDistance(node selectedNode, edgeLineShape segment);
@@ -324,7 +320,7 @@ public:
     //! If nodes/lines/arcs are moved, then this function needs to be called in order to check if the displaced geometry intercets with other geometries
     void checkIntersections(EditGeometry editedGeometry, double tolerance);
     
-    bool createSoftEdge(double radius);
+    bool createFillet(double radius);
 };
 
 #endif

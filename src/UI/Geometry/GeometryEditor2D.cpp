@@ -1,83 +1,6 @@
 #include <UI/GeometryEditor2D.h>
 #include <string>
 
-double geometryEditor2D::getAngle(wxRealPoint aboutPoint, node toPoint)
-{
-    if(fabs(aboutPoint.y - toPoint.getCenterYCoordinate()) <= 1e-9)
-    {
-        if(toPoint.getCenterXCoordinate() > aboutPoint.x)
-            return 0.0;
-        else
-            return 180.0;
-    }
-    else if(fabs(aboutPoint.x - toPoint.getCenterXCoordinate()) <= 1e-9)
-    {
-        if(toPoint.getCenterYCoordinate() > aboutPoint.y)
-            return 90.0;
-        else
-            return 270.0;
-    }
-    
-    if(toPoint.getCenterXCoordinate() > aboutPoint.x && toPoint.getCenterYCoordinate() > aboutPoint.y)
-    {
-        return (atan((toPoint.getCenterYCoordinate() - aboutPoint.y) / (toPoint.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
-    }
-    else if(toPoint.getCenterXCoordinate() < aboutPoint.x && toPoint.getCenterYCoordinate() > aboutPoint.y)
-    {
-        return 90.0 + (atan((toPoint.getCenterYCoordinate() - aboutPoint.y) / (aboutPoint.x - toPoint.getCenterXCoordinate())) * 180.0 / PI);
-    }
-    else if(toPoint.getCenterXCoordinate() < aboutPoint.x && toPoint.getCenterYCoordinate() < aboutPoint.y)
-    {
-        return 180.0 + (atan((aboutPoint.y - toPoint.getCenterYCoordinate()) / (aboutPoint.x - toPoint.getCenterXCoordinate())) * 180.0 / PI);
-    }
-    else if(toPoint.getCenterXCoordinate() > aboutPoint.x && toPoint.getCenterYCoordinate() < aboutPoint.y)
-    {
-        return 270.0 + (atan((aboutPoint.y - toPoint.getCenterYCoordinate()) / (toPoint.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
-    }
-    
-    return 0.0;
-}
-
-
-
-double geometryEditor2D::getAngle(wxRealPoint aboutPoint, blockLabel label)
-{
-    if(fabs(aboutPoint.y - label.getCenterYCoordinate()) <= 1e-9)
-    {
-        if(label.getCenterXCoordinate() > aboutPoint.x)
-            return 0.0;
-        else
-            return 180.0;
-    }
-    else if(fabs(aboutPoint.x - label.getCenterXCoordinate()) <= 1e-9)
-    {
-        if(label.getCenterYCoordinate() > aboutPoint.y)
-            return 90.0;
-        else
-            return 270.0;
-    }
-    
-    if(label.getCenterXCoordinate() > aboutPoint.x && label.getCenterYCoordinate() > aboutPoint.y)
-    {
-        return (atan((label.getCenterYCoordinate() - aboutPoint.y) / (label.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
-    }
-    else if(label.getCenterXCoordinate() < aboutPoint.x && label.getCenterYCoordinate() > aboutPoint.y)
-    {
-        return 90.0 + (atan((label.getCenterYCoordinate() - aboutPoint.y) / (aboutPoint.x - label.getCenterXCoordinate())) * 180.0 / PI);
-    }
-    else if(label.getCenterXCoordinate() < aboutPoint.x && label.getCenterYCoordinate() < aboutPoint.y)
-    {
-        return 180.0 + (atan((aboutPoint.y - label.getCenterYCoordinate()) / (aboutPoint.x - label.getCenterXCoordinate())) * 180.0 / PI);
-    }
-    else if(label.getCenterXCoordinate() > aboutPoint.x && label.getCenterYCoordinate() < aboutPoint.y)
-    {
-        return 270.0 + (atan((aboutPoint.y - label.getCenterYCoordinate()) / (label.getCenterXCoordinate() - aboutPoint.x)) * 180.0 / PI);
-    }
-    
-    return 0.0;
-}
-
-
 
 bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode)// Could distance be the 1/mag which is the zoom factor
 {
@@ -770,17 +693,18 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
 
 
 
-bool geometryEditor2D::createSoftEdge(double radius)
+bool geometryEditor2D::createFillet(double radius)
 {
     bool willReturn = false;
     // This code is being adapted from CcdrawDoc::CreateRadius located in femm/CDRAWDOC.CPP
     if(radius <= 0)
         return false;
         
-    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
+    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end();)
     {
         if(nodeIterator->getIsSelectedState())
         {
+            nodeIterator->setSelectState(false);
             unsigned int numberOfLines = 0;
             unsigned int numberOfArcs = 0;
             
@@ -877,12 +801,19 @@ bool geometryEditor2D::createSoftEdge(double radius)
                         {
                             m++;
                             if(m == 2)
-                                break;
+                            {
+                                ++nodeIterator;
+                                continue;
+                            }
+                                
                         }
                     }
                     
                     if(m == 0)
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
                     else if(m > 1)
                     {
                         if(Vabs(v[0] - lineEndpointOne) < Vabs(v[1] - lineEndpointOne))
@@ -910,7 +841,11 @@ bool geometryEditor2D::createSoftEdge(double radius)
                         }
                     }  
                     else
-                        break;// This means there is something interfering with the node and this should be dealt with properly
+                    {
+                        ++nodeIterator;
+                        continue;// This means there is something interfering with the node and this should be dealt with properly
+                    }
+                        
                     
                     lineListSize = _lineList.size();
                     if(addNode(I2[j].getXComponent(), I2[j].getYComponent(), radius / 10000.0))
@@ -928,9 +863,13 @@ bool geometryEditor2D::createSoftEdge(double radius)
                         }
                     }
                     else
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
                         
-                    _nodeList.erase(nodeIterator--);// TODO: This could cause issues. Throughly test this guy here
+                        
+                    _nodeList.erase(nodeIterator++);// TODO: This could cause issues. Throughly test this guy here
                     
                     angle = Varg((I2[j] - v[j])/(I1[j] - v[j]));
                     
@@ -947,7 +886,7 @@ bool geometryEditor2D::createSoftEdge(double radius)
                     if(addArc(addedArc, 0, true));
                         willReturn = true;
 
-                    break;
+                    continue;
                 }
                 case 2:// This is the case for if we have two lines
                 {
@@ -988,7 +927,11 @@ bool geometryEditor2D::createSoftEdge(double radius)
                     angle = Varg((endPointLine2 - commonNode) / (endPointLine1 - commonNode));// Angle here is currently in radians
                     
                     if(fabs(angle) > PI)
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
+                        
                     
                     if(angle < 0)
                     {
@@ -1003,7 +946,11 @@ bool geometryEditor2D::createSoftEdge(double radius)
                     
                     // If the radius is too big to fit
                     if((Vabs(endPointLine1 - commonNode) < length) || Vabs(endPointLine2 - commonNode) < length)
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
+                        
                     
                     // Compute the locations of the tangent points
                     endPointLine1 = length * (endPointLine1 - commonNode) / Vabs(endPointLine1 - commonNode) + commonNode;
@@ -1011,31 +958,44 @@ bool geometryEditor2D::createSoftEdge(double radius)
                     
                     if(addNode(endPointLine1.getXComponent(), endPointLine1.getYComponent(), length / 10000.0))
                     {
-                        setNodeIndex(*_lastNodeAdded);
-                        _lineList.erase(_lastLineAdded);
-                        _lastLineAdded = _lineList.begin();// Used to make sure that the variable is still set to a valid iterator
+                        _nodeInterator2 = &(*_lastNodeAdded);
+                    }
+                    else
+                    {
+                        ++nodeIterator;
+                        continue;
                     }
                         
-                    else
-                        break;
                         
                     if(addNode(endPointLine2.getXComponent(), endPointLine2.getYComponent(), length / 10000.0))
                     {
-                        setNodeIndex(*_lastNodeAdded);
-                        _lineList.erase(_lastLineAdded);
-                        _lastLineAdded = _lineList.begin();// Used to make sure that the variable is still set to a valid iterator
+                        _nodeInterator1 = &(*_lastNodeAdded);
                     }
                     else
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
                     
-                    _nodeList.erase(nodeIterator--); /// TODO: Check here for issues with iterators
+                    for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end();)
+                    {
+                        if(*nodeIterator == *lineIterator->getFirstNode() || *nodeIterator == *lineIterator->getSecondNode())
+                        {
+                            _lineList.erase(lineIterator++);
+                        }
+                        else
+                            lineIterator++;
+                    }
+                    
+                    _lastLineAdded = _lineList.begin();// Used to make sure that the variable is still set to a valid iterator
+                    _nodeList.erase(nodeIterator++); /// TODO: Check here for issues with iterators
                     
                     lineAddedArc.setArcAngle(180.0 - angle * (180.0 / PI));
                     
                     if(addArc(lineAddedArc, 0, true))
                         willReturn = true;
                     
-                    break;
+                    continue;
                     
                 }
                 case -2:// This is the case for if we have two arcs
@@ -1116,12 +1076,15 @@ bool geometryEditor2D::createSoftEdge(double radius)
                         {
                             j++;
                             if(j == 2)
-                                break;
+                            {
+                                ++nodeIterator;
+                                continue;
+                            }
                         }
                     }
                     
                     if(j > 1)
-                        break;
+                        continue;
                     else if(j > 1)
                     {
                         if(Vabs(p[0] - commonNode) < Vabs(p[1] - commonNode))
@@ -1139,7 +1102,11 @@ bool geometryEditor2D::createSoftEdge(double radius)
                         _lastArcAdded = _arcList.begin();// used to make sure that the _lastArcAdded variable is set to a valid iterator
                     }
                     else
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
+                        
                         
                     if(addNode(arcI2[j].getXComponent(), arcI2[j].getYComponent(), centerDistance / 10000.0))
                     {
@@ -1149,9 +1116,12 @@ bool geometryEditor2D::createSoftEdge(double radius)
                     }
                         
                     else
-                        break;
+                    {
+                        ++nodeIterator;
+                        continue;
+                    }
                         
-                    _nodeList.erase(nodeIterator--);/// TODO: Check here for any iterator issues
+                    _nodeList.erase(++nodeIterator);/// TODO: Check here for any iterator issues
                     
                     angle = Varg((arcI2[j] - p[j]) / (arcI1[j] - p[j]));
                     if(angle < 0)
@@ -1167,14 +1137,16 @@ bool geometryEditor2D::createSoftEdge(double radius)
                     if(addArc(arcAddArc, 0, true))
                         willReturn = true;
 
-                    break;
-                    
+                    continue;
                 }
                 default:// For everything else
+                    ++nodeIterator;
                     continue;
                     
             }
         }
+        else
+            ++nodeIterator;
     }
     
     return willReturn;

@@ -2303,7 +2303,9 @@ void modelDefinition::getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTw
 
 void modelDefinition::createFillet(double filletRadius)
 {
-    _editor.createSoftEdge(filletRadius);
+    _editor.createFillet(filletRadius);
+    this->Refresh();
+    return;
 }
 
 
