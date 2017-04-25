@@ -39,12 +39,12 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     
     /* Creating the menu listinging of the Edit Menu */
     _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
-    _menuEdit->Append(EditMenuID::ID_COPY, "&Copy");
+    _menuEdit->Append(EditMenuID::ID_COPY, "&Copy\tCtrl-C");
     _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
     _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
     _menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
     _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
-    _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
+    _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Fillet");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
     _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group");
     _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property");

@@ -162,7 +162,7 @@ void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
         centerPoint.y = centerY;
         if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
         {
-            /* It is expected that the user only places one of these withing a problem.
+            /* It is expected that the user only places one of these within a problem.
              * If more then one is used, then we will have duplicates on this matter
              */ 
             for(long i = 0; i < layerNumber; i++)
