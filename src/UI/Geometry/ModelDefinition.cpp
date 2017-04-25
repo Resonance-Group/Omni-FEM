@@ -677,84 +677,119 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
 
 void modelDefinition::moveTranslateSelection(double horizontalShift, double verticalShift)
 {
-    if(_nodesAreSelected)
+    // First, we are going to scan through all of the lines/arcs and check the nodes that are to be moved (and uncheck all of the lines/arcs)
+    
+    if(!_geometryGroupIsSelected)
     {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        if(_arcsAreSelected)
         {
-            if(nodeIterator->getIsSelectedState())
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
-                // Update the node with the translated coordinates
-                nodeIterator->moveCenter(horizontalShift, verticalShift);
+                if(arcIterator->getIsSelectedState())
+                {
+                    arcIterator->getFirstNode()->setSelectState(true);
+                    arcIterator->getSecondNode()->setSelectState(true);
+                    arcIterator->setSelectState(false);
+                }
             }
+            _arcsAreSelected = false;
+        }
+        else if(_linesAreSelected)
+        {
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                if(lineIterator->getIsSelectedState())
+                {
+                    lineIterator->getFirstNode()->setSelectState(true);
+                    lineIterator->getSecondNode()->setSelectState(true);
+                    lineIterator->setSelectState(false);
+                }
+            }
+             _linesAreSelected = false;
+        }
+        
+    }
+    else 
+    {
+        // If mixed geometery is selected then lets go ahead and move all of the nodes that are associated with the lines and arcs.
+        // Also check to make sure that the node is actually selected for moving. If it is, then move it and deselect the node
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                if(arcIterator->getFirstNode()->getIsSelectedState())
+                {
+                    arcIterator->getFirstNode()->moveCenter(horizontalShift, verticalShift);
+                    arcIterator->getFirstNode()->setSelectState(false);
+                }
+                
+                if(arcIterator->getSecondNode()->getIsSelectedState())
+                {
+                    arcIterator->getSecondNode()->moveCenter(horizontalShift, verticalShift);
+                    arcIterator->getSecondNode()->setSelectState(false);
+                }
+                arcIterator->setSelectState(false);
+                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after it is moved
+            }
+        }
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+        {
+            if(lineIterator->getIsSelectedState())
+            {
+                if(lineIterator->getFirstNode()->getIsSelectedState())
+                {
+                    lineIterator->getFirstNode()->moveCenter(horizontalShift, verticalShift);
+                    lineIterator->getFirstNode()->setSelectState(false);
+                }
+                
+                if(lineIterator->getSecondNode()->getIsSelectedState())
+                {
+                    lineIterator->getSecondNode()->moveCenter(horizontalShift, verticalShift);
+                    lineIterator->getSecondNode()->setSelectState(false);
+                }
+                lineIterator->setSelectState(false);
+            }
+        }
+    }
+    
+    if(_labelsAreSelected || _geometryGroupIsSelected)
+    {
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                blockIterator->moveCenter(horizontalShift, verticalShift);
+                blockIterator->setSelectState(false);
+            }
+        }
+        _labelsAreSelected = false;
+    }
+    
+    
+    // Now we want to go ahead and move any of the selected nodes
+    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+    {
+        if(nodeIterator->getIsSelectedState())
+        {
+            // Update the node with the translated coordinates
+            nodeIterator->moveCenter(horizontalShift, verticalShift);
+            nodeIterator->setSelectState(false);
         }
         
         // After moving the nodes, we need to then make sure all of the arcs have been updated with the new node positions
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
-            if(arcIterator->getFirstNode()->getIsSelectedState() || arcIterator->getSecondNode()->getIsSelectedState())
+            if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
             {
                 arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
             }
         }
-
-        _editor.checkIntersections(EditGeometry::EDIT_NODES, getTolerance());
-    }
-    else if(_labelsAreSelected)
-    {
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            if(blockIterator->getIsSelectedState())
-                blockIterator->moveCenter(horizontalShift, verticalShift);
-        }
-    }
-    else if(_linesAreSelected)
-    {
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-        {
-            if(lineIterator->getIsSelectedState())
-            {
-                if(!lineIterator->getFirstNode()->getIsSelectedState())
-                {
-                    lineIterator->getFirstNode()->moveCenter(horizontalShift, verticalShift);
-                    lineIterator->getFirstNode()->setSelectState(true);
-                }
-                
-                if(!lineIterator->getSecondNode()->getIsSelectedState())
-                {
-                    lineIterator->getSecondNode()->moveCenter(horizontalShift, verticalShift);
-                    lineIterator->getSecondNode()->setSelectState(true);
-                }
-            }
-        }
-        
-        _editor.checkIntersections(EditGeometry::EDIT_LINES, getTolerance());
-    }
-    else if(_arcsAreSelected)
-    {
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            if(arcIterator->getIsSelectedState())
-            {
-                if(!arcIterator->getFirstNode()->getIsSelectedState())
-                {
-                    arcIterator->getFirstNode()->moveCenter(horizontalShift, verticalShift);
-                    arcIterator->getFirstNode()->setSelectState(true);
-                }
-                
-                if(!arcIterator->getSecondNode()->getIsSelectedState())
-                {
-                    arcIterator->getSecondNode()->moveCenter(horizontalShift, verticalShift);
-                    arcIterator->getSecondNode()->setSelectState(true);
-                }
-                
-                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after it is moved
-            }
-        }
-
-        _editor.checkIntersections(EditGeometry::EDIT_ARCS, getTolerance());
     }
     
-    clearSelection();
+    _geometryGroupIsSelected = false;
+    _nodesAreSelected = false;
+    
     this->Refresh();
     return;
 }
@@ -763,49 +798,67 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 
 void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint aboutPoint)
 {
-    if(_nodesAreSelected)
+    if(!_geometryGroupIsSelected)
     {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+        // If we have a specific type of geometry selected, mark the corresponding nodes for moving and deselect the actual geometry
+        if(_arcsAreSelected)
         {
-            if(nodeIterator->getIsSelectedState())
+            for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
-                // Calculate the radius and the new position of the node
-                double angle = angularShift + _editor.getAngle(aboutPoint, *nodeIterator);
-                double radius = nodeIterator->getDistance(aboutPoint);
-                double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
-                double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
-                // Update the node with the translated coordinates
-                nodeIterator->setCenter(horizontalShift, verticalShift);
+                if(arcIterator->getIsSelectedState())
+                {
+                    arcIterator->getFirstNode()->setSelectState(true);
+                    arcIterator->getSecondNode()->setSelectState(true);
+                    arcIterator->setSelectState(false);
+                }
+            }
+            _arcsAreSelected = false;
+        }
+        else if(_linesAreSelected)
+        {
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+            {
+                if(lineIterator->getIsSelectedState())
+                {
+                    lineIterator->getFirstNode()->setSelectState(true);
+                    lineIterator->getSecondNode()->setSelectState(true);
+                    lineIterator->setSelectState(false);
+                }
+            }
+            _linesAreSelected = false;
+        }
+        
+    }
+    else 
+    {
+        // If mixed geometery is selected then lets go ahead and move all of the nodes that are associated with the lines and arcs.
+        // Also check to make sure that the node is actually selected for moving. If it is, then move it and deselect the node
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(arcIterator->getIsSelectedState())
+            {
+                double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+                
+                double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+                
+                if(arcIterator->getFirstNode()->getIsSelectedState())
+                {
+                    arcIterator->getFirstNode()->setCenter(horizontalShift1, verticalShift1);
+                    arcIterator->getFirstNode()->setSelectState(false);
+                }
+                
+                if(arcIterator->getSecondNode()->getIsSelectedState())
+                {
+                    arcIterator->getSecondNode()->setCenter(horizontalShift2, verticalShift2);
+                    arcIterator->getSecondNode()->setSelectState(false);
+                }
+                arcIterator->calculate();
+                arcIterator->setSelectState(false);
             }
         }
         
-        // After moving the nodes, we need to then make sure all of the arcs have been updated with the new node positions
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            if(arcIterator->getFirstNode()->getIsSelectedState() || arcIterator->getSecondNode()->getIsSelectedState())
-            {
-                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
-            }
-        }
-
-        _editor.checkIntersections(EditGeometry::EDIT_NODES, getTolerance()); 
-    }
-    else if(_labelsAreSelected)
-    {
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            if(blockIterator->getIsSelectedState())
-            {
-                double angle = angularShift + _editor.getAngle(aboutPoint, *blockIterator);
-                double radius = blockIterator->getDistance(aboutPoint);
-                double horizontalShift = aboutPoint.x + (radius * cos(angle * PI / 180.0));
-                double verticalShift = aboutPoint.y + (radius * sin(angle * PI / 180.0));
-                blockIterator->setCenter(horizontalShift, verticalShift);
-            }   
-        }
-    }
-    else if(_linesAreSelected)
-    {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
@@ -817,53 +870,66 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
                 double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
                 double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
                 
-                if(!lineIterator->getFirstNode()->getIsSelectedState())
+                if(lineIterator->getFirstNode()->getIsSelectedState())
                 {
                     lineIterator->getFirstNode()->setCenter(horizontalShift1, verticalShift1);
-                    lineIterator->getFirstNode()->setSelectState(true);
+                    lineIterator->getFirstNode()->setSelectState(false);
                 }
                 
-                if(!lineIterator->getSecondNode()->getIsSelectedState())
+                if(lineIterator->getSecondNode()->getIsSelectedState())
                 {
                     lineIterator->getSecondNode()->setCenter(horizontalShift2, verticalShift2);
-                    lineIterator->getSecondNode()->setSelectState(true);
+                    lineIterator->getSecondNode()->setSelectState(false);
                 }
+                
+                lineIterator->setSelectState(false);
             }
         }
-        
-        _editor.checkIntersections(EditGeometry::EDIT_LINES, getTolerance());
-    }
-    else if(_arcsAreSelected)
-    {
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            if(arcIterator->getIsSelectedState())
-            {
-                double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
-                double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
-                
-                double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
-                double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
-                
-                if(!arcIterator->getFirstNode()->getIsSelectedState())
-                {
-                    arcIterator->getFirstNode()->setCenter(horizontalShift1, verticalShift1);
-                    arcIterator->getFirstNode()->setSelectState(true);
-                }
-                
-                if(!arcIterator->getSecondNode()->getIsSelectedState())
-                {
-                    arcIterator->getSecondNode()->setCenter(horizontalShift2, verticalShift2);
-                    arcIterator->getSecondNode()->setSelectState(true);
-                }
-                arcIterator->calculate();
-            }
-        }
-        
-        _editor.checkIntersections(EditGeometry::EDIT_ARCS, getTolerance());
     }
     
-    clearSelection();
+    if(_labelsAreSelected || _geometryGroupIsSelected)
+    {
+        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+        {
+            if(blockIterator->getIsSelectedState())
+            {
+                double horizontalShift = (blockIterator->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (blockIterator->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift = -(blockIterator->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (blockIterator->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+            
+                blockIterator->setCenter(horizontalShift, verticalShift);
+                blockIterator->setSelectState(false);
+            }   
+        }
+        _labelsAreSelected = false;
+    }
+    
+    
+    // Now we want to go ahead and move any of the selected nodes
+    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+    {
+        if(nodeIterator->getIsSelectedState())
+        {
+            double horizontalShift = (nodeIterator->getCenterXCoordinate() - aboutPoint.x) * cos(-angularShift * PI / 180.0) + (nodeIterator->getCenterYCoordinate() - aboutPoint.y) * sin(-angularShift * PI / 180.0) + aboutPoint.x;
+            double verticalShift = -(nodeIterator->getCenterXCoordinate() - aboutPoint.x) * sin(-angularShift * PI / 180.0) + (nodeIterator->getCenterYCoordinate() - aboutPoint.y) * cos(-angularShift * PI / 180.0) + aboutPoint.y;
+            
+            // Update the node with the translated coordinates
+            nodeIterator->setCenter(horizontalShift, verticalShift);
+            nodeIterator->setSelectState(false);
+        }
+        
+        // After moving the nodes, we need to then make sure all of the arcs have been updated with the new node positions
+        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+        {
+            if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+            {
+                arcIterator->calculate(); // The center and radius of the arc will need to be recalculated after one of the nodes has moved
+            }
+        }
+    }    
+    
+    _geometryGroupIsSelected = false;
+    _nodesAreSelected = false;
+
     this->Refresh();
     return;
 }
