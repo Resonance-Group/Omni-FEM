@@ -1,5 +1,5 @@
-#ifndef CREATE_RADIUS_DIALOG_H_
-#define CREATE_RADIUS_DIALOG_H_
+#ifndef CREATE_FILLET_DIALOG_H_
+#define CREATE_FILLET_DIALOG_H_
 
 #include <wx/wx.h>
 #include <wx/stattext.h>
@@ -8,14 +8,14 @@
 
 
 
-class createRadiusDialog : public wxDialog
+class createFilletDialog : public wxDialog
 {
 private:
 
     wxTextCtrl *_radiusTextCtrl = new wxTextCtrl();
     
 public:
-    createRadiusDialog(wxWindow *par);
+    createFilletDialog(wxWindow *par);
     
     double getRadius();
 };

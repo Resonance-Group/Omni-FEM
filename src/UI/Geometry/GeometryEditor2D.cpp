@@ -723,7 +723,10 @@ bool geometryEditor2D::createFillet(double radius)
             }
             
             if((numberOfLines + numberOfArcs > 2) || (numberOfLines == 1 && numberOfArcs == 0) || (numberOfLines == 0 && numberOfArcs == 1) || (numberOfLines + numberOfArcs) == 0)
+            {
+                ++nodeIterator;
                 continue;// Move to the next node if there are too many lines/arcs connecting to the node (Or not enough of either type)
+            } 
                 
             switch(numberOfLines - numberOfArcs)
             {
@@ -801,11 +804,7 @@ bool geometryEditor2D::createFillet(double radius)
                         {
                             m++;
                             if(m == 2)
-                            {
-                                ++nodeIterator;
-                                continue;
-                            }
-                                
+                                break; 
                         }
                     }
                     
@@ -824,21 +823,9 @@ bool geometryEditor2D::createFillet(double radius)
                     else
                         j =0;
                     
-                    double lineListSize = _lineList.size();
-                    
                     if(addNode(I1[j].getXComponent(), I1[j].getYComponent(), radius / 10000.0))
                     {
-                        setNodeIndex(*_lastNodeAdded);
-                        if(_lineList.size() > lineListSize)
-                        {
-                            _lineList.erase(_lastLineAdded);
-                            _lastLineAdded = _lineList.begin();
-                        }
-                        else if(_lineList.size() == lineListSize)
-                        {
-                            _arcList.erase(_lastArcAdded);
-                            _lastArcAdded = _arcList.begin();
-                        }
+                        _nodeInterator2 = &(*_lastNodeAdded);
                     }  
                     else
                     {
@@ -847,29 +834,35 @@ bool geometryEditor2D::createFillet(double radius)
                     }
                         
                     
-                    lineListSize = _lineList.size();
                     if(addNode(I2[j].getXComponent(), I2[j].getYComponent(), radius / 10000.0))
                     {
-                        setNodeIndex(*_lastNodeAdded);
-                        if(_lineList.size() > lineListSize)
-                        {
-                            _lineList.erase(_lastLineAdded);
-                            _lastLineAdded = _lineList.begin();
-                        }
-                        else if(_lineList.size() == lineListSize)// Another arc was probably added
-                        {
-                            _arcList.erase(_lastArcAdded);
-                            _lastArcAdded = _arcList.begin();
-                        }
+                        _nodeInterator1 = &(*_lastNodeAdded);
                     }
                     else
                     {
                         ++nodeIterator;
                         continue;
                     }
+                    
+                    for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+                    {
+                        if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                        {
+                            _lineList.erase(lineIterator);
+                            break;
+                        }
+                    }
+                    
+                    for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
+                    {
+                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                        {
+                            _arcList.erase(arcIterator);
+                            break;
+                        }
+                    }
                         
-                        
-                    _nodeList.erase(nodeIterator++);// TODO: This could cause issues. Throughly test this guy here
+                    _nodeList.erase(nodeIterator++);
                     
                     angle = Varg((I2[j] - v[j])/(I1[j] - v[j]));
                     
@@ -981,7 +974,13 @@ bool geometryEditor2D::createFillet(double radius)
                     {
                         if(*nodeIterator == *lineIterator->getFirstNode() || *nodeIterator == *lineIterator->getSecondNode())
                         {
-                            _lineList.erase(lineIterator++);
+                            if(lineIterator == _lineList.back())
+                            {
+                                _lineList.erase(lineIterator);
+                                break;
+                            }
+                            else
+                                _lineList.erase(lineIterator++);
                         }
                         else
                             lineIterator++;
@@ -1000,7 +999,7 @@ bool geometryEditor2D::createFillet(double radius)
                 }
                 case -2:// This is the case for if we have two arcs
                 {
-                    int j;
+                    int arcj = 0;
                     Vector arcCenter1, arcCenter2, commonNode, p[8], arcI1[8], arcI2[8];
                     double angle, radius1, radius2, centerDistance, a[8], b[8], d[8], x[8];
                     bool firstArcFound = false;
@@ -1009,20 +1008,24 @@ bool geometryEditor2D::createFillet(double radius)
                     plf::colony<arcShape>::iterator secondArc;
                     arcShape arcAddArc;
                     
+                    commonNode = Vector(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
+                    
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
                     {
                         if(!firstArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator))
                         {
-                            arcCenter1.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
+                            arcCenter1 = Vector(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
                             radius1 = arcIterator->getRadius(); 
                             arcAddArc.setSegmentProperty(*arcIterator->getSegmentProperty());
                             arcAddArc.setNumSegments(arcIterator->getnumSegments());
+                            firstArc = arcIterator;
                             firstArcFound = true;
                         }
                         else if(!secondArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator))
                         {
-                            arcCenter2.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
-                            radius2 = arcIterator->getRadius(); 
+                            arcCenter2 = Vector(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
+                            radius2 = arcIterator->getRadius();
+                            secondArc = arcIterator; 
                             secondArcFound = true;
                         }
                     }
@@ -1066,40 +1069,41 @@ bool geometryEditor2D::createFillet(double radius)
                         p[k + 1] = ((1 - x[k]) * centerDistance - J * d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
                     }
                     
-                    for(int k = 0, j = 0; k < 8; k++)
+                    
+                    for(int k = 0; k < 8; k++)
                     {
-                        arcI1[j] = arcCenter1 + radius1 * (p[k] - arcCenter1) / Vabs(p[k] - arcCenter1);
-                        arcI2[j] = arcCenter2 + radius2 * (p[k] - arcCenter2) / Vabs(p[k] - arcCenter2);
-                        p[j] = p[k];
+                        arcI1[arcj] = arcCenter1 + radius1 * (p[k] - arcCenter1) / Vabs(p[k] - arcCenter1);
+                        arcI2[arcj] = arcCenter2 + radius2 * (p[k] - arcCenter2) / Vabs(p[k] - arcCenter2);
+                        p[arcj] = p[k];
                         
-                        if(shortestDistanceFromArc(arcI1[j], *firstArc) < (radius / 10000.0) && shortestDistanceFromArc(arcI2[j], *secondArc) < (radius / 10000.0) && Vabs(arcI1[j] - arcI2[j]) > (radius / 10000.0))
+                        if(shortestDistanceFromArc(arcI1[arcj], *firstArc) < (radius / 10000.0) && shortestDistanceFromArc(arcI2[arcj], *secondArc) < (radius / 10000.0) && Vabs(arcI1[arcj] - arcI2[arcj]) > (radius / 10000.0))
                         {
-                            j++;
-                            if(j == 2)
+                            arcj++;
+                            if(arcj == 2)
                             {
-                                ++nodeIterator;
-                                continue;
+                                break;
                             }
                         }
                     }
                     
-                    if(j > 1)
+                    if(arcj == 0)
+                    {
+                        ++nodeIterator;
                         continue;
-                    else if(j > 1)
+                    }
+                    else if(arcj > 1)
                     {
                         if(Vabs(p[0] - commonNode) < Vabs(p[1] - commonNode))
-                            j = 0;
+                            arcj = 0;
                         else
-                            j = 1;
+                            arcj = 1;
                     }
                     else 
-                        j = 0;
+                        arcj = 0;
                         
-                    if(addNode(arcI1[j].getXComponent(), arcI1[j].getYComponent(), centerDistance / 10000.0))
+                    if(addNode(arcI1[arcj].getXComponent(), arcI1[arcj].getYComponent(), centerDistance / 10000.0))
                     {
-                        setNodeIndex(*_lastNodeAdded);
-                        _arcList.erase(_lastArcAdded);
-                        _lastArcAdded = _arcList.begin();// used to make sure that the _lastArcAdded variable is set to a valid iterator
+                            _nodeInterator1 = &(*_lastNodeAdded);
                     }
                     else
                     {
@@ -1108,27 +1112,41 @@ bool geometryEditor2D::createFillet(double radius)
                     }
                         
                         
-                    if(addNode(arcI2[j].getXComponent(), arcI2[j].getYComponent(), centerDistance / 10000.0))
+                    if(addNode(arcI2[arcj].getXComponent(), arcI2[arcj].getYComponent(), centerDistance / 10000.0))
                     {
-                        setNodeIndex(*_lastNodeAdded);
-                        _arcList.erase(_lastArcAdded);
-                        _lastArcAdded = _arcList.begin();// used to make sure that the _lastArcAdded variable is set to a valid iterator
-                    }
-                        
+                            _nodeInterator2 = &(*_lastNodeAdded);
+                    }  
                     else
                     {
                         ++nodeIterator;
                         continue;
                     }
-                        
-                    _nodeList.erase(++nodeIterator);/// TODO: Check here for any iterator issues
                     
-                    angle = Varg((arcI2[j] - p[j]) / (arcI1[j] - p[j]));
+                    for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end();)
+                    {
+                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                        {
+                            if(arcIterator == _arcList.back())
+                            {
+                                _arcList.erase(arcIterator);
+                                break;
+                            }
+                            else
+                                _arcList.erase(arcIterator++);
+                        }
+                        else
+                            arcIterator++;
+                    }
+    
+                    _nodeList.erase(nodeIterator++);/// TODO: Check here for any iterator issues
+                    
+                    angle = Varg((arcI2[arcj] - p[arcj]) / (arcI1[arcj] - p[arcj]));
                     if(angle < 0)
                     {
-                        commonNode = arcI2[j];
-                        arcI2[j] = arcI1[j];
-                        arcI1[j] = commonNode;
+                        node *tempNode;
+                        tempNode = _nodeInterator1;
+                        _nodeInterator1 = _nodeInterator2;
+                        _nodeInterator2 = tempNode;
                         angle = fabs(angle);
                     }
                     

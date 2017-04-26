@@ -1,7 +1,7 @@
-#include <UI/EditMenu/CreateRadiusDialog.h>
+#include <UI/EditMenu/CreateFilletDialog.h>
 
 
-createRadiusDialog::createRadiusDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Soft Edge Radius")
+createFilletDialog::createFilletDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Fillet Radius")
 {
     wxFloatingPointValidator<double> radiusValidator;
     radiusValidator.SetMin(0);
@@ -34,7 +34,7 @@ createRadiusDialog::createRadiusDialog(wxWindow *par) : wxDialog(par, wxID_ANY, 
 
 
 
-double createRadiusDialog::getRadius()
+double createFilletDialog::getRadius()
 {
     double value;
     _radiusTextCtrl->GetValue().ToDouble(&value);
