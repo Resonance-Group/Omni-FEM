@@ -46,7 +46,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
     /* If the node is in between a line, then break the line into 2 lines */
 	for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
-		if(fabs(calculateShortestDistance(newNode, *lineIterator)) < distanceNode)
+		if((fabs(calculateShortestDistance(newNode, *lineIterator)) < distanceNode) && (newNode != *lineIterator->getFirstNode() && newNode != *lineIterator->getSecondNode()))
 		{
             /* If the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
              * Line1 will be set equal to the original line (line0).
@@ -59,7 +59,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 			
             edgeLine.setFirstNode(*_lastNodeAdded);// This will set the recently created node to be the first node of the new line
 			_lastLineAdded = _lineList.insert(edgeLine);// Add the new line to the array
-            break;
+            continue;
 		}
 	} 
     
@@ -69,8 +69,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
         Vector nodeVector;
         nodeVector.Set(xPoint, yPoint);
         /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
-        double dis = fabs(shortestDistanceFromArc(nodeVector, *arcIterator));
-		if(dis < distanceNode) // this needs t be looked into more
+		if((fabs(shortestDistanceFromArc(nodeVector, *arcIterator)) < distanceNode) && (newNode != *arcIterator->getFirstNode() && newNode != *arcIterator->getSecondNode())) // this needs t be looked into more
 		{
             Vector firstNode, secondNode, thirdNode, center;
             arcShape arcSegment = *arcIterator;
@@ -245,7 +244,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
     {
         double tempX, tempY;
-        if(getIntersection(newLine, *lineIterator, tempX, tempY))
+        if(getIntersection(newLine, *lineIterator, tempX, tempY) && !lineIterator->getSegmentProperty()->getHiddenState())
             addNode(tempX, tempY, tempTolerance);
     }
     
@@ -254,7 +253,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
     {
         Vector newNodesPoints[2];
         int j = getLineToArcIntersection(newLine, *arcIterator, newNodesPoints);
-        if(j > 0)
+        if(j > 0 && !arcIterator->getSegmentProperty()->getHiddenState())
         {
             for(int k = 0; k < j; k++)
             {
@@ -388,7 +387,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 	{
 		int j = getLineToArcIntersection(*lineIterator, arcSeg, intersectingNodes); // Place the function for intersecting here This will be for an arc intersecting a line
 		
-		if(j > 0)
+		if(j > 0 && !lineIterator->getSegmentProperty()->getHiddenState())
 		{
 			for(int k = 0; k < j; k++)
 			{
@@ -404,7 +403,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
         // The point values are stored in the variable intersectiongNodes.
 		int j = getArcToArcIntersection(*arcIterator, arcSeg,  intersectingNodes); // This will be for an arc intersecting an arc
 		
-		if(j > 0)
+		if(j > 0 && !arcIterator->getSegmentProperty()->getHiddenState())
 		{
 			for(int k = 0; k < j; k++)
 			{
@@ -456,8 +455,12 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
     return true;
 }
 
-void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double tolerance)
+
+
+bool geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double tolerance)
 {
+    bool labelsViolated = false;
+    
     if(editedGeometry == EditGeometry::EDIT_NODES || editedGeometry == EditGeometry::EDIT_ALL)
     {
         for(plf::colony<node>::iterator nodeIterator1 = _nodeList.begin(); nodeIterator1 != _nodeList.end(); ++nodeIterator1)
@@ -486,9 +489,9 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
                     {
                         if(*arcIterator->getFirstNode() == *nodeIterator2)
-                            arcIterator->setFirstNode(*nodeIterator2);
+                            arcIterator->setFirstNode(*nodeIterator1);
                         else if(*arcIterator->getSecondNode() == *nodeIterator2)
-                            arcIterator->setSecondNode(*nodeIterator2);
+                            arcIterator->setSecondNode(*nodeIterator1);
                     }
                     
                     if(*_lastNodeAdded == *nodeIterator2)
@@ -500,11 +503,12 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                 }
             }
             
+            // If the node is not ontop of another node, then check to see if the node is on top of a line or arc. If so, break the line/arc into 2
             if(!nodeIsConfigured)
             {
                 for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
                 {
-                    if(fabs(calculateShortestDistance(*nodeIterator1, *lineIterator)) < tolerance)
+                    if((fabs(calculateShortestDistance(*nodeIterator1, *lineIterator)) < tolerance) && (*nodeIterator1 != *lineIterator->getFirstNode() && *nodeIterator1 != *lineIterator->getSecondNode()) && !lineIterator->getSegmentProperty()->getHiddenState())
                     {
                         /* If the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
                          * Line1 will be set equal to the original line (line0).
@@ -521,10 +525,7 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                         break;
                     }
                 }
-            }
-            
-            if(!nodeIsConfigured)
-            {
+                
                 for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
                 {
                     Vector nodeVector;
@@ -532,7 +533,7 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                     /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
                     double dis = fabs(shortestDistanceFromArc(nodeVector, *arcIterator));
                     
-                    if(dis < tolerance) // this needs t be looked into more
+                    if(dis < tolerance && !arcIterator->getSegmentProperty()->getHiddenState() && (*nodeIterator1 != *arcIterator->getFirstNode() && *nodeIterator1 != *arcIterator->getSecondNode())) // this needs t be looked into more
                     {
                         Vector firstNode, secondNode, thirdNode, center;
                         arcShape arcSegment = *arcIterator;
@@ -562,7 +563,6 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                     }
                 }
             }
-            
         }
     }
     
@@ -570,15 +570,19 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
         {
-            plf::colony<edgeLineShape>::iterator tempLineIterator =  ++lineIterator;
+            // If the line is to be ignored by the postprocessor, go ahead and ignore it in any intercetion calculation
+            if(lineIterator->getSegmentProperty()->getHiddenState())
+                continue;
+                
+            plf::colony<edgeLineShape>::iterator tempLineIterator = lineIterator;
             
             //TODO: Check if there is ever a case where one line iterator can intesect a node/line/arc
             if(editedGeometry == EditGeometry::EDIT_LINES)
             {
-                
+                /* First we check if there is any intercetion with just nodes */
                 for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
                 {
-                    if(fabs(calculateShortestDistance(*nodeIterator, *lineIterator)) < tolerance)
+                    if(fabs(calculateShortestDistance(*nodeIterator, *lineIterator)) < tolerance && (*nodeIterator != *lineIterator->getFirstNode() && *nodeIterator != *lineIterator->getSecondNode()))
                     {
                         /* If the node is on the line (determined by the calculateShortestDistance function) a new line will be created (This will be called line 1)
                          * Line1 will be set equal to the original line (line0).
@@ -595,14 +599,16 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                 }
             }
             
-            for(plf::colony<edgeLineShape>::iterator lineIterator2 = tempLineIterator; lineIterator2 != _lineList.end(); ++lineIterator2)
+            // Next, we need to check if there are any intercetions with the lines. That is, if a line is placed on top of a line or if a line crosses another line
+            for(plf::colony<edgeLineShape>::iterator lineIterator2 = ++tempLineIterator; lineIterator2 != _lineList.end();)
             {
                 double tempX, tempY;
                 
                 if(lineIterator2 == _lineList.end())
                     break;
+                    
                 // If a line is placed on top of another line, then we will have to transfer any lines/arcs connecting to the nodes of the line to the other line 
-                if((*lineIterator->getFirstNode() == *lineIterator2->getFirstNode() && *lineIterator->getSecondNode() == *lineIterator2->getSecondNode()) || (*lineIterator->getFirstNode() == *lineIterator2->getSecondNode() && *lineIterator->getSecondNode() == *lineIterator2->getFirstNode()))
+                if(((*lineIterator->getFirstNode() == *lineIterator2->getFirstNode() && *lineIterator->getSecondNode() == *lineIterator2->getSecondNode()) || (*lineIterator->getFirstNode() == *lineIterator2->getSecondNode() && *lineIterator->getSecondNode() == *lineIterator2->getFirstNode())) && (lineIterator != lineIterator2))
                 {
                     for(plf::colony<edgeLineShape>::iterator lineIterator3 = _lineList.begin(); lineIterator3 != _lineList.end(); ++lineIterator3)
                     {
@@ -621,23 +627,31 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                     }
                     
                     // As the last item, we need to delete the two nodes and the line from the list
-                    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
+                    for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end();)
                     {
                         if(*nodeIterator == *lineIterator2->getFirstNode() || *nodeIterator == *lineIterator2->getSecondNode())
-                            _nodeList.erase(nodeIterator--);
+                            _nodeList.erase(nodeIterator++);
+                        else
+                             nodeIterator++;   
                     }
                     
-                    _lineList.erase(lineIterator2--);
+                    _lineList.erase(lineIterator2++);
                 }    
-                else if(getIntersection(*lineIterator, *lineIterator2, tempX, tempY))
+                else if(getIntersection(*lineIterator2, *lineIterator, tempX, tempY) && !lineIterator2->getSegmentProperty()->getHiddenState())
+                {
+                    // If the line intersectes with another line, then go ahead and place a node at the intercetion point
                     addNode(tempX, tempY, tolerance);
+                    lineIterator2++;
+                }
+                else
+                    lineIterator2++;
             }
             
             for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
             {
                 Vector newNodesPoints[2];
                 int j = getLineToArcIntersection(*lineIterator, *arcIterator, newNodesPoints);
-                if(j > 0)
+                if(j > 0 && !arcIterator->getSegmentProperty()->getHiddenState())
                 {
                     for(int k = 0; k < j; k++)
                     {
@@ -656,14 +670,46 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
             {
                 for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
                 {
-                    // TODO: Add in case for if the arc was moved ontop of a node
+                    Vector nodeVector;
+                    nodeVector.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
+                    /* Pretty much, this portion of the code is doing the exact same thing as the code above but instead of straight lines, we are working with arcs */
+                    double dis = fabs(shortestDistanceFromArc(nodeVector, *arcIterator));
+                    
+                    if(dis < tolerance && !arcIterator->getSegmentProperty()->getHiddenState() && (*nodeIterator != *arcIterator->getFirstNode() && *nodeIterator != *arcIterator->getSecondNode())) // this needs t be looked into more
+                    {
+                        Vector firstNode, secondNode, thirdNode, center;
+                        arcShape arcSegment = *arcIterator;
+                        double radius;
+                        
+                        firstNode.Set(arcIterator->getFirstNode()->getCenterXCoordinate(), arcIterator->getFirstNode()->getCenterYCoordinate());
+                        secondNode.Set(arcIterator->getSecondNode()->getCenterXCoordinate(), arcIterator->getSecondNode()->getCenterYCoordinate());
+                        thirdNode.Set(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate());
+                        
+                        center.Set(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
+                        radius = arcIterator->getRadius();
+                        
+                        arcIterator->setSecondNode(*nodeIterator);
+                        
+                        double angle = Varg((thirdNode - center) / (firstNode - center)) * (180.0 / PI);
+                        arcIterator->setArcAngle(angle);
+                        arcIterator->calculate();
+                        
+                        arcSegment.setFirstNode(*nodeIterator);
+                        angle = Varg((secondNode - center) / (thirdNode - center)) * (180.0 / PI);
+                        arcSegment.setArcAngle(angle);
+                        arcSegment.setNumSegments(20);
+                        arcSegment.calculate();
+                        
+                        _lastArcAdded = _arcList.insert(arcSegment);
+                        break;
+                    }
                 }
                 
                 for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
                 {
                     Vector newNodesPoints[2];
                     int j = getLineToArcIntersection(*lineIterator, *arcIterator, newNodesPoints);
-                    if(j > 0)
+                    if(j > 0 && !lineIterator->getSegmentProperty()->getHiddenState())
                     {
                         for(int k = 0; k < j; k++)
                         {
@@ -672,13 +718,13 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
                     }
                 }
             }
-            
-            for(plf::colony<arcShape>::iterator arcIterator2 = ++arcIterator; arcIterator != _arcList.end(); ++arcIterator)
+            plf::colony<arcShape>::iterator tempArcIterator = arcIterator;
+            for(plf::colony<arcShape>::iterator arcIterator2 = ++tempArcIterator; arcIterator2 != _arcList.end(); ++arcIterator2)
             {
                 Vector intersectingNodes[2];
                 int j = getArcToArcIntersection(*arcIterator, *arcIterator2,  intersectingNodes); // This will be for an arc intersecting an arc
 		
-                if(j > 0)
+                if(j > 0 && !arcIterator2->getSegmentProperty()->getHiddenState())
                 {
                     for(int k = 0; k < j; k++)
                     {
@@ -688,6 +734,58 @@ void geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
             }
         }
     }
+    
+    // Here we will not delete the block labels but rather we willl flag them so that the user can deal with them apprioately
+    if(editedGeometry == EditGeometry::EDIT_LABELS || editedGeometry == EditGeometry::EDIT_ALL)
+    {
+        
+        for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
+        {
+            for(plf::colony<arcShape>::iterator arcIterator = ++tempArcIterator; arcIterator != _arcList.end(); ++arcIterator)
+            {
+                Vector blockLabelVector = vector(blockIterator->getCenterXCoordinate(), blockIterator->getCenterYCoordinate());
+                if(shortestDistanceFromArc(blockLabelVector, *arcIterator) < tolerance)
+                {
+                    labelsViolated = true;
+                    blockIterator->setSelectState(true);// Flag the block label if it violates tolerances so that the user can deal with it.
+                }
+                    
+            }
+            
+            for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+            {
+                if(calculateShortestDistance(*blockIterator, *lineIterator) < tolerance)
+                {
+                    labelsViolated = true;
+                    blockIterator->setSelectState(true);
+                }
+                    
+            }
+            
+            for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); ++nodeIterator)
+            {
+                if(nodeIterator->getDistance(blockIterator->getCenterXCoordinate(), blockIterator->getCenterYCoordinate()) < tolerance)
+                {
+                    labelsViolated = true;
+                    blockIterator->setSelectState(true);
+                }
+                    
+            }
+            
+            plf::colony<blockLabel>::iterator tempIterator = blockIterator;
+            for(plf::colony<blockLabel>::iterator blockIterator2 = ++tempIterator; blockIterator != blockIterator2.end(); ++blockIterator2)
+            {
+                if(blockIterator2->getDistance(blockIterator->getCenterXCoordinate(), blockIterator->getCenterYCoordinate()) < tolerance)
+                {
+                    labelsViolated = true;
+                    blockIterator->setSelectState(true);
+                }
+                    
+            }
+        }
+    }
+    
+    return labelsViolated;
 }
 
 
@@ -711,14 +809,14 @@ bool geometryEditor2D::createFillet(double radius)
             // Tally up the number of lines connected to the node
             for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
             {
-                if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                if((*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator) && !lineIterator->getSegmentProperty()->getHiddenState())
                     numberOfLines++;
             }
             
             // Tally up the number of arcs connected to the node
             for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
             {
-                if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                if((*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator) && !arcIterator->getSegmentProperty()->getHiddenState())
                     numberOfArcs++;
             }
             
@@ -879,8 +977,9 @@ bool geometryEditor2D::createFillet(double radius)
                     if(addArc(addedArc, 0, true));
                         willReturn = true;
 
-                    continue;
+                    
                 }
+                    continue;
                 case 2:// This is the case for if we have two lines
                 {
                     Vector commonNode, endPointLine1, endPointLine2;
@@ -992,11 +1091,9 @@ bool geometryEditor2D::createFillet(double radius)
                     lineAddedArc.setArcAngle(180.0 - angle * (180.0 / PI));
                     
                     if(addArc(lineAddedArc, 0, true))
-                        willReturn = true;
-                    
-                    continue;
-                    
+                        willReturn = true; 
                 }
+                    continue;
                 case -2:// This is the case for if we have two arcs
                 {
                     int arcj = 0;
@@ -1154,9 +1251,8 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     if(addArc(arcAddArc, 0, true))
                         willReturn = true;
-
-                    continue;
                 }
+                    continue;
                 default:// For everything else
                     ++nodeIterator;
                     continue;

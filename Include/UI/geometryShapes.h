@@ -522,6 +522,7 @@ public:
                  * the arc angle is positive or if the bottom node is selected first and the arc angle is negative.
                  * For the second case, if the arc angle is positive, the arc will be "inflected"
                  */ 
+                  
                 startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (xCenterCoordinate - _firstNode->getCenterXCoordinate())) * (180.0 / PI);
                 glBegin(GL_LINE_STRIP);
                     glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
@@ -543,7 +544,8 @@ public:
                 /* In this case, for center to be to the left of both of them, the first endpoint
                  * needs to be lower then the second endpoint. If this is not the case, then the 
                  * user needs to place the arc angle as negative
-                 */
+                 */ 
+                 
                  
                  startAngle = atan((_firstNode->getCenterYCoordinate() - yCenterCoordinate) / (_firstNode->getCenterXCoordinate() - xCenterCoordinate)) * (180.0 / PI);
                  glBegin(GL_LINE_STRIP);

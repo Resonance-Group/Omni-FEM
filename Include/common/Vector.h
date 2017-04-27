@@ -191,7 +191,7 @@ private:
 /* This functions are defined specifically for vector math. They are labeled with a V for vector so that the compiler or developer does not get this confused with the math.h functions */
 double Varg(const Vector &x);
 double Vabs(const Vector &x);
-Vector Vexp(Vector &x);
+Vector Vexp(const Vector &x);
 
 Vector Vsqrt(Vector &x);
 Vector Vsin(const Vector &z);
