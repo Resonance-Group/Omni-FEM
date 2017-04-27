@@ -312,8 +312,10 @@ enum EditGeometry
     EDIT_NODES,
     EDIT_LINES,
     EDIT_ARCS,
-    EDIT_LABELS
+    EDIT_LABELS,
+    EDIT_ALL
 };
+
 
 
 #endif

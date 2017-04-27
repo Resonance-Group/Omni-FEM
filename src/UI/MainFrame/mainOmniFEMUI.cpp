@@ -39,12 +39,12 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     
     /* Creating the menu listinging of the Edit Menu */
     _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
-    _menuEdit->Append(EditMenuID::ID_COPY, "&Copy");
+    _menuEdit->Append(EditMenuID::ID_COPY, "&Copy\tCtrl-C");
     _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
     _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
     _menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
     _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
-    _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Radius");
+    _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Fillet");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
     _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group");
     _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property");
@@ -58,7 +58,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuView->AppendSeparator();
     _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
     _menuView->Check(ViewMenuID::ID_SHOW_BLOCK_NAMES, true);
-	_menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Orphans");
+	_menuView->Append(ViewMenuID::ID_SHOW_ORPHANS, "&Show Open Boundaries");
     _menuView->AppendSeparator();
     _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_STATUSBAR, "&Status Bar");
     _menuView->Check(ViewMenuID::ID_SHOW_STATUSBAR, true);
@@ -275,7 +275,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     
     this->SetMaxSize(wxSize(-1, -1));
-    this->SetSize(wxSize(960, 544));
+    this->SetSize(wxSize(650, 650));
     this->SetMinSize(wxSize(1, 1));
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
@@ -497,6 +497,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_CREATE_RADIUS, OmniFEMMainFrame::onCreateRadius)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
     EVT_MENU(EditMenuID::ID_SELECT_GROUP, OmniFEMMainFrame::onSelectGroup)
+    EVT_MENU(EditMenuID::ID_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
 	
 	/* This section is for the View menu */
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)

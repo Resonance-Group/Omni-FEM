@@ -13,20 +13,26 @@ openBoundaryDialog::openBoundaryDialog(wxWindow *par) : wxDialog(par, wxID_ANY, 
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
+    wxIntegerValidator<int> layerNumberValidator;
+    layerNumberValidator.SetRange(0, 12);
+    
+    wxFloatingPointValidator<double> radiusValidator;
+    radiusValidator.SetMin(0);
+    
     wxArrayString *edgeTypeArray = new wxArrayString();
     edgeTypeArray->Add("Dirichlet");
     edgeTypeArray->Add("Neumann");
     
     wxStaticText *numLayersText = new wxStaticText(this, wxID_ANY, "Number of Layers:");
     numLayersText->SetFont(*font);
-    _numberLayersTextCtrl->Create(this, wxID_ANY, "0", wxPoint(111, 12), wxSize(100, 20));
+    _numberLayersTextCtrl->Create(this, wxID_ANY, "0", wxPoint(111, 12), wxSize(100, 20), 0, layerNumberValidator);
     _numberLayersTextCtrl->SetFont(*font);
     line1->Add(numLayersText, 0, wxCENTER | wxALL, 6);
     line1->Add(_numberLayersTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticText *radiusText = new wxStaticText(this, wxID_ANY, "Radius:");
     radiusText->SetFont(*font);
-    _radiusTextCtrl->Create(this, wxID_ANY, "0", wxPoint(111, 38), wxSize(100, 20));
+    _radiusTextCtrl->Create(this, wxID_ANY, "0", wxPoint(111, 38), wxSize(100, 20), 0, radiusValidator);
     _radiusTextCtrl->SetFont(*font);
     
     line2->Add(radiusText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);

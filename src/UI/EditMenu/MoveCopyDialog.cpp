@@ -130,7 +130,7 @@ bool moveCopyDialog::rotationIsSelected()
 
 
 
-void moveCopyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, unsigned int &numberCopies)
+void moveCopyDialog::getRotationCopy(wxRealPoint &aboutPoint, double &angularShift, unsigned int &numberCopies)
 {
     double value1, value2;
     long numCopies;
@@ -148,7 +148,7 @@ void moveCopyDialog::getRotationCopy(wxPoint &aboutPoint, double &angularShift, 
     else
         numberCopies = 0;
     
-    aboutPoint = wxPoint(value1, value2);
+    aboutPoint = wxRealPoint(value1, value2);
 }
 
 

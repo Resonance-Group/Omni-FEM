@@ -484,7 +484,7 @@ Vector Vsqrt(Vector &x)
 
 
 
-Vector Vexp(Vector &x)
+Vector Vexp(const Vector &x)
 {
 	Vector y;
 

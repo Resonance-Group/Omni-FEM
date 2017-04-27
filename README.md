@@ -10,6 +10,8 @@ Please see wiki for more inforation
 
 Must have wxWidgets v3.0.2 installed
 Must have support for openGL V2.1
+For font rendering in the canvas, we are using the freetype library. The current version that the program uses in FreeType2.7
+The font that the program uses is called DejaVuSansMono. 
 
 # Notes
 
@@ -25,3 +27,15 @@ http://codelite.org/LiteEditor/WxWidgets30Binaries
 
 The icons that are used by the UI are the default kde4 icons that are suppose to be located in the folder /usr/share/icons
 
+In order to install the freetype 2.7, run these commands in terminal (these are for ubuntu. Another otion is to build the source)
+
+sudo add-apt-repository ppa:no1wantdthisname/ppa
+sudo apt update && sudo apt install libfreetype6
+
+The include files are located in /usr/include/freetype2 and the library file is located in /usr/lib/x86_64-linux-gnu/libfreetype.a
+
+In order to install and run the fonts, you have to first install the microsoft core fonts:
+
+sudo apt-get install ttf-mscorefonts-installer
+sudo fc-cache -f -v
+sudo apt-get install ubuntu-restricted-extras

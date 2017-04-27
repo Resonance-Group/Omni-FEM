@@ -6,9 +6,12 @@
 #include <deque>
 #include <math.h>
 
+#include <glew.h>
+#include <freeglut.h>
+/*
 #include <gl.h>
 #include <glu.h>
-
+*/
 #include <common/Vector.h>
 #include <common/plfcolony.h>
 #include <common/wxGLString.h>
@@ -44,13 +47,29 @@ private:
     
     wxGLStringArray _blockLabelNameArray;
     
-    node *_nodeInterator1;// This is the index of the first selected node
+    /*! The reason that these two variables are initilized to nullptr on first go around is this,
+     *  There have been cases where the gcc compiler did not initilize these two variables as null
+     *  and they were pointing to something. Which is an issue which occurs when you first select
+     *  a node to be used for arc or line creation. The program will skip the first nodeIterator
+     *  and move on to the second (or skip the second and never set it). Then, when you
+     *  go to add the line or arc, one of these two pointers are pointing to something other 
+     *  then the selected node. Thus causing the program to crash
+     */ 
+    node *_nodeInterator1 = nullptr;// This is the index of the first selected node
     
-    node *_nodeInterator2;// This is the index of the second selected node
+    node *_nodeInterator2 = nullptr;// This is the index of the second selected node
+    
+    plf::colony<node>::iterator _lastNodeAdded;
+    
+    plf::colony<edgeLineShape>::iterator _lastLineAdded;
+    
+    plf::colony<arcShape>::iterator _lastArcAdded;
+    
+    plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
     
     int _tolerance = 2;
     
-    double *_zoomFactorPointer;
+    double _zoomFactorPointer = 1.0;
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
      * node0 is the first node that the user selects
@@ -61,7 +80,7 @@ private:
 	bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
     
     /*! This function will calculate the shortest distance from a point to an arc */
-	double shortestDistanceFromArc(Vector point, arcShape &arcSegment);
+	double shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment);
 	
 	/*! This function will get the number of instersection points where a line and an arc intersect */
 	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
@@ -72,16 +91,18 @@ private:
     
 
 public:
-
-    /*! This function is used to calcualte if the shortest distance between a line a node */
-	double calculateShortestDistance(double p, double q, edgeLineShape segment);
     
-    double calculateShortestDistanceFromArc(arcShape arcSegment, double xPoint, double yPoint)
+    /*! This function is used to calcualte if the shortest distance between a line a node */
+	double calculateShortestDistance(node selectedNode, edgeLineShape segment);
+    
+    /*! This function is used to calcualte if the distance between a line a node */
+	double calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment);
+    
+    double calculateShortestDistance(wxRealPoint selectedPoint, edgeLineShape segment);
+    
+    double calculateShortestDistanceFromArc(wxRealPoint selectedPoint, arcShape arcSegment)
     {
-        Vector newVector;
-        
-        newVector.Set(xPoint, yPoint);
-        return shortestDistanceFromArc(newVector, arcSegment);
+        return shortestDistanceFromArc(Vector(selectedPoint.x, selectedPoint.y), arcSegment);
     }
     
     bool setNodeIndex(node &iterator)
@@ -140,49 +161,54 @@ public:
         _arcList = list;
     }
 
-    void addNode(double xPoint, double yPoint);
+    bool addNode(double xPoint, double yPoint, double distanceNode);
     
     void addDragNode(double xPoint, double yPoint)
     {
         node newNode;
         newNode.setCenter(xPoint, yPoint);
         newNode.setDraggingState(true);
-        _nodeList.insert(newNode);
+        _lastNodeAdded = _nodeList.insert(newNode);
     }
     
-    void addBlockLabel(double xPoint, double yPoint);
+    bool addBlockLabel(double xPoint, double yPoint, double tolerance);
     
     void addDragBlockLabel(double xPoint, double yPoint)
     {
         blockLabel newLabel;
         newLabel.setCenter(xPoint, yPoint);
         newLabel.setDraggingState(true);
-        _blockLabelList.insert(newLabel);
+        _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
     }
     
-    void addLine(node *firstNode, node *secondNode);
-    
-    void addLine(node &firstNode, node *secondNode)
+    bool addLine(node &firstNode, node &secondNode, double tolerance)
     {
-        addLine(&firstNode, secondNode);
+        return addLine(&firstNode, &secondNode, tolerance);
     }
     
-    void addLine(node *firstNode, node &secondNode)
+    bool addLine(node *firstNode, node *secondNode, double tolerance = 0);
+    
+    bool addLine(node &firstNode, node *secondNode, double tolerance)
     {
-        addLine(firstNode, &secondNode);
+        return addLine(&firstNode, secondNode, tolerance);
     }
     
-    void addLine()
+    bool addLine(node *firstNode, node &secondNode, double tolerance)
     {
-        addLine(nullptr, nullptr);
+        return addLine(firstNode, &secondNode, tolerance);
     }
     
-    void addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
-    
-    void setZoomFactorAddress(double &address)
+    bool addLine()
     {
-        _zoomFactorPointer = &address;
+        return addLine(nullptr, nullptr);
     }
+    
+    bool addLine(double tolerance)
+    {
+        return addLine(nullptr, nullptr, tolerance);
+    }
+    
+    bool addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
     
     void resetIndexs()
     {
@@ -217,7 +243,7 @@ public:
             number.consolidate(dc);
             first_time = false;
         }
-        my_message.scale(zoomFactor);
+        my_message.scale(1);
         my_message.consolidate(dc);
 
 
@@ -226,7 +252,7 @@ public:
         my_message.rotate(0);
         my_message.setFlip(false, true);
         
-        glColor3f(1,0,0);
+        glColor3f(0,0,0);
         my_message.render(0,0);
 
         my_messages.bind();
@@ -263,7 +289,38 @@ public:
     {
         _blockLabelNameArray = stringArray;
     }
-	
+    
+    void switchIndex()
+    {
+        node *temp = _nodeInterator1;
+        _nodeInterator1 = _nodeInterator2;
+        _nodeInterator2 = temp;
+    }
+    
+    plf::colony<node>::iterator getLastNodeAdd()
+    {
+        return _lastNodeAdded;
+    }
+    
+    plf::colony<edgeLineShape>::iterator getLastLineAdded()
+    {
+        return _lastLineAdded;
+    }
+    
+    plf::colony<arcShape>::iterator getLastArcAdded()
+    {
+        return _lastArcAdded;
+    }
+    
+    plf::colony<blockLabel>::iterator getLastBlockLabelAdded()
+    {
+        return _lastBlockLabelAdded;
+    }
+    
+    //! If nodes/lines/arcs are moved, then this function needs to be called in order to check if the displaced geometry intercets with other geometries
+    bool checkIntersections(EditGeometry editedGeometry, double tolerance);
+    
+    bool createFillet(double radius);
 };
 
 #endif

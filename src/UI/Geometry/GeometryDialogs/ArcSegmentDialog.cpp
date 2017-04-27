@@ -66,11 +66,11 @@ void arcSegmentDialog::createDialog()
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
     wxFloatingPointValidator<double> angleValidator(3, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
-    angleValidator.SetRange(-360, 360);
+    angleValidator.SetRange(0, 180);
     
     wxIntegerValidator<int> segmentValidator;
     segmentValidator.SetMax(100);
-    segmentValidator.SetMin(3);
+    segmentValidator.SetMin(0);
     
     wxStaticText *arcAngleText = new wxStaticText(this, wxID_ANY, "Arc Angle (deg):");
     arcAngleText->SetFont(*font);

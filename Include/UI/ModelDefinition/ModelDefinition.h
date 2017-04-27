@@ -10,16 +10,15 @@
 #define MODELDEFINITION_H_
 
 #include <vector>
-#include <list>
-#include <deque>
+#include <algorithm>
 #include <string>
 #include <math.h>
 
+#include <glew.h>
 #include <freeglut.h>
-#include <gl.h>
-#include <glu.h>
 
 #include <wx/wx.h>
+#include <wx/gdicmn.h>
 
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
@@ -32,10 +31,13 @@
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 #include <UI/GeometryDialog/ArcSegmentDialog.h>
+#include <UI/GeometryDialog/EditGroupDialog.h>
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
+
+#include <UI/ModelDefinition/glText.h>
 
 class modelDefinition : public wxGLCanvas
 {
@@ -50,9 +52,11 @@ private:
     
     geometryEditor2D _editor;
     
-    double _zoomFactor = 1.0;
+    glText *_textRendering;
     
-    double _otherZoom = 2.0;
+    double _zoomX = 1.0;
+    
+    double _zoomY = 1.0;
     
     double _cameraX = 0;
     
@@ -61,6 +65,12 @@ private:
     int _mouseXPixel = 0;// This is the pixel coordinate
     
     int _mouseYPixel = 0;
+    
+    bool _doZoomWindow = false;
+    
+    bool _doMirrorLine = false;
+    
+    bool _doSelectionWindow = false;
     
     bool _isFirstInitlized = false;
     
@@ -80,9 +90,26 @@ private:
     
     bool _geometryIsSelected = false;
     
-    double convertToXCoordinate(int xPixel);
+    bool _geometryGroupIsSelected = false;
     
-    double convertToYCoordinate(int yPixel);
+    wxRealPoint _startPoint;
+    
+    wxRealPoint _endPoint;
+    
+    double convertToXCoordinate(int xPixel)
+    {
+        return _zoomX * (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
+    }
+    
+    double convertToYCoordinate(int yPixel)
+    {
+        return _zoomY * (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0 + _cameraY;
+    }
+    
+    double getTolerance()
+    {
+        return ((((_zoomX + _zoomY) / 2.0) / 25.0));
+    }
     
     void clearSelection();
 
@@ -107,12 +134,16 @@ private:
     
     void onMouseRightDown(wxMouseEvent &event);
     
+    void onMouseRightUp(wxMouseEvent &event);
+    
     void onKeyDown(wxKeyEvent &event);
     
     void onEnterWindow(wxMouseEvent &event)
     {
       //  this->SetFocus();
     }
+    
+    void doZoomWindow();
     
 public:
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition);
@@ -148,11 +179,53 @@ public:
         return _createLines;
     }
     
+    void setZoomWindow(bool state)
+    {
+        _doZoomWindow = state;
+    }
+    
+    bool getZoomWindow()
+    {
+        return _doZoomWindow;
+    }
+    
+    void setMirrorLineState(bool state)
+    {
+        _doMirrorLine = state;
+    }
+    
+    bool getMirrorLineState()
+    {
+        return _doMirrorLine;
+    }
+    
+    void zoomIn()
+    {
+        _zoomX *= pow(1.2, -(300.0) / 150.0);
+        _zoomY *= pow(1.2, -(300.0) / 150.0);
+        
+        if(_zoomX > _zoomY)
+            _zoomY = _zoomX;
+        else if(_zoomY > _zoomX)
+            _zoomX = _zoomY;
+
+        this->Refresh();
+    }
+    
+    void zoomOut()
+    {
+        _zoomX *= pow(1.2, (300.0) / 150.0);
+        _zoomY *= pow(1.2, (300.0) / 150.0);
+        
+        if(_zoomX > _zoomY)
+            _zoomY = _zoomX;
+        else if(_zoomY > _zoomX)
+            _zoomX = _zoomY;
+        
+        this->Refresh();
+    }
+    
     void deleteSelection();
-    
-    void zoomIn();
-    
-    void zoomOut();
     
     //! This will allow the user to edit the settings for the particular node/label/arc/line. It is in this calss because this class has access to the master settings list
     void editSelection();
@@ -164,15 +237,26 @@ public:
     
     void moveTranslateSelection(double horizontalShift, double verticalShift);
     
-    void moveRotateSelection(double angularShift, wxPoint aboutPoint);
+    void moveRotateSelection(double angularShift, wxRealPoint aboutPoint);
     
-    void scaleSelection(double scalingFactor, wxPoint basePoint);
+    void scaleSelection(double scalingFactor, wxRealPoint basePoint);
     
-    void mirrorSelection(wxPoint pointOne, wxPoint pointTwo);
+    void mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo);
     
     void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
     
-    void copyRotateSelection(double angularShift, wxPoint aboutPoint, unsigned int numberOfCopies);
+    void copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies);
+    
+    void displayDanglingNodes();
+    
+    void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
+    
+    //! pointOne is the point that for the boundaing box that is the highest left most point. Pointtwo is hte lowest right most point 
+    void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
+    
+    void createFillet(double filletRadius);
+    
+    // Create Radius is found on CcdrawDoc::CreateRadius
     
 private:
     wxDECLARE_EVENT_TABLE(); 

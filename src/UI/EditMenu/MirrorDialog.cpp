@@ -47,17 +47,17 @@ mirrorDialog::mirrorDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Mirror")
 
 
 
-void mirrorDialog::getPoints(wxPoint &firstPoint, wxPoint &secondPoint)
+void mirrorDialog::getPoints(wxRealPoint &firstPoint, wxRealPoint &secondPoint)
 {
     double value1, value2;
     
     _firstPointXTextCtrl->GetValue().ToDouble(&value1);
     _firstPointYTextCtrl->GetValue().ToDouble(&value2);
-    firstPoint = wxPoint(value1, value2);
+    firstPoint = wxRealPoint(value1, value2);
     
     _secondPointXTextCtrl->GetValue().ToDouble(&value1);
     _secondPointYTextCtrl->GetValue().ToDouble(&value2);
-    secondPoint = wxPoint(value1, value2);
+    secondPoint = wxRealPoint(value1, value2);
 }
 
 

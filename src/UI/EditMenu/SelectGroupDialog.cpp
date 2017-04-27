@@ -22,11 +22,14 @@ selectGroupDialog::selectGroupDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "S
     _arcRadioButton->SetFont(*font);
     _labelRadioButton->Create(this, wxID_ANY, "Block Labels");
     _labelRadioButton->SetFont(*font);
+    _allRadioButton->Create(this, wxID_ANY, "All Geometry");
+    _allRadioButton->SetFont(*font);
     
     line1Sizer->Add(_nodeRadioButton, 0, wxCENTER | wxALL, 6);
     line1Sizer->Add(_lineRadioButton, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     line1Sizer->Add(_arcRadioButton, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     line1Sizer->Add(_labelRadioButton, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+    line1Sizer->Add(_allRadioButton, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticText *groupText = new wxStaticText(this, wxID_ANY, "Group Number:");
     groupText->SetFont(*font);
@@ -68,6 +71,8 @@ EditGeometry selectGroupDialog::getGroupNumber(unsigned int &groupNumber)
         return EditGeometry::EDIT_ARCS;
     else if(_labelRadioButton->GetValue())
         return EditGeometry::EDIT_LABELS;
+    else if(_allRadioButton->GetValue())
+        return EditGeometry::EDIT_ALL;
     
     return EditGeometry::EDIT_NONE;
 }

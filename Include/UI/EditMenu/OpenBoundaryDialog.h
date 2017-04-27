@@ -7,6 +7,7 @@
 #include <wx/combobox.h>
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/valnum.h>
 
 #include <common/enums.h>
 

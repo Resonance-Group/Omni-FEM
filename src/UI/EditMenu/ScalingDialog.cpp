@@ -1,7 +1,7 @@
 #include <UI/EditMenu/ScalingDialog.h>
 
 
-scaleDialog::scaleDialog(wxWindow *par, wxPoint &selectedPoint) : wxDialog(par, wxID_ANY, "Scale")
+scaleDialog::scaleDialog(wxWindow *par, wxRealPoint &selectedPoint) : wxDialog(par, wxID_ANY, "Scale")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -47,7 +47,7 @@ scaleDialog::scaleDialog(wxWindow *par, wxPoint &selectedPoint) : wxDialog(par, 
 }
 
 
-void scaleDialog::getScalingParameters(double &scalingFactor, wxPoint &baseFactor)
+void scaleDialog::getScalingParameters(double &scalingFactor, wxRealPoint &baseFactor)
 {
     double value1, value2;
     
@@ -57,7 +57,7 @@ void scaleDialog::getScalingParameters(double &scalingFactor, wxPoint &baseFacto
     _baseFactorXTextCtrl->GetValue().ToDouble(&value1);
     _baseFactorYTextCtrl->GetValue().ToDouble(&value2);
     
-    baseFactor = wxPoint(value1, value2);
+    baseFactor = wxRealPoint(value1, value2);
 }
 
 

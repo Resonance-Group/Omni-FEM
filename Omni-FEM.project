@@ -40,9 +40,11 @@
           <File Name="src/UI/Geometry/GeometryDialogs/BlockPropertyDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/NodalSettingDialog.cpp"/>
           <File Name="src/UI/Geometry/GeometryDialogs/ArcSegmentDialog.cpp"/>
+          <File Name="src/UI/Geometry/GeometryDialogs/EditGroupDialog.cpp"/>
         </VirtualDirectory>
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
+        <File Name="src/UI/Geometry/glText.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
@@ -76,6 +78,7 @@
         <File Name="src/UI/EditMenu/OpenBoundaryDialog.cpp"/>
         <File Name="src/UI/ConductorsDialog/ConductorPropSetDialog.cpp"/>
         <File Name="src/UI/EditMenu/SelectGroupDialog.cpp"/>
+        <File Name="src/UI/EditMenu/CreateFilletDialog.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>
@@ -135,6 +138,7 @@
         <File Name="Include/UI/EditMenu/OpenBoundaryDialog.h"/>
         <File Name="Include/UI/EditMenu/GlobalPreferencesDialog.h"/>
         <File Name="Include/UI/EditMenu/SelectGroupDialog.h"/>
+        <File Name="Include/UI/EditMenu/CreateFilletDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ViewMenu">
         <File Name="Include/UI/ViewMenu/ZoomWindow.h"/>
@@ -147,9 +151,11 @@
         <File Name="Include/UI/GeometryDialog/BlockPropertyDialog.h"/>
         <File Name="Include/UI/GeometryDialog/NodalSettingDialog.h"/>
         <File Name="Include/UI/GeometryDialog/ArcSegmentDialog.h"/>
+        <File Name="Include/UI/GeometryDialog/EditGroupDialog.h"/>
       </VirtualDirectory>
       <VirtualDirectory Name="ModelDefinition">
         <File Name="Include/UI/ModelDefinition/ModelDefinition.h"/>
+        <File Name="Include/UI/ModelDefinition/glText.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/GeometryEditor2D.h"/>
     </VirtualDirectory>
@@ -201,8 +207,13 @@
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
         <IncludePath Value="/usr/include/GL"/>
         <IncludePath Value="/usr/include/wx-3.0"/>
+        <IncludePath Value="/usr/include/freetype2"/>
       </Compiler>
-      <Linker Options="-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes"/>
+      <Linker Options="-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes">
+        <LibraryPath Value="/usr/lib/x86_64-linux-gnu"/>
+        <Library Value="libfreetype"/>
+        <Library Value="libGLEW"/>
+      </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="yes" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">

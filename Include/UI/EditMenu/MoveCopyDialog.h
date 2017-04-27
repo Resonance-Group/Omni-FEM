@@ -44,17 +44,17 @@ public:
 
     bool rotationIsSelected();
     
-    void getRotationMove(wxPoint &aboutPoint, double &angularShift)
+    void getRotationMove(wxRealPoint &aboutPoint, double &angularShift)
     {
         double temp1;
-        wxPoint temp2;
+        wxRealPoint temp2;
         unsigned int deleteMe = 0;
         getRotationCopy(temp2, temp1, deleteMe);
         aboutPoint = temp2;
         angularShift = temp1;
     }
     
-    void getRotationCopy(wxPoint &aboutPoint, double &angularShift, unsigned int &numberCopies);
+    void getRotationCopy(wxRealPoint &aboutPoint, double &angularShift, unsigned int &numberCopies);
     
     void getTranslationMove(double &horizontalShift, double &veriticalShift)
     {
