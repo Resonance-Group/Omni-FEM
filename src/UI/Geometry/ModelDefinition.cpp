@@ -225,6 +225,7 @@ void modelDefinition::editSelection()
                     lineIterator->setSegmentProperty(selectedProperty);
             }
         }
+        _editor.checkIntersections(EditGeometry::EDIT_LINES, getTolerance());// This is mainly for if a line moved from being hidden to being real
         delete(dialog);
     }
     else if(_arcsAreSelected)
@@ -256,6 +257,7 @@ void modelDefinition::editSelection()
                     arcIterator->setSegmentProperty(selectedProperty);
             }
         }
+        _editor.checkIntersections(EditGeometry::EDIT_ARCS, getTolerance());
         delete(dialog);
     }
     else if(_labelsAreSelected)

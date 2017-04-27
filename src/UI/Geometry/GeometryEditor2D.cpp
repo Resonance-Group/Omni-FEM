@@ -741,9 +741,9 @@ bool geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
         
         for(plf::colony<blockLabel>::iterator blockIterator = _blockLabelList.begin(); blockIterator != _blockLabelList.end(); ++blockIterator)
         {
-            for(plf::colony<arcShape>::iterator arcIterator = ++tempArcIterator; arcIterator != _arcList.end(); ++arcIterator)
+            for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
             {
-                Vector blockLabelVector = vector(blockIterator->getCenterXCoordinate(), blockIterator->getCenterYCoordinate());
+                Vector blockLabelVector = Vector(blockIterator->getCenterXCoordinate(), blockIterator->getCenterYCoordinate());
                 if(shortestDistanceFromArc(blockLabelVector, *arcIterator) < tolerance)
                 {
                     labelsViolated = true;
@@ -773,7 +773,7 @@ bool geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
             }
             
             plf::colony<blockLabel>::iterator tempIterator = blockIterator;
-            for(plf::colony<blockLabel>::iterator blockIterator2 = ++tempIterator; blockIterator != blockIterator2.end(); ++blockIterator2)
+            for(plf::colony<blockLabel>::iterator blockIterator2 = ++tempIterator; blockIterator2 != _blockLabelList.end(); ++blockIterator2)
             {
                 if(blockIterator2->getDistance(blockIterator->getCenterXCoordinate(), blockIterator->getCenterYCoordinate()) < tolerance)
                 {
@@ -842,7 +842,7 @@ bool geometryEditor2D::createFillet(double radius)
                     // First we need to grab some information about the arc that the node is connected to
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
                     {
-                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                        if((*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator) && !arcIterator->getSegmentProperty()->getHiddenState())
                         {
                             addedArc.setSegmentProperty(*arcIterator->getSegmentProperty());
                             addedArc.setNumSegments(arcIterator->getnumSegments());
@@ -855,7 +855,7 @@ bool geometryEditor2D::createFillet(double radius)
                     // Next, we need to grab some information about the line that the node is connected to
                     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
                     {
-                        if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                        if((*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator) && !lineIterator->getSegmentProperty()->getHiddenState())
                         {
                             lineEndpointOne.Set(lineIterator->getFirstNode()->getCenterXCoordinate(), lineIterator->getFirstNode()->getCenterYCoordinate());
                             lineEndpointTwo.Set(lineIterator->getSecondNode()->getCenterXCoordinate(), lineIterator->getSecondNode()->getCenterYCoordinate());
@@ -923,7 +923,7 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     if(addNode(I1[j].getXComponent(), I1[j].getYComponent(), radius / 10000.0))
                     {
-                        _nodeInterator2 = &(*_lastNodeAdded);
+                        _nodeInterator1 = &(*_lastNodeAdded);
                     }  
                     else
                     {
@@ -934,7 +934,8 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     if(addNode(I2[j].getXComponent(), I2[j].getYComponent(), radius / 10000.0))
                     {
-                        _nodeInterator1 = &(*_lastNodeAdded);
+                        _nodeInterator2 = &(*_lastNodeAdded);
+                        
                     }
                     else
                     {
@@ -942,33 +943,35 @@ bool geometryEditor2D::createFillet(double radius)
                         continue;
                     }
                     
+                    bool isConnectedToHiddenSegment = false;
+                    
                     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
                     {
-                        if(*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator)
+                        if((*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator) && !lineIterator->getSegmentProperty()->getHiddenState())
                         {
                             _lineList.erase(lineIterator);
                             break;
                         }
+                        else if(lineIterator->getSegmentProperty()->getHiddenState())
+                            isConnectedToHiddenSegment = true;
                     }
                     
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
                     {
-                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                        if((*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator) && !arcIterator->getSegmentProperty()->getHiddenState())
                         {
                             _arcList.erase(arcIterator);
                             break;
                         }
+                        else if(arcIterator->getSegmentProperty()->getHiddenState())
+                            isConnectedToHiddenSegment = true;
                     }
                         
-                    _nodeList.erase(nodeIterator++);
-                    
                     angle = Varg((I2[j] - v[j])/(I1[j] - v[j]));
                     
                     if(angle < 0)
                     {
-                        centerPoint = I2[j];
-                        I2[j] = I1[j];
-                        I1[j] = centerPoint;
+                        switchIndex();
                         angle = fabs(angle);
                     }
                     
@@ -976,8 +979,11 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     if(addArc(addedArc, 0, true));
                         willReturn = true;
-
-                    
+                        
+                    if(!isConnectedToHiddenSegment)
+                        _nodeList.erase(nodeIterator++);
+                    else
+                        nodeIterator++;
                 }
                     continue;
                 case 2:// This is the case for if we have two lines
@@ -994,7 +1000,7 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
                     {
-                        if(!firstLineFound && (*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator))
+                        if(!firstLineFound && (*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator) && !lineIterator->getSegmentProperty()->getHiddenState())
                         {
                             if(*lineIterator->getFirstNode() == *nodeIterator)
                                 endPointLine1.Set(lineIterator->getSecondNode()->getCenterXCoordinate(), lineIterator->getSecondNode()->getCenterYCoordinate());
@@ -1005,7 +1011,7 @@ bool geometryEditor2D::createFillet(double radius)
                             
                             firstLineFound = true;
                         }
-                        else if(!secondLineFound && (*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator))
+                        else if(!secondLineFound && (*lineIterator->getFirstNode() == *nodeIterator || *lineIterator->getSecondNode() == *nodeIterator) && !lineIterator->getSegmentProperty()->getHiddenState())
                         {
                             if(*lineIterator->getFirstNode() == *nodeIterator)
                                 endPointLine2.Set(lineIterator->getSecondNode()->getCenterXCoordinate(), lineIterator->getSecondNode()->getCenterYCoordinate());
@@ -1069,9 +1075,11 @@ bool geometryEditor2D::createFillet(double radius)
                         continue;
                     }
                     
+                    bool isConnectedToHiddenLine = false;
+                    
                     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end();)
                     {
-                        if(*nodeIterator == *lineIterator->getFirstNode() || *nodeIterator == *lineIterator->getSecondNode())
+                        if((*nodeIterator == *lineIterator->getFirstNode() || *nodeIterator == *lineIterator->getSecondNode()) && !lineIterator->getSegmentProperty()->getHiddenState())
                         {
                             if(lineIterator == _lineList.back())
                             {
@@ -1081,17 +1089,41 @@ bool geometryEditor2D::createFillet(double radius)
                             else
                                 _lineList.erase(lineIterator++);
                         }
+                        else if(lineIterator->getSegmentProperty()->getHiddenState())
+                        {
+                            isConnectedToHiddenLine = true;
+                            lineIterator++;
+                        }
                         else
                             lineIterator++;
                     }
                     
+                    if(!isConnectedToHiddenLine)
+                    {
+                        for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
+                        {
+                            if((*nodeIterator == *arcIterator->getFirstNode() || *nodeIterator == *arcIterator->getSecondNode()) && arcIterator->getSegmentProperty()->getHiddenState())
+                            {
+                                // Even if there is one arc/line connnected to the node and labeled as hidden, we must keep that node
+                                // Although if there are multiple lines/arcs, connected to the node, then they all must be hidden save for
+                                // one line, one arc or two arcs or two lines in order to execute these functions
+                                isConnectedToHiddenLine = true;
+                                break;
+                            }
+                        }
+                    }
+                    
                     _lastLineAdded = _lineList.begin();// Used to make sure that the variable is still set to a valid iterator
-                    _nodeList.erase(nodeIterator++); /// TODO: Check here for issues with iterators
                     
                     lineAddedArc.setArcAngle(180.0 - angle * (180.0 / PI));
                     
                     if(addArc(lineAddedArc, 0, true))
-                        willReturn = true; 
+                        willReturn = true;
+                        
+                    if(!isConnectedToHiddenLine)
+                        _nodeList.erase(nodeIterator++); /// TODO: Check here for issues with iterators
+                    else
+                        nodeIterator++;
                 }
                     continue;
                 case -2:// This is the case for if we have two arcs
@@ -1109,7 +1141,7 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); ++arcIterator)
                     {
-                        if(!firstArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator))
+                        if(!firstArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator) && !arcIterator->getSegmentProperty()->getHiddenState())
                         {
                             arcCenter1 = Vector(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
                             radius1 = arcIterator->getRadius(); 
@@ -1118,7 +1150,7 @@ bool geometryEditor2D::createFillet(double radius)
                             firstArc = arcIterator;
                             firstArcFound = true;
                         }
-                        else if(!secondArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator))
+                        else if(!secondArcFound && (*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator) && !arcIterator->getSegmentProperty()->getHiddenState())
                         {
                             arcCenter2 = Vector(arcIterator->getCenterXCoordinate(), arcIterator->getCenterYCoordinate());
                             radius2 = arcIterator->getRadius();
@@ -1219,9 +1251,11 @@ bool geometryEditor2D::createFillet(double radius)
                         continue;
                     }
                     
+                    bool isConnectedToHiddenSegment = false;
+                    
                     for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end();)
                     {
-                        if(*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator)
+                        if((*arcIterator->getFirstNode() == *nodeIterator || *arcIterator->getSecondNode() == *nodeIterator) && !arcIterator->getSegmentProperty()->getHiddenState())
                         {
                             if(arcIterator == _arcList.back())
                             {
@@ -1231,19 +1265,34 @@ bool geometryEditor2D::createFillet(double radius)
                             else
                                 _arcList.erase(arcIterator++);
                         }
+                        else if(arcIterator->getSegmentProperty()->getHiddenState())
+                        {
+                            isConnectedToHiddenSegment = true;
+                            arcIterator++;
+                        }
                         else
                             arcIterator++;
                     }
-    
-                    _nodeList.erase(nodeIterator++);/// TODO: Check here for any iterator issues
                     
+                    if(!isConnectedToHiddenSegment)
+                    {
+                        for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
+                        {
+                            if((*nodeIterator == *lineIterator->getFirstNode() || *nodeIterator == *lineIterator->getSecondNode()) && lineIterator->getSegmentProperty()->getHiddenState())
+                            {
+                                // Even if there is one arc/line connnected to the node and labeled as hidden, we must keep that node
+                                // Although if there are multiple lines/arcs, connected to the node, then they all must be hidden save for
+                                // one line, one arc or two arcs or two lines in order to execute these functions
+                                isConnectedToHiddenSegment = true;
+                                break;
+                            }
+                        }
+                    }
+    
                     angle = Varg((arcI2[arcj] - p[arcj]) / (arcI1[arcj] - p[arcj]));
                     if(angle < 0)
                     {
-                        node *tempNode;
-                        tempNode = _nodeInterator1;
-                        _nodeInterator1 = _nodeInterator2;
-                        _nodeInterator2 = tempNode;
+                        switchIndex();
                         angle = fabs(angle);
                     }
                     
@@ -1251,6 +1300,11 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     if(addArc(arcAddArc, 0, true))
                         willReturn = true;
+                        
+                    if(!isConnectedToHiddenSegment)
+                        _nodeList.erase(nodeIterator++);
+                    else
+                        nodeIterator++;
                 }
                     continue;
                 default:// For everything else
