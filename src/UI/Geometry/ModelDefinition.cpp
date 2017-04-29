@@ -27,11 +27,12 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 	}
     
     glMatrixMode(GL_MODELVIEW);
-    
+   
     if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
         _textRendering = new glText(physicProblems::PROB_ELECTROSTATIC);
     else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
         _textRendering = new glText(physicProblems::PROB_MAGNETICS);
+          
 }
 
 

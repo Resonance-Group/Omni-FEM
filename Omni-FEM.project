@@ -45,6 +45,8 @@
         <File Name="src/UI/Geometry/ModelDefinition.cpp"/>
         <File Name="src/UI/Geometry/GeometryEditor2D.cpp"/>
         <File Name="src/UI/Geometry/glText.cpp"/>
+        <File Name="src/UI/Geometry/text.vsh"/>
+        <File Name="src/UI/Geometry/text.fsh"/>
       </VirtualDirectory>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="src/UI/MaterialsDialog/MaterialsDialog.cpp"/>
