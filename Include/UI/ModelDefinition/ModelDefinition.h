@@ -33,11 +33,11 @@
 #include <UI/GeometryDialog/ArcSegmentDialog.h>
 #include <UI/GeometryDialog/EditGroupDialog.h>
 
+#include <UI/ModelDefinition/OGLFT.h>
+
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
-
-#include <UI/ModelDefinition/glText.h>
 
 class modelDefinition : public wxGLCanvas
 {
@@ -51,8 +51,6 @@ private:
     gridPreferences _preferences;
     
     geometryEditor2D _editor;
-    
-    glText *_textRendering;
     
     double _zoomX = 1.0;
     
@@ -95,6 +93,8 @@ private:
     wxRealPoint _startPoint;
     
     wxRealPoint _endPoint;
+    
+    OGLFT::Grayscale *_fontRender = new OGLFT::Grayscale("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 8);
     
     double convertToXCoordinate(int xPixel)
     {

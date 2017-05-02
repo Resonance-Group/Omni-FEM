@@ -27,12 +27,6 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 	}
     
     glMatrixMode(GL_MODELVIEW);
-   
-    if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-        _textRendering = new glText(physicProblems::PROB_ELECTROSTATIC);
-    else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-        _textRendering = new glText(physicProblems::PROB_MAGNETICS);
-          
 }
 
 
@@ -2355,8 +2349,6 @@ void modelDefinition::updateProjection()
     
     glOrtho(-_zoomX, _zoomX, -_zoomY, _zoomY, -1.0, 1.0);
     
-    glMatrixMode(GL_MODELVIEW);
-    
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -2567,46 +2559,32 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     drawGrid();
     glMatrixMode(GL_MODELVIEW);
     
+    for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
+    {
+        lineIterator->draw();
+    }
+    
+    for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
+    {
+        arcIterator->draw();
+    }
+    
+    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+    {
+        nodeIterator->draw();
+    }
+    
+    for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+    {
+        blockIterator->draw();
+        if(_preferences.getShowBlockNameState())
+        {
+            blockIterator->drawBlockName(_fontRender, (_zoomX + _zoomY) / 2.0);
+            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+                blockIterator->drawCircuitName(_fontRender, (_zoomX + _zoomY) / 2.0);
+        }
+    }
 
-    if(_editor.getLineList()->size() > 0)
-    {
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-        {
-            lineIterator->draw();
-        }
-    }
-    
-    if(_editor.getArcList()->size() > 0)
-    {
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            arcIterator->draw();
-        }
-    }
-    
-    if(_editor.getBlockLabelList()->size() > 0)
-    {
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            blockIterator->draw();
-        }
-    }
-    
-    if(_editor.getNodeList()->size() > 0)
-    {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-        {
-            nodeIterator->draw();
-        }
-    }
-    
-    
-    
-    if(_preferences.getShowBlockNameState())
-    {
-        _textRendering->renderBlockLabelText();
-    }
-    
     if(_doZoomWindow || _doSelectionWindow)// We are going to be drawing the same thing for this one
     {
         glLineWidth(3.0);
@@ -2636,32 +2614,14 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         glEnable(GL_LINE_STIPPLE);
         
         glLineStipple(1, 0b0001100011000110);
-        
+        glColor3d(0.0, 0.0, 0.0);
         glBegin(GL_LINES);
-            glColor3d(0.0, 0.0, 0.0);
             glVertex2d(_startPoint.x, _startPoint.y);
             glVertex2d(_endPoint.x, _endPoint.y);
         glEnd();
         glDisable(GL_LINE_STIPPLE);
     }
-    
-
-  //  if(_preferences.getShowBlockNameState() && _editor.getBlockNameArray()->getNameArraySize() > 0)
-  //  {
- /*       glEnable(GL_TEXTURE_2D);
-        if(!_isFirstInitlized)
-        {
-           _editor.getBlockNameArray()->consolidate(&dc);
-           _editor.getBlockNameArray()->setFont(wxFont(8.25, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-           _isFirstInitlized = true;
-        }
-        _editor.getBlockNameArray()->bind();
-        glColor3b(0, 0, 0);
-        
-        _editor.renderBlockNames();
-        glDisable(GL_TEXTURE_2D);*/
- //   }
-    
+      
     SwapBuffers();
 }
 

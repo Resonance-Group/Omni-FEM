@@ -6,17 +6,15 @@
 
 #include <glew.h>
 #include <freeglut.h>
-/*
-#include <freeglut.h>
-#include <gl.h>
-#include <glu.h>
-*/
+
 #include <wx/wx.h>
 #include <wx/glcanvas.h>
 
 #include <common/GeometryProperties/BlockProperty.h>
 #include <common/GeometryProperties/NodeSettings.h>
 #include <common/GeometryProperties/SegmentProperties.h>
+
+#include <UI/ModelDefinition/OGLFT.h>
 
 #include <common/Vector.h>
 
@@ -340,6 +338,20 @@ public:
         glBegin(GL_POINTS);
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
+    }
+    
+    void drawBlockName(OGLFT::Grayscale *textRender, double factor)
+    {
+        double offset = 0.02 * factor;
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset + 0.01, _property.getMaterialName().c_str());
+    }
+    
+    void drawCircuitName(OGLFT::Grayscale *textRender, double factor)
+    {
+        double offset = 0.02 * factor;
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset - 0.01, _property.getCircuitName().c_str());
     }
 	
     blockProperty *getProperty()
