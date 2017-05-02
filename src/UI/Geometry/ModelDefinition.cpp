@@ -27,6 +27,8 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
 	}
     
     glMatrixMode(GL_MODELVIEW);
+    
+    _fontRender = new OGLFT::Grayscale("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 8);
 }
 
 
@@ -2444,7 +2446,7 @@ void modelDefinition::drawGrid()
     {
         /* Create the center axis */    
         glColor3d(0.0, 0.0, 0.0);
-        glLineWidth(0.5);
+        glLineWidth(1.0);
     
         glBegin(GL_LINES);
             glVertex2d(0, cornerMinY);
@@ -2453,6 +2455,7 @@ void modelDefinition::drawGrid()
             glVertex2d(cornerMinX, 0);
             glVertex2d(cornerMaxX, 0);
         glEnd();
+        glLineWidth(0.5);// Resets the line width back to the default
     }
     
     /* This will create a crosshairs to indicate the location of the origin */
@@ -2554,7 +2557,8 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
     glMatrixMode(GL_MODELVIEW);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
     updateProjection();
     drawGrid();
     glMatrixMode(GL_MODELVIEW);
@@ -2808,9 +2812,9 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
 void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 {
     wxGLCanvas::SetCurrent(*_geometryContext);
+    bool createArc = false;
     
-    if(!_doMirrorLine)
-        clearSelection();
+    
     
     if(!_doZoomWindow && !_doMirrorLine)
     {    
@@ -2828,43 +2832,19 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             //Create the line
                             _editor.addLine();
                             _geometryIsSelected = false;
+                            clearSelection();
                             this->Refresh();
                             return;
                         }
                         else
                         {
-                            arcSegmentDialog *newArcDialog;
                             
-                            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-                            {
-                                arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
-                                if(newArcDialog->ShowModal() == wxID_OK)
-                                {
-                                    arcShape tempShape;
-                                    newArcDialog->getArcParameter(tempShape);
-                                    _editor.addArc(tempShape, getTolerance(), true);
-                                }
-                                else
-                                    _editor.resetIndexs();
-                                delete(newArcDialog);
-                            }
-                            else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-                            {
-                               arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
-                                if(newArcDialog->ShowModal() == wxID_OK)
-                                {
-                                    arcShape tempShape;
-                                    newArcDialog->getArcParameter(tempShape);
-                                    _editor.addArc(tempShape, getTolerance(), true);
-                                }
-                                else
-                                    _editor.resetIndexs();
-                                delete(newArcDialog);
-                            }
-                            
+                            createArc = true;
+                            nodeIterator->setSelectState(true);
                             _geometryIsSelected = false;
                             this->Refresh();
-                            return;
+                            break;
+//                            return;
                         }
                     }
                     else
@@ -2877,21 +2857,22 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                     }
                 }
             }
-            //Create the node at the point of the mouse with grid snapping
-            if(_preferences.getSnapGridState())
+            
+            if(!createArc)
             {
                 double tempX = convertToXCoordinate(event.GetX());
                 double tempY = convertToYCoordinate(event.GetY());
-                roundToNearestGrid(tempX, tempY);
+                //Create the node at the point of the mouse with grid snapping
+                if(_preferences.getSnapGridState())
+                    roundToNearestGrid(tempX, tempY);
                 _editor.addDragNode(tempX, tempY);
+                
+                _geometryIsSelected = false;
+                _editor.resetIndexs();
+                clearSelection();
+                this->Refresh();// Draw the node at the mouse location
+                return;
             }
-            else
-                _editor.addDragNode(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
-            
-            _geometryIsSelected = false;
-            _editor.resetIndexs();
-            this->Refresh();// Draw the node at the mouse location
-            return;
         }
         else
         {
@@ -2903,6 +2884,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             _editor.addDragBlockLabel(tempX, tempY);
 
             this->Refresh();
+            clearSelection();
             return;
         }
     }
@@ -2916,9 +2898,50 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             
         _startPoint = wxRealPoint(tempX, tempY);
         _endPoint = wxRealPoint(tempX, tempY);
+        clearSelection();
     }
     
     this->Refresh();
+    
+    if(createArc)
+    {
+        arcSegmentDialog *newArcDialog;
+                            
+        if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+        {
+            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
+            if(newArcDialog->ShowModal() == wxID_OK)
+            {
+                arcShape tempShape;
+                newArcDialog->getArcParameter(tempShape);
+                _editor.addArc(tempShape, getTolerance(), true);
+                this->Refresh();
+                clearSelection();
+                return;
+            }
+            else
+                _editor.resetIndexs();
+            delete(newArcDialog);
+        }
+        else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+        {
+           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+            if(newArcDialog->ShowModal() == wxID_OK)
+            {
+                arcShape tempShape;
+                newArcDialog->getArcParameter(tempShape);
+                _editor.addArc(tempShape, getTolerance(), true);
+                this->Refresh();
+                clearSelection();
+                return;
+            }
+            else
+                _editor.resetIndexs();
+            delete(newArcDialog);
+        }
+    }
+    
+    clearSelection();
     return;
 }
 

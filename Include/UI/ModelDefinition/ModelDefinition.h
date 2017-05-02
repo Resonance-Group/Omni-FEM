@@ -39,25 +39,91 @@
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
 
+
+//! The model class the handles the dispaying of objects
+/*!
+    This class is designed to handle the bulk of dispalying the geometry onto a glCanvas.
+    This class will handle the drawing of any nodes/arcs/lines/labels. Along
+    with any zooming, mouse moving, dragging, snapping to grid, and selecting geometry objects.
+    Other functionality in the class include creating copies of selected geometry and moving selected geometry.
+    THe modelDefinition inherits from the wxGLCanvas class because the modelDefinition class
+    handles all direct calls for openGL.
+    Refer to the following link for documentation of wxGLCanvas class:
+    http://docs.wxwidgets.org/3.1.0/classwx_g_l_canvas.html
+*/ 
 class modelDefinition : public wxGLCanvas
 {
 private:
-    //! This is the context which will be associated to the class
+
+    //! This is the context which will be associated to the class.
+    /*!
+        A context is used for the glCanvans becuase there needs to be a record
+        of the state of an openGL machince. This also servces as a connection
+        between openGL and the canvas.
+        For further documentation of the wxGLCanvas object, refer to the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_g_l_context.html
+    */ 
 	wxGLContext *_geometryContext;
     
-    //! This is the address for the master definition contained in the main frame
+    //! This is the address for the problem definition contained in the main frame object.
+    /*!
+        This is simply a local variable for easier access to the state of Omni-FEM.
+        This couldn't be a direct copy because the modelDefinition would need to be able to 
+        see any changes that the user makes while to program is running. With this being a pointer,
+        we are now pointing to the address which will allow the user to make changes to the top level
+        and the changes will properaget downward
+     */ 
     problemDefinition *_localDefinition;
     
+    //! The local variable containing all of the grid preferences.
+    /*! 
+        For a detailed explanation, refer to the apprioate documentation for the gridPreferences class.
+        In short, this variable stores the current state of the grid. The state of if the grid should be drawn,
+        if geometry should be snapped to the grid, if block labels should be displayed, etc. All of these 
+        status variables are stored in this variable which is access through out the modelDefinition class
+    */ 
     gridPreferences _preferences;
     
+    //! The local variable containing all of the code for calculating anything related to the geometry.
+    /*!
+        For a detailed explanation, refer to the documentation for the geometryEditor2D class.
+        In short, this variable contains all of the code necessary for calculating any geometric functions.
+        If there is an intersection between the arcs or lines or node or block labels.
+        This variable also contains the data structures which hold the lists of the geometry shapes.
+        Anytime a draw event occurs or the class needs to loop through any combination of the geometry
+        shapes, this variable is accessed
+     */ 
     geometryEditor2D _editor;
     
+    //! The variable that contains the zoom factor in the x direction.
+    /*!
+        Zooming could be taken as one variable. However, having two variables for zooming
+        allows a greater ability for configuring the glViewport especially for the zoom window.
+        Still, in many cases in order to convert a two variable zoom factor into one, the 
+        program takes the average between the x and the y zoom factors
+     */ 
     double _zoomX = 1.0;
     
+    //! The variable that contains the zoom factor in the y-direction.
+    /*
+        See the documentation for the _zoomX variable for a detailed description
+     */ 
     double _zoomY = 1.0;
     
+    //! The varable that contains the viewport offset in the x-direction.
+    /*!
+        In order to emulate panning across an infinite grid, the program uses glTranslate function.
+        Every time that a paint event is fired, the program will alwys reset itself back to the default position 
+        which is the view port being centered at 0,0 with coordinate number 1 above, -1 below, 1 to the right, and -1 to the left.
+        Then, the program will translate the viewport _cameraX and _cameraY number of steps to the proper location.
+        For more documentation on this matter, refer to the function updateProjection(). THis function implements the idea.
+     */ 
     double _cameraX = 0;
     
+    //! The varibale that contains the viewport offset in the y-direction.
+    /*!
+        For a detailed explaniation refer to the documentation for the _cameraX variable
+     */ 
     double _cameraY = 0;
     
     int _mouseXPixel = 0;// This is the pixel coordinate
@@ -94,7 +160,7 @@ private:
     
     wxRealPoint _endPoint;
     
-    OGLFT::Grayscale *_fontRender = new OGLFT::Grayscale("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 8);
+    OGLFT::Grayscale *_fontRender;
     
     double convertToXCoordinate(int xPixel)
     {
@@ -103,7 +169,7 @@ private:
     
     double convertToYCoordinate(int yPixel)
     {
-        return _zoomY * (-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0 + _cameraY;
+        return _zoomY * ((-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraY;
     }
     
     double getTolerance()
