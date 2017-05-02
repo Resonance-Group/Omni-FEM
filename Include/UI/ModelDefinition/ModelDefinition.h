@@ -126,24 +126,81 @@ private:
      */ 
     double _cameraY = 0;
     
-    int _mouseXPixel = 0;// This is the pixel coordinate
+    //! Holds the pixel value for hte previous location of the mouse in the x-direction
+    /*!
+        This variable is not used for much except for calculating the _cameraX/_cameraY values 
+        when the user pans across the canvas. In the calculation, the program looks to find the difference
+        between the current mouse position and the previous mouse position (which is this variable) and from there 
+        determines how much to increment the _cameraX/_cameraY values by. For a more detailed description of this,
+        refer to the documentation of for the function onMouseMove(wxMouseEvent &event).
+        As a side note, this is the pixel value and not the coordiante value.
+    */ 
+    int _mouseXPixel = 0;
     
+    //! Holds the pixel value for the previous location of the mouse in the y-Direction
+    /*!
+        Refer to the documentation for the _mouseXPixel for a detailed description of this variable
+     */ 
     int _mouseYPixel = 0;
     
+    //! A status flag to indicate to the program to perform a zoom window
+    /*
+        When the user clicks on the zooom window, this boolean becomes true. When it is true,
+        the program's abaility to create nodes/lines/arcs will be overridden to create a 
+        zoom window which is a dotted line. On the up release of the left mouse button,
+        the program will check if this boolean is true and if so, resize the glviewport and 
+        the projection matrix in order to match the zoom window that the user created.
+        After completetion, this variable will be set back to false.
+     */ 
     bool _doZoomWindow = false;
     
+    //! A status flag to indicate to the program that a mirror operation will be performed
+    /*!
+        When the user would like perform a mirror operation on selected geometry, this 
+        status boolean will be set to true. Like the _doZoomWindow flag, this flag will override the
+        program's abaility to create geometry in favor of creating the mirror line.
+        On the release of the right mouse button, if this boolean is set to true, the program
+        will execute the mirror function and after completetion, will reset this variable back
+        to false.
+    */ 
     bool _doMirrorLine = false;
     
+    //! A status flag to draw a selection box rectangle
+    /*!
+        When a user wants to select a group of geometry objects, this status flag will be set to true.
+        Like the flags _doMirrorLine and _doZoomWindow, this will override the program's ability to
+        create geometry objects. On the up release of the right mouse button, the program will
+        check if this flag is true and if so, execute the necessary functions in order to select a group
+        of geometry objects within the window. This flag will be set back to false upon the completetion 
+        of this process
+     */ 
     bool _doSelectionWindow = false;
     
-    bool _isFirstInitlized = false;
-    
-    //! This is the variable that will determine to create nodes/block labels
+    //! This is a status variable which will indicate to the program whether or not the user is creating nodes or block labels
+    /*!
+        This is the status varaible that the simulator uses in order to determine if the user will be creating nodes or block labels
+        This variable does not effect the users abaility to select nodes or block labels. This variable is primarily used when the user
+        presses down on the left mouse button. This variable will also effect what geometry is selected when the user performs a left up motion
+        on the selection window. The variable is true when the user needs to create nodes and false when the user needs to create block labels
+    */ 
     bool _createNodes = true;
     
-    //! This is the variable that will determine to create lines/arcs
+    //! This is a status variable that will indicate to the program whether or not the user will create lines/arcs
+    /*!
+        This variable has the same function and purpose as the _createNodes variable except for this variable applies to lines and arcs.
+        This variable effects whetehr lines or arcs are selected when the user performs a left down motion when creating a selection window
+        This variable is true when the user whats to create lines and false when the user wants to create arcs
+     */ 
     bool _createLines = true;
     
+    //! A status variable which tells the program that nodes have been selected.
+    /*!
+        When a user clicks the right mouse button, if the mouse pointer is above a node, then the this variable 
+        will be set to true to keep track of which geometry objects are selected. THis is helpful in functions such as
+        mirroring geometry, translating geometry, and copying the geometry. This boolean will only be set to false when 
+        all nodes are deselected or if another geometry is selected that is different from the nodes.
+        Also, the selection window process will effect this variable
+     */ 
     bool _nodesAreSelected = false;
     
     bool _linesAreSelected = false;
@@ -321,8 +378,6 @@ public:
     void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
     
     void createFillet(double filletRadius);
-    
-    // Create Radius is found on CcdrawDoc::CreateRadius
     
 private:
     wxDECLARE_EVENT_TABLE(); 
