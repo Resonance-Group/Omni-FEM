@@ -344,14 +344,15 @@ public:
     {
         double offset = 0.02 * factor;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset + 0.01, _property.getMaterialName().c_str());
+        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset, _property.getMaterialName().c_str());
     }
     
     void drawCircuitName(OGLFT::Grayscale *textRender, double factor)
     {
         double offset = 0.02 * factor;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset - 0.01, _property.getCircuitName().c_str());
+        if(_property.getCircuitName() != "None")
+            textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset, _property.getCircuitName().c_str());
     }
 	
     blockProperty *getProperty()

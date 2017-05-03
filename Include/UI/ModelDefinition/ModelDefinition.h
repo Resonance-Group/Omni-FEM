@@ -1,11 +1,3 @@
-/* The purpose of this file will be to create the canvas to which the user will need to interact with
- * This class will contain an object(s) that will contain most of the definitions of the physics problem.
- * For example, this class will containt the list of boundary conditions, material properties, etc.
- * The reason for this desgin was that it would be easier for data access when the user needs to manipulate
- * the data or whent he user needs to set lines or nodes to specific sets of data.
- * Other methods invovled creating a custom class which can be tricky
- */ 
-
 #ifndef MODELDEFINITION_H_
 #define MODELDEFINITION_H_
 
@@ -49,6 +41,7 @@
     THe modelDefinition inherits from the wxGLCanvas class because the modelDefinition class
     handles all direct calls for openGL.
     Refer to the following link for documentation of wxGLCanvas class:
+     
     http://docs.wxwidgets.org/3.1.0/classwx_g_l_canvas.html
 */ 
 class modelDefinition : public wxGLCanvas
@@ -241,10 +234,33 @@ private:
      */ 
     bool _geometryIsSelected = false;
     
+    //! This variable specifies the starting point of the a mirror line/zoom window/selection box
+    /*!
+        This variable is only used when the user would creates a mirror line, a zoom window box, or a selection box.
+        This variable is not updated when the mouse moves over the canvas. The variable is first set to a value when the user
+        presses down on the left mouse button. After this, the variable is set. When the mouse moves over the canvas,
+        the _endPoint variable is updated. After a mirror,zoom window, or selection box function has been executed,
+        the variable is reset back to the point (0, 0). The datatype is wxRealPoint becuase this stores the coordinate position
+        of the mouse for the graph instead of the pixel coordinate.
+     */ 
     wxRealPoint _startPoint;
-    
+   
+    //! This variable specifices the end point of a mirror line/zoom window/selection box.
+    /*!
+        The purpose of the variable is to store the end point of a mirror line/zoom window/selection box.
+        The variable is updated whenever the mouse is moved across the canvas. At the conclusion of the function
+        executing either the mirror line/zoom window box/selection box, this variable is reset back to (0, 0). Again,
+        the datatype is a wxRealPoint becuase this stores the coordinate position inside of the variable.
+     */ 
     wxRealPoint _endPoint;
     
+    //! The variable that contains all of the related functions for font render
+    /*!
+        The instance of the font rendering engine OGLFT. This handles all of the importing of the fonts and the 
+        actual rendering of the font. For documentation regarding the OGLFT library, refer to the following link:
+         
+        http://oglft.sourceforge.net/
+    */ 
     OGLFT::Grayscale *_fontRender;
     
     double convertToXCoordinate(int xPixel)

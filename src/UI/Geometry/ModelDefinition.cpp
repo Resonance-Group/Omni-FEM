@@ -2674,8 +2674,8 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
     {
         /* This section of the code was adapted from Agro2D */
         
-        _cameraX += (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomX) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomY;
+        _cameraX += (((2.0 / (double)this->GetSize().GetWidth()) * (event.GetX() - (double)this->GetSize().GetWidth() / 2.0)) * _zoomX) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight());
+        _cameraY += (-(2.0 / (double)this->GetSize().GetHeight()) * (event.GetY() - (double)this->GetSize().GetHeight() / 2.0)) * _zoomY;
         
         if(!_preferences.getMouseZoomReverseState())
         {
@@ -2723,8 +2723,8 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
         /* This will recalculate the new position of the mouse. Assuming that the mouse does not move at all during the process
          * This also enables the feature where the zoom will zoom in/out at the position of the mouse */
         
-        _cameraX -= (((2.0 / this->GetSize().GetWidth()) * (event.GetX() - this->GetSize().GetWidth() / 2.0)) * _zoomX) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY -= (-(2.0 / this->GetSize().GetHeight()) * (event.GetY() - this->GetSize().GetHeight() / 2.0)) * _zoomY;
+        _cameraX -= (((2.0 / (double)this->GetSize().GetWidth()) * (event.GetX() - (double)this->GetSize().GetWidth() / 2.0)) * _zoomX) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight());
+        _cameraY -= (-(2.0 / (double)this->GetSize().GetHeight()) * (event.GetY() - (double)this->GetSize().GetHeight() / 2.0)) * _zoomY;
     }
 	
     this->Refresh();// This will force the canvas to experience a redraw event
