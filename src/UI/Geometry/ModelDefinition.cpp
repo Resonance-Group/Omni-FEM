@@ -2346,16 +2346,30 @@ void modelDefinition::doZoomWindow()
 void modelDefinition::updateProjection()
 {
         // First, load the projection matrix and reset the view to a default view
+    glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     
-    glOrtho(-_zoomX, _zoomX, -_zoomY, _zoomY, -1.0, 1.0);
+    double aspectRatio = (double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight();
+    /*
+     * So the bug is this that when the window is not the same for the width and height, everything is squashed.
+     * We need to take into account the aspect ratio of the viewport. Thankfully, the size of the viewport is 
+     * equal to the size of the canvas so this makes that math really easy.
+     * Basically, the fix is is that we need to multiply the x zoom factor by the aspect ratio
+     * in order for openGL to "resize" according to the aspect factor. This will case the x coordinate plane
+     * to become more "dense" in the number of coordinate positions that it can hold.
+     * For some more explanation on the matter, refer to the following link:
+     * 
+     * http://stackoverflow.com/questions/9071814/opengl-stretched-shapes-aspect-ratio
+     * 
+     */ 
+    glOrtho(-_zoomX * aspectRatio, _zoomX * aspectRatio, -_zoomY, _zoomY, -1.0, 1.0);
     
     //Reset to modelview matrix
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
+    
     /* This section will handle the translation (panning) and scaled (zooming). 
      * Needs to be called each time a draw occurs in order to update the placement of all the components */
     if(_zoomX < 1e-9 || _zoomY < 1e-9)
@@ -2718,10 +2732,6 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
 
 
 
-
-
-
-
 void modelDefinition::onMouseMove(wxMouseEvent &event)
 {
     int dx = event.GetX() - _mouseXPixel;
@@ -2732,8 +2742,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
-        _cameraX -= (2.0 / this->GetSize().GetWidth()) * ((double)dx * _zoomX) * (this->GetSize().GetWidth() / this->GetSize().GetHeight());
-        _cameraY += (2.0 / this->GetSize().GetHeight()) * ((double)dy * _zoomY);
+        _cameraX -= (2.0 / (double)this->GetSize().GetWidth()) * ((double)dx * _zoomX) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight());
+        _cameraY += (2.0 / (double)this->GetSize().GetHeight()) * ((double)dy * _zoomY);
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {

@@ -203,15 +203,43 @@ private:
      */ 
     bool _nodesAreSelected = false;
     
+    //! A status variable that tells the program that the user is selecting or has selected lines
+    /*!
+        For a detailed description, see the documentation for _nodesAreSelected. The purpose
+        and function of this status variable is the same for the status variable _nodesAreSelected
+    */ 
     bool _linesAreSelected = false;
     
+    //! A status variable that tells the program that the user is selecting or has selected arcs.
+    /*!
+        For a detailed description, see the documentation for _nodesAreSelected. The purpose
+        and function of this status variable is the same for the status variable _nodesAreSelected
+    */ 
     bool _arcsAreSelected = false;
     
+    //! A status variable that tells the program that the user is selecting or has selected block labels.
+    /*!
+        For a detailed description, see the documentation for _nodesAreSelected. The purpose
+        and function of this status variable is the same for the status variable _nodesAreSelected
+    */ 
     bool _labelsAreSelected = false;
     
-    bool _geometryIsSelected = false;
-    
+    //! A status variable that tells the program that a mix of the geometry shapes has been selected.
+    /*!
+        For a detailed description, see the documentation for _nodesAreSelected. The purpose
+        and function of this status variable is the same for the status variable _nodesAreSelected.
+        However, this variable is set to true only if a mixture of geometry is selected. This would occur during the
+        group selection process where the user creates a window where the endpoint is greater then the start point 
+        in the x-direction. When a mix of geometry is selected, this variable becomes true.
+    */ 
     bool _geometryGroupIsSelected = false;
+    
+    //! A status flag that is set to true for if a node is selected
+    /*!
+        This selection differs from the _nodesAreSelected variable becuase this status flag
+        is set to true only when the user selects a node that is to be used for creating lines/arcs
+     */ 
+    bool _geometryIsSelected = false;
     
     wxRealPoint _startPoint;
     
@@ -221,12 +249,12 @@ private:
     
     double convertToXCoordinate(int xPixel)
     {
-        return _zoomX * (((2.0 / this->GetSize().GetWidth()) * ((double)xPixel - this->GetSize().GetWidth() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraX;
+        return _zoomX * (((2.0 / (double)this->GetSize().GetWidth()) * ((double)xPixel - (double)this->GetSize().GetWidth() / 2.0)) / 1.0) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight()) + _cameraX;
     }
     
     double convertToYCoordinate(int yPixel)
     {
-        return _zoomY * ((-(2.0 / this->GetSize().GetHeight()) * ((double)yPixel - this->GetSize().GetHeight() / 2.0)) / 1.0) * (this->GetSize().GetWidth() / this->GetSize().GetHeight()) + _cameraY;
+        return _zoomY * ((-(2.0 / (double)this->GetSize().GetHeight()) * ((double)yPixel - (double)this->GetSize().GetHeight() / 2.0)) / 1.0) + _cameraY;
     }
     
     double getTolerance()
