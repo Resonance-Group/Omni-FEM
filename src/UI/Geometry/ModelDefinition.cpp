@@ -2571,7 +2571,6 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     
     glMatrixMode(GL_MODELVIEW);
     glClear(GL_COLOR_BUFFER_BIT);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
     updateProjection();
     drawGrid();
@@ -2734,6 +2733,10 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
 
 void modelDefinition::onMouseMove(wxMouseEvent &event)
 {
+ //   wxCommandEvent updateStatusInformation;
+ //   updateStatusInformation.
+ //   wxEvent updateStatusBarEvent;
+    
     int dx = event.GetX() - _mouseXPixel;
     int dy = event.GetY() - _mouseYPixel;
     
@@ -2755,35 +2758,20 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
                 {
                     double tempX = convertToXCoordinate(event.GetX());
                     double tempY = convertToYCoordinate(event.GetY());
-                    // Update the last node entry with new x and y coordinates and round if on snap grid
                     if(_preferences.getSnapGridState())
-                    {
                         roundToNearestGrid(tempX, tempY);
-                        _editor.getLastNodeAdd()->setCenter(tempX, tempY);
-                    }
-                    else
-                    {
-                        _editor.getLastNodeAdd()->setCenter(tempX, tempY);
-                    }
+                    _editor.getLastNodeAdd()->setCenter(tempX, tempY);
                 }
             }
             else if(!_createNodes)
             {
                 if(_editor.getBlockLabelList()->size() > 0 && _editor.getLastBlockLabelAdded()->getDraggingState())
                 {
-                    // Update the last bloc labe with new x and y coordinates and round if on snap grid
+                    double tempX = convertToXCoordinate(event.GetX());
+                    double tempY = convertToYCoordinate(event.GetY());
                     if(_preferences.getSnapGridState())
-                    {
-                        double tempX = convertToXCoordinate(event.GetX());
-                        double tempY = convertToYCoordinate(event.GetY());
                         roundToNearestGrid(tempX, tempY);
-                        _editor.getLastBlockLabelAdded()->setCenter(tempX, tempY);
-                    }
-                    else
-                    {
-                        _editor.getLastBlockLabelAdded()->setCenter(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
-                    }
-                    
+                    _editor.getLastBlockLabelAdded()->setCenter(tempX, tempY);
                 }
             }
         }
@@ -2824,8 +2812,6 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
     wxGLCanvas::SetCurrent(*_geometryContext);
     bool createArc = false;
     
-    
-    
     if(!_doZoomWindow && !_doMirrorLine)
     {    
         if(_createNodes)
@@ -2854,7 +2840,6 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             _geometryIsSelected = false;
                             this->Refresh();
                             break;
-//                            return;
                         }
                     }
                     else

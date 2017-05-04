@@ -251,6 +251,7 @@ private:
         The variable is updated whenever the mouse is moved across the canvas. At the conclusion of the function
         executing either the mirror line/zoom window box/selection box, this variable is reset back to (0, 0). Again,
         the datatype is a wxRealPoint becuase this stores the coordinate position inside of the variable.
+        \sa _startPoint
      */ 
     wxRealPoint _endPoint;
     
@@ -263,16 +264,44 @@ private:
     */ 
     OGLFT::Grayscale *_fontRender;
     
+    //! A function that converts the x pixel coordinate into a cartesian/polar coordinate
+    /*!
+        This function takes into account the _zoomX parameter and the _cameraX parameter. This fucntion also takes into account the aspect ratio of the screen
+        in order to properly size the gird. In simple form, we multiply the pixel value by two and then divide by the screen width. Subtract the result by 1 and multiply
+        this result by the aspect ratio and the zoom factor. Last, we add in the camera offset in order to obtain the mappping between the pixel coordinate plane and 
+        the cartensian coordinate plane. The reason that this function works with the polar form is that the mapping is exactly the same; hwoever, the meaning of the 
+        coordinate value has changed from cartesian to polar coordinate.
+        \@param xPixel The pixel value that needs to be converted into the cartensian plane. This is for the x-plane and ranges from 0 to the screen width.
+        \return Returns the cartensian/polar coordinate of the pixel value.
+     */ 
     double convertToXCoordinate(int xPixel)
     {
         return _zoomX * (((2.0 / (double)this->GetSize().GetWidth()) * ((double)xPixel - (double)this->GetSize().GetWidth() / 2.0)) / 1.0) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight()) + _cameraX;
     }
     
+    //! A function that converts the y pixel coordinate into a cartesian/polar coordinate
+    /*!
+        This function performs the same way as the convertTOXCoordinate function. Except that this function does not take into account of the 
+        aspect ratio since this is already taken into account by the convertToXCoordinate function. The math is a little reversed compared to the math
+        for the convertToXCoordinate. Mathmatically speaking, this function will subtact the result of multipling the yPixel value by the half of the
+        the canvas height from 1. Then multiply this result by the zoom Y factor and add in the camera Y offset.
+        \@param yPixel The pixel value that needs to be converted to the cartesian/polar plane. this is for the y-plane and ranges from 0 to the canvas height.
+        \return Returns the cartesian/poalr coordiante of the y pixel value.
+        \sa convertToXCoordinate
+     */
     double convertToYCoordinate(int yPixel)
     {
         return _zoomY * ((-(2.0 / (double)this->GetSize().GetHeight()) * ((double)yPixel - (double)this->GetSize().GetHeight() / 2.0)) / 1.0) + _cameraY;
     }
     
+    //! A function that will calculate the tolerance value used for selecting geometry shapes and creating the geometry
+    /*!
+        The tolerance is an imaginary buffer that gives the user a region in order to select a shape. The tolerance
+        is also used in creating geometry. When a geometry shape is created (this primarily pertains to the block labels and nodes) 
+        the program needs to make sure the the geomety is not created too close to another geometry in order to avoid convergence issues.
+        The simulator uses this function in order to properly determine the "Keep out" area for the block labels and nodes.
+        \return The function will return the tolerance value that reprents the width of the area that is either keep out or selectable.
+     */
     double getTolerance()
     {
         return ((((_zoomX + _zoomY) / 2.0) / 25.0));
