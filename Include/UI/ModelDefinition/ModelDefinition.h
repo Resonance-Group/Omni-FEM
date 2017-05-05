@@ -271,7 +271,7 @@ private:
         this result by the aspect ratio and the zoom factor. Last, we add in the camera offset in order to obtain the mappping between the pixel coordinate plane and 
         the cartensian coordinate plane. The reason that this function works with the polar form is that the mapping is exactly the same; hwoever, the meaning of the 
         coordinate value has changed from cartesian to polar coordinate.
-        \@param xPixel The pixel value that needs to be converted into the cartensian plane. This is for the x-plane and ranges from 0 to the screen width.
+        \param xPixel The pixel value that needs to be converted into the cartensian plane. This is for the x-plane and ranges from 0 to the screen width.
         \return Returns the cartensian/polar coordinate of the pixel value.
      */ 
     double convertToXCoordinate(int xPixel)
@@ -285,7 +285,7 @@ private:
         aspect ratio since this is already taken into account by the convertToXCoordinate function. The math is a little reversed compared to the math
         for the convertToXCoordinate. Mathmatically speaking, this function will subtact the result of multipling the yPixel value by the half of the
         the canvas height from 1. Then multiply this result by the zoom Y factor and add in the camera Y offset.
-        \@param yPixel The pixel value that needs to be converted to the cartesian/polar plane. this is for the y-plane and ranges from 0 to the canvas height.
+        \param yPixel The pixel value that needs to be converted to the cartesian/polar plane. this is for the y-plane and ranges from 0 to the canvas height.
         \return Returns the cartesian/poalr coordiante of the y pixel value.
         \sa convertToXCoordinate
      */
@@ -307,17 +307,98 @@ private:
         return ((((_zoomX + _zoomY) / 2.0) / 25.0));
     }
     
+    //! A function that will clear the selection of any selected geometries
+    /*!
+        The function will first check the state of the variables: _createNodes, _labelsAreSelected, _createLines, _arcsAreSelected, and _geometryGroupIsSelected.
+        If the _createNodes flag is set to true, then the program will only loop through the entire node list and set the select status of the node to false.
+        Same thing appplies to the _labelsAreSelected, _createLines, and _arcsAreSelected. Except they will effect their respectivey geometry shapes.
+        If _geometryGroupIsSelected is set to true, then the program will loop through all geometry lists and deselect the geometry shape.
+        The function will also set the variables _createNodes, _labelsAreSelected, _createLines, _arcsAreSelected, and _geometryGroupIsSelected to false 
+        no matter what flag is set to true at the conclusion of the function
+     */ 
     void clearSelection();
-
+    
+    //! Function that is called in order to update the user's view
+    /*!
+        Every time onPaintCanvas is called, this function is executed.
+        This function will update the user's view of the scene.
+        First, we size the viewport to be equal to the canvas height and width.
+        Next, we clear the projection matrix and reset it according to the aspect ratio and the zoom factor.
+        Lastly, we clear the modelmatrix and then shift the matrix according to the camera offset
+     */ 
     void updateProjection();
     
+    //! Function that will draw the grid on the screen. The grid consists of the grid markings, the grid axis, and the center.
+    /*!
+        This function will draw the grid markings, the axis for the grid along with the cneter crosshair in order to display where (0, 0)
+        is for the frid. All of these are controlled by the user preference. For the grid preference, the function checks the variable
+        _preferences in order to determine what should be drawn.
+      
+        Drawing the crosshair for the center point and drawing the axis is quite straight forward. Both function in a similiar manner.
+        At the top of the drawGrid function, the coordinate min and max of the screen width and height is computed. Using the 4 numbers,
+        the program is able to create the axis line. Where the x-axis line extends from 0 to the width of the canvas and the y-axis line
+        extends from 0 to the height of the canvas. The min and max values are effected by the zoom and translation factors. In fact, 
+        if you are to recompile the project with the glOrtho2D scaled to double what the code states, you will end up seeing the 
+        grid axis move and zoom with the user. The reason the lines are not drawn on the screen when the user pans or zooms past the grid
+        lines is that for both the x and y axis lines, neither take the other into account. For example, when the x line is drawn, the y value
+        is zero and when the y-axis line is drawn, the x value is zero.
+        
+        Drawing the grid markings is not as straight forward. First, we check to see if the user has zoomed out toom much. If this is the 
+        case, then the grid will be too dense for us to really see anything so don't bother to draw the grid. Next, we create the grid markings
+        for the y-axis by calculating the number of times we need to loop through the code. For every 4th iteration, we need to draw the line 
+        more bold in order to desginate this as a minor axis line. The program repeats this operation for the x-axis.
+ 
+        \sa _preferences
+     */ 
     void drawGrid();
 
+    //! This function will take an x coordinate value and a y coordinate value and round the two values to the nearest grid marking
+    /*! For the sake of the explanianation, imagine we are working with
+     * a 1D problem and that the point is between two grid markings.
+     * First, the program finds the modulus of the coordinate / gridStep.
+     * What this tells the program is the "distance" from the lower grid makeing to the point.
+     * If the point is beyond the halfway "mark" of two grid markings, the modulus will return a number 
+     * greater then gridStep / 2. If the point is below the halfway "mark",
+     * the program will simply take the point coordinate and subtract out the modulus.
+     * And this is the rounded answer.
+     * If the point is beyond the halfway "mark", the program will add the gridstep to the 
+     * point and then subtract out the modulus.
+     * For example, if a point is at 0.40 and the grid step size is 0.25, then the point 
+     * is between 0.25 and 0.5. The modulus of 0.40 % 0.25 will be 0.15. Since this is 
+     * greater then 0.25 / 2 = 0.125 (the halfway mark), we need to add 0.25 to 0.40 (0.25 + 0.4 = 0.65)
+     * Subtracting the modulus of 0.15 yeilds 0.5. The correct number to round 0.4 up to.
+     * The two parameters are passed in by reference.
+     * \param xCoordinate The x coordinate of a point that will be rounded to the nearest grid marking
+     * \param yCoordinate The y coordinate of a point that will be rounded to the nearest grid marking
+     */ 
     void roundToNearestGrid(double &xCoordinate, double &yCoordinate);
     
     //! This is the event that is fired when the canvas is drawn or re-drawn
+    /*!
+        A very important function. Inside this function is all of the draw calls for the canvas.
+        The canvas is redrawn by calling the function this->Refresh(). This will effectively 
+        post a paintevent to the event handler which the computer will execute then this function.
+        First, the function must set the context. This simply redirects all openGL commands to the canvas.
+        Next, we need to create an instance of the wxPaintDC object becuase we are drawing to a canvas inside
+        of an event procedure (For more documentation regarding the wxPaintDC class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_paint_d_c.html)
+        Next, the program switches to the modelMatrix and deletes everything.
+        Then, update the projection and draw the grid. The program will then loop through the entire
+        node/line/arc/and label list and call their corresponding draw function to draw them on the canvas.
+        For the label name that is displayed, it is required that the program pass the variable _fontRender into the draw call
+        so that the function has access to all of the glyphs for drawing the text onto the screen.
+        The function that actually draws everything to the screen is SwapBuffers().
+        \param event A requirded event datatype needed for the event table to post the event function properyl and to route the event procedure to the correct function.
+     */ 
 	void onPaintCanvas(wxPaintEvent &event);
     
+    //! The function that is called when a resize event occurs
+    /*!
+        Typically, a resize event occurs when the user resizes the main frame. In this case,
+        the canvas needs to be resized with the main frame and in order to maintain consistency.
+        This function handles the resize event for the canvas
+        \param event A requirded event datatype needed for the event table to post the event function properyl and to route the event procedure to the correct function.
+     */ 
     void onResize(wxSizeEvent &event);
     
     void onMouseWheel(wxMouseEvent &event);

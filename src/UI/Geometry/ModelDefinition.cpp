@@ -2351,6 +2351,7 @@ void modelDefinition::updateProjection()
     glLoadIdentity();
     
     double aspectRatio = (double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight();
+    
     /*
      * So the bug is this that when the window is not the same for the width and height, everything is squashed.
      * We need to take into account the aspect ratio of the viewport. Thankfully, the size of the viewport is 
@@ -2362,15 +2363,9 @@ void modelDefinition::updateProjection()
      * 
      * http://stackoverflow.com/questions/9071814/opengl-stretched-shapes-aspect-ratio
      * 
-     */ 
-    glOrtho(-_zoomX * aspectRatio, _zoomX * aspectRatio, -_zoomY, _zoomY, -1.0, 1.0);
-    
-    //Reset to modelview matrix
-	glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    
-    
-    /* This section will handle the translation (panning) and scaled (zooming). 
+     */
+
+    /* This section will handle the zooming. 
      * Needs to be called each time a draw occurs in order to update the placement of all the components */
     if(_zoomX < 1e-9 || _zoomY < 1e-9)
     {
@@ -2383,7 +2378,13 @@ void modelDefinition::updateProjection()
         _zoomX = 1e6;
         _zoomY = _zoomX;
     }
+ 
+    glOrtho(-_zoomX * aspectRatio, _zoomX * aspectRatio, -_zoomY, _zoomY, -1.0, 1.0);
     
+    //Reset to modelview matrix. This section handles the panning
+	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
     glTranslated(-_cameraX, -_cameraY, 0.0);
 }
 
@@ -2412,14 +2413,14 @@ void modelDefinition::drawGrid()
         glLineStipple(1, 0b0001100011000110);
     
         glBegin(GL_LINES);
-            if(((cornerMaxX - cornerMinX) / _preferences.getGridStep() + (cornerMinY - cornerMaxY) / _preferences.getGridStep() < 200) && ((cornerMaxX - cornerMinX) / _preferences.getGridStep() > 0) && ((cornerMinY - cornerMaxY) / _preferences.getGridStep() > 0))
+            if(((cornerMaxX - cornerMinX) / _preferences.getGridStep() + (cornerMinY - cornerMaxY) / _preferences.getGridStep() < 300) && ((cornerMaxX - cornerMinX) / _preferences.getGridStep() > 0) && ((cornerMinY - cornerMaxY) / _preferences.getGridStep() > 0))
             {
                 /* Create the grid for the vertical lines first */
                 for(int i = cornerMinX / _preferences.getGridStep() - 1; i < cornerMaxX / _preferences.getGridStep() + 1; i++)
                 {
                     if(i % 4 == 0)
                     {
-                        glLineWidth(1.0);
+                        glLineWidth(1.2);
                         glColor3d(0.0, 0.0, 0.0);
                     }
                     else
@@ -2429,7 +2430,6 @@ void modelDefinition::drawGrid()
                     }
                     
                     glVertex2d(i * _preferences.getGridStep(), cornerMinY);
-                
                     glVertex2d(i * _preferences.getGridStep(), cornerMaxY);
                 }
             
@@ -2438,7 +2438,7 @@ void modelDefinition::drawGrid()
                 {
                     if(i % 4 == 0)
                     {
-                        glLineWidth(1.0);
+                        glLineWidth(1.2);
                         glColor3d(0.0, 0.0, 0.0);
                     }
                     else
@@ -2494,7 +2494,7 @@ void modelDefinition::drawGrid()
 
 void modelDefinition::clearSelection()
 {
-    if(_createNodes)
+    if(_createNodes || _geometryGroupIsSelected)
     {
         for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
         {
@@ -2502,7 +2502,8 @@ void modelDefinition::clearSelection()
                 nodeIterator->setSelectState(false);
         }
     }
-    else if(!_createNodes || _labelsAreSelected)
+    
+    if(_labelsAreSelected || _geometryGroupIsSelected)
     {
         for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
@@ -2511,7 +2512,7 @@ void modelDefinition::clearSelection()
         }
     }
     
-    if(_createLines)
+    if(_createLines || _geometryGroupIsSelected)
     {
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
@@ -2519,7 +2520,8 @@ void modelDefinition::clearSelection()
                 lineIterator->setSelectState(false);
         }
     }
-    else if(!_createLines || _arcsAreSelected)
+    
+    if(_arcsAreSelected || _geometryGroupIsSelected)
     {
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
@@ -2527,34 +2529,7 @@ void modelDefinition::clearSelection()
                 arcIterator->setSelectState(false);
         }
     }
-    
-    if(_geometryGroupIsSelected)
-    {
-        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-        {
-            if(nodeIterator->getIsSelectedState())
-                nodeIterator->setSelectState(false);
-        }
-        
-        for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
-        {
-            if(blockIterator->getIsSelectedState())
-                blockIterator->setSelectState(false);
-        }
-        
-        for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
-        {
-            if(lineIterator->getIsSelectedState())
-                lineIterator->setSelectState(false);
-        }
-        
-        for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
-        {
-            if(arcIterator->getIsSelectedState())
-                arcIterator->setSelectState(false);
-        }
-    }
-    
+
     _nodesAreSelected = false;
     _linesAreSelected = false;
     _arcsAreSelected = false;
@@ -2877,9 +2852,9 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                 roundToNearestGrid(tempX, tempY);
                 
             _editor.addDragBlockLabel(tempX, tempY);
-
-            this->Refresh();
+            
             clearSelection();
+            this->Refresh();
             return;
         }
     }
@@ -2894,9 +2869,9 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         _startPoint = wxRealPoint(tempX, tempY);
         _endPoint = wxRealPoint(tempX, tempY);
         clearSelection();
+        this->Refresh();
+        return;
     }
-    
-    this->Refresh();
     
     if(createArc)
     {
@@ -2936,6 +2911,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         }
     }
     
+    this->Refresh();
     clearSelection();
     return;
 }
@@ -3007,20 +2983,6 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
 
 void modelDefinition::roundToNearestGrid(double &xCoordinate, double &yCoordinate)
 {
-    /* How to code works. For the sake of the explanianation, imagine we are working with
-     * a 1D problem and that the point is between two grid markings.
-     * So first, we find the modulus of the coordinate / gridStep.
-     * What this tells us is the "distance" from the lower grid makring to the point.
-     * If the point is beyond the half way "mark", te modulus will return a number 
-     * greater then gridStep / 2. If the point is below the halfway "mark",
-     * you can simply take the point coordinate and subtract out the modulus.
-     * If the point is beyond the halfway "mark", you have to add the gridstep to the 
-     * point and then subtract out the modulus.
-     * For example, if a point is at 0.40 and the grid step size is 0.25, then the point 
-     * is between 0.25 and 0.5. The modulus of 0.40 % 0.25 will be 0.15. Since this is 
-     * greater then 0.25 / 2 = 0.125 (the halfway mark), we need to add 0.25 to 0.40 (0.25 + 0.4 = 0.65)
-     * Subtracting the modulus of 0.15 yeilds 0.5. The correct number to round 0.4 up to.
-     */ 
     double xCoordRemainder = fmod(abs(xCoordinate), _preferences.getGridStep());
     double yCoordRemainder = fmod(abs(yCoordinate), _preferences.getGridStep());
     
