@@ -396,13 +396,44 @@ private:
     /*!
         Typically, a resize event occurs when the user resizes the main frame. In this case,
         the canvas needs to be resized with the main frame and in order to maintain consistency.
-        This function handles the resize event for the canvas
+        This function handles the resize event for the canvas.
+        For more documentation regarding the wxSizeEvent class, refer to the following documentation:
+        http://docs.wxwidgets.org/3.1.0/classwx_size_event.html
         \param event A requirded event datatype needed for the event table to post the event function properyl and to route the event procedure to the correct function.
      */ 
     void onResize(wxSizeEvent &event);
     
+    //! The event procedure that is executed every time the user moves the mouse wheel.
+    /*!
+        This function will query the GetWheelRotation from the event variable. This will determine if the mouse wheel moved counter-clock-wise or
+        clock-wise. Depending on the status of getMouseZoomReverseState, a counter-clockwise motion will cause the canvas to zoom in and a clockwise rotation
+        will cause the canvas to zoom out. If getMouseZoomReverseState is true, then the operation is reversed. The program changes the zoom variables (_zoomX and _zoomY)
+        by a factor that is computed by 1.2^(GetWheelRotation/150). This value is multuplied by the current zoom factor (for x and y). The program will ensure that
+        both zoom factors are equal to each other. If a user zoom windowed to a particular location, when the user zooms in or out of that location, the program 
+        will reset the zoom factors back to equal to each other. The program will also calculate a small offset and add/subtract this from the _cameraX and _cameraY
+        variables. This allows the program to pan towards/away from the current mouse position as the program is zooming in/out.
+        \sa _cameraX, _cameraY, _zoomX, _zoomY
+        \param event This variable is required for the event procedure to work properly. When called from the event table, this variable contains the datatype to retrieve how much the user rotated the mouse wheel
+     */ 
     void onMouseWheel(wxMouseEvent &event);
     
+    //! This is the function that is executed when the user moves the mouse pointer across the canvas
+    /*!
+        This is executed every time the user moves the mouse pointer across the canvas. THe program will check a series of status flags 
+        and execute accordingly. The first flag that it checks is to see if the middel mouse button (the wheel button) is pressed down.
+        This indicates that tehe user woudl like to pan across the canvas. Based on the change of pixels from the last event to the next,
+        the program will calculate the shift for the _cameraX and _cameraY variables. The variables, _mousePixelX and _mousePixelY, store the
+        last position of the mouse (in pixel units). The current position X and Y mouse pixels can be obtained from the function GetX() and GetY() located
+        in the wxMouseEvent class. 
+        If the middle mouse button is not pressed, the program will check to see if the left mouse button is pressed at the time that the mouse moved
+        If so, the program will check if the canvas is to move a draggingNode/label or to update the position of the _endPoint becuase the user
+        is drawing a mirror line or a selection window. 
+        If the left mouse button is not pressed and the user has the right mouse button down when moving the mouse, the program will update the
+        value of _endPoint variable. This occurs only if the program is in the mode to draw a selection window.
+        Once the program is finished executing, the program will force the canvas to refresh the screen
+        \sa _cameraX, _cameraY, _endPoint
+        \param event This variable is required for the event procedure to function properly. The wxMouseEvent class stores the current mouse positon and the information needed to determine what mouse button is pressed at the time that the event is fired.
+     */ 
     void onMouseMove(wxMouseEvent &event);
     
     void onMouseLeftDown(wxMouseEvent &event);
@@ -534,6 +565,7 @@ public:
     void createFillet(double filletRadius);
     
 private:
+    //! This is a macro in order to let wxWidgets understand that there are events withing the class
     wxDECLARE_EVENT_TABLE(); 
 };
 

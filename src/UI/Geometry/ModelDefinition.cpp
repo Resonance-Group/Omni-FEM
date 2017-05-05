@@ -2767,10 +2767,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
             double tempX = convertToXCoordinate(event.GetX());
             double tempY = convertToYCoordinate(event.GetY());
             if(_preferences.getSnapGridState())
-            {
                 roundToNearestGrid(tempX, tempY);
-                roundToNearestGrid(_startPoint.x, _startPoint.y);
-            }
                 
             _endPoint = wxRealPoint(tempX, tempY);
         }
@@ -3031,6 +3028,9 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
     double xCoordinate = convertToXCoordinate(event.GetX());
     double yCoordinate = convertToYCoordinate(event.GetY());
+    
+    if(_preferences.getSnapGridState())
+        roundToNearestGrid(xCoordinate, yCoordinate);
     
     _startPoint = wxRealPoint(xCoordinate, yCoordinate);
     _endPoint = _startPoint;
