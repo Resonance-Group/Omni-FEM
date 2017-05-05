@@ -2720,6 +2720,14 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
+        /* For the _cameraX variable, this is -= instead of +=. For those not as inclined in math, this maybe confusing.
+         * The program always takes the current position as the reference. To get the distan between two points (in one dimension in the x-plane) normally
+         * you would perform x1 - x2 = d where x1 > x2. This would give you a positive answer. However, since x1 is equal to the current position, then if
+         * x2 > x1, you get a negative answer. Therefor, you have the multiple the result by -1 in order to for the distance to be positive and add this result to 
+         * the current position in order to move the point to the right. In the case that x2 < x1, then the distance is negative and you simply have to add the negative number to 
+         * the current position in order to move the point to the left. Hence the need to have _camerX -= and not +=. This is not the case for _cameraY.
+         * The _cameraY variable behaves more normal since we already take into account the postional shift in the equation
+         */ 
         _cameraX -= (2.0 / (double)this->GetSize().GetWidth()) * ((double)dx * _zoomX) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight());
         _cameraY += (2.0 / (double)this->GetSize().GetHeight()) * ((double)dy * _zoomY);
     }
