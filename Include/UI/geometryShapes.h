@@ -202,12 +202,14 @@ public:
     {
         glPointSize(6.0);
         
+        
+    
+        glBegin(GL_POINTS);
         if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 0.0);
-    
-        glBegin(GL_POINTS);
+            
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
     
@@ -217,6 +219,8 @@ public:
         glBegin(GL_POINTS);
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
+        
+        glColor3d(0.0, 0.0, 0.0);
     }
     
     void setNodeSettings(nodeSetting setting)

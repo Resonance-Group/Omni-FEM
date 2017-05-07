@@ -26,6 +26,7 @@
 #include <UI/GeometryDialog/EditGroupDialog.h>
 
 #include <UI/ModelDefinition/OGLFT.h>
+#include <UI/ModelDefinition/glText.h>
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
@@ -47,6 +48,8 @@
 class modelDefinition : public wxGLCanvas
 {
 private:
+
+    glText *_textRendering;
 
     //! This is the context which will be associated to the class.
     /*!
@@ -438,27 +441,40 @@ private:
     
     //! Function that is executed everytime the user presses down on the left mouse button
     /*!
-     * This function is performing a number of different options. The primary function of this function
-     * is to add the geometry to the list. It does by checking the status _createNodes and _createLines and the position.
-     * This function will also initilize the _startPoint when in zoom window mode or when creating a mirror line
-     * When a down click occurs, the function will check if the booleans _doZoomWindow and _doMirrorLine are set to false.
-     * The function will check if the user wants to create nodes by checking if _createNodes is set to true.
-     * If so, the function will then scan through the entire node list and check if the mouse pointer is within the clickable area of the node.
-     * If so, the program will then save this node iterator. The saving function will return true if there are 2 iterators that
-     * have been saved. If the return is true, the program will check the boolean _createLines. If _createLines is true, the program
-     * will create a line between the two saved points. If false, the program will create an arc between the two points. The arc creation occurs
-     * later in the code becuase the code is designed to refresh the canvas such that both selected nodes are colored selected for the user's sake.
-     * 
-     * If the user did not click on an area containing a node, then the program will add in a dragging node. This dragging node overrides 
-     * all checks for a node and is simply used as a display to show the user where they are dragging the node to. The actual node is created 
-     * in the function omMouseLeftUp.
-     * 
-     * If _createNodes is false, this means that the user would like to create a dragging block label. Which the program will perform.
-     * \sa _createNodes, _createLines, onMouseLeftUp
-     * \param wxMouseEvent This variable is required in order for the event table to properly route the event to the function.
+        This function is performing a number of different options. The primary function of this function
+        is to add the geometry to the list. It does by checking the status _createNodes and _createLines and the position.
+        This function will also initilize the _startPoint when in zoom window mode or when creating a mirror line
+        When a down click occurs, the function will check if the booleans _doZoomWindow and _doMirrorLine are set to false.
+        The function will check if the user wants to create nodes by checking if _createNodes is set to true.
+        If so, the function will then scan through the entire node list and check if the mouse pointer is within the clickable area of the node.
+        If so, the program will then save this node iterator. The saving function will return true if there are 2 iterators that
+        have been saved. If the return is true, the program will check the boolean _createLines. If _createLines is true, the program
+        will create a line between the two saved points. If false, the program will create an arc between the two points. The arc creation occurs
+        later in the code becuase the code is designed to refresh the canvas such that both selected nodes are colored selected for the user's sake.
+      
+        If the user did not click on an area containing a node, then the program will add in a dragging node. This dragging node overrides 
+        all checks for a node and is simply used as a display to show the user where they are dragging the node to. The actual node is created 
+        in the function omMouseLeftUp.
+      
+        If _createNodes is false, this means that the user would like to create a dragging block label. Which the program will perform.
+        \sa _createNodes, _createLines, onMouseLeftUp
+        \param event This variable is required in order for the event table to properly route the event to the function.
      */ 
     void onMouseLeftDown(wxMouseEvent &event);
     
+    //! Function that is responsible for adding the real block/node to the list
+    /*!
+        After the user has positioned the block label or node, when the user releases the button on the mouse
+        this function is called. First, the function will check if both _doZoomWindow and _doMirrorLine are false.
+        if so, the function will check if the user wants to create nodes or block labels by checking if _createNodes is true.
+        If true, the function will delete the dragging node and add in the node with all of the checking (checking for intersections). The fucntion will also round the
+        node to the nearest grid marking if the user wants to snap to the grid.
+        If the user is creating block labels, then the function will do the same thing as the node except with block labels.
+        However, if _doZoomWindow or _doMirrorLine are true, then the function execute their respective functions and set the _startPoint
+        and _endPoint back to (0,0) and set _doZoomWindow or _doMirrorLine to false.
+        \sa _doMirrorLine, _doZoomWindow, _createNodes
+        \param event This variable is required in order for the event table to properly route the event to the function.
+     */ 
     void onMouseLeftUp(wxMouseEvent &event);
     
     void onMouseRightDown(wxMouseEvent &event);

@@ -28,6 +28,11 @@ modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSi
     
     glMatrixMode(GL_MODELVIEW);
     
+     if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+        _textRendering = new glText(physicProblems::PROB_ELECTROSTATIC);
+    else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+        _textRendering = new glText(physicProblems::PROB_MAGNETICS);   
+        
     _fontRender = new OGLFT::Grayscale("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 8);
 }
 
@@ -1755,7 +1760,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                         }
                     }
                     
-                    arcIterator->getFirstNode()->setSelectState(false);
+            //        arcIterator->getFirstNode()->setSelectState(false);
                     
                     if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, 0))
                     {
@@ -1777,7 +1782,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                         }
                     }
                     
-                    arcIterator->getSecondNode()->setSelectState(false);
+              //      arcIterator->getSecondNode()->setSelectState(false);
                     
                     arcShape tempArc;
                     tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
@@ -2420,7 +2425,7 @@ void modelDefinition::drawGrid()
                 {
                     if(i % 4 == 0)
                     {
-                        glLineWidth(1.2);
+                        glLineWidth(1.5);
                         glColor3d(0.0, 0.0, 0.0);
                     }
                     else
@@ -2438,7 +2443,7 @@ void modelDefinition::drawGrid()
                 {
                     if(i % 4 == 0)
                     {
-                        glLineWidth(1.2);
+                        glLineWidth(1.5);
                         glColor3d(0.0, 0.0, 0.0);
                     }
                     else
@@ -2460,7 +2465,7 @@ void modelDefinition::drawGrid()
     {
         /* Create the center axis */    
         glColor3d(0.0, 0.0, 0.0);
-        glLineWidth(1.0);
+        glLineWidth(1.7);
     
         glBegin(GL_LINES);
             glVertex2d(0, cornerMinY);
@@ -2529,7 +2534,9 @@ void modelDefinition::clearSelection()
                 arcIterator->setSelectState(false);
         }
     }
-
+    
+    _editor.resetIndexs();
+    
     _nodesAreSelected = false;
     _linesAreSelected = false;
     _arcsAreSelected = false;
@@ -2605,15 +2612,27 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
         glLineWidth(3.0);
         glEnable(GL_LINE_STIPPLE);
         
+   
         glLineStipple(1, 0b0001100011000110);
         glColor3d(0.0, 0.0, 0.0);
         glBegin(GL_LINES);
             glVertex2d(_startPoint.x, _startPoint.y);
             glVertex2d(_endPoint.x, _endPoint.y);
         glEnd();
+         
         glDisable(GL_LINE_STIPPLE);
     }
-      
+    /*
+     * This resets the color back to 0. Actually,
+     * if this command is not called,
+     * the white dot that is ontop of the black dot for a node
+     * (To draw a node, we have a black point drawn first and 
+     * a white point drawn ontop of it)
+     * will not be drawn for the last node added
+     */ 
+    glColor3f(0.0, 0.0, 0.0);
+    glColor3d(0.0, 0.0, 0.0);
+  
     SwapBuffers();
 }
 
@@ -2873,7 +2892,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
             
         _startPoint = wxRealPoint(tempX, tempY);
         _endPoint = wxRealPoint(tempX, tempY);
-        clearSelection();
+        
         this->Refresh();
         return;
     }
@@ -3110,7 +3129,8 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
                     } 
                 }
                 
-                nodeIterator->setSelectState(!nodeIterator->getIsSelectedState());
+                nodeIterator->setSelectState(!(nodeIterator->getIsSelectedState()));
+
                 _nodesAreSelected = true;
                 
                 /* I placed this inside of the if statement for every iteration because if there is one, then this is valid. But, if the user did not click on one, then this logic beecomes invalid */
@@ -3127,6 +3147,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
                     if(nodesSeleted == 0)
                         _nodesAreSelected = false;
                 }
+                _doSelectionWindow = false;
                 this->Refresh();
                 return;
             }
@@ -3180,7 +3201,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
                         _labelsAreSelected = false;
                 }
                 
-                
+                _doSelectionWindow = false;
                 this->Refresh();
                 return;
             }
@@ -3234,6 +3255,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
                         _linesAreSelected = false;
                 }
                 
+                _doSelectionWindow = false;
                 this->Refresh();
                 return;
             }
@@ -3285,6 +3307,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
                         _arcsAreSelected = false;
                 }
                 
+                _doSelectionWindow = false;
                 this->Refresh();
                 return;
             }
@@ -3332,6 +3355,7 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
         }
         
         _geometryGroupIsSelected = false;
+        _doSelectionWindow = false;
         this->Refresh();
         return;
     }
