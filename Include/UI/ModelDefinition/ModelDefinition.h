@@ -26,7 +26,6 @@
 #include <UI/GeometryDialog/EditGroupDialog.h>
 
 #include <UI/ModelDefinition/OGLFT.h>
-#include <UI/ModelDefinition/glText.h>
 
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
@@ -48,8 +47,6 @@
 class modelDefinition : public wxGLCanvas
 {
 private:
-
-    glText *_textRendering;
 
     //! This is the context which will be associated to the class.
     /*!
