@@ -2,13 +2,14 @@
 
 wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
-modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
+modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
     _geometryContext = new wxGLContext(this);
 	wxGLCanvas::SetCurrent(*_geometryContext);
     wxPaintDC dc(this);
     
     _localDefinition = &definition;
+    _statusBarTopWindow = statusBar;
     
     glViewport(0, 0, (double)this->GetSize().GetWidth(), (double)this->GetSize().GetHeight());
     
@@ -2726,12 +2727,12 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
 	_mouseXPixel = event.GetX();
 	_mouseYPixel = event.GetY();
     
-    wxString xCoordinateString = wxString(std::to_string(convertToXCoordinate(_mouseXPixel)));
-    wxString yCoordinateString = wxString(std::to_string(convertToYCoordinate(_mouseYPixel)));
-    wxString combinedString = wxString("(") + xCoordinateString + wxString(", ") + yCoordinateString + wxString(")");
+
     
-    customEvent.SetString(combinedString);
-    wxPostEvent(this->GetParent(), customEvent);
+ //   customEvent.SetString(combinedString);
+ //   wxPostEvent(this->GetParent(), customEvent);
+    
+    
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
@@ -2745,6 +2746,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
          */ 
         _cameraX -= (2.0 / (double)this->GetSize().GetWidth()) * ((double)dx * _zoomX) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight());
         _cameraY += (2.0 / (double)this->GetSize().GetHeight()) * ((double)dy * _zoomY);
+        this->Refresh();
+        return;
     }
     else if(event.ButtonIsDown(wxMOUSE_BTN_LEFT))
     {
@@ -2795,6 +2798,19 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
             _endPoint = wxRealPoint(tempX, tempY);
         }
     }
+    
+    std::stringstream xStream;
+    std::stringstream yStream;
+    
+    xStream << std::fixed << std::setprecision(3) << convertToXCoordinate(_mouseXPixel);
+    yStream << std::fixed << std::setprecision(3) << convertToYCoordinate(_mouseYPixel);
+    
+    wxString xCoordinateString = wxString(xStream.str());
+    wxString yCoordinateString = wxString(yStream.str());
+    wxString combinedString = wxString("(") + xCoordinateString + wxString(", ") + yCoordinateString + wxString(")");
+    
+    if(_localDefinition->getShowStatusBarState())
+        _statusBarTopWindow->SetStatusText(wxString("Omni-FEM Simulator: ") + combinedString);
     
     this->Refresh();
     return;

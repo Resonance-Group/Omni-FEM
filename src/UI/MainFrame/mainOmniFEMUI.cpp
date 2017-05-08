@@ -281,7 +281,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
  
-    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition);
+    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition, this->GetStatusBar());
     
     enableToolMenuBar(true);
     createTopToolBar();

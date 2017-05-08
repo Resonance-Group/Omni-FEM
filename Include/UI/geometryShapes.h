@@ -504,10 +504,8 @@ public:
         
         a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0));
         
-        if(std::isnan(a))
+        if(std::isnan(a))// This will account for the case if the mid point is directly ontop of the center point
             a = 0;
-            
-      //  a = ; // This is just an intermediate varable to make calculations easier
         
         // We need two cases here. One for if the line between the first and second node has a slope of 0 and the other case being if the line is vertical
         if(slope >= 0 && slope <= 1e-9)

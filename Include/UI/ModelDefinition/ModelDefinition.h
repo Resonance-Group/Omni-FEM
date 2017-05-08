@@ -5,12 +5,14 @@
 #include <algorithm>
 #include <string>
 #include <math.h>
+#include <sstream>
 
 #include <glew.h>
 #include <freeglut.h>
 
 #include <wx/wx.h>
 #include <wx/gdicmn.h>
+#include <wx/statusbr.h>
 
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
@@ -47,7 +49,9 @@
 class modelDefinition : public wxGLCanvas
 {
 private:
-
+    
+    wxStatusBarBase *_statusBarTopWindow;
+    
     //! This is the context which will be associated to the class.
     /*!
         A context is used for the glCanvans becuase there needs to be a record
@@ -488,7 +492,7 @@ private:
     void doZoomWindow();
     
 public:
-    modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition);
+    modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar);
 
     void setGridPreferences(gridPreferences &preferences)
     {

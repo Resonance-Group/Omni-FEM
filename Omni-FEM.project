@@ -158,6 +158,7 @@
         <File Name="Include/UI/ModelDefinition/OGLFT.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/GeometryEditor2D.h"/>
+      <File Name="Include/UI/CustomEvent.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

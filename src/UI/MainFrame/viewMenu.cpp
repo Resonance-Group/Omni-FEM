@@ -59,6 +59,8 @@ void OmniFEMMainFrame::onStatusBar(wxCommandEvent &event)
 {
     _displayStatusMenu = _menuView->IsChecked(ViewMenuID::ID_SHOW_STATUSBAR);
     
+    _problemDefinition.setShowStatusBarState(!_problemDefinition.getShowStatusBarState());
+    
     if(_displayStatusMenu)
     {
         this->SetStatusText("Omni-FEM Simulator");

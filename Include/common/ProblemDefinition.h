@@ -53,6 +53,8 @@ private:
     
     wxString _problemName = "Untitled";
     
+    bool _showStatusBar = true;
+    
     /**********
     * Methods *
 	***********/
@@ -196,6 +198,16 @@ public:
     wxString getProblemName()
     {
         return _problemName;
+    }
+    
+    bool getShowStatusBarState()
+    {
+        return _showStatusBar;
+    }
+    
+    void setShowStatusBarState(bool state)
+    {
+        _showStatusBar = state;
     }
 };
 
