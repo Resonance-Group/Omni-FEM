@@ -502,7 +502,12 @@ public:
         
         slope = (_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate());
         
-        a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0)); // This is just an intermediate varable to make calculations easier
+        a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0));
+        
+        if(std::isnan(a))
+            a = 0;
+            
+      //  a = ; // This is just an intermediate varable to make calculations easier
         
         // We need two cases here. One for if the line between the first and second node has a slope of 0 and the other case being if the line is vertical
         if(slope >= 0 && slope <= 1e-9)
@@ -573,14 +578,20 @@ public:
                 // This will calculate the center that is above the arc.
                 // If the start node is lower then the end node, the logic is reversed. This portion will create
                 // the center above the arc.
+
                 xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+
+
+                
             }
             else
             {
                 // This will calculate the center below the arc
+                
                 xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+
             }
         }
         else if(slope < 0)
@@ -590,12 +601,14 @@ public:
                 // This will calculate the center that is above the arc.
                 // If the start node is lower then the end node, the logic is reversed. This portion will create
                 // the center above the arc.
+                
                 xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
             }
             else
             {
                 // This will calculate the center below the arc
+                
                 xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
             }

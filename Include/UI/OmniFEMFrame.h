@@ -211,6 +211,8 @@ private:
     {
         return;
     }
+    
+    void onGLCanvasMouseMove(wxCommandEvent &event);
 
  	/*****************************
 	* Prototypes for client area *

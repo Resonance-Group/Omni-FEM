@@ -1,5 +1,6 @@
 #include "UI/OmniFEMFrame.h"
 
+wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
 /***************
  * Constructor *
@@ -466,6 +467,14 @@ void OmniFEMMainFrame::onProblemPreferences(wxCommandEvent &event)
         _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, false);
 }
 
+void OmniFEMMainFrame::onGLCanvasMouseMove(wxCommandEvent &event)
+{
+    if(_displayStatusMenu)
+    {
+        this->SetStatusText(wxString("Omni-FEM Simulator: ") + event.GetString());
+    }
+}
+
 
 
 	/**************
@@ -576,6 +585,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	/********
 	* Other *
 	*********/
+    EVT_COMMAND(wxID_ANY, MOUSE_MOVE, OmniFEMMainFrame::onGLCanvasMouseMove)
     
 wxEND_EVENT_TABLE()
 

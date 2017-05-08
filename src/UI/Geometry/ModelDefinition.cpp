@@ -1,5 +1,6 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
 
+wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
 modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
@@ -2717,12 +2718,20 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
  //   wxCommandEvent updateStatusInformation;
  //   updateStatusInformation.
  //   wxEvent updateStatusBarEvent;
+    wxCommandEvent customEvent(MOUSE_MOVE);
     
     int dx = event.GetX() - _mouseXPixel;
     int dy = event.GetY() - _mouseYPixel;
     
 	_mouseXPixel = event.GetX();
 	_mouseYPixel = event.GetY();
+    
+    wxString xCoordinateString = wxString(std::to_string(convertToXCoordinate(_mouseXPixel)));
+    wxString yCoordinateString = wxString(std::to_string(convertToYCoordinate(_mouseYPixel)));
+    wxString combinedString = wxString("(") + xCoordinateString + wxString(", ") + yCoordinateString + wxString(")");
+    
+    customEvent.SetString(combinedString);
+    wxPostEvent(this->GetParent(), customEvent);
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
