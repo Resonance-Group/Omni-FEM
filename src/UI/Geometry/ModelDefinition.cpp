@@ -284,6 +284,11 @@ void modelDefinition::editSelection()
             
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
+                /* This will clear the default flag of the block label no matter what. If the user did select the label
+                 * to be the defualt, then in the next few lines the program will set that flag to the block label
+                 * since we copy the user set parameters and place them into the block label
+                 */ 
+                blockIterator->getProperty()->setDefaultState(false);
                 if(blockIterator->getIsSelectedState())
                     blockIterator->setPorperty(selectedBlockLabel);
             }
@@ -2992,6 +2997,19 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 {
                     _editor.getBlockLabelList()->erase(_editor.getLastBlockLabelAdded()); 
                     _editor.addBlockLabel(tempX, tempY, getTolerance());
+                }
+                
+                /* Now we want to scan through the entire block label list to finc if there is one that is
+                 * set to defualt, if there is, then copy the settings to the newly created label
+                 */
+                for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
+                {
+                    if(blockIterator->getProperty()->getDefaultState())
+                    {
+                        _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
+                        _editor.getLastBlockLabelAdded()->getProperty()->setDefaultState(false);
+                        break;
+                    }
                 }
             }
         }

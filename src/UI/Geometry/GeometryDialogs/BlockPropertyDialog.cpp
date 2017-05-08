@@ -150,6 +150,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     line8Sizer->Add(_externalRegionCheckbox, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
     
     _defaultCheckBox->Create(this, wxID_ANY, "Set as Default Block Label");
+    _defaultCheckBox->SetValue(property.getDefaultState());
     _defaultCheckBox->SetFont(*font);
     
     line9Sizer->Add(_defaultCheckBox, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
@@ -271,6 +272,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     line5Sizer->Add(_externalRegionCheckbox, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
     
     _defaultCheckBox->Create(this, wxID_ANY, "Set as Default Block Label");
+    _defaultCheckBox->SetValue(property.getDefaultState());
     _defaultCheckBox->SetFont(*font);
     
     line6Sizer->Add(_defaultCheckBox, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
