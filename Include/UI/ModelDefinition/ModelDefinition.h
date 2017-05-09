@@ -478,17 +478,56 @@ private:
      */ 
     void onMouseLeftUp(wxMouseEvent &event);
     
+    //! Function that is called when then user presses down on the mouse right button
+    /*!
+        This function begins the geometry selection processes. The program sets _startPoint and _endPoint equal to
+        the current position of the mouse. If snapping grid is on, then the program will round the mouse position to the
+        nearest grid position. The function will also set _doSelectionWindow to true.
+        \sa _startPoint, _endPoint, _doSelectionWindow
+        \param event This variable is required in order for the event table to properly route the event to the function.
+     */ 
     void onMouseRightDown(wxMouseEvent &event);
     
+    //! The function that is called when the user releases the right mouse button
+    /*!
+        This function completes the geometry selection process. First, the function will check if the current mouse position 
+        is equal to the mouse position when the user started the process. If so, this could mean that the user selected an individual geometry
+        shape. The function will then perform a series of checks to determine which geometry shape the user could have selected. This is 
+        based on the distance between the geometry shape and the mouse pointer. If the user did click on a geometry shape, then the
+        function will loop through all the other geometry lists and de-select any shapes that are not already selected (this only
+        applies to the shapes that are different then the one selected). If the user clicked on a whitespace, then the function will
+        de-select all geomerty shapes.
+      
+        If the variable _endPoint is greater then _startPoint on the y-plane but less then _startPoint on the x-plane, then 
+        this would indicate that the user wants to select only nodes/block labels. This is determined by the variable _createNodes. If 
+        true, then the user will select all ndoes within the box the user drew. If false, then the user will select the block labels.
+        The program will always select a new group of nodes/labels. If the user would like to select an addiditonal set of nodes/labels,
+        the the CTRL button must be pressed down. This logic applies to the lines/arcs. This function keeps a static count of all of the 
+        selected geometry. This may be removed one day.
+      
+        To select a grouping of lines/arcs, the _endpoint variable must be less then _startPoint on the x and y-plane. The same
+        logic applies for as above for the node/labels except the function will be looking at _createLines. However, in order to select a line/acr, 
+        only one of the endpoints needs to be in the selection box.
+      
+        In order to select all of the geometry, the _endpoint must be greater then _startPoint on the x-plane. The y-plane is not looked at.
+        In this mode, all of the geometry wll be selected and operated on. This would be mixed geometry mode. Again, the same logic as the
+        nodes/labels applied to the mixed geometry where the user needs to have CTRL down in order to add to the curretn selection. In this mode,
+        in order for a line/arc to be selected, both nodes need to be in the selection window.
+
+        After executing, _doSelectionWindow is false.
+      
+        \sa onMouseLeftUp, _createNodes, _createLines
+        \param event This variable is required in order for the event table to properly route the event to the function. This variable also contains the current pixel coordinate of the mouse.
+     */ 
     void onMouseRightUp(wxMouseEvent &event);
     
-    void onKeyDown(wxKeyEvent &event);
-    
-    void onEnterWindow(wxMouseEvent &event)
-    {
-      //  this->SetFocus();
-    }
-    
+    //! The function that is called in order to implement the zoom window functionality.
+    /*!
+        This function is called after the user release from the left mouse button and the _doZoomWindow is true.
+        First, we determine the center point of the zoom window. Later, the openGL matrix will be equal to this offset.
+        Next, the function determines what the viewport bounds are based on the middel point and the location of _startPoint and _endPoint.
+        After execution, _doZoomWindow is false.
+     */ 
     void doZoomWindow();
     
 public:

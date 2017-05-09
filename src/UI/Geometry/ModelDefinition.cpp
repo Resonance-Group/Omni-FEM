@@ -3092,26 +3092,6 @@ void modelDefinition::onMouseRightDown(wxMouseEvent &event)
     _startPoint = wxRealPoint(xCoordinate, yCoordinate);
     _endPoint = _startPoint;
     _doSelectionWindow = true;
-    
- /*   if(event.ControlDown())
-    {
-        std::string combineStringPixel;
-        std::string combineStringCoord = "(";
-    
-        combineStringPixel = "(";
-        combineStringPixel.append(std::to_string(_mouseXPixel));
-        combineStringPixel.append(", ");
-        combineStringPixel.append(std::to_string(_mouseYPixel));
-        combineStringPixel.append(")");
-    
-        combineStringCoord.append(std::to_string(convertToXCoordinate(_mouseXPixel)));
-        combineStringCoord.append(", ");
-        combineStringCoord.append(std::to_string(convertToYCoordinate(_mouseYPixel)));
-        combineStringCoord.append(")");
-    
-        wxMessageBox(combineStringCoord);
-    }
-     */ 
 }
 
 
@@ -3677,31 +3657,11 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
     return;
 }
 
-
-
-
-void modelDefinition::onKeyDown(wxKeyEvent &event)
-{
-    if(event.GetKeyCode() == DEL_KEY || event.GetKeyCode() == LETTER_d)
-    {
-        deleteSelection();
-    }
-    else if(event.GetKeyCode() == LETTER_e)
-    {
-        editSelection();
-    }
-    else if(event.GetKeyCode() == LETTER_b)
-        _createNodes = !_createNodes;
-    else if(event.GetKeyCode() == LETTER_a)
-        _createLines = !_createLines;
-}
-
-
+ss
 
 wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_PAINT(modelDefinition::onPaintCanvas)
     EVT_SIZE(modelDefinition::onResize)
-    EVT_ENTER_WINDOW(modelDefinition::onEnterWindow)
     EVT_KEY_DOWN(modelDefinition::onKeyDown)
     /* This section is the event procedure for the mouse controls */
     EVT_MOUSEWHEEL(modelDefinition::onMouseWheel)
