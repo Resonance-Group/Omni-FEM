@@ -601,45 +601,45 @@ void modelDefinition::selectGroup(EditGeometry geometry, unsigned int groupNumbe
     switch(geometry)
     {
         case EditGeometry::EDIT_NODES:
-            _nodesAreSelected = true;
             for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
                 if(nodeIterator->getNodeSetting()->getGroupNumber() == groupNumber)
                 {
                     nodeIterator->setSelectState(true);
+                    _nodesAreSelected = true;
                 }
             }
             break;
             
         case EditGeometry::EDIT_LINES:
-            _linesAreSelected = true;
             for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
                 if(lineIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
                 {
                     lineIterator->setSelectState(true);
+                    _linesAreSelected = true;
                 }
             }
             break;
             
         case EditGeometry::EDIT_ARCS:
-            _arcsAreSelected = true;
             for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
                 if(arcIterator->getSegmentProperty()->getGroupNumber() == groupNumber)
                 {
                     arcIterator->setSelectState(true);
+                    _arcsAreSelected = true;
                 }
             }
             break;
         
         case EditGeometry::EDIT_LABELS:
-           _labelsAreSelected = true;
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
                 if(blockIterator->getProperty()->getGroupNumber() == groupNumber)
                 {
                     blockIterator->setSelectState(true);
+                    _labelsAreSelected = true;
                 }
             }             
             break;

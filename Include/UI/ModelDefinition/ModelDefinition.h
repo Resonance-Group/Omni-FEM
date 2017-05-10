@@ -715,10 +715,52 @@ public:
     //! If a properties name is changes or if the property is deleted, this will reset the properties
     void updateProperties(bool scanConductorProperty, bool scanNodalProperty, bool scanBoundaryProperty, bool scanMaterialProperty, bool scanCircuitProperty);
     
+    //! Selects a group of geometry objects based on their group ID (speciffied by groupNumber).
+    /*!
+        Depending on the value of geometry, this function will select all of the nodes or lines or labels or arcs
+        that have the same goup ID as groupNumber. If a mixed geometry is needed to selected, then this function
+        will scan through all lists to select all of the nodes/labels/lines/arcs that contain the same group ID as
+        groupNumber
+        \sa EditGeometry
+        \param geometry This arguement determines which geometry shape to select. Or if a all of the geomtry should be selected.
+        \param groupNumber Specifies which group ID that should be selected
+     */ 
     void selectGroup(EditGeometry geometry, unsigned int groupNumber);
     
+    //! This function will move any selected geomtry by the units of horizontalShift for the x-plane and verticalShift for the y-plane
+    /*!
+        THe program will first check if a mixed geomrty selection occured. If not, the function will then check the lines are selected flag. If not, 
+        the program will check if the arcs are selected flag is set. For both lines and arcs, the program will iterate through the entire arc/line list 
+        and for the arcs/lines that are selected, the program will then select the corresponding nodes. The function mainly deals with moving the nodes.
+        By moving the node, you move the arc/line along with it. Once done with this section, the program will deselect all lnies/arcs.
+      
+        If the mixed geometry is selected, then the program will loop through all of the line and arc lists and move any corresponding nodes. If the node is selected, then the node
+        will be moved. If not, then the node will not be moved. If the node is shifted, then the program will deselect the node to enusre that it does not get shifted
+        a second time.
+      
+        The program will then check if the labels are selected flag is set or if the mixed geometry flag is set. If so, the program will shift any selected labels
+      
+        Lastly, the program will loop the node list and shift any remaining selected nodes for a mixed geometry. This section is alos able to handle
+        if nodes are just selected.
+        
+        At the end of the function, the program will scan through the node and arc and line lists to check if there are any intercetions with the 
+        geomtry. If so, handle accordingly.
+        \param horizontalShift Arguement that specifies how much to move the selected geometry by in the x-plane
+        \param verticalShift Arguement that specifies how much to move the selected geomtry by in the y-plane
+    */ 
     void moveTranslateSelection(double horizontalShift, double verticalShift);
     
+    //! Function that will rotate any selected goemtry by angularShift units about the point aboutPoint
+    /*!
+        The logic for this function follows the logic for the function moveTranslateSelection.
+        However, instead of adding to the center of a node, this function calculates a new center
+        based on the anfular shift and the current position of the node and the point which to rotate
+        about and sets the node's center to the newly calculated center.
+        The forumla that calculates the new center was inspired by the following stackoverflow post:
+        http://stackoverflow.com/questions/14842090/rotate-line-around-center-point-given-two-vertices
+        \param angularShift The angle to shift the geometry by in degrees
+        \param aboutPoint The center point of the angular shift
+    */
     void moveRotateSelection(double angularShift, wxRealPoint aboutPoint);
     
     void scaleSelection(double scalingFactor, wxRealPoint basePoint);
