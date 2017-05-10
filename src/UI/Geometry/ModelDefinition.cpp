@@ -2131,10 +2131,12 @@ void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radiu
         arcShape tempArcOne, tempArcTwo;
         tempArcOne.setArcAngle(180.0);// Create the arc with the arc in a positive direction
         tempArcOne.setNumSegments(50);
-        if(_editor.addArc(tempArcOne, 0, true))
+        if(_editor.addArc(tempArcOne, 0, true) && boundaryType == OpenBoundaryEdge::DIRICHLET)
         {
-            //Add some code to set the boundary conditions if the arc does not exist
-       //     continue;
+            if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                _editor.getLastArcAdded()->getSegmentProperty()->setBoundaryName("V=0");
+            else
+                _editor.getLastArcAdded()->getSegmentProperty()->setBoundaryName("A=0");
         }
         
         // Reverse the selected nodes (since all angles of the arc need to be positive)

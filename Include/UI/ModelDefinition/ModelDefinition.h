@@ -839,7 +839,13 @@ public:
     
     //! The function that will create a circular boundary with layers
     /*!
-     * Insert description here
+        This function will loop through numberLayers number of layers and create a series con concentric circles about the centerPoint.
+        the number of concentric circles that are created is numberLayers + 1. This function will automatically place the node point and
+        select the node point for arc generation. If the node point already exists, the program will scan through the entire list 
+        and select the node for arc creation. The program will also automatically create new materials to fit the boundary and place the 
+        block label automatically. All block labels are designed to fit between 0 - 90 deg and will be staggered. For the arcs, the arc
+        is broken into 50 pieces. For a DIRICHLET boundary condition, the program will create a new boundary condition called 
+        V (or A)=0 and set it to the newly created arc. 
         \param numberLayers This will determine how many boundary layers are created
         \param radius The distance from the first layer to centerPoint
         \param centerPoint The center of the open boundary
@@ -849,7 +855,14 @@ public:
     
     //! A function that will determine the box the bounds any selected geometry
     /*!
-     * Insert description here
+        No matter what geoemtry is selected, the program will first scan through any of the selected geomety, look at the node points and
+        give the pointOne and pointTwo an initial value of the first selected node (either selected by user or selected becuase of a 
+        corresponding line or arc). Next, the program will loop through the node list and determine which combination
+        creates the highest point of the bounding box (which is the highest left most point) and the lowest (which is the lowest right
+        most point. If arcs or lines are selected, then the program will look at their corresponding end points to determine 
+        the highest and lowest point.
+      
+        Once found, the highest point will become pointOne and the lowest point will become pointTwo
         \param pointOne This is a returned value that is the highest left most point of the bounding box
         \param pointTwo This is a returned value that is the lowest right most point of the bounding box
     */ 
