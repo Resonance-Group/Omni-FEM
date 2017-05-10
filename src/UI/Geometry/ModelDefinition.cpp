@@ -3659,6 +3659,8 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
     return;
 }
 
+
+
 wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_PAINT(modelDefinition::onPaintCanvas)
     EVT_SIZE(modelDefinition::onResize)

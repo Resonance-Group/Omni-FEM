@@ -763,16 +763,88 @@ public:
     */
     void moveRotateSelection(double angularShift, wxRealPoint aboutPoint);
     
+    //! This function will move any selected geometry away from a point by a given distance which is based on the scalingFactor arguement
+    /*!
+        For any lines or arcs selected, the function will select the nodes, set the selected nodes flag and unset the select arc/line flag then 
+        the function will call itself.
+        The function will then move the nodes away from a point given by basePoint. THe amount that the node is moved by is determined
+        by the argument scalingFactor and the relationship is linear.
+        In most cases, basePoint is equal to the center all selected geometry shapes. This is determined by the bounadign box which 
+        can be obtained by calling the function getBoundingBox
+        \sa getBoundingBox
+        \param scalingFactor The factor by which to scale the distance between the selected geometry by
+        \param basePoint The center point of the scaling
+    */ 
     void scaleSelection(double scalingFactor, wxRealPoint basePoint);
     
+    //! This function will mirror any selected geometry across a line defined by pointOne and pointTwo
+    /*!
+        This function takes into account the 3 different cases of a mirror. On the canvas, the user draws a mirror line.
+        The 3 cases this mirror line can have are vertical, horizontal, and diagonal. For each geometry shape, these 3 cases
+        must be taken into account. The program will first calculate the slope of the mirror line. The slope will determine
+        which of the three cases the user created.
+      
+        Mirroring nodes and labels are relatively simple. First, the program will calculate the y-intercept of the mirror line.
+        Next, the program will calculate the perpendicular slope of the mirrored point. Then the program will calculate the 
+        y-intercept of the of the line that the mirrored point is on. Lastly, the progam will caluclate the point where the 
+        two lines cross and from there, we can calculate the distance between the node and the intersection. By knowing
+        this distance, the mirrored point will have the same distance.
+      
+        For lines and arcs, the calculation is a little more invovled. The process described above is applied to both end points
+        of the line/arc.However, the program will automatically select the two mirrored points in order to draw a line between
+        them. IF the node already exists, then the program will scan through the entire node list and select the existing node.
+      
+        All properties of the node/line/label/arc is copied over to the mirrored geometry.
+        \param pointOne The first point of the mirror line. This is not a pixel coordinate.
+        \param pointTwo The second point of the mirror line. This is not a pixel coordinate
+    */ 
     void mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo);
     
+    //! Fucntion that will perform a linear copy specified by horizontalShift and verticalShift.
+    /*!
+        This function will create numberOfCOpies number of copies in a more linear fashion. The logic follows that 
+        of the function moveTranslateSelection except there is a for loop whose limit is governed by numberOfCopies.
+        This for loop will determine the position of each node. For lines and arcs, the creation of a new line/arc 
+        for a copy follows the logic in mirror selection. Where the program will create a node, select this node and copy any 
+        nodal properties from the master shape to the newly create node, create a second and perform the same steps as the first 
+        one, and lastly, create the arc/line connecting the two nodes together. All segment properties is copied over from the master
+        line/arc to the newly created line/arc. If the endpoint already exists, then the program will loop through
+        the entire node list to find the endpoint and select it for line/arc creation.
+        \sa mirrorSelection, moveTranslateSelection
+        \param horizontalShift The x-plane distance between the new geometry shapes (and the distance between the master shape and the newly created one).
+        \param verticalShift The y-plane distance between the new geometry shapes (and the distance between the master shape and the newly created one).
+        \param numberOfCopies This is the number of copies that need to be made.
+    */ 
     void copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies);
     
+    //! The function that will copy geometry shapes around a point defined by aboutPoint
+    /*!
+        The copy logic follows that of copyTranslateSelection. However, the function will rotate the copied 
+        shapes by the angularShift. The rotational logic is similiar to that of moveRotateSelection.
+        \sa copyTranslateSelection, moveRotateSelection
+        \param angularShift The angular distance between each newly copied shape (This is also the angular distance between the master shape and the first copied shape) in degrees
+        \param aboutPoint The center point to perform the rotate copy
+        \param numberOfCopies This is the number of copies that need to be made.
+    */ 
     void copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies);
     
+    //! The function that will select any dangling nodes.
+    /*!
+        A node is considered dangling when the node does not form a closed boundary.
+        This occurs if there is just 1 line or arc connected to the node.
+        This function will go through the entire node list and highlight any nodes
+        that only have 1 arc or line connected to it
+    */ 
     void displayDanglingNodes();
     
+    //! The function that will create a circular boundary with layers
+    /*!
+     * Insert description here
+        \param numberLayers This will determine how many boundary layers are created
+        \param radius The distance from the first layer to centerPoint
+        \param centerPoint The center of the open boundary
+        \param boundaryType The type of boundary that this open boundary will be.
+     */ 
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
     //! A function that will determine the box the bounds any selected geometry
