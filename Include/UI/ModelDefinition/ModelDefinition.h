@@ -358,22 +358,22 @@ private:
 
     //! This function will take an x coordinate value and a y coordinate value and round the two values to the nearest grid marking
     /*! For the sake of the explanianation, imagine we are working with
-     * a 1D problem and that the point is between two grid markings.
-     * First, the program finds the modulus of the coordinate / gridStep.
-     * What this tells the program is the "distance" from the lower grid makeing to the point.
-     * If the point is beyond the halfway "mark" of two grid markings, the modulus will return a number 
-     * greater then gridStep / 2. If the point is below the halfway "mark",
-     * the program will simply take the point coordinate and subtract out the modulus.
-     * And this is the rounded answer.
-     * If the point is beyond the halfway "mark", the program will add the gridstep to the 
-     * point and then subtract out the modulus.
-     * For example, if a point is at 0.40 and the grid step size is 0.25, then the point 
-     * is between 0.25 and 0.5. The modulus of 0.40 % 0.25 will be 0.15. Since this is 
-     * greater then 0.25 / 2 = 0.125 (the halfway mark), we need to add 0.25 to 0.40 (0.25 + 0.4 = 0.65)
-     * Subtracting the modulus of 0.15 yeilds 0.5. The correct number to round 0.4 up to.
-     * The two parameters are passed in by reference.
-     * \param xCoordinate The x coordinate of a point that will be rounded to the nearest grid marking
-     * \param yCoordinate The y coordinate of a point that will be rounded to the nearest grid marking
+        a 1D problem and that the point is between two grid markings.
+        First, the program finds the modulus of the coordinate / gridStep.
+        What this tells the program is the "distance" from the lower grid makeing to the point.
+        If the point is beyond the halfway "mark" of two grid markings, the modulus will return a number 
+        greater then gridStep / 2. If the point is below the halfway "mark",
+        the program will simply take the point coordinate and subtract out the modulus.
+        And this is the rounded answer.
+        If the point is beyond the halfway "mark", the program will add the gridstep to the 
+        point and then subtract out the modulus.
+        For example, if a point is at 0.40 and the grid step size is 0.25, then the point 
+        is between 0.25 and 0.5. The modulus of 0.40 % 0.25 will be 0.15. Since this is 
+        greater then 0.25 / 2 = 0.125 (the halfway mark), we need to add 0.25 to 0.40 (0.25 + 0.4 = 0.65)
+        Subtracting the modulus of 0.15 yeilds 0.5. The correct number to round 0.4 up to.
+        The two parameters are passed in by reference.
+        \param xCoordinate The x coordinate of a point that will be rounded to the nearest grid marking
+        \param yCoordinate The y coordinate of a point that will be rounded to the nearest grid marking
      */ 
     void roundToNearestGrid(double &xCoordinate, double &yCoordinate);
     
@@ -531,59 +531,124 @@ private:
     void doZoomWindow();
     
 public:
+    //! This is the constructor for the class
+    /*!
+        The constructor will initilize some of the private variables. Inside, the program sets up the openGL state machine and
+        also initilizes the datatype that holds the font
+        \param par A pointer to the parent window
+        \param point The point on the parent window where the top left corner will be placed
+        \param size The initial size of the canvas
+        \param definition This is a reference to the global problem definition
+        \param statusBar A reference to the parent status bar
+     */ 
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar);
 
+    //! This function will update the _preferences with a new user defined preferences
+    /*!
+        This function is primarly used when the user needs to change something in the grid preferences object.
+        \sa _preferences
+     */ 
     void setGridPreferences(gridPreferences &preferences)
     {
         _preferences = preferences;
         this->Refresh();
     }
     
+    //! Retrieves the grid preferences object for editing.
+    /*!
+        \sa _preferences
+        \return Returns a pointer pointing to the location of the grid preferences object
+     */ 
     gridPreferences* getGridPreferences()
     {
         return &_preferences;
     }
     
+    //! This function will set the state of the create node flag equal to the value of state
+    /*!
+        \sa _createNodes
+        \param state True or False value indicting if the create node flag should be true or false. True if the user wants to edit nodes. Otherwise false if the user needs to edit block labels
+     */ 
     void setCreateNodeState(bool state)
     {
         _createNodes = state;
     }
     
+    //! This function will set the state of the create line flag equal to the value of state
+    /*!
+        \sa _createLines
+        \param state True or False value indicting if the create line flag should be true or false. True if the user wants to edit lines. Otherwise false if the user needs to edit arcs
+     */ 
     void setCreateLinesState(bool state)
     {
         _createLines = state;
     }
     
+    //! Returns the value of the create node flag
+    /*!
+        \sa _createNodes
+        \return Returns true if the user wants to edit nodes. False if the user wants to edit block labels
+     */
     bool getCreateNodeState()
     {
         return _createNodes;
     }
     
+    //! Returns the value of the create line flag
+    /*!
+        \sa _createLines
+        \return Returns true if the user wants to edit lines. False if the user wants to edit arcs.
+     */ 
     bool getCreateLineState()
     {
         return _createLines;
     }
     
+    //! Sets the state of the zoom window flag to the value of state
+    /*!
+        \sa _doZoomWindow
+        \param state Set to True if the canvas needs to execute a zoom window routine
+     */ 
     void setZoomWindow(bool state)
     {
         _doZoomWindow = state;
     }
     
+    //! Gets the state of the zoom window flag
+    /*!
+        \sa _doZoomWindow
+        \return Returns True if the canvas is in zoom window mode. Otherwise, returns false.
+     */ 
     bool getZoomWindow()
     {
         return _doZoomWindow;
     }
     
+    //! Sets that state of the mirror flag equal to the value provided in state
+    /*!
+        \sa _doMirrorLine
+        \param state True if the user wants the program to perform a mirror operation on selected geometry pieces. Otherwise false
+    */ 
     void setMirrorLineState(bool state)
     {
         _doMirrorLine = state;
     }
     
+    //! Gets the state of the mirror flag
+    /*!
+        \sa _doMirrorLine
+        \return Function returns true if the program is in the process of performing a mirror operation. Otherwise false.
+     */ 
     bool getMirrorLineState()
     {
         return _doMirrorLine;
     }
     
+    //! Will cause the canvas to zoom in by a pre determined factor.
+    /*!
+        This function will zoom in by a pre determined factor. This factor was determined by experimentation.
+        The function will zomm in towards the center of the current position of the screen.
+    */ 
     void zoomIn()
     {
         _zoomX *= pow(1.2, -(300.0) / 150.0);
@@ -597,6 +662,11 @@ public:
         this->Refresh();
     }
     
+    //! Will cause the canvas to zoom out by a pre determined factor.
+    /*!
+        This function will zoom out by a pre determined factor. This factor was determined by experimentation.
+        The function will zomm out away from the center of the current position of the screen.
+    */ 
     void zoomOut()
     {
         _zoomX *= pow(1.2, (300.0) / 150.0);
@@ -610,9 +680,36 @@ public:
         this->Refresh();
     }
     
+    //! This function is called when the user needs to deleted any of the selected geometry
+    /*!
+        No matter what, this function will scan through all of the node/labels/arc/lines lists to see if any are selected.
+        This may seem time consuming but in a test with 1000 lines and 2000 nodes, the delete operation was not hindered by this large amount
+        If there are any nodes selected, the program will scan through the entire line and arc list to determine what line(s) and/or arc(s) the 
+        node is apart of. For any lines or arcs that the node is connected to, the progam will mark these for deletion.
+      
+        For all geometry shapes, if the last geomety shape is selected in its respective list, then the program will immediately break out of the loop.
+        This idea also extends to the case if there is only one geometry shape in its respective list.
+        The for loop does not automatically increment the iterator but rather, this is done outside of the for loop. It was discovered that
+        during an erasing operation, the iterator would become invalidated and incrementing an invalid iterator would cause the value to be 
+        in an unknown state. It was decided to increment the iterator in the loop itself. When the iterator is to be erased, the program
+        first increments the iterator and then erases the previous iterator. This prevents any invalidated errors from occuring.
+    */ 
     void deleteSelection();
     
-    //! This will allow the user to edit the settings for the particular node/label/arc/line. It is in this calss because this class has access to the master settings list
+    //! This will allow the user to edit the settings for the selected node(s)/label(s)/arc(s)/line(s).
+    /*! 
+        Depending on the state of the nodes selected flag and the lines selected flag and the labels selected flag and the 
+        arcs selected flag, this function will scan through the apprioate geometry list to find the first selected geometry.
+        Once found, the program will extract the cooresponding property and display for the user to edit. It is done this way 
+        because if the user selected a set of nodes, for example, then it doesnt really matter from which node the program
+        pulls the settings since after execution all of the selected nodes will contain the same proprety. This is the case for 
+        all geometry shapes. 
+      
+        In the event that the user selects mixed geometry, the user can only change the group that the geomety shapes belong to.
+        Again, the program will scan through all of the lists to find the first selected shape, starting with the node list first.
+        Once the property has been set, the program will scan through all lists and any geometry shapes selected, the program will
+        set the group number as specified by the user.
+    */ 
     void editSelection();
     
     //! If a properties name is changes or if the property is deleted, this will reset the properties
@@ -636,13 +733,22 @@ public:
     
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
-    //! pointOne is the point that for the boundaing box that is the highest left most point. Pointtwo is hte lowest right most point 
+    //! A function that will determine the box the bounds any selected geometry
+    /*!
+     * Insert description here
+        \param pointOne This is a returned value that is the highest left most point of the bounding box
+        \param pointTwo This is a returned value that is the lowest right most point of the bounding box
+    */ 
     void getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTwo);
     
+    //! Intermediate function call that is used to call the function geometryEditor2D::createFillet(double radius)
+    /*!
+        \param filletRadius A positive real number that specifies what the radius is of the fillet
+    */ 
     void createFillet(double filletRadius);
     
 private:
-    //! This is a macro in order to let wxWidgets understand that there are events withing the class
+    //! This is a macro in order to let wxWidgets understand that there are events within the class
     wxDECLARE_EVENT_TABLE(); 
 };
 

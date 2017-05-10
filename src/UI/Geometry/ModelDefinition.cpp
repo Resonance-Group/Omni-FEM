@@ -280,6 +280,7 @@ void modelDefinition::editSelection()
 
         if(dialog->ShowModal() == wxID_OK)
         {
+            bool firstIsSet = false;
             dialog->getBlockProperty(selectedBlockLabel);
             
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
@@ -288,9 +289,17 @@ void modelDefinition::editSelection()
                  * to be the defualt, then in the next few lines the program will set that flag to the block label
                  * since we copy the user set parameters and place them into the block label
                  */ 
-                blockIterator->getProperty()->setDefaultState(false);
+                if(selectedBlockLabel.getDefaultState())
+                    blockIterator->getProperty()->setDefaultState(false);
+                    
                 if(blockIterator->getIsSelectedState())
+                {
                     blockIterator->setPorperty(selectedBlockLabel);
+                    // This will ensure that only 1 block at a time will be set to default state
+                    if(firstIsSet)
+                        blockIterator->getProperty()->setDefaultState(false);
+                    firstIsSet = true;
+                }
             }
         }
         delete(dialog);
@@ -2318,6 +2327,10 @@ void modelDefinition::getBoundingBox(wxRealPoint &pointOne, wxRealPoint &pointTw
 
 void modelDefinition::createFillet(double filletRadius)
 {
+    // A check to ensure that the _editor.createFillet is never executed with a negative radius
+    if(filletRadius < 0)
+        return;
+        
     _editor.createFillet(filletRadius);
     this->Refresh();
     return;
@@ -2795,12 +2808,7 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     {
         if(_doSelectionWindow)
         {
-            double tempX = convertToXCoordinate(event.GetX());
-            double tempY = convertToYCoordinate(event.GetY());
-            if(_preferences.getSnapGridState())
-                roundToNearestGrid(tempX, tempY);
-                
-            _endPoint = wxRealPoint(tempX, tempY);
+            _endPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
         }
     }
     
@@ -3083,13 +3091,7 @@ void modelDefinition::roundToNearestGrid(double &xCoordinate, double &yCoordinat
 
 void modelDefinition::onMouseRightDown(wxMouseEvent &event)
 {
-    double xCoordinate = convertToXCoordinate(event.GetX());
-    double yCoordinate = convertToYCoordinate(event.GetY());
-    
-    if(_preferences.getSnapGridState())
-        roundToNearestGrid(xCoordinate, yCoordinate);
-    
-    _startPoint = wxRealPoint(xCoordinate, yCoordinate);
+    _startPoint = wxRealPoint(convertToXCoordinate(event.GetX()), convertToYCoordinate(event.GetY()));
     _endPoint = _startPoint;
     _doSelectionWindow = true;
 }
@@ -3657,12 +3659,9 @@ void modelDefinition::onMouseRightUp(wxMouseEvent &event)
     return;
 }
 
-ss
-
 wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_PAINT(modelDefinition::onPaintCanvas)
     EVT_SIZE(modelDefinition::onResize)
-    EVT_KEY_DOWN(modelDefinition::onKeyDown)
     /* This section is the event procedure for the mouse controls */
     EVT_MOUSEWHEEL(modelDefinition::onMouseWheel)
     EVT_MOTION(modelDefinition::onMouseMove)
