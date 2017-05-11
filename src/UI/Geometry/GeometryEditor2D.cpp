@@ -294,8 +294,8 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
             if(shortDistance < dmin)
             {
                 _lineList.erase(_lastLineAdded);
-                addLine(tempNodeOne, *nodeIterator, dmin);
-                addLine(*nodeIterator, tempNodeTwo, dmin);
+                addLine(tempNodeOne, &(*nodeIterator), dmin);
+                addLine(&(*nodeIterator), tempNodeTwo, dmin);
                 nodeIterator = _nodeList.back();
             }
         }

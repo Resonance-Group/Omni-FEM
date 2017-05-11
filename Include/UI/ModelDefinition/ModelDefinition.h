@@ -74,7 +74,7 @@ private:
         see any changes that the user makes while to program is running. With this being a pointer,
         we are now pointing to the address which will allow the user to make changes to the top level
         and the changes will properaget downward
-     */ 
+    */ 
     problemDefinition *_localDefinition;
     
     //! The local variable containing all of the grid preferences.
@@ -94,7 +94,7 @@ private:
         This variable also contains the data structures which hold the lists of the geometry shapes.
         Anytime a draw event occurs or the class needs to loop through any combination of the geometry
         shapes, this variable is accessed
-     */ 
+    */ 
     geometryEditor2D _editor;
     
     //! The variable that contains the zoom factor in the x direction.
@@ -103,13 +103,13 @@ private:
         allows a greater ability for configuring the glViewport especially for the zoom window.
         Still, in many cases in order to convert a two variable zoom factor into one, the 
         program takes the average between the x and the y zoom factors
-     */ 
+    */ 
     double _zoomX = 1.0;
     
     //! The variable that contains the zoom factor in the y-direction.
     /*
         See the documentation for the _zoomX variable for a detailed description
-     */ 
+    */ 
     double _zoomY = 1.0;
     
     //! The varable that contains the viewport offset in the x-direction.
@@ -119,13 +119,13 @@ private:
         which is the view port being centered at 0,0 with coordinate number 1 above, -1 below, 1 to the right, and -1 to the left.
         Then, the program will translate the viewport _cameraX and _cameraY number of steps to the proper location.
         For more documentation on this matter, refer to the function updateProjection(). THis function implements the idea.
-     */ 
+    */ 
     double _cameraX = 0;
     
     //! The varibale that contains the viewport offset in the y-direction.
     /*!
         For a detailed explaniation refer to the documentation for the _cameraX variable
-     */ 
+    */ 
     double _cameraY = 0;
     
     //! Holds the pixel value for hte previous location of the mouse in the x-direction
@@ -192,7 +192,7 @@ private:
         This variable has the same function and purpose as the _createNodes variable except for this variable applies to lines and arcs.
         This variable effects whetehr lines or arcs are selected when the user performs a left down motion when creating a selection window
         This variable is true when the user whats to create lines and false when the user wants to create arcs
-     */ 
+    */ 
     bool _createLines = true;
     
     //! A status variable which tells the program that nodes have been selected.
@@ -202,7 +202,7 @@ private:
         mirroring geometry, translating geometry, and copying the geometry. This boolean will only be set to false when 
         all nodes are deselected or if another geometry is selected that is different from the nodes.
         Also, the selection window process will effect this variable
-     */ 
+    */ 
     bool _nodesAreSelected = false;
     
     //! A status variable that tells the program that the user is selecting or has selected lines
@@ -240,7 +240,7 @@ private:
     /*!
         This selection differs from the _nodesAreSelected variable becuase this status flag
         is set to true only when the user selects a node that is to be used for creating lines/arcs
-     */ 
+    */ 
     bool _geometryIsSelected = false;
     
     //! This variable specifies the starting point of the a mirror line/zoom window/selection box
@@ -251,7 +251,7 @@ private:
         the _endPoint variable is updated. After a mirror,zoom window, or selection box function has been executed,
         the variable is reset back to the point (0, 0). The datatype is wxRealPoint becuase this stores the coordinate position
         of the mouse for the graph instead of the pixel coordinate.
-     */ 
+    */ 
     wxRealPoint _startPoint;
    
     //! This variable specifices the end point of a mirror line/zoom window/selection box.
@@ -261,7 +261,7 @@ private:
         executing either the mirror line/zoom window box/selection box, this variable is reset back to (0, 0). Again,
         the datatype is a wxRealPoint becuase this stores the coordinate position inside of the variable.
         \sa _startPoint
-     */ 
+    */ 
     wxRealPoint _endPoint;
     
     //! The variable that contains all of the related functions for font render
@@ -282,7 +282,7 @@ private:
         coordinate value has changed from cartesian to polar coordinate.
         \param xPixel The pixel value that needs to be converted into the cartensian plane. This is for the x-plane and ranges from 0 to the screen width.
         \return Returns the cartensian/polar coordinate of the pixel value.
-     */ 
+    */ 
     double convertToXCoordinate(int xPixel)
     {
         return _zoomX * (((2.0 / (double)this->GetSize().GetWidth()) * ((double)xPixel - (double)this->GetSize().GetWidth() / 2.0)) / 1.0) * ((double)this->GetSize().GetWidth() / (double)this->GetSize().GetHeight()) + _cameraX;
@@ -297,7 +297,7 @@ private:
         \param yPixel The pixel value that needs to be converted to the cartesian/polar plane. this is for the y-plane and ranges from 0 to the canvas height.
         \return Returns the cartesian/poalr coordiante of the y pixel value.
         \sa convertToXCoordinate
-     */
+    */
     double convertToYCoordinate(int yPixel)
     {
         return _zoomY * ((-(2.0 / (double)this->GetSize().GetHeight()) * ((double)yPixel - (double)this->GetSize().GetHeight() / 2.0)) / 1.0) + _cameraY;
@@ -310,7 +310,7 @@ private:
         the program needs to make sure the the geomety is not created too close to another geometry in order to avoid convergence issues.
         The simulator uses this function in order to properly determine the "Keep out" area for the block labels and nodes.
         \return The function will return the tolerance value that reprents the width of the area that is either keep out or selectable.
-     */
+    */
     double getTolerance()
     {
         return ((((_zoomX + _zoomY) / 2.0) / 25.0));
@@ -324,7 +324,7 @@ private:
         If _geometryGroupIsSelected is set to true, then the program will loop through all geometry lists and deselect the geometry shape.
         The function will also set the variables _createNodes, _labelsAreSelected, _createLines, _arcsAreSelected, and _geometryGroupIsSelected to false 
         no matter what flag is set to true at the conclusion of the function
-     */ 
+    */ 
     void clearSelection();
     
     //! Function that is called in order to update the user's view
@@ -358,7 +358,7 @@ private:
         more bold in order to desginate this as a minor axis line. The program repeats this operation for the x-axis.
  
         \sa _preferences
-     */ 
+    */ 
     void drawGrid();
 
     //! This function will take an x coordinate value and a y coordinate value and round the two values to the nearest grid marking
@@ -379,7 +379,7 @@ private:
         The two parameters are passed in by reference.
         \param xCoordinate The x coordinate of a point that will be rounded to the nearest grid marking
         \param yCoordinate The y coordinate of a point that will be rounded to the nearest grid marking
-     */ 
+    */ 
     void roundToNearestGrid(double &xCoordinate, double &yCoordinate);
     
     //! This is the event that is fired when the canvas is drawn or re-drawn
@@ -398,7 +398,7 @@ private:
         so that the function has access to all of the glyphs for drawing the text onto the screen.
         The function that actually draws everything to the screen is SwapBuffers().
         \param event A requirded event datatype needed for the event table to post the event function properyl and to route the event procedure to the correct function.
-     */ 
+    */ 
 	void onPaintCanvas(wxPaintEvent &event);
     
     //! The function that is called when a resize event occurs
@@ -409,7 +409,7 @@ private:
         For more documentation regarding the wxSizeEvent class, refer to the following documentation:
         http://docs.wxwidgets.org/3.1.0/classwx_size_event.html
         \param event A requirded event datatype needed for the event table to post the event function properyl and to route the event procedure to the correct function.
-     */ 
+    */ 
     void onResize(wxSizeEvent &event);
     
     //! The event procedure that is executed every time the user moves the mouse wheel.
@@ -423,7 +423,7 @@ private:
         variables. This allows the program to pan towards/away from the current mouse position as the program is zooming in/out.
         \sa _cameraX, _cameraY, _zoomX, _zoomY
         \param event This variable is required for the event procedure to work properly. When called from the event table, this variable contains the datatype to retrieve how much the user rotated the mouse wheel
-     */ 
+    */ 
     void onMouseWheel(wxMouseEvent &event);
     
     //! This is the function that is executed when the user moves the mouse pointer across the canvas
@@ -442,7 +442,7 @@ private:
         Once the program is finished executing, the program will force the canvas to refresh the screen
         \sa _cameraX, _cameraY, _endPoint
         \param event This variable is required for the event procedure to function properly. The wxMouseEvent class stores the current mouse positon and the information needed to determine what mouse button is pressed at the time that the event is fired.
-     */ 
+    */ 
     void onMouseMove(wxMouseEvent &event);
     
     //! Function that is executed everytime the user presses down on the left mouse button
@@ -465,7 +465,7 @@ private:
         If _createNodes is false, this means that the user would like to create a dragging block label. Which the program will perform.
         \sa _createNodes, _createLines, onMouseLeftUp
         \param event This variable is required in order for the event table to properly route the event to the function.
-     */ 
+    */ 
     void onMouseLeftDown(wxMouseEvent &event);
     
     //! Function that is responsible for adding the real block/node to the list
@@ -480,7 +480,7 @@ private:
         and _endPoint back to (0,0) and set _doZoomWindow or _doMirrorLine to false.
         \sa _doMirrorLine, _doZoomWindow, _createNodes
         \param event This variable is required in order for the event table to properly route the event to the function.
-     */ 
+    */ 
     void onMouseLeftUp(wxMouseEvent &event);
     
     //! Function that is called when then user presses down on the mouse right button
@@ -490,7 +490,7 @@ private:
         nearest grid position. The function will also set _doSelectionWindow to true.
         \sa _startPoint, _endPoint, _doSelectionWindow
         \param event This variable is required in order for the event table to properly route the event to the function.
-     */ 
+    */ 
     void onMouseRightDown(wxMouseEvent &event);
     
     //! The function that is called when the user releases the right mouse button
@@ -523,7 +523,7 @@ private:
       
         \sa onMouseLeftUp, _createNodes, _createLines
         \param event This variable is required in order for the event table to properly route the event to the function. This variable also contains the current pixel coordinate of the mouse.
-     */ 
+    */ 
     void onMouseRightUp(wxMouseEvent &event);
     
     //! The function that is called in order to implement the zoom window functionality.
@@ -532,7 +532,7 @@ private:
         First, we determine the center point of the zoom window. Later, the openGL matrix will be equal to this offset.
         Next, the function determines what the viewport bounds are based on the middel point and the location of _startPoint and _endPoint.
         After execution, _doZoomWindow is false.
-     */ 
+    */ 
     void doZoomWindow();
     
 public:
@@ -545,14 +545,14 @@ public:
         \param size The initial size of the canvas
         \param definition This is a reference to the global problem definition
         \param statusBar A reference to the parent status bar
-     */ 
+    */ 
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar);
 
     //! This function will update the _preferences with a new user defined preferences
     /*!
         This function is primarly used when the user needs to change something in the grid preferences object.
         \sa _preferences
-     */ 
+    */ 
     void setGridPreferences(gridPreferences &preferences)
     {
         _preferences = preferences;
@@ -563,7 +563,7 @@ public:
     /*!
         \sa _preferences
         \return Returns a pointer pointing to the location of the grid preferences object
-     */ 
+    */ 
     gridPreferences* getGridPreferences()
     {
         return &_preferences;
@@ -573,7 +573,7 @@ public:
     /*!
         \sa _createNodes
         \param state True or False value indicting if the create node flag should be true or false. True if the user wants to edit nodes. Otherwise false if the user needs to edit block labels
-     */ 
+    */ 
     void setCreateNodeState(bool state)
     {
         _createNodes = state;
@@ -583,7 +583,7 @@ public:
     /*!
         \sa _createLines
         \param state True or False value indicting if the create line flag should be true or false. True if the user wants to edit lines. Otherwise false if the user needs to edit arcs
-     */ 
+    */ 
     void setCreateLinesState(bool state)
     {
         _createLines = state;
@@ -593,7 +593,7 @@ public:
     /*!
         \sa _createNodes
         \return Returns true if the user wants to edit nodes. False if the user wants to edit block labels
-     */
+    */
     bool getCreateNodeState()
     {
         return _createNodes;
@@ -603,7 +603,7 @@ public:
     /*!
         \sa _createLines
         \return Returns true if the user wants to edit lines. False if the user wants to edit arcs.
-     */ 
+    */ 
     bool getCreateLineState()
     {
         return _createLines;
@@ -613,7 +613,7 @@ public:
     /*!
         \sa _doZoomWindow
         \param state Set to True if the canvas needs to execute a zoom window routine
-     */ 
+    */ 
     void setZoomWindow(bool state)
     {
         _doZoomWindow = state;
@@ -623,7 +623,7 @@ public:
     /*!
         \sa _doZoomWindow
         \return Returns True if the canvas is in zoom window mode. Otherwise, returns false.
-     */ 
+    */ 
     bool getZoomWindow()
     {
         return _doZoomWindow;
@@ -643,7 +643,7 @@ public:
     /*!
         \sa _doMirrorLine
         \return Function returns true if the program is in the process of performing a mirror operation. Otherwise false.
-     */ 
+    */ 
     bool getMirrorLineState()
     {
         return _doMirrorLine;
@@ -729,7 +729,7 @@ public:
         \sa EditGeometry
         \param geometry This arguement determines which geometry shape to select. Or if a all of the geomtry should be selected.
         \param groupNumber Specifies which group ID that should be selected
-     */ 
+    */ 
     void selectGroup(EditGeometry geometry, unsigned int groupNumber);
     
     //! This function will move any selected geomtry by the units of horizontalShift for the x-plane and verticalShift for the y-plane
@@ -855,7 +855,7 @@ public:
         \param radius The distance from the first layer to centerPoint
         \param centerPoint The center of the open boundary
         \param boundaryType The type of boundary that this open boundary will be.
-     */ 
+    */ 
     void createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType);
     
     //! A function that will determine the box the bounds any selected geometry

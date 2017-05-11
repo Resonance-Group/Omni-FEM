@@ -1,9 +1,6 @@
 #ifndef GEOMETRYEDITOR2D_H_
 #define GEOMETRYEDITOR2D_H_
 
-#include <vector>
-#include <list>
-#include <deque>
 #include <math.h>
 
 #include <glew.h>
@@ -11,10 +8,17 @@
 
 #include <common/Vector.h>
 #include <common/plfcolony.h>
-#include <common/wxGLString.h>
 
 #include <UI/geometryShapes.h>
 
+//! This class is responsible for any math related functions that operate on the geometry shapes. This includes adding the geomerty.
+/*!
+    This class contains any math related function that operates directly on the geometry objects (nodes/labels/arcs/lines)
+    The functions that this class contains relate to determining how many line-line/line-arc/arc-arc intersections occur and
+    where the intersection point is located at. The class is responsible for calculating the distance between a point and a line
+    and the distance between a point and an arc.
+    The class is also responsible for any functions that add nodes/labels/arcs/lines to their respective lists
+*/ 
 class geometryEditor2D
 {
 private:
@@ -61,10 +65,6 @@ private:
     plf::colony<arcShape>::iterator _lastArcAdded;
     
     plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
-    
-    int _tolerance = 2;
-    
-    double _zoomFactorPointer = 1.0;
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
      * node0 is the first node that the user selects
@@ -182,16 +182,6 @@ public:
     }
     
     bool addLine(node *firstNode, node *secondNode, double tolerance = 0);
-    
-    bool addLine(node &firstNode, node *secondNode, double tolerance)
-    {
-        return addLine(&firstNode, secondNode, tolerance);
-    }
-    
-    bool addLine(node *firstNode, node &secondNode, double tolerance)
-    {
-        return addLine(firstNode, &secondNode, tolerance);
-    }
     
     bool addLine()
     {

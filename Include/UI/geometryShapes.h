@@ -2,7 +2,6 @@
 #define GEOMETRY_SHAPES_H_
 
 #include <math.h>
-#include <vector>
 
 #include <glew.h>
 #include <freeglut.h>
@@ -17,8 +16,6 @@
 #include <UI/ModelDefinition/OGLFT.h>
 
 #include <common/Vector.h>
-
-//#include <UI/openGLGeometry.h>
 
 /*! \class geometry2D
 	\brief This is the base class for all of the geometry classes

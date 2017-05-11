@@ -108,7 +108,6 @@
       <File Name="Include/UI/common.h"/>
       <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>
-      <File Name="Include/UI/wxGLString.h"/>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>
