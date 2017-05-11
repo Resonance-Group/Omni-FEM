@@ -50,6 +50,11 @@ class modelDefinition : public wxGLCanvas
 {
 private:
     
+    //! A pointer to the status bar of the main window
+    /*!
+        This variable is primaliry used in order to update the text of the coordinate
+        location of the mouse. This is the address of the main frame status bar
+    */ 
     wxStatusBarBase *_statusBarTopWindow;
     
     //! This is the context which will be associated to the class.
