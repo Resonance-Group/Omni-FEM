@@ -23,7 +23,7 @@ class geometryEditor2D
 {
 private:
     
-    /*! /brief
+    /*
      *  So you might be thinking, why use a colony instead of a vector or a list or a deque?
      *  It is simple, for a vector, when something is added or removed, the vector
      *  copies all of of the contents from one memory location to another. This can cause significant speed issues
@@ -37,26 +37,69 @@ private:
      *  list's ability to keep all of the addresses validated when changing the list but have the speed of a deque.
      *  Further research found the plf::colony class. It functions similiar to a list
      *  and you have many of the benefits of using a list but with the added speed bonus of a deque
-     */ 
+     */
+     
+    //! This is the list that contains all of the nodes that the user adds to the model
+    /*!
+        This is the master node list and contains all of the nodes that are added. 
+        A colony data type was used becuase in many cases, it has a faster access time
+        then many of the stl containers. A colony also allows the use of pointers and
+        only invaldates a pointer when the object that the pointer is pointing is
+        deleted. For additional documentation on the colony datatype, visit the website:
+        http://plflib.org/colony.htm
+    */ 
     plf::colony<node> _nodeList;
     
+    //! This is the list that contains all of the labels that the user adds to the model
+    /*!
+        This is the master block label list. For additional documentation on the colony,
+        visit the website:
+        http://plflib.org/colony.htm
+        \sa _nodeList
+    */ 
 	plf::colony<blockLabel> _blockLabelList;
     
+    //! This is the list that contains all of the lines that the user adds to the model
+    /*!
+        This is the master line list. For additional documentation on the colony,
+        visit the website:
+        http://plflib.org/colony.htm
+        \sa _nodeList
+    */ 
 	plf::colony<edgeLineShape> _lineList;
     
+    //! This is the list that contains all of the arcs that the user adds to the model
+    /*!
+        This is the master arc list. For additional documentation on the colony,
+        visit the website:
+        http://plflib.org/colony.htm
+        \sa _nodeList
+    */ 
 	plf::colony<arcShape> _arcList;
     
-    /*! The reason that these two variables are initilized to nullptr on first go around is this,
-     *  There have been cases where the gcc compiler did not initilize these two variables as null
-     *  and they were pointing to something. Which is an issue which occurs when you first select
-     *  a node to be used for arc or line creation. The program will skip the first nodeIterator
-     *  and move on to the second (or skip the second and never set it). Then, when you
-     *  go to add the line or arc, one of these two pointers are pointing to something other 
-     *  then the selected node. Thus causing the program to crash
-     */ 
-    node *_nodeInterator1 = nullptr;// This is the index of the first selected node
+    //! For nodes that are selected for arc/line creation, the first node is saved here
+    /*! 
+        This variable is the address of the first selected node when a user would like to 
+        create an arc or line. This will also apply to the program if the program is manually
+        creating the lines or arcs.
+      
+        This variable is initilized to nullptr becuase there have been cases where the gcc compiler
+        did not initilize these two variables as null and they were pointing to something. 
+        Which is an issue which occurs when you first select a node to be used for arc or line creation.
+        The program will skip the first nodeIterator and move on to the second (or skip the second 
+        and never set it). Then, when the user goes to add the line or arc, one of these two pointers are
+        pointing to something other then the selected node. Thus causing the program to crash
+    */ 
+    node *_nodeInterator1 = nullptr;
     
-    node *_nodeInterator2 = nullptr;// This is the index of the second selected node
+    //! For nodes that are selected for arc/line creation, the second selected node is saved here
+    /*!
+        This variable is the address of the second selected node when a user would like to create
+        an arc or a line. This is also used when the program manually creates an arc or line.
+        For further documentation, see the _nodeIterator1 variable.
+        \sa _nodeInterator1
+    */ 
+    node *_nodeInterator2 = nullptr;
     
     plf::colony<node>::iterator _lastNodeAdded;
     
