@@ -3,9 +3,6 @@
 
 #include <math.h>
 
-#include <glew.h>
-#include <freeglut.h>
-
 #include <common/Vector.h>
 #include <common/plfcolony.h>
 
@@ -101,12 +98,34 @@ private:
     */ 
     node *_nodeInterator2 = nullptr;
     
+    //! The iterator that is pointing to the location to the last node added in the colony
+    /*!
+        This is the iterator that contains the address of the last node added in the colony. The colony
+        is an unsorted structure. This means that when objects are added to the colony,
+        they may not necessarily  be added to the end of the colony. They could be added in middle or 
+        closer to the beginning. This iterator saves the location of where the node was added for quick access.
+    */ 
     plf::colony<node>::iterator _lastNodeAdded;
     
+    //! The iterator that is pointing to the location of the last line added in the colony
+    /*!
+        This does the same thing as _lastNodeAdded except this is for lines
+        \sa _lastNodeAdded
+    */
     plf::colony<edgeLineShape>::iterator _lastLineAdded;
     
+    //! THe iterator that is pointing to the location of the last arc added in the respective colony
+    /*!
+        This has the same purpose and function as _lastNodeAdded except this is for line
+        \sa _lastNodeAdded
+    */ 
     plf::colony<arcShape>::iterator _lastArcAdded;
     
+    //! The iterator that is pointing to the location of the last block label added in the respective colony
+    /*!
+        THis has the same purpose and function as _lastNodeAdded except this is for the block labels.
+        \sa _lastNodeAdded
+    */ 
     plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
     
     /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
@@ -115,6 +134,7 @@ private:
      * lineSegment is the line segment index that will be checked for an intersection
      * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
      */
+     //! Function that will get the intersection X and Y points of two lines crossing each other
 	bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
     
     /*! This function will calculate the shortest distance from a point to an arc */
