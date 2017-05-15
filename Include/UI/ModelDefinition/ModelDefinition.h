@@ -16,7 +16,6 @@
 
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
-#include <common/wxGLString.h>
 #include <common/plfcolony.h>
 
 #include <common/GeometryProperties/NodeSettings.h>

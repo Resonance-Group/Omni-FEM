@@ -1322,19 +1322,19 @@ bool geometryEditor2D::createFillet(double radius)
 
 
 // Talk to Palm about some of these functions
-bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint)
+bool geometryEditor2D::getIntersection(edgeLineShape existingLine, edgeLineShape prospectiveLine, double &intersectionXPoint, double &intersectionYPoint)
 {
-    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 */
+    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 BOOL CFemmeDoc::GetIntersection*/
     Vector pNode0, pNode1, iNode0, iNode1;// These are the nodes on the prospective line (pNode) and the intersectionLine (iNode
     Vector tempNode0, tempNode1;
     // First check to see if there are any commmon end points. If so, there is no intersection
-    if(prospectiveLine.getFirstNode() == intersectionLine.getFirstNode() || prospectiveLine.getFirstNode() == intersectionLine.getSecondNode() || prospectiveLine.getSecondNode() == intersectionLine.getFirstNode() || prospectiveLine.getSecondNode() == intersectionLine.getSecondNode())
+    if(existingLine.getFirstNode() == prospectiveLine.getFirstNode() || existingLine.getFirstNode() == prospectiveLine.getSecondNode() || existingLine.getSecondNode() == prospectiveLine.getFirstNode() || existingLine.getSecondNode() == prospectiveLine.getSecondNode())
         return false;
         
-    pNode0.Set(prospectiveLine.getFirstNode()->getCenterXCoordinate(), prospectiveLine.getFirstNode()->getCenterYCoordinate());
-    pNode1.Set(prospectiveLine.getSecondNode()->getCenterXCoordinate(), prospectiveLine.getSecondNode()->getCenterYCoordinate());
-    iNode0.Set(intersectionLine.getFirstNode()->getCenterXCoordinate(), intersectionLine.getFirstNode()->getCenterYCoordinate());
-    iNode1.Set(intersectionLine.getSecondNode()->getCenterXCoordinate(), intersectionLine.getSecondNode()->getCenterYCoordinate());
+    pNode0.Set(existingLine.getFirstNode()->getCenterXCoordinate(), existingLine.getFirstNode()->getCenterYCoordinate());
+    pNode1.Set(existingLine.getSecondNode()->getCenterXCoordinate(), existingLine.getSecondNode()->getCenterYCoordinate());
+    iNode0.Set(prospectiveLine.getFirstNode()->getCenterXCoordinate(), prospectiveLine.getFirstNode()->getCenterYCoordinate());
+    iNode1.Set(prospectiveLine.getSecondNode()->getCenterXCoordinate(), prospectiveLine.getSecondNode()->getCenterYCoordinate());
     
     tempNode0 = iNode0;
     tempNode1 = iNode1;

@@ -128,14 +128,21 @@ private:
     */ 
     plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
     
-    /*! This function will check to see if there is an intersection between two lines. If so, get the node of intersection and return true
-     * node0 is the first node that the user selects
-     * node1 is the second node that the user selects
-     * lineSegment is the line segment index that will be checked for an intersection
-     * intersectionXPoint and YPoint are the (X, Y) intercetion points of the two lines
-     */
-     //! Function that will get the intersection X and Y points of two lines crossing each other
-	bool getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint);
+    //! Function that will get the intersection X, Y point of two lines crossing each other
+    /*!
+        The idea behind this function is that it will transform the endpoints of the two lines to lie within the range between 0 and 1.
+        If the y parts of the translated existingLine line are both greater then 0, then the existingLine line is above the x-axis
+        and there can be no intersection. This also applies if the y parts are both < 0 except this would mean that the line is below the x-axis
+        If the x part of the endpoints for the existingLine line are < 0, then this means that the prosepective line is to the left of the 
+        prospectiveLine line which would mean that there is no intersection. if the x part ofs are > 1, then this means that the existingLine line
+        is only to the right of the prospectiveLine line and there is no intersection.
+        \param existingLine This is a line that already exists within the line list.
+        \param prospectiveLine This is the line that is to be drawn.
+        \param intersectionXPoint The returned x-point if there is an intersection.
+        \param intersectionYPoint The returned y-point if there is an intersection.
+        \return The function returns True if an intersection is found. Otherwise, the function returns False.
+    */ 
+	bool getIntersection(edgeLineShape existingLine, edgeLineShape prospectiveLine, double &intersectionXPoint, double &intersectionYPoint);
     
     /*! This function will calculate the shortest distance from a point to an arc */
 	double shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment);
