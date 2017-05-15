@@ -2817,8 +2817,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     std::stringstream xStream;
     std::stringstream yStream;
     
-    xStream << std::fixed << std::setprecision(3) << convertToXCoordinate(_mouseXPixel);
-    yStream << std::fixed << std::setprecision(3) << convertToYCoordinate(_mouseYPixel);
+    xStream << std::fixed << std::setprecision(4) << convertToXCoordinate(_mouseXPixel);
+    yStream << std::fixed << std::setprecision(4) << convertToYCoordinate(_mouseYPixel);
     
     wxString xCoordinateString = wxString(xStream.str());
     wxString yCoordinateString = wxString(yStream.str());

@@ -1551,7 +1551,7 @@ double geometryEditor2D::calculateShortestDistance(node selectedNode, edgeLineSh
 
 
 
-double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment)
+double geometryEditor2D::calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment)
 {
     double t, x[3], y[3];
 
@@ -1561,7 +1561,7 @@ double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edge
     x[1] = segment.getSecondNode()->getCenterXCoordinate();
     y[1] = segment.getSecondNode()->getCenterYCoordinate();
 	
-	t = ((selectedNode.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedNode.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
+	t = ((selectedLabel.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedLabel.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
       
 	if(t > 1)
 		t = 1.0;
@@ -1571,7 +1571,7 @@ double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edge
 	x[2] = x[0] + t * (x[1] - x[0]);
 	y[2] = y[0] + t * (y[1] - y[0]);
     
-	return sqrt((selectedNode.getCenterXCoordinate() - x[2]) * (selectedNode.getCenterXCoordinate() - x[2]) + (selectedNode.getCenterYCoordinate() - y[2]) * (selectedNode.getCenterYCoordinate() - y[2]));   
+	return sqrt((selectedLabel.getCenterXCoordinate() - x[2]) * (selectedLabel.getCenterXCoordinate() - x[2]) + (selectedLabel.getCenterYCoordinate() - y[2]) * (selectedLabel.getCenterYCoordinate() - y[2]));   
 }
 
 

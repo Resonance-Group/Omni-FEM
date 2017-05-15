@@ -144,25 +144,70 @@ private:
     */ 
 	bool getIntersection(edgeLineShape existingLine, edgeLineShape prospectiveLine, double &intersectionXPoint, double &intersectionYPoint);
     
-    /*! This function will calculate the shortest distance from a point to an arc */
+    //! This function will calculate the shortest distance from a vector point to an arc
+    /*!
+        \param vectorPoint The vector of point where the distance needs to be calculated from
+        \param arcSegment The arc that is used to calculate the distance to
+        \return Returns a number representing the shortest distance from the vector point to the arc
+    */ 
 	double shortestDistanceFromArc(Vector vectorPoint, arcShape &arcSegment);
 	
-	/*! This function will get the number of instersection points where a line and an arc intersect */
+	//! This function will get the number of intersection points where a line and an arc intersect
+    /*!
+        When a line and an arc intersect, there is at most 2 possible points of intersection.
+        The first would be if the line is a tangent to the arc. In this case, there is only 1 point of 
+        intersection.
+        The second would be if the line is a chord to the arc. In this case, there are 2 points of
+        intersections.
+        This fnction will be able to determine if the line is a chord or a tangent and return
+        the apprioate number of intersection points.
+        \param lineSegment The line segment that could possibly intersecting the arc
+        \param arcSegment The arc segment that the program is checking to see if lineSegment is intersecting
+        \param pointVec This is a point to an array which holds the vector points of the intersections
+        \return Returns 0 if there are no intersections, 1 if the line is a tangent, and 2 if the line is a chord
+    */ 
 	int getLineToArcIntersection(edgeLineShape &lineSegment, arcShape &arcSegment, Vector *pointVec);
 	
-	/*! This function will calculate the number of intersection points where two arcs intersect */
+	//! This function will calculate the number of intersection points where two arcs intersect
+    /*!
+        This does the same thing as the getLineToArcIntersection function. Except, there can be more 
+        intersections beyond 2 since we are dealing with 2 arcs
+        \param arcSegment1 The arc segment which is intersecting another
+        \param arcSegment2 The arc segment that is being checked to see if arcSegment1 is intersecting
+        \param point A pointer to an array which will store all of the vector points for the intersection
+        \return Returns the total number of intersections between arcSegment1 and arcSegment2
+    */ 
 	int getArcToArcIntersection(arcShape& arcSegment1, arcShape &arcSegment2, Vector *point);
     
-    
-
 public:
     
-    /*! This function is used to calcualte if the shortest distance between a line a node */
+    //! This function is used to calculate the shortest distance between a line and a node
+    /*!
+        This function contains that same underlying principal that operates the getIntersection function
+        \param selectedNode The node that the function calculating the distance from
+        \param segment The line segment that the distance is being calculated from
+        \return Returns the shortest distance between the selectedNode and segment
+    */ 
 	double calculateShortestDistance(node selectedNode, edgeLineShape segment);
     
-    /*! This function is used to calcualte if the distance between a line a node */
-	double calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment);
+    //! This function is used to calculate the shortest distance between a line and a block label
+    /*!
+        This function is the same as the calculateShortestDistance except the node is now a 
+        blockLabel
+        \param selectedLabel The label that the function calculating the distance from
+        \param segment The line segment that the distance is being calculated to
+        \return Returns the shortest distance between the selectedNode and the segment
+    */ 
+	double calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment);
     
+    //! This function is used to calculate the shortest distance between a line and a point
+    /*!
+        This function is the same as the calculateShortestDistance except the node is now a 
+        point. This version is primarly used when the user clicks on the mouse.
+        \param selectedPoint The point that the function is calculating the distance from. This would contain cartesiant (or polar) coordiantes. 
+        \param segment The line segment that the distance is being calculated to
+        \return Returns the shortest distance between the point and the segment
+    */ 
     double calculateShortestDistance(wxRealPoint selectedPoint, edgeLineShape segment);
     
     double calculateShortestDistanceFromArc(wxRealPoint selectedPoint, arcShape arcSegment)
