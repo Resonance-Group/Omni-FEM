@@ -210,21 +210,37 @@ public:
     */ 
     double calculateShortestDistance(wxRealPoint selectedPoint, edgeLineShape segment);
     
+    //! This function is used to calculate the shortest distance between a point and an arc
+    /*!
+        This function is primarly used when the used left clicks on the canvas.
+        \sa shortestDistanceFromArc
+        \param selectedPoint The point that the function us calculating the distance from. This would contain the cartesian (or polar) coordiantes.
+        \param arcSegment The arc segment that the distance is being calculated to.
+        \return Returns the shortest distance between the point and the segment
+    */ 
     double calculateShortestDistanceFromArc(wxRealPoint selectedPoint, arcShape arcSegment)
     {
         return shortestDistanceFromArc(Vector(selectedPoint.x, selectedPoint.y), arcSegment);
     }
     
-    bool setNodeIndex(node &iterator)
+    //! This function will save the address of two node objects that are to be used for line/arc creation
+    /*!
+        This function will edit the _nodeInterator1 and _nodeInterator2 variables that are used to save the address
+        of two selected nodes. These nodes are use for creating a line or arc between the nodes.
+        \sa  _nodeInterator1, _nodeInterator2
+        \param nodeAddress The address of a node that will be used for line/arc creation
+        \return Returns true if 2 nodes have been saved. Otherwise, return false
+    */ 
+    bool setNodeIndex(node &nodeAddress)
     {
         if(_nodeInterator1 == nullptr)
         {
-            _nodeInterator1 = &iterator;
+            _nodeInterator1 = &nodeAddress;
             return false;
         }
         else if(_nodeInterator2 == nullptr)
         {
-            _nodeInterator2 = &iterator;
+            _nodeInterator2 = &nodeAddress;
             return true;
         }
         
