@@ -467,7 +467,7 @@ bool geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
         {
             bool nodeIsConfigured = false;
             plf::colony<node>::iterator tempNodeIterator = nodeIterator1;
-            /* Iterate through all of the nodes to see if a node is on top of another node and if so, move all of the lines/arcs to one of the nodes 8*/
+            /* Iterate through all of the nodes to see if a node is on top of another node and if so, move all of the lines/arcs to one of the nodes */
             for(plf::colony<node>::iterator nodeIterator2 = ++tempNodeIterator; nodeIterator2 != _nodeList.end(); ++nodeIterator2)
             {
                 if(nodeIterator2 == _nodeList.end())

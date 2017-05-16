@@ -249,43 +249,80 @@ public:
 
     //! Function that will return a pointer to the node list
     /*!
-     * By returning a pointer to the node list, this makes it much easier to 
-     */ 
+        By returning a pointer to the node list, this makes it much easier to edit the node list or to grab additional datatypes for
+        example if the programmer needs ot loop through the entire node list. There is no requirement for a copy of memory. This
+        method actually saves memory since we are only returning an address
+        \return Returns a pointer pointing to the node list
+    */ 
     plf::colony<node> *getNodeList()
     {
         return &_nodeList;
     }
     
+    //! Function that is used to set the node list
+    /*!
+        \param list The node list that _nodeList will be set to
+    */ 
     void setNodeList(plf::colony<node> list)
     {
         _nodeList = list;
     }
     
+    //! Function that will get the block list and return a pointer pointing to the block list
+    /*!
+        Works similair to getNodeList() but is for the block labels
+        \sa getNodeList()
+        \return Returns a pointer pointing to the block labels list
+    */ 
     plf::colony<blockLabel> *getBlockLabelList()
     {
         return &_blockLabelList;
     }
     
+    //! Function that is used to set the node list
+    /*!
+        \param list The node list that _nodeList will be set to
+    */ 
     void setBlockLabelList(plf::colony<blockLabel> list)
     {
         _blockLabelList = list;
     }
     
+    //! Function that will get the line list and return a pointer pointing to the line list
+    /*!
+        Works similair to getNodeList() but is for the line labels
+        \sa getNodeList()
+        \return Returns a pointer pointing to the line labels list
+    */ 
     plf::colony<edgeLineShape> *getLineList()
     {
         return &_lineList;
     }
     
+    //! Function that is used to set the line list
+    /*!
+        \param list The line list that _lineList will be set to
+    */ 
     void setLineList(plf::colony<edgeLineShape> list)
     {
         _lineList = list;
     }
     
+    //! Function that will get the arc list and return a pointer pointing to the arc list
+    /*!
+        Works similair to getNodeList() but is for the arc labels
+        \sa getNodeList()
+        \return Returns a pointer pointing to the arc labels list
+    */ 
     plf::colony<arcShape> *getArcList()
     {
         return &_arcList;
     }
     
+    //! Function that is used to set the arc list
+    /*!
+        \param list The arc list that _arcList will be set to
+    */ 
     void setArcList(plf::colony<arcShape> list)
     {
         _arcList = list;
@@ -314,7 +351,8 @@ public:
         First, this function will get called on the down of the left mouse button.
         This will override any checks to allow the user to drag the node to the proper location
         Once there, the user will release the left mouse button which will call the function
-        addNode which contains all of the needed checks.
+        addNode which contains all of the needed checks. A node that is created by this function
+        is only temporary. The arguements here are to give the node a starting position.
         \sa addNode
         \param xPoint The x part of the location to added a dragging node
         \param yPoint The y part of the location to add a dragging node
@@ -327,8 +365,28 @@ public:
         _lastNodeAdded = _nodeList.insert(newNode);
     }
     
+    //! Function that is called to add a block label to the block label list
+    /*!
+        This function contains all of the checks needed in order to add a block label to the 
+        list of block labels. This function will check to see if the blockl label is 
+        placed on top of a node, ontop of another block label, ontop of a 
+        line and ontop of an arc. If any of these conditions are true, then the
+        block label will not be created.
+        \param xPoint The x-coordinate of the location where the block lable is to be placed. This is in the cartesian coordinates (or polar)
+        \param yPoint The y-coordinate of the location where the block label is to be placed. This is in cartesian coordinates (or polar)
+        \param tolerance This is a tolerance parameter in which this value specifies the minimum distance when a block label is ontop of a node, another block label, arc, and line in order for the block label to not be added
+        \return Returns True if the block label is able to be added. Otherwise, returns False.
+    */ 
     bool addBlockLabel(double xPoint, double yPoint, double tolerance);
     
+    //! This function adds a block label to the list for thr purpose of dragging the label across the canvas
+    /*!
+        This function has the same purpose as the addDragnode function except 
+        this function works with block labels
+        \sa addDragNode
+        \param xPoint The x-coordinate of the location where the block lable is to be placed. This is in the cartesian coordinates (or polar)
+        \param yPoint The y-coordinate of the location where the block label is to be placed. This is in cartesian coordinates (or polar)
+    */ 
     void addDragBlockLabel(double xPoint, double yPoint)
     {
         blockLabel newLabel;
@@ -337,31 +395,94 @@ public:
         _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
     }
     
+    //! Function that is called in order to add a line to the line list
+    /*!
+        This is the main function that is called if the user (or program) would
+        like to add a line to the line list. This function takes in the address
+        of the two points. The function will also perform an necessary checks to
+        see if the line passes through a node, if the line has already been created
+        and if there are any intersections with any arcs or other lines. If 
+        any of these cases are true, then the function will handle all of the cases apprioately.
+        There are addition to checks to determine the user has selected two node already as endpoints
+        or if the user is passing in the address to the two nodes for line creation
+        \param firstNode The first endpoint of the line
+        \param secondNode The second endpoint of the line
+        \param tolerance This is the value that is used for if any nodes need to be created, the value is passed into the addNode function
+        \return Returns True if the line is successfully created. Otherwise returns False. A false condition occurs if the line has already been created, if the two endpoints are the same, or if one of the two nodes does not exist. 
+    */ 
+    bool addLine(node *firstNode, node *secondNode, double tolerance = 0);
+    
+    //! Function that is used to add a line where the nodes are not addresses
+    /*!
+        This is a wrapper function where the arguements are not 
+        address to the endpoints (nodes) of the line. This function
+        will convert them to addresses and call the addLine function that takes
+        in addresses.
+        \sa addNode
+        \param firstNode The first endpoint of the line
+        \param secondNode The second endpoint of the line
+        \param tolerance This is the value that is used for if any nodes need to be created, the value is passed into the addNode function
+        \return Returns True if the line is successfully created. Otherwise returns False.
+    */ 
     bool addLine(node &firstNode, node &secondNode, double tolerance)
     {
         return addLine(&firstNode, &secondNode, tolerance);
     }
     
-    bool addLine(node *firstNode, node *secondNode, double tolerance = 0);
-    
-    bool addLine()
-    {
-        return addLine(nullptr, nullptr);
-    }
-    
-    bool addLine(double tolerance)
+    //! Function that is called to add a line to the list where the two nodes have already been selected
+    /*!
+        This function calls the addLine function and passes in null pointers as the arguments
+        By passing in null pointers, this tells the addLine function that two endpoints 
+        have already been selected are are saved in the variables _nodeInterator1 and _nodeInterator2.
+        \sa addLine
+        \param tolerance This is the value that is used for if any nodes need to be created, the value is passed into the addNode function
+        \return Returns True if the line is successfully added. Otherwise, returns false.
+    */ 
+    bool addLine(double tolerance = 0)
     {
         return addLine(nullptr, nullptr, tolerance);
     }
     
+    //! Function that is called when the user or the program needs to add an arc to the arc list
+    /*!
+        For arcs, an arc shape containing the selected nodes, boundary conditions, and nuumber of segments
+        should be passed into here first. Mainly becuase the arc needs to be setup before any calculation can 
+        be done on the arc and it simplifies the number of arguments needed for the function to work.
+        One thing to note about arcs is that the order of selection matters. All arcs are drawn as 
+        counterclockwise being positive. Therefor, an arc is drawn concave if the endpoint to the right
+        is selected first and convex if the node to the left is selected first.
+        This function also checks and handles the following cases: if the arc crosses a node,
+        if the arc intersects another arc or if the arc intersects a line, and if the arc already exists 
+        in the list.
+        The function can handle first the selection of the endpoints but it is highly recommmanded
+        that the arSeg argument contains the selection of the nodes, any BC, and number of segments before 
+        calling this function.
+        \param arcSeg The arc that is to be added to the list 
+        \param tolerance This is the value that is used for if any nodes need to be created at intersection points. This value is passed into the addNode function
+        \param nodesAreSelected Boolean used to indicate if the program needs to check the selected nodes variables to grab which nodes the user has selected
+        \return Returns True if the function successfully added the arc to the list. Otherwise returns False. A false condition occurs if the arc is already in the list, if the two selected nodes are the same, or if one of the two selected nodes does not exist 
+    */ 
     bool addArc(arcShape &arcSeg, double tolerance, bool nodesAreSelected);
     
+    //! Function that is called in order to reset the seelected nodes variables back to null pointers
+    /*!
+        The default value for _nodeInterator1 and _nodeInterator2 is the null pointer. This function
+        is typically called at the end of the add line and add arc functions. This function
+        is also called if adding a line/arc fails.
+    */ 
     void resetIndexs()
     {
         _nodeInterator1 = nullptr;
         _nodeInterator2 = nullptr;
     }
     
+    //! Function that is called in order to swap the two selected nodes variable
+    /*!
+        This function is mainly for any arc related algoritms. For arcs, the order
+        of the selected nodes matters. If the node to the right is selected first, then
+        the arc will be drawn concave style. If the node to the left is selected first,
+        then the arc will be drawn convex style
+    */ 
     void switchIndex()
     {
         node *temp = _nodeInterator1;
@@ -369,29 +490,80 @@ public:
         _nodeInterator2 = temp;
     }
     
+    //! Function that is used to grab the last node that was added to the colony
+    /*!
+        In short, the colony datatype is not a sorted list. This means that the node that
+        is added to the list does not mean that the node is on the top of the list.
+        The node could easily be in somewhere in the middle. For more documentation regarding
+        the colony datatype, refer to the following link:
+        http://plflib.org/colony.htm
+        So, during a copy routine, if the program is copying a line or arc, then the program will
+        need to grab the location of the last node added. Iterators and pointers are similiar to each other.
+        So much so, that they are handled the same. So the iterator was choosen as a convience.
+        \return The function returns an iterator which is pointing to the location of the last added node to the colony.
+    */ 
     plf::colony<node>::iterator getLastNodeAdd()
     {
         return _lastNodeAdded;
     }
     
+    //! Function that is used to get the last line added to the colony
+    /*!
+        Works the same way as getLastNodeAdd() except this works with lines
+        \sa getLastNode()
+        \return The function returns an iterator which is pointing to the location of the last added line to the colony.
+    */ 
     plf::colony<edgeLineShape>::iterator getLastLineAdded()
     {
         return _lastLineAdded;
     }
     
+    //! Function that is used to get the last arc added to the arc colony
+    /*!
+        Works the same way as getLastNodeAdd() except this works with arcs
+        \sa getLastNode()
+        \return The function returns an iterator which is pointing to the location of the last added arc to the colony.
+    */ 
     plf::colony<arcShape>::iterator getLastArcAdded()
     {
         return _lastArcAdded;
     }
     
+    //! Function that is used to get the last block label added to the block label colony
+    /*!
+        Works the same way as getLastNodeAdd() except this works with block labels
+        \sa getLastNode()
+        \return The function returns an iterator which is pointing to the location of the last added block label to the colony.
+    */
     plf::colony<blockLabel>::iterator getLastBlockLabelAdded()
     {
         return _lastBlockLabelAdded;
     }
     
-    //! If nodes/lines/arcs are moved, then this function needs to be called in order to check if the displaced geometry intercets with other geometries
+    //! Function that is used to check all of the geomtery and determine if there are any intersections with any shapes
+    /*!
+        This function is primarly used after a user moves a geometry shape around. During a move, there could be intersections between 
+        nodes/lines/arcs. This function will check all geometry (or the selected geometry) if any intersections. If there are intersections,
+        then the function will place a node at the intersections. As for block labels, the function will check to see if after a move, there
+        are any block labels ontop of a geometry piece, if so, this function will return true.
+        \param editedGeometry Arguement that is used to specify what geometry needs to be checked for intersections
+        \param tolerance This is the value that is used for if any nodes need to be created at intersection points. This value is passed into the addNode function
+        \return Returns True if there are any block labels ontop of another geometry shape. Otherwise, returns False.
+    */ 
     bool checkIntersections(EditGeometry editedGeometry, double tolerance);
     
+    //! Function that is used to create a fillet where two lines or two arcs or one line and one arc converge at.
+    /*!
+        This function will loop through the entire node list and find the nodes that are selected for fillet creation.
+        If the node is selected, the function will ensure that there is only two lines or two arcs or one line and one arc
+        that converges to the node. Construction lines/arcs are not counted.
+        The function has three different cases for if two lines or two arcs or one line and one arc converge at the node.
+        If there function is able to succesfully create a fillet, the function will return true. If the function 
+        is unable to create the fillet, the function will leave the node intact and there will be no change to what is drawn
+        on the screen. 
+        \param radius The radius of the fillet
+        \return Returns true if even one fillet is succesfully created. Otherwise returns False.
+    */ 
     bool createFillet(double radius);
 };
 
