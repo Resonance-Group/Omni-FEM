@@ -247,6 +247,10 @@ public:
         return false;
     }
 
+    //! Function that will return a pointer to the node list
+    /*!
+     * By returning a pointer to the node list, this makes it much easier to 
+     */ 
     plf::colony<node> *getNodeList()
     {
         return &_nodeList;
@@ -286,9 +290,35 @@ public:
     {
         _arcList = list;
     }
-
+    
+    //! Function that is called in order to add a node a list
+    /*!
+        This function will perform all neccessary checks into order to 
+        add the node to the list. The checks include, if a node was placed
+        ontop of another node or blocklabel, if a node was placed ontop
+        of a line and if a node was placed ontop of an arc.
+        In the case that the node was placed ontop of a node or blocklabel,
+        the function will not add a node to the list. 
+        If the node is placed ontop an line or arc, then the function will
+        break the line or arc up into two lines or arcs.
+        \param xPoint The x-point location in cartesian coordinates to add the node
+        \param yPoint The y-point location in cartesian coordinates to add the node
+        \param distanceNode This is a tolerance parameter in which this value specifies the minimum distance when a node is ontop of another node/label or how close a node needs to be to an arc/line in order to break the arc/line into 2 seperate pieces
+        \return Function returns True if node was successfully added. Otherwise, return False. A false condition occurs if the node is placed ontop of another node/label.
+    */ 
     bool addNode(double xPoint, double yPoint, double distanceNode);
     
+    //! Adds a node to the list for the purpose of dragging
+    /*!
+        This function is called alot when the user wants to add a node to the canvas.
+        First, this function will get called on the down of the left mouse button.
+        This will override any checks to allow the user to drag the node to the proper location
+        Once there, the user will release the left mouse button which will call the function
+        addNode which contains all of the needed checks.
+        \sa addNode
+        \param xPoint The x part of the location to added a dragging node
+        \param yPoint The y part of the location to add a dragging node
+    */ 
     void addDragNode(double xPoint, double yPoint)
     {
         node newNode;
