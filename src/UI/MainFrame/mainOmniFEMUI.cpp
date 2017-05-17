@@ -32,6 +32,9 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     
     /* Creating the menu listing of File menu */
     _menuFile->Append(menubarID::ID_menubarNew, "&New\tCtrl-N");
+    // So the nice thing about wxWidgets is that you only need to place the \t and keyboard combination
+    // in order to route the keyboard press to the apprioate event procedure which happens to be
+    // on the menu
     _menuFile->Append(menubarID::ID_menubarSave, "&Save\tCtrl-S");
     _menuFile->Append(menubarID::ID_menubarSaveAs, "&Save As");
 	_menuFile->Append(menubarID::ID_menubarOpen, "&Open");
@@ -134,6 +137,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(EditMenuID::ID_UNDO, enable);
     _menuBar->Enable(EditMenuID::ID_SELECT_GROUP, enable);
     _menuEdit->Enable(EditMenuID::ID_EDIT_PROPERTY, enable);
+    _menuEdit->Enable(EditMenuID::ID_LUA_RUN, enable);
     
     _menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
     _menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);

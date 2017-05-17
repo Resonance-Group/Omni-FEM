@@ -12,6 +12,7 @@ void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
         if(wxMessageBox("Create New File?", "New File", wxOK | wxCANCEL | wxICON_QUESTION) == wxCANCEL)
             return;
     }
+    enableToolMenuBar(false);
     createProblemChoosingClient();
 }
 

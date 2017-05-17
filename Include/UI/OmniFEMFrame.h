@@ -299,8 +299,45 @@ private:
     */ 
     void onPreferences(wxCommandEvent &event);
     
+    //! Event procedure that is fired when the user would like to copy any selected geometries
+    /*!
+        This event is fired every time that the user clicks on Edit->Copy, clicks on the 
+        copy icon, or presses the keyboard combination Ctrl+C. This function
+        will bring up the copy dialog where the user needs to enter parameters about 
+        copying the geometry.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onCopy(wxCommandEvent &event);
+    
+    //! Procedure that is fired when the user would like to scale the geometry
+    /*!
+        This event is fired every time the user clicks on Edit->Scale or when the user clicks on the Scale icon.
+        This function will bring up the scale dialog. However, before the scale dialog is displayed,
+        the program will calculate the center of the selected geometry and place this center into 
+        the base point of the scale dialog. The user has the option of using that center
+        or to specifya new center.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onScale(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to mirror selected geometry
+    /*!
+        This event is fired each time the user clicks on Edit->Mirror. This will place
+        the canvas into mirror selection state where the user needs to draw a mirror on 
+        the canvas in order to indicate how they would like to mirror the geometry. Once
+        drawn, the program will calculate all neccessary parameters in order to 
+        mirror the geometry.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onMirror(wxCommandEvent &event);
     void onUndo(wxCommandEvent &event);
     void onDelete(wxCommandEvent &event);
