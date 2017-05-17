@@ -51,6 +51,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property");
     _menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
+    _menuEdit->Append(EditMenuID::ID_LUA_RUN, "Run Lua Script");
 	
 	/* Creting the menu listing of the View Menu */
     _menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
@@ -507,6 +508,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
     EVT_MENU(EditMenuID::ID_SELECT_GROUP, OmniFEMMainFrame::onSelectGroup)
     EVT_MENU(EditMenuID::ID_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
+    EVT_MENU(EditMenuID::ID_LUA_RUN, OmniFEMMainFrame::onLuaRun)
 	
 	/* This section is for the View menu */
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)

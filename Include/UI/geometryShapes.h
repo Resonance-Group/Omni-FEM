@@ -7,15 +7,14 @@
 #include <freeglut.h>
 
 #include <wx/wx.h>
-//
+
+#include <common/Vector.h>
 
 #include <common/GeometryProperties/BlockProperty.h>
 #include <common/GeometryProperties/NodeSettings.h>
 #include <common/GeometryProperties/SegmentProperties.h>
 
 #include <UI/ModelDefinition/OGLFT.h>
-
-#include <common/Vector.h>
 
 /*! \class geometry2D
 	\brief This is the base class for all of the geometry classes

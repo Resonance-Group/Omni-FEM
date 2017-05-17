@@ -117,37 +117,95 @@ private:
     bool _displayStatusMenu = true;
 	
 	//! The menu bar for the main window
+    /*!
+        The menu bar is kind of like a container where it contains all of the listings of the different
+        wxMenu classes. 
+        For additional documentation on the wxMenuBar class, refer to the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_menu_bar.html
+    */ 
 	wxMenuBar *_menuBar = new wxMenuBar;
 	
-	//! This would be the file menu in the menu bar
+	//! The file selection for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuFile = new wxMenu;
 	
-	//! This would be the edit menu in the menu bar
+	//! The edit menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuEdit = new wxMenu;
 	
-	//! This would be the view menu in the menu bar
+	//! The view menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuView = new wxMenu;
 	
-	//! This would be the problem menu in the menu bar
+	//! The problem menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuProblem = new wxMenu;
 	
-    //! The Grid menu in the menu bar
+    //! The grid menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuGrid = new wxMenu;
     
-    //! The properties menu in the menu bar
+    //! The properties menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuProperties = new wxMenu;
     
-    //! This would be the mesh menu in the menu bar
+    //! The mesh menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuMesh = new wxMenu;
     
-    //! This is the menu entry for hte analsis
+    //! The analysis menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_analysisMenu = new wxMenu;
     
-	//! This would be the help menu in the menu bar
+	//! The help menu for the menu bar
+    /*!
+        For additional documentation on the wxMenu class, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_menu.html
+    */ 
     wxMenu *_menuHelp = new wxMenu;
     
+    //! The list box that contains the selection of the different physics problems
+    /*!
+        This object is used to display the selection of the different physics problems
+        that the user is able to choose from. This Once choosen, the selection will be 
+        converted into physics problem enum which is used to determine which dialog to
+        show depending on the physics selection.
+        For additional documentation on the wxListBox object, refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_list_box.html
+    */ 
     wxListBox *_physicsProblemsListBox;
     
+    //! Variable that is used to indicate which state the UI is in.
+    /*! 
+        This variable is used through the OmniFEMMainFrame class. 
+        The variable indicates what state the UI is in which will dictate what
+        widgets are drawn on the frame and will dictate what widgets are 
+        deleted on the frame when the user moves between UI states
+    */ 
     systemState _UIState = systemState::ON_START_UP_STATE;
 
 
@@ -156,14 +214,91 @@ private:
 	************************************/
 	
     /* This section is for the File menu */
+    
+    //! Event procedure for the new file event
+    /*!
+        This event is thrown every time the user clicks on 
+        File->New or when the user clicks on the new file icon
+        in the tool bar. This event is also filed on the start up menu
+        when the user can choose from either creating a new simulation
+        or opening an exisitng simulation
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onNewFile(wxCommandEvent &event);
+    
+    //! Event procedure for the save event
+    /*!
+        This event is fired everytime the user goes to
+        file->Save, clicks onthe save icon on the toolbar, 
+        or presses the key combination Ctrl+s. This will automatically
+        save the file to the current directory that the file is located in.
+        If the file does not exist, then this function will
+        call the save as function in order to allow the user to 
+        select the location to save the file at
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void OnSave(wxCommandEvent &event);
+    
+    //! Event procedure for the Save As event
+    /*!
+        This event is fired every time that the user
+        goes to File->SaveAs. This function will bring up a dialog
+        box giving the user the ability to choose the location where
+        they would like to save their simulation as
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onSaveAs(wxCommandEvent &event);
+    
+    //! Event procedure for the Open File event
+    /*!
+        This event is fired every time the user clicks on File->Open or
+        the Open file icon in the tool bar or when the
+        user chooses to open a new simulation on the startup screen
+        The function will bring up a dialog box asking the user
+        for the location of the file.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
 	void onOpenFile(wxCommandEvent &event);
     
     /* This section is for the Edit menu */
+    
+    //! Event procedure that is fired when the user needs to run a lua script
+    /*!
+        This event is executed when the the user clicks on Edit->Lua Run. This 
+        function will open a dialog box in order to allow the user to choose 
+        the location of the lua script.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
 	void onLuaRun(wxCommandEvent &event);
+    
+    //! Event procedure that is fired in order to bring up the system preferences menu
+    /*!
+        This event is fired when the user clicks on Edit->Preferences or when the user
+        presses the key combination Ctrl+P. This function will display the system preferences
+        menu which will allow the user to edit all settings within the simulator
+        envirnoment
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onPreferences(wxCommandEvent &event);
+    
     void onCopy(wxCommandEvent &event);
     void onScale(wxCommandEvent &event);
     void onMirror(wxCommandEvent &event);
