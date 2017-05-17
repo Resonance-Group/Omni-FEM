@@ -43,40 +43,77 @@
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
+//! This is the base class of the application
+/*!
+    This is the class that is first called in order to start the 
+    application running. Without this class, Omni-FEM would not be able to run at all.
+    The class derives from the wxApp class since this is required by wxwidgets for
+    proper functionality.
+    For documentation regarding wxApp class, refer to the following link:
+    http://docs.wxwidgets.org/3.1.0/classwx_app.html
+*/ 
 class OmniFEMApp : public wxApp
-{
-	private:
-	
-		wxSize minSize = wxSize(450, 340);
-	
-    public:
-        virtual bool OnInit();
+{	
+public:
+    //! Function that is called to start Omni-FEM
+    virtual bool OnInit();
 };
 
 
 
-
-
-
-/*! \class OmniFEMMainFrame
- *  \brief The main class for everything
- * 
- *  This class is also the presentation layer of the main frame
- */
+//! This is the main class for Omni-FEM.
+/*!
+    This class handles all of UI drawing for what the user sees.
+    The class will route any event procedures to their proper function 
+    when the user clicks on an icon.
+    The class derives from the wxFrame as this is the most base class for a frame
+    thus giving the class the most flexability in terms of usage
+    For additional documentation on the wxFrame class, refer to the following link:
+    http://docs.wxwidgets.org/trunk/classwx_frame.html
+*/
 class OmniFEMMainFrame : public wxFrame
 {
 public:
+    
+    //! The constructor for the class
+    /*!
+        It is in the constructor where Omni-FEM sets up the fame that will
+        display the menu items. In the constructor, the program creates all
+        of the toolbars that the user will see along with the first frame that
+        appears to the user
+        \param title The title of the frame
+        \param pos The starting position of the frame
+    */ 
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos);
 private:
 
     /************
 	* Variables *
 	*************/
-	
+    
+	//! The glCanvas that is created in order for the user to draw their geomtry
+    /*!
+        This is the object that is used on the frame in order to allow the user to draw the
+        geometry. The model is the 2D model that the user will be able to create by creating 
+        nodes and connecting the node together by arcs or lines. The user can also create block labels
+        The user can create lines or block labels and arcs or lines. The ability to switch between the
+        creation of these is toggled by the onToggleNodeCreation and onToggleLineCreation functions
+        which is called when the user clicks on the node and line icon.
+    */ 
     modelDefinition *_model;
     
+    //! This is the global definiton for the problem
+    /*!
+        In this object, the program stores all of the lists for the materials,
+        boundary conitions, conductor properties, what physics problems, etc.
+        An address to this object must be passed into the modelDefiniton object
+        becuase the modelDefinition object must be able to see the different preferences
+        that the user is setting and have access to these such as the boundary conditions 
+        and the materials
+    */ 
     problemDefinition _problemDefinition;
     
+    //! Boolean used to indicate if the user would like to display the status menu
     bool _displayStatusMenu = true;
 	
 	//! The menu bar for the main window

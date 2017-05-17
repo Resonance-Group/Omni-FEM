@@ -1668,143 +1668,158 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
 {
     if(_linesAreSelected || _geometryGroupIsSelected)
     {
+        plf::colony<edgeLineShape> selectedLines;
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
             {
-                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
-                {
-                    
-                    /* Bug Fix:
-                     * The issue was that if two or more lines were connected to a common node, then on the copy,
-                     * some of the copied lines would not be connected to the propery node.
-                     * The main issue behind this is that the program never checked to see if the node
-                     * that was being copied was already copied.
-                     * The fix is to iterate through the entire node list to ensure that the first node was not
-                     * already copied. It would be compared against a test node. If it was already copied,
-                     * then add the iterator to the class (for accessing when the line is ready to be drawn).
-                     * Since this can occur for either the first or second node, we have to do this again to the
-                     * second node. If the node does not exist, then create the node adn set the iterator in the 
-                     * geometry editor class for line creation.
-                     * The same logic applies to arcs
-                     */
-                     // TODO: Check FEMM code to make sure that it is necessary to have the tolerance here set to 0
-                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            // TODO: This if statement will need to check if the node is within tolerance
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    lineIterator->getFirstNode()->setSelectState(false);
-                    
-                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            // TODO: This if statement will need to check if the node is within tolerance
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    lineIterator->getSecondNode()->setSelectState(false);
-
-                    if(_editor.addLine(getTolerance()))
-                        _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
-                }
+                selectedLines.insert(*lineIterator);
                 lineIterator->setSelectState(false);
             }
         }
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = selectedLines.begin(); lineIterator != selectedLines.end(); ++lineIterator)
+        {
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                
+                /* Bug Fix:
+                 * The issue was that if two or more lines were connected to a common node, then on the copy,
+                 * some of the copied lines would not be connected to the propery node.
+                 * The main issue behind this is that the program never checked to see if the node
+                 * that was being copied was already copied.
+                 * The fix is to iterate through the entire node list to ensure that the first node was not
+                 * already copied. It would be compared against a test node. If it was already copied,
+                 * then add the iterator to the class (for accessing when the line is ready to be drawn).
+                 * Since this can occur for either the first or second node, we have to do this again to the
+                 * second node. If the node does not exist, then create the node adn set the iterator in the 
+                 * geometry editor class for line creation.
+                 * The same logic applies to arcs
+                 */
+                 // TODO: Check FEMM code to make sure that it is necessary to have the tolerance here set to 0
+                if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(lineIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        // TODO: This if statement will need to check if the node is within tolerance
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                lineIterator->getFirstNode()->setSelectState(false);
+                
+                if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(lineIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, lineIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        // TODO: This if statement will need to check if the node is within tolerance
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                lineIterator->getSecondNode()->setSelectState(false);
+
+                if(_editor.addLine(getTolerance()))
+                    _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
+            }
+        }
+            
         _linesAreSelected = false;
     }
     
     if(_arcsAreSelected || _geometryGroupIsSelected)
     {
+        plf::colony<arcShape> selectedArcs;
+        
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(arcIterator->getIsSelectedState())
             {
-                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
-                {
-                    
-                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            // TODO: This if statement will need to check if the node is within tolerance
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    arcIterator->getFirstNode()->setSelectState(false);
-                    
-                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            // TODO: This if statement will need to check if the node is within tolerance
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    arcIterator->getSecondNode()->setSelectState(false);
-                    
-                    arcShape tempArc;
-                    tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
-                    tempArc.setArcAngle(arcIterator->getArcAngle());
-                    tempArc.setNumSegments(arcIterator->getnumSegments());
-                    
-                    _editor.addArc(tempArc, 0, true);
-                }
                 arcIterator->setSelectState(false);
+                selectedArcs.insert(*arcIterator);
             }
         }
+        
+        for(plf::colony<arcShape>::iterator arcIterator = selectedArcs.begin(); arcIterator != selectedArcs.end(); ++arcIterator)
+        {
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                
+                if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(arcIterator->getFirstNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getFirstNode()->getCenterYCoordinate() + i * verticalShift);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        // TODO: This if statement will need to check if the node is within tolerance
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                arcIterator->getFirstNode()->setSelectState(false);
+                
+                if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(arcIterator->getSecondNode()->getCenterXCoordinate() + i * horizontalShift, arcIterator->getSecondNode()->getCenterYCoordinate() + i * verticalShift);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        // TODO: This if statement will need to check if the node is within tolerance
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                arcIterator->getSecondNode()->setSelectState(false);
+                
+                arcShape tempArc;
+                tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                tempArc.setArcAngle(arcIterator->getArcAngle());
+                tempArc.setNumSegments(arcIterator->getnumSegments());
+                
+                _editor.addArc(tempArc, 0, true);
+            }
+        }
+                
         _arcsAreSelected = false;
     }
     
@@ -1855,136 +1870,150 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
     if(_linesAreSelected || _geometryGroupIsSelected)
     {
         double tempShift = -angularShift;// I am not sure why this is necessary but for some reason, the program does not like a -i in the loop.
+        plf::colony<edgeLineShape> selectedLines;
         for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
         {
             if(lineIterator->getIsSelectedState())
             {
-                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
-                {
-                    double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
-                    
-                    double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
-                
-                    if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(horizontalShift1, verticalShift1);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    lineIterator->getFirstNode()->setSelectState(false);
-                   
-                    if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd());  
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(horizontalShift2, verticalShift2);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    lineIterator->getSecondNode()->setSelectState(false);
-
-                    if(_editor.addLine(getTolerance()))
-                        _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
-                }
                 lineIterator->setSelectState(false);
+                selectedLines.insert(*lineIterator);
             }
         }
+        
+        for(plf::colony<edgeLineShape>::iterator lineIterator = selectedLines.begin(); lineIterator != selectedLines.end(); ++lineIterator)
+        {   
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                double horizontalShift1 = (lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift1 = -(lineIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (lineIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
+                
+                double horizontalShift2 = (lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift2 = -(lineIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (lineIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
+            
+                if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd()); 
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(horizontalShift1, verticalShift1);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                lineIterator->getFirstNode()->setSelectState(false);
+               
+                if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());  
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(horizontalShift2, verticalShift2);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                lineIterator->getSecondNode()->setSelectState(false);
+
+                if(_editor.addLine(getTolerance()))
+                    _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
+            }
+        }
+                
         _linesAreSelected = false;
     }
     
     if(_arcsAreSelected || _geometryGroupIsSelected)
     {
         double tempShift = -angularShift;
+        plf::colony<arcShape> selectedArcs;
         for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
         {
             if(arcIterator->getIsSelectedState())
             {
-                for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
-                {
-                    double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
-                    
-                    double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
-                    double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
-                    
-                    if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(horizontalShift1, verticalShift1);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    arcIterator->getFirstNode()->setSelectState(false);
-                   
-                    if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance() / 4.0))
-                    {
-                        _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
-                        _editor.setNodeIndex(*_editor.getLastNodeAdd());
-                    }
-                    else
-                    {
-                        node testNode;
-                        testNode.setCenter(horizontalShift2, verticalShift2);
-                        for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
-                        {
-                            if(*nodeIterator == testNode)
-                            {
-                                _editor.setNodeIndex(*nodeIterator);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    arcIterator->getSecondNode()->setSelectState(false);
-
-                    arcShape tempArc;
-                    tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
-                    tempArc.setArcAngle(arcIterator->getArcAngle());
-                    tempArc.setNumSegments(arcIterator->getnumSegments());
-                    
-                    _editor.addArc(tempArc, 0, true);
-                }
                 arcIterator->setSelectState(false);
+                selectedArcs.insert(*arcIterator);
             }
         }
+        
+        for(plf::colony<arcShape>::iterator arcIterator = selectedArcs.begin(); arcIterator != selectedArcs.end(); ++arcIterator)
+        {
+            for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
+            {
+                double horizontalShift1 = (arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift1 = -(arcIterator->getFirstNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (arcIterator->getFirstNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
+                
+                double horizontalShift2 = (arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
+                double verticalShift2 = -(arcIterator->getSecondNode()->getCenterXCoordinate() - aboutPoint.x) * sin(i * tempShift * PI / 180.0) + (arcIterator->getSecondNode()->getCenterYCoordinate() - aboutPoint.y) * cos(i * tempShift * PI / 180.0) + aboutPoint.y;
+                
+                if(_editor.addNode(horizontalShift1, verticalShift1, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(horizontalShift1, verticalShift1);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                arcIterator->getFirstNode()->setSelectState(false);
+               
+                if(_editor.addNode(horizontalShift2, verticalShift2, getTolerance() / 8.0))
+                {
+                    _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
+                    _editor.setNodeIndex(*_editor.getLastNodeAdd());
+                }
+                else
+                {
+                    node testNode;
+                    testNode.setCenter(horizontalShift2, verticalShift2);
+                    for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
+                    {
+                        if(*nodeIterator == testNode)
+                        {
+                            _editor.setNodeIndex(*nodeIterator);
+                            break;
+                        }
+                    }
+                }
+                
+                arcIterator->getSecondNode()->setSelectState(false);
+
+                arcShape tempArc;
+                tempArc.setSegmentProperty(*arcIterator->getSegmentProperty());
+                tempArc.setArcAngle(arcIterator->getArcAngle());
+                tempArc.setNumSegments(arcIterator->getnumSegments());
+                
+                _editor.addArc(tempArc, 0, true);
+            }
+        }
+                
         _arcsAreSelected = false;
     }
     

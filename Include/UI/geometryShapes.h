@@ -7,7 +7,7 @@
 #include <freeglut.h>
 
 #include <wx/wx.h>
-#include <wx/glcanvas.h>
+//
 
 #include <common/GeometryProperties/BlockProperty.h>
 #include <common/GeometryProperties/NodeSettings.h>

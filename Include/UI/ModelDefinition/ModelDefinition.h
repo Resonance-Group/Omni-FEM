@@ -13,6 +13,7 @@
 #include <wx/wx.h>
 #include <wx/gdicmn.h>
 #include <wx/statusbr.h>
+#include <wx/glcanvas.h>
 
 #include <common/ProblemDefinition.h>
 #include <common/GridPreferences.h>
