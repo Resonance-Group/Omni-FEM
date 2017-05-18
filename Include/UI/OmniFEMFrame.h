@@ -462,10 +462,65 @@ private:
         \param event A required parameter for the event procedure to work properly
     */ 
     void onZoomOut(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user wants to zoom in on a specific area
+    /*!
+        This function will place the modelDefinition into the zoom window state which will
+        allow the user to draw a box around the area that they would like to zoom in on.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onZoomWindow(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user toggles the Show Block Name option in the View menubar.
+    /*!
+        This function will toggle the display of the block names by setting toggleing
+        the value in the modelDefinition class.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onBlockName(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to see any Open Boundaries
+    /*!
+        Although this says orphans, this function will cause the modelDefinition class
+        to select any nodes that are Open Boundaries. 
+        A node is considered an open boundary if there is only one line or one arc
+        connected to the node. This function is exeucted each time the user 
+        clicks on View->Show Open Boundaries
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onOrphans(wxCommandEvent &event);
+    
+    //! Event Procedure that is fired when the user would like to toggle the display of hte status bar
+    /*!
+        This functoin is executed each time the user clicks on View->Status Bar. The function
+        uses the state of the check mark in the menu bar to determine if there should be a 
+        status bar displayed. If the status bar is displayed, then there will be a check mark.
+        Otherwise, there will be no check mark.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly 
+    */ 
     void onStatusBar(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to bring up the Lua console
+    /*!
+        The lua console is an in-house lua editor that can execute lua functions.
+        This function will create and display the lua console for the user to utilize
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onLua(wxCommandEvent &event);
     
     /* This section is for the Problem Menu */
