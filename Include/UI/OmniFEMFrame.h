@@ -201,7 +201,7 @@ private:
     
     //! Variable that is used to indicate which state the UI is in.
     /*! 
-        This variable is used through the OmniFEMMainFrame class. 
+        This variable is used through out the OmniFEMMainFrame class. 
         The variable indicates what state the UI is in which will dictate what
         widgets are drawn on the frame and will dictate what widgets are 
         deleted on the frame when the user moves between UI states
@@ -339,16 +339,128 @@ private:
         \param event A required parameter for the event procedure to work properly
     */ 
     void onMirror(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to undo their last action
+    /*!
+        This function currently doesn't do anything. But this
+        function would undo the users last action. More
+        documentation will come as the function is coded more
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onUndo(wxCommandEvent &event);
+    
+    //! The event that is fired when the user needs to delete selected geometry
+    /*!
+        This event is fired each time the user clicks on Edit->Delete, on the 
+        delete icon, or when the delete key is pressed on the keyboard. This function will
+        delete any selected geometry and remove it from the list.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onDelete(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to move the geometry
+    /*!
+        This event is fired when the user clicks on Edit->Move or
+        clicks on the move icon in the toolbar. This function will
+        call the apprioate function in the modelDefinition object 
+        in order to move any selected geometry.This function
+        will create the move geometry dialog box which will give the 
+        user the option to move the geometry about a point or
+        to translate the geometry.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onMove(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to create a fillet
+    /*!
+        This event is fired when the user clicks on Edit->Create Fillet from
+        the toolbar. This fucntion will create a dialog box allowing the user to 
+        input their desired radius for the fillet. Once the user presses
+        ok, the function will call the apprioate function in the modelDefinition
+        class in order to create the fillet. If for any reason the program is unable
+        to create the fillet, then the UI will not be updated and the selected node(s)
+        will be uneffected.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+     */ 
     void onCreateRadius(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to create an open boundary
+    /*! 
+        This event is fired when the user clicks on Edit->Create Open Boundary 
+        in the toolbar. This function will create the Open Boundary dialog box
+        allowing the user to input the number of layers, the radius, and the
+        center position and the boundary type. Once selected, the program 
+        will create concentric circles with the correct number of layers, 
+        material block labels at the desired radius
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onCreateOpenBoundary(wxCommandEvent &event);
+    
+    //! This event is fired when the user needs to select a group of geometry
+    /*!
+        THis event is fired when the user clicks on Edit->Select Group from the toolbar
+        or when the user presses Ctrl+A. This function will create the select group dialog
+        allowing the user to select specific geometry groups (nodes/lines/arcs/block labels) 
+        or all of the geometry that corresponds to a particular group number
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onSelectGroup(wxCommandEvent &event);
+    
+    //! This event is fired when the user needs to edit the properties of any selected geometry
+    /*!
+        This event is fired when the user clicks on Edit->Edit Property, selects the 
+        Edit Property icon in the toolbar, or when the user presse the key combination Ctrl+E.
+        This function will bring up the apprioate dialog box to edit the property of
+        any selected geometry. If mixed geometry is selected, then the dialog box that appears
+        is for changing the group number
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onEditProperty(wxCommandEvent &event);
 	
 	/* This section is for the View Menu */
+    //! Event procedure that is fired when the user needs to zoom in on the model canvas
+    /*!
+        This event is fired when the user clicks on Edit->Zoom In on the menu or when
+        the user clicks on the zoom in icon in the toolbar. This will cause the canvas to zoom in
+        by a fixed amount
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onZoomIn(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to zoom out on the model canvas
+    /*!
+        This event is fired when the user clicks on Edit->Zoom Out on the menu or when
+        the user clicks on the zoom out icon in the toolbar. This will cause the canvas to zoom out
+        by a fixed amount
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onZoomOut(wxCommandEvent &event);
     void onZoomWindow(wxCommandEvent &event);
     void onBlockName(wxCommandEvent &event);
@@ -422,6 +534,18 @@ private:
     }
     
     void onGLCanvasMouseMove(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user press a key on the keyboard
+    /*!
+        Any keyboard bindings that are not on the toolbar can be found here. 
+        This event is fired each time that the user presses a button on the keyboard.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly. This will contain the 
+                     data for which key was pressed by the user
+    */ 
+    void onKeyDown(wxKeyEvent &event);
 
  	/*****************************
 	* Prototypes for client area *

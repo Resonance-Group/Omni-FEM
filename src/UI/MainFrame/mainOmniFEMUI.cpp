@@ -42,23 +42,23 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-    _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
+    _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo\tCtrl-Z");
     _menuEdit->Append(EditMenuID::ID_COPY, "&Copy\tCtrl-C");
-    _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
+    _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete\tDEL");
     _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
     _menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
     _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
     _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Fillet");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
-    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group");
-    _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property");
+    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group\tCtrl-A");
+    _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property\tCtrl-E");
     _menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
     _menuEdit->Append(EditMenuID::ID_LUA_RUN, "Run Lua Script");
 	
 	/* Creting the menu listing of the View Menu */
-    _menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
-    _menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
+    _menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In\tCtrl-+");
+    _menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out\tCtrl--");
     _menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
     _menuView->AppendSeparator();
     _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
@@ -480,6 +480,16 @@ void OmniFEMMainFrame::onGLCanvasMouseMove(wxCommandEvent &event)
     }
 }
 
+void OmniFEMMainFrame::onKeyDown(wxKeyEvent &event)
+{
+    wxChar keyPress = event.GetUnicodeKey();
+    if(keyPress == LETTER_A)
+    {
+        
+    }
+        
+}
+
 
 
 	/**************
@@ -556,6 +566,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
 	EVT_SIZE(OmniFEMMainFrame::onResize)
+    EVT_KEY_DOWN(OmniFEMMainFrame::onKeyDown)
 	
 	/************************
 	* Button Event Handling *
