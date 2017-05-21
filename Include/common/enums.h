@@ -23,6 +23,7 @@ enum menubarID
     ID_menubarSnapGrid,
     ID_menubarDispLuaConsole,
     ID_PROBLEM_PREFERNCES,
+    ID_SOLVE_PROBLEM
 };
 
 

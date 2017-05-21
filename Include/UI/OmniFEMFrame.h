@@ -272,6 +272,17 @@ private:
     */ 
 	void onOpenFile(wxCommandEvent &event);
     
+    //! Event procedure that is exeucted when the user needs to quite the program.
+    /*!
+        This function is executed when the user clicks on File->Quit.
+        This will exit out of the program and stop all processes.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
+    void OnExit(wxCommandEvent &event);
+    
     /* This section is for the Edit menu */
     
     //! Event procedure that is fired when the user needs to run a lua script
@@ -524,43 +535,268 @@ private:
     void onLua(wxCommandEvent &event);
     
     /* This section is for the Problem Menu */
+    
+    //! Event procedure that is fired when the user needs to change the problem preferences for the simulation
+    /*!
+        This function is exeucted when the user clicks on Problem->Problem Preferences.
+        This function will create the problem definition dialog box which will allow the user
+        to change any preferences related to the physics problem. This includes 
+        the problem type, lenght units, depth, solver precision, and min angle.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onProblemPreferences(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user is ready to solve the simulation
+    /*!
+        This function is exeucted when the user clicks on Problem->Solve or the solve icon in the toolbar.
+        This function is currently a work in progress. THis function will begin the dealII solver
+        to solve the physics problem.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
+    void onSolveProblem(wxCommandEvent &event)
+    {
+        return;
+    }
 	
     /* This section is for the Grid Menu */
+    
+    //! Event procedure that is fired each time the user clicks on Grid->Display Grid.
+    /*!
+        This function will set the display grid boolean to the value, located in the grid preferences object in the modelDefintion, of the display grid menubar option.
+        This option is a boolean meaning that if there is a check, then the program will display the grid 
+        since a check means true. Otherwise, the program will not display the grid.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onDispGrid(wxCommandEvent &event);
+    
+    //! Event procedure that is fired each time the user clicks on Grid->Snap Grid.
+    /*!
+        This function will set the snap grid boolean to the value, located in the grid preferences object in the modelDefintion, of the snap grid menubar option.
+        This option is a boolean meaning that if there is a check, then the program will snap any blcok labels or nodes (or selection windows or mirror lines) to the grid 
+        since a check means true. Otherwise, the program will not snap to the grid.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onSnapGrid(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to change any grid preferences.
+    /*!
+        This fucntion will create the Grid Preferences dialog which will allow the user to set grid preferences such
+        as displaying the grid, displaying the origin, displaying grid axis, etc. This function will get the current
+        values for the grid preferences and load these values into the dialog. If the user changes any of the values,
+        the program will save these new values into the modelDefintion class. For Show grid, Snap Grid, and Show Block Names,
+        the program will check/uncheck the apprioate menu bar option if the value has changed.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onSetGridPreferences(wxCommandEvent &event);
     
     /* Thos section is for the Properties Menu */
+    
+    //! Event procedure that is fired when the user needs to edit the material list
+    /*! 
+        This function is executed when the user clicks on Properties->Materials or presses
+        the key combination Ctrl+M. The function will bring up the Material Definition dialog
+        box allowing the user to edit the material list. If the user clicks on ok,
+        then the program will set the material list found in the problemDefinition object 
+        and update any geometry containing the material.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onMaterials(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to edit the boundary list
+    /*! 
+        This function is executed when the user clicks on Properties->Boundary Condition or presses
+        the key combination Ctrl+B. The function will bring up the Boundary Definition dialog
+        box allowing the user to edit the boundary list. If the user clicks on ok,
+        then the program will set the boundary list found in the problemDefinition object 
+        and update any geometry containing the boundary.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onBoundary(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to edit the nodal list
+    /*! 
+        This function is executed when the user clicks on Properties->Nodal Properties
+        The function will bring up the Nodal Definition dialog
+        box allowing the user to edit the nodal list. If the user clicks on ok,
+        then the program will set the nodal list found in the problemDefinition object 
+        and update any geometry containing the nodal.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onPointProperty(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to edit the conductor list
+    /*! 
+        This function is executed when the user clicks on Properties->Conductors
+        The function will bring up the Conductor Definition dialog
+        box allowing the user to edit the conductor list. If the user clicks on ok,
+        then the program will set the conductor list found in the problemDefinition object 
+        and update any geometry containing the conductor.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */
     void onCircuitsConductor(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to edit the exterior region
+    /*! 
+        This function is executed when the user clicks on Properties->Exterior Region.
+        The function will bring up the Exterior Region dialog
+        box allowing the user to edit the exterior region. Please
+        note that by default, this option is greyed out and will
+        only be avaiable if the probem type is set to Axisymmetric.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */
     void onExteriorRegion(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user needs to access the material library.
+    /*!
+        This function is executed when the user clicks on Properties->Material Library 
+        or pressing the key combination Ctrl+L. This function will bring up the Material
+        Library dialog and will display all of the materials within the library and what is 
+        currently being using in the simulation. The dialog will allow the user to add in new materials
+        into the library from the simulation material listing or to edit any material.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onMatLibrary(wxCommandEvent &event);
     
 	/* This section is for the Mesh menu */
+    
+    //! Event procedure that is fired when the user is ready to create the mesh from the geometry
+    /*! 
+        This function is executed each time the user clicks on Mesh->Create Mesh or 
+        when the user clicks on the create mesh icon in the toolbar.
+        Currently, this is being worked on and additional documentation 
+        will come when things are rady
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
 	void onCreateMesh(wxCommandEvent &event);
+    
+    //! Event procedure that is fired when the user would like to display the mesh with the geometry on the canvas
+    /*!
+        This function is executed each time the user clicks on Mesh->Create Mesh.
+        The idea behind this function is that this function will toggle the displaying of the mesh
+        on the canvas. This display will go alongside that of the geometry.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
 	void onShowMesh(wxCommandEvent &event);
+    
+    //! Event proceudre that is fired when the user needs to delete the mesh
+    /*!
+        This function is executed when the user clicks on Mesh->Delete Mesh.
+        This will delete the mesh from memory.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
 	void onDeleteMesh(wxCommandEvent &event);
     
     /* This section is for the Analysis menu */
+    
+    //! Event procedure that is executed each time the user needs to view something
+    /*!
+        This function is exeucted each time the user clicks on Analysis->Analyze.
+        This is currently being worked on any will be updated later
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onAnalyze(wxCommandEvent &event);
+    
+    //! Event procedure that is executed each time the user needs to view the results of the simulation
+    /*!
+        This function is exeucted each time the user clicks on Analysis->View Results or clicks on the view results icon in the toolbar.
+        This will create a new frame allowing the user to view the results of the simulation
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onViewResults(wxCommandEvent &event);
     
-	//! Event called to view the manual
+    /* This section is for the Help menu option */
+    
+	//! Event Procedure that is fired when the user needs to view the manual
+    /*!
+        This event is fired each time the user clicks on Help->View Manual.
+        This function will bring up the website (or open the pdf file) of the manual
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onManual(wxCommandEvent &event);
 	
-	//! Event called to view the manual
+	//! Event procedure that is fired when the user needs to see the license associated with the simulator
+    /*!
+        This function is executed each time the user clicks on Help->View License.
+        This will bring up a copy of the GNU public v3 license that is used for the program to be
+        open source.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onLicense(wxCommandEvent &event);
 	
-	//! Event called to view the manual
+	//! Event procedure that is fired when the user needs to see what verison the simualtor is currently at.
+    /*!
+        This function is executed each time the user clicks on Help->About. This will bring 
+        up the about dialog which will provide some general information about the simulator such as
+        author contact information, current version, and copyright infomation and any acknowlegements
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void OnAbout(wxCommandEvent &event);
     
-	//! Event called to view the manual
-    void OnExit(wxCommandEvent &event);
-    
+	
     //! Event that is called when the user wants to toggle between node and block label creation
+    /*!
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onToggleNodeCreation(wxCommandEvent &event)
     {
         if(_UIState == systemState::MODEL_DEFINING)
@@ -570,6 +806,12 @@ private:
     }
     
     //! Event that is called when the user wants to toggle between line and arc label creation
+    /*!
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly
+    */ 
     void onToggleLineCreation(wxCommandEvent &event)
     {
         if(_UIState == systemState::MODEL_DEFINING)
@@ -578,16 +820,16 @@ private:
         }
     }
     
-    void onSolveProblem(wxCommandEvent &event)
-    {
-        return;
-    }
-	
-    void onDisplayResults(wxCommandEvent &event)
-    {
-        return;
-    }
     
+    
+    //! Event procedure that is fired when the user moves the mouse pointer across the canvas screen
+    /*!
+        This function will simply update the status bar with the current coordinate position of the mouse
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly.
+    */ 
     void onGLCanvasMouseMove(wxCommandEvent &event);
     
     //! Event procedure that is fired when the user press a key on the keyboard

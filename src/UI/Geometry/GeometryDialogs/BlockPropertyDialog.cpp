@@ -18,6 +18,12 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
+    wxFloatingPointValidator<double> numberValidator(6);
+    numberValidator.SetMin(0);
+    
+    wxIntegerValidator<unsigned int> groupValidator;
+    groupValidator.SetMin(0);
+    
     _problem = physicProblems::PROB_MAGNETICS;
     
     _magneticMaterialList = material;

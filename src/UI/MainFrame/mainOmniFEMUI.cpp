@@ -70,6 +70,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
     
     /* Create the menu listing for the problem menu option */
+    _menuProblem->Append(menubarID::ID_SOLVE_PROBLEM, "Solve");
     _menuProblem->Append(menubarID::ID_PROBLEM_PREFERNCES, "Problem Preferences");
     
     /* Create the menu listing for the grid menu option */
@@ -535,6 +536,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     
     /* This section is for the Problem menu */
     EVT_MENU(menubarID::ID_PROBLEM_PREFERNCES, OmniFEMMainFrame::onProblemPreferences)
+    EVT_MENU(menubarID::ID_SOLVE_PROBLEM, OmniFEMMainFrame::onSolveProblem)
 	
     /* This section is for the Grid menu */
     EVT_MENU(GridMenuID::ID_SHOW_GRID, OmniFEMMainFrame::onDispGrid)
@@ -597,7 +599,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_TOOL(ToolBarID::ID_TOGGLE_LINE, OmniFEMMainFrame::onToggleLineCreation)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_CREATE_MESH, OmniFEMMainFrame::onCreateMesh)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_SOLVE, OmniFEMMainFrame::onSolveProblem)
-    EVT_TOOL(ToolBarID::ID_TOOLBAR_VIEW_RESULTS, OmniFEMMainFrame::onDisplayResults)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_VIEW_RESULTS, OmniFEMMainFrame::onViewResults)
 	
 	/********
 	* Other *

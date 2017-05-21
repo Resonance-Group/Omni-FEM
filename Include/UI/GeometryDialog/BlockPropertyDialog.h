@@ -12,6 +12,7 @@
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
 #include <wx/arrstr.h>
+#include <wx/valnum.h>
 
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
