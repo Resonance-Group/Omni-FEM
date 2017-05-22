@@ -34,6 +34,8 @@ private:
 
     wxComboBox *_materialComboBox = new wxComboBox();
     
+    wxComboBox *_meshSizeComboBox = new wxComboBox();
+    
     wxCheckBox *_autoMeshCheckBox = new wxCheckBox();
     
     wxTextCtrl *_meshSizeTextCtrl = new wxTextCtrl();
@@ -51,6 +53,12 @@ private:
     wxCheckBox *_defaultCheckBox = new wxCheckBox();
     
     void onCheckAutoMesh(wxCommandEvent &event);
+    
+    void onTextEdit(wxCommandEvent &event);
+    
+    void onComboBoxSelection(wxCommandEvent &event);
+    
+    void setMeshSizeTextCtrl(meshSize meshType);
     
 public:
     //! This is the constructor for the block label if the problem is magnetics

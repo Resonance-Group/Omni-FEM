@@ -14,6 +14,8 @@ class blockProperty
 private:
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
     
+    meshSize _meshSizeType = meshSize::MESH_NORMAL;
+    
     std::string _materialName = "None";
     
     std::string _circuitName = "None";
@@ -41,6 +43,16 @@ public:
     physicProblems getPhysicsProblem()
     {
         return _problem;
+    }
+    
+    void setMeshSizeType(meshSize type)
+    {
+        _meshSizeType = type;
+    }
+    
+    meshSize getMeshsizeType()
+    {
+        return _meshSizeType;
     }
     
     void setMaterialName(std::string name)

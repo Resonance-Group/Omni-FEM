@@ -2,6 +2,21 @@
 #define ENUMS_H_
 
 
+enum meshSize
+{
+    MESH_NONE,
+    MESH_EXTREMELY_FINE,
+    MESH_EXTRA_FINE,
+    MESH_FINER,
+    MESH_FINE,
+    MESH_NORMAL,
+    MESH_COARSE,
+    MESH_COARSER,
+    MESH_EXTRA_COARSE,
+    MESH_EXTREMELY_COARSE,
+    MESH_CUSTOM
+};
+
 
 //! Enum for the menus of the menu bar
 enum menubarID
