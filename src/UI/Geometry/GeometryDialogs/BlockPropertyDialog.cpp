@@ -93,8 +93,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     _meshSizeTextCtrl->SetFont(*font);
     _meshSizeTextCtrl->Enable(!property.getAutoMeshState());
     std::ostream meshSizeStream(_meshSizeTextCtrl);
-    meshSizeStream << fixed << std::setprecision(6);
-    meshSizeStream << property.getMeshSize();
+    meshSizeStream << std::fixed << std::setprecision(6) << property.getMeshSize();
     
     line3Sizer->Add(meshText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
     line3Sizer->Add(75, 0, 0);
@@ -288,8 +287,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     _meshSizeTextCtrl->SetFont(*font);
     _meshSizeTextCtrl->Enable(!property.getAutoMeshState());
     std::ostream meshSizeStream(_meshSizeTextCtrl);
-    meshSizeStream << std::setprecision(4);
-    meshSizeStream << property.getMeshSize();
+    meshSizeStream << std::fixed << std::setprecision(4) << property.getMeshSize();
     
     line3Sizer->Add(meshText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
     line3Sizer->Add(75, 0, 0);
@@ -415,8 +413,7 @@ void blockPropertyDialog::onTextEdit(wxCommandEvent &event)
     _meshSizeTextCtrl->GetValue().ToDouble(&value);
     _meshSizeTextCtrl->SetValue(wxEmptyString);
     std::ostream meshSizeStream(_meshSizeTextCtrl);
-    meshSizeStream << fixed << std::setprecision(4);
-    meshSizeStream << value;
+    meshSizeStream << fixed << std::setprecision(4) << value;
     
     _meshSizeComboBox->SetSelection(9);
 }

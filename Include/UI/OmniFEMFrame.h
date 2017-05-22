@@ -849,16 +849,31 @@ private:
 	******************************/   
 	
 	//! Function that is called to create the initial client area
+    /*!
+        This function is only called on start-up and is the
+        first screen that the user sees
+    */ 
 	void createInitialStartupClient();
 	
-	
 	//! This function is called when the user is ready to choose their physics simulation
+    /*!
+        This function is called when the user presses on new on the startup screen
+        or when the user is ready for a new simulation by clicking on File->New.
+        For this function to work properly, the frame must be cleared of any items
+        from the previouse state and then it will draw the approiate items 
+        on the screen.
+        The user is able to choose the different physics simulations that they need to perform
+        from the menu. After choosing, the function will call the createModelDefinitingClient
+        in order to allow the user to begin creating their geometry
+    */ 
 	void createProblemChoosingClient();
 	
 	
 	//! This function is called to create the client for defining the physics problem
 	/*
-		Defining would be creating the geometry, creating the mesh, determining boundary conditions, etc.
+		This function is called when the user is ready to create the model for the simulation.
+        This function will draw the toolbar and the canvas for the user to use. It will
+        also enable the menu bar for the user to click on.
 	*/
 	void createModelDefiningClient();
 	
@@ -875,15 +890,41 @@ private:
 	**************************/
 	
 	//! Function called that will create the toolbar for the main frame
+    /*!
+        This function is executed when the createModelDefiningClient function
+        is executed
+        \sa createModelDefinitingClient()
+    */ 
 	void createTopToolBar();
 	
     /*************************
 	* Prototypes for buttons *
 	**************************/
 	
-	//! Function called when the back button is pressed 
+	//! Function called when the back button is pressed
+    /*!
+        This function is exectured when the user is on the problem selection client
+        where the two buttons are back or finish. When user clicks on the back button,
+        this function is executed. The function does not use any of the parameters
+        in the wxCommandEvent object but this is required for proper routing of the event.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly.
+    */ 
 	void onBackButton(wxCommandEvent &event);
 	
+    //! Function that is called when the finish button is preseed
+    /*!
+        This function is exectured when the user is on the problem selection client
+        where the two buttons are back or finish. When user clicks on the finish button,
+        this function is executed. The function does not use any of the parameters
+        in the wxCommandEvent object but this is required for proper routing of the event.
+        For additional documentation on the wxCommandEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.0/classwx_command_event.html
+        \param event A required parameter for the event procedure to work properly.
+    */ 
 	void onFinishButton(wxCommandEvent &event);
 	
     /********************
@@ -891,23 +932,29 @@ private:
 	*********************/	
 	
 	//! Event called when a resize event occurs
+    /*!
+        A resize event occurs whenever the user expands or collaspes the
+        main frame. This event will also calculate the size needed for 
+        the canvas to stay in within propotion to the client area of
+        the frame. 
+        For additional documentation on the wxSizeEvent object, refer
+        to the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_size_event.html
+        \param event A required parameter for the event procedure to work properly. In this function, the object is not used
+    */ 
 	void onResize(wxSizeEvent &event);	
 	
-	//! This is a function that will be for the initial state of Omni-FEM. With items on the toolbar greyed out and menus not accessible
+	//! This fucntion will enable/disable the menubar
+    /*!
+        This fucntion is called on the start up in order to disable the menubar. 
+        The menu bar is enabled when the state of the UI is in the model defining
+        state. Otherwise, the menubar is alwasy disabled
+        \param enable Boolean to enable or disable the menu bar. True means the menu bar is enable. False for disable
+    */ 
 	void enableToolMenuBar(bool enable);
-
+    
+    //! Fucntion that is needed in order to tell the wx library that this class has event procedures
     wxDECLARE_EVENT_TABLE();
 };
-
-
-
-
-
-
-
-
-
-
-
 
 #endif /* OMNIFEM_H_ */
