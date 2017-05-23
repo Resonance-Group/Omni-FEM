@@ -1,46 +1,45 @@
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
-
+//! Enum used to designate the mesh size
+/*!
+    This enum is used mainly to indicate what mesh size
+    the user would like to apply to a particular area 
+    The enum ranges from extremely fine to extremely coarse.
+    There is also an option for a custom mesh size
+*/ 
 enum meshSize
 {
-    MESH_NONE,
-    MESH_EXTREMELY_FINE,
-    MESH_EXTRA_FINE,
-    MESH_FINER,
-    MESH_FINE,
-    MESH_NORMAL,
-    MESH_COARSE,
-    MESH_COARSER,
-    MESH_EXTRA_COARSE,
-    MESH_EXTREMELY_COARSE,
-    MESH_CUSTOM
+    MESH_NONE,/*!< Value to indicate that there is no mesh size for the designated area */
+    MESH_EXTREMELY_FINE,/*!< Values to indicate that the mesh needs to contain the smallest element size possible */
+    MESH_EXTRA_FINE,/*!< Values to indicate that the mesh needs to contain very small element sizes */
+    MESH_FINER,/*!< Value to indicate that the mesh needes to contain small element sizes */
+    MESH_FINE,/*!< Value to indicate that the mesh needs to contain mesh sizes that are a little bit smaller then the default */ 
+    MESH_NORMAL,/*!< Value used to indicate that the mesh needs to contain the default element size */
+    MESH_COARSE,/*!< Value used to indicate that the mesh needs to contain elements that are a little bit bigger then the default element size */
+    MESH_COARSER,/*!< Value used to indicate that the mesh neeeds to contain large element sizes */
+    MESH_EXTRA_COARSE,/*!< Value used to indicate that the mesh needs to contain very large element sizes */
+    MESH_EXTREMELY_COARSE,/*!< Value used to indicate that the mesh needs to contain the largest possible element size */
+    MESH_CUSTOM /*!< Value used to indicate that the user is manually inputting the element size */
 };
 
 
-//! Enum for the menus of the menu bar
-enum menubarID
+
+
+//! Enum used in the event table to disgiunish the event as a file menu event
+/*!
+    This enum is used to indicate that the event came from the file
+    menu. This will also allow propery routing for the event to
+    call the correct function
+*/ 
+enum FileMenuID
 {
-    ID_menubarNew,
-    ID_menubarSave,
-    ID_menubarSaveAs,
-    ID_menubarPreferences,
-    ID_menubarManual,
-    ID_menubarLicense,
-	ID_menubarViewResults,
-	ID_menubarCreateMesh,
-	ID_menubarShowMesh,
-	ID_menubarDeleteMesh,
-	ID_menubarPrecision,
-	ID_menubarOpen,
-	ID_menubarLUASCRIPT,
-    ID_menubarShowGrid,
-    ID_menubarSnapGrid,
-    ID_menubarDispLuaConsole,
-    ID_PROBLEM_PREFERNCES,
-    ID_SOLVE_PROBLEM
+    ID_NO_FILE_ID,/*!< Default value for the enum */
+    ID_FILE_NEW,/*!< Value used to indicate that the event is a file new event */
+    ID_SAVE,/*!< Value used to indicate that the event is a save event */
+    ID_SAVE_AS,/*!< Value used to indicate that the event is a save as event */
+    ID_OPEN/*!< Value used to indicate that the event is a open event */
 };
-
 
 enum EditMenuID
 {
@@ -134,6 +133,26 @@ enum ToolBarID
 	ID_TOOLBAR_CREATE_MESH,
     ID_TOOLBAR_SOLVE,
     ID_TOOLBAR_VIEW_RESULTS
+};
+
+//! Enum for the menus of the menu bar
+/*!
+ * This is a general purpose enum
+ * used for during the menu bar creation.
+ * This enum is primaryly used 
+ * for event proceuder routing. Normally,
+ * these would go in their own enum. But since
+ * there would be 2 additional enums with 2 items 
+ * inside, it is more convient to place these in one
+ * larger enum.
+ */ 
+enum menubarID
+{
+    ID_NO_ID = 800, /*!< Defuault value for this eneum */
+    ID_MANUAL, /*!< Value used to indicate that the user sent a manual event */
+    ID_LICENSE, /*!< Value used to indicate that the user sent a license event */
+    ID_PROBLEM_PREFERNCES,/*!< Value used to indicate that the user sent a problem preferences event */
+    ID_SOLVE_PROBLEM/*!< Value used to indicate that the event is a solve problem event */
 };
 
 

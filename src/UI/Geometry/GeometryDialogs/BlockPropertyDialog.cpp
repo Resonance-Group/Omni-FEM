@@ -32,6 +32,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     
     wxArrayString *materialNameList = new wxArrayString();
     materialNameList->Add("None");
+    materialNameList->Add("No Mesh");
     
     wxArrayString *circuitNameList = new wxArrayString();
     circuitNameList->Add("None");
@@ -234,6 +235,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     
     wxArrayString *materialNameList = new wxArrayString();
     materialNameList->Add("None");
+    materialNameList->Add("No Mesh");
     
     wxArrayString meshSettingArray;
     meshSettingArray.Add("Extremely Fine");
