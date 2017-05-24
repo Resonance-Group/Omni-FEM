@@ -23,9 +23,6 @@ enum meshSize
     MESH_CUSTOM /*!< Value used to indicate that the user is manually inputting the element size */
 };
 
-
-
-
 //! Enum used in the event table to disgiunish the event as a file menu event
 /*!
     This enum is used to indicate that the event came from the file
@@ -41,21 +38,27 @@ enum FileMenuID
     ID_OPEN/*!< Value used to indicate that the event is a open event */
 };
 
+
+//! Enum used in the event table to disguish that the event came from the edit menu
+/*!
+    This enum is used to indicate that the event came from the edit menu. This will
+    allow the event table to properly route the event to the correct function
+*/ 
 enum EditMenuID
 {
-    NO_EDIT_ID = 100,
-    ID_UNDO,
-    ID_COPY,
-    ID_DELETE,
-    ID_MOVE,
-    ID_SCALE,
-    ID_MIRROR,
-    ID_CREATE_RADIUS,
-    ID_CREATE_OPEN_BOUNDARY,
-    ID_PREFERENCES, 
-    ID_SELECT_GROUP,
-    ID_EDIT_PROPERTY,
-    ID_LUA_RUN
+    NO_EDIT_ID = 100, /*!< Default value for the enum */
+    ID_UNDO,/*!< Value used to indicate that the event is an undo event */
+    ID_COPY,/*!< Value used to indicate that the event is a copy event*/
+    ID_DELETE,/*!< Value used to indicate that the event is a delete event */
+    ID_MOVE,/*!< Value used to indicate that the event is a move event */
+    ID_SCALE,/*!< Value used to indicate that the event is a scale event */
+    ID_MIRROR,/*!< Value used to indicate that the event is a mirror event */
+    ID_CREATE_RADIUS,/*!< Value used to indicate that the event is a fillet event */
+    ID_CREATE_OPEN_BOUNDARY,/*!< Value used to indicate that the event is to create an open boundary */
+    ID_PREFERENCES, /*!< Valus used to indicate that the event is a global preferences event */
+    ID_SELECT_GROUP,/*!< Value used to indicate that the event is a select group event */
+    ID_EDIT_PROPERTY,/*!< Value used to indicate that the event is a edit property event */
+    ID_LUA_RUN /*!< Value used to indicate that the event is a LUA run event */
 };
 
 
