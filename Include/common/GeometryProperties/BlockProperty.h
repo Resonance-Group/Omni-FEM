@@ -99,12 +99,31 @@ private:
         z - denotes the z position of the center of the block label. ONly use if the problem is
             and axisymmetric problem
     */ 
-    wxString _magnetization = 0;
+    wxString _magnetization;
     
+    //! The group that the block label will belong to
+    /*!
+        This number allows the user to specify a group that
+        the label belongs to. This will allow the user to select and
+        edit all of the block labels (or geometry shapes) belonging to the
+        specific group.
+    */ 
     unsigned int _groupNumber = 0;
     
+    //! Boolean that states if the block label is within an external region
+    /*!
+        This variable is only used when the problem type is axisymetric
+    */ 
     bool _isExternalRegion = false;
     
+    //! Boolean used to specify if the block label is the default label
+    /*!
+        If this is set to true, then all newly created block labels will take on
+        the properties of the block label that is set as default. There can 
+        only be one block label seelcted as default at a time. If any block label
+        is selected as default, the program will check if there are any existing labels 
+        set as default and if so, deselect them
+    */ 
     bool _isDefault = false;
     
 public:
@@ -128,6 +147,7 @@ public:
     
     //! Sets the name of the block label
     /*!
+        \sa _materialName
         \param name The name that the block label will be. This name will be displayed on the canvas if the user wants it
     */ 
     void setMaterialName(std::string name)
@@ -137,6 +157,7 @@ public:
     
     //! Gets the name of the block label
     /*!
+        \sa _materialName
         \return Returns the name to the block label
     */ 
     std::string getMaterialName()
@@ -147,6 +168,7 @@ public:
     //! Sets the circuit name of the block label
     /*!
         This only applies to magnetic simulations.
+        \sa _circuitName
         \param name The name of the circuit that the block label belongs to. 
                     This name will be displayed on the canvas if the user needs to
     */ 
@@ -158,6 +180,7 @@ public:
     //! Gets the circuit name of the block label
     /*!
         This only applies to magnetic simulations
+        \sa _circuitName
         \return Returns the name of the circuit
     */ 
     std::string getCircuitName()
@@ -167,6 +190,7 @@ public:
     
     //! Sets the state of the auto mesh
     /*!
+        \sa _meshSizeIsAuto
         \param state Boolean that states whether or not the mesh size should be
                      automatically caluclated. True for auto on, False for
                      auto off
@@ -178,6 +202,7 @@ public:
     
     //! Gets the state of the auto mesh variable
     /*!
+        \sa _meshSizeIsAuto
         \return Returns True if the user selected for the mesher to automatically set
                         the mesh size. False otherwise
     */ 
@@ -189,6 +214,7 @@ public:
     // TODO: needs a better commenting
     //! Sets the mesh size of the elements.
     /*!
+        \sa _meshSize
         \param size The size that the elements should be equal to
                     in the mesher
     */ 
@@ -200,6 +226,7 @@ public:
     // TODO: needs a better commenting
     //! Gets the mesh size of the elements
     /*!
+        \sa _meshSize
         \return Returns the mesh size that the user set to the 
                 the block label
     */ 
@@ -211,6 +238,7 @@ public:
     //! Sets the number of turns on the block label
     /*!
         This only applies to magnetic simulations
+        \sa _numberOfTurns
         \param turnCount The number of turns that the wire is wrapped around the section 
                         that belongs to the block label
     */ 
@@ -222,6 +250,7 @@ public:
     //! Returns the number of turns belonging to the label
     /*!
         This only applies to magnetic simulations
+        \sa _numberOfTurns
         \return Returns the number of turns that belong to the block label
     */ 
     double getNumberOfTurns()
@@ -248,7 +277,7 @@ public:
     /*!
         This function only pertains to magnetic simulations.
         \sa _magnetization
-        \return Returns the string of the magnetization direction
+        \return Returns the string of the magnetization direction. Can be a number or a fucntion
     */ 
     wxString getMagnetization()
     {
@@ -257,6 +286,7 @@ public:
     
     //! Sets the group number that the block label belongs to
     /*!
+        \sa _groupNumber
         \param number The group number that the block label will belong to
     */ 
     void setGroupNumber(unsigned int number)
@@ -266,6 +296,7 @@ public:
     
     //! Returns the group number that the block label belongs to
     /*!
+        \sa _groupNumber
         \return Returns the group number that the block label belongs to
     */ 
     unsigned int getGroupNumber()
@@ -273,11 +304,21 @@ public:
         return _groupNumber;
     }
     
+    //! Sets the external region state
+    /*!
+        \sa _isExternalRegion
+        \param state If the block label is in an external region, set to True. Otherwise set to False
+    */ 
     void setIsExternalState(bool state)
     {
         _isExternalRegion = state;
     }
     
+    //! Returns the state of the is external region boolean
+    /*!
+        \sa _isExternalRegion
+        \return Returns true if the user selected the block label as in external region. Otherwise false.
+    */ 
     bool getIsExternalState()
     {
         return _isExternalRegion;
@@ -285,6 +326,7 @@ public:
     
     //! Sets if the block label is the default label or not
     /*!
+        \sa _isDefault
         \param state Boolean that specifies if the block label is default (T) or
                     not the default (F)
     */ 
@@ -295,6 +337,7 @@ public:
     
     //! Returns if the block label is default
     /*!
+        \sa _isDefault
         \return Returns True if the block label is default. Otherwise, returns False.
     */ 
     bool getDefaultState()
