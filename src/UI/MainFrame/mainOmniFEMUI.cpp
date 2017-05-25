@@ -304,7 +304,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 
 void OmniFEMMainFrame::createTopToolBar()
 {
-    wxInitAllImageHandlers();
+//    wxInitAllImageHandlers();
     
     wxStandardPaths path = wxStandardPaths::Get();
 	wxImage::AddHandler(new wxPNGHandler);

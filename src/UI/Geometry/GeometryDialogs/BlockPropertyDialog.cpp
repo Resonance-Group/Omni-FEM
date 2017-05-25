@@ -362,13 +362,6 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
     double value;
     long value2;
     
-    if(_problem == physicProblems::PROB_ELECTROSTATIC)
-    {
-        property.setPhysicsProblem(physicProblems::PROB_ELECTROSTATIC);
-    }
-    else
-        property.setPhysicsProblem(physicProblems::PROB_MAGNETICS);
-    
     property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()));
     
     property.setAutoMeshState(_autoMeshCheckBox->GetValue());
