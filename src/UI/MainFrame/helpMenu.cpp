@@ -10,12 +10,11 @@ void OmniFEMMainFrame::OnAbout(wxCommandEvent &event)
 	
 	wxArrayString developers;
 	developers.Add("Phillip Mobley <phillipmobley@resonancegroupusa.com>");
-	developers.Add("Jackson Carvalho <toledo.lccc@gmail.com>");
 	
 	info.SetName("Omni-FEM");
 	info.SetVersion("Pre-Alpha");
-	info.SetDescription("An Open source Finite Element Simulator");
-	info.SetCopyright("	(C) 2016 Phillip Mobley <phillipmobley@resonancegroupusa.com\r\n"
+	info.SetDescription("An Open Source Finite Element Simulator");
+	info.SetCopyright("	(C) 2017 Phillip Mobley <phillipmobley@resonancegroupusa.com\r\n"
 						"(C) 2016 SCASE	<scase@eng.utoledo.edu>");
 	info.SetDevelopers(developers);
 	

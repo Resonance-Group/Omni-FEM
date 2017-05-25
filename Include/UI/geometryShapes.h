@@ -2,23 +2,19 @@
 #define GEOMETRY_SHAPES_H_
 
 #include <math.h>
-#include <vector>
 
 #include <glew.h>
 #include <freeglut.h>
 
 #include <wx/wx.h>
-#include <wx/glcanvas.h>
+
+#include <common/Vector.h>
 
 #include <common/GeometryProperties/BlockProperty.h>
 #include <common/GeometryProperties/NodeSettings.h>
 #include <common/GeometryProperties/SegmentProperties.h>
 
 #include <UI/ModelDefinition/OGLFT.h>
-
-#include <common/Vector.h>
-
-//#include <UI/openGLGeometry.h>
 
 /*! \class geometry2D
 	\brief This is the base class for all of the geometry classes
@@ -200,14 +196,16 @@ public:
 	//! This function will draw the shape
 	void draw()
     {
+        glPointSize(6.0);
+        
+        
+    
+        glBegin(GL_POINTS);
         if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 0.0);
-    
-        glPointSize(6.0);
-    
-        glBegin(GL_POINTS);
+            
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
     
@@ -217,6 +215,8 @@ public:
         glBegin(GL_POINTS);
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
+        
+        glColor3d(0.0, 0.0, 0.0);
     }
     
     void setNodeSettings(nodeSetting setting)
@@ -344,14 +344,15 @@ public:
     {
         double offset = 0.02 * factor;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset + 0.01, _property.getMaterialName().c_str());
+        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset, _property.getMaterialName().c_str());
     }
     
     void drawCircuitName(OGLFT::Grayscale *textRender, double factor)
     {
         double offset = 0.02 * factor;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset - 0.01, _property.getCircuitName().c_str());
+        if(_property.getCircuitName() != "None")
+            textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset, _property.getCircuitName().c_str());
     }
 	
     blockProperty *getProperty()
@@ -497,7 +498,10 @@ public:
         
         slope = (_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate());
         
-        a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0)); // This is just an intermediate varable to make calculations easier
+        a = sqrt(pow(_radius, 2) - (distanceSquared / 4.0));
+        
+        if(std::isnan(a))// This will account for the case if the mid point is directly ontop of the center point
+            a = 0;
         
         // We need two cases here. One for if the line between the first and second node has a slope of 0 and the other case being if the line is vertical
         if(slope >= 0 && slope <= 1e-9)
@@ -568,14 +572,20 @@ public:
                 // This will calculate the center that is above the arc.
                 // If the start node is lower then the end node, the logic is reversed. This portion will create
                 // the center above the arc.
+
                 xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+
+
+                
             }
             else
             {
                 // This will calculate the center below the arc
+                
                 xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+
             }
         }
         else if(slope < 0)
@@ -585,12 +595,14 @@ public:
                 // This will calculate the center that is above the arc.
                 // If the start node is lower then the end node, the logic is reversed. This portion will create
                 // the center above the arc.
+                
                 xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
             }
             else
             {
                 // This will calculate the center below the arc
+                
                 xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
             }

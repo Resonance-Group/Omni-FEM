@@ -12,6 +12,7 @@
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
 #include <wx/arrstr.h>
+#include <wx/valnum.h>
 
 #include <common/ElectroStaticMaterial.h>
 #include <common/MagneticMaterial.h>
@@ -33,6 +34,8 @@ private:
 
     wxComboBox *_materialComboBox = new wxComboBox();
     
+    wxComboBox *_meshSizeComboBox = new wxComboBox();
+    
     wxCheckBox *_autoMeshCheckBox = new wxCheckBox();
     
     wxTextCtrl *_meshSizeTextCtrl = new wxTextCtrl();
@@ -50,6 +53,12 @@ private:
     wxCheckBox *_defaultCheckBox = new wxCheckBox();
     
     void onCheckAutoMesh(wxCommandEvent &event);
+    
+    void onTextEdit(wxCommandEvent &event);
+    
+    void onComboBoxSelection(wxCommandEvent &event);
+    
+    void setMeshSizeTextCtrl(meshSize meshType);
     
 public:
     //! This is the constructor for the block label if the problem is magnetics

@@ -1,5 +1,6 @@
 #include "UI/OmniFEMFrame.h"
 
+wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
 /***************
  * Constructor *
@@ -30,30 +31,34 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuBar->Append(_menuHelp, "&Help");
     
     /* Creating the menu listing of File menu */
-    _menuFile->Append(menubarID::ID_menubarNew, "&New\tCtrl-N");
-    _menuFile->Append(menubarID::ID_menubarSave, "&Save\tCtrl-S");
-    _menuFile->Append(menubarID::ID_menubarSaveAs, "&Save As");
-	_menuFile->Append(menubarID::ID_menubarOpen, "&Open");
+    _menuFile->Append(FileMenuID::ID_FILE_NEW, "&New\tCtrl-N");
+    // So the nice thing about wxWidgets is that you only need to place the \t and keyboard combination
+    // in order to route the keyboard press to the apprioate event procedure which happens to be
+    // on the menu
+    _menuFile->Append(FileMenuID::ID_SAVE, "&Save\tCtrl-S");
+    _menuFile->Append(FileMenuID::ID_SAVE_AS, "&Save As");
+	_menuFile->Append(FileMenuID::ID_OPEN, "&Open");
     _menuFile->AppendSeparator();
     _menuFile->Append(wxID_EXIT);
     
     /* Creating the menu listinging of the Edit Menu */
-    _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo");
+    _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo\tCtrl-Z");
     _menuEdit->Append(EditMenuID::ID_COPY, "&Copy\tCtrl-C");
-    _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete");
+    _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete\tDEL");
     _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
     _menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
     _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
     _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Fillet");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
-    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group");
-    _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property");
+    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group\tCtrl-A");
+    _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property\tCtrl-E");
     _menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
+    _menuEdit->Append(EditMenuID::ID_LUA_RUN, "Run Lua Script");
 	
 	/* Creting the menu listing of the View Menu */
-    _menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In");
-    _menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out");
+    _menuView->Append(ViewMenuID::ID_ZOOM_IN, "&Zoom In\tCtrl-+");
+    _menuView->Append(ViewMenuID::ID_ZOOM_OUT, "&Zoom Out\tCtrl--");
     _menuView->Append(ViewMenuID::ID_ZOOM_WINDOW, "&Zoom Window");
     _menuView->AppendSeparator();
     _menuView->AppendCheckItem(ViewMenuID::ID_SHOW_BLOCK_NAMES, "&Show Block Name");
@@ -65,6 +70,7 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuView->Append(ViewMenuID::ID_LUA_CONSOLE, "&Lua Console");
     
     /* Create the menu listing for the problem menu option */
+    _menuProblem->Append(menubarID::ID_SOLVE_PROBLEM, "Solve");
     _menuProblem->Append(menubarID::ID_PROBLEM_PREFERNCES, "Problem Preferences");
     
     /* Create the menu listing for the grid menu option */
@@ -83,18 +89,18 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuProperties->Append(PropertiesMenuID::ID_MATERIAL_LIBRARY, "&Materials Library\tCtrl-L");
     
 	/* Create the menu listing for the mesh menu */
-	_menuMesh->Append(menubarID::ID_menubarCreateMesh, "&Create Mesh");
-	_menuMesh->Append(menubarID::ID_menubarShowMesh, "&Show Mesh");
-	_menuMesh->Append(menubarID::ID_menubarDeleteMesh, "&Delete Mesh");
+	_menuMesh->Append(MeshMenuID::ID_CREATE_MESH, "&Create Mesh");
+	_menuMesh->Append(MeshMenuID::ID_SHOW_MESH, "&Show Mesh");
+	_menuMesh->Append(MeshMenuID::ID_DELETE_MESH, "&Delete Mesh");
     
     /* Creating the listinf of the Analysis menu */
     _analysisMenu->Append(AnalysisMenuID::ID_ANALYZE, "Analyze");
     _analysisMenu->Append(AnalysisMenuID::ID_VIEW_RESULTS, "View Results");
     
     /* Creates the menu listing of the help menu */
-    _menuHelp->Append(menubarID::ID_menubarManual, "View Manual");
+    _menuHelp->Append(menubarID::ID_MANUAL, "View Manual");
     _menuHelp->AppendSeparator();
-    _menuHelp->Append(menubarID::ID_menubarLicense, "License");
+    _menuHelp->Append(menubarID::ID_LICENSE, "License");
     _menuHelp->Append(wxID_ABOUT);
     
     /* Create and display the menu bar */
@@ -114,12 +120,12 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
 
 void OmniFEMMainFrame::enableToolMenuBar(bool enable)
 {
-	_menuBar->Enable(menubarID::ID_menubarShowMesh,	enable);
-	_menuBar->Enable(menubarID::ID_menubarSave, enable);
-	_menuBar->Enable(menubarID::ID_menubarSaveAs, enable);
+	_menuBar->Enable(MeshMenuID::ID_SHOW_MESH,	enable);
+	_menuBar->Enable(FileMenuID::ID_SAVE, enable);
+	_menuBar->Enable(FileMenuID::ID_SAVE_AS, enable);
 	
-	_menuBar->Enable(menubarID::ID_menubarCreateMesh, enable);
-	_menuBar->Enable(menubarID::ID_menubarDeleteMesh, enable);
+	_menuBar->Enable(MeshMenuID::ID_CREATE_MESH, enable);
+	_menuBar->Enable(MeshMenuID::ID_DELETE_MESH, enable);
     
     _menuBar->Enable(EditMenuID::ID_COPY, enable);
     _menuBar->Enable(EditMenuID::ID_PREFERENCES, enable);
@@ -132,6 +138,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(EditMenuID::ID_UNDO, enable);
     _menuBar->Enable(EditMenuID::ID_SELECT_GROUP, enable);
     _menuEdit->Enable(EditMenuID::ID_EDIT_PROPERTY, enable);
+    _menuEdit->Enable(EditMenuID::ID_LUA_RUN, enable);
     
     _menuBar->Enable(ViewMenuID::ID_LUA_CONSOLE, enable);
     _menuBar->Enable(ViewMenuID::ID_SHOW_BLOCK_NAMES, enable);
@@ -280,7 +287,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
  
-    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition);
+    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition, this->GetStatusBar());
     
     enableToolMenuBar(true);
     createTopToolBar();
@@ -297,7 +304,7 @@ void OmniFEMMainFrame::createModelDefiningClient()
 
 void OmniFEMMainFrame::createTopToolBar()
 {
-    wxInitAllImageHandlers();
+//    wxInitAllImageHandlers();
     
     wxStandardPaths path = wxStandardPaths::Get();
 	wxImage::AddHandler(new wxPNGHandler);
@@ -466,6 +473,24 @@ void OmniFEMMainFrame::onProblemPreferences(wxCommandEvent &event)
         _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, false);
 }
 
+void OmniFEMMainFrame::onGLCanvasMouseMove(wxCommandEvent &event)
+{
+    if(_displayStatusMenu)
+    {
+        this->SetStatusText(wxString("Omni-FEM Simulator: ") + event.GetString());
+    }
+}
+
+void OmniFEMMainFrame::onKeyDown(wxKeyEvent &event)
+{
+    wxChar keyPress = event.GetUnicodeKey();
+    if(keyPress == LETTER_A)
+    {
+        
+    }
+        
+}
+
 
 
 	/**************
@@ -480,13 +505,12 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
 	***********************/
 	
     /* This section is for the file menu */
-    EVT_MENU(menubarID::ID_menubarNew,   OmniFEMMainFrame::onNewFile)
-    EVT_MENU(menubarID::ID_menubarSave, OmniFEMMainFrame::OnSave)
-    EVT_MENU(menubarID::ID_menubarSaveAs, OmniFEMMainFrame::onSaveAs)
-	EVT_MENU(menubarID::ID_menubarOpen, OmniFEMMainFrame::onOpenFile)
+    EVT_MENU(FileMenuID::ID_FILE_NEW,   OmniFEMMainFrame::onNewFile)
+    EVT_MENU(FileMenuID::ID_SAVE, OmniFEMMainFrame::OnSave)
+    EVT_MENU(FileMenuID::ID_SAVE_AS, OmniFEMMainFrame::onSaveAs)
+	EVT_MENU(FileMenuID::ID_OPEN, OmniFEMMainFrame::onOpenFile)
     
     /* This section is for the Edit menu */
-	EVT_MENU(menubarID::ID_menubarLUASCRIPT, OmniFEMMainFrame::onLuaRun)
     EVT_MENU(EditMenuID::ID_PREFERENCES, OmniFEMMainFrame::onPreferences)
     EVT_MENU(EditMenuID::ID_COPY, OmniFEMMainFrame::onCopy)
     EVT_MENU(EditMenuID::ID_SCALE, OmniFEMMainFrame::onScale)
@@ -498,6 +522,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
     EVT_MENU(EditMenuID::ID_SELECT_GROUP, OmniFEMMainFrame::onSelectGroup)
     EVT_MENU(EditMenuID::ID_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
+    EVT_MENU(EditMenuID::ID_LUA_RUN, OmniFEMMainFrame::onLuaRun)
 	
 	/* This section is for the View menu */
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)
@@ -510,6 +535,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     
     /* This section is for the Problem menu */
     EVT_MENU(menubarID::ID_PROBLEM_PREFERNCES, OmniFEMMainFrame::onProblemPreferences)
+    EVT_MENU(menubarID::ID_SOLVE_PROBLEM, OmniFEMMainFrame::onSolveProblem)
 	
     /* This section is for the Grid menu */
     EVT_MENU(GridMenuID::ID_SHOW_GRID, OmniFEMMainFrame::onDispGrid)
@@ -525,22 +551,23 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(PropertiesMenuID::ID_MATERIAL_LIBRARY, OmniFEMMainFrame::onMatLibrary)
     
 	/*This section is for the mesh menu */
-    EVT_MENU(menubarID::ID_menubarCreateMesh, OmniFEMMainFrame::onCreateMesh)
-	EVT_MENU(menubarID::ID_menubarShowMesh, OmniFEMMainFrame::onShowMesh)
-	EVT_MENU(menubarID::ID_menubarDeleteMesh, OmniFEMMainFrame::onDeleteMesh)
+    EVT_MENU(MeshMenuID::ID_CREATE_MESH, OmniFEMMainFrame::onCreateMesh)
+	EVT_MENU(MeshMenuID::ID_SHOW_MESH, OmniFEMMainFrame::onShowMesh)
+	EVT_MENU(MeshMenuID::ID_DELETE_MESH, OmniFEMMainFrame::onDeleteMesh)
     
     /* This section is for the Analysis menu */
     EVT_MENU(AnalysisMenuID::ID_ANALYZE, OmniFEMMainFrame::onViewResults)
 	EVT_MENU(AnalysisMenuID::ID_VIEW_RESULTS, OmniFEMMainFrame::onAnalyze)
 	
     /* This section is for the Help menu */
-	EVT_MENU(menubarID::ID_menubarManual, OmniFEMMainFrame::onManual)
-    EVT_MENU(menubarID::ID_menubarLicense, OmniFEMMainFrame::onLicense)
+	EVT_MENU(menubarID::ID_MANUAL, OmniFEMMainFrame::onManual)
+    EVT_MENU(menubarID::ID_LICENSE, OmniFEMMainFrame::onLicense)
     EVT_MENU(wxID_ABOUT, OmniFEMMainFrame::OnAbout)
     
     /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
 	EVT_SIZE(OmniFEMMainFrame::onResize)
+    EVT_KEY_DOWN(OmniFEMMainFrame::onKeyDown)
 	
 	/************************
 	* Button Event Handling *
@@ -571,11 +598,12 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_TOOL(ToolBarID::ID_TOGGLE_LINE, OmniFEMMainFrame::onToggleLineCreation)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_CREATE_MESH, OmniFEMMainFrame::onCreateMesh)
     EVT_TOOL(ToolBarID::ID_TOOLBAR_SOLVE, OmniFEMMainFrame::onSolveProblem)
-    EVT_TOOL(ToolBarID::ID_TOOLBAR_VIEW_RESULTS, OmniFEMMainFrame::onDisplayResults)
+    EVT_TOOL(ToolBarID::ID_TOOLBAR_VIEW_RESULTS, OmniFEMMainFrame::onViewResults)
 	
 	/********
 	* Other *
 	*********/
+    EVT_COMMAND(wxID_ANY, MOUSE_MOVE, OmniFEMMainFrame::onGLCanvasMouseMove)
     
 wxEND_EVENT_TABLE()
 

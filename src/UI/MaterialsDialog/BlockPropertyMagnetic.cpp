@@ -75,7 +75,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This section is for the header */
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");
     name->SetFont(*font);
-    nameTextCtrl->Create(this, magneticBlockPropertyDiag::ID_TextControl1, _magneticMaterial.getName(), wxDefaultPosition, wxSize(364, 20));
+    nameTextCtrl->Create(this, wxID_ANY, _magneticMaterial.getName(), wxDefaultPosition, wxSize(364, 20));
     nameTextCtrl->SetFont(*font);
     headerSizer->Add(name, 0, wxCENTER | wxALL, 6);
     headerSizer->Add(17, 0, 0);
@@ -95,22 +95,22 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This first part is for the Linear Properties */
     wxStaticText *relativeUx = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxT("Relative μx:"));
     relativeUx->SetFont(*font);
-    relativeUxTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl2, wxEmptyString, wxDefaultPosition, wxSize(87, 20));
+    relativeUxTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(87, 20));
     relativeUxTextCtrl->SetFont(*font);
     
     wxStaticText *relativeUy = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxT("Relative μy:"));
     relativeUy->SetFont(*font);
-    relativeUyTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl4, wxEmptyString, wxDefaultPosition, wxSize(87, 20));
+    relativeUyTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(87, 20));
     relativeUyTextCtrl->SetFont(*font);
     
     wxStaticText *phiX = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxT("ϕ hx:"));
     phiX->SetFont(*font);
-    phiXTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl3, wxEmptyString, wxDefaultPosition, wxSize(87, 20), 0, angleValidator);
+    phiXTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(87, 20), 0, angleValidator);
     phiXTextCtrl->SetFont(*font);
     
     wxStaticText *phiY = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxT("ϕ hy:"));
     phiY->SetFont(*font);
-    phiYTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl5, wxEmptyString, wxDefaultPosition, wxSize(87, 20), 0, angleValidator);
+    phiYTextCtrl->Create(linearPropertiesSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(87, 20), 0, angleValidator);
     phiYTextCtrl->SetFont(*font);
     
     wxStaticText *deg1 = new wxStaticText(linearPropertiesSizer->GetStaticBox(), wxID_ANY, "deg");
@@ -141,7 +141,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This part is for the coercivity section */
     wxStaticText *HcLabel = new wxStaticText(coercivitySizer->GetStaticBox(), wxID_ANY, "Hc (A/m2):");
     HcLabel->SetFont(*font);
-    coercivityTextCtrl->Create(coercivitySizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl7, wxEmptyString, wxDefaultPosition, wxSize(120, 20));
+    coercivityTextCtrl->Create(coercivitySizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, 20));
     coercivityTextCtrl->SetFont(*font);
     coercivitySizer->Add(HcLabel, 0, wxCENTER | wxALL, 6);
     coercivitySizer->Add(coercivityTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -149,7 +149,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This part is for the electrical conductivity */
     wxStaticText *sigLabel = new wxStaticText(eConductivitySizer->GetStaticBox(), wxID_ANY, wxT("σ MS/m:"));
     sigLabel->SetFont(*font);
-    eConductivityTextCtrl->Create(eConductivitySizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl8, wxEmptyString, wxDefaultPosition, wxSize(120, 20));
+    eConductivityTextCtrl->Create(eConductivitySizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, 20));
     eConductivityTextCtrl->SetFont(*font);
     eConductivitySizer->Add(sigLabel, 0, wxCENTER | wxALL, 6);
     eConductivitySizer->Add(eConductivityTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -161,7 +161,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This part is for the source current density */
     wxStaticText *currentDesnityLabel = new wxStaticText(currentDensitySizer->GetStaticBox(), wxID_ANY, "J (MA/m2):");
     currentDesnityLabel->SetFont(*font);
-    currentDensityTextCtrl->Create(currentDensitySizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl9, wxEmptyString, wxDefaultPosition, wxSize(352, 20));
+    currentDensityTextCtrl->Create(currentDensitySizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(352, 20));
     currentDensityTextCtrl->SetFont(*font);
     currentDensitySizer->Add(currentDesnityLabel, 0, wxCENTER | wxALL, 6);
     currentDensitySizer->Add(currentDensityTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
@@ -172,22 +172,22 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     
     wxStaticText *lamThickLabel = new wxStaticText(specialAttriSizer->GetStaticBox(), wxID_ANY, "Lam. Thickness:");
     lamThickLabel->SetFont(*font);
-    lamThickTextCtrl->Create(specialAttriSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl10, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, greaterThenZeroValidator);
+    lamThickTextCtrl->Create(specialAttriSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, greaterThenZeroValidator);
     lamThickTextCtrl->SetFont(*font);
     
     wxStaticText *numStrandsLabel = new wxStaticText(specialAttriSizer->GetStaticBox(), wxID_ANY, "Number of Strands:");
     numStrandsLabel->SetFont(*font);
-    numStrandsTextCtrl->Create(specialAttriSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl11, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, intValidator);
+    numStrandsTextCtrl->Create(specialAttriSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, intValidator);
     numStrandsTextCtrl->SetFont(*font);
     
     wxStaticText *lamFillLabel = new wxStaticText(specialAttriSizer->GetStaticBox(), wxID_ANY, "Lam. Fill Factor:");
     lamFillLabel->SetFont(*font);
-    lamFFTextCtrl->Create(specialAttriSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl12, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, greaterThenZeroValidator);
+    lamFFTextCtrl->Create(specialAttriSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, greaterThenZeroValidator);
     lamFFTextCtrl->SetFont(*font);
     
     wxStaticText *strandDiaLabel = new wxStaticText(specialAttriSizer->GetStaticBox(), wxID_ANY, "Strand Dia:");
     strandDiaLabel->SetFont(*font);
-    strandDiaTextCtrl->Create(specialAttriSizer->GetStaticBox(), magneticBlockPropertyDiag::ID_TextControl13, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, greaterThenZeroValidator);
+    strandDiaTextCtrl->Create(specialAttriSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(77, 20), 0, greaterThenZeroValidator);
     strandDiaTextCtrl->SetFont(*font);
     
     wxStaticText *mmLabel1 = new wxStaticText(specialAttriSizer->GetStaticBox(), wxID_ANY, "mm");

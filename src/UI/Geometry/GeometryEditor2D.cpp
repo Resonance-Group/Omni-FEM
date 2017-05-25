@@ -294,8 +294,8 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
             if(shortDistance < dmin)
             {
                 _lineList.erase(_lastLineAdded);
-                addLine(tempNodeOne, *nodeIterator, dmin);
-                addLine(*nodeIterator, tempNodeTwo, dmin);
+                addLine(tempNodeOne, &(*nodeIterator), dmin);
+                addLine(&(*nodeIterator), tempNodeTwo, dmin);
                 nodeIterator = _nodeList.back();
             }
         }
@@ -467,7 +467,7 @@ bool geometryEditor2D::checkIntersections(EditGeometry editedGeometry, double to
         {
             bool nodeIsConfigured = false;
             plf::colony<node>::iterator tempNodeIterator = nodeIterator1;
-            /* Iterate through all of the nodes to see if a node is on top of another node and if so, move all of the lines/arcs to one of the nodes 8*/
+            /* Iterate through all of the nodes to see if a node is on top of another node and if so, move all of the lines/arcs to one of the nodes */
             for(plf::colony<node>::iterator nodeIterator2 = ++tempNodeIterator; nodeIterator2 != _nodeList.end(); ++nodeIterator2)
             {
                 if(nodeIterator2 == _nodeList.end())
@@ -1322,19 +1322,19 @@ bool geometryEditor2D::createFillet(double radius)
 
 
 // Talk to Palm about some of these functions
-bool geometryEditor2D::getIntersection(edgeLineShape prospectiveLine, edgeLineShape intersectionLine, double &intersectionXPoint, double &intersectionYPoint)
+bool geometryEditor2D::getIntersection(edgeLineShape existingLine, edgeLineShape prospectiveLine, double &intersectionXPoint, double &intersectionYPoint)
 {
-    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 */
+    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 BOOL CFemmeDoc::GetIntersection*/
     Vector pNode0, pNode1, iNode0, iNode1;// These are the nodes on the prospective line (pNode) and the intersectionLine (iNode
     Vector tempNode0, tempNode1;
     // First check to see if there are any commmon end points. If so, there is no intersection
-    if(prospectiveLine.getFirstNode() == intersectionLine.getFirstNode() || prospectiveLine.getFirstNode() == intersectionLine.getSecondNode() || prospectiveLine.getSecondNode() == intersectionLine.getFirstNode() || prospectiveLine.getSecondNode() == intersectionLine.getSecondNode())
+    if(existingLine.getFirstNode() == prospectiveLine.getFirstNode() || existingLine.getFirstNode() == prospectiveLine.getSecondNode() || existingLine.getSecondNode() == prospectiveLine.getFirstNode() || existingLine.getSecondNode() == prospectiveLine.getSecondNode())
         return false;
         
-    pNode0.Set(prospectiveLine.getFirstNode()->getCenterXCoordinate(), prospectiveLine.getFirstNode()->getCenterYCoordinate());
-    pNode1.Set(prospectiveLine.getSecondNode()->getCenterXCoordinate(), prospectiveLine.getSecondNode()->getCenterYCoordinate());
-    iNode0.Set(intersectionLine.getFirstNode()->getCenterXCoordinate(), intersectionLine.getFirstNode()->getCenterYCoordinate());
-    iNode1.Set(intersectionLine.getSecondNode()->getCenterXCoordinate(), intersectionLine.getSecondNode()->getCenterYCoordinate());
+    pNode0.Set(existingLine.getFirstNode()->getCenterXCoordinate(), existingLine.getFirstNode()->getCenterYCoordinate());
+    pNode1.Set(existingLine.getSecondNode()->getCenterXCoordinate(), existingLine.getSecondNode()->getCenterYCoordinate());
+    iNode0.Set(prospectiveLine.getFirstNode()->getCenterXCoordinate(), prospectiveLine.getFirstNode()->getCenterYCoordinate());
+    iNode1.Set(prospectiveLine.getSecondNode()->getCenterXCoordinate(), prospectiveLine.getSecondNode()->getCenterYCoordinate());
     
     tempNode0 = iNode0;
     tempNode1 = iNode1;
@@ -1551,7 +1551,7 @@ double geometryEditor2D::calculateShortestDistance(node selectedNode, edgeLineSh
 
 
 
-double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edgeLineShape segment)
+double geometryEditor2D::calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment)
 {
     double t, x[3], y[3];
 
@@ -1561,7 +1561,7 @@ double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edge
     x[1] = segment.getSecondNode()->getCenterXCoordinate();
     y[1] = segment.getSecondNode()->getCenterYCoordinate();
 	
-	t = ((selectedNode.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedNode.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
+	t = ((selectedLabel.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedLabel.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
       
 	if(t > 1)
 		t = 1.0;
@@ -1571,7 +1571,7 @@ double geometryEditor2D::calculateShortestDistance(blockLabel selectedNode, edge
 	x[2] = x[0] + t * (x[1] - x[0]);
 	y[2] = y[0] + t * (y[1] - y[0]);
     
-	return sqrt((selectedNode.getCenterXCoordinate() - x[2]) * (selectedNode.getCenterXCoordinate() - x[2]) + (selectedNode.getCenterYCoordinate() - y[2]) * (selectedNode.getCenterYCoordinate() - y[2]));   
+	return sqrt((selectedLabel.getCenterXCoordinate() - x[2]) * (selectedLabel.getCenterXCoordinate() - x[2]) + (selectedLabel.getCenterYCoordinate() - y[2]) * (selectedLabel.getCenterYCoordinate() - y[2]));   
 }
 
 

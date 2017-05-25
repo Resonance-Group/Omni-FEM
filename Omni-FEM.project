@@ -86,7 +86,6 @@
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
-      <File Name="src/common/wxGLString.cpp"/>
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
       <File Name="src/common/omniFEMDialog.cpp"/>
@@ -106,9 +105,7 @@
     <VirtualDirectory Name="UI">
       <File Name="Include/UI/OmniFEMFrame.h"/>
       <File Name="Include/UI/common.h"/>
-      <File Name="Include/UI/openGLGeometry.h"/>
       <File Name="Include/UI/geometryShapes.h"/>
-      <File Name="Include/UI/wxGLString.h"/>
       <VirtualDirectory Name="MaterialsDialog">
         <File Name="Include/UI/MaterialsDialog/MaterialDialog.h"/>
         <File Name="Include/UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h"/>
@@ -184,7 +181,6 @@
         <File Name="Include/common/GeometryProperties/BlockProperty.h"/>
         <File Name="Include/common/GeometryProperties/NodeSettings.h"/>
       </VirtualDirectory>
-      <File Name="Include/common/wxGLString.h"/>
       <File Name="Include/common/plfcolony.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
