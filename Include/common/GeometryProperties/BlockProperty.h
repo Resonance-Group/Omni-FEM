@@ -8,7 +8,14 @@
 #include <common/CircuitProperty.h>
 #include <common/enums.h>
 
-
+//! Class that handles all properties that are related to the block label
+/*!
+    Any of the block label properties that the user
+    is able to change or set is handled by this class.
+    It was decided to abstract the properties out from the class
+    that handles the geometic portion of the class in order to keep
+    the properties and the geometry seperated
+*/ 
 class blockProperty
 {
 private:
@@ -25,17 +32,74 @@ private:
     */ 
     meshSize _meshSizeType = meshSize::MESH_NORMAL;
     
+    //! The material name that is associated with the block label
+    /*!
+        This is the name that is displayed on the canvas. This is considered
+        as the block label name since the material name is required
+        for all simulations
+    */ 
     std::string _materialName = "None";
     
+    //! The circuit name that is associated with the block label
+    /*!
+        This only pertains to magnetic simualtions.
+        With magnetic simulations, a circuit can be created 
+        in order to simulate current going through a coil or 
+        a cross-section of some sort
+    */ 
     std::string _circuitName = "None";
     
+    //! Boolean that is used to determine if the mesher should auto zise
+    /*!
+        Currently, it is unknown how the mesher will handle an auto size. However
+        if this boolean is set to true, the mesher will the mesh with a pre-determined value
+    */ 
     bool _meshSizeIsAuto = true;
     
+    //! How large of an area tthat each element takes up
+    /*!
+        This parameters descirbes how mcuh area each element is when creating the mesh.
+        A lower mesh size equates to a higher density since a lower area allows the mesher to
+        fit in more elements in a subdomain
+    */ 
     double _meshSize = 0;
     
+    //! If the block label is to be associated with a coil, then this is the number of turns of wire around the coil
+    /*!
+        This parameter only pertains to magnetic simulations. This represets the number of turns that the wire takes
+        within the subdomain. The region will be treated as a stranded conductor. In order for proper operation,
+        the accomying circuit property must be set to series as each strand within the coil is connected as 
+        a series circuit
+    */ 
     double _numberOfTurns = 1;
     
-    double _magnetization = 0;
+    //! This is an angle that describes the direction of magnetization.
+    /*!
+        This parameter only pertains to magnetic simulations. The parameter is actually an 
+        angle whose reference line is parallel to the x-axis. A value of 0 means that the 
+        direction is parallel to the x-axis and pointing to the right. A value of 90 means that the
+        direction is parallel to the y-axis and pointing upwards. All positive angles are in the 
+        counter-clockwise direction while all negative angles are in the clockwise direction.
+        Alternatively, this can be a function (hence the string part) of the block label position.
+        Some keywords for the function is as follows:
+        
+        theta - denotes the angle (in degree) of line connecting the center of each block label
+                with the position (0,0).
+      
+        R - denotes the length of the line connecting the center of each block label with the 
+            poition (0,0)
+      
+        x - denotes the x position of the center of the block label in cartesian
+      
+        y - denotes the y position of the center of the block label in cartesian
+      
+        r - denotes the r position of the center of the block label. Only use if the problem is
+            an axisymmeteric problem
+      
+        z - denotes the z position of the center of the block label. ONly use if the problem is
+            and axisymmetric problem
+    */ 
+    wxString _magnetization = 0;
     
     unsigned int _groupNumber = 0;
     
@@ -165,12 +229,28 @@ public:
         return _numberOfTurns;
     }
     
-    void setMagnetization(double value)
+    //! Sets the direction of magnetiation (in degrees) of the block label
+    /*!
+        This function only pertains to magnetic simulations. The reference line
+        for the angle is parallel to the x-axis. All positive angles are a counter-clockwise direction
+        and negative angles are clockwise direction. Alternatively, a function can be used instead of 
+        a hard coded value. For keywords to the function, see the documentation of the private variable
+        that this function accesses
+        \sa _magnetization
+        \param value The magnetization direction of the block label
+    */ 
+    void setMagnetization(wxString value)
     {
         _magnetization = value;
     }
     
-    double getMagnetization()
+    //! Gets the magnetization direction that is associated with the block label
+    /*!
+        This function only pertains to magnetic simulations.
+        \sa _magnetization
+        \return Returns the string of the magnetization direction
+    */ 
+    wxString getMagnetization()
     {
         return _magnetization;
     }

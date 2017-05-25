@@ -380,8 +380,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
         _numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
         property.setNumberOfTurns(value2);
         
-        _magnetizationTextCtrl->GetValue().ToDouble(&value);
-        property.setMagnetization(value);
+        property.setMagnetization(_magnetizationTextCtrl->GetValue());
     }
     
     _groupTextCtrl->GetValue().ToLong(&value2);
