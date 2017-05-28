@@ -394,6 +394,21 @@ enum EditGeometry
     EDIT_ALL
 };
 
+//! Enum that is used to determine which property to edit
+/*!
+    This enum will tell the program which set of geometry to scan through
+    and edit which property
+*/ 
+enum EditProperty
+{
+    EDIT_PROPERTY_NONE,
+    EDIT_CONDUCTOR,
+    EDIT_NODAL,
+    EDIT_BOUNDARY,
+    EDIT_MATERIAL,
+    EDIT_CIRCUIT
+};
+
 
 
 #endif

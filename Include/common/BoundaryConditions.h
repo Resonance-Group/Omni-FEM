@@ -6,6 +6,9 @@
 #include <common/enums.h>
 
 
+// As a side note, FEMM documentation for the magnetic boundary begins on PDF page 25
+// page 50 for electrostatic
+
 //! Base class for boundary conditions
 /*!
     This class is the base class for the boundary conditions.

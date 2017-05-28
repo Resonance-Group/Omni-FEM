@@ -302,35 +302,34 @@ void magneticBoundaryDialog::updateInterface()
     nameTextCtrl->SetValue(_magneticBoundary.getBoundaryName());
     
     uRelativeTextCtrl->SetValue(wxEmptyString);
-    relativeStream << setprecision(3);
-    relativeStream << _magneticBoundary.getMu();
+    relativeStream << std::setprecision(3) << std::fixed << _magneticBoundary.getMu();
     
     sigTextCtrl->SetValue(wxEmptyString);
-    sigStream << setprecision(3);
+    sigStream << std::setprecision(3);
     sigStream << _magneticBoundary.getSigma();
     
     c0TextCtrl->SetValue(wxEmptyString);
-    c0Stream << setprecision(3);
+    c0Stream << std::setprecision(3);
     c0Stream << _magneticBoundary.getC0Value();
     
     c1TextCtrl->SetValue(wxEmptyString);
-    c1Stream << setprecision(3);
+    c1Stream << std::setprecision(3);
     c1Stream << _magneticBoundary.getC1Value();
     
     A0TextCtrl->SetValue(wxEmptyString);
-    A0Stream << setprecision(3);
+    A0Stream << std::setprecision(3);
     A0Stream << _magneticBoundary.getA0();
     
     A1TextCtrl->SetValue(wxEmptyString);
-    A1Stream << setprecision(3);
+    A1Stream << std::setprecision(3);
     A1Stream << _magneticBoundary.getA1();
     
     A2TextCtrl->SetValue(wxEmptyString);
-    A2Stream << setprecision(3);
+    A2Stream << std::setprecision(3);
     A2Stream << _magneticBoundary.getA2();
     
     phiTextCtrl->SetValue(wxEmptyString);
-    phiStream << setprecision(3);
+    phiStream << std::setprecision(3);
     phiStream << _magneticBoundary.getPhi();
     
     BCComboBox->SetSelection((int)_magneticBoundary.getBC());

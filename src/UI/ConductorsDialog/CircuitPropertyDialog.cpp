@@ -125,7 +125,7 @@ void circuitPropertyDialog::setTextBox()
     radioButton2->SetValue(_circuitProperty.getCircuitSeriesState());
     
     circuitCurrentTextCtrl->SetValue(wxEmptyString);
-    currentStream << setprecision(7);
+    currentStream << std::setprecision(7);
     currentStream << _circuitProperty.getCurrent();
 }
 

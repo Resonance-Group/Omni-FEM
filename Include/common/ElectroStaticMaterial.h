@@ -3,37 +3,81 @@
 
 #include <common/MaterialProperty.h>
 
-/*! This class is used to create materials needed for the electrostatic simulation
- *  It inherits from the materialProperty class.
- */ 
+//! Class that is used to handle the specific values for the electrostatic material
+/*!
+    This class is used to handle the specific values for an electrostatic material.
+    For electrostatic materials, this class is able to specificy
+    different relative permittiviteis in the horizontal and vertical directions.
+    The class also allows a specific volume charge density.
+*/ 
 class electrostaticMaterial : public materialProperty
 {
 private:
-    //! This value contains the relative permittivity in the X plane 
+    //! This variable contains the relative permittivity in the X plane 
     double _relativePermittivityX = 1;
     
-    //! This value contains the relative permittivity in the Y plane
+    //! This variable contains the relative permittivity in the Y plane
     double _relativePermittivityY = 1;
     
-    
-    double _chargeDensity = 0;
+    //! This variable allows the specfication of a volume charge density in C/m^3
+    double _volumetricChargeDensity = 0;
     
 public:
-    //! This section is for the getters/setters of the above private variables
-    void setEpsilonX(double value);
-    double getEpsilonX();
     
-    void setEpsilonY(double value);
-    double getEpsilonY();
-    
-    void setChargeDensity(double value)
+    //! Sets the relative permittivity in the x-plane
+    /*!
+        \param value The value of the relative permittivity in the x-plane
+    */ 
+    void setEpsilonX(double value)
     {
-        _chargeDensity = value;
+        _relativePermittivityX = value;
     }
     
+    //! Retrieves the relative permittivity in the x-plane
+    /*!
+        \return Returns the relative permittivity in the x-plane of a material
+    */ 
+    double getEpsilonX()
+    {
+        return _relativePermittivityX;
+    }
+    
+    //! Sets the relative permittivity in the y-plane
+    /*!
+        \param value The value of the relative permittivity in the y-plane
+    */ 
+    void setEpsilonY(double value)
+    {
+        _relativePermittivityY = value;
+    }
+    
+    //! Retrieves the relative permittivity in the y-plane
+    /*!
+        \return Returns the relative permittivity in the y-plane of a material
+    */
+    double getEpsilonY()
+    {
+        return _relativePermittivityY;
+    }
+    
+    //! Sets the volumetric charge density of a material
+    /*!
+        This will set the value for a volunme charge density (ρ).
+        \param value The value of the volume charge density in C/m^3
+    */ 
+    void setChargeDensity(double value)
+    {
+        _volumetricChargeDensity = value;
+    }
+    
+    //! Retrieves the volumnetric charge density of a material
+    /*!
+        \return Returns a value representing the volume charge density
+                in C/m^3
+    */ 
     double getChargeDensity()
     {
-        return _chargeDensity;
+        return _volumetricChargeDensity;
     }
 };
 
