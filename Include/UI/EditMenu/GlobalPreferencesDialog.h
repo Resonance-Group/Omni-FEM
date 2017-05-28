@@ -74,6 +74,8 @@ private:
     
     void createDialog(wxWindow *par);
     
+    void onProblemTypeComboBox(wxCommandEvent &event);
+    
 public:
     globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref);
     
@@ -82,6 +84,9 @@ public:
     void getPreferences(electroStaticPreference &electricPref);
     
     void getPreferences(magneticPreference &magneticPref);
+    
+private:
+    wxDECLARE_EVENT_TABLE();
 };
 
 

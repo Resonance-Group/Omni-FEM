@@ -149,7 +149,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     /* This next section is for the preferences related to the settings */
     wxStaticText *probTypeText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Problem Type:");
     probTypeText->SetFont(*font);
-    _problemTypeComboBox->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), problemTypeNameArray);
+    _problemTypeComboBox->Create(physicsProblemPreferencesPanel, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), problemTypeNameArray);
     _problemTypeComboBox->SetFont(*font);
     documentSettingLine1->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
     documentSettingLine1->Add(20, 0, 0);
@@ -256,6 +256,11 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
         _commentsTextCtrl->SetValue(_magneticPreference.getComments());
     }
     
+    if(_problemTypeComboBox->GetSelection() == 1)
+    {
+        _depthTextCtrl->Enable(false);
+    }
+    
     gridSettingPanel->SetSizerAndFit(gridSettingsSizer);
     physicsProblemPreferencesPanel->SetSizerAndFit(documentSettingsSizer);
     
@@ -263,6 +268,24 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     base->AddPage(physicsProblemPreferencesPanel, "Problem Settings");
     
     LayoutDialog();
+}
+
+
+
+
+void globalPreferencesDialog::onProblemTypeComboBox(wxCommandEvent &event)
+{
+    switch(_problemTypeComboBox->GetSelection())
+    {
+        case 0:// This first case is if the user selected the problem type to be planar
+            _depthTextCtrl->Enable(true);
+            break;
+        case 1:// This second case is if the user selected the problem type to be axisymmetric
+            _depthTextCtrl->Enable(false);
+            break;
+        default:// Everything else
+            break;
+    }
 }
 
 
@@ -339,3 +362,9 @@ void globalPreferencesDialog::updateInterface()
         
     }
 }
+
+
+
+wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
+    EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, globalPreferencesDialog::onProblemTypeComboBox)
+wxEND_EVENT_TABLE()

@@ -59,6 +59,8 @@ private:
     
     void createDialog();
     
+    void onComboBox(wxCommandEvent &event);
+    
 public:
 
     preferencesDialog(wxWindow *par, magneticPreference pref);
@@ -71,7 +73,8 @@ public:
     
     void getPreferences(electroStaticPreference &settings);
 
-    
+private:
+    wxDECLARE_EVENT_TABLE();
 };
 
 

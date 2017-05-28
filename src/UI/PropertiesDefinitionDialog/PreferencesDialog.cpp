@@ -32,7 +32,7 @@ void preferencesDialog::createDialog()
     wxFloatingPointValidator<double> greaterThenZero(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
     greaterThenZero.SetMin(0);
     
-    wxFloatingPointValidator<double> angleValidator(15);
+    wxFloatingPointValidator<double> angleValidator(15, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
     angleValidator.SetRange(0, 360);
     
     wxBoxSizer *probTypeSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -57,7 +57,7 @@ void preferencesDialog::createDialog()
     
     wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:");
     probTypeText->SetFont(*font);
-    _problemTypeComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_probTypeNameArray);
+    _problemTypeComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_probTypeNameArray);
     _problemTypeComboBox->SetFont(*font);
     probTypeSizer->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
     probTypeSizer->Add(20, 0, 0);
@@ -103,7 +103,7 @@ void preferencesDialog::createDialog()
     depthSizer->Add(depthText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     depthSizer->Add(59, 0, 0);
     depthSizer->Add(_depthTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-   
+    
     wxStaticText *solverPrecisionText = new wxStaticText(this, wxID_ANY, "Solver Precision:");
     solverPrecisionText->SetFont(*font);
     _solverPrecisionTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
@@ -172,8 +172,28 @@ void preferencesDialog::createDialog()
         _commentsTextCtrl->SetValue(_magPreference.getComments());
     }
     
+    if(_problemTypeComboBox->GetSelection() == 1)
+    {
+        _depthTextCtrl->Enable(false);
+    }
+    
     SetSizerAndFit(topSizer);
     
+}
+
+void preferencesDialog::onComboBox(wxCommandEvent &event)
+{
+    switch(_problemTypeComboBox->GetSelection())
+    {
+        case 0:// This first case is if the user selected the problem type to be planar
+            _depthTextCtrl->Enable(true);
+            break;
+        case 1:// This second case is if the user selected the problem type to be axisymmetric
+            _depthTextCtrl->Enable(false);
+            break;
+        default:// Everything else
+            break;
+    }
 }
 
 
@@ -227,3 +247,8 @@ preferencesDialog::~preferencesDialog()
 {
     
 }
+
+
+wxBEGIN_EVENT_TABLE(preferencesDialog, wxDialog)
+    EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, preferencesDialog::onComboBox)
+wxEND_EVENT_TABLE()
