@@ -20,7 +20,7 @@
   
     The mixed boundary condition has different meanings depending on the physics simulation.
     For electrostatics, the mixed boundary condition is of the form:
-    \f[\varepsilon _{r}\varepsilon _{o}\frac{\delta V}{\delta n}+c_{o}V+c_{1}=0\f]
+    \f[\varepsilon _{r}\varepsilon _{o}\frac{\partial V}{\partial n}+c_{o}V+c_{1}=0 \f]
     Depending on the vvalues of c1 and c0, the boundary can either be a Robin or Neumann
     boundary condition. If c1 = 0, then careful selection of the c0 coefficient
     will allow the boundary condition to be applied to the outer boundary

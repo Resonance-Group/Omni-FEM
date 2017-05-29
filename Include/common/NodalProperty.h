@@ -33,20 +33,40 @@ public:
     }
 
     //! This next section contains the getters and setters for the above private variables
-    void setName(string name);
-    string getName();
+    void setName(string name)
+    {
+        _nodalName = name;
+    }
+    
+    string getName()
+    {
+        return _nodalName;
+    }
     
     /*! /brief 
      * This function will set the state of the property which determined if the property is a specific potential or point current for magnetics
      * For electrostatics, this function will change the state to be either a Specific Potential or a POint Charge Dnesity value
      */ 
-    void setState(bool state);
+    void setState(bool state)
+    {
+        _isSpecificPotential = state;
+    }
     
     //! This function will get the state of the property. Function returns true to indicate that the value in the class is for a specificed potential
-    bool getState();
+    bool getState()
+    {
+        return _isSpecificPotential;
+    }
     
-    void setValue(double value);
-    double getValue();
+    void setValue(double value)
+    {
+        _value = value;
+    }
+    
+    double getValue()
+    {
+        return _value;
+    }
 };
 
 

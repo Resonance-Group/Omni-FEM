@@ -25,14 +25,35 @@ private:
     string _folderVendor;
 public:
     //! This next section are the getters and setters for the private variables
-    void setFolderName(string name);
-    string getFolderName();
+    void setFolderName(string name)
+    {
+        _folderName = name;
+    }
     
-    void setFolderURL(string url);
-    string getFolderURL();
+    string getFolderName()
+    {
+        return _folderName;
+    }
     
-    void setFolderVendor(string vendor);
-    string getFolderVendor();
+    void setFolderURL(string url)
+    {
+        _folderURL = url;
+    }
+    
+    string getFolderURL()
+    {
+        return _folderURL;
+    }
+    
+    void setFolderVendor(string vendor)
+    {
+        _folderVendor = vendor;
+    }
+    
+    string getFolderVendor()
+    {
+        return _folderVendor;
+    }
 };
 
 

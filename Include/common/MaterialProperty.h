@@ -18,8 +18,15 @@ private:
     
 public:
     //! The getter/setter for the name
-    void setName(std::string name);
-    std::string getName();
+    void setName(std::string name)
+    {
+        _propertyName = name;
+    }
+    
+    std::string getName()
+    {
+        return _propertyName;
+    }
 };
 
 #endif

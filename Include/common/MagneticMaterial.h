@@ -55,90 +55,172 @@ private:
     double _strandDia = 0;
 public:
     //! This will toggle the status of the isLinear boolean to indicate if the material is linear/nonlinear. The default value is that the material is linear
-    void setBHCurveLinearity(bool isLinear);
+    void setBHCurveLinearity(bool isLinear)
+    {
+        _isLinear = isLinear;
+    }
     
     //! This will get the state of the isLinear boolean
-    bool getBHState();
+    bool getBHState()
+    {
+        return _isLinear;
+    }
     
     //! This will set the relative permeability of the material in the x-direction.
-    void setMUrX(double value);
+    void setMUrX(double value)
+    {
+        _relativePermeabilityX = value;
+    }
     
     //! This will get the relative permeability of the material in the x-direction.
-    double getMUrX();
+    double getMUrX()
+    {
+        return _relativePermeabilityX;
+    }
     
     //! This will set the relative permeability of the material in the y-direction.
-    void setMUrY(double value);
+    void setMUrY(double value)
+    {
+        _relativePermeabilityY = value;
+    }
     
     //! This will get the relative permeability of the material in the y-direction.
-    double getMUrY();
+    double getMUrY()
+    {
+        return _relativePermeabilityY;
+    }
     
     //! This will set the hystersis lag angle in the x-direction. Note that this parameter is only used for the linear approximation
-    void setPhiX(double value);
+    void setPhiX(double value)
+    {
+        _phiHX = value;
+    }
     
     //! This will get the hystersis lag angle in the x-direction. Note that this parameter is only used for the linear approximation
-    double getPhiX();
+    double getPhiX()
+    {
+        return _phiHX;
+    }
     
     //! This will set the hystersis lag angle in the y-direction. Note that this parameter is only used for the linear approximation
-    void setPhiY(double value);
+    void setPhiY(double value)
+    {
+        _phiHY = value;
+    }
     
     //! This will get the hystersis lag angle in the y-direction. Note that this parameter is only used for the linear approximation
-    double getPhiY();
+    double getPhiY()
+    {
+        return _phiHY;
+    }
     
     //! This will set the Jiles Atherton model parameters.
-    void setJilesAtherton(jilesAthertonParameters parameter);
+    void setJilesAtherton(jilesAthertonParameters parameter)
+    {
+        _nonLinearParameters = parameter;
+    }
     
     //! This function will return the Jiles-Artherton model parameters
-    jilesAthertonParameters getJilesAtherton();
+    jilesAthertonParameters getJilesAtherton()
+    {
+        return _nonLinearParameters;
+    }
     
     //! This will set the coercivity for the material. Units are in A/m.
-    void setCoercivity(double value);
+    void setCoercivity(double value)
+    {
+        _coercivity = value;
+    }
     
     //! This will get the coercivity for the material. Units are in A/m.
-    double getCoercivity();
+    double getCoercivity()
+    {
+        return _coercivity;
+    }
     
     //! This will set the electrical conductivity of the material. Units are in MS/m.
-    void setSigma(double value);
+    void setSigma(double value)
+    {
+        _electricalConductivity = value;
+    }
     
     //! This will get the electrical conductivity of the material. Units are in MS/m.
-    double getSigma();
+    double getSigma()
+    {
+        return _electricalConductivity;
+    }
     
     //! This will set the current density of the material. Units are in MA/m2.
-    void setCurrentDensity(double value);
+    void setCurrentDensity(double value)
+    {
+        _currentDensity = value;
+    }
     
     //! This will get the current density of the material. Units are in MA/m2.
-    double getCurrentDensity();
+    double getCurrentDensity()
+    {
+        return _currentDensity;
+    }
     
     //! This will set the lamination and wire type of the material.
-    void setSpecialAttribute(lamWireEnum value);
+    void setSpecialAttribute(lamWireEnum value)
+    {
+        _attribute = value;
+    }
     
     //! This will get the lamination and wire type of the material.
-    lamWireEnum getSpecialAttribute();
+    lamWireEnum getSpecialAttribute()
+    {
+        return _attribute;
+    }
     
     //! This will set the lamination thickness (if any) of the material. Units are in mm
-    void setLaminationThickness(double value);
+    void setLaminationThickness(double value)
+    {
+        _lamThickness = value;
+    }
     
     //! This will get the lamination thickness (if any) of the material.Units are in mm.
-    double getLaminationThickness();
+    double getLaminationThickness()
+    {
+        return _lamThickness;
+    }
     
     //! This will set the number of strands in the wire.
-    void setNumberStrands(unsigned int value);
+    void setNumberStrands(unsigned int value)
+    {
+        _numStrands = value;
+    }
     
     //! This will get the number of strands in the wire.
-    unsigned int getNumberStrands();
+    unsigned int getNumberStrands()
+    {
+        return _numStrands;
+    }
     
     //! This will set the lamination fill factor (if any) of the material.
-    void setLaminationFillFactor(double value);
+    void setLaminationFillFactor(double value)
+    {
+        _lamFF = value;
+    }
     
     //! This will get the lamination fill factor (if any) of the material.
-    double getLaminationFillFactor();
+    double getLaminationFillFactor()
+    {
+        return _lamFF;
+    }
     
     //! This will set the strand diameter of the material (if any). Units are in mm.
-    void setStrandDiameter(double value);
+    void setStrandDiameter(double value)
+    {
+        _strandDia = value;
+    }
     
     //! This will get hte strand diameter of the material (if any). Units are in mm.
-    double getStrandDiameter();
-    
-    void setMagneticMaterial(magneticMaterial mat);
+    double getStrandDiameter()
+    {
+        return _strandDia;
+    }
     
     void clearJilesAtherton()
     {
