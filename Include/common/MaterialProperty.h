@@ -6,10 +6,11 @@
 using namespace std;
 
 
-/*! This is the general class for the material properties. 
- *  Instead of having two different classes and two different data structures in each
- *  block label for the materials, a general one was created.
- */
+
+//! Base class for all of the material property classes
+/*!
+    This class handles any properties that are common to the other classes
+*/ 
 class materialProperty
 {
 private:
@@ -17,12 +18,19 @@ private:
     string _propertyName;
     
 public:
-    //! The getter/setter for the name
+    //! Sets the name of the material
+    /*!
+        \param name The name of the material
+    */ 
     void setName(std::string name)
     {
         _propertyName = name;
     }
     
+    //! Retrieves the name of the material
+    /*!
+        \return Returns a name representing the name of the material
+    */ 
     std::string getName()
     {
         return _propertyName;
