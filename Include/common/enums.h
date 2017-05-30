@@ -311,15 +311,19 @@ enum bcEnumMagnetic
     ANTIPERIODIC
 };
 
-
+//! Enum that is used to differentiate the different boundary conditions for electrostatic simulation
+/*!
+    This enum is used to help identify which boundary condition needs to be applied
+    to segments in an electrical simulation
+*/ 
 enum bcEnumElectroStatic
 {
    /* These are specific for E-stat */
-    FIXED_VOLTAGE,
-    SURFACE_CHARGE_DENSITY,
-    E_STATIC_MIXED, 
-    E_STATIC_PERIODIC,
-    E_STATIC_ANTIPERIODIC
+    FIXED_VOLTAGE, //!< Value used to indicate that the boundary condition is a fixed voltage 
+    SURFACE_CHARGE_DENSITY, //!< Value used to indicate that the boundary condition is a surface charge density 
+    E_STATIC_MIXED, //!< Value used to indicate that the boundary condition is a mixed BC
+    E_STATIC_PERIODIC, //!< Value used to indicate that the boundary condition is periodic
+    E_STATIC_ANTIPERIODIC//!< Value used to indicate that the boundary condition is anti-periodic
 };
 
 
@@ -339,6 +343,10 @@ enum propertiesDialogEnum
 };
 
 //! This enum is a general enum for frames that will include buttons or other widgets
+/*!
+    Some of these ID were not located in the wx_ID enum so this was created
+    for general widgets to do general tasks
+*/ 
 enum generalFrameButton
 {
     ID_ComboBox1,
@@ -378,7 +386,7 @@ enum buttonID
 */ 
 enum OpenBoundaryEdge
 {
-    NO_BOUNDARY_DEFINED,
+    NO_BOUNDARY_DEFINED,//!< Default value for the enum
     DIRICHLET,
     NEUMANN
 };
@@ -386,12 +394,12 @@ enum OpenBoundaryEdge
 //! Enum that is used to differentiate between which geometry has been edited
 enum EditGeometry
 {
-    EDIT_NONE,
-    EDIT_NODES,
-    EDIT_LINES,
-    EDIT_ARCS,
-    EDIT_LABELS,
-    EDIT_ALL
+    EDIT_NONE,//!< Default value for the enum
+    EDIT_NODES,//!< Value used to indicate that the node list was edited
+    EDIT_LINES,//!< Value used to indicate that the line list was edited
+    EDIT_ARCS,//!< Value used to indicate that the arc list was edited
+    EDIT_LABELS,//!< Value used to indicate that the block label list was edited
+    EDIT_ALL//!< Value used to indicate that all of the geometry lists were edited
 };
 
 //! Enum that is used to determine which property to edit
@@ -401,12 +409,12 @@ enum EditGeometry
 */ 
 enum EditProperty
 {
-    EDIT_PROPERTY_NONE,
-    EDIT_CONDUCTOR,
-    EDIT_NODAL,
-    EDIT_BOUNDARY,
-    EDIT_MATERIAL,
-    EDIT_CIRCUIT
+    EDIT_PROPERTY_NONE,//!< Default value for the enum
+    EDIT_CONDUCTOR,//!< Value used to indicate that the conductor property list was edited
+    EDIT_NODAL,//!< Value used to indicate that the nodal property list was edited
+    EDIT_BOUNDARY,//!< Value used to indicate that the boundary property list was edited
+    EDIT_MATERIAL,//!< Value used to indicate that the material property list was edited
+    EDIT_CIRCUIT//!< Value used to indicate that the circuit property list was edited
 };
 
 

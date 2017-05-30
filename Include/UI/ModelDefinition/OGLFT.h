@@ -54,7 +54,15 @@
 #include FT_TRIGONOMETRY_H
 
 //! All of OGLFT C++ objects are in this namespace.
-
+/*!
+ * Just for the record, this was NOT coded by the author of Omni-FEM.
+ * This was obtained from http://oglft.sourceforge.net/.
+ * The aurthor of Omni-FEM tried to contact the author of this library throuhg 
+ * various provided emails. None of them worked. 
+ * There seems to be some issue with the monochrome class of drawing the text.
+ * All comments and documentation that is within this namespace is provided as-is.
+ * The author of omni-fem will not be editting any of the comments 
+ */ 
 namespace OGLFT {
 
   //! Thanks to DesCartes, I'd consider these manifest constants.
