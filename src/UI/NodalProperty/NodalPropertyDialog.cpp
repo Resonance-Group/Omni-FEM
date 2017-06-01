@@ -59,7 +59,7 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     if(_problem == physicProblems::PROB_MAGNETICS)
         boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Vector Potential (Wb/m)");
     else
-        boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Vector Potential (V)");
+        boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Voltage Potential (V)");
     boxSizer1->GetStaticBox()->SetFont(*font);
     textCtrl1->Create(boxSizer1->GetStaticBox(), wxID_ANY, std::to_string(0.0), wxDefaultPosition, wxSize(198, 20));
     textCtrl1->SetFont(*font);
