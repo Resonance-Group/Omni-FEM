@@ -260,8 +260,8 @@ enum planarCoordinateEnum
 //! This enum is used to specify what problem type Omni-FEM needs to use when solving
 enum problemTypeEnum
 {
-    PLANAR,
-    AXISYMMETRIC
+    PLANAR,/*!< Value used to indicate that the problem is defined in 2-D Euclidean geometry */
+    AXISYMMETRIC/*!< Value used to indicate that the problem has cylindrical symmetry */
 };
 
 
@@ -277,8 +277,8 @@ enum lamWireEnum
     PLAIN_STRANDED_WIRE,/*!< Value used to indicate that the block label is stranded */
     LITZ_WIRE,/*!< Vcalue used to indicate that the block label is stranded */
     SQUARE_WIRE, /*!< Value used to indicate that the block label is squared wire */
-    CCA_10,
-    CCA_15
+    CCA_10,/*!< Value used to indicate that the block label is copper clad aluminium 10% wire */
+    CCA_15/*!< Value used to indicate that the block label is copper clad aluminium 15% wire */
 };
 
 

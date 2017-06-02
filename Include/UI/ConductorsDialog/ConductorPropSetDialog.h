@@ -16,32 +16,32 @@
 #include <UI/ConductorsDialog/CircuitPropertyDialog.h>
 #include <UI/ConductorsDialog/ConductorPropertyDialog.h>
 
+
+//! Class that handles the dialog for editing the conductor lists
+/*!
+    This class does not handle the creation/modifying of individual conductor objects that 
+    the user selects. Rather, this class handles the editing of the list as a whole.
+    This dialog will allow the user to add an item to the list, modify an existing item,
+    or remove an item from the list. For modifying or adding the elements in the list,
+    this class will call the approiate dialog in order to perform this action.
+    This class inherits from the dialog class because it allows for the easy creation
+    of ok/cancel buttons. This class is intended to be created in order to operate as
+    modal.
+    For additional documentation for the wxDialog class, refer to the following link:
+    http://docs.wxwidgets.org/3.1.0/classwx_dialog.html
+*/
 class conductorPropertySetDialog : public wxDialog
 {
 private:
     //! This will contain a local copy of the circuit list. This will allow for easy editing
-    std::vector<circuitProperty> _circuitList;
+    std::vector<circuitProperty> *_circuitList;
     
-    std::vector<conductorProperty> _conductorList;
+    std::vector<conductorProperty> *_conductorList;
     
     physicProblems _problem;
     
     //! This is the combo box containing the current avaiable magnetic boundary
-    wxComboBox *selection = new wxComboBox();
-    
-    /*! /brief 
-     *  The string array containing the names of the different circuits
-     *  This variable is actually used once to load the initial state of the names into the combo box.
-     *  Once the forum is loaded, this variable is no longer used as the combo box list can be directly edited.
-     */ 
-    wxArrayString *circuitNameArray = new wxArrayString();
-    
-    /*! /brief 
-     *  The string array containing the names of the different conductors
-     *  This variable is actually used once to load the initial state of the names into the combo box.
-     *  Once the forum is loaded, this variable is no longer used as the combo box list can be directly edited.
-     */ 
-    wxArrayString *conductorNameArray = new wxArrayString();
+    wxComboBox *_selection = new wxComboBox();
     
     /*! /brief
         This function is called when the Add Property button is called.
@@ -63,22 +63,14 @@ private:
     
     void makeDialog();
     
-    //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
-    
-    
 public:
     //! This is the constructor for the class. This constructor is for a magnetic material
-    conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> circuitList);
+    conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> *circuitList);
     
-    conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> conductorList);
+    conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> *conductorList);
     
     //! This is the destructor for the class. This will take the material list and save it back into memory
     ~conductorPropertySetDialog();
-    
-    //! This function needs to be called in order to retrieve the editted list once the dialog is closed
-    std::vector<circuitProperty> getCircuitList();
-    
-    std::vector<conductorProperty> getConductorList();
     
 private:
     wxDECLARE_EVENT_TABLE();  

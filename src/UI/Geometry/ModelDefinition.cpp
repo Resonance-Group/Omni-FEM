@@ -176,7 +176,7 @@ void modelDefinition::editSelection()
         }
         // Create and display the dialog dependign on the physics problem
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting, _localDefinition->getConductorList());
+            dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting, *_localDefinition->getConductorList());
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
             dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting); 
         
@@ -210,9 +210,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty, false);
+            dialog = new segmentPropertyDialog(this, *_localDefinition->getElectricalBoundaryList(), *_localDefinition->getConductorList(), selectedProperty, false);
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty, false);
+            dialog = new segmentPropertyDialog(this, *_localDefinition->getMagneticBoundaryList(), selectedProperty, false);
             
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -242,9 +242,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty, true);
+            dialog = new segmentPropertyDialog(this, *_localDefinition->getElectricalBoundaryList(), *_localDefinition->getConductorList(), selectedProperty, true);
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty, true);
+            dialog = new segmentPropertyDialog(this, *_localDefinition->getMagneticBoundaryList(), selectedProperty, true);
             
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -276,7 +276,7 @@ void modelDefinition::editSelection()
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
             dialog = new blockPropertyDialog(this, _localDefinition->getElectricalMaterialList(), selectedBlockLabel, _localDefinition->getElectricalPreferences().isAxistmmetric());
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new blockPropertyDialog(this, _localDefinition->getMagnetMaterialList(), _localDefinition->getCircuitList(), selectedBlockLabel, _localDefinition->getMagneticPreference().isAxistmmetric());
+            dialog = new blockPropertyDialog(this, _localDefinition->getMagnetMaterialList(), *_localDefinition->getCircuitList(), selectedBlockLabel, _localDefinition->getMagneticPreference().isAxistmmetric());
 
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -368,11 +368,11 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<node>::iterator nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); ++nodeIterator)
             {
                 bool conductorPropertyIsPresent = false;
-                if(nodeIterator->getNodeSetting()->getConductorPropertyName() != "None")
+                if(nodeIterator->getNodeSetting()->getConductorPropertyName() != "None" && _localDefinition->getConductorList() != nullptr)
                 {
-                    for(int i = 0; i < _localDefinition->getConductorList().size(); i++)
+                    for(int i = 0; i < _localDefinition->getConductorList()->size(); i++)
                     {
-                        if(nodeIterator->getNodeSetting()->getConductorPropertyName() == _localDefinition->getConductorList().at(i).getName())
+                        if(nodeIterator->getNodeSetting()->getConductorPropertyName() == _localDefinition->getConductorList()->at(i).getName())
                         {
                             conductorPropertyIsPresent = true;
                             break;
@@ -386,11 +386,11 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
                 bool conductorPropertyIsPresent = false;
-                if(lineIterator->getSegmentProperty()->getConductorName() != "None")
+                if(lineIterator->getSegmentProperty()->getConductorName() != "None" && _localDefinition->getConductorList() != nullptr)
                 {
-                    for(int i = 0; i < _localDefinition->getConductorList().size(); i++)
+                    for(int i = 0; i < _localDefinition->getConductorList()->size(); i++)
                     {
-                        if(lineIterator->getSegmentProperty()->getConductorName() == _localDefinition->getConductorList().at(i).getName() && !conductorPropertyIsPresent)
+                        if(lineIterator->getSegmentProperty()->getConductorName() == _localDefinition->getConductorList()->at(i).getName() && !conductorPropertyIsPresent)
                         {
                             conductorPropertyIsPresent = true;
                             break;
@@ -405,11 +405,11 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
                 bool conductorPropertyIsPresent = false;
-                if(arcIterator->getSegmentProperty()->getConductorName() != "None")
+                if(arcIterator->getSegmentProperty()->getConductorName() != "None" && _localDefinition->getConductorList() != nullptr)
                 {
-                    for(int i = 0; i < _localDefinition->getConductorList().size(); i++)
+                    for(int i = 0; i < _localDefinition->getConductorList()->size(); i++)
                     {
-                        if(arcIterator->getSegmentProperty()->getConductorName() == _localDefinition->getConductorList().at(i).getName() && !conductorPropertyIsPresent)
+                        if(arcIterator->getSegmentProperty()->getConductorName() == _localDefinition->getConductorList()->at(i).getName() && !conductorPropertyIsPresent)
                         {
                             conductorPropertyIsPresent = true;
                             break;
@@ -454,13 +454,13 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
                 bool boundaryIsPresent = false;
-                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC && _localDefinition->getElectricalBoundaryList() != nullptr)
                 {
                     if(lineIterator->getSegmentProperty()->getBoundaryName() != "None")
                     {
-                        for(int i = 0; i < _localDefinition->getElectricalBoundaryList().size(); i++)
+                        for(int i = 0; i < _localDefinition->getElectricalBoundaryList()->size(); i++)
                         {
-                            if(lineIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName() && !boundaryIsPresent)
+                            if(lineIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList()->at(i).getBoundaryName() && !boundaryIsPresent)
                             {
                                 boundaryIsPresent = true;
                                 break;
@@ -471,14 +471,14 @@ void modelDefinition::updateProperties(EditProperty property)
                             lineIterator->getSegmentProperty()->setBoundaryName("None");
                     }
                 }
-                else if (_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+                else if (_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS && _localDefinition->getElectricalBoundaryList() != nullptr)
                 {
                     bool boundaryIsPresent = false;
                     if(lineIterator->getSegmentProperty()->getBoundaryName() != "None")
                     {
-                        for(int i = 0; i < _localDefinition->getMagneticBoundaryList().size(); i++)
+                        for(int i = 0; i < _localDefinition->getMagneticBoundaryList()->size(); i++)
                         {
-                            if(lineIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName())
+                            if(lineIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList()->at(i).getBoundaryName())
                             {
                                 boundaryIsPresent = true;
                                 break;
@@ -494,13 +494,13 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
                 bool boundaryIsPresent = false;
-                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC && _localDefinition->getElectricalBoundaryList() != nullptr)
                 {
                     if(arcIterator->getSegmentProperty()->getBoundaryName() != "None")
                     {
-                        for(int i = 0; i < _localDefinition->getElectricalBoundaryList().size(); i++)
+                        for(int i = 0; i < _localDefinition->getElectricalBoundaryList()->size(); i++)
                         {
-                            if(arcIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName() && !boundaryIsPresent)
+                            if(arcIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList()->at(i).getBoundaryName() && !boundaryIsPresent)
                             {
                                 boundaryIsPresent = true;
                                 break;
@@ -511,14 +511,14 @@ void modelDefinition::updateProperties(EditProperty property)
                             arcIterator->getSegmentProperty()->setBoundaryName("None");
                     }
                 }
-                else if (_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+                else if (_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS && _localDefinition->getElectricalBoundaryList() != nullptr)
                 {
                     bool boundaryIsPresent = false;
                     if(arcIterator->getSegmentProperty()->getBoundaryName() != "None")
                     {
-                        for(int i = 0; i < _localDefinition->getMagneticBoundaryList().size(); i++)
+                        for(int i = 0; i < _localDefinition->getMagneticBoundaryList()->size(); i++)
                         {
-                            if(arcIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList().at(i).getBoundaryName())
+                            if(arcIterator->getSegmentProperty()->getBoundaryName() == _localDefinition->getElectricalBoundaryList()->at(i).getBoundaryName())
                             {
                                 boundaryIsPresent = true;
                                 break;
@@ -580,11 +580,11 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
                 bool circuitIsPresent = false;
-                if(blockIterator->getAddressProperty()->getCircuitName() != "None")
+                if(blockIterator->getAddressProperty()->getCircuitName() != "None" && _localDefinition->getConductorList() != nullptr)
                 {
-                    for(int i = 0; i < _localDefinition->getCircuitList().size(); i++)
+                    for(int i = 0; i < _localDefinition->getCircuitList()->size(); i++)
                     {
-                        if(blockIterator->getAddressProperty()->getCircuitName() == _localDefinition->getCircuitList().at(i).getName())
+                        if(blockIterator->getAddressProperty()->getCircuitName() == _localDefinition->getCircuitList()->at(i).getName())
                         {
                             circuitIsPresent = true;
                             break;
@@ -2968,7 +2968,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
         {
-            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
+            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, *_localDefinition->getElectricalBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;
@@ -2984,7 +2984,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         }
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
         {
-           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, *_localDefinition->getMagneticBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;

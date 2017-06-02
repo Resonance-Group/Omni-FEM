@@ -1,32 +1,22 @@
 #include <UI/ConductorsDialog/ConductorPropSetDialog.h>
 
-conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> circuitList) : wxDialog(par, wxID_ANY, "Conductor Definition")
+conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<circuitProperty> *circuitList) : wxDialog(par, wxID_ANY, "Conductor Definition")
 {
     _circuitList = circuitList;
  
     _problem = physicProblems::PROB_MAGNETICS;
    
-    for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
-    {
-        conductorNameArray->Add(wxString(circuitIterator->getName()));
-    }
-    
     makeDialog();
 }
 
 
 
-conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> conductorList) : wxDialog(par, wxID_ANY, "Conductor Definition")
+conductorPropertySetDialog::conductorPropertySetDialog(wxWindow *par, std::vector<conductorProperty> *conductorList) : wxDialog(par, wxID_ANY, "Conductor Definition")
 {
     _conductorList = conductorList;
  
     _problem = physicProblems::PROB_ELECTROSTATIC;
    
-    for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList.begin(); conductorIterator != _conductorList.end(); ++conductorIterator)
-    {
-        conductorNameArray->Add(wxString(conductorIterator->getName()));
-    }
-    
     makeDialog();
 }
 
@@ -44,13 +34,38 @@ void conductorPropertySetDialog::makeDialog()
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *conductorNameArray);
-    selection->SetFont(*font);
-    if(conductorNameArray->GetCount() > 0)
-        selection->SetSelection(0);
+    wxArrayString conductorNameArray;
+    
+    
+    switch(_problem)
+    {
+        case physicProblems::PROB_ELECTROSTATIC:
+        {
+            for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList->begin(); conductorIterator != _conductorList->end(); ++conductorIterator)
+            {
+                conductorNameArray.Add(wxString(conductorIterator->getName()));
+            }
+        }
+        break;
+        case physicProblems::PROB_MAGNETICS:
+        {
+           for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); ++circuitIterator)
+            {
+                conductorNameArray.Add(wxString(circuitIterator->getName()));
+            } 
+        }
+        break;
+        default:
+            return;
+    }
+    
+    _selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), conductorNameArray);
+    _selection->SetFont(*font);
+    if(conductorNameArray.GetCount() > 0)
+        _selection->SetSelection(0);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
-    headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);
+    headerSizer->Add(_selection, 0, wxALIGN_CENTER | wxUP, 6);
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
     addPropertyButton->SetFont(*font);
@@ -96,7 +111,7 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
         if(circuitPropDialog->ShowModal() == wxID_OK)
         {
             circuitPropDialog->getNewCircuit(newCircuit);
-            for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
+            for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); ++circuitIterator)
             {
                 if(circuitIterator->getName() == newCircuit.getName())
                 {
@@ -104,9 +119,9 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
-            _circuitList.push_back(newCircuit);
-            selection->Append(newCircuit.getName());
-            selection->SetSelection(0);
+            _circuitList->push_back(newCircuit);
+            _selection->Append(newCircuit.getName());
+            _selection->SetSelection(0);
         }
     }
     else if(_problem == physicProblems::PROB_ELECTROSTATIC)
@@ -117,7 +132,7 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
         if(conductorPropDialog->ShowModal() == wxID_OK)
         {
             conductorPropDialog->getNewConductor(newConductor);
-            for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList.begin(); conductorIterator != _conductorList.end(); ++conductorIterator)
+            for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList->begin(); conductorIterator != _conductorList->end(); ++conductorIterator)
             {
                 if(conductorIterator->getName() == newConductor.getName())
                 {
@@ -125,9 +140,9 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
-            _conductorList.push_back(newConductor);
-            selection->Append(newConductor.getName());
-            selection->SetSelection(0);
+            _conductorList->push_back(newConductor);
+            _selection->Append(newConductor.getName());
+            _selection->SetSelection(0);
         }
     }
 } 
@@ -136,19 +151,29 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
 
 void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_circuitList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
+    if(_circuitList != nullptr && _problem == physicProblems::PROB_MAGNETICS)
     {
-        int currentSelection = selection->GetCurrentSelection();
-        _circuitList.erase(_circuitList.begin() + currentSelection);
-        selection->Delete(currentSelection);
-        selection->SetSelection(0);
+        if(!_circuitList->empty())
+        {
+            int currentSelection = _selection->GetCurrentSelection();
+            _circuitList->erase(_circuitList->begin() + currentSelection);
+            _selection->Delete(currentSelection);
+            _selection->SetSelection(0);
+            if(_circuitList->empty())
+                _selection->SetValue(wxEmptyString);
+        }
     }
-    else if(_conductorList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
+    else if(_conductorList != nullptr && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        int currentSelection = selection->GetCurrentSelection();
-        _conductorList.erase(_conductorList.begin() + currentSelection);
-        selection->Delete(currentSelection);
-        selection->SetSelection(0);
+        if(!_conductorList->empty())
+        {
+            int currentSelection = _selection->GetCurrentSelection();
+            _conductorList->erase(_conductorList->begin() + currentSelection);
+            _selection->Delete(currentSelection);
+            _selection->SetSelection(0);
+            if(_conductorList->empty())
+                _selection->SetValue(wxEmptyString);
+        }
     }
 }
 
@@ -157,76 +182,68 @@ void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
 void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
 {
     
-    if(_circuitList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
+    if(_circuitList != nullptr && _problem == physicProblems::PROB_MAGNETICS)
     {
-        circuitProperty selectedCircuitProperty;
-        circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);
-        int currentSelection = selection->GetSelection();
-        selectedCircuitProperty = _circuitList.at(currentSelection);
-        circuitPropDialog->setCircuit(selectedCircuitProperty);
-        if(circuitPropDialog->ShowModal() == wxID_OK)
+        if(_circuitList->empty())
         {
-            /*
-             * This is a counter. The loop is checking to see if the user accidently changed the name of the material to one that is already there.
-             * However, the one that the user wants to modify is still in the list. So, the program needs to skip
-             * that one. Which, this counter will assist in that
-             */
-            int i = 0;
-            circuitPropDialog->getNewCircuit(selectedCircuitProperty);
-            for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
+            circuitProperty selectedCircuitProperty;
+            circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);
+            int currentSelection = _selection->GetSelection();
+            selectedCircuitProperty = _circuitList->at(currentSelection);
+            circuitPropDialog->setCircuit(selectedCircuitProperty);
+            if(circuitPropDialog->ShowModal() == wxID_OK)
             {
-                if(circuitIterator->getName() == selectedCircuitProperty.getName() && (i != currentSelection))
+                /*
+                 * This is a counter. The loop is checking to see if the user accidently changed the name of the material to one that is already there.
+                 * However, the one that the user wants to modify is still in the list. So, the program needs to skip
+                 * that one. Which, this counter will assist in that
+                 */
+                int i = 0;
+                circuitPropDialog->getNewCircuit(selectedCircuitProperty);
+                for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); ++circuitIterator)
                 {
-                    wxMessageBox(selectedCircuitProperty.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
-                    break;
-                }
-                
-                i++;
-            } 
-            _circuitList.at(currentSelection) = selectedCircuitProperty;
-            selection->SetString(currentSelection, selectedCircuitProperty.getName());
-            selection->SetSelection(0);
-        }
-    }
-    else if(_conductorList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
-    {
-        conductorProperty selectedConductor;
-        conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog(this);
-        int currentSelection = selection->GetSelection();
-        selectedConductor = _conductorList.at(currentSelection);
-        conductorPropDialog->setConductor(selectedConductor);
-        if(conductorPropDialog->ShowModal() == wxID_OK)
-        {
-            int i = 0;
-            conductorPropDialog->getNewConductor(selectedConductor);
-            for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList.begin(); conductorIterator != _conductorList.end(); ++conductorIterator)
-            {
-                if(conductorIterator->getName() == selectedConductor.getName() && i != currentSelection)
-                {
-                    wxMessageBox(selectedConductor.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
-                    break;
-                }
-                i++;
+                    if(circuitIterator->getName() == selectedCircuitProperty.getName() && (i != currentSelection))
+                    {
+                        wxMessageBox(selectedCircuitProperty.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
+                        break;
+                    }
+                    
+                    i++;
+                } 
+                _circuitList->at(currentSelection) = selectedCircuitProperty;
+                _selection->SetString(currentSelection, selectedCircuitProperty.getName());
+                _selection->SetSelection(0);
             }
-            _conductorList.at(currentSelection) = selectedConductor;
-            selection->SetString(currentSelection, selectedConductor.getName());
-            selection->SetSelection(0);
         }
     }
-}
-
-
-
-std::vector<conductorProperty> conductorPropertySetDialog::getConductorList()
-{
-    return _conductorList;
-}
-
-
-
-std::vector<circuitProperty> conductorPropertySetDialog::getCircuitList()
-{
-    return _circuitList;
+    else if(_conductorList != nullptr && _problem == physicProblems::PROB_ELECTROSTATIC)
+    {
+        if(!_conductorList->empty())
+        {
+            conductorProperty selectedConductor;
+            conductorPropertyDialog *conductorPropDialog = new conductorPropertyDialog(this);
+            int currentSelection = _selection->GetSelection();
+            selectedConductor = _conductorList->at(currentSelection);
+            conductorPropDialog->setConductor(selectedConductor);
+            if(conductorPropDialog->ShowModal() == wxID_OK)
+            {
+                int i = 0;
+                conductorPropDialog->getNewConductor(selectedConductor);
+                for(std::vector<conductorProperty>::iterator conductorIterator = _conductorList->begin(); conductorIterator != _conductorList->end(); ++conductorIterator)
+                {
+                    if(conductorIterator->getName() == selectedConductor.getName() && i != currentSelection)
+                    {
+                        wxMessageBox(selectedConductor.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER);
+                        break;
+                    }
+                    i++;
+                }
+                _conductorList->at(currentSelection) = selectedConductor;
+                _selection->SetString(currentSelection, selectedConductor.getName());
+                _selection->SetSelection(0);
+            }
+        }
+    }
 }
 
 

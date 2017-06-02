@@ -69,8 +69,8 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     LamWireSettingsArray->Add("Plain Stranded Wire");
     LamWireSettingsArray->Add("Litz Wire");
     LamWireSettingsArray->Add("Square Wire");
-    LamWireSettingsArray->Add("10% CCA");
-    LamWireSettingsArray->Add("15% CCA");
+    LamWireSettingsArray->Add("Copper Clad Aluminium 10%");
+    LamWireSettingsArray->Add("Copper Clad Aluminium 15%");
     
     /* This section is for the header */
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");

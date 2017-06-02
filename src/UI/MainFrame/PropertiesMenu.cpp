@@ -35,7 +35,6 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
         boundaryDialog *boundaryDia = new boundaryDialog(this, _problemDefinition.getElectricalBoundaryList());
         if(boundaryDia->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setBoundaryList(boundaryDia->getElectrostaticBoundaryList());
             _model->updateProperties(EditProperty::EDIT_BOUNDARY);
         }
     }
@@ -44,7 +43,6 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
         boundaryDialog *boundaryDia = new boundaryDialog(this, _problemDefinition.getMagneticBoundaryList());
         if(boundaryDia->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setBoundaryList(boundaryDia->getMagneticBoundaryList());
             _model->updateProperties(EditProperty::EDIT_BOUNDARY);
         }
     }
@@ -83,7 +81,6 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
         conductorPropertySetDialog *diag = new conductorPropertySetDialog(this, _problemDefinition.getConductorList());
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setConductorList(diag->getConductorList());
             _model->updateProperties(EditProperty::EDIT_CONDUCTOR);
         }
     }
@@ -92,7 +89,6 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
         conductorPropertySetDialog *diag = new conductorPropertySetDialog(this, _problemDefinition.getCircuitList());
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setCircuitList(diag->getCircuitList());
             _model->updateProperties(EditProperty::EDIT_CIRCUIT);
             _model->Refresh();
         }

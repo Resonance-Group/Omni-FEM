@@ -109,6 +109,7 @@ private:
     * Methods *
 	***********/
 public:
+    
     //! Sets the physics problem
     /*!
         \param prob A value that represents the physics simulation that 
@@ -169,18 +170,18 @@ public:
     /*!
         \return Returns a vector that contains all of the magnetic boundary list
     */ 
-    std::vector<magneticBoundary> getMagneticBoundaryList()
+    std::vector<magneticBoundary> *getMagneticBoundaryList()
     {
-        return _localMagneticBoundaryConditionList;
+        return &_localMagneticBoundaryConditionList;
     }
     
     //! Retrieves the electrical boundary list
     /*!
         \return Returns a vector that contains all of the electrical boundary list
     */
-    std::vector<electricalBoundary> getElectricalBoundaryList()
+    std::vector<electricalBoundary> *getElectricalBoundaryList()
     {
-        return _localElectricalBoundaryConditionList;
+        return &_localElectricalBoundaryConditionList;
     }
     
     //! Sets the conductor list
@@ -198,9 +199,9 @@ public:
     /*!
         \return Returns a vector containing all of the conductor properties
     */ 
-    std::vector<conductorProperty> getConductorList()
+    std::vector<conductorProperty> *getConductorList()
     {
-        return _localConductorList;
+        return &_localConductorList;
     }
     
     //! Sets the circuit list
@@ -218,9 +219,9 @@ public:
     /*!
         \return Returns a vector containing all of the circuit properties
     */ 
-    std::vector<circuitProperty> getCircuitList()
+    std::vector<circuitProperty> *getCircuitList()
     {
-        return _localCircuitList;
+        return &_localCircuitList;
     }
     
     //! Sets the nodal list
