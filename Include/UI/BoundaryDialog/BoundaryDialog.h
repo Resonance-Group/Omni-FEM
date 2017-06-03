@@ -69,13 +69,13 @@ private:
     
     //! Event Procedure that is called when the user clicks on the Delete Property button
     /*!
-        This function will remove the propety that is selected in the combo boc from the
-        the list. This will only occur if there are more then 1 elements with in the list
+        This function will remove the property that is selected in the combo box from the
+        the list. This will only occur if there are more then 1 elements within the list
         \param event A required parameter in order to properly route the event procedure
     */ 
     void onDeleteProperty(wxCommandEvent &event);
 
-    //! Event procedure that is called when the user clicks on the Modift Property button
+    //! Event procedure that is called when the user clicks on the Modify Property button
     /*!
         This function will bring up the apprioate dialog box in order to modify the settings
         of the property that is selected in the combo box. This will only occur if there is more
@@ -112,7 +112,7 @@ public:
     ~boundaryDialog();
     
 private:
-//! Required function for the event procedures to work properly
+    //! Required function for the event procedures to work properly
     wxDECLARE_EVENT_TABLE();
 };
 

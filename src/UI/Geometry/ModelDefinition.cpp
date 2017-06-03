@@ -176,9 +176,9 @@ void modelDefinition::editSelection()
         }
         // Create and display the dialog dependign on the physics problem
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting, *_localDefinition->getConductorList());
+            dialog = new setNodalPropertyDialog(this, *_localDefinition->getNodalPropertyList(), selectedNodeSetting, *_localDefinition->getConductorList());
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting); 
+            dialog = new setNodalPropertyDialog(this, *_localDefinition->getNodalPropertyList(), selectedNodeSetting); 
         
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -274,9 +274,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new blockPropertyDialog(this, _localDefinition->getElectricalMaterialList(), selectedBlockLabel, _localDefinition->getElectricalPreferences().isAxistmmetric());
+            dialog = new blockPropertyDialog(this, *_localDefinition->getElectricalMaterialList(), selectedBlockLabel, _localDefinition->getElectricalPreferences().isAxistmmetric());
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new blockPropertyDialog(this, _localDefinition->getMagnetMaterialList(), *_localDefinition->getCircuitList(), selectedBlockLabel, _localDefinition->getMagneticPreference().isAxistmmetric());
+            dialog = new blockPropertyDialog(this, *_localDefinition->getMagnetMaterialList(), *_localDefinition->getCircuitList(), selectedBlockLabel, _localDefinition->getMagneticPreference().isAxistmmetric());
 
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -429,14 +429,14 @@ void modelDefinition::updateProperties(EditProperty property)
                 bool nodalPropertyIsPresent = false;
                 if(nodeIterator->getNodeSetting()->getNodalPropertyName() != "None")
                 {
-                    for(int i = 0; i < _localDefinition->getNodalPropertyList().size(); i++)
+                    for(int i = 0; i < _localDefinition->getNodalPropertyList()->size(); i++)
                     {
                         // THis section will take the nodeIterator object and comapre it against each property that is related to the node. It will only compare against the name
                         // IF the problem is electrostatics, we will also compare against the conductor property.
                         // IF the property name is found in the master list, the loop will break and move onto the next node object.
                         // If not, then the property name within the node object will be changed back to none.
                         // This logic continues for the other geometry shape cases
-                        if(nodeIterator->getNodeSetting()->getNodalPropertyName() == _localDefinition->getNodalPropertyList().at(i).getName() && !nodalPropertyIsPresent)
+                        if(nodeIterator->getNodeSetting()->getNodalPropertyName() == _localDefinition->getNodalPropertyList()->at(i).getName() && !nodalPropertyIsPresent)
                         {
                             nodalPropertyIsPresent = true;
                             break;
@@ -538,39 +538,52 @@ void modelDefinition::updateProperties(EditProperty property)
             {
                 bool materialIsPresent = false;
                 
-                if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+                switch(_localDefinition->getPhysicsProblem())
                 {
-                    if(blockIterator->getAddressProperty()->getMaterialName() != "None")
+                    case physicProblems::PROB_ELECTROSTATIC:
                     {
-                        for(int i = 0; i < _localDefinition->getElectricalMaterialList().size(); i++)
+                        if(_localDefinition->getElectricalMaterialList() != nullptr)
                         {
-                            if(blockIterator->getAddressProperty()->getMaterialName() == _localDefinition->getElectricalMaterialList().at(i).getName())
+                            if(blockIterator->getProperty()->getMaterialName() != "None")
                             {
-                                materialIsPresent = true;
-                                break;
-                            }
-                        }
-                        
-                        if(!materialIsPresent)
-                            blockIterator->getAddressProperty()->setMaterialName("None");
-                    }
-                    else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-                    {
-                        if(blockIterator->getAddressProperty()->getMaterialName() != "None")
-                        {
-                            for(int i = 0; i < _localDefinition->getMagnetMaterialList().size(); i++)
-                            {
-                                if(blockIterator->getAddressProperty()->getMaterialName() == _localDefinition->getMagnetMaterialList().at(i).getName())
+                                for(int i = 0; i < _localDefinition->getElectricalMaterialList()->size(); i++)
                                 {
-                                    materialIsPresent = true;
-                                    break;
+                                    if(blockIterator->getProperty()->getMaterialName() == _localDefinition->getElectricalMaterialList()->at(i).getName())
+                                    {
+                                        materialIsPresent = true;
+                                        break;
+                                    }
                                 }
+                                
+                                if(!materialIsPresent)
+                                    blockIterator->getProperty()->setMaterialName("None");
                             }
-                            
-                            if(!materialIsPresent)
-                                blockIterator->getAddressProperty()->setMaterialName("None");
                         }
                     }
+                    break;
+                    case physicProblems::PROB_MAGNETICS:
+                    {
+                        if(_localDefinition->getMagnetMaterialList() != nullptr)
+                        {
+                            if(blockIterator->getProperty()->getMaterialName() != "None")
+                            {
+                                for(int i = 0; i < _localDefinition->getMagnetMaterialList()->size(); i++)
+                                {
+                                    if(blockIterator->getProperty()->getMaterialName() == _localDefinition->getMagnetMaterialList()->at(i).getName())
+                                    {
+                                        materialIsPresent = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if(!materialIsPresent)
+                                    blockIterator->getProperty()->setMaterialName("None");
+                            }
+                        }
+                    }
+                    break;
+                    default:
+                        break;
                 }
             }
         }
@@ -580,11 +593,11 @@ void modelDefinition::updateProperties(EditProperty property)
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
                 bool circuitIsPresent = false;
-                if(blockIterator->getAddressProperty()->getCircuitName() != "None" && _localDefinition->getConductorList() != nullptr)
+                if(blockIterator->getProperty()->getCircuitName() != "None" && _localDefinition->getConductorList() != nullptr)
                 {
                     for(int i = 0; i < _localDefinition->getCircuitList()->size(); i++)
                     {
-                        if(blockIterator->getAddressProperty()->getCircuitName() == _localDefinition->getCircuitList()->at(i).getName())
+                        if(blockIterator->getProperty()->getCircuitName() == _localDefinition->getCircuitList()->at(i).getName())
                         {
                             circuitIsPresent = true;
                             break;
@@ -592,7 +605,7 @@ void modelDefinition::updateProperties(EditProperty property)
                     }
                     
                     if(!circuitIsPresent)
-                        blockIterator->getAddressProperty()->setCircuitName("None");
+                        blockIterator->getProperty()->setCircuitName("None");
                 }
             }
         }
@@ -2623,7 +2636,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
     {
         blockIterator->draw();
-        if(_preferences.getShowBlockNameState())
+        if(_preferences.getShowBlockNameState() && !blockIterator->getDraggingState())
         {
             blockIterator->drawBlockName(_fontRender, (_zoomX + _zoomY) / 2.0);
             if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)

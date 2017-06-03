@@ -184,7 +184,7 @@ void conductorPropertySetDialog::onModifyProperty(wxCommandEvent &event)
     
     if(_circuitList != nullptr && _problem == physicProblems::PROB_MAGNETICS)
     {
-        if(_circuitList->empty())
+        if(!_circuitList->empty())
         {
             circuitProperty selectedCircuitProperty;
             circuitPropertyDialog *circuitPropDialog = new circuitPropertyDialog(this);

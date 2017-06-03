@@ -168,7 +168,7 @@ public:
     
     //! Retrieves the magnetic boundary list
     /*!
-        \return Returns a vector that contains all of the magnetic boundary list
+        \return Returns a pointer to a vector that contains all of the magnetic boundary list
     */ 
     std::vector<magneticBoundary> *getMagneticBoundaryList()
     {
@@ -177,7 +177,7 @@ public:
     
     //! Retrieves the electrical boundary list
     /*!
-        \return Returns a vector that contains all of the electrical boundary list
+        \return Returns a pointer to a vector that contains all of the electrical boundary list
     */
     std::vector<electricalBoundary> *getElectricalBoundaryList()
     {
@@ -197,7 +197,7 @@ public:
     
     //! Retrieves the condutor list
     /*!
-        \return Returns a vector containing all of the conductor properties
+        \return Returns a pointer to a vector containing all of the conductor properties
     */ 
     std::vector<conductorProperty> *getConductorList()
     {
@@ -217,7 +217,7 @@ public:
     
     //! Retrieves the circuit list
     /*!
-        \return Returns a vector containing all of the circuit properties
+        \return Returns a pointer to a vector containing all of the circuit properties
     */ 
     std::vector<circuitProperty> *getCircuitList()
     {
@@ -236,11 +236,11 @@ public:
     
     //! Retrieves the nodal list
     /*!
-        \return Returns a vector containing all of the nodal properties
+        \return Returns a pointer to a vector containing all of the nodal properties
     */
-    std::vector<nodalProperty> getNodalPropertyList()
+    std::vector<nodalProperty> *getNodalPropertyList()
     {
-        return _localNodalList;
+        return &_localNodalList;
     }
     
     //! Sets the magnetic material list
@@ -267,36 +267,18 @@ public:
     
     //! Retrieves the magnetic material list
     /*!
-        \return Returns a vector containing all of the magnetic material properties
+        \return Returns a pointer to a vector containing all of the magnetic material properties
     */
-    std::vector<magneticMaterial> getMagnetMaterialList()
-    {
-        return _localMagneticMaterialList;
-    }
-    
-    //! Retrieves the magnetic material list
-    /*!
-        \return Returns a pointer pointing to the vector containing all of the magnetic material properties
-    */
-    std::vector<magneticMaterial> *modifyMagnetMaterialList()
+    std::vector<magneticMaterial> *getMagnetMaterialList()
     {
         return &_localMagneticMaterialList;
     }
     
     //! Retrieves the electrical material list
     /*!
-        \return Returns a vector containing all of the electrical material properties
+        \return Returns a pointer to a vector containing all of the electrical material properties
     */
-    std::vector<electrostaticMaterial> getElectricalMaterialList()
-    {
-        return _localElectrialMaterialList;
-    }
-    
-    //! Retrieves the electrical material list
-    /*!
-        \return Returns a pointer pointing to the vector containing all of the electrical material properties
-    */
-    std::vector<electrostaticMaterial> *modifyElectricalMaterialList()
+    std::vector<electrostaticMaterial> *getElectricalMaterialList()
     {
         return &_localElectrialMaterialList;
     }

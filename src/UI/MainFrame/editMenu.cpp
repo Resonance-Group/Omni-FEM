@@ -171,7 +171,7 @@ void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
                 wxString baseString = "e";
                 baseString.append(std::to_string(i + 1));
                 material.setName(baseString.ToStdString());
-                _problemDefinition.modifyElectricalMaterialList()->push_back(material);
+                _problemDefinition.getElectricalMaterialList()->push_back(material);
             }
             
             if(boundaryEdge == OpenBoundaryEdge::DIRICHLET)
@@ -189,7 +189,7 @@ void OmniFEMMainFrame::onCreateOpenBoundary(wxCommandEvent &event)
                 wxString baseString = "u";
                 baseString.append(std::to_string(i + 1));
                 material.setName(baseString.ToStdString());
-                _problemDefinition.modifyMagnetMaterialList()->push_back(material);
+                _problemDefinition.getMagnetMaterialList()->push_back(material);
             }
             
             if(boundaryEdge == OpenBoundaryEdge::DIRICHLET)

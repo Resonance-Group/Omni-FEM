@@ -9,7 +9,6 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
         materialDialog *materialDiag = new materialDialog(this, _problemDefinition.getElectricalMaterialList());
         if(materialDiag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setMaterialList(materialDiag->getElectroMaterialList());
             _model->updateProperties(EditProperty::EDIT_MATERIAL);
             _model->Refresh();
         }
@@ -19,7 +18,6 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
         materialDialog *materialDiag = new materialDialog(this, _problemDefinition.getMagnetMaterialList()); 
         if(materialDiag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setMaterialList(materialDiag->getMagenticMaterialList());
             _model->updateProperties(EditProperty::EDIT_MATERIAL);
             _model->Refresh();
         }
@@ -57,7 +55,6 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
         nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_ELECTROSTATIC);
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
             _model->updateProperties(EditProperty::EDIT_NODAL);
         }
     }
@@ -66,7 +63,6 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
         nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_MAGNETICS);
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
             _model->updateProperties(EditProperty::EDIT_NODAL);
         }
     }

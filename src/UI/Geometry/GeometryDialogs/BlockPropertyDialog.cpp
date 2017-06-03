@@ -73,7 +73,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
         {
             if(_magneticMaterialList.at(i).getName() == property.getMaterialName())
             {
-                _materialComboBox->SetSelection(i + 1);
+                _materialComboBox->SetSelection(i + 2);
                 break;
             }
         }
@@ -268,7 +268,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
         {
             if(_electricalMaterialList.at(i).getName() == property.getMaterialName())
             {
-                _materialComboBox->SetSelection(i + 1);
+                _materialComboBox->SetSelection(i + 2);
                 break;
             }
         }
