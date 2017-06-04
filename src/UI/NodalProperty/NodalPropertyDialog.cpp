@@ -4,22 +4,15 @@
 
 nodalPropertyDialog::nodalPropertyDialog(wxWindow *par, physicProblems problem) : wxDialog(par, wxID_ANY, "Nodal Property")
 {
-    createDialog(problem);
+    _problem = problem;
+    createDialog();
 }
 
 
 
-nodalPropertyDialog::nodalPropertyDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Nodal Property")
-{
-    
-}
-
-
-void nodalPropertyDialog::createDialog(physicProblems problem)
+void nodalPropertyDialog::createDialog()
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
-    _problem = problem;
     
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *radioSizer = new wxBoxSizer(wxVERTICAL);

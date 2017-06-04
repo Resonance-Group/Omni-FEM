@@ -11,21 +11,29 @@
     tangential derivative of A along the boundary. The form for A along the bonudary
     is specified by 3 different parameters: A0, A1, A2, and phi. If the problem is planar:
     then the forumal for A is as follows:
+
     \f[ A=(A_0+A_1x+A_2y)e^{j\phi} \f]
+    
     or A = (A0 + A1 * x + A2 * y)^(j * phi).
     For axisymmetruc problems, A corresponds to the following equation:
+
     \f[ A=(A_0+A_1r+A_2z)e^{j\phi} \f]
+    
     or A = (A0 + A1 * r + A2 * z)^(j * phi).
   
     For the small skin depth boundary condition, this boundary condition denotes an interface
     with a material subject to eddy currents at frequencies that are high enough such that the 
     skin depth in the material is very small. Teh boundary condition for the small skin depth
     is a Robin boundary condition:
+
     \f[ \frac{\partial A}{\partial n} + (\frac{1+j}{\delta })A=0 \f]
+    
     or dA/dn + ((1 + j)/(delta)) * A = 0 where n is the direction
     of the outward normal to the bounday and \f[ \delta \f] denotes the skin deth
     of the material at the frequency of interest. The skin depth is defined as:
+
     \f[ \sqrt{\frac{2}{\omega \mu_{r} \mu_o \sigma}}=\delta \f]
+    
     or sqrt(2 / (ω * μr * μo * σ)) = δ where ω = 2 * π * f.
     μr and σ are defined as the relative permeability and conductivity of the skin depth
     eddy current material. At 0 Hz, the boundary condition becomes \f[ \frac{\partial A}{\partial n} = 0 \f]

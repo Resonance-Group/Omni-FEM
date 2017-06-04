@@ -51,6 +51,12 @@ private:
     physicProblems _problem;
     
     //! Combo box that contains the listing of all of the names of the list
+    /*!
+        Combo box that contains the listing of all of the names of the list
+        For documentation on the wxComboBox class, 
+        refer to the following link:
+        http://docs.wxwidgets.org/trunk/classwx_combo_box.html
+    */ 
     wxComboBox *_selection = new wxComboBox();
     
     //! Event procedure that is called when the user presses the Add Property button
