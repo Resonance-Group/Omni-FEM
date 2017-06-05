@@ -351,20 +351,6 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref)
 
 
 
-void globalPreferencesDialog::updateInterface()
-{
-    if(_problem == physicProblems::PROB_ELECTROSTATIC)
-    {
-        
-    }
-    else if(_problem == physicProblems::PROB_MAGNETICS)
-    {
-        
-    }
-}
-
-
-
 wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, globalPreferencesDialog::onProblemTypeComboBox)
 wxEND_EVENT_TABLE()
