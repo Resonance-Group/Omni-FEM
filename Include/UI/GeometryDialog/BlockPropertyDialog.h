@@ -26,7 +26,9 @@
     that allows the user to edit the properties
     of a block label. After clicking on the ok button,
     this class will generate a wxID_OK event which will allow the 
-    program to grab the parameters of the block property
+    program to grab the parameters of the block property.
+    For documentation on the wxDialog class, refer to the following link:
+    http://docs.wxwidgets.org/3.1.0/classwx_dialog.html
 */ 
 class blockPropertyDialog : public wxDialog
 {

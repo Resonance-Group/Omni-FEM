@@ -176,9 +176,9 @@ void modelDefinition::editSelection()
         }
         // Create and display the dialog dependign on the physics problem
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new setNodalPropertyDialog(this, *_localDefinition->getNodalPropertyList(), selectedNodeSetting, *_localDefinition->getConductorList());
+            dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting, _localDefinition->getConductorList());
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new setNodalPropertyDialog(this, *_localDefinition->getNodalPropertyList(), selectedNodeSetting); 
+            dialog = new setNodalPropertyDialog(this, _localDefinition->getNodalPropertyList(), selectedNodeSetting); 
         
         if(dialog->ShowModal() == wxID_OK)
         {

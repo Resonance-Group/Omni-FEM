@@ -1,7 +1,7 @@
 #include <UI/GeometryDialog/NodalSettingDialog.h>
 
 
-setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> nodePropertyList, nodeSetting nodeSettings, std::vector<conductorProperty> conductorPropertyList) : wxDialog(par, wxID_ANY, "Nodal Settings")
+setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> *nodePropertyList, nodeSetting nodeSettings, std::vector<conductorProperty> *conductorPropertyList) : wxDialog(par, wxID_ANY, "Nodal Settings")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
      
@@ -22,12 +22,12 @@ setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalP
     wxArrayString *conductorPropertyNameArray = new wxArrayString();
     conductorPropertyNameArray->Add("None");
      
-    for(std::vector<nodalProperty>::iterator nameIterator = _nodalList.begin(); nameIterator != _nodalList.end(); ++nameIterator)
+    for(std::vector<nodalProperty>::iterator nameIterator = _nodalList->begin(); nameIterator != _nodalList->end(); ++nameIterator)
     {
         nodePropertyNameArray->Add(nameIterator->getName());
     }
     
-    for(std::vector<conductorProperty>::iterator nameIterator = _conductorList.begin(); nameIterator != _conductorList.end(); ++nameIterator)
+    for(std::vector<conductorProperty>::iterator nameIterator = _conductorList->begin(); nameIterator != _conductorList->end(); ++nameIterator)
     {
         conductorPropertyNameArray->Add(nameIterator->getName());
     }
@@ -46,9 +46,9 @@ setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalP
          * we know the name. From there, we can determine what selection to set the combo box becuase it is +1 of the 
          * nodal list position
          */ 
-        for(int i = 0; i < _nodalList.size(); i++)
+        for(int i = 0; i < _nodalList->size(); i++)
         {
-            if(_nodalList.at(i).getName() == _nodeSetting.getNodalPropertyName())
+            if(_nodalList->at(i).getName() == _nodeSetting.getNodalPropertyName())
             {
                 _nodePropertyComboBox->SetSelection(i + 1);
                 break;
@@ -78,9 +78,9 @@ setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalP
     }
     else
     {
-        for(int i = 0; i < _conductorList.size(); i++)
+        for(int i = 0; i < _conductorList->size(); i++)
         {
-            if(_conductorList.at(i).getName() == _nodeSetting.getConductorPropertyName())
+            if(_conductorList->at(i).getName() == _nodeSetting.getConductorPropertyName())
             {
                 _conductorsComboBox->SetSelection(i + 1);
                 break;
@@ -111,7 +111,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalP
  
  
  
-setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> nodePropertyList, nodeSetting nodeSettings) : wxDialog(par, wxID_ANY, "Nodal Settings")
+setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalProperty> *nodePropertyList, nodeSetting nodeSettings) : wxDialog(par, wxID_ANY, "Nodal Settings")
 {
      wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
      
@@ -127,7 +127,7 @@ setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalP
     wxArrayString *nodePropertyNameArray = new wxArrayString();
     nodePropertyNameArray->Add("None");
      
-    for(std::vector<nodalProperty>::iterator nameIterator = _nodalList.begin(); nameIterator != _nodalList.end(); ++nameIterator)
+    for(std::vector<nodalProperty>::iterator nameIterator = _nodalList->begin(); nameIterator != _nodalList->end(); ++nameIterator)
     {
         nodePropertyNameArray->Add(nameIterator->getName());
     }
@@ -146,9 +146,9 @@ setNodalPropertyDialog::setNodalPropertyDialog(wxWindow *par, std::vector<nodalP
          * we know the name. From there, we can determine what selection to set the combo box becuase it is +1 of the 
          * nodal list position
          */ 
-        for(int i = 0; i < _nodalList.size(); i++)
+        for(int i = 0; i < _nodalList->size(); i++)
         {
-            if(_nodalList.at(i).getName() == _nodeSetting.getNodalPropertyName())
+            if(_nodalList->at(i).getName() == _nodeSetting.getNodalPropertyName())
             {
                 _nodePropertyComboBox->SetSelection(i + 1);
                 break;
