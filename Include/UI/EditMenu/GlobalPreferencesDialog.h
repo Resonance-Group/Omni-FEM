@@ -73,68 +73,140 @@ private:
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
     
     //! Text box used to modify the depth of the problem
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_depthTextCtrl = new wxTextCtrl();
     
     //! Text box used to modify the precision of the problem
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_precisionTextCtrl = new wxTextCtrl();
     
     //! Text box used to modify the minimum angle of the problem
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_minAngleTextCtrl = new wxTextCtrl();
     
     //! Text box used to modify the comments of the problem
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_commentsTextCtrl = new wxTextCtrl();
     
     //! Combo box used to select the units for the length
     /*!
         The units are also used to specify teh units for the
-        depth
+        depth.
+        For documenation on the wxComboBox class, refer to the following
+        link:
+        http://docs.wxwidgets.org/trunk/classwx_combo_box.html
     */ 
     wxComboBox *_lengthComboBox = new wxComboBox();
     
     //! Combo boxused to select the problem type of the simulation
     /*!
         The selection can be either Planar or Axisymmetric
+        For documenation on the wxComboBox class, refer to the following
+        link:
+        http://docs.wxwidgets.org/trunk/classwx_combo_box.html
     */ 
     wxComboBox *_problemTypeComboBox = new wxComboBox();
     
     /* This section are declarations for specifically the magnetic problem */
     
     //! Text box used to modify the frequency for the problem
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */
     wxTextCtrl *_frequencyTextCtrl = new wxTextCtrl();
     
     //! Combo box used to select the AC solver of the problem
     /*!
-        Can be either Succisive Approxamation or Newton
+        Can be either Succisive Approxamation or Newton.
+        For documenation on the wxComboBox class, refer to the following
+        link:
+        http://docs.wxwidgets.org/trunk/classwx_combo_box.html
     */ 
     wxComboBox *_acSolverComboBox = new wxComboBox();
     
     /* This section is for creating the grid settings */
     
     //! Text box used to modify the grid step size
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */
     wxTextCtrl *_gridStepTextCtrl = new wxTextCtrl();
     
     //! Combo box used to select the coordiante plane
     /*!
-        Can be either Cartesian or Planar
+        Can be either Cartesian or Planar.
+        For documenation on the wxComboBox class, refer to the following
+        link:
+        http://docs.wxwidgets.org/trunk/classwx_combo_box.html
     */ 
     wxComboBox *_coordinateComboBox = new wxComboBox();
     
     //! Check box used to toggle the show grid state
+    /*!
+        For documentation on the wxCheckBox class, refer to
+        the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
+    */ 
     wxCheckBox *_showGridCheckBox = new wxCheckBox();
     
     //! Check box used to toggle the show origin state
+    /*!
+        For documentation on the wxCheckBox class, refer to
+        the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
+    */ 
     wxCheckBox *_showOriginCheckBox = new wxCheckBox();
     
     //! Check box used to toggle the show grid axis state
+    /*!
+        For documentation on the wxCheckBox class, refer to
+        the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
+    */ 
     wxCheckBox *_showGridAxisCheckBox = new wxCheckBox();
     
     //! Check box used to toggle the snap to grid state
+    /*!
+        For documentation on the wxCheckBox class, refer to
+        the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
+    */ 
     wxCheckBox *_snapGridCheckBox = new wxCheckBox();
     
     //! Check box used to toggle the show block names state
+    /*!
+        For documentation on the wxCheckBox class, refer to
+        the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
+    */ 
     wxCheckBox *_showBlockNameCheckBox = new wxCheckBox();
     
     //! Check box used to toggle the reverse mouse wheel direction for zooming state
+    /*!
+        For documentation on the wxCheckBox class, refer to
+        the following link:
+        http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
+    */ 
     wxCheckBox *_reverseMouseZoomCheckBox = new wxCheckBox();
     
     //! Function that is called to draw the screen

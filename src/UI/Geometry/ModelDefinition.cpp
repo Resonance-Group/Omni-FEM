@@ -274,9 +274,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new blockPropertyDialog(this, *_localDefinition->getElectricalMaterialList(), selectedBlockLabel, _localDefinition->getElectricalPreferences().isAxistmmetric());
+            dialog = new blockPropertyDialog(this, _localDefinition->getElectricalMaterialList(), selectedBlockLabel, _localDefinition->getElectricalPreferences().isAxistmmetric());
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new blockPropertyDialog(this, *_localDefinition->getMagnetMaterialList(), *_localDefinition->getCircuitList(), selectedBlockLabel, _localDefinition->getMagneticPreference().isAxistmmetric());
+            dialog = new blockPropertyDialog(this, _localDefinition->getMagnetMaterialList(), _localDefinition->getCircuitList(), selectedBlockLabel, _localDefinition->getMagneticPreference().isAxistmmetric());
 
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -2981,7 +2981,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
         {
-            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, *_localDefinition->getElectricalBoundaryList());
+            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;
@@ -2997,7 +2997,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         }
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
         {
-           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, *_localDefinition->getMagneticBoundaryList());
+           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;

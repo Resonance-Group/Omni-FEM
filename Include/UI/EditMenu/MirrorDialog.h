@@ -18,15 +18,35 @@ class mirrorDialog : public wxDialog
 {
 private:
     //! Text box used to enter in the first coordinate point in the X-plane
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_firstPointXTextCtrl = new wxTextCtrl();
     
     //! Text box used to enter in the first coordinate point in the Y-plane
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_firstPointYTextCtrl = new wxTextCtrl();
     
     //! Text box used to enter in the second coordinate point in the X-plane
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_secondPointXTextCtrl = new wxTextCtrl();
     
     //! Text box used to enter in the second coordinate point in the Y-plane
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_secondPointYTextCtrl = new wxTextCtrl();
     
 public:

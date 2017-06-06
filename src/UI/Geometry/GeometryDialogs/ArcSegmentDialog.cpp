@@ -2,36 +2,22 @@
 
 
 
-arcSegmentDialog::arcSegmentDialog(wxWindow *par, std::vector<electricalBoundary> list) : wxDialog(par, wxID_ANY, "Arc Segment")
+arcSegmentDialog::arcSegmentDialog(wxWindow *par, std::vector<electricalBoundary> *list) : wxDialog(par, wxID_ANY, "Arc Segment")
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     
     _localElectricalBoundaryList = list;
-    
-    _nameArray.Add("None");
-    
-    for(std::vector<electricalBoundary>::iterator electricalIterator = _localElectricalBoundaryList.begin(); electricalIterator != _localElectricalBoundaryList.end(); ++electricalIterator)
-    {
-        _nameArray.Add(electricalIterator->getBoundaryName());
-    }
-    
+
     createDialog();
 }
 
 
 
-arcSegmentDialog::arcSegmentDialog(wxWindow *par, std::vector<magneticBoundary> list) : wxDialog(par, wxID_ANY, "Arc Segment")
+arcSegmentDialog::arcSegmentDialog(wxWindow *par, std::vector<magneticBoundary> *list) : wxDialog(par, wxID_ANY, "Arc Segment")
 {
     _problem = physicProblems::PROB_MAGNETICS;
     
     _localMagneticBoundaryList = list;
-    
-    _nameArray.Add("None");
-    
-    for(std::vector<magneticBoundary>::iterator magneticIterator = _localMagneticBoundaryList.begin(); magneticIterator != _localMagneticBoundaryList.end(); ++magneticIterator)
-    {
-        _nameArray.Add(magneticIterator->getBoundaryName());
-    }
     
     createDialog();
 }
@@ -65,6 +51,8 @@ void arcSegmentDialog::createDialog()
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     
+    wxArrayString nameArray;
+    
     wxFloatingPointValidator<double> angleValidator(3, NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
     angleValidator.SetRange(0, 180);
     
@@ -89,9 +77,31 @@ void arcSegmentDialog::createDialog()
     line2Sizer->Add(maxSegmentText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     line2Sizer->Add(_segmentTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
+    nameArray.Add("None");
+    
+    switch(_problem)
+    {
+        case physicProblems::PROB_ELECTROSTATIC:
+        {
+            for(std::vector<electricalBoundary>::iterator electricalIterator = _localElectricalBoundaryList->begin(); electricalIterator != _localElectricalBoundaryList->end(); ++electricalIterator)
+            {
+                nameArray.Add(electricalIterator->getBoundaryName());
+            }
+            break;
+        }
+        case physicProblems::PROB_MAGNETICS:
+        {
+            for(std::vector<magneticBoundary>::iterator magneticIterator = _localMagneticBoundaryList->begin(); magneticIterator != _localMagneticBoundaryList->end(); ++magneticIterator)
+            {
+                nameArray.Add(magneticIterator->getBoundaryName());
+            }
+            break;
+        }
+    }
+    
     wxStaticText *boundaryText = new wxStaticText(this, wxID_ANY, "Set Boundary:");
     boundaryText->SetFont(*font);
-    _boundaryComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), _nameArray);
+    _boundaryComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), nameArray);
     _boundaryComboBox->SetFont(*font);
     
     line3Sizer->Add(boundaryText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);

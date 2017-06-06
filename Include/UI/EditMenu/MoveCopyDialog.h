@@ -38,9 +38,19 @@ private:
     wxTextCtrl *_angularShiftTextCtrl = new wxTextCtrl();
     
     //! Text box used to set the center X position of the rotation
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */
     wxTextCtrl *_aboutPointXTextCtrl = new wxTextCtrl();
     
     //! Text box used to set the center Y position of the rotation
+    /*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */
     wxTextCtrl *_aboutPointYTextCtrl = new wxTextCtrl();
     
     //! Text box used to set the amount to move a geomerty piece by in the x direction
