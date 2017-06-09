@@ -210,9 +210,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new segmentPropertyDialog(this, *_localDefinition->getElectricalBoundaryList(), *_localDefinition->getConductorList(), selectedProperty, false);
+            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty, false);
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new segmentPropertyDialog(this, *_localDefinition->getMagneticBoundaryList(), selectedProperty, false);
+            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty, false);
             
         if(dialog->ShowModal() == wxID_OK)
         {
@@ -242,9 +242,9 @@ void modelDefinition::editSelection()
         }
         
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
-            dialog = new segmentPropertyDialog(this, *_localDefinition->getElectricalBoundaryList(), *_localDefinition->getConductorList(), selectedProperty, true);
+            dialog = new segmentPropertyDialog(this, _localDefinition->getElectricalBoundaryList(), _localDefinition->getConductorList(), selectedProperty, true);
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
-            dialog = new segmentPropertyDialog(this, *_localDefinition->getMagneticBoundaryList(), selectedProperty, true);
+            dialog = new segmentPropertyDialog(this, _localDefinition->getMagneticBoundaryList(), selectedProperty, true);
             
         if(dialog->ShowModal() == wxID_OK)
         {

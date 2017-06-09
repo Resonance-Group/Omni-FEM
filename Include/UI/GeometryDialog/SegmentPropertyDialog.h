@@ -45,14 +45,33 @@ private:
     */ 
     physicProblems _problem;
     
+	//! Pointer to the global magnetics list
     std::vector<magneticBoundary> *_magneticBoundayList;
     
+	//! Pointer to the global electrical boundary list
     std::vector<electricalBoundary> *_electricalBoundaryList;
     
+	//! Pointer to the global conductor list
     std::vector<conductorProperty> *_conductorList;
     
+	//! Boolean used to indicate if the geometry is an arc
+	/*!
+		The dialog for a line segment and an arc segment
+		contain some different parameters.
+		This boolean is used to determine what widgets to place on
+		the dialog
+	*/ 
     bool _isArc;
-
+	
+	//! Text box used to modify the element size
+	/*!
+		If the auto mesh spacing is not checked, this 
+		text box will be enabled allowing the user to manually
+		specify the element size along the boundary
+		For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+	*/ 
     wxTextCtrl *_elementSizeTextCtrl = new wxTextCtrl();
     
     wxTextCtrl *_groupTextCtrl = new wxTextCtrl();
