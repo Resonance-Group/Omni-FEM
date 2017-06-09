@@ -26,7 +26,7 @@ Debug/femm.log
 *.supp
 *.d
 .codelite
-Debug/
+Debug
 
 # Compiled source #
 ###################

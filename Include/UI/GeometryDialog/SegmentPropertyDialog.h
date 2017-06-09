@@ -74,6 +74,12 @@ private:
 	*/ 
     wxTextCtrl *_elementSizeTextCtrl = new wxTextCtrl();
     
+	//! Text box used to modufy the group number of the segment
+	/*!
+        For documentation on the wxTextCtrl class, refer to
+        the following link:
+        http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
+    */ 
     wxTextCtrl *_groupTextCtrl = new wxTextCtrl();
     
     wxComboBox *_boundaryListCombo = new wxComboBox();
