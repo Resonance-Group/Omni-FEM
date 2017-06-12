@@ -42,7 +42,9 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     
     wxFloatingPointValidator<double> angleValidator(15);
     angleValidator.SetRange(0, 360);
-    
+	
+	wxArrayString BHSettingsArray;
+	wxArrayString LamWireSettingsArray;
     
     _magneticMaterial.setCoercivity(0);
     _magneticMaterial.setName("New Material");
@@ -58,19 +60,19 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     _magneticMaterial.setSpecialAttribute(lamWireEnum::NOT_LAMINATED_OR_STRANDED);
     _magneticMaterial.setStrandDiameter(0);
     
-    BHSettingsArray->Add("Linear B-H Curve");
-    BHSettingsArray->Add("Nonlinear B-H Curve");
+    BHSettingsArray.Add("Linear B-H Curve");
+    BHSettingsArray.Add("Nonlinear B-H Curve");
     
-    LamWireSettingsArray->Add("Not Laminated or Stranded");
-    LamWireSettingsArray->Add("Laminated In-Plane");
-    LamWireSettingsArray->Add("Laminated Parallel to x (Planar) or r (Axisymmetric)");
-    LamWireSettingsArray->Add("Laminated Parallel to y (Planar) or z (Axisymmetric)");
-    LamWireSettingsArray->Add("Magnet Wire");
-    LamWireSettingsArray->Add("Plain Stranded Wire");
-    LamWireSettingsArray->Add("Litz Wire");
-    LamWireSettingsArray->Add("Square Wire");
-    LamWireSettingsArray->Add("Copper Clad Aluminium 10%");
-    LamWireSettingsArray->Add("Copper Clad Aluminium 15%");
+    LamWireSettingsArray.Add("Not Laminated or Stranded");
+    LamWireSettingsArray.Add("Laminated In-Plane");
+    LamWireSettingsArray.Add("Laminated Parallel to x (Planar) or r (Axisymmetric)");
+    LamWireSettingsArray.Add("Laminated Parallel to y (Planar) or z (Axisymmetric)");
+    LamWireSettingsArray.Add("Magnet Wire");
+    LamWireSettingsArray.Add("Plain Stranded Wire");
+    LamWireSettingsArray.Add("Litz Wire");
+    LamWireSettingsArray.Add("Square Wire");
+    LamWireSettingsArray.Add("Copper Clad Aluminium 10%");
+    LamWireSettingsArray.Add("Copper Clad Aluminium 15%");
     
     /* This section is for the header */
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name:");
@@ -84,7 +86,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     /* This section is for the BH Curve infomation */
     wxStaticText *BHCurve = new wxStaticText(this, wxID_ANY, "B-H Curve");
     BHCurve->SetFont(*font);
-    BHCurveComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(165, 21), *BHSettingsArray);
+    BHCurveComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(165, 21), BHSettingsArray);
     BHCurveComboBox->SetFont(*font);
     jilesAthertonButton->Create(this, wxID_EDIT, "Edit Jiles-Atherton Parameters", wxDefaultPosition, wxSize(193, 23));
     jilesAthertonButton->SetFont(*font);
@@ -167,7 +169,7 @@ blockPropertyMagnetic::blockPropertyMagnetic(wxWindow *par) : wxDialog(par, wxID
     currentDensitySizer->Add(currentDensityTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
     /* This part is for the Special Attributes */
-    specialAttriComboBox->Create(specialAttriSizer->GetStaticBox(),  generalFrameButton::ID_ComboBox2, wxEmptyString, wxDefaultPosition, wxSize(361, 21), *LamWireSettingsArray);
+    specialAttriComboBox->Create(specialAttriSizer->GetStaticBox(),  generalFrameButton::ID_ComboBox2, wxEmptyString, wxDefaultPosition, wxSize(361, 21), LamWireSettingsArray);
     specialAttriComboBox->SetFont(*font);
     
     wxStaticText *lamThickLabel = new wxStaticText(specialAttriSizer->GetStaticBox(), wxID_ANY, "Lam. Thickness:");
