@@ -1,7 +1,7 @@
 #include <UI/MaterialsDialog/JilesAthertonParametersDialog.h>
 
 
-jilesAthertonParameterDialog::jilesAthertonParameterDialog() : wxDialog(NULL, wxID_ANY, "Jiles Atheron ")
+jilesAthertonParameterDialog::jilesAthertonParameterDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Jiles Atheron ")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     

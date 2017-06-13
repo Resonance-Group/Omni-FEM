@@ -22,7 +22,9 @@
 	This calss is for creating the dialog to edit a magnetic material when in the magnetics simualtion
 	The user will have the ability to edit properties such as the 
 	lamination type and the permeabiloity. If the material is a linear or non-linear
-	permeability
+	permeability.
+	For documentation on the wxDialog, refer to the following link:
+	http://docs.wxwidgets.org/3.0/classwx_dialog.html
 */
 class blockPropertyMagnetic : public wxDialog
 {
@@ -152,36 +154,47 @@ private:
         
     //! This function is called when the button is pressed in order to edit the Jiles-Atherton parameters
 	/**
-	 * @brief 
-	 * @param event
+	 * @brief 	This function is called each time the user presses on the button to edit the 
+	 * 		  	Jiles-Atherton parameters of the material. This function will create the 
+	 * 			dialog needed to edit the Jiles Atherton properties
+	 * @param event Required argument for proper routing of the event procedure
 	 */
     void onBHCurve(wxCommandEvent &event);
     
     //! This function is called in order to update the form should the user choose to change the material from linear to non-linear and vice-versa
 	/**
-	 * @brief 
-	 * @param event
+	 * @brief 	This function will enable the user to click on the button to edite the Jiles-Atherton parameters.
+	 * 			If already enabled, then this function will disable the button.
+	 * @param event Required argument for proper routing of the event procedure
 	 */
     void onBHCurveCombo(wxCommandEvent &event);
     
     //! THis function is called in order ot update the form when the user chooses the different options listed in the corresponding combo-box
 	/**
-	 * @brief 
-	 * @param event
+	 * @brief 	This function will enable/disable the various text boxes based on the user
+	 * 			selection.
+	 * @param event Required argument for proper routing of the event procedure
 	 */
     void onSpecialComboBox(wxCommandEvent &event);
     
     //! This is an internal function that gets called in order to update the fields in the text control box
 	/**
-	 * @brief 
+	 * @brief 	This function is called in order to reset the display of the for text boxes
+	 * 			with the values stored in the local material variable
 	 */
     void updateInterface();
     
 public:
     
-
+	//! The constructor of the class
+	/*!
+		This function will setup the display and position the widgets in their
+		approiate places for the user to see.
+		\param par Pointer to the parent window
+	*/ 
     blockPropertyMagnetic(wxWindow *par);
     
+	//! The desctructor for the class
     ~blockPropertyMagnetic();
     
     /*! /brief
@@ -200,11 +213,13 @@ public:
 	 */
     void setMaterial(magneticMaterial &material);
     
-    //! This will reset the variable _magneticMaterial to default values. Useful if adding a new material
-	
+	/**
+	 * @brief This will reset the variable _magneticMaterial to default values. Useful if adding a new material
+	 */
     void clearMaterial();
     
 private:
+	//! This macro is required for event procedure
     wxDECLARE_EVENT_TABLE();
 };
 
