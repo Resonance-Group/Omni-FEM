@@ -14,12 +14,26 @@
 #include <UI/MaterialsDialog/BlockPropertyMagnetics.h>
 #include <UI/MaterialsDialog/BlockPropertyDialogElectrostatic.h>
 
+/**
+ * @class materialLibraryDialog
+ * @author phillip
+ * @date 14/06/17
+ * @file MaterialsLibrary.h
+ * @brief Class that handles the creation of the material libaray
+ * 			dialog. The material library will allow the user to hand 
+ * 			pick some preset materials. The library is also able to allow the
+ * 			user to add to it. Once the user clicks ok on the interface,
+ * 			the class will generate a wkID_OK event. 
+ * 			For documentation on the wxDialog class, refer
+ * 			to the following link:
+ * 			http://docs.wxwidgets.org/3.0/classwx_dialog.html
+ */
 class materialLibraryDialog : public wxDialog
 {
 private:
-    std::vector<electrostaticMaterial> _electricalMaterialList;
+    std::vector<electrostaticMaterial> *_electricalMaterialList;
     
-    std::vector<magneticMaterial> _magneticMaterialList;
+    std::vector<magneticMaterial> *_magneticMaterialList;
 
     wxTreeCtrl *_masterLibraryTreeCtrl = new wxTreeCtrl();
     
@@ -40,9 +54,9 @@ private:
     void onLocalDrag(wxTreeEvent &event);
 
 public:
-    materialLibraryDialog(wxWindow *par, std::vector<electrostaticMaterial> &material);
+    materialLibraryDialog(wxWindow *par, std::vector<electrostaticMaterial> *material);
     
-    materialLibraryDialog(wxWindow *par, std::vector<magneticMaterial> &material);
+    materialLibraryDialog(wxWindow *par, std::vector<magneticMaterial> *material);
     
     void getMagneticLocalMaterialList(std::vector<magneticMaterial> &magneticMaterialList);
     
