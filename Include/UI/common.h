@@ -67,7 +67,7 @@
 
 
 
-//! These enums are for the different panels
+/*
 enum panelID
 {
 	ID_initialCreation = 0,
@@ -80,6 +80,7 @@ enum panelID
 	ID_modelBuilderTree = 7,
 	ID_status = 8
 };
+ */ 
 
 
 #endif
