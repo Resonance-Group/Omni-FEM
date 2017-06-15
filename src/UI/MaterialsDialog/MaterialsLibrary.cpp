@@ -4,7 +4,7 @@ materialLibraryDialog::materialLibraryDialog(wxWindow *par, std::vector<electros
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	
-	_magneticMaterialList = material;
+    _electricalMaterialList = material;
 	
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -63,7 +63,7 @@ materialLibraryDialog::materialLibraryDialog(wxWindow *par, std::vector<magnetic
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	
-	_electricalMaterialList = material;
+	_magneticMaterialList = material;
     
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);

@@ -158,7 +158,7 @@ public:
     //! Sets the hystersis lag angle in the x-direction.
     /*! 
         Note that this parameter is only used for the linear approximation
-        \param value A value htat represents the hystersis lag angle in the x-plane.
+        \param value A value that represents the hystersis lag angle in the x-plane in degs.
     */ 
     void setPhiX(double value)
     {
@@ -168,28 +168,28 @@ public:
     //! Retrieves the hystersis lag angle in the x-direction. 
     /*!
         Note that this parameter is only used for the linear approximation
-        \return Returns a value representing the hystersis lag angle in the x-plane
+        \return Returns a value representing the hystersis lag angle in the x-plane in degs
     */ 
     double getPhiX()
     {
         return _phiHX;
     }
     
-    //! Sets the hystersis lag angle in the y-direction.
-    /*! 
-        Note that this parameter is only used for the linear approximation
-        \param value A value htat represents the hystersis lag angle in the y-plane.
-    */ 
+    /**
+     * @brief   Sets the hystersis lag angle in the y-direction.
+     *          Note that this parameter is only used for the linear approximation
+     * @param value A value that represents the hystersis lag angle in the y-plane in degs.
+     */
     void setPhiY(double value)
     {
         _phiHY = value;
     }
-    
-    //! Retrieves the hystersis lag angle in the y-direction. 
-    /*!
-        Note that this parameter is only used for the linear approximation
-        \return Returns a value representing the hystersis lag angle in the y-plane
-    */
+
+    /**
+     * @brief   Retrieves the hystersis lag angle in the y-direction. 
+     *          Note that this parameter is only used for the linear approximation
+     * @return Returns a value representing the hystersis lag angle in the y-plane in degs
+     */
     double getPhiY()
     {
         return _phiHY;

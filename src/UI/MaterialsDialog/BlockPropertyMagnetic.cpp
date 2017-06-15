@@ -294,7 +294,7 @@ void blockPropertyMagnetic::getNewMaterial(magneticMaterial &newMaterial)
 
 void blockPropertyMagnetic::onBHCurve(wxCommandEvent &event)
 {
-    jilesAthertonParameterDialog *dialog = new jilesAthertonParameterDialog();
+    jilesAthertonParameterDialog *dialog = new jilesAthertonParameterDialog(this);
     dialog->setJilesAthertonParameter(_magneticMaterial.getJilesAtherton());
     if(dialog->ShowModal() == wxID_OK)
     {

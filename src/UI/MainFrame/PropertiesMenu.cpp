@@ -110,8 +110,14 @@ void OmniFEMMainFrame::onExteriorRegion(wxCommandEvent &event)
 void OmniFEMMainFrame::onMatLibrary(wxCommandEvent &event)
 {
     std::vector<electrostaticMaterial> test;
-    materialLibraryDialog *test2 = new materialLibraryDialog(this, test);
-    if(test2->ShowModal() == wxID_OK)
+    materialLibraryDialog *library;
+    
+    if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+        library = new materialLibraryDialog(this, _problemDefinition.getElectricalMaterialList());
+    else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+        library = new materialLibraryDialog(this, _problemDefinition.getMagnetMaterialList());
+
+    if(library->ShowModal() == wxID_OK)
     {
        _model->updateProperties(EditProperty::EDIT_MATERIAL); 
     }

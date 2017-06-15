@@ -130,7 +130,7 @@
 #endif
 
 
-//! This namespace and even the classes within will not be documented her
+//! This namespace and even the classes within will not be documented here
 /*!
     Instead, for further documentation on the plf::colony, refer to the link
     for all of the documentation:

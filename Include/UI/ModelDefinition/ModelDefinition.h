@@ -507,7 +507,7 @@ private:
         this would indicate that the user wants to select only nodes/block labels. This is determined by the variable _createNodes. If 
         true, then the user will select all ndoes within the box the user drew. If false, then the user will select the block labels.
         The program will always select a new group of nodes/labels. If the user would like to select an addiditonal set of nodes/labels,
-        the the CTRL button must be pressed down. This logic applies to the lines/arcs. This function keeps a static count of all of the 
+        then the CTRL button must be pressed down. This logic applies to the lines/arcs. This function keeps a static count of all of the 
         selected geometry. This may be removed one day.
       
         To select a grouping of lines/arcs, the _endpoint variable must be less then _startPoint on the x and y-plane. The same

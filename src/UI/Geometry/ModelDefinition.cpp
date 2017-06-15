@@ -3079,16 +3079,15 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
     {
         _doZoomWindow = !_doZoomWindow;
         doZoomWindow();
-        _startPoint = wxRealPoint(0, 0);
-        _endPoint = wxRealPoint(0, 0);
     }
     else if(!_doZoomWindow && _doMirrorLine)
     {
         _doMirrorLine = !_doMirrorLine;
         mirrorSelection(_startPoint, _endPoint);
-        _startPoint = wxRealPoint(0, 0);
-        _endPoint = wxRealPoint(0, 0);
     }
+    
+    _startPoint = wxRealPoint(0, 0);
+    _endPoint = wxRealPoint(0, 0);
     
     this->Refresh();
     return;
