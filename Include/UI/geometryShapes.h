@@ -16,18 +16,24 @@
 
 #include <UI/ModelDefinition/OGLFT.h>
 
-/*! \class geometry2D
-	\brief This is the base class for all of the geometry classes
-*/
+/**
+ * @class geometry2D
+ * @author Phillip
+ * @date 16/06/17
+ * @file geometryShapes.h
+ * @brief   This is the base class for all of the geometry shapes
+ *          This class contains all of the properties and methods that
+ *          is common through out all of the geometry shapes.
+ *          For example, a boolean to describe if the geometry shape
+ *          is selected or not and the x and y coordinate
+ *          position for the center.
+ */
 class geometry2D
 {
 protected:
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
 	bool _isSelected = false;
-    
-    //! This is used to indicate if the geometry that is selected is for a group
-    bool isGroupSelectedState = false;
 
 	//! This data type stroes the center x  position in Cartesian Coordiantes
 	/*! 
@@ -38,94 +44,157 @@ protected:
 	double xCenterCoordinate;
 	
 	//! This data type stores the center y position in Cartesians Coordiantes
+    /*!
+        For arcs, this is the center of the circle.
+		For lines, this is the midpoint
+		For nodes and blocklabels, this would be the center of the square.
+    */ 
 	double yCenterCoordinate;
     
 public:
 	
+    //! The constructor for the class
 	geometry2D()
     {
         
     }
 	
-	//! Function used to set the X coordiante for the center point of the shape
+	//! Function used to set the X coordinate for the center point of the shape
+    /**
+     * @brief This function will set the center X coordinate position for the shape
+     * @param xCenter The center position of the geometry shape in the x-plane
+     */
 	void setCenterXCoordinate(double xCenter)
     {
         xCenterCoordinate = xCenter;
     }
 	
 	//! Function used to set the Y coordiante for the center point of the shape
+    /**
+     * @brief This function will set the center Y coordinate position for the shape
+     * @param yCenter The center position of the geometry shape in the y-plane
+     */
 	void setCenterYCoordiante(double yCenter)
     {
         yCenterCoordinate = yCenter;
     }
 	
 	//! Function used to get the X Coordinate of the center point point of the shape
+    /**
+     * @brief Retrieves the x position of the center 
+     * @return Returns a number representing the center X coordinate
+     */
 	double getCenterXCoordinate() const
     {
         return xCenterCoordinate;
     }
 	
 	//! Function used to get the Y Coordinate of the center point point of the shape
+    /**
+     * @brief Retrieves the y position of the center
+     * @return Returns a number representing the center Y coordinate
+     */
 	double getCenterYCoordinate() const
     {
         return yCenterCoordinate;
     }
 
 	//! the function will be called when the user selects the geomtry shape
+    /**
+     * @brief Sets the select state of the geometry shape
+     * @param state Set to true in order to indicate if the geometry
+     *              piece is to be selected. All selected geometry piecces
+     *              will turn red.
+     */
 	void setSelectState(bool state)
     {
         _isSelected = state;
     }
 	
 	//! This function will return the selected status
+    /**
+     * @brief Retrieves the selected state of the geometry piece
+     * @return Returns true if geometry piece is selected. Otherwise, returns false
+     */
 	bool getIsSelectedState()
     {
         return _isSelected;
     }
-    
-    void setGroupSelectedState(bool state)
-    {
-        isGroupSelectedState = state;
-    }
-    
-    bool getGroupSelectedState()
-    {
-        return isGroupSelectedState;
-    }
-    
-
 };
 
-
+/**
+ * @class rectangleShape
+ * @author Phillip
+ * @date 16/06/17
+ * @file geometryShapes.h
+ * @brief   This is the base class for the block label and the node shapes.
+ *          Both are rectangles but, one is drawn black and the other is
+ *          drawn blue. They also have different properties that are
+ *          associated with them,
+ */
 class rectangleShape : public geometry2D
 {
 private:
-
+    
+    //! Boolean used to determine if the node/block label is draggin
+    /*!
+        Dragging occurs when the user holds the left mouse button down.
+        The node/block label will drag across the screen. Note that this
+        mode overwites all geometry checks and only when the use releases the 
+        mouse button does the program place a node/block label with 
+        the checks onto the canvas
+    */ 
     bool _isDragging = false;
     
 public:
+
+    //! The constructor for the class
     rectangleShape() : geometry2D()
     {
         
     }
     
+    //! The constructor for the clas
+    /*!
+        This constructor is called only when there is 
+        a specific x and y center coordinate to specify
+        \param xCenterPoint The x-coordinate position of the center
+        \param yCenterPoint The y-coordinate position of the center
+    */ 
 	rectangleShape(double xCenterPoint, double yCenterPoint) : geometry2D()
     {
         xCenterCoordinate = xCenterPoint;
         yCenterCoordinate = yCenterPoint;
     }
 	
-	//! This function will get the distance between two points. The first being itself and the second, the input. The values that are taken in are the x and y coordinate of the second point
-	double getDistance(double xp, double yp)
+	/**
+	 * @brief Computes the distance between the rectangle shape and a given point
+	 * @param xp The x-coordinate position of the location to calculate the distance to
+	 * @param yp The y-coordinate position of the location to calculate the distance to
+	 * @return Returns a number representing the distance between a point in space and the rectangle shape
+	 */
+    double getDistance(double xp, double yp)
     {
         return sqrt(pow((xCenterCoordinate - xp), 2) + pow((yCenterCoordinate - yp), 2));
     }
     
+    /**
+     * @brief   Computes the distance between the rectangle shape and a wxRealPoint.
+     *          This function operates much like the function getDistance(double xp, double yp)
+     *          except the parameter is in a more convient format
+     * @param point The wxRealPoint in space to calculate the distance to
+     * @return Returns a number representing the distance between a point in space and the rectangle shape
+     */
     double getDistance(wxRealPoint point)
     {
         return sqrt(pow((xCenterCoordinate - point.x), 2) + pow((yCenterCoordinate - point.y), 2));
     }
     
+    /**
+     * @brief Computes the distance between the rectangle shape and another rectangle shape
+     * @param testNode The other rectangle shape to compute the distance to
+     * @return Returns a number representing the distance between a point in space and the rectangle shape
+     */
     double getDistance(rectangleShape testNode)
     {
         return sqrt(pow(xCenterCoordinate - testNode.getCenterXCoordinate(), 2) + pow(yCenterCoordinate - testNode.getCenterYCoordinate(), 2));
