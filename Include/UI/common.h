@@ -60,27 +60,4 @@
 #define DEL_KEY 0x7F
 
 
-
-
-
-
-
-
-
-/*
-enum panelID
-{
-	ID_initialCreation = 0,
-	ID_dimSelectFrame = 1,
-	ID_probSelectPanel = 2,
-	ID_probDefiningPanel = 3,
-	ID_viewResultsPanel = 4,
-	ID_geometryBuilder = 5,
-	ID_settings = 6,
-	ID_modelBuilderTree = 7,
-	ID_status = 8
-};
- */ 
-
-
 #endif

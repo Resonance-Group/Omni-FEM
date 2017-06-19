@@ -200,23 +200,41 @@ public:
         return sqrt(pow(xCenterCoordinate - testNode.getCenterXCoordinate(), 2) + pow(yCenterCoordinate - testNode.getCenterYCoordinate(), 2));
     }
     
+    /**
+     * @brief Function that is called in order to reset the center of the rectangle object
+     * @param xCoor The new center in the x-plane
+     * @param yCoor The new center in the y-plane
+     */
     void setCenter(double xCoor, double yCoor)
     {
         xCenterCoordinate = xCoor;
         yCenterCoordinate = yCoor;
     }
     
+    /**
+     * @brief This function will move the position of the center
+     * @param xCoor The amount to move the center by in the x-position
+     * @param yCoor THe amount to move the center by in the y-position
+     */
     void moveCenter(double xCoor, double yCoor)
     {
         xCenterCoordinate += xCoor;
         yCenterCoordinate += yCoor;
     }
     
+    /**
+     * @brief Retrieves the dragging state of the rectangle object
+     * @return Returns true if the rectangle object is dragging
+     */
     bool getDraggingState()
     {
         return _isDragging;
     }
     
+    /**
+     * @brief Sets the dragging state of the rectangle object
+     * @param state Set to true if the rectangle object needs to be dragged. Otherwise, set to false
+     */
     void setDraggingState(bool state)
     {
         _isDragging = state;
@@ -247,29 +265,49 @@ public:
 
 
 
+/**
+ * @class node
+ * @author Phillip
+ * @date 18/06/17
+ * @file geometryShapes.h
+ * @brief   This is the object that is used for nodes. This handles any specific node
+ *          items such as the nodal property and the draw method for the node
+ */
 class node : public rectangleShape
 {
 private:
+    //! The nodal property for the node
+    /*!
+        This object contains all of the nodal settings that are relevant to the node.
+        When the user wants to edit the properties of the node, the data structure of this
+        variable is exposed to the user for editing
+     */ 
     nodeSetting _nodalSettings;
 public:
+
+    //! The constructor for the class
 	node(double xCenter, double yCenter) : rectangleShape(xCenter, yCenter)
     {
 
     }
     
+    //! The constructor for the class
     node()
     {
         
     }
     
-	//! This function will draw the shape
+	/**
+	 * @brief This function is called when the program needs to draw the object on the 
+     *          glCanvas. To make a node, the program draws a white point on top of a 
+     *          block point. When the user selects the node, the black is turned to
+     *          red.
+	 */
 	void draw()
     {
         glPointSize(6.0);
-        
-        
-    
         glBegin(GL_POINTS);
+        
         if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
@@ -288,15 +326,19 @@ public:
         glColor3d(0.0, 0.0, 0.0);
     }
     
+    /**
+     * @brief Sets the nodal settings of the node
+     * @param setting The settings that the node should become
+     */
     void setNodeSettings(nodeSetting setting)
     {
         _nodalSettings = setting;
     }
 	
-    /*! /brief
-    *   This function returns the address of the variable that contains the setting for the node.
-    *   These settings are specificially settings such as nodal properties, material,etc.
-    */ 
+    /**
+     * @brief Retrieves the nodal settings belonging to the node
+     * @return Returns an address to the nodal settings for the node
+     */
     nodeSetting *getNodeSetting()
     {
         return &_nodalSettings;
@@ -306,16 +348,28 @@ public:
 };
 
 
-
+/**
+ * @class edgeLineShape
+ * @author Phillip
+ * @date 18/06/17
+ * @file geometryShapes.h
+ * @brief   This class handles the lines that the user creates. 
+ *          Each line is composed of a segment property and 
+ *          two nodes. For quick access, the nodes are pointers to
+ *          the nodes that connect the lines together.
+ */
 class edgeLineShape : public geometry2D
 {
 protected:
+
+    //! The property of the line segment
+    /*!
+        This property contains details on the group number and any
+        boundary conditions that are associated with the line
+    */ 
     segmentProperty _property;
     
 protected:
-	
-	//! The length of the line?
-	double _maxSideLength;
     
     node *_firstNode;
     
