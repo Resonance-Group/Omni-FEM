@@ -240,7 +240,10 @@ public:
         _isDragging = state;
     }
 	
-	//! This is the function that is called in order to draw the rectangle. One thing that is 
+	/**
+	 * @brief 	This is the draw function for hte rectangle object. Note that for a generic retangle objecyt
+	 * 			nothing is drawn.
+	 */
 	virtual void draw()
     {
         
@@ -348,6 +351,106 @@ public:
 };
 
 
+
+/**
+ * @class blockLabel
+ * @author phillip
+ * @date 24/06/17
+ * @file geometryShapes.h
+ * @brief Class that is used to handle the geometry shape of a block label.
+ * 			This class stores the property of the block label and handles 
+ * 			the drawing of the block label and the drawing of the text that
+ * 			is associated with the block label
+ */
+class blockLabel : public rectangleShape
+{
+private:
+    //! The block property that is associated with the block label
+	/*!
+		This property contains properties for the mesh size of a particular region
+		and what material should be associated with the particular region.
+	*/ 
+    blockProperty _property;
+public:
+
+	/**
+	 * @brief	This is the draw method for the block label. This will
+	 * 			create it similiar to the node geometry class; however,
+	 * 			the bottom point is colored blue as default. When selected,
+	 * 			it will change colors to red.
+	 */
+    void draw()
+    {
+        glPointSize(6.0);
+        
+        if(_isSelected)
+            glColor3d(1.0, 0.0, 0.0);
+        else
+            glColor3d(0.0, 0.0, 1.0);
+    
+        glBegin(GL_POINTS);
+            glVertex2d(xCenterCoordinate, yCenterCoordinate);
+        glEnd();
+    
+        glColor3d(1.0, 1.0, 1.0);
+        glPointSize(4.25);
+    
+        glBegin(GL_POINTS);
+            glVertex2d(xCenterCoordinate, yCenterCoordinate);
+        glEnd();
+    }
+    
+	/**
+	 * @brief 	Draws the text for the block label onto the screen. The text that is drawn is the material
+	 * 			associated with the block label
+	 * @param textRender 	A pointer to the OGLFT object that needs to be used
+	 * 						for drawing the text
+	 * @param factor		This is a constant that determines the distance as to
+	 * 						where the text is drawn on the screen. A factor to how much 
+	 * 						of an offset the text needs to be drawn at from the center 
+	 * 						point of the block label.
+	 */
+    void drawBlockName(OGLFT::Grayscale *textRender, double factor)
+    {
+        double offset = 0.02 * factor;
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset, _property.getMaterialName().c_str());
+    }
+    
+	/**
+	 * @brief Draws the circuit name that is associated with the block label onto the screen
+	 * @param textRender A pointer to hte OGLFT object that is to be used for drawing the text
+	 * @param factor	This is a constant that detemines how far of an offset that the 
+	 * 					text should be drawn from the center of the block label
+	 */
+    void drawCircuitName(OGLFT::Grayscale *textRender, double factor)
+    {
+        double offset = 0.02 * factor;
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        if(_property.getCircuitName() != "None")
+            textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset, _property.getCircuitName().c_str());
+    }
+	
+	/**
+	 * @brief Retrieves the block property that is associated with the block label
+	 * @return A pointer pointing to the block property for the block label
+	 */
+    blockProperty *getProperty()
+    {
+        return &_property;
+    }
+    
+	/**
+	 * @brief Sets the property that is to be associated with the block label
+	 * @param property The property that is to be associated with the block label
+	 */
+    void setPorperty(blockProperty property)
+    {
+        _property = property;
+    }
+};
+
+
 /**
  * @class edgeLineShape
  * @author Phillip
@@ -371,36 +474,68 @@ protected:
     
 protected:
     
+	//! Pointer for the first node
+	/*!
+		This points to the first node of the 
+		edge line shape (basically a segment)
+	*/ 
     node *_firstNode;
     
+	//! Pointer for the first node
+	/*!
+		This points to the first node of the 
+		edge line shape (basically a segment)
+	*/ 
     node *_secondNode;
     
 public:
+	//! Constructor for the generic class
 	edgeLineShape()
     {
         
     }
     
+	/**
+	 * @brief Sets the first node of the line segment
+	 * @param a_Node The first node of the line segment
+	 */
     void setFirstNode(node &a_Node)
     {
         _firstNode = &a_Node;
     }
     
+	/**
+	 * @brief Gets the first node of the line segment
+	 * @return Retruns a pointer pointing to the first node of the line segment
+	 */
     node *getFirstNode()
     {
         return _firstNode;
     }
     
+	/**
+	 * @brief Sets the second node of the line segment
+	 * @param a_node The second node of the line segment
+	 */
     void setSecondNode(node &a_node)
     {
         _secondNode = &a_node;
     }
     
+	/**
+	 * @brief Retrieves the second node of the line segment
+	 * @return Returns a pointer pointing to the second node of the line segment
+	 */
     node *getSecondNode()
     {
         return _secondNode;
     }
     
+	/**
+	 * @brief This is the draw method for the line segment. This differs from the arc segment class since this 
+	 * 			is a straight line. The defualt color is black. If the line is selected, then the line
+	 * 			will change colors to red
+	 */
     void draw()
     {
         if(_property.getHiddenState())
@@ -422,73 +557,25 @@ public:
         glDisable(GL_LINE_STIPPLE);
     }
     
+	/**
+	 * @brief Retrieves the segment properties of the line segment
+	 * @return Returns the segment property object that is associated with the line segment
+	 */
     segmentProperty *getSegmentProperty()
     {
         return &_property;
     } 
 	
+	/**
+	 * @brief Sets the segment properties of the line segment
+	 * @param property 	The segment property that the line segment will
+	 * 					be associated with
+	 */
     void setSegmentProperty(segmentProperty property)
     {
         _property = property;
     }
 };
-
-
-
-class blockLabel : public rectangleShape
-{
-private:
-	std::string blockType;
-    
-    blockProperty _property;
-public:
-    void draw()
-    {
-        glPointSize(6.0);
-        
-        if(_isSelected)
-            glColor3d(1.0, 0.0, 0.0);
-        else
-            glColor3d(0.0, 0.0, 1.0);
-    
-        glBegin(GL_POINTS);
-            glVertex2d(xCenterCoordinate, yCenterCoordinate);
-        glEnd();
-    
-        glColor3d(1.0, 1.0, 1.0);
-        glPointSize(4.25);
-    
-        glBegin(GL_POINTS);
-            glVertex2d(xCenterCoordinate, yCenterCoordinate);
-        glEnd();
-    }
-    
-    void drawBlockName(OGLFT::Grayscale *textRender, double factor)
-    {
-        double offset = 0.02 * factor;
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset, _property.getMaterialName().c_str());
-    }
-    
-    void drawCircuitName(OGLFT::Grayscale *textRender, double factor)
-    {
-        double offset = 0.02 * factor;
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        if(_property.getCircuitName() != "None")
-            textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset, _property.getCircuitName().c_str());
-    }
-	
-    blockProperty *getProperty()
-    {
-        return &_property;
-    }
-    
-    void setPorperty(blockProperty property)
-    {
-        _property = property;
-    }
-};
-
 
 
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
