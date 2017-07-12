@@ -260,8 +260,8 @@ enum planarCoordinateEnum
 //! This enum is used to specify what problem type Omni-FEM needs to use when solving
 enum problemTypeEnum
 {
-    PLANAR,
-    AXISYMMETRIC
+    PLANAR,/*!< Value used to indicate that the problem is defined in 2-D Euclidean geometry */
+    AXISYMMETRIC/*!< Value used to indicate that the problem has cylindrical symmetry */
 };
 
 
@@ -269,16 +269,16 @@ enum problemTypeEnum
 //! For the magnetics solver, this enum will inform Omni-FEM if laminations or wire should be used in solving. This sets a specific region to be laminated or wired
 enum lamWireEnum
 {
-    NOT_LAMINATED_OR_STRANDED,
-    LAMINATED_IN_PLANE,
-    LAMINATED_PARALLEL_X_OR_R_AXISYMMETRIC,
-    LAMINATED_PARALLEL_Y_OR_Z_AXISYMMETRIC,
-    MAGNET_WIRE,
-    PLAIN_STRANDED_WIRE,
-    LITZ_WIRE,
-    SQUARE_WIRE, 
-    CCA_10,
-    CCA_15
+    NOT_LAMINATED_OR_STRANDED,/*!< Default value for the enum */
+    LAMINATED_IN_PLANE,/*!< Value used to indiacte that the laminations are in the iagminary z-plane */
+    LAMINATED_PARALLEL_X_OR_R_AXISYMMETRIC,/*!< Value used to indicate that the laminations are directed in the x-plane */
+    LAMINATED_PARALLEL_Y_OR_Z_AXISYMMETRIC,/*!< Value used to indicate that the laminations are directed in the y-plane */
+    MAGNET_WIRE,/*!< Value used to indicate that the block is magnet wire. This means that there is 1 strand */
+    PLAIN_STRANDED_WIRE,/*!< Value used to indicate that the block label is stranded */
+    LITZ_WIRE,/*!< Vcalue used to indicate that the block label is stranded */
+    SQUARE_WIRE, /*!< Value used to indicate that the block label is squared wire */
+    CCA_10,/*!< Value used to indicate that the block label is copper clad aluminium 10% wire */
+    CCA_15/*!< Value used to indicate that the block label is copper clad aluminium 15% wire */
 };
 
 
@@ -286,40 +286,28 @@ enum lamWireEnum
 //! This enum will be used to designate the different Boundary conditions for the magnetic Boundary Conditions
 enum bcEnumMagnetic
 {
-    /*!
-     *  The vector potental A is prescribed along a given boundary. This boundary condition
-     *  can be used to presribe the flux passing normal to a boundary, since the normal
-     *  flux is equal to the tangential derivative of A along the bounary.
-     *  The parameters are identified by A0, A1, A2, and phi
-     */ 
-    PRESCRIBE_A,
-    /*! 
-     *  This boundary condition denotes an interface with a material subject to eddy currents at
-     *  high enough frequencies suc hthat the skin dpeth in the material
-     *  is very small. The boundary condition is a Robin boundary condition with complex
-     *  coefficients of the form:
-     *  da/dn + ((1 + j) / delta) * A = 0.
-     *  where n denotes the direction of the outward normal to the boundary and delta
-     *  denotes the skin depth of the material the the frequency of interest
-     *  delta = sqrt(2 / (omega * mur * mu0 * sigma))
-     */ 
-    SMALL_SKIN_DEPTH,
-    MIXED,
+    PRESCRIBE_A, /*!< Value used that the vector potental A is prescribed along a given boundary. */
+    SMALL_SKIN_DEPTH, /*!< Value used to indicate that the material is subjected to the skin effect */
+    MIXED,/*!< Value used to indicate that the boundary is an open boundary or to solve for the field intensity H */
     //! An experimental BC
-    STRATEGIC_DUAL_IMAGE,
-    PERIODIC,
-    ANTIPERIODIC
+    STRATEGIC_DUAL_IMAGE,/*!< Value used to indicate that the boundary is an open boundary */
+    PERIODIC,/*!< Value used to indicate that the boundary condition is periodic and there is some symmetry to the problem */
+    ANTIPERIODIC/*!< Value used to indicate that the boundary condition is anti-periodic and there is some symmetry to the problem */
 };
 
-
+//! Enum that is used to differentiate the different boundary conditions for electrostatic simulation
+/*!
+    This enum is used to help identify which boundary condition needs to be applied
+    to segments in an electrical simulation
+*/ 
 enum bcEnumElectroStatic
 {
    /* These are specific for E-stat */
-    FIXED_VOLTAGE,
-    SURFACE_CHARGE_DENSITY,
-    E_STATIC_MIXED, 
-    E_STATIC_PERIODIC,
-    E_STATIC_ANTIPERIODIC
+    FIXED_VOLTAGE, //!< Value used to indicate that the boundary condition is a fixed voltage 
+    SURFACE_CHARGE_DENSITY, //!< Value used to indicate that the boundary condition is a surface charge density 
+    E_STATIC_MIXED, //!< Value used to indicate that the boundary condition is a mixed BC
+    E_STATIC_PERIODIC, //!< Value used to indicate that the boundary condition is periodic
+    E_STATIC_ANTIPERIODIC//!< Value used to indicate that the boundary condition is anti-periodic
 };
 
 
@@ -339,6 +327,10 @@ enum propertiesDialogEnum
 };
 
 //! This enum is a general enum for frames that will include buttons or other widgets
+/*!
+    Some of these ID were not located in the wx_ID enum so this was created
+    for general widgets to do general tasks
+*/ 
 enum generalFrameButton
 {
     ID_ComboBox1,
@@ -378,20 +370,35 @@ enum buttonID
 */ 
 enum OpenBoundaryEdge
 {
-    NO_BOUNDARY_DEFINED,
-    DIRICHLET,
-    NEUMANN
+    NO_BOUNDARY_DEFINED,//!< Default value for the enum
+    DIRICHLET,/*!< Value that this used to indicate that the value of the solution is given along the open boundary */
+    NEUMANN/*!< Value used to indicate that the derivative of the solution is tangent to the open boundary */
 };
 
 //! Enum that is used to differentiate between which geometry has been edited
 enum EditGeometry
 {
-    EDIT_NONE,
-    EDIT_NODES,
-    EDIT_LINES,
-    EDIT_ARCS,
-    EDIT_LABELS,
-    EDIT_ALL
+    EDIT_NONE,//!< Default value for the enum
+    EDIT_NODES,//!< Value used to indicate that the node list was edited
+    EDIT_LINES,//!< Value used to indicate that the line list was edited
+    EDIT_ARCS,//!< Value used to indicate that the arc list was edited
+    EDIT_LABELS,//!< Value used to indicate that the block label list was edited
+    EDIT_ALL//!< Value used to indicate that all of the geometry lists were edited
+};
+
+//! Enum that is used to determine which property to edit
+/*!
+    This enum will tell the program which set of geometry to scan through
+    and edit which property
+*/ 
+enum EditProperty
+{
+    EDIT_PROPERTY_NONE,//!< Default value for the enum
+    EDIT_CONDUCTOR,//!< Value used to indicate that the conductor property list was edited
+    EDIT_NODAL,//!< Value used to indicate that the nodal property list was edited
+    EDIT_BOUNDARY,//!< Value used to indicate that the boundary property list was edited
+    EDIT_MATERIAL,//!< Value used to indicate that the material property list was edited
+    EDIT_CIRCUIT//!< Value used to indicate that the circuit property list was edited
 };
 
 

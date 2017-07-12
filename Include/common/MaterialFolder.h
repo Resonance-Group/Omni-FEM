@@ -24,15 +24,63 @@ private:
     //! The vendor that the folder is associated with
     string _folderVendor;
 public:
-    //! This next section are the getters and setters for the private variables
-    void setFolderName(string name);
-    string getFolderName();
+
+    //! Sets the folder name
+    /*!
+        \param name The name of the folder
+    */ 
+    void setFolderName(string name)
+    {
+        _folderName = name;
+    }
     
-    void setFolderURL(string url);
-    string getFolderURL();
+    //! Retrieves the name of the folder
+    /*!
+        \return Returns a string representing the name 
+                of the folder
+    */ 
+    string getFolderName()
+    {
+        return _folderName;
+    }
     
-    void setFolderVendor(string vendor);
-    string getFolderVendor();
+    //! Sets the URL that can be associated with the folder
+    /*!
+        \param url The url that the folder is associated with
+    */ 
+    void setFolderURL(string url)
+    {
+        _folderURL = url;
+    }
+    
+    //! Retrieves the url of the folder
+    /*!
+        \return Returns a string representing the url 
+                associated to the folder
+    */ 
+    string getFolderURL()
+    {
+        return _folderURL;
+    }
+    
+    //! Sets the vendor that is associated with the folder
+    /*!
+        \param vendor The vendor name that is associated with the folder
+    */ 
+    void setFolderVendor(string vendor)
+    {
+        _folderVendor = vendor;
+    }
+    
+    //! Retrieves the vendor associated with the folder
+    /*!
+        \return Returns a string representing the vendor 
+                associated to the folder
+    */ 
+    string getFolderVendor()
+    {
+        return _folderVendor;
+    }
 };
 
 

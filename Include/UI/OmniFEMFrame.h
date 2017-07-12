@@ -232,7 +232,7 @@ private:
     //! Event procedure for the save event
     /*!
         This event is fired everytime the user goes to
-        file->Save, clicks onthe save icon on the toolbar, 
+        file->Save, clicks on the save icon on the toolbar, 
         or presses the key combination Ctrl+s. This will automatically
         save the file to the current directory that the file is located in.
         If the file does not exist, then this function will
@@ -953,7 +953,7 @@ private:
     */ 
 	void enableToolMenuBar(bool enable);
     
-    //! Fucntion that is needed in order to tell the wx library that this class has event procedures
+    //! Function that is needed in order to tell the wx library that this class has event procedures
     wxDECLARE_EVENT_TABLE();
 };
 

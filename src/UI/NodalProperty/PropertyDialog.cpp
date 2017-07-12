@@ -1,7 +1,7 @@
 #include <UI/NodalProperty/PropertyDialog.h>
 
 
-nodalPropertiesDialog::nodalPropertiesDialog(wxWindow *par, std::vector<nodalProperty> nodalPropertyList, physicProblems problem) : wxDialog(par, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
+nodalPropertiesDialog::nodalPropertiesDialog(wxWindow *par, std::vector<nodalProperty> *nodalPropertyList, physicProblems problem) : wxDialog(par, wxID_ANY, "Nodal Definition", wxDefaultPosition, wxSize(204, 140))
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -13,22 +13,24 @@ nodalPropertiesDialog::nodalPropertiesDialog(wxWindow *par, std::vector<nodalPro
     
     _nodalPropertyList = nodalPropertyList;
     _problem = problem;
-    
-    for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
-    {
-        nodalPropertyNameArray->Add(wxString(nodalIterator->getName()));
-    }
 
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ", wxPoint(12, 9), wxSize(38, 13));
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), *nodalPropertyNameArray);
-    selection->SetFont(*font);
-    if(nodalPropertyNameArray->GetCount() > 0)
-        selection->SetSelection(0);
+    wxArrayString nodalPropertyNameArray;
+    
+    for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList->begin(); nodalIterator != _nodalPropertyList->end(); ++nodalIterator)
+    {
+        nodalPropertyNameArray.Add(wxString(nodalIterator->getName()));
+    }
+    
+    _selection->Create(this, wxID_ANY, wxEmptyString, wxPoint(56, 5), wxSize(139, 21), nodalPropertyNameArray);
+    _selection->SetFont(*font);
+    if(nodalPropertyNameArray.GetCount() > 0)
+        _selection->SetSelection(0);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
-    headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);
+    headerSizer->Add(_selection, 0, wxALIGN_CENTER | wxUP, 6);
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
     addPropertyButton->SetFont(*font);
@@ -68,18 +70,13 @@ nodalPropertiesDialog::nodalPropertiesDialog(wxWindow *par, std::vector<nodalPro
 void nodalPropertiesDialog::onAddProperty(wxCommandEvent &event)
 {
     nodalProperty newNodalProperty;
-    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog(this);
-    
-    if(_problem == physicProblems::PROB_ELECTROSTATIC)
-        nodalPropDialog->createDialog(physicProblems::PROB_ELECTROSTATIC);
-    else
-        nodalPropDialog->createDialog(physicProblems::PROB_MAGNETICS);
+    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog(this, _problem);
         
     nodalPropDialog->clearNodalProperty();
     if(nodalPropDialog->ShowModal() == wxID_OK)
     {
         nodalPropDialog->getNodalProperty(newNodalProperty);
-        for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
+        for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList->begin(); nodalIterator != _nodalPropertyList->end(); ++nodalIterator)
         {
             if(nodalIterator->getName() == newNodalProperty.getName())
             {
@@ -87,9 +84,9 @@ void nodalPropertiesDialog::onAddProperty(wxCommandEvent &event)
                 break;
             }
         }
-        _nodalPropertyList.push_back(newNodalProperty);
-        selection->Append(newNodalProperty.getName());
-        selection->SetSelection(0);
+        _nodalPropertyList->push_back(newNodalProperty);
+        _selection->Append(newNodalProperty.getName());
+        _selection->SetSelection(0);
     }
 } 
 
@@ -97,12 +94,14 @@ void nodalPropertiesDialog::onAddProperty(wxCommandEvent &event)
 
 void nodalPropertiesDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_nodalPropertyList.size() > 0)
+    if(!_nodalPropertyList->empty())
     {
-        int currentSelection = selection->GetCurrentSelection();
-        _nodalPropertyList.erase(_nodalPropertyList.begin() + currentSelection);
-        selection->Delete(currentSelection);
-        selection->SetSelection(0);
+        int currentSelection = _selection->GetCurrentSelection();
+        _nodalPropertyList->erase(_nodalPropertyList->begin() + currentSelection);
+        _selection->Delete(currentSelection);
+        _selection->SetSelection(0);
+        if(_nodalPropertyList->empty())
+            _selection->SetValue(wxEmptyString);
     }
 }
 
@@ -111,17 +110,12 @@ void nodalPropertiesDialog::onDeleteProperty(wxCommandEvent &event)
 void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
 {
     nodalProperty selectedNodalProperty;
-    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog(this);
-    
-    if(_problem == physicProblems::PROB_ELECTROSTATIC)
-        nodalPropDialog->createDialog(physicProblems::PROB_ELECTROSTATIC);
-    else
-        nodalPropDialog->createDialog(physicProblems::PROB_MAGNETICS);
+    nodalPropertyDialog *nodalPropDialog = new nodalPropertyDialog(this, _problem);
         
-    if(_nodalPropertyList.size() > 0)
+    if(!_nodalPropertyList->empty())
     {
-        int currentSelection = selection->GetSelection();
-        selectedNodalProperty = _nodalPropertyList.at(currentSelection);
+        int currentSelection = _selection->GetSelection();
+        selectedNodalProperty = _nodalPropertyList->at(currentSelection);
         nodalPropDialog->setNodalProperty(selectedNodalProperty);
         if(nodalPropDialog->ShowModal() == wxID_OK)
         {
@@ -132,7 +126,7 @@ void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
               */
             int i = 0;
             nodalPropDialog->getNodalProperty(selectedNodalProperty);
-            for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList.begin(); nodalIterator != _nodalPropertyList.end(); ++nodalIterator)
+            for(std::vector<nodalProperty>::iterator nodalIterator = _nodalPropertyList->begin(); nodalIterator != _nodalPropertyList->end(); ++nodalIterator)
             {
                 if(nodalIterator->getName() == selectedNodalProperty.getName() && (i != currentSelection))
                 {
@@ -142,21 +136,12 @@ void nodalPropertiesDialog::onModifyProperty(wxCommandEvent &event)
                 
                 i++;
             } 
-            _nodalPropertyList.at(currentSelection) = selectedNodalProperty;
-            selection->SetString(currentSelection, selectedNodalProperty.getName());
+            _nodalPropertyList->at(currentSelection) = selectedNodalProperty;
+            _selection->SetString(currentSelection, selectedNodalProperty.getName());
         }
-        selection->SetSelection(0);
+        _selection->SetSelection(0);
     }
 }
-
-
-
-std::vector<nodalProperty> nodalPropertiesDialog::getNodalPropertyList()
-{
-    return _nodalPropertyList;
-}
-
-
 
 
 

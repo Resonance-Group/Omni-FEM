@@ -1,6 +1,12 @@
 #ifndef JILESARTHERTONPARAMETER_H_
 #define JILESARTHERTONPARAMETER_H_
 
+//! Class that handles the parameters for Jiles-Artherton
+/*!
+    This class was created in order to handle all of the parameters for the Jiles-Artherton model.
+    Currently, this calss only deals with the parameters in one-plane. More research needs to be
+    done in order to vectorize the parameters
+*/ 
 class jilesAthertonParameters
 {
 private:
@@ -34,7 +40,13 @@ private:
     
     //! For anisotropy materials, this is the participation of anisotropic phase in the magnetic material
     double _tParamX = 0;
-/* Below are repeats of the above parameters in the Y direction */
+/* 
+    Below are repeats of the above parameters in the Y direction
+    These have the same meaninf except in the y-plane. 
+    For now, these will not be commented as I am still learning
+    how to do the vectorizes Jiles-atherton model. It is unkonwn if 
+    these parameters are needed 
+ */
     double _aParamY = 0;
     
     double _MsParamY = 0;
@@ -51,13 +63,23 @@ private:
     
 public:
 
-    //! This function will set whether or not the material is anisotropy
+    //! Sets that state of material
+    /*!
+        The material can either be anisotropy or not.
+        This is the state of the material
+        \param isAnisotropy Set to true if the material is anisotropy.
+                            Otherwise, set to false.
+    */ 
     void setIsAnisotropyMaterial(bool isAnisotropy)
     {
         _isAnisotropy = isAnisotropy;
     }
     
-    //! This function will return true if the material is anisotropy
+    //! Retrieves if the material is anisotropy or not
+    /*!
+        \return Returns true if the material is anisotropy.
+                Otherwise, returns false.
+    */ 
     bool getIsAnisotropyMaterial()
     {
         return _isAnisotropy;
@@ -75,104 +97,187 @@ public:
         return _useYParameters;
     }
     
-    //! This function will set the alpha parameter or the interdomain coupoling in the magnetic material
+    //! Sets the interdomain coupling for the magnetic material
+    /*!
+        The interdomain coupling is the alpha parameter in the 
+        Jiles-Atherton model.
+        \param alpha The value of the interdomain coupling
+    */ 
     void setAlpha(double alpha)
     {
         _alpha = alpha;
     }
     
     
-    //! This function will return the alpha parameter.
+    //! Retrieves the value of the interdomain coupling for the magnetic material
+    /*!
+        \return Returns a value representing the interdomain coupling (or alpha value)
+                of the magnetic material
+    */ 
     double getAlpha()
     {
         return _alpha;
     }
     
-    //! This function will set the a parameter or the quantity of the domain wall density in the magnetic material
+    //! Sets the value for the quantity of the domain wall density in the magnetic material.
+    /*!
+        This is the a parameter in the Jiles-atherton model. This parameter is represents
+        the quantity of the domain wall density in the magnetic material.
+        \param aParam The value for the quantity of the domain wall density in the magnetic material
+    */ 
     void setAParam(double aParam)
     {
         _aParamX = aParam;
     }
 
-    //! This function will return the a parameter
+    //! Retrieves the quantity of the domain wall density in the magnetic material
+    /*!
+        \return Returns a value representing the quantity of the domain wall density in the magnetic material or
+                the a parameter.
+    */ 
     double getAParam()
     {
         return _aParamX;
     }
     
-    //! This function will set the saturation magnetization of the material
+    //! This function will set the 
+    //! Sets the value for the saturation magnetization of the material
+    /*!
+        The saturation magnetization of the material is the Ms parameter of the Jiles-Atherton model
+        \param value The value of the saturation magnetization of the material
+    */ 
     void setSaturationMagnetization(double value)
     {
         _MsParamX = value;
     }
     
-    //! This function will return the saturation magnetization of the material
+    //! Retrieves the saturation magnetization of the magnetic material
+    /*!
+        \return Returns the saturation magnetization of the magnetic material. 
+                This is the Ms parameter
+    */ 
     double getSaturationMagnetization()
     {
         return _MsParamX;
     }
     
-    //! This function will set the k parameter which is teh average energy required to break the pinning site in the magnetic material
+    //! Sets the average energy required to break the pinning site in the magnetic material
+    /*!
+        This is also the k parameter
+        \param value The average energy required to break the pinning site in the magnetic material
+    */ 
     void setKParam(double value)
     {
         _kParamX = value;
     }
     
-    //! This function will return the value of the k parameter
+    //! Retrieves the k parameter of the magnetic material
+    /*!
+        \return Returns a value representing the average energy required to break the pinning site in the magnetic material
+    */ 
     double getKParam()
     {
         return _kParamX;
     }
     
-    //! This function will set the magnetization reversibility of the material
+    //! Sets the magnetization reversibility of the material
+    /*!
+        \param value The value for the magnetization reversibility of the material
+                    or the c parameter
+    */ 
     void setMagnetizationReversibility(double value)
     {
         _cParamX = value;
     }
     
-    //! This function will return the magnetization reversibility of the material
+    //! Retrieves the magnetization reversibility of the material
+    /*!
+        \return Returns a value representing the magnetization reversibility
+                of the material
+    */ 
     double getMagnetizationReversibility()
     {
         return _cParamX;
     }
     
-    //! For anisotropy materials, this function will set the Average ansotropy energy density
+    //! Sets the average anisotropy energy density
+    /*!
+        This parameter only applies if the material
+        is designated as anisotropy.
+        \param value The average anisotropy energy density. This is also the 
+                    k parameter.
+    */ 
     void setEnergyDensity(double value)
     {
         _KanParamX = value;
     }
     
-    //! This function will return the average anisotropy energy density if enables for the material. IF the function returns 0, then the material is not anisotropy.
+    //! Retrieves the average anisotropy energy density of the material.
+    /*!
+        This only applies to materials that are anisotropy.
+        \return Returns a value representing the average anisotropy energy density of the material.
+                If the material is not designated as anisotropy, this function will return 0.
+    */ 
     double getEnergyDensity()
     {
-
-        return _KanParamX;
+        if(!_isAnisotropy)
+            return 0;
+        else
+            return _KanParamX;
     }
     
-    //!  For anisotropy materials, this function will set the Psi Parameter
+    //TODO: Determine what the Psi parameter actually is
+    //! Sets the Psi parameter of the material
+    /*!
+        This only applies to materials that are designated as anisotropy.
+        \param value The value for the psi parameter
+    */ 
     void setPsi(double value)
     {
         _psiParamX = value;
     }
     
-    //! For anisotropy materials, this function will return the psi Parameter. IF the function returns a 0, then it could mean that the material is not anisotropy
+    //! Retrieves the Psi parameter of the magnetic material.
+    /*!
+        \return Returns a value representing the Psi parameter. 
+                If the material is not anisotropy, then this function will return 0.
+    */ 
     double getPsi()
     {
-        return _psiParamX;
+        if(!_isAnisotropy)
+            return 0;
+        else
+            return _psiParamX;
     }
     
-    //! For anisotropy materials, this function will set the participation of anistropic phase in the magnetic material
+    //! Sets the participation of anistropic phase in the magnetic material.
+    /*!
+        This function only pertains to materials that are desginated as anisotropy.
+        The participation of anistropic phase is known as the T parameter.
+        \param value The value for the participation of anistropic phase in the magnetic material.
+    */ 
     void setTParameter(double value)
     {
         _tParamX = value;
     }
     
-    //! For anisotropy materials, this function will return the t parameter. If the function returns 0, it could mean that the material is not anisotropy
+    //! Retrieves the T parameter of the magnetic material.
+    /*!
+        \return Returns a value representing the participation of anistropic phase in the magnetic material.
+                If the material is not designated as anisotropy, this function will return 0.
+    */ 
     double getTParameter()
     {
-        return _tParamX;
+        if(!_isAnisotropy)
+            return 0;
+        else
+            return _tParamX;
     }
     
+    //! Resets all of the parameters back to 0
+    /*!
+        This function will also set the material to not anisotropy
+    */ 
     void clear()
     {
         _isAnisotropy = false;

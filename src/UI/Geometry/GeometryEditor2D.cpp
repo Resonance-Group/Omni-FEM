@@ -157,8 +157,6 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint, double tolera
    
     _lastBlockLabelAdded = _blockLabelList.insert(newLabel);
 
-  //  _blockLabelNameArray.addString(newLabel.getProperty()->getMaterialName());
- //   _blockLabelNameArray.addString(wxT("Test"));
     return true;
 }
 

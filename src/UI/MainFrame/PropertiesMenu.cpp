@@ -9,8 +9,8 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
         materialDialog *materialDiag = new materialDialog(this, _problemDefinition.getElectricalMaterialList());
         if(materialDiag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setMaterialList(materialDiag->getElectroMaterialList());
-            _model->updateProperties(false, false, false, true, false);
+            _model->updateProperties(EditProperty::EDIT_MATERIAL);
+            _model->Refresh();
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -18,8 +18,8 @@ void OmniFEMMainFrame::onMaterials(wxCommandEvent &event)
         materialDialog *materialDiag = new materialDialog(this, _problemDefinition.getMagnetMaterialList()); 
         if(materialDiag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setMaterialList(materialDiag->getMagenticMaterialList());
-            _model->updateProperties(false, false, false, true, false);
+            _model->updateProperties(EditProperty::EDIT_MATERIAL);
+            _model->Refresh();
         }
     }
 }
@@ -33,8 +33,7 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
         boundaryDialog *boundaryDia = new boundaryDialog(this, _problemDefinition.getElectricalBoundaryList());
         if(boundaryDia->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setBoundaryList(boundaryDia->getElectrostaticBoundaryList());
-            _model->updateProperties(false, false, true, false, false);
+            _model->updateProperties(EditProperty::EDIT_BOUNDARY);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -42,8 +41,7 @@ void OmniFEMMainFrame::onBoundary(wxCommandEvent &event)
         boundaryDialog *boundaryDia = new boundaryDialog(this, _problemDefinition.getMagneticBoundaryList());
         if(boundaryDia->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setBoundaryList(boundaryDia->getMagneticBoundaryList());
-            _model->updateProperties(false, false, true, false, false);
+            _model->updateProperties(EditProperty::EDIT_BOUNDARY);
         }
     }
 }
@@ -57,8 +55,7 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
         nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_ELECTROSTATIC);
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
-            _model->updateProperties(false, true, false, false, false);
+            _model->updateProperties(EditProperty::EDIT_NODAL);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -66,8 +63,7 @@ void OmniFEMMainFrame::onPointProperty(wxCommandEvent &event)
         nodalPropertiesDialog *diag = new nodalPropertiesDialog(this, _problemDefinition.getNodalPropertyList(), physicProblems::PROB_MAGNETICS);
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setNodalPropertyList(diag->getNodalPropertyList());
-            _model->updateProperties(false, true, false, false, false);
+            _model->updateProperties(EditProperty::EDIT_NODAL);
         }
     }
 }
@@ -81,8 +77,7 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
         conductorPropertySetDialog *diag = new conductorPropertySetDialog(this, _problemDefinition.getConductorList());
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setConductorList(diag->getConductorList());
-            _model->updateProperties(true, false, false, false, false);
+            _model->updateProperties(EditProperty::EDIT_CONDUCTOR);
         }
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
@@ -90,8 +85,8 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
         conductorPropertySetDialog *diag = new conductorPropertySetDialog(this, _problemDefinition.getCircuitList());
         if(diag->ShowModal() == wxID_OK)
         {
-            _problemDefinition.setCircuitList(diag->getCircuitList());
-            _model->updateProperties(false, false, false, false, true);
+            _model->updateProperties(EditProperty::EDIT_CIRCUIT);
+            _model->Refresh();
         }
     }
 }
@@ -115,9 +110,15 @@ void OmniFEMMainFrame::onExteriorRegion(wxCommandEvent &event)
 void OmniFEMMainFrame::onMatLibrary(wxCommandEvent &event)
 {
     std::vector<electrostaticMaterial> test;
-    materialLibraryDialog *test2 = new materialLibraryDialog(this, test);
-    if(test2->ShowModal() == wxID_OK)
+    materialLibraryDialog *library;
+    
+    if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+        library = new materialLibraryDialog(this, _problemDefinition.getElectricalMaterialList());
+    else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+        library = new materialLibraryDialog(this, _problemDefinition.getMagnetMaterialList());
+
+    if(library->ShowModal() == wxID_OK)
     {
-        
+       _model->updateProperties(EditProperty::EDIT_MATERIAL); 
     }
 }

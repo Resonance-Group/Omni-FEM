@@ -14,56 +14,90 @@
 
 #include <UI/NodalProperty/NodalPropertyDialog.h>
 
+
+//! Class that handles the dialog for editing the nodal property list
+/*!
+    This class does not handle the creation/modifying of individual nodal property objects that 
+    the user selects. Rather, this class handles the editing of the list as a whole.
+    This dialog will allow the user to add an item to the list, modify an existing item,
+    or remove an item from the list. For modifying or adding the elements in the list,
+    this class will call the approiate dialog in order to perform this action.
+    This class inherits from the dialog class because it allows for the easy creation
+    of ok/cancel buttons. This class is intended to be created in order to operate as
+    modal.
+    For additional documentation for the wxDialog class, refer to the following link:
+    http://docs.wxwidgets.org/3.1.0/classwx_dialog.html
+*/
 class nodalPropertiesDialog : public wxDialog
 {
 private:
-    //! This will contain a local copy of the nodal property list. This will allow for easy editing. Since there is no significant different between electro static and magnetics, this will handle both cases
-    std::vector<nodalProperty> _nodalPropertyList;
+
+    //! Pointer pointing to the global nodal property list
+    /*!
+        Since there is no significant difference between electrostatic and magnetics, this will handle both cases
+    */
+    std::vector<nodalProperty> *_nodalPropertyList;
     
+    //! Variable that keeps track of the simulation problem the user selected
+    /*!
+        This variable is set when the constructor is called.
+        This will take on the value that is supplied to the constructor.
+        This value will effect how the nodal property dialog is drawn.
+    */
     physicProblems _problem;
     
-    //! This is the combo box containing the current avaiable magnetic boundary
-    wxComboBox *selection = new wxComboBox();
-    
-    /*! /brief 
-     *  The string array containing the names of the different magnetic boundary
-     *  This variable is actually used once to load the initial state of the names into the combo box.
-     *  Once the forum is loaded, this variable is no longer used as the combo box list can be directly edited.
-     */ 
-    wxArrayString *nodalPropertyNameArray = new wxArrayString();
-    
-    /*! /brief
-        This function is called when the Add Property button is called.
-        This fucntion will create another dialog box and add a property to the ;ist once the user is finished
-    */ 
+    //! This is the combo box containing all of the names of the nodal properties
+    wxComboBox *_selection = new wxComboBox();
+
+    //! Event procedure that is called when the user presses the Add Property button
+    /*!
+        This function will create the appropriate dialog box in order to add a nodal property
+        to the list. The dialog box that gets created is dependent on the problem variable.
+        Once the user is finished on adding the property, the function will add the 
+        property to the global list. This function will also alert the user
+        if they created a property with the same name already. This is not preventing the 
+        creation of the property as the user can go and modify the name of the property.
+        If there are two properties with the same name, this can cause the program to 
+        operate in an unknown state.
+        \param event A required parameter in order to properly route the event procedure
+    */  
     void onAddProperty(wxCommandEvent &event);
     
-    /*! /brief
-     *  This function will be called when the delete button is pressed
-     *  This function will remove the selection from the list.
-     */
+    //! Event Procedure that is called when the user clicks on the Delete Property button
+    /*!
+        This function will remove the property that is selected in the combo box from the
+        the list. This will only occur if there are more then 1 elements within the list
+        \param event A required parameter in order to properly route the event procedure
+    */
     void onDeleteProperty(wxCommandEvent &event);
     
-    /*! /brief
-     *  This function will be called when the modify button is pressed
-     *  This function will create another dialog box allowing the user to modif the property
-     */
+    //! Event procedure that is called when the user clicks on the Modify Property button
+    /*!
+        This function will bring up the appropriate dialog box in order to modify the settings
+        of the property that is selected in the combo box. This will only occur if there is more
+        then 1 element within the list
+        \param event A required parameter in order to properly route the event procedure
+    */
     void onModifyProperty(wxCommandEvent &event);
-    
-    //! This contains the dialog that is used to edit and add the magnetic boundary to/from the list
-    
-    
+
 public:
-    //! This is the constructor for the class. This constructor is for a magnetic material
-    nodalPropertiesDialog(wxWindow *par, std::vector<nodalProperty> nodalPropertyList, physicProblems problem);
+    //! This is the constructor for the class.
+    /*!
+        Since the same nodal list is used for the simualtions,
+        the program will need to pass in the variable that saves
+        which simulation the user selected. Also,
+        this function handles the creation of the dialog box
+        \param par The parent window of the dialog box
+        \param nodalPropertyList A pointer to the global nodal property list
+        \param problem The physics problem that the user selected
+    */ 
+    nodalPropertiesDialog(wxWindow *par, std::vector<nodalProperty> *nodalPropertyList, physicProblems problem);
     
-    //! This is the destructor for the class. This will take the material list and save it back into memory
+    //! This is the destructor for the class.
     ~nodalPropertiesDialog();
     
-    //! This function needs to be called in order to retrieve the editted list once the dialog is closed
-    std::vector<nodalProperty> getNodalPropertyList();
-    
 private:
+    //! Required function for the event procedures to work properly
     wxDECLARE_EVENT_TABLE();  
 };
 

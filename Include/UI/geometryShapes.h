@@ -16,18 +16,24 @@
 
 #include <UI/ModelDefinition/OGLFT.h>
 
-/*! \class geometry2D
-	\brief This is the base class for all of the geometry classes
-*/
+/**
+ * @class geometry2D
+ * @author Phillip
+ * @date 16/06/17
+ * @file geometryShapes.h
+ * @brief   This is the base class for all of the geometry shapes
+ *          This class contains all of the properties and methods that
+ *          is common through out all of the geometry shapes.
+ *          For example, a boolean to describe if the geometry shape
+ *          is selected or not and the x and y coordinate
+ *          position for the center.
+ */
 class geometry2D
 {
 protected:
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
 	bool _isSelected = false;
-    
-    //! This is used to indicate if the geometry that is selected is for a group
-    bool isGroupSelectedState = false;
 
 	//! This data type stroes the center x  position in Cartesian Coordiantes
 	/*! 
@@ -38,122 +44,206 @@ protected:
 	double xCenterCoordinate;
 	
 	//! This data type stores the center y position in Cartesians Coordiantes
+    /*!
+        For arcs, this is the center of the circle.
+		For lines, this is the midpoint
+		For nodes and blocklabels, this would be the center of the square.
+    */ 
 	double yCenterCoordinate;
     
 public:
 	
+    //! The constructor for the class
 	geometry2D()
     {
         
     }
 	
-	//! Function used to set the X coordiante for the center point of the shape
+	//! Function used to set the X coordinate for the center point of the shape
+    /**
+     * @brief This function will set the center X coordinate position for the shape
+     * @param xCenter The center position of the geometry shape in the x-plane
+     */
 	void setCenterXCoordinate(double xCenter)
     {
         xCenterCoordinate = xCenter;
     }
 	
 	//! Function used to set the Y coordiante for the center point of the shape
+    /**
+     * @brief This function will set the center Y coordinate position for the shape
+     * @param yCenter The center position of the geometry shape in the y-plane
+     */
 	void setCenterYCoordiante(double yCenter)
     {
         yCenterCoordinate = yCenter;
     }
 	
 	//! Function used to get the X Coordinate of the center point point of the shape
+    /**
+     * @brief Retrieves the x position of the center 
+     * @return Returns a number representing the center X coordinate
+     */
 	double getCenterXCoordinate() const
     {
         return xCenterCoordinate;
     }
 	
 	//! Function used to get the Y Coordinate of the center point point of the shape
+    /**
+     * @brief Retrieves the y position of the center
+     * @return Returns a number representing the center Y coordinate
+     */
 	double getCenterYCoordinate() const
     {
         return yCenterCoordinate;
     }
 
 	//! the function will be called when the user selects the geomtry shape
+    /**
+     * @brief Sets the select state of the geometry shape
+     * @param state Set to true in order to indicate if the geometry
+     *              piece is to be selected. All selected geometry piecces
+     *              will turn red.
+     */
 	void setSelectState(bool state)
     {
         _isSelected = state;
     }
 	
 	//! This function will return the selected status
+    /**
+     * @brief Retrieves the selected state of the geometry piece
+     * @return Returns true if geometry piece is selected. Otherwise, returns false
+     */
 	bool getIsSelectedState()
     {
         return _isSelected;
     }
-    
-    void setGroupSelectedState(bool state)
-    {
-        isGroupSelectedState = state;
-    }
-    
-    bool getGroupSelectedState()
-    {
-        return isGroupSelectedState;
-    }
-    
-
 };
 
-
+/**
+ * @class rectangleShape
+ * @author Phillip
+ * @date 16/06/17
+ * @file geometryShapes.h
+ * @brief   This is the base class for the block label and the node shapes.
+ *          Both are rectangles but, one is drawn black and the other is
+ *          drawn blue. They also have different properties that are
+ *          associated with them,
+ */
 class rectangleShape : public geometry2D
 {
 private:
-
+    
+    //! Boolean used to determine if the node/block label is draggin
+    /*!
+        Dragging occurs when the user holds the left mouse button down.
+        The node/block label will drag across the screen. Note that this
+        mode overwites all geometry checks and only when the use releases the 
+        mouse button does the program place a node/block label with 
+        the checks onto the canvas
+    */ 
     bool _isDragging = false;
     
 public:
+
+    //! The constructor for the class
     rectangleShape() : geometry2D()
     {
         
     }
     
+    //! The constructor for the clas
+    /*!
+        This constructor is called only when there is 
+        a specific x and y center coordinate to specify
+        \param xCenterPoint The x-coordinate position of the center
+        \param yCenterPoint The y-coordinate position of the center
+    */ 
 	rectangleShape(double xCenterPoint, double yCenterPoint) : geometry2D()
     {
         xCenterCoordinate = xCenterPoint;
         yCenterCoordinate = yCenterPoint;
     }
 	
-	//! This function will get the distance between two points. The first being itself and the second, the input. The values that are taken in are the x and y coordinate of the second point
-	double getDistance(double xp, double yp)
+	/**
+	 * @brief Computes the distance between the rectangle shape and a given point
+	 * @param xp The x-coordinate position of the location to calculate the distance to
+	 * @param yp The y-coordinate position of the location to calculate the distance to
+	 * @return Returns a number representing the distance between a point in space and the rectangle shape
+	 */
+    double getDistance(double xp, double yp)
     {
         return sqrt(pow((xCenterCoordinate - xp), 2) + pow((yCenterCoordinate - yp), 2));
     }
     
+    /**
+     * @brief   Computes the distance between the rectangle shape and a wxRealPoint.
+     *          This function operates much like the function getDistance(double xp, double yp)
+     *          except the parameter is in a more convient format
+     * @param point The wxRealPoint in space to calculate the distance to
+     * @return Returns a number representing the distance between a point in space and the rectangle shape
+     */
     double getDistance(wxRealPoint point)
     {
         return sqrt(pow((xCenterCoordinate - point.x), 2) + pow((yCenterCoordinate - point.y), 2));
     }
     
+    /**
+     * @brief Computes the distance between the rectangle shape and another rectangle shape
+     * @param testNode The other rectangle shape to compute the distance to
+     * @return Returns a number representing the distance between a point in space and the rectangle shape
+     */
     double getDistance(rectangleShape testNode)
     {
         return sqrt(pow(xCenterCoordinate - testNode.getCenterXCoordinate(), 2) + pow(yCenterCoordinate - testNode.getCenterYCoordinate(), 2));
     }
     
+    /**
+     * @brief Function that is called in order to reset the center of the rectangle object
+     * @param xCoor The new center in the x-plane
+     * @param yCoor The new center in the y-plane
+     */
     void setCenter(double xCoor, double yCoor)
     {
         xCenterCoordinate = xCoor;
         yCenterCoordinate = yCoor;
     }
     
+    /**
+     * @brief This function will move the position of the center
+     * @param xCoor The amount to move the center by in the x-position
+     * @param yCoor THe amount to move the center by in the y-position
+     */
     void moveCenter(double xCoor, double yCoor)
     {
         xCenterCoordinate += xCoor;
         yCenterCoordinate += yCoor;
     }
     
+    /**
+     * @brief Retrieves the dragging state of the rectangle object
+     * @return Returns true if the rectangle object is dragging
+     */
     bool getDraggingState()
     {
         return _isDragging;
     }
     
+    /**
+     * @brief Sets the dragging state of the rectangle object
+     * @param state Set to true if the rectangle object needs to be dragged. Otherwise, set to false
+     */
     void setDraggingState(bool state)
     {
         _isDragging = state;
     }
 	
-	//! This is the function that is called in order to draw the rectangle. One thing that is 
+	/**
+	 * @brief 	This is the draw function for hte rectangle object. Note that for a generic retangle objecyt
+	 * 			nothing is drawn.
+	 */
 	virtual void draw()
     {
         
@@ -178,29 +268,49 @@ public:
 
 
 
+/**
+ * @class node
+ * @author Phillip
+ * @date 18/06/17
+ * @file geometryShapes.h
+ * @brief   This is the object that is used for nodes. This handles any specific node
+ *          items such as the nodal property and the draw method for the node
+ */
 class node : public rectangleShape
 {
 private:
+    //! The nodal property for the node
+    /*!
+        This object contains all of the nodal settings that are relevant to the node.
+        When the user wants to edit the properties of the node, the data structure of this
+        variable is exposed to the user for editing
+     */ 
     nodeSetting _nodalSettings;
 public:
+
+    //! The constructor for the class
 	node(double xCenter, double yCenter) : rectangleShape(xCenter, yCenter)
     {
 
     }
     
+    //! The constructor for the class
     node()
     {
         
     }
     
-	//! This function will draw the shape
+	/**
+	 * @brief This function is called when the program needs to draw the object on the 
+     *          glCanvas. To make a node, the program draws a white point on top of a 
+     *          block point. When the user selects the node, the black is turned to
+     *          red.
+	 */
 	void draw()
     {
         glPointSize(6.0);
-        
-        
-    
         glBegin(GL_POINTS);
+        
         if(_isSelected)
             glColor3d(1.0, 0.0, 0.0);
         else
@@ -219,15 +329,19 @@ public:
         glColor3d(0.0, 0.0, 0.0);
     }
     
+    /**
+     * @brief Sets the nodal settings of the node
+     * @param setting The settings that the node should become
+     */
     void setNodeSettings(nodeSetting setting)
     {
         _nodalSettings = setting;
     }
 	
-    /*! /brief
-    *   This function returns the address of the variable that contains the setting for the node.
-    *   These settings are specificially settings such as nodal properties, material,etc.
-    */ 
+    /**
+     * @brief Retrieves the nodal settings belonging to the node
+     * @return Returns an address to the nodal settings for the node
+     */
     nodeSetting *getNodeSetting()
     {
         return &_nodalSettings;
@@ -238,87 +352,33 @@ public:
 
 
 
-class edgeLineShape : public geometry2D
-{
-protected:
-    segmentProperty _property;
-    
-protected:
-	
-	//! The length of the line?
-	double _maxSideLength;
-    
-    node *_firstNode;
-    
-    node *_secondNode;
-    
-public:
-	edgeLineShape()
-    {
-        
-    }
-    
-    void setFirstNode(node &a_Node)
-    {
-        _firstNode = &a_Node;
-    }
-    
-    node *getFirstNode()
-    {
-        return _firstNode;
-    }
-    
-    void setSecondNode(node &a_node)
-    {
-        _secondNode = &a_node;
-    }
-    
-    node *getSecondNode()
-    {
-        return _secondNode;
-    }
-    
-    void draw()
-    {
-        if(_property.getHiddenState())
-        {
-            glEnable(GL_LINE_STIPPLE);
-            glLineStipple(1, 0b0001100011000110);
-        }
-  
-        glLineWidth(2.0);
-        glBegin(GL_LINES);
-            if(_isSelected)
-                glColor3f(1.0f, 0.0f, 0.0f);
-            else
-                glColor3f(0.0f, 0.0f, 0.0f);
-            glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
-            glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
-        glEnd();
-        glLineWidth(0.5);
-        glDisable(GL_LINE_STIPPLE);
-    }
-    
-    segmentProperty *getSegmentProperty()
-    {
-        return &_property;
-    } 
-	
-    void setSegmentProperty(segmentProperty property)
-    {
-        _property = property;
-    }
-};
-
-
-
+/**
+ * @class blockLabel
+ * @author phillip
+ * @date 24/06/17
+ * @file geometryShapes.h
+ * @brief Class that is used to handle the geometry shape of a block label.
+ * 			This class stores the property of the block label and handles 
+ * 			the drawing of the block label and the drawing of the text that
+ * 			is associated with the block label
+ */
 class blockLabel : public rectangleShape
 {
 private:
-	std::string blockType;
-    
+    //! The block property that is associated with the block label
+	/*!
+		This property contains properties for the mesh size of a particular region
+		and what material should be associated with the particular region.
+	*/ 
     blockProperty _property;
 public:
+
+	/**
+	 * @brief	This is the draw method for the block label. This will
+	 * 			create it similiar to the node geometry class; however,
+	 * 			the bottom point is colored blue as default. When selected,
+	 * 			it will change colors to red.
+	 */
     void draw()
     {
         glPointSize(6.0);
@@ -340,6 +400,16 @@ public:
         glEnd();
     }
     
+	/**
+	 * @brief 	Draws the text for the block label onto the screen. The text that is drawn is the material
+	 * 			associated with the block label
+	 * @param textRender 	A pointer to the OGLFT object that needs to be used
+	 * 						for drawing the text
+	 * @param factor		This is a constant that determines the distance as to
+	 * 						where the text is drawn on the screen. A factor to how much 
+	 * 						of an offset the text needs to be drawn at from the center 
+	 * 						point of the block label.
+	 */
     void drawBlockName(OGLFT::Grayscale *textRender, double factor)
     {
         double offset = 0.02 * factor;
@@ -347,6 +417,12 @@ public:
         textRender->draw(xCenterCoordinate + offset, yCenterCoordinate + offset, _property.getMaterialName().c_str());
     }
     
+	/**
+	 * @brief Draws the circuit name that is associated with the block label onto the screen
+	 * @param textRender A pointer to hte OGLFT object that is to be used for drawing the text
+	 * @param factor	This is a constant that detemines how far of an offset that the 
+	 * 					text should be drawn from the center of the block label
+	 */
     void drawCircuitName(OGLFT::Grayscale *textRender, double factor)
     {
         double offset = 0.02 * factor;
@@ -355,25 +431,151 @@ public:
             textRender->draw(xCenterCoordinate + offset, yCenterCoordinate - offset, _property.getCircuitName().c_str());
     }
 	
+	/**
+	 * @brief Retrieves the block property that is associated with the block label
+	 * @return A pointer pointing to the block property for the block label
+	 */
     blockProperty *getProperty()
     {
         return &_property;
     }
     
-    blockProperty *getAddressProperty()
-    {
-        return &_property;
-    }
-    
+	/**
+	 * @brief Sets the property that is to be associated with the block label
+	 * @param property The property that is to be associated with the block label
+	 */
     void setPorperty(blockProperty property)
     {
         _property = property;
     }
-    
-    
-
 };
 
+
+/**
+ * @class edgeLineShape
+ * @author Phillip
+ * @date 18/06/17
+ * @file geometryShapes.h
+ * @brief   This class handles the lines that the user creates. 
+ *          Each line is composed of a segment property and 
+ *          two nodes. For quick access, the nodes are pointers to
+ *          the nodes that connect the lines together.
+ */
+class edgeLineShape : public geometry2D
+{
+protected:
+
+    //! The property of the line segment
+    /*!
+        This property contains details on the group number and any
+        boundary conditions that are associated with the line
+    */ 
+    segmentProperty _property;
+    
+protected:
+    
+	//! Pointer for the first node
+	/*!
+		This points to the first node of the 
+		edge line shape (basically a segment)
+	*/ 
+    node *_firstNode;
+    
+	//! Pointer for the first node
+	/*!
+		This points to the first node of the 
+		edge line shape (basically a segment)
+	*/ 
+    node *_secondNode;
+    
+public:
+	//! Constructor for the generic class
+	edgeLineShape()
+    {
+        
+    }
+    
+	/**
+	 * @brief Sets the first node of the line segment
+	 * @param a_Node The first node of the line segment
+	 */
+    void setFirstNode(node &a_Node)
+    {
+        _firstNode = &a_Node;
+    }
+    
+	/**
+	 * @brief Gets the first node of the line segment
+	 * @return Retruns a pointer pointing to the first node of the line segment
+	 */
+    node *getFirstNode()
+    {
+        return _firstNode;
+    }
+    
+	/**
+	 * @brief Sets the second node of the line segment
+	 * @param a_node The second node of the line segment
+	 */
+    void setSecondNode(node &a_node)
+    {
+        _secondNode = &a_node;
+    }
+    
+	/**
+	 * @brief Retrieves the second node of the line segment
+	 * @return Returns a pointer pointing to the second node of the line segment
+	 */
+    node *getSecondNode()
+    {
+        return _secondNode;
+    }
+    
+	/**
+	 * @brief This is the draw method for the line segment. This differs from the arc segment class since this 
+	 * 			is a straight line. The defualt color is black. If the line is selected, then the line
+	 * 			will change colors to red
+	 */
+    void draw()
+    {
+        if(_property.getHiddenState())
+        {
+            glEnable(GL_LINE_STIPPLE);
+            glLineStipple(1, 0b0001100011000110);
+        }
+  
+        glLineWidth(2.0);
+        glBegin(GL_LINES);
+            if(_isSelected)
+                glColor3f(1.0f, 0.0f, 0.0f);
+            else
+                glColor3f(0.0f, 0.0f, 0.0f);
+            glVertex2d(_firstNode->getCenterXCoordinate(), _firstNode->getCenterYCoordinate());
+            glVertex2d(_secondNode->getCenterXCoordinate(), _secondNode->getCenterYCoordinate());
+        glEnd();
+        glLineWidth(0.5);
+        glDisable(GL_LINE_STIPPLE);
+    }
+    
+	/**
+	 * @brief Retrieves the segment properties of the line segment
+	 * @return Returns the segment property object that is associated with the line segment
+	 */
+    segmentProperty *getSegmentProperty()
+    {
+        return &_property;
+    } 
+	
+	/**
+	 * @brief Sets the segment properties of the line segment
+	 * @param property 	The segment property that the line segment will
+	 * 					be associated with
+	 */
+    void setSegmentProperty(segmentProperty property)
+    {
+        _property = property;
+    }
+};
 
 
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */

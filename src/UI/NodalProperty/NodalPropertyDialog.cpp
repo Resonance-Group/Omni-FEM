@@ -4,22 +4,15 @@
 
 nodalPropertyDialog::nodalPropertyDialog(wxWindow *par, physicProblems problem) : wxDialog(par, wxID_ANY, "Nodal Property")
 {
-    createDialog(problem);
+    _problem = problem;
+    createDialog();
 }
 
 
 
-nodalPropertyDialog::nodalPropertyDialog(wxWindow *par) : wxDialog(par, wxID_ANY, "Nodal Property")
-{
-    
-}
-
-
-void nodalPropertyDialog::createDialog(physicProblems problem)
+void nodalPropertyDialog::createDialog()
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
-    _problem = problem;
     
     wxBoxSizer *headerSizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *radioSizer = new wxBoxSizer(wxVERTICAL);
@@ -59,7 +52,7 @@ void nodalPropertyDialog::createDialog(physicProblems problem)
     if(_problem == physicProblems::PROB_MAGNETICS)
         boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Vector Potential (Wb/m)");
     else
-        boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Vector Potential (V)");
+        boxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, "Specified Voltage Potential (V)");
     boxSizer1->GetStaticBox()->SetFont(*font);
     textCtrl1->Create(boxSizer1->GetStaticBox(), wxID_ANY, std::to_string(0.0), wxDefaultPosition, wxSize(198, 20));
     textCtrl1->SetFont(*font);

@@ -95,7 +95,7 @@ void blockPropertyDialogElectrostatic::clearMaterial()
     _material.setName("New Material");
     _material.setChargeDensity(0);
     
-    setTextBox();
+    updateInterface();
 }
 
 
@@ -104,12 +104,12 @@ void blockPropertyDialogElectrostatic::clearMaterial()
 void blockPropertyDialogElectrostatic::setMaterial(electrostaticMaterial &material)
 {
     _material = material;
-    setTextBox();
+    updateInterface();
 }
 
 
 
-void blockPropertyDialogElectrostatic::setTextBox()
+void blockPropertyDialogElectrostatic::updateInterface()
 {
     std::ostream relativeXStream(_relativeEpiXTextCtrl);
     std::ostream relativeYStream(_relativeEpiYTextCtrl);

@@ -1,7 +1,7 @@
 #include <UI/GeometryDialog/SegmentPropertyDialog.h>
 
 
-segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> electricalBoundaryList, std::vector<conductorProperty> conductorList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> *electricalBoundaryList, std::vector<conductorProperty> *conductorList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     _isArc = isArc;
     
@@ -27,12 +27,12 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     
     _problem = physicProblems::PROB_ELECTROSTATIC;
     
-    for(std::vector<electricalBoundary>::iterator boundaryNameIterator = electricalBoundaryList.begin(); boundaryNameIterator != electricalBoundaryList.end(); ++boundaryNameIterator)
+    for(std::vector<electricalBoundary>::iterator boundaryNameIterator = electricalBoundaryList->begin(); boundaryNameIterator != electricalBoundaryList->end(); ++boundaryNameIterator)
     {
         boundaryNameList->Add(boundaryNameIterator->getBoundaryName());
     }
     
-    for(std::vector<conductorProperty>::iterator conductorIterator = conductorList.begin(); conductorIterator != conductorList.end(); ++conductorIterator)
+    for(std::vector<conductorProperty>::iterator conductorIterator = conductorList->begin(); conductorIterator != conductorList->end(); ++conductorIterator)
     {
         conductorNameList->Add(conductorIterator->getName());
     }
@@ -47,9 +47,9 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     }
     else
     {
-        for(unsigned int i = 0; i < electricalBoundaryList.size(); i++)
+        for(unsigned int i = 0; i < electricalBoundaryList->size(); i++)
         {
-            if(electricalBoundaryList.at(i).getBoundaryName() == property.getBoundaryName())
+            if(electricalBoundaryList->at(i).getBoundaryName() == property.getBoundaryName())
             {
                 _boundaryListCombo->SetSelection(i + 1);
                 break;
@@ -93,9 +93,9 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     }
     else
     {
-        for(unsigned int i = 0; i < conductorList.size(); i++)
+        for(unsigned int i = 0; i < conductorList->size(); i++)
         {
-            if(conductorList.at(i).getName() == property.getConductorName())
+            if(conductorList->at(i).getName() == property.getConductorName())
             {
                 _conductorListCombobox->SetSelection(i + 1);
             }
@@ -142,7 +142,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
 
 
 
-segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> magneticBoundayList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
+segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> *magneticBoundayList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     _isArc = isArc;
     
@@ -163,7 +163,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
     
     _problem = physicProblems::PROB_MAGNETICS;
     
-    for(std::vector<magneticBoundary>::iterator boundaryNameIterator = magneticBoundayList.begin(); boundaryNameIterator != magneticBoundayList.end(); ++boundaryNameIterator)
+    for(std::vector<magneticBoundary>::iterator boundaryNameIterator = magneticBoundayList->begin(); boundaryNameIterator != magneticBoundayList->end(); ++boundaryNameIterator)
     {
         boundaryNameList->Add(boundaryNameIterator->getBoundaryName());
     }
@@ -178,9 +178,9 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
     }
     else
     {
-        for(int i = 0; i < magneticBoundayList.size(); i++)
+        for(int i = 0; i < magneticBoundayList->size(); i++)
         {
-            if(magneticBoundayList.at(i).getBoundaryName() == property.getBoundaryName())
+            if(magneticBoundayList->at(i).getBoundaryName() == property.getBoundaryName())
             {
                 _boundaryListCombo->SetSelection(i + 1);
                 break;

@@ -507,7 +507,7 @@ private:
         this would indicate that the user wants to select only nodes/block labels. This is determined by the variable _createNodes. If 
         true, then the user will select all ndoes within the box the user drew. If false, then the user will select the block labels.
         The program will always select a new group of nodes/labels. If the user would like to select an addiditonal set of nodes/labels,
-        the the CTRL button must be pressed down. This logic applies to the lines/arcs. This function keeps a static count of all of the 
+        then the CTRL button must be pressed down. This logic applies to the lines/arcs. This function keeps a static count of all of the 
         selected geometry. This may be removed one day.
       
         To select a grouping of lines/arcs, the _endpoint variable must be less then _startPoint on the x and y-plane. The same
@@ -670,7 +670,7 @@ public:
     //! Will cause the canvas to zoom out by a pre determined factor.
     /*!
         This function will zoom out by a pre determined factor. This factor was determined by experimentation.
-        The function will zomm out away from the center of the current position of the screen.
+        The function will zoom out away from the center of the current position of the screen.
     */ 
     void zoomOut()
     {
@@ -717,8 +717,18 @@ public:
     */ 
     void editSelection();
     
-    //! If a properties name is changes or if the property is deleted, this will reset the properties
-    void updateProperties(bool scanConductorProperty, bool scanNodalProperty, bool scanBoundaryProperty, bool scanMaterialProperty, bool scanCircuitProperty);
+    //! This function will change all geomety objects with the particular property
+    /*!
+        For which ever property that is selected, the program will scan throguh all relevent
+        geometry shapes comparing the property that the shape has against the approiate property list.
+        If it is found that the property within the geometry shape is not in the approiate property list,
+        then the program will set name of the property within the geometry shape to None. 
+        Note that this is not the geometry properties. These are properties such as material,
+        boundary conditions, nodal, etc. 
+        \param property The property that needs to be searched through and checked and updated
+                        if the property no longer exists
+    */ 
+    void updateProperties(EditProperty property);
     
     //! Selects a group of geometry objects based on their group ID (speciffied by groupNumber).
     /*!

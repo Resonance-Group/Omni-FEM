@@ -24,10 +24,10 @@ circuitPropertyDialog::circuitPropertyDialog(wxWindow *par) : wxDialog(par, wxID
     headerSizer->Add(nameTextCtrl, 0, wxALIGN_CENTER | wxTOP | wxRIGHT, 6);
     
     /* Creating the radio buttons for the options of the circuit being series or parallel */
-    radioButton1->Create(this, generalFrameButton::ID_RadioButton1, "Parallel");
+    radioButton1->Create(this, wxID_ANY, "Parallel");
     radioButton1->SetFont(*font);
     radioButton1->SetValue(true);
-    radioButton2->Create(this, generalFrameButton::ID_RadioButton2, "Series");
+    radioButton2->Create(this, wxID_ANY, "Series");
     radioButton2->SetFont(*font);
     radioButton2->SetValue(false);
     
@@ -83,7 +83,7 @@ void circuitPropertyDialog::setCircuit(circuitProperty &circuit)
 {
     _circuitProperty = circuit;
     
-    setTextBox();
+    updateInterface();
 }
 
 
@@ -94,28 +94,12 @@ void circuitPropertyDialog::clearCircuit()
     _circuitProperty.setCurrent(0.0);
     _circuitProperty.setCircuitSeriesState(false);
     
-    setTextBox();
+    updateInterface();
 }
 
 
 
-void circuitPropertyDialog::onRadioButton1Click(wxCommandEvent &event)
-{
-    radioButton1->SetValue(true);
-    radioButton2->SetValue(false);    
-}
-
-
-
-void circuitPropertyDialog::onRadioButton2Click(wxCommandEvent &event)
-{
-    radioButton1->SetValue(false);
-    radioButton2->SetValue(true);    
-}
-
-
-
-void circuitPropertyDialog::setTextBox()
+void circuitPropertyDialog::updateInterface()
 {
     std::ostream currentStream(circuitCurrentTextCtrl);
     
@@ -125,7 +109,7 @@ void circuitPropertyDialog::setTextBox()
     radioButton2->SetValue(_circuitProperty.getCircuitSeriesState());
     
     circuitCurrentTextCtrl->SetValue(wxEmptyString);
-    currentStream << setprecision(7);
+    currentStream << std::setprecision(7);
     currentStream << _circuitProperty.getCurrent();
 }
 
@@ -134,10 +118,3 @@ circuitPropertyDialog::~circuitPropertyDialog()
 {
     
 }
-
-
-
-wxBEGIN_EVENT_TABLE(circuitPropertyDialog, wxDialog)
-    EVT_RADIOBUTTON(generalFrameButton::ID_RadioButton1, circuitPropertyDialog::onRadioButton1Click)
-    EVT_RADIOBUTTON(generalFrameButton::ID_RadioButton2, circuitPropertyDialog::onRadioButton2Click)
-wxEND_EVENT_TABLE()

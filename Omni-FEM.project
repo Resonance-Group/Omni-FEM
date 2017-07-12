@@ -88,17 +88,6 @@
     <VirtualDirectory Name="common">
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
-      <File Name="src/common/omniFEMDialog.cpp"/>
-      <File Name="src/common/MagneticMaterial.cpp"/>
-      <File Name="src/common/MagneticBoundary.cpp"/>
-      <File Name="src/common/BoundaryConditions.cpp"/>
-      <File Name="src/common/CircuitProperty.cpp"/>
-      <File Name="src/common/ConductorProperty.cpp"/>
-      <File Name="src/common/ElectricalBoundary.cpp"/>
-      <File Name="src/common/ElectroStaticMaterial.cpp"/>
-      <File Name="src/common/MaterialFolder.cpp"/>
-      <File Name="src/common/MaterialProperty.cpp"/>
-      <File Name="src/common/NodalProperty.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -158,7 +147,6 @@
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
-      <File Name="Include/common/omniFEMDialog.h"/>
       <File Name="Include/common/ConductorProperty.h"/>
       <File Name="Include/common/MaterialFolder.h"/>
       <File Name="Include/common/NodalProperty.h"/>
@@ -173,7 +161,6 @@
       <File Name="Include/common/ProblemDefinition.h"/>
       <File Name="Include/common/MagneticPreference.h"/>
       <File Name="Include/common/ElectrostaticPreference.h"/>
-      <File Name="Include/common/omniFEMEvent.h"/>
       <File Name="Include/common/JilesAthertonParameters.h"/>
       <File Name="Include/common/GridPreferences.h"/>
       <VirtualDirectory Name="GeometryProperties">

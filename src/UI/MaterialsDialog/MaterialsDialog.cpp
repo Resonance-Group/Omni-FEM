@@ -1,31 +1,21 @@
 #include <UI/MaterialsDialog/MaterialDialog.h>
 
-materialDialog::materialDialog(wxWindow *par, std::vector<magneticMaterial> materialList) : wxDialog(par, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
+materialDialog::materialDialog(wxWindow *par, std::vector<magneticMaterial> *materialList) : wxDialog(par, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
     _problem = physicProblems::PROB_MAGNETICS;
     
     _magneticMaterialList = materialList;
-    
-    for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin(); materialIterator != _magneticMaterialList.end(); ++materialIterator)
-    {
-        materialNameArray->Add(wxString(materialIterator->getName()));
-    }
     
     makeDialog();
 }
 
 
 
-materialDialog::materialDialog(wxWindow *par, std::vector<electrostaticMaterial> electroStaticMaterialList) : wxDialog(par, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
+materialDialog::materialDialog(wxWindow *par, std::vector<electrostaticMaterial> *electroStaticMaterialList) : wxDialog(par, wxID_ANY, "Material Definition", wxDefaultPosition, wxSize(233, 148))
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     
     _electroStaticMaterialList = electroStaticMaterialList;
-    
-    for(std::vector<electrostaticMaterial>::iterator materialIterator = _electroStaticMaterialList.begin(); materialIterator != _electroStaticMaterialList.end(); ++materialIterator)
-    {
-        materialNameArray->Add(wxString(materialIterator->getName()));
-    }
     
     makeDialog();
 }
@@ -45,13 +35,37 @@ void materialDialog::makeDialog()
     wxStaticText *name = new wxStaticText(this, wxID_ANY, "Name: ");
     name->SetFont(*font);
     
-    selection->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(139, 21), *materialNameArray);
-    selection->SetFont(*font);
-    if(materialNameArray->GetCount() > 0)
-        selection->SetSelection(0);
+    wxArrayString materialNameArray;
+    
+    switch(_problem)
+    {
+        case physicProblems::PROB_ELECTROSTATIC:
+        {
+            for(std::vector<electrostaticMaterial>::iterator materialIterator = _electroStaticMaterialList->begin(); materialIterator != _electroStaticMaterialList->end(); ++materialIterator)
+            {
+                materialNameArray.Add(wxString(materialIterator->getName()));
+            }
+        }
+        break;
+        case physicProblems::PROB_MAGNETICS:
+        {
+           for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList->begin(); materialIterator != _magneticMaterialList->end(); ++materialIterator)
+            {
+                materialNameArray.Add(wxString(materialIterator->getName()));
+            } 
+        }
+        break;
+        default:
+            return;
+    }
+    
+    _selection->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(139, 21), materialNameArray);
+    _selection->SetFont(*font);
+    if(materialNameArray.GetCount() > 0)
+        _selection->SetSelection(0);
     
     headerSizer->Add(name, 0, wxALIGN_CENTER | wxLEFT | wxUP, 6);
-    headerSizer->Add(selection, 0, wxALIGN_CENTER | wxUP, 6);
+    headerSizer->Add(_selection, 0, wxALIGN_CENTER | wxUP, 6);
     
     wxButton *addPropertyButton = new wxButton(this, propertiesDialogEnum::ID_ButtonAdd, "Add Property", wxPoint(12, 43), wxSize(102, 23));
     addPropertyButton->SetFont(*font);
@@ -98,7 +112,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
         if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
         {
             magneticMaterialPropertyDialog->getNewMaterial(newMat);
-            for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin();  materialIterator != _magneticMaterialList.end(); ++materialIterator)
+            for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList->begin();  materialIterator != _magneticMaterialList->end(); ++materialIterator)
             {
                 if(materialIterator->getName() == newMat.getName())
                 {
@@ -106,9 +120,9 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
-            _magneticMaterialList.push_back(newMat);
-            selection->Append(newMat.getName());
-            selection->SetSelection(0);
+            _magneticMaterialList->push_back(newMat);
+            _selection->Append(newMat.getName());
+            _selection->SetSelection(0);
         }
     }
     else if(_problem == physicProblems::PROB_ELECTROSTATIC)
@@ -119,7 +133,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
         if(eStaticMaterialDialog->ShowModal() == wxID_OK)
         {
            eStaticMaterialDialog->getMaterial(newMaterial);
-            for(std::vector<electrostaticMaterial>::iterator materialIterator = _electroStaticMaterialList.begin();  materialIterator != _electroStaticMaterialList.end(); ++materialIterator)
+            for(std::vector<electrostaticMaterial>::iterator materialIterator = _electroStaticMaterialList->begin();  materialIterator != _electroStaticMaterialList->end(); ++materialIterator)
             {
                 if(materialIterator->getName() == newMaterial.getName())
                 {
@@ -127,9 +141,9 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
-            _electroStaticMaterialList.push_back(newMaterial);
-            selection->Append(newMaterial.getName());
-            selection->SetSelection(0); 
+            _electroStaticMaterialList->push_back(newMaterial);
+            _selection->Append(newMaterial.getName());
+            _selection->SetSelection(0); 
         }
     }
 } 
@@ -138,19 +152,29 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
 
 void materialDialog::onDeleteProperty(wxCommandEvent &event)
 {
-    if(_magneticMaterialList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
+    if(_magneticMaterialList != nullptr && _problem == physicProblems::PROB_MAGNETICS)
     {
-        int currentSelection = selection->GetCurrentSelection();
-        _magneticMaterialList.erase(_magneticMaterialList.begin() + currentSelection);
-        selection->Delete(currentSelection);
-        selection->SetSelection(0);
+        if(!_magneticMaterialList->empty())
+        {
+            int currentSelection = _selection->GetCurrentSelection();
+            _magneticMaterialList->erase(_magneticMaterialList->begin() + currentSelection);
+            _selection->Delete(currentSelection);
+            _selection->SetSelection(0);
+            if(_magneticMaterialList->empty())
+                _selection->SetValue(wxEmptyString);
+        }
     }
-    else if(_electroStaticMaterialList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
+    else if(_electroStaticMaterialList != nullptr && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        int currentSelection = selection->GetCurrentSelection();
-        _electroStaticMaterialList.erase(_electroStaticMaterialList.begin() + currentSelection);
-        selection->Delete(currentSelection);
-        selection->SetSelection(0);
+        if(!_electroStaticMaterialList->empty())
+        {
+            int currentSelection = _selection->GetCurrentSelection();
+            _electroStaticMaterialList->erase(_electroStaticMaterialList->begin() + currentSelection);
+            _selection->Delete(currentSelection);
+            _selection->SetSelection(0);
+            if(_electroStaticMaterialList->empty())
+                _selection->SetValue(wxEmptyString);
+        }
     }
 }
 
@@ -159,69 +183,62 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
 void materialDialog::onModifyProperty(wxCommandEvent &event)
 {
     
-    if(_magneticMaterialList.size() > 0 && _problem == physicProblems::PROB_MAGNETICS)
+    if(_magneticMaterialList != nullptr && _problem == physicProblems::PROB_MAGNETICS)
     {
-        blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic(this);
-        magneticMaterial selectedMaterial;
-        int currentSelection = selection->GetSelection();
-        selectedMaterial = _magneticMaterialList.at(currentSelection);
-        magneticMaterialPropertyDialog->setMaterial(selectedMaterial);
-        if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
+        if(!_magneticMaterialList->empty())
         {
-            int i = 0;
-            magneticMaterialPropertyDialog->getNewMaterial(selectedMaterial);
-            for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin();  materialIterator != _magneticMaterialList.end();++materialIterator)
+            blockPropertyMagnetic *magneticMaterialPropertyDialog = new blockPropertyMagnetic(this);
+            magneticMaterial selectedMaterial;
+            int currentSelection = _selection->GetSelection();
+            selectedMaterial = _magneticMaterialList->at(currentSelection);
+            magneticMaterialPropertyDialog->setMaterial(selectedMaterial);
+            if(magneticMaterialPropertyDialog->ShowModal() == wxID_OK)
             {
-                if(materialIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
+                int i = 0;
+                magneticMaterialPropertyDialog->getNewMaterial(selectedMaterial);
+                for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList->begin();  materialIterator != _magneticMaterialList->end(); ++materialIterator)
                 {
-                    wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER); 
-                    break;
+                    if(materialIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
+                    {
+                        wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER); 
+                        break;
+                    }
+                    i++;
                 }
-                i++;
+                _magneticMaterialList->at(currentSelection) = selectedMaterial;
+                _selection->SetString(currentSelection, selectedMaterial.getName());
             }
-            _magneticMaterialList.at(currentSelection) = selectedMaterial;
-            selection->SetString(currentSelection, selectedMaterial.getName());
         }
     }
-    else if(_electroStaticMaterialList.size() > 0 && _problem == physicProblems::PROB_ELECTROSTATIC)
+    else if(_electroStaticMaterialList != nullptr && _problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        electrostaticMaterial selectedMaterial;
-        blockPropertyDialogElectrostatic *eStaticMaterialDialog = new blockPropertyDialogElectrostatic(this);
-        int currentSelection = selection->GetSelection();
-        selectedMaterial = _electroStaticMaterialList.at(currentSelection);
-        eStaticMaterialDialog->setMaterial(selectedMaterial);
-        if(eStaticMaterialDialog->ShowModal() == wxID_OK)
+        if(!_electroStaticMaterialList->empty())
         {
-            int i = 0;
-            eStaticMaterialDialog->getMaterial(selectedMaterial);
-            for(std::vector<electrostaticMaterial>::iterator materialIterator = _electroStaticMaterialList.begin();  materialIterator != _electroStaticMaterialList.end();++materialIterator)
+            electrostaticMaterial selectedMaterial;
+            blockPropertyDialogElectrostatic *eStaticMaterialDialog = new blockPropertyDialogElectrostatic(this);
+            int currentSelection = _selection->GetSelection();
+            selectedMaterial = _electroStaticMaterialList->at(currentSelection);
+            eStaticMaterialDialog->setMaterial(selectedMaterial);
+            if(eStaticMaterialDialog->ShowModal() == wxID_OK)
             {
-                if(materialIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
+                int i = 0;
+                eStaticMaterialDialog->getMaterial(selectedMaterial);
+                for(std::vector<electrostaticMaterial>::iterator materialIterator = _electroStaticMaterialList->begin();  materialIterator != _electroStaticMaterialList->end();++materialIterator)
                 {
-                    wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER); 
-                    break;
+                    if(materialIterator->getName() == selectedMaterial.getName() && (i != currentSelection))
+                    {
+                        wxMessageBox(selectedMaterial.getName().append(" already exists. Choose a different name."), "Information", wxOK | wxICON_INFORMATION | wxCENTER); 
+                        break;
+                    }
+                    i++;
                 }
-                i++;
+                _electroStaticMaterialList->at(currentSelection) = selectedMaterial;
+                _selection->SetString(currentSelection, selectedMaterial.getName());
             }
-            _electroStaticMaterialList.at(currentSelection) = selectedMaterial;
-            selection->SetString(currentSelection, selectedMaterial.getName());
         }
     }
 }
 
-
-
-std::vector<magneticMaterial> materialDialog::getMagenticMaterialList()
-{
-    return _magneticMaterialList;
-}
-
-
-
-std::vector<electrostaticMaterial>  materialDialog::getElectroMaterialList()
-{
-    return _electroStaticMaterialList;
-}
 
 
 materialDialog::~materialDialog()

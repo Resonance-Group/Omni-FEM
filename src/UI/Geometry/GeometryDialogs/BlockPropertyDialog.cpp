@@ -2,7 +2,7 @@
 #include <UI/GeometryDialog/BlockPropertyDialog.h>
 
 
-blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMaterial> material, std::vector<circuitProperty> circuit, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
+blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMaterial> *material, std::vector<circuitProperty> *circuit, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -49,12 +49,12 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     meshSettingArray.Add("Extremely Coarse");
     meshSettingArray.Add("Custom");
     
-    for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList.begin(); materialIterator != _magneticMaterialList.end(); ++materialIterator)
+    for(std::vector<magneticMaterial>::iterator materialIterator = _magneticMaterialList->begin(); materialIterator != _magneticMaterialList->end(); ++materialIterator)
     {
         materialNameList->Add(materialIterator->getName());
     }
     
-    for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList.begin(); circuitIterator != _circuitList.end(); ++circuitIterator)
+    for(std::vector<circuitProperty>::iterator circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); ++circuitIterator)
     {
         circuitNameList->Add(circuitIterator->getName());
     }
@@ -67,13 +67,17 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     {
         _materialComboBox->SetSelection(0);
     }
+    else if(property.getMaterialName() == "No Mesh")
+    {
+        _materialComboBox->SetSelection(1);
+    }
     else
     {
-        for(unsigned int i = 0; i < _magneticMaterialList.size(); i++)
+        for(unsigned int i = 0; i < _magneticMaterialList->size(); i++)
         {
-            if(_magneticMaterialList.at(i).getName() == property.getMaterialName())
+            if(_magneticMaterialList->at(i).getName() == property.getMaterialName())
             {
-                _materialComboBox->SetSelection(i + 1);
+                _materialComboBox->SetSelection(i + 2);
                 break;
             }
         }
@@ -119,9 +123,9 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     }
     else
     {
-        for(unsigned int i = 0; i < _circuitList.size(); i++)
+        for(unsigned int i = 0; i < _circuitList->size(); i++)
         {
-            if(_circuitList.at(i).getName() == property.getCircuitName())
+            if(_circuitList->at(i).getName() == property.getCircuitName())
             {
                 _circuitComboBox->SetSelection(i + 1);
                 break;
@@ -209,7 +213,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
 
 
 
-blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostaticMaterial> material, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
+blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostaticMaterial> *material, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
@@ -249,7 +253,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     meshSettingArray.Add("Extremely Coarse");
     meshSettingArray.Add("Custom");
     
-    for(std::vector<electrostaticMaterial>::iterator materialIterator = _electricalMaterialList.begin(); materialIterator != _electricalMaterialList.end(); ++materialIterator)
+    for(std::vector<electrostaticMaterial>::iterator materialIterator = _electricalMaterialList->begin(); materialIterator != _electricalMaterialList->end(); ++materialIterator)
     {
         materialNameList->Add(materialIterator->getName());
     }
@@ -262,13 +266,17 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     {
         _materialComboBox->SetSelection(0);
     }
-    else
+    else if(property.getMaterialName() == "No Mesh")
     {
-        for(unsigned int i = 0; i < _electricalMaterialList.size(); i++)
+        _materialComboBox->SetSelection(1);
+    }
+    else 
+    {
+        for(unsigned int i = 0; i < _electricalMaterialList->size(); i++)
         {
-            if(_electricalMaterialList.at(i).getName() == property.getMaterialName())
+            if(_electricalMaterialList->at(i).getName() == property.getMaterialName())
             {
-                _materialComboBox->SetSelection(i + 1);
+                _materialComboBox->SetSelection(i + 2);
                 break;
             }
         }
@@ -380,8 +388,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
         _numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
         property.setNumberOfTurns(value2);
         
-        _magnetizationTextCtrl->GetValue().ToDouble(&value);
-        property.setMagnetization(value);
+        property.setMagnetization(_magnetizationTextCtrl->GetValue());
     }
     
     _groupTextCtrl->GetValue().ToLong(&value2);

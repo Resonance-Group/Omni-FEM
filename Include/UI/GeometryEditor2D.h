@@ -183,7 +183,7 @@ public:
     
     //! This function is used to calculate the shortest distance between a line and a node
     /*!
-        This function contains that same underlying principal that operates the getIntersection function
+        This function contains the same underlying principal that operates the getIntersection function
         \param selectedNode The node that the function calculating the distance from
         \param segment The line segment that the distance is being calculated from
         \return Returns the shortest distance between the selectedNode and segment
