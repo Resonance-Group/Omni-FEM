@@ -7,8 +7,7 @@ preferencesDialog::preferencesDialog(wxWindow *par, magneticPreference pref) : w
     _magPreference = pref;
     _problem = physicProblems::PROB_MAGNETICS;
 
-    _acSolverNameArray->Add("Succ. Approx");
-    _acSolverNameArray->Add("Newton");
+    
    
     createDialog();
 }
@@ -45,19 +44,26 @@ void preferencesDialog::createDialog()
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
     
-    _probTypeNameArray->Add("Planar");
-    _probTypeNameArray->Add("Axisymmetric");
+    wxArrayString probTypeNameArray;
+    wxArrayString lengthUnitsNameArray;
+    wxArrayString acSolverNameArray;
+    
+    probTypeNameArray.Add("Planar");
+    probTypeNameArray.Add("Axisymmetric");
    
-    _lengthUnitsNameArray->Add("Inches");
-    _lengthUnitsNameArray->Add("Millimeters");
-    _lengthUnitsNameArray->Add("Centimeters");
-    _lengthUnitsNameArray->Add("Meters");
-    _lengthUnitsNameArray->Add("Mils");
-    _lengthUnitsNameArray->Add("Micrometers");
+    lengthUnitsNameArray.Add("Inches");
+    lengthUnitsNameArray.Add("Millimeters");
+    lengthUnitsNameArray.Add("Centimeters");
+    lengthUnitsNameArray.Add("Meters");
+    lengthUnitsNameArray.Add("Mils");
+    lengthUnitsNameArray.Add("Micrometers");
+    
+    acSolverNameArray.Add("Succ. Approx");
+    acSolverNameArray.Add("Newton");
     
     wxStaticText *probTypeText = new wxStaticText(this, wxID_ANY, "Problem Type:");
     probTypeText->SetFont(*font);
-    _problemTypeComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_probTypeNameArray);
+    _problemTypeComboBox->Create(this, generalFrameButton::ID_ComboBox1, wxEmptyString, wxDefaultPosition, wxSize(121, 21), probTypeNameArray);
     _problemTypeComboBox->SetFont(*font);
     probTypeSizer->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
     probTypeSizer->Add(20, 0, 0);
@@ -65,7 +71,7 @@ void preferencesDialog::createDialog()
    
     wxStaticText *lengthUnitsText = new wxStaticText(this, wxID_ANY, "Length Units:");
     lengthUnitsText->SetFont(*font);
-    _lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_lengthUnitsNameArray);
+    _lengthUnitsComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), lengthUnitsNameArray);
     _lengthUnitsComboBox->SetFont(*font);
     lengthSizer->Add(lengthUnitsText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
     lengthSizer->Add(23, 0, 0);
@@ -75,7 +81,7 @@ void preferencesDialog::createDialog()
     {
         wxStaticText *acSolverText = new wxStaticText(this, wxID_ANY, "AC Solver:");
         acSolverText->SetFont(*font);
-        _acSolverComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), *_acSolverNameArray);
+        _acSolverComboBox->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), acSolverNameArray);
         _acSolverComboBox->SetFont(*font);
         _acSolverComboBox->SetSelection((int)_magPreference.getACSolver());
         acSolverSizer->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
