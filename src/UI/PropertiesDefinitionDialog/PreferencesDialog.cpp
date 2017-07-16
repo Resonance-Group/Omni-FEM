@@ -7,8 +7,6 @@ preferencesDialog::preferencesDialog(wxWindow *par, magneticPreference pref) : w
     _magPreference = pref;
     _problem = physicProblems::PROB_MAGNETICS;
 
-    
-   
     createDialog();
 }
 

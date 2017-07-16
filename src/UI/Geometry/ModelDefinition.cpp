@@ -1954,7 +1954,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                 
                 lineIterator->getSecondNode()->setSelectState(false);
 
-                if(_editor.addLine(getTolerance()))
+                if(_editor.addLine(getTolerance() / 8.0))
                     _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
             }
         }
