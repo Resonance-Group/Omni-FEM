@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Workspace Name="Omni-FEM" Database="">
+<CodeLite_Workspace Name="Omni-FEM" Database="" Version="10.0.0">
   <Project Name="Omni-FEM" Path="Omni-FEM.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">

@@ -3,6 +3,7 @@
 */
 
 #include "UI/OmniFEMFrame.h"
+#include <fstream>
 
 void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
@@ -30,11 +31,22 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 
 void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 {
-	wxFileDialog saveFileDialog(this, "Save File", "", "", "", wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR);
-	
-	if(saveFileDialog.ShowModal() != wxID_CANCEL)
+	if(_saveFilePath != "")
 	{
-
+		save(_saveFilePath);
+	}
+	else
+	{
+		wxFileDialog saveFileDialog(this, "Save File", "", "", "", wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxFD_CHANGE_DIR);
+		if(saveFileDialog.ShowModal() != wxID_CANCEL)
+		{
+			wxString appendedTitle = "Omni-FEM - ";
+			_problemDefinition.setName(saveFileDialog.GetFilename());
+			appendedTitle.append(_problemDefinition.getName());
+			this->SetTitle(appendedTitle);
+			_saveFilePath = saveFileDialog.GetPath();
+			save(_saveFilePath);
+		}
 	}
 }
 
@@ -50,5 +62,17 @@ void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
 		_problemDefinition.setName(saveFileDialog.GetFilename());
         appendedTitle.append(_problemDefinition.getName());
         this->SetTitle(appendedTitle);
+		_saveFilePath = saveFileDialog.GetPath();
+		save(_saveFilePath);
 	}
+}
+
+
+
+void OmniFEMMainFrame::save(string filePath)
+{
+	std::ofstream saveFile;
+	wxString pathName(filePath);
+	pathName += wxString(".omniFEM");
+	saveFile.open(pathName.ToStdString(), std::ofstream::out);
 }

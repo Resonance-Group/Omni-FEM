@@ -286,6 +286,14 @@ private:
         variable is exposed to the user for editing
      */ 
     nodeSetting _nodalSettings;
+	
+	//! Number that represents the nodal ID
+	/*!
+		The nodal ID is used to correctly associate the lines/arcs
+		to the correct node. THis number is obtained
+		by determining how many nodes were created
+	*/ 
+	unsigned long _nodeNumber;
 public:
 
     //! The constructor for the class
@@ -346,8 +354,25 @@ public:
     {
         return &_nodalSettings;
     }
-    
-    
+	
+	/**
+	 * @brief 	Function that is used to set the noda ID of the node.
+	 * 			This ID is used to associate the node to the arc/line.
+	 * @param id The ID number of the node.
+	 */
+	void setNodeID(unsigned long id)
+	{
+		_nodeNumber = id;
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the nodal ID of the node.
+	 * @return Returns a number representing the nodal ID of the node.
+	 */
+	unsigned long getNodeID()
+	{
+		return _nodeNumber;
+	}
 };
 
 

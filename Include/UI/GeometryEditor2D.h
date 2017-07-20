@@ -127,6 +127,14 @@ private:
         \sa _lastNodeAdded
     */ 
     plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
+	
+	//! This number is used to keep track of the number of nodes created
+	/*!
+		This number is primarly used for saving and restoring. This will help to
+		ensure that all of the lines/arcs are associated with the correct
+		node when a user loads a file
+	*/ 
+	unsigned long _nodeNumber = 0;
     
     //! Function that will get the intersection X, Y point of two lines crossing each other
     /*!

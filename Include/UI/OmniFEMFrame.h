@@ -90,6 +90,13 @@ private:
     /************
 	* Variables *
 	*************/
+	
+	//! A local copy of the path file for the saved file
+	/*!
+		This is primarly used during a saved event. For a saved as event,
+		the contents are replaced by what the user choose in the dialog
+	*/ 
+	string _saveFilePath = "";
     
 	//! The glCanvas that is created in order for the user to draw their geomtry
     /*!
@@ -820,8 +827,6 @@ private:
         }
     }
     
-    
-    
     //! Event procedure that is fired when the user moves the mouse pointer across the canvas screen
     /*!
         This function will simply update the status bar with the current coordinate position of the mouse
@@ -952,6 +957,12 @@ private:
         \param enable Boolean to enable or disable the menu bar. True means the menu bar is enable. False for disable
     */ 
 	void enableToolMenuBar(bool enable);
+	
+	/**
+	 * @brief Function that is called which will save the data structures to a file choosen by the user
+	 * @param filePath The path where the data should be saved to
+	 */
+	void save(string filePath);
     
     //! Function that is needed in order to tell the wx library that this class has event procedures
     wxDECLARE_EVENT_TABLE();

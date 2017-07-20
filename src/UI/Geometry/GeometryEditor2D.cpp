@@ -41,6 +41,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 	}
     
     newNode.setCenter(xPoint, yPoint);
+	newNode.setNodeID(_nodeNumber++);
 	_lastNodeAdded = _nodeList.insert(newNode);
     
     /* If the node is in between a line, then break the line into 2 lines */
