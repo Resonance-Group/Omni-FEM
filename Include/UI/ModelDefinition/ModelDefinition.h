@@ -888,6 +888,42 @@ public:
         \param filletRadius A positive real number that specifies what the radius is of the fillet
     */ 
     void createFillet(double filletRadius);
+	
+	/**
+	 * @brief Function that is used to retrieve the nodal list of the model
+	 * @return Returns a pointer pointing to the nodal list
+	 */
+	plf::colony<node> *getModelNodeList()
+	{
+		return _editor.getNodeList();
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the line list of the model
+	 * @return Returns a pointer pointing to the line list.
+	 */
+	plf::colony<edgeLineShape> *getModelLineList()
+	{
+		return _editor.getLineList();
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the block label list of the model
+	 * @return Returns a pointer pointing to the block label list
+	 */
+	plf::colony<blockLabel> *getModelBlockList()
+	{
+		return _editor.getBlockLabelList();
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the arc list of the model
+	 * @return Returns a pointer pointing to the arc list
+	 */
+	plf::colony<arcShape> *getModelArcList()
+	{
+		return _editor.getArcList();
+	}
     
 private:
     //! This is a macro in order to let wxWidgets understand that there are events within the class

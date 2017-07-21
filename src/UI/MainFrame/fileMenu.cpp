@@ -73,6 +73,28 @@ void OmniFEMMainFrame::save(string filePath)
 {
 	std::ofstream saveFile;
 	wxString pathName(filePath);
-	pathName += wxString(".omniFEM");
+	
+	if(!pathName.Contains(wxString(".omniFEM")))
+		pathName += wxString(".omniFEM");
+
 	saveFile.open(pathName.ToStdString(), std::ofstream::out);
+	if(saveFile.is_open())
+	{
+		saveFile << (int)_problemDefinition.getPhysicsProblem() << std::endl;
+		if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
+		{
+			saveFile << _problemDefinition.getElectricalPreferences().getComments().ToStdString() << std::endl;
+			saveFile << _problemDefinition.getElectricalPreferences().getDepth() << std::endl;
+			saveFile << _problemDefinition.getElectricalPreferences().getMinAngle() << std::endl;
+			saveFile << _problemDefinition.getElectricalPreferences().getPrecision() << std::endl;
+			saveFile << (int)_problemDefinition.getElectricalPreferences().getUnitLength() << std::endl;
+		}
+	//	saveFile << (int)_problemDefinition.getElectricalPreferences(). << std::endl;
+		
+	}
+	else
+	{
+		wxMessageBox("Please close all instances of the file before saving");
+	}
+	
 }
