@@ -1,4 +1,5 @@
 #include "UI/OmniFEMFrame.h"
+#include <common/ExteriorRegion.h>
 
 
 
@@ -95,14 +96,11 @@ void OmniFEMMainFrame::onCircuitsConductor(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onExteriorRegion(wxCommandEvent &event)
 {
-    static double centerTest = 5.3;
-    static double radius1Test = 1.2;
-    static double radius2Test = 7.3;
     exteriorRegionDialog *test = new exteriorRegionDialog(this);
-    test->setParameters(centerTest, radius1Test, radius2Test);
+	test->setParameters(*_problemDefinition.getExteriorRegion());
     if(test->ShowModal() == wxID_OK)
     {
-        test->getParameters(centerTest, radius1Test, radius2Test);
+		_problemDefinition.setExteriorRegion(test->getParameters());
     }
 }
 

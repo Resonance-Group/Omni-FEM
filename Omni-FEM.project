@@ -169,6 +169,7 @@
         <File Name="Include/common/GeometryProperties/NodeSettings.h"/>
       </VirtualDirectory>
       <File Name="Include/common/plfcolony.h"/>
+      <File Name="Include/common/ExteriorRegion.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

@@ -17,6 +17,8 @@
 
 #include <common/NodalProperty.h>
 
+#include <common/ExteriorRegion.h>
+
 
 
 //! Class that handles all of main settings for runnning a simulation
@@ -98,6 +100,8 @@ private:
         the frame with electrical or magnetic material properties
     */ 
     physicProblems _phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
+	
+	exteriorRegion p_exteriorRegion;
     
     //! The name of the physics simulation
     wxString _problemName = "Untitled";
@@ -361,6 +365,25 @@ public:
     {
         _showStatusBar = state;
     }
+	
+	/**
+	 * @brief Function that will set the exterior region of the problem
+	 * @param value The exterior region properties that the simulation
+	 * 				need to take.
+	 */
+	void setExteriorRegion(exteriorRegion value)
+	{
+		p_exteriorRegion = value;
+	}
+	
+	/**
+	 * @brief Function that will return a pointer pointing to the exterior region of the problem
+	 * @return The pointer pointing to the exterier region class of the simulation
+	 */
+	exteriorRegion *getExteriorRegion()
+	{
+		return &p_exteriorRegion;
+	}
 };
 
 #endif

@@ -4,6 +4,21 @@
 
 #include "UI/OmniFEMFrame.h"
 #include <fstream>
+#include "UI/geometryShapes.h"
+
+#include <common/ElectricalBoundary.h>
+#include <common/ElectroStaticMaterial.h>
+#include <common/ElectrostaticPreference.h>
+#include <common/ConductorProperty.h>
+
+#include <common/CircuitProperty.h>
+#include <common/MagneticBoundary.h>
+#include <common/MagneticMaterial.h>
+#include <common/MagneticPreference.h>
+
+#include <common/NodalProperty.h>
+
+#include <common/ExteriorRegion.h>
 
 void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
@@ -79,22 +94,79 @@ void OmniFEMMainFrame::save(string filePath)
 
 	saveFile.open(pathName.ToStdString(), std::ofstream::out);
 	if(saveFile.is_open())
-	{
+	{	
+		saveFile << "v1.0" << std::endl;
 		saveFile << (int)_problemDefinition.getPhysicsProblem() << std::endl;
+		saveFile << (int)_model->getGridPreferences()->getCoordinateSystem() << std::endl;
 		if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
 		{
 			saveFile << _problemDefinition.getElectricalPreferences().getComments().ToStdString() << std::endl;
+			saveFile << "\\-\\" << endl;
 			saveFile << _problemDefinition.getElectricalPreferences().getDepth() << std::endl;
 			saveFile << _problemDefinition.getElectricalPreferences().getMinAngle() << std::endl;
 			saveFile << _problemDefinition.getElectricalPreferences().getPrecision() << std::endl;
+			saveFile << (int)_problemDefinition.getElectricalPreferences().getProblemType() << std::endl;
 			saveFile << (int)_problemDefinition.getElectricalPreferences().getUnitLength() << std::endl;
+			
+			for(std::vector<electrostaticMaterial>::iterator materialIterator = _problemDefinition.getElectricalMaterialList()->begin(); materialIterator != _problemDefinition.getElectricalMaterialList()->end(); materialIterator++)
+			{
+				
+			}
+			
+			for(std::vector<electricalBoundary>::iterator boundaryIterator = _problemDefinition.getElectricalBoundaryList()->begin(); boundaryIterator != _problemDefinition.getElectricalBoundaryList()->end(); boundaryIterator++)
+			{
+				
+			}
+			
+			for(std::vector<nodalProperty>::iterator nodalIterator = _problemDefinition.getNodalPropertyList()->begin(); nodalIterator != _problemDefinition.getNodalPropertyList()->end(); nodalIterator++)
+			{
+				
+			}
+			
+			for(std::vector<conductorProperty>::iterator conductorIterator = _problemDefinition.getConductorList()->begin(); conductorIterator != _problemDefinition.getConductorList()->end(); conductorIterator++)
+			{
+				
+			}
+			
+			wxString exteriorRegionData = wxString(std::to_string(_problemDefinition.getExteriorRegion()->getCenter())) + wxString(",") + wxString(std::to_string(_problemDefinition.getExteriorRegion()->getRadiusExterior())) + wxString(",") + wxString(std::to_string(_problemDefinition.getExteriorRegion()->getRadiusInterior()));
+			saveFile << exteriorRegionData.ToStdString() << endl;
 		}
-	//	saveFile << (int)_problemDefinition.getElectricalPreferences(). << std::endl;
+		else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
+		{
+			saveFile << _problemDefinition.getMagneticPreference().getComments().ToStdString() << std::endl;
+			saveFile << "\\-\\" << std::endl;
+			saveFile << _problemDefinition.getMagneticPreference().getDepth() << std::endl;
+			saveFile << (int)_problemDefinition.getMagneticPreference().getACSolver() << std::endl;
+			saveFile << _problemDefinition.getMagneticPreference().getFrequency() << std::endl;
+			saveFile << _problemDefinition.getMagneticPreference().getMinAngle() << std::endl;
+			saveFile << _problemDefinition.getMagneticPreference().getPrecision() << std::endl;
+			saveFile << (int)_problemDefinition.getMagneticPreference().getProblemType() << std::endl;
+			saveFile << (int)_problemDefinition.getMagneticPreference().getUnitLength() << std::endl;
+		}
 		
-	}
+		for(plf::colony<node>::iterator nodeIterator = _model->getModelNodeList()->begin(); nodeIterator != _model->getModelNodeList()->end(); nodeIterator++)
+		{
+			
+		}
+		
+		for(plf::colony<edgeLineShape>::iterator lineIterator = _model->getModelLineList()->begin(); lineIterator != _model->getModelLineList()->end(); lineIterator++)
+		{
+			
+		}
+
+		for(plf::colony<arcShape>::iterator arcIterator = _model->getModelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
+		{
+			
+		}
+		
+		for(plf::colony<blockLabel>::iterator labelIterator = _model->getModelBlockList()->begin(); labelIterator != _model->getModelBlockList()->end(); labelIterator++)
+		{
+			
+		}
+	}	
 	else
 	{
 		wxMessageBox("Please close all instances of the file before saving");
 	}
-	
+	saveFile.close();
 }
