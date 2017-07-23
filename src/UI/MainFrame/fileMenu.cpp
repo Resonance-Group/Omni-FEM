@@ -74,6 +74,19 @@ void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
 	if(saveFileDialog.ShowModal() != wxID_CANCEL)
 	{
         wxString appendedTitle = "Omni-FEM - ";
+		wxString fileName;
+		if(saveFileDialog.GetFilename().Contains(wxString(".omniFEM")))
+		{
+			std::string tempFileName1 = saveFileDialog.GetFilename().ToStdString();
+			//std::string tempFileName2;
+			for(int i = 0; i < (tempFileName1.length() - 8); i++)
+				fileName += wxString(tempFileName1[i]);
+		}
+		else
+		{
+			fileName = saveFileDialog.GetFilename();
+		}
+			
 		_problemDefinition.setName(saveFileDialog.GetFilename());
         appendedTitle.append(_problemDefinition.getName());
         this->SetTitle(appendedTitle);
@@ -108,21 +121,37 @@ void OmniFEMMainFrame::save(string filePath)
 			saveFile << (int)_problemDefinition.getElectricalPreferences().getProblemType() << std::endl;
 			saveFile << (int)_problemDefinition.getElectricalPreferences().getUnitLength() << std::endl;
 			
+			saveFile << "MATERIALS" << std::endl;
 			for(std::vector<electrostaticMaterial>::iterator materialIterator = _problemDefinition.getElectricalMaterialList()->begin(); materialIterator != _problemDefinition.getElectricalMaterialList()->end(); materialIterator++)
 			{
-				
+				wxString name = wxString(materialIterator->getName());
+				wxString relativePermittivityX = wxString(std::to_string(materialIterator->getEpsilonX()));
+				wxString relativePermittivityY = wxString(std::to_string(materialIterator->getEpsilonY()));
+				wxString chargeDensity = wxString(std::to_string(materialIterator->getChargeDensity()));
+				wxString combinedForm = name + wxString(",") + relativePermittivityX + wxString(",") + relativePermittivityY + wxString(",") + chargeDensity;
+				saveFile << combinedForm.ToStdString() << std::endl;
 			}
 			
+			saveFile << "BOUNDARYCONDITIONS" << std::endl;
 			for(std::vector<electricalBoundary>::iterator boundaryIterator = _problemDefinition.getElectricalBoundaryList()->begin(); boundaryIterator != _problemDefinition.getElectricalBoundaryList()->end(); boundaryIterator++)
 			{
-				
+				wxString name = wxString(boundaryIterator->getBoundaryName());
+				wxString boundaryType = wxString(std::to_string((int)boundaryIterator->getBC()));
+				wxString c0 = wxString(std::to_string(boundaryIterator->getC0Value()));
+				wxString c1 = wxString(std::to_string(boundaryIterator->getC1Value()));
+				wxString sigma = wxString(std::to_string(boundaryIterator->getSigma()));
+				wxString voltage = wxString(std::to_string(boundaryIterator->getVoltage()));
+				wxString combinedForm = name + wxString(",") + boundaryType + wxString(",") + c0 + wxString(",") + c1 + wxString(",") + sigma + wxString(",") + voltage;
+				saveFile << combinedForm.ToStdString() << endl;
 			}
 			
+			saveFile << "NODEPROPERTIES" << std::endl;
 			for(std::vector<nodalProperty>::iterator nodalIterator = _problemDefinition.getNodalPropertyList()->begin(); nodalIterator != _problemDefinition.getNodalPropertyList()->end(); nodalIterator++)
 			{
 				
 			}
 			
+			saveFile << "CONDUCTORPROPERTIES" << std::endl;
 			for(std::vector<conductorProperty>::iterator conductorIterator = _problemDefinition.getConductorList()->begin(); conductorIterator != _problemDefinition.getConductorList()->end(); conductorIterator++)
 			{
 				
