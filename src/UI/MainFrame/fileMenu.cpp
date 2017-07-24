@@ -56,7 +56,16 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 		if(saveFileDialog.ShowModal() != wxID_CANCEL)
 		{
 			wxString appendedTitle = "Omni-FEM - ";
-			_problemDefinition.setName(saveFileDialog.GetFilename());
+            wxString fileName;
+            if(saveFileDialog.GetFilename().Contains(wxString(".omniFEM")))
+            {
+                std::string tempFileName = saveFileDialog.GetFilename().ToStdString();
+                for(int i = 0; i < (tempFileName.length() - 8); i++)
+                    fileName += wxString(tempFileName[i]);
+            }
+            else
+                fileName = saveFileDialog.GetFilename();
+			_problemDefinition.setName(fileName);
 			appendedTitle.append(_problemDefinition.getName());
 			this->SetTitle(appendedTitle);
 			_saveFilePath = saveFileDialog.GetPath();
@@ -77,17 +86,14 @@ void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
 		wxString fileName;
 		if(saveFileDialog.GetFilename().Contains(wxString(".omniFEM")))
 		{
-			std::string tempFileName1 = saveFileDialog.GetFilename().ToStdString();
-			//std::string tempFileName2;
-			for(int i = 0; i < (tempFileName1.length() - 8); i++)
-				fileName += wxString(tempFileName1[i]);
+			std::string tempFileName = saveFileDialog.GetFilename().ToStdString();
+			for(int i = 0; i < (tempFileName.length() - 8); i++)
+				fileName += wxString(tempFileName[i]);
 		}
 		else
-		{
 			fileName = saveFileDialog.GetFilename();
-		}
 			
-		_problemDefinition.setName(saveFileDialog.GetFilename());
+		_problemDefinition.setName(fileName);
         appendedTitle.append(_problemDefinition.getName());
         this->SetTitle(appendedTitle);
 		_saveFilePath = saveFileDialog.GetPath();
