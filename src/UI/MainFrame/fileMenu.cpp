@@ -164,9 +164,14 @@ void OmniFEMMainFrame::save(string filePath)
 			saveFile << "CONDUCTORPROPERTIES" << std::endl;
 			for(std::vector<conductorProperty>::iterator conductorIterator = _problemDefinition.getConductorList()->begin(); conductorIterator != _problemDefinition.getConductorList()->end(); conductorIterator++)
 			{
-				
+				wxString name = conductorIterator->getName();
+				wxString aBoolean = wxString(std::to_string((int)conductorIterator->getIsTotalChargeState()));
+				wxString valueNumber = wxString(std::to_string(conductorIterator->getValue()));
+				wxString combinedForm = name + wxString(",") + aBoolean + wxString(",") + valueNumber;
+				saveFile << combinedForm.ToStdString() << std::endl;	
 			}
 			
+			saveFile << "EXTERNALREGION" << std::endl;
 			wxString exteriorRegionData = wxString(std::to_string(_problemDefinition.getExteriorRegion()->getCenter())) + wxString(",") + wxString(std::to_string(_problemDefinition.getExteriorRegion()->getRadiusExterior())) + wxString(",") + wxString(std::to_string(_problemDefinition.getExteriorRegion()->getRadiusInterior()));
 			saveFile << exteriorRegionData.ToStdString() << endl;
 		}
@@ -183,21 +188,34 @@ void OmniFEMMainFrame::save(string filePath)
 			saveFile << (int)_problemDefinition.getMagneticPreference().getUnitLength() << std::endl;
 		}
 		
+		saveFile << "NODES" << std::endl;
 		for(plf::colony<node>::iterator nodeIterator = _model->getModelNodeList()->begin(); nodeIterator != _model->getModelNodeList()->end(); nodeIterator++)
 		{
-			
+			wxString centerX = wxString(std::to_string(nodeIterator->getCenterXCoordinate()));
+			wxString centerY = wxString(std::to_string(nodeIterator->getCenterYCoordinate()));
+			wxString nodeNumber = wxString(std::to_string(nodeIterator->getNodeID()));
+			wxString nodalSetting = wxString(nodeIterator->getNodeSetting()->getNodalPropertyName());
+			wxString combinedForm = centerX + wxString(",") + centerY + wxString(",") + nodeNumber + wxString(",") + nodalSetting;
+			saveFile << combinedForm.ToStdString() << std::endl;
 		}
 		
+		saveFile << "LINES" << std::endl;
 		for(plf::colony<edgeLineShape>::iterator lineIterator = _model->getModelLineList()->begin(); lineIterator != _model->getModelLineList()->end(); lineIterator++)
 		{
-			
+			wxString firstNode = wxString(std::to_string(lineIterator->getFirstNode()->getNodeID()));
+			wxString secondNode = wxString(std::to_string(lineIterator->getSecondNode()->getNodeID()));
+			wxString lineProperty = wxString(lineIterator->getSegmentProperty()->getBoundaryName());
+			wxString combinedForm = firstNode + wxString(",") + secondNode + wxString(",") + lineProperty;
+			saveFile << combinedForm.ToStdString() << endl;
 		}
-
+		
+		saveFile << "ARCS" << std::endl;
 		for(plf::colony<arcShape>::iterator arcIterator = _model->getModelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
 		{
 			
 		}
 		
+		saveFile << "BLOCKLABELS" << std::endl;
 		for(plf::colony<blockLabel>::iterator labelIterator = _model->getModelBlockList()->begin(); labelIterator != _model->getModelBlockList()->end(); labelIterator++)
 		{
 			
