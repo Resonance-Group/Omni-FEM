@@ -154,7 +154,11 @@ void OmniFEMMainFrame::save(string filePath)
 			saveFile << "NODEPROPERTIES" << std::endl;
 			for(std::vector<nodalProperty>::iterator nodalIterator = _problemDefinition.getNodalPropertyList()->begin(); nodalIterator != _problemDefinition.getNodalPropertyList()->end(); nodalIterator++)
 			{
-				
+				wxString name = wxString(nodalIterator->getName());
+				wxString isSpecificpotentialProperty = wxString(std::to_string((int)nodalIterator->getState()));
+				wxString valueNumber = wxString(std::to_string(nodalIterator->getValue()));
+				wxString combinedForm = name + wxString(",") + isSpecificpotentialProperty + wxString(",") + valueNumber;
+				saveFile << combinedForm.ToStdString() << endl;
 			}
 			
 			saveFile << "CONDUCTORPROPERTIES" << std::endl;
