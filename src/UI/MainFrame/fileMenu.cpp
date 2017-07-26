@@ -212,13 +212,37 @@ void OmniFEMMainFrame::save(string filePath)
 		saveFile << "ARCS" << std::endl;
 		for(plf::colony<arcShape>::iterator arcIterator = _model->getModelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
 		{
-			
+			wxString lineProperty = wxString(arcIterator->getSegmentProperty()->getBoundaryName());
+			wxString arcAngle = wxString(std::to_string(arcIterator->getArcAngle()));
+			wxString segmentNumber = wxString(std::to_string(arcIterator->getnumSegments()));
+			wxString firstNode = wxString(std::to_string(arcIterator->getFirstNode()->getNodeID()));
+			wxString secondNode = wxString(std::to_string(arcIterator->getSecondNode()->getNodeID()));
+			wxString radius = wxString(std::to_string(arcIterator->getRadius()));
+			wxString centerX = wxString(std::to_string(arcIterator->getCenterXCoordinate()));
+			wxString centerY = wxString(std::to_string(arcIterator->getCenterYCoordinate()));
+			wxString combinedForm = lineProperty + wxString(",") + arcAngle + wxString(",") + segmentNumber + wxString(",") + firstNode + wxString(",") + secondNode + wxString(",") + radius + wxString(",") + centerY + wxString(",") + centerX;
+			saveFile << combinedForm.ToStdString() << std::endl;
 		}
 		
 		saveFile << "BLOCKLABELS" << std::endl;
 		for(plf::colony<blockLabel>::iterator labelIterator = _model->getModelBlockList()->begin(); labelIterator != _model->getModelBlockList()->end(); labelIterator++)
 		{
-			
+			wxString blockPropertyMaterial = wxString(labelIterator->getProperty()->getMaterialName());
+			wxString blockPropertyCircuit = wxString(labelIterator->getProperty()->getCircuitName());
+			wxString meshSizeType = wxString(std::to_string((int)labelIterator->getProperty()->getMeshsizeType()));
+			wxString autoMesh = wxString(std::to_string((int)labelIterator->getProperty()->getAutoMeshState()));
+			wxString theMeshSize = wxString(std::to_string(labelIterator->getProperty()->getMeshSize()));
+			wxString turnCount = wxString(std::to_string(labelIterator->getProperty()->getNumberOfTurns()));
+			wxString magnetization = labelIterator->getProperty()->getMagnetization();// This is mainly becuase everything else is doing it
+			wxString groupNumber = wxString(std::to_string(labelIterator->getProperty()->getGroupNumber()));
+			wxString externalState = wxString(std::to_string((int)labelIterator->getProperty()->getIsExternalState()));
+			wxString defaultState = wxString(std::to_string((int)labelIterator->getProperty()->getDefaultState()));
+			wxString centerX = wxString(std::to_string(labelIterator->getCenterXCoordinate()));
+			wxString centerY = wxString(std::to_string(labelIterator->getCenterYCoordinate()));
+			wxString combinedForm = blockPropertyMaterial + wxString(",") + blockPropertyCircuit + wxString(",") + meshSizeType + wxString(",") + autoMesh + wxString(",") + theMeshSize
+									+ wxString(",") + turnCount + wxString(",") + magnetization + wxString(",") + groupNumber + wxString(",") + externalState + wxString(",") 
+									+ defaultState + wxString(",") + centerX + wxString(",") + centerY;
+			saveFile << combinedForm.ToStdString() << std::endl;
 		}
 	}	
 	else
