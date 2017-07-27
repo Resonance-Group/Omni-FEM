@@ -497,8 +497,6 @@ protected:
     */ 
     segmentProperty _property;
     
-protected:
-    
 	//! Pointer for the first node
 	/*!
 		This points to the first node of the 

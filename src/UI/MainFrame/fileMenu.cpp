@@ -195,7 +195,9 @@ void OmniFEMMainFrame::save(string filePath)
 			wxString centerY = wxString(std::to_string(nodeIterator->getCenterYCoordinate()));
 			wxString nodeNumber = wxString(std::to_string(nodeIterator->getNodeID()));
 			wxString nodalSetting = wxString(nodeIterator->getNodeSetting()->getNodalPropertyName());
-			wxString combinedForm = centerX + wxString(",") + centerY + wxString(",") + nodeNumber + wxString(",") + nodalSetting;
+			wxString conductorName = wxString(nodeIterator->getNodeSetting()->getConductorPropertyName());
+			wxString groupNumber = wxString(std::to_string(nodeIterator->getNodeSetting()->getGroupNumber()));
+			wxString combinedForm = centerX + wxString(",") + centerY + wxString(",") + nodeNumber + wxString(",") + nodalSetting + wxString(",") + conductorName + wxString(",") + groupNumber;
 			saveFile << combinedForm.ToStdString() << std::endl;
 		}
 		
@@ -205,12 +207,19 @@ void OmniFEMMainFrame::save(string filePath)
 			wxString firstNode = wxString(std::to_string(lineIterator->getFirstNode()->getNodeID()));
 			wxString secondNode = wxString(std::to_string(lineIterator->getSecondNode()->getNodeID()));
 			wxString lineProperty = wxString(lineIterator->getSegmentProperty()->getBoundaryName());
-			wxString combinedForm = firstNode + wxString(",") + secondNode + wxString(",") + lineProperty;
+			wxString autoMeshSpacing = wxString(std::to_string((int)lineIterator->getSegmentProperty()->getMeshAutoState()));
+			wxString elementSize = wxString(std::to_string(lineIterator->getSegmentProperty()->getElementSizeAlongLine()));
+			wxString conductorName = wxString(lineIterator->getSegmentProperty()->getConductorName());
+			wxString segmentHidden = wxString(std::to_string((int)lineIterator->getSegmentProperty()->getHiddenState()));
+			wxString groupNumber = wxString(std::to_string(lineIterator->getSegmentProperty()->getGroupNumber()));
+			wxString combinedForm = firstNode + wxString(",") + secondNode + wxString(",") + lineProperty + wxString(",") + autoMeshSpacing
+									+ wxString(",") + elementSize + wxString(",") + conductorName + wxString(",") + segmentHidden + wxString(",")
+									+ groupNumber;;
 			saveFile << combinedForm.ToStdString() << endl;
 		}
 		
 		saveFile << "ARCS" << std::endl;
-		for(plf::colony<arcShape>::iterator arcIterator = _model->getModelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
+		for(plf::colony<arcShape>::iterator arcIterator = _model->getMogroupdelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
 		{
 			wxString lineProperty = wxString(arcIterator->getSegmentProperty()->getBoundaryName());
 			wxString arcAngle = wxString(std::to_string(arcIterator->getArcAngle()));
@@ -220,7 +229,14 @@ void OmniFEMMainFrame::save(string filePath)
 			wxString radius = wxString(std::to_string(arcIterator->getRadius()));
 			wxString centerX = wxString(std::to_string(arcIterator->getCenterXCoordinate()));
 			wxString centerY = wxString(std::to_string(arcIterator->getCenterYCoordinate()));
-			wxString combinedForm = lineProperty + wxString(",") + arcAngle + wxString(",") + segmentNumber + wxString(",") + firstNode + wxString(",") + secondNode + wxString(",") + radius + wxString(",") + centerY + wxString(",") + centerX;
+			wxString autoMeshSpacing = wxString(std::to_string((int)arcIterator->getSegmentProperty()->getMeshAutoState()));
+			wxString elementSize = wxString(std::to_string(arcIterator->getSegmentProperty()->getElementSizeAlongLine()));
+			wxString conductorName = wxString(arcIterator->getSegmentProperty()->getConductorName());
+			wxString segmentHidden = wxString(std::to_string((int)arcIterator->getSegmentProperty()->getHiddenState()));
+			wxString groupNumber = wxString(std::to_string(arcIterator->getSegmentProperty()->getGroupNumber()));			
+			wxString combinedForm = lineProperty + wxString(",") + arcAngle + wxString(",") + segmentNumber + wxString(",") + firstNode + wxString(",") + secondNode + wxString(",") 
+									+ radius + wxString(",") + centerY + wxString(",") + centerX + wxString(",") + autoMeshSpacing + wxString(",") + elementSize + wxString(",") + 
+									conductorName + wxString(",") + segmentHidden + wxString(",") + groupNumber;
 			saveFile << combinedForm.ToStdString() << std::endl;
 		}
 		
