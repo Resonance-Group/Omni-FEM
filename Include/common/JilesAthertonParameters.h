@@ -42,7 +42,7 @@ private:
     double _tParamX = 0;
 /* 
     Below are repeats of the above parameters in the Y direction
-    These have the same meaninf except in the y-plane. 
+    These have the same meaning except in the y-plane. 
     For now, these will not be commented as I am still learning
     how to do the vectorizes Jiles-atherton model. It is unkonwn if 
     these parameters are needed 
@@ -173,7 +173,8 @@ public:
     
     //! Retrieves the k parameter of the magnetic material
     /*!
-        \return Returns a value representing the average energy required to break the pinning site in the magnetic material
+        \return Returns a value representing the average energy required to break the pinning site in the magnetic material.
+		 		This is the k parameter.
     */ 
     double getKParam()
     {
@@ -193,7 +194,7 @@ public:
     //! Retrieves the magnetization reversibility of the material
     /*!
         \return Returns a value representing the magnetization reversibility
-                of the material
+                of the material. This is the c parameter.
     */ 
     double getMagnetizationReversibility()
     {

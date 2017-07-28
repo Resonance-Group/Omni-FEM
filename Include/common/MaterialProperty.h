@@ -3,10 +3,6 @@
 
 #include <string>
 
-using namespace std;
-
-
-
 //! Base class for all of the material property classes
 /*!
     This class handles any properties that are common to the other classes
@@ -15,7 +11,7 @@ class materialProperty
 {
 private:
     //! The name of the material
-    string _propertyName;
+    std::string _propertyName;
     
 public:
     //! Sets the name of the material

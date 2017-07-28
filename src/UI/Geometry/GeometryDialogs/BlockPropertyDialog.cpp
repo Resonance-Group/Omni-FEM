@@ -415,7 +415,7 @@ void blockPropertyDialog::onTextEdit(wxCommandEvent &event)
     _meshSizeTextCtrl->GetValue().ToDouble(&value);
     _meshSizeTextCtrl->SetValue(wxEmptyString);
     std::ostream meshSizeStream(_meshSizeTextCtrl);
-    meshSizeStream << fixed << std::setprecision(4) << value;
+    meshSizeStream << std::fixed << std::setprecision(4) << value;
     
     _meshSizeComboBox->SetSelection(9);
 }

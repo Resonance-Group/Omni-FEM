@@ -115,8 +115,8 @@ void OmniFEMMainFrame::save(string filePath)
 	if(saveFile.is_open())
 	{	
 		saveFile << "v1.0" << std::endl;
-		saveFile << (int)_problemDefinition.getPhysicsProblem() << std::endl;
-		saveFile << (int)_model->getGridPreferences()->getCoordinateSystem() << std::endl;
+		saveFile << std::to_string((int)_problemDefinition.getPhysicsProblem()) << std::endl;
+		saveFile << std::to_string((int)_model->getGridPreferences()->getCoordinateSystem()) << std::endl;
 		if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
 		{
 			saveFile << _problemDefinition.getElectricalPreferences().getComments().ToStdString() << std::endl;
@@ -186,6 +186,79 @@ void OmniFEMMainFrame::save(string filePath)
 			saveFile << _problemDefinition.getMagneticPreference().getPrecision() << std::endl;
 			saveFile << (int)_problemDefinition.getMagneticPreference().getProblemType() << std::endl;
 			saveFile << (int)_problemDefinition.getMagneticPreference().getUnitLength() << std::endl;
+			
+			saveFile << "MATERIALS" << std::endl;
+			for(std::vector<magneticMaterial>::iterator materialIterator = _problemDefinition.getMagnetMaterialList()->begin(); materialIterator != _problemDefinition.getMagnetMaterialList()->end(); materialIterator++)
+			{
+				wxString materialName = wxString(materialIterator->getName());
+				wxString linearState = wxString(std::to_string((int)materialIterator->getBHState()));
+				wxString relativeX = wxString(std::to_string(materialIterator->getMUrX()));
+				wxString relativeY = wxString(std::to_string(materialIterator->getMUrY()));
+				wxString valuePhiX = wxString(std::to_string(materialIterator->getPhiX()));
+				wxString valuePhiY = wxString(std::to_string(materialIterator->getPhiY()));
+				wxString valueCoercivity = wxString(std::to_string(materialIterator->getCoercivity()));
+				wxString valueConduct = wxString(std::to_string(materialIterator->getSigma()));
+				wxString valueCurrent = wxString(std::to_string(materialIterator->getCurrentDensity()));
+				wxString specialValue = wxString(std::to_string((int)materialIterator->getSpecialAttribute()));
+				wxString thicknessValue = wxString(std::to_string(materialIterator->getLaminationThickness()));
+				wxString strandValue = wxString(std::to_string(materialIterator->getNumberStrands()));
+				wxString valueFF = wxString(std::to_string(materialIterator->getLaminationFillFactor()));
+				wxString valueDiameter = wxString(std::to_string(materialIterator->getStrandDiameter()));
+				/* This next section is for the nonlinear properties */
+				wxString anisotropyState = wxString(std::to_string((int)materialIterator->getJilesAtherton().getIsAnisotropyMaterial()));
+				wxString valueAlpha = wxString(std::to_string(materialIterator->getJilesAtherton().getAlpha()));
+				wxString valueAParam = wxString(std::to_string(materialIterator->getJilesAtherton().getAParam()));
+				wxString valueMsParam = wxString(std::to_string(materialIterator->getJilesAtherton().getSaturationMagnetization()));
+				wxString valueKParam = wxString(std::to_string(materialIterator->getJilesAtherton().getKParam()));
+				wxString valueCParam = wxString(std::to_string(materialIterator->getJilesAtherton().getMagnetizationReversibility()));
+				wxString valuePsi = wxString(std::to_string(materialIterator->getJilesAtherton().getPsi()));
+				wxString valueTParam = wxString(std::to_string(materialIterator->getJilesAtherton().getTParameter()));
+				wxString combinedForm = materialName + wxString(",") + linearState + wxString(",") + relativeX + wxString(",") + relativeY + wxString(",") + valuePhiX + wxString(",") 
+										+ valuePhiY + wxString(",") + valueCoercivity + wxString(",") + valueConduct + wxString(",") + valueCurrent + wxString(",") + specialValue +
+										wxString(",") + thicknessValue + wxString(",") + strandValue + wxString(",") + valueFF + wxString(",") + valueDiameter + wxString(",") + 
+										anisotropyState + wxString(",") + valueAlpha + wxString(",") + valueAParam + wxString(",") + valueMsParam + wxString(",") + valueKParam + 
+										wxString(",") + valueCParam + wxString(",") + valuePsi + wxString(",") + valueTParam;
+				saveFile << combinedForm.ToStdString() << std::endl;
+			}
+			
+			saveFile << "BOUNDARYCONDITION" << std::endl;
+			for(std::vector<magneticBoundary>::iterator boundaryIterator = _problemDefinition.getMagneticBoundaryList()->begin(); boundaryIterator != _problemDefinition.getMagneticBoundaryList()->end(); boundaryIterator++)
+			{
+				wxString boundaryName = wxString(boundaryIterator->getBoundaryName());
+				wxString valueA0 = wxString(std::to_string(boundaryIterator->getA0()));
+				wxString valueA1 = wxString(std::to_string(boundaryIterator->getA1()));
+				wxString valueA2 = wxString(std::to_string(boundaryIterator->getA2()));
+				wxString boundaryType = wxString(std::to_string((int)boundaryIterator->getBC()));
+				wxString valueC0 = wxString(std::to_string(boundaryIterator->getC0Value()));
+				wxString valueC1 = wxString(std::to_string(boundaryIterator->getC1Value()));
+				wxString valueMu = wxString(std::to_string(boundaryIterator->getMu()));
+				wxString valuePhi = wxString(std::to_string(boundaryIterator->getPhi()));
+				wxString valueSig = wxString(std::to_string(boundaryIterator->getSigma()));
+				wxString combinedForm = boundaryName + wxString(",") + valueA0 + wxString(",") + valueA1 + wxString(",") + valueA2 + wxString(",") + boundaryType
+										+ wxString(",") + valueC0 + wxString(",") + valueC1 + wxString(",") + valueMu + wxString(",") + valuePhi + wxString(",") 
+										+ valueSig;
+				saveFile << combinedForm.ToStdString() << std::endl;
+			}
+			
+			saveFile << "NODEPROPERTIES" << std::endl;
+			for(std::vector<nodalProperty>::iterator nodalIterator = _problemDefinition.getNodalPropertyList()->begin(); nodalIterator != _problemDefinition.getNodalPropertyList()->end(); nodalIterator++)
+			{
+				wxString name = wxString(nodalIterator->getName());
+				wxString isSpecificpotentialProperty = wxString(std::to_string((int)nodalIterator->getState()));
+				wxString valueNumber = wxString(std::to_string(nodalIterator->getValue()));
+				wxString combinedForm = name + wxString(",") + isSpecificpotentialProperty + wxString(",") + valueNumber;
+				saveFile << combinedForm.ToStdString() << endl;
+			}
+			
+			saveFile << "CIRCUITPROPERTIES" << std::endl;
+			for(std::vector<circuitProperty>::iterator circuitIterator = _problemDefinition.getCircuitList()->begin(); circuitIterator != _problemDefinition.getCircuitList()->end(); circuitIterator++)
+			{
+				wxString circuitName = wxString(circuitIterator->getName());
+				wxString seriesState = wxString(std::to_string((int)circuitIterator->getCircuitSeriesState()));
+				wxString currentValue = wxString(std::to_string(circuitIterator->getCurrent()));
+				wxString combinedForm = circuitName + wxString(",") + seriesState + wxString(",") + currentValue;
+				saveFile << combinedForm.ToStdString() << std::endl;
+			}
 		}
 		
 		saveFile << "NODES" << std::endl;
@@ -219,7 +292,7 @@ void OmniFEMMainFrame::save(string filePath)
 		}
 		
 		saveFile << "ARCS" << std::endl;
-		for(plf::colony<arcShape>::iterator arcIterator = _model->getMogroupdelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
+		for(plf::colony<arcShape>::iterator arcIterator = _model->getModelArcList()->begin(); arcIterator != _model->getModelArcList()->end(); arcIterator++)
 		{
 			wxString lineProperty = wxString(arcIterator->getSegmentProperty()->getBoundaryName());
 			wxString arcAngle = wxString(std::to_string(arcIterator->getArcAngle()));
