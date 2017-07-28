@@ -3041,7 +3041,7 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                     roundToNearestGrid(tempX, tempY);
                     
                 _editor.getNodeList()->erase(_editor.getLastNodeAdd());
-                _editor.addNode(tempX, tempY, getTolerance());
+                _editor.addNode(tempX, tempY, getTolerance() / 8.0);
             }
         }
         else
@@ -3057,7 +3057,7 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_editor.getLastBlockLabelAdded()->getDraggingState())
                 {
                     _editor.getBlockLabelList()->erase(_editor.getLastBlockLabelAdded()); 
-                    _editor.addBlockLabel(tempX, tempY, getTolerance());
+                    _editor.addBlockLabel(tempX, tempY, getTolerance() / 1.2);
                 }
                 
                 /* Now we want to scan through the entire block label list to finc if there is one that is
