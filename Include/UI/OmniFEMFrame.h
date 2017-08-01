@@ -963,6 +963,12 @@ private:
 	 * @param filePath The path where the data should be saved to
 	 */
 	void save(string filePath);
+	
+	/**
+	 * @brief Function that is called which will load the data into the data structures from a file choosen by the user
+	 * @param filePath The path where the file is located
+	 */
+	void load(string filePath);
     
     //! Function that is needed in order to tell the wx library that this class has event procedures
     wxDECLARE_EVENT_TABLE();

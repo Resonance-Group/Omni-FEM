@@ -4,6 +4,7 @@
 
 #include "UI/OmniFEMFrame.h"
 #include <fstream>
+#include <istream>
 #include "UI/geometryShapes.h"
 
 #include <common/ElectricalBoundary.h>
@@ -19,6 +20,11 @@
 #include <common/NodalProperty.h>
 
 #include <common/ExteriorRegion.h>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+
 
 void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 {
@@ -112,7 +118,9 @@ void OmniFEMMainFrame::save(string filePath)
 		pathName += wxString(".omniFEM");
 
 	saveFile.open(pathName.ToStdString(), std::ofstream::out);
-	if(saveFile.is_open())
+	std::ofstream ofs(pathName.ToStdString());
+	
+/*	if(saveFile.is_open())
 	{	
 		saveFile << "v1.0" << std::endl;
 		saveFile << std::to_string((int)_problemDefinition.getPhysicsProblem()) << std::endl;
@@ -204,7 +212,7 @@ void OmniFEMMainFrame::save(string filePath)
 				wxString strandValue = wxString(std::to_string(materialIterator->getNumberStrands()));
 				wxString valueFF = wxString(std::to_string(materialIterator->getLaminationFillFactor()));
 				wxString valueDiameter = wxString(std::to_string(materialIterator->getStrandDiameter()));
-				/* This next section is for the nonlinear properties */
+				/* This next section is for the nonlinear properties 
 				wxString anisotropyState = wxString(std::to_string((int)materialIterator->getJilesAtherton().getIsAnisotropyMaterial()));
 				wxString valueAlpha = wxString(std::to_string(materialIterator->getJilesAtherton().getAlpha()));
 				wxString valueAParam = wxString(std::to_string(materialIterator->getJilesAtherton().getAParam()));
@@ -337,6 +345,24 @@ void OmniFEMMainFrame::save(string filePath)
 	else
 	{
 		wxMessageBox("Please close all instances of the file before saving");
-	}
+	}*/
 	saveFile.close();
+}
+
+
+
+void OmniFEMMainFrame::load(string filePath)
+{
+	std::ifstream loadFile;
+	wxString pathName(filePath);
+
+	loadFile.open(pathName.ToStdString(), std::ofstream::in);
+	
+	if(loadFile.is_open())
+	{
+		while(!loadFile.eof())
+		{
+			
+		}
+	}
 }

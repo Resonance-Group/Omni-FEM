@@ -192,9 +192,11 @@
         <IncludePath Value="/usr/include/GL"/>
         <IncludePath Value="/usr/include/wx-3.0"/>
         <IncludePath Value="/usr/include/freetype2"/>
+        <IncludePath Value="/usr/local/boost_1_64_0"/>
       </Compiler>
       <Linker Options="-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes">
         <LibraryPath Value="/usr/lib/x86_64-linux-gnu"/>
+        <LibraryPath Value="/usr/local/boost1_64_0/stage/lib"/>
         <Library Value="libfreetype"/>
         <Library Value="libGLEW"/>
       </Linker>

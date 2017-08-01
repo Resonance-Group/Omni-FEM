@@ -3,12 +3,21 @@
 
 #include <string>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Base class for all of the material property classes
 /*!
     This class handles any properties that are common to the other classes
 */ 
 class materialProperty
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _propertyName;
+	}
 private:
     //! The name of the material
     std::string _propertyName;

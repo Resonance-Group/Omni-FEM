@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 using namespace std;
 
 //! Class the defines the conductor that is used in an electrostatic simulation
@@ -15,6 +18,14 @@ using namespace std;
 */ 
 class conductorProperty
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _conductorName;
+		ar & _isTotalCharge;
+		ar & _value;
+	}
 private:
     //! This is the name of the property
     string _conductorName = "None";

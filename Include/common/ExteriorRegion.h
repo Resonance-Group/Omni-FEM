@@ -1,6 +1,9 @@
 #ifndef EXTERIOR_REGION_H_
 #define EXTERIOR_REGION_H_
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 /**
  * @class exteriorRegion
  * @author phillip
@@ -12,6 +15,14 @@
  */
 class exteriorRegion
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & p_centerExterior;
+		ar & p_radiusExterior;
+		ar & p_radiusInterior;
+	}
 private:
 	//! The center of the exterior region
 	double p_centerExterior = 0.0;

@@ -5,6 +5,9 @@
 
 #include <common/enums.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 
 // As a side note, FEMM documentation for the magnetic boundary begins on PDF page 25
 // page 50 for electrostatic
@@ -42,6 +45,15 @@
 */ 
 class boundaryCondition
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _boundaryName;
+		ar & _c0;
+		ar & _c1;
+	}
+	
 private:
     //! The name of the boundary condition
     std::string _boundaryName;

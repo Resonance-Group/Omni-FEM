@@ -12,6 +12,15 @@
 */ 
 class electrostaticMaterial : public materialProperty
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<materialProperty>(*this);
+		ar & _relativePermittivityX;
+		ar & _relativePermittivityY;
+		ar & _volumetricChargeDensity;
+	}
 private:
     //! This variable contains the relative permittivity in the X plane 
     double _relativePermittivityX = 1;

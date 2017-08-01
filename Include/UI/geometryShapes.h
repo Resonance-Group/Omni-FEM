@@ -16,6 +16,9 @@
 
 #include <UI/ModelDefinition/OGLFT.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 /**
  * @class geometry2D
  * @author Phillip
@@ -30,6 +33,13 @@
  */
 class geometry2D
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & xCenterCoordinate;
+		ar & yCenterCoordinate;
+	}
 protected:
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
@@ -134,6 +144,12 @@ public:
  */
 class rectangleShape : public geometry2D
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<geometry2D>(*this);
+	}
 private:
     
     //! Boolean used to determine if the node/block label is draggin

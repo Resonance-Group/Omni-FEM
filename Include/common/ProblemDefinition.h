@@ -19,7 +19,8 @@
 
 #include <common/ExteriorRegion.h>
 
-
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 //! Class that handles all of main settings for runnning a simulation
 /*!
@@ -29,6 +30,26 @@
 */ 
 class problemDefinition
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _phycisProblem;
+		ar & p_exteriorRegion;
+		ar & _localNodalList;
+		ar & _problemName;
+		if(_phycisProblem == physicProblems::PROB_ELECTROSTATIC)
+		{
+			ar & _localElectricalBoundaryConditionList;
+			ar & _localConductorList;
+			ar & _localElectrialMaterialList;
+		}
+		else if(_phycisProblem == physicProblems::PROB_MAGNETICS)
+		{
+			
+		}
+	}
+	
 	/************
 	* Variables *
 	*************/
