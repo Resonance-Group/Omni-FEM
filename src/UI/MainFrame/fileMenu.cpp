@@ -2,6 +2,8 @@
 	This file will contain all of the class implementation for the file menu in the menu bar of the main fram
 */
 
+//#define BOOST_NO_EXCEPTIONS
+
 #include "UI/OmniFEMFrame.h"
 #include <fstream>
 #include <istream>
@@ -23,6 +25,9 @@
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include "boost/serialization/vector.hpp"
+#include <boost/archive/archive_exception.hpp>
+
 
 
 
@@ -116,9 +121,11 @@ void OmniFEMMainFrame::save(string filePath)
 	
 	if(!pathName.Contains(wxString(".omniFEM")))
 		pathName += wxString(".omniFEM");
-
-	saveFile.open(pathName.ToStdString(), std::ofstream::out);
+	
+//	saveFile.open(pathName.ToStdString(), std::ofstream::out);
 	std::ofstream ofs(pathName.ToStdString());
+	boost::archive::text_oarchive oa(ofs);
+	oa << _problemDefinition;
 	
 /*	if(saveFile.is_open())
 	{	

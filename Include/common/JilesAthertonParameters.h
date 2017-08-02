@@ -1,6 +1,10 @@
 #ifndef JILESARTHERTONPARAMETER_H_
 #define JILESARTHERTONPARAMETER_H_
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+
 //! Class that handles the parameters for Jiles-Artherton
 /*!
     This class was created in order to handle all of the parameters for the Jiles-Artherton model.
@@ -10,6 +14,7 @@
 class jilesAthertonParameters
 {
 private:
+	friend class boost::serialization::access;
     
     //! Boolean to state if the material is an anisotropy material
     bool _isAnisotropy = false;
@@ -60,6 +65,21 @@ private:
     double _psiParamY = 0;
     
     double _tParamY = 0;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _isAnisotropy;
+		ar & _alpha;
+		ar & _aParamX;
+		ar & _MsParamX;
+		ar & _MsParamX;
+		ar & _kParamX;
+		ar & _cParamX;
+		ar & _KanParamX;
+		ar & _psiParamX;
+		ar & _tParamX;
+	}
     
 public:
 

@@ -21,6 +21,7 @@
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 //! Class that handles all of main settings for runnning a simulation
 /*!
@@ -30,30 +31,14 @@
 */ 
 class problemDefinition
 {
+private:
 	friend class boost::serialization::access;
-	template<class Archive>
-	void serialize(Archive &ar, const unsigned int version)
-	{
-		ar & _phycisProblem;
-		ar & p_exteriorRegion;
-		ar & _localNodalList;
-		ar & _problemName;
-		if(_phycisProblem == physicProblems::PROB_ELECTROSTATIC)
-		{
-			ar & _localElectricalBoundaryConditionList;
-			ar & _localConductorList;
-			ar & _localElectrialMaterialList;
-		}
-		else if(_phycisProblem == physicProblems::PROB_MAGNETICS)
-		{
-			
-		}
-	}
+
 	
 	/************
 	* Variables *
 	*************/
-private:
+
 
     //! The global list for the electrostatic boundary conditions
     /*!
@@ -129,6 +114,30 @@ private:
     
     //! Boolean used to determine if the status bar should be drawn
     bool _showStatusBar = true;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _phycisProblem;
+		ar & p_exteriorRegion;
+		ar & _localNodalList;
+		std::string name = _problemName.ToStdString();
+		ar & name;
+		if(_phycisProblem == physicProblems::PROB_ELECTROSTATIC)
+		{
+			ar & _localElectricalPreference;
+			ar & _localElectricalBoundaryConditionList;
+			ar & _localConductorList;
+			ar & _localElectrialMaterialList;
+		}
+		else if(_phycisProblem == physicProblems::PROB_MAGNETICS)
+		{
+			ar & _localMagneticPreference;
+			ar & _localMagneticBoundaryConditionList;
+			ar & _localCircuitList;
+			ar & _localMagneticMaterialList;
+		}
+	}
     
     /**********
     * Methods *
