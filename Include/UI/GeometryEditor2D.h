@@ -2,11 +2,16 @@
 #define GEOMETRYEDITOR2D_H_
 
 #include <math.h>
+#include <vector>
 
 #include <common/Vector.h>
 #include <common/plfcolony.h>
 
 #include <UI/geometryShapes.h>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 //! This class is responsible for any math related functions that operate on the geometry shapes. This includes adding the geomerty.
 /*!
@@ -19,7 +24,66 @@
 class geometryEditor2D
 {
 private:
-    
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void save(Archive &ar, const unsigned int version) const
+	{
+		/*
+		 * I really wish there was a better way of doing this
+		 */ 
+		std::vector<node> saveNodes;
+		std::vector<edgeLineShape> saveLines;
+		std::vector<arcShape> saveArcs;
+		std::vector<blockLabel> saveLabels;
+		
+		for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); nodeIterator++)
+			saveNodes.push_back(*nodeIterator);
+		
+		for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); lineIterator++)
+			saveLines.push_back(*lineIterator);
+			
+		for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); arcIterator++)
+			saveArcs.push_back(*arcIterator);
+			
+		for(plf::colony<blockLabel>::iterator labelIterator = _blockLabelList.begin(); labelIterator != _blockLabelList.end(); labelIterator++)
+			saveLabels.push_back(*labelIterator);
+
+		ar & saveNodes;
+		ar & saveLines;
+		ar & saveArcs;
+		ar & saveLabels;
+		
+	}
+	
+	template<class Archive>
+	void load(Archive &ar, const unsigned int version)
+	{
+		std::vector<node> loadNodes;
+		std::vector<edgeLineShape> loadLines;
+		std::vector<arcShape> loadArcs;
+		std::vector<blockLabel> loadLabels;
+		
+		ar & loadNodes;
+		ar & loadLines;
+		ar & loadArcs;
+		ar & loadLabels;
+		
+		for(std::vector<node>::iterator nodeIterator = loadNodes.begin(); nodeIterator != loadNodes.end(); nodeIterator++)
+			_nodeList.insert(*nodeIterator);
+			
+		for(std::vector<edgeLineShape>::iterator lineIterator = loadLines.begin(); lineIterator != loadLines.end(); lineIterator++)
+			_lineList.insert(*lineIterator);
+			
+		for(std::vector<arcShape>::iterator arcIterator = loadArcs.begin(); arcIterator != loadArcs.end(); arcIterator++)
+			_arcList.insert(*arcIterator);
+			
+		for(std::vector<blockLabel>::iterator labelIterator = loadLabels.begin(); labelIterator != loadLabels.end(); labelIterator++)
+			_blockLabelList.insert(*labelIterator);
+			
+		// TODO: Add in the code to rebuild the pointers that are in the arcs and nodes
+	}
+	BOOST_SERIALIZATION_SPLIT_MEMBER()
     /*
      *  So you might be thinking, why use a colony instead of a vector or a list or a deque?
      *  It is simple, for a vector, when something is added or removed, the vector
@@ -278,7 +342,7 @@ public:
     
     //! Function that will get the block list and return a pointer pointing to the block list
     /*!
-        Works similair to getNodeList() but is for the block labels
+        Works similair to getNodeList() b		 * ut is for the block labels
         \sa getNodeList()
         \return Returns a pointer pointing to the block labels list
     */ 

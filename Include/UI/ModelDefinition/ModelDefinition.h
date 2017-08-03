@@ -33,6 +33,9 @@
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 
 //! The model class the handles the dispaying of objects
 /*!
@@ -49,6 +52,18 @@
 class modelDefinition : public wxGLCanvas
 {
 private:
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _preferences;
+		ar & _editor;
+		ar & _zoomX;
+		ar & _zoomY;
+		ar & _cameraX;
+		ar & _cameraY;
+	}
     
     //! A pointer to the status bar of the main window
     /*!
@@ -232,7 +247,7 @@ private:
         and function of this status variable is the same for the status variable _nodesAreSelected.
         However, this variable is set to true only if a mixture of geometry is selected. This would occur during the
         group selection process where the user creates a window where the endpoint is greater then the start point 
-        in the x-direction. When a mix of geometry is selected, this variable becomes true.
+        in the x-direction. When a_coordinateSystem mix of geometry is selected, this variable becomes true.
     */ 
     bool _geometryGroupIsSelected = false;
     

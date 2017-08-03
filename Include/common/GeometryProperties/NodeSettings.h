@@ -7,6 +7,9 @@
 #include <common/ConductorProperty.h>
 #include <common/enums.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 
 
 //! Class that contains all of the properties for a specific node
@@ -21,6 +24,15 @@
 class nodeSetting
 {
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _problem;
+		ar & _nodalPropertyName;
+		ar & _conductorPropertyName;
+		ar & _groupNumber;
+	}
     //! This will store a local copy of the current physics problem that the user is working
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;// Is this needed?
     

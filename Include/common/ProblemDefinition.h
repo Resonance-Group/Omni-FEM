@@ -123,6 +123,7 @@ private:
 		ar & _localNodalList;
 		std::string name = _problemName.ToStdString();
 		ar & name;
+		_problemName = wxString(name);
 		if(_phycisProblem == physicProblems::PROB_ELECTROSTATIC)
 		{
 			ar & _localElectricalPreference;

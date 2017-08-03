@@ -3,6 +3,9 @@
 
 #include <common/MaterialProperty.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that is used to handle the specific values for the electrostatic material
 /*!
     This class is used to handle the specific values for an electrostatic material.

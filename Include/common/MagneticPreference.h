@@ -89,6 +89,7 @@ private:
 		ar & _acSolver;
 		std::string comments = _comments.ToStdString();
 		ar & comments;
+		_comments = wxString(comments);
 	}
     
 public:

@@ -74,6 +74,7 @@ private:
 		ar & _minAngle;
 		std::string comments = _comments.ToStdString();
 		ar & comments;
+		_comments = wxString(comments);
 		ar & _probType;
 		ar & _unitLength;
 	}

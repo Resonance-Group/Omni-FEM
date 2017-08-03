@@ -33,6 +33,7 @@
  */
 class geometry2D
 {
+private:
 	friend class boost::serialization::access;
 	template<class Archive>
 	void serialize(Archive &ar, const unsigned int version)
@@ -144,13 +145,13 @@ public:
  */
 class rectangleShape : public geometry2D
 {
+private:
 	friend class boost::serialization::access;
 	template<class Archive>
 	void serialize(Archive &ar, const unsigned int version)
 	{
 		ar & boost::serialization::base_object<geometry2D>(*this);
 	}
-private:
     
     //! Boolean used to determine if the node/block label is draggin
     /*!
@@ -295,6 +296,14 @@ public:
 class node : public rectangleShape
 {
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<rectangleShape>(*this);
+		ar & _nodalSettings;
+		ar & _nodeNumber;
+	}
     //! The nodal property for the node
     /*!
         This object contains all of the nodal settings that are relevant to the node.
@@ -406,6 +415,13 @@ public:
 class blockLabel : public rectangleShape
 {
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<rectangleShape>(*this);
+		ar & _property;
+	}
     //! The block property that is associated with the block label
 	/*!
 		This property contains properties for the mesh size of a particular region
@@ -504,8 +520,41 @@ public:
  */
 class edgeLineShape : public geometry2D
 {
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<geometry2D>(*this);
+		ar & _property;
+		ar & p_firstNodeNumber;
+		ar & p_secondNodeNumber;
+	}
 protected:
-
+	//! The node number for the first node
+	/*!
+		For saving, this is useful because we are node able to save the 
+		actual pointer. We would have to save the object that it points to
+		instead. But, if there are mulple lines emitting from one node
+		then the node will be save multple times. This is not 
+		very efficient. Instead, we will track the node number for each
+		node that connects the line. his way, when we load the data from 
+		file, we have a way to quickly rebuild the node pointers for each line
+	*/ 
+	unsigned long p_firstNodeNumber = 0;
+	
+	//! The node number for the second node
+	/*!
+		For saving, this is useful because we are node able to save the 
+		actual pointer. We would have to save the object that it points to
+		instead. But, if there are mulple lines emitting from one node
+		then the node will be save multple times. This is not 
+		very efficient. Instead, we will track the node number for each
+		node that connects the line. his way, when we load the data from 
+		file, we have a way to quickly rebuild the node pointers for each line
+	*/ 
+	unsigned long p_secondNodeNumber = 0;
+	
     //! The property of the line segment
     /*!
         This property contains details on the group number and any
@@ -518,14 +567,14 @@ protected:
 		This points to the first node of the 
 		edge line shape (basically a segment)
 	*/ 
-    node *_firstNode;
+    node *_firstNode = nullptr;
     
 	//! Pointer for the first node
 	/*!
 		This points to the first node of the 
 		edge line shape (basically a segment)
 	*/ 
-    node *_secondNode;
+    node *_secondNode = nullptr;
     
 public:
 	//! Constructor for the generic class
@@ -541,6 +590,7 @@ public:
     void setFirstNode(node &a_Node)
     {
         _firstNode = &a_Node;
+		p_firstNodeNumber = _firstNode->getNodeID();
     }
     
 	/**
@@ -559,6 +609,7 @@ public:
     void setSecondNode(node &a_node)
     {
         _secondNode = &a_node;
+		p_secondNodeNumber = _secondNode->getNodeID();
     }
     
 	/**
@@ -614,6 +665,24 @@ public:
     {
         _property = property;
     }
+	
+	/**
+	 * @brief Retrieves the node ID that belongs to the first node of the line segment
+	 * @return Returns a number representing the node ID of the first node
+	 */
+	unsigned long getFirstNodeID()
+	{
+		return p_firstNodeNumber;
+	}
+	
+	/**
+	 * @brief Retrieves the node ID that belongs to the second node of the line segment
+	 * @return Returns a number representing the node ID of the second node
+	 */
+	unsigned long getSecondNodeID()
+	{
+		return p_secondNodeNumber;
+	}
 };
 
 
@@ -621,6 +690,18 @@ public:
 class arcShape : public edgeLineShape
 {
 private:
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<edgeLineShape>(*this);
+		ar & _numSegments;
+		ar & _arcAngle;
+		ar & _radius;
+		ar & _isCounterClockWise;
+	}
+	
 	unsigned int _numSegments = 3;
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees

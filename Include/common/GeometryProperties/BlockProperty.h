@@ -8,6 +8,9 @@
 #include <common/CircuitProperty.h>
 #include <common/enums.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that handles all properties that are related to the block label
 /*!
     Any of the block label properties that the user
@@ -19,6 +22,23 @@
 class blockProperty
 {
 private:
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _meshSizeType;
+		ar & _materialName;
+		ar & _circuitName;
+		ar & _meshSizeIsAuto;
+		ar & _numberOfTurns;
+		std::string magnet = _magnetization.ToStdString();
+		ar & magnet;
+		_magnetization = wxString(magnet);
+		ar & _groupNumber;
+		ar & _isExternalRegion;
+		ar & _isDefault;
+	}
     //! Datatype used to store if the mesh is extremely fine->extremely Coarse or a custom mesh size
     /*!
         This datatype is looked at when the program create the mesh.

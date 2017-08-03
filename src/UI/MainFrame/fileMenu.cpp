@@ -126,6 +126,7 @@ void OmniFEMMainFrame::save(string filePath)
 	std::ofstream ofs(pathName.ToStdString());
 	boost::archive::text_oarchive oa(ofs);
 	oa << _problemDefinition;
+	oa << _model;
 	
 /*	if(saveFile.is_open())
 	{	
