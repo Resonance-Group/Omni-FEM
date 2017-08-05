@@ -342,12 +342,13 @@ public:
 	void draw()
     {
         glPointSize(6.0);
+		
         glBegin(GL_POINTS);
         
-        if(_isSelected)
-            glColor3d(1.0, 0.0, 0.0);
-        else
-            glColor3d(0.0, 0.0, 0.0);
+			if(_isSelected)
+				glColor3d(1.0, 0.0, 0.0);
+			else
+				glColor3d(0.0, 0.0, 0.0);
             
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
@@ -753,7 +754,7 @@ public:
         else
             glColor3d(0.0, 0.0, 0.0);
             
-        
+      /*  
         if(_numSegments == -1)// Hey this code needs to be looked at!
         {
             if(_arcAngle < 10)
@@ -762,7 +763,8 @@ public:
                 _numSegments = _arcAngle / 3.0;
         }
         else if(_numSegments < 2)
-            _numSegments = 2;
+            _numSegments = 2
+			 */ 
         
         if(_property.getHiddenState())
         {

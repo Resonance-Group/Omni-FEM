@@ -70,8 +70,12 @@ private:
 		ar & loadLabels;
 		
 		for(std::vector<node>::iterator nodeIterator = loadNodes.begin(); nodeIterator != loadNodes.end(); nodeIterator++)
+		{
 			_nodeList.insert(*nodeIterator);
-			
+			if(nodeIterator->getNodeID() > _nodeNumber)
+				_nodeNumber = nodeIterator->getNodeID();
+		}
+		
 		for(std::vector<edgeLineShape>::iterator lineIterator = loadLines.begin(); lineIterator != loadLines.end(); lineIterator++)
 			_lineList.insert(*lineIterator);
 			
@@ -81,7 +85,7 @@ private:
 		for(std::vector<blockLabel>::iterator labelIterator = loadLabels.begin(); labelIterator != loadLabels.end(); labelIterator++)
 			_blockLabelList.insert(*labelIterator);
 			
-		// TODO: Add in the code to rebuild the pointers that are in the arcs and nodes
+		
 	}
 	BOOST_SERIALIZATION_SPLIT_MEMBER()
     /*
@@ -637,6 +641,42 @@ public:
         \return Returns true if even one fillet is succesfully created. Otherwise returns False.
     */ 
     bool createFillet(double radius);
+	
+	/**
+	 * @brief 	Function that is called after the data structure is loaded AND copied. If this function is called
+	 * 			after the data structure is loaded, then the addresses of all of nodes will change once the 
+	 * 			data structure is copied. Therefor, it is necessary to call this function which will rebuild
+	 * 			all of the node addresses contained within the arcs/lines once the data structure is copied.
+	 * 			The function will loop through the entire node list and compare the node with the node ID saved
+	 * 			in the arcs and lines. If there is a match for either the first or second node, the function 
+	 * 			will then set the address of the first/second node of the arc/line to the matched node.
+	 */
+	void rebuildDataStructure()
+	{
+		for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); nodeIterator++)
+		{
+			for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); lineIterator++)
+			{
+				if(nodeIterator->getNodeID() == lineIterator->getFirstNodeID())
+					lineIterator->setFirstNode(*nodeIterator);
+				else if(nodeIterator->getNodeID() == lineIterator->getSecondNodeID())
+					lineIterator->setSecondNode(*nodeIterator);
+			}
+			
+			for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); arcIterator++)
+			{
+				if(nodeIterator->getNodeID() == arcIterator->getFirstNodeID())
+					arcIterator->setFirstNode(*nodeIterator);
+				else if(nodeIterator->getNodeID() == arcIterator->getSecondNodeID())
+					arcIterator->setSecondNode(*nodeIterator);
+			}
+		}
+		
+		_lastArcAdded = _arcList.begin();
+		_lastBlockLabelAdded = _blockLabelList.begin();
+		_lastLineAdded = _lineList.begin();
+		_lastNodeAdded = _nodeList.begin();
+	}
 };
 
 #endif

@@ -16,8 +16,8 @@
 #include <wx/glcanvas.h>
 
 #include <common/ProblemDefinition.h>
-#include <common/GridPreferences.h>
 #include <common/plfcolony.h>
+#include <common/GridPreferences.h>
 
 #include <common/GeometryProperties/NodeSettings.h>
 
@@ -562,7 +562,27 @@ public:
         \param statusBar A reference to the parent status bar
     */ 
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar);
-
+	
+	~modelDefinition()
+	{
+		_editor.getArcList()->clear();
+		_editor.getBlockLabelList()->clear();
+		_editor.getLineList()->clear();
+		_editor.getNodeList()->clear();
+		_arcsAreSelected = false;
+		_cameraX = 0.0;
+		_cameraY = 0.0;
+		_createLines = true;
+		_createNodes = true;
+		_doMirrorLine = false;
+		_doSelectionWindow = false;
+		_doZoomWindow = false;
+		delete(_fontRender);
+		_endPoint = wxRealPoint(0.0, 0.0);
+		_startPoint = wxRealPoint(0.0, 0.0);
+		delete(_geometryContext);
+	}
+	
     //! This function will update the _preferences with a new user defined preferences
     /*!
         This function is primarly used when the user needs to change something in the grid preferences object.
@@ -745,7 +765,7 @@ public:
     */ 
     void updateProperties(EditProperty property);
     
-    //! Selects a group of geometry objects based on their group ID (speciffied by groupNumber).
+    //! Selects a group of geometry objects based on their gro		up ID (speciffied by groupNumber).
     /*!
         Depending on the value of geometry, this function will select all of the nodes or lines or labels or arcs
         that have the same goup ID as groupNumber. If a mixed geometry is needed to selected, then this function
@@ -831,7 +851,7 @@ public:
     void mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo);
     
     //! Fucntion that will perform a linear copy specified by horizontalShift and verticalShift.
-    /*!
+    /*!		
         This function will create numberOfCOpies number of copies in a more linear fashion. The logic follows that 
         of the function moveTranslateSelection except there is a for loop whose limit is governed by numberOfCopies.
         This for loop will determine the position of each node. For lines and arcs, the creation of a new line/arc 
@@ -939,7 +959,57 @@ public:
 	{
 		return _editor.getArcList();
 	}
-    
+	
+	/**
+	 * @brief 	Function that rerieves the data structures that are crucial for the operation of the class.
+	 * 			These data structures are required in order to save the class apprioately. It was discovered
+	 * 			that the boost::serialization class does not work well with classes that do not have a default 
+	 * 			constructer. This class is unable to contain a default constructor because the wxGLCanvas 
+	 * 			class needs to have a pointer to the parent window. This parent window does not contain
+	 * 			the needed functions for serializing. It was decided to extract only the crucial
+	 * 			data structures from the class and save those. For more information refer
+	 * 			to the following link:
+	 * 			https://stackoverflow.com/questions/45512699/how-to-work-boost-serialization-with-pointers-with-non-default-constructors
+	 * @param gridParam Variable used to store the gridPreferences class into
+	 * @param editorParam Variable to store the geometryEditor2D class into
+	 * @param otherParam A vector containing the following doubles: the zoom factor (x and y) and camera displacement (x and y)
+	 */
+	void getParameters(gridPreferences &gridParam, geometryEditor2D &editorParam, std::vector<double> &otherParam)
+	{
+		gridParam = _preferences;
+		editorParam = _editor;
+		otherParam.push_back(_zoomX);
+		otherParam.push_back(_zoomY);
+		otherParam.push_back(_cameraX);
+		otherParam.push_back(_cameraY);
+	}
+	
+	/**
+	 * @brief 	Function that is used to set the gridPreferences, geometryEditor2D, window placement variables.
+	 * 			This is mainly used when a user needs to load the data back into the data structure. This function
+	 * 			will automatically rebuilt the ponters of the nodes within the geometryEditor2D class
+	 * @param gridParam 	Variable that contains what the grdiPreferences of the class should be
+	 * @param editorParam 	Variable that contains the nodes/lines/arcs/etc of the gemoetry class
+	 * @param otherParam 	A vector containing the following doubles: the zoom factor (x and y) and camera displacement (x and y)
+	 * 						that needs to be loaded back into this class
+	 */
+	void setParameters(gridPreferences &gridParam, geometryEditor2D &editorParam, std::vector<double> &otherParam)
+	{
+		_preferences = gridParam;
+		_editor = editorParam;
+		/*
+		 * This is required and must be done after the program copies the editor data structure.
+		 * If the data structure is rebuilt after it is loaded, then all of the addresses will
+		 * become invalided. This is so because the editor data structure is now occupying a 
+		 * different block of memory.
+		 */ 
+		_editor.rebuildDataStructure();
+		_zoomX = otherParam.at(0);
+		_zoomY = otherParam.at(1);
+		_cameraX = otherParam.at(2);
+		_cameraY = otherParam.at(3);
+	}
+
 private:
     //! This is a macro in order to let wxWidgets understand that there are events within the class
     wxDECLARE_EVENT_TABLE(); 

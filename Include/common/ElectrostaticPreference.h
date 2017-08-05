@@ -80,6 +80,7 @@ private:
 	}
     
 public:
+	
     //! Sets the depth of the problem
     /*!
         The depth value is only used in planar problems
@@ -215,6 +216,19 @@ public:
         else
             return false;
     }
+	
+	/**
+	 * @brief Function that is called to reset the class back to default values
+	 */
+	void resetPreferences()
+	{
+		_depth = 1;
+		_precision = powf(10, -8);
+		_minAngle = 30;
+		_comments = wxString("Add comments here");
+		_probType = PLANAR;
+		_unitLength = INCHES;
+	}
  
 };
 

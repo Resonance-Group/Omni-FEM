@@ -2046,8 +2046,6 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
         {
             if(nodeIterator->getIsSelectedState())
             {
-                double radius = nodeIterator->getDistance(aboutPoint);
-                
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     double horizontalShift = (nodeIterator->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (nodeIterator->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
@@ -2069,8 +2067,6 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
         {
             if(blockIterator->getIsSelectedState())
             {
-                double radius = blockIterator->getDistance(aboutPoint);
-                
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     double horizontalShift = (blockIterator->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (blockIterator->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
@@ -2981,7 +2977,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
         {
-            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
+            newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;
@@ -2997,7 +2993,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         }
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
         {
-           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+			newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;
@@ -3030,7 +3026,9 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
              * However, the last node doesn't exist.
              * The form would reload so quickly that sometimes the canvas would be able to detect the user on the releasing the left mouse.
              * The fix, check to make sure that the size of the array (vector) is greater then 0 to ensure the program does not check an empty 
-             * position
+             * position.
+			 * There are some instances where even this check is not adequate. For example, when the user might load a saved file.
+			 * It is important to make sure that the getLastNodaAdd is always pointing to something.
              */ 
             if(_editor.getNodeList()->size() > 0 && _editor.getLastNodeAdd()->getDraggingState())
             {

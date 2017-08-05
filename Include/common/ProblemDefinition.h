@@ -38,8 +38,6 @@ private:
 	/************
 	* Variables *
 	*************/
-
-
     //! The global list for the electrostatic boundary conditions
     /*!
         This list contains all of the boundary conditions that the user user
@@ -414,6 +412,24 @@ public:
 	exteriorRegion *getExteriorRegion()
 	{
 		return &p_exteriorRegion;
+	}
+	
+	/**
+	 * @brief Resets all of the data structures back to their default values
+	 */
+	void defintionClear()
+	{
+		_localCircuitList.clear();
+		_localConductorList.clear();
+		_localElectrialMaterialList.clear();
+		_localElectricalBoundaryConditionList.clear();
+		_localElectricalPreference.resetPreferences();
+		_localMagneticBoundaryConditionList.clear();
+		_localMagneticMaterialList.clear();
+		_localMagneticPreference.resetPreferences();
+		_localNodalList.clear();
+		_phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
+		_problemName = wxString("Untitled");
 	}
 };
 

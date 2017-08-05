@@ -94,6 +94,8 @@ private:
     
 public:
     
+	
+	
     //! Sets the frequency that the program will use for magnetic simulations
     /*!
         For a magnetostatic problem, this value shoudl be set to 0.
@@ -269,6 +271,21 @@ public:
         else
             return false;
     }
+	
+	/**
+	 * @brief Function that is called in order to reset the class back to default values
+	 */
+	void resetPreferences()
+	{
+		_frequency = 0;
+		_depth = 1;
+		_precision = powf(10, -8);
+		_minAngle = 30;
+		_lengthUnit = unitLengthEnum::INCHES;
+		_probType = PLANAR;
+		_acSolver = SUCCAPPROX;
+		_comments = wxString("Add comments here");
+	}
 };
 
 #endif
