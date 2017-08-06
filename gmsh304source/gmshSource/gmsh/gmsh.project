@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Project Name="gmsh" Version="10.0.0" InternalType="Console">
+  <Description/>
+  <Dependencies/>
+  <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="" Assembler="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-O0;-Wall" C_Options="-g;-O0;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-O2;-Wall" C_Options="-O2;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+        <Preprocessor Value="NDEBUG"/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+  <VirtualDirectory Name="Common">
+    <File Name="../../Common/avl.cpp"/>
+    <File Name="../../Common/avl.h"/>
+    <File Name="../../Common/CMakeLists.txt"/>
+    <File Name="../../Common/Colors.h"/>
+    <File Name="../../Common/CommandLine.cpp"/>
+    <File Name="../../Common/CommandLine.h"/>
+    <File Name="../../Common/Context.cpp"/>
+    <File Name="../../Common/Context.h"/>
+    <File Name="../../Common/CreateFile.cpp"/>
+    <File Name="../../Common/CreateFile.h"/>
+    <File Name="../../Common/DefaultOptions.h"/>
+    <File Name="../../Common/GamePad.cpp"/>
+    <File Name="../../Common/GamePad.h"/>
+    <File Name="../../Common/Gmsh.cpp"/>
+    <File Name="../../Common/Gmsh.h"/>
+    <File Name="../../Common/GmshAPI.cpp"/>
+    <File Name="../../Common/GmshAPI.h"/>
+    <File Name="../../Common/GmshConfig.h.in"/>
+    <File Name="../../Common/GmshDefines.h"/>
+    <File Name="../../Common/GmshIO.h"/>
+    <File Name="../../Common/gmshLocalNetworkClient.cpp"/>
+    <File Name="../../Common/gmshLocalNetworkClient.h"/>
+    <File Name="../../Common/GmshMessage.cpp"/>
+    <File Name="../../Common/GmshMessage.h"/>
+    <File Name="../../Common/gmshPopplerWrapper.cpp"/>
+    <File Name="../../Common/gmshPopplerWrapper.h"/>
+    <File Name="../../Common/GmshRemote.cpp"/>
+    <File Name="../../Common/GmshRemote.h"/>
+    <File Name="../../Common/GmshSocket.h"/>
+    <File Name="../../Common/GmshVersion.h.in"/>
+    <File Name="../../Common/Hash.h"/>
+    <File Name="../../Common/HashMap.h"/>
+    <File Name="../../Common/ListUtils.cpp"/>
+    <File Name="../../Common/ListUtils.h"/>
+    <File Name="../../Common/Main.cpp"/>
+    <File Name="../../Common/MallocUtils.cpp"/>
+    <File Name="../../Common/MallocUtils.h"/>
+    <File Name="../../Common/Octree.cpp"/>
+    <File Name="../../Common/Octree.h"/>
+    <File Name="../../Common/OctreeInternals.cpp"/>
+    <File Name="../../Common/OctreeInternals.h"/>
+    <File Name="../../Common/onelab.h"/>
+    <File Name="../../Common/onelabUtils.cpp"/>
+    <File Name="../../Common/onelabUtils.h"/>
+    <File Name="../../Common/OpenFile.cpp"/>
+    <File Name="../../Common/OpenFile.h"/>
+    <File Name="../../Common/Options.cpp"/>
+    <File Name="../../Common/Options.h"/>
+    <File Name="../../Common/OS.cpp"/>
+    <File Name="../../Common/OS.h"/>
+    <File Name="../../Common/picojson.h"/>
+    <File Name="../../Common/rtree.h"/>
+    <File Name="../../Common/SmoothData.cpp"/>
+    <File Name="../../Common/SmoothData.h"/>
+    <File Name="../../Common/StringUtils.cpp"/>
+    <File Name="../../Common/StringUtils.h"/>
+    <File Name="../../Common/TreeUtils.cpp"/>
+    <File Name="../../Common/TreeUtils.h"/>
+    <File Name="../../Common/VertexArray.cpp"/>
+    <File Name="../../Common/VertexArray.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Geo">
+    <File Name="../../Geo/ACISEdge.cpp"/>
+    <File Name="../../Geo/ACISEdge.h"/>
+    <File Name="../../Geo/ACISFace.cpp"/>
+    <File Name="../../Geo/ACISFace.h"/>
+    <File Name="../../Geo/ACISVertex.cpp"/>
+    <File Name="../../Geo/ACISVertex.h"/>
+    <File Name="../../Geo/boundaryLayersData.cpp"/>
+    <File Name="../../Geo/boundaryLayersData.h"/>
+    <File Name="../../Geo/Cell.cpp"/>
+    <File Name="../../Geo/Cell.h"/>
+    <File Name="../../Geo/CellComplex.cpp"/>
+    <File Name="../../Geo/CellComplex.h"/>
+    <File Name="../../Geo/CGNSOptions.h"/>
+    <File Name="../../Geo/Chain.cpp"/>
+    <File Name="../../Geo/Chain.h"/>
+    <File Name="../../Geo/ChainComplex.cpp"/>
+    <File Name="../../Geo/ChainComplex.h"/>
+    <File Name="../../Geo/closestPoint.cpp"/>
+    <File Name="../../Geo/closestPoint.h"/>
+    <File Name="../../Geo/CMakeLists.txt"/>
+    <File Name="../../Geo/Curvature.cpp"/>
+    <File Name="../../Geo/Curvature.h"/>
+    <File Name="../../Geo/CustomContainer.h"/>
+    <File Name="../../Geo/discreteDiskFace.cpp"/>
+    <File Name="../../Geo/discreteDiskFace.h"/>
+    <File Name="../../Geo/discreteEdge.cpp"/>
+    <File Name="../../Geo/discreteEdge.h"/>
+    <File Name="../../Geo/discreteFace.cpp"/>
+    <File Name="../../Geo/discreteFace.h"/>
+    <File Name="../../Geo/discreteRegion.cpp"/>
+    <File Name="../../Geo/discreteRegion.h"/>
+    <File Name="../../Geo/discreteVertex.h"/>
+    <File Name="../../Geo/ExtrudeParams.cpp"/>
+    <File Name="../../Geo/ExtrudeParams.h"/>
+    <File Name="../../Geo/findLinks.cpp"/>
+    <File Name="../../Geo/findLinks.h"/>
+    <File Name="../../Geo/fourierEdge.cpp"/>
+    <File Name="../../Geo/fourierEdge.h"/>
+    <File Name="../../Geo/fourierFace.cpp"/>
+    <File Name="../../Geo/fourierFace.h"/>
+    <File Name="../../Geo/fourierProjectionFace.cpp"/>
+    <File Name="../../Geo/fourierProjectionFace.h"/>
+    <File Name="../../Geo/fourierVertex.h"/>
+    <File Name="../../Geo/GEdge.cpp"/>
+    <File Name="../../Geo/GEdge.h"/>
+    <File Name="../../Geo/GEdgeCompound.cpp"/>
+    <File Name="../../Geo/GEdgeCompound.h"/>
+    <File Name="../../Geo/GEdgeLoop.cpp"/>
+    <File Name="../../Geo/GEdgeLoop.h"/>
+    <File Name="../../Geo/GenericEdge.cpp"/>
+    <File Name="../../Geo/GenericEdge.h"/>
+    <File Name="../../Geo/GenericFace.cpp"/>
+    <File Name="../../Geo/GenericFace.h"/>
+    <File Name="../../Geo/GenericRegion.cpp"/>
+    <File Name="../../Geo/GenericRegion.h"/>
+    <File Name="../../Geo/GenericVertex.cpp"/>
+    <File Name="../../Geo/GenericVertex.h"/>
+    <File Name="../../Geo/GEntity.cpp"/>
+    <File Name="../../Geo/GEntity.h"/>
+    <File Name="../../Geo/Geo.cpp"/>
+    <File Name="../../Geo/Geo.h"/>
+    <File Name="../../Geo/GeoDefines.h"/>
+    <File Name="../../Geo/GeoInterpolation.cpp"/>
+    <File Name="../../Geo/GeoInterpolation.h"/>
+    <File Name="../../Geo/GeomMeshMatcher.cpp"/>
+    <File Name="../../Geo/GeomMeshMatcher.h"/>
+    <File Name="../../Geo/GeoStringInterface.cpp"/>
+    <File Name="../../Geo/GeoStringInterface.h"/>
+    <File Name="../../Geo/GFace.cpp"/>
+    <File Name="../../Geo/GFace.h"/>
+    <File Name="../../Geo/GFaceCompound.cpp"/>
+    <File Name="../../Geo/GFaceCompound.h"/>
+    <File Name="../../Geo/GModel.cpp"/>
+    <File Name="../../Geo/GModel.h"/>
+    <File Name="../../Geo/GModelCreateTopologyFromMesh.cpp"/>
+    <File Name="../../Geo/GModelCreateTopologyFromMesh.h"/>
+    <File Name="../../Geo/GModelFactory.cpp"/>
+    <File Name="../../Geo/GModelFactory.h"/>
+    <File Name="../../Geo/GModelIO_ACIS.cpp"/>
+    <File Name="../../Geo/GModelIO_ACIS.h"/>
+    <File Name="../../Geo/GModelIO_ACTRAN.cpp"/>
+    <File Name="../../Geo/GModelIO_BDF.cpp"/>
+    <File Name="../../Geo/GModelIO_CELUM.cpp"/>
+    <File Name="../../Geo/GModelIO_CGNS.cpp"/>
+    <File Name="../../Geo/GModelIO_DIFF.cpp"/>
+    <File Name="../../Geo/GModelIO_Fourier.cpp"/>
+    <File Name="../../Geo/GModelIO_Fourier.h"/>
+    <File Name="../../Geo/GModelIO_GEO.cpp"/>
+    <File Name="../../Geo/GModelIO_GEO.h"/>
+    <File Name="../../Geo/GModelIO_GEOM.cpp"/>
+    <File Name="../../Geo/GModelIO_INP.cpp"/>
+    <File Name="../../Geo/GModelIO_IR3.cpp"/>
+    <File Name="../../Geo/GModelIO_MAIL.cpp"/>
+    <File Name="../../Geo/GModelIO_MED.cpp"/>
+    <File Name="../../Geo/GModelIO_MESH.cpp"/>
+    <File Name="../../Geo/GModelIO_MSH.cpp"/>
+    <File Name="../../Geo/GModelIO_MSH2.cpp"/>
+    <File Name="../../Geo/GModelIO_OCC.cpp"/>
+    <File Name="../../Geo/GModelIO_OCC.h"/>
+    <File Name="../../Geo/GModelIO_P3D.cpp"/>
+    <File Name="../../Geo/GModelIO_PLY.cpp"/>
+    <File Name="../../Geo/GModelIO_POS.cpp"/>
+    <File Name="../../Geo/GModelIO_SAMCEF.cpp"/>
+    <File Name="../../Geo/GModelIO_STL.cpp"/>
+    <File Name="../../Geo/GModelIO_SU2.cpp"/>
+    <File Name="../../Geo/GModelIO_TOCHNOG.cpp"/>
+    <File Name="../../Geo/GModelIO_UNV.cpp"/>
+    <File Name="../../Geo/GModelIO_VRML.cpp"/>
+    <File Name="../../Geo/GModelIO_VTK.cpp"/>
+    <File Name="../../Geo/GModelVertexArrays.cpp"/>
+    <File Name="../../Geo/gmshEdge.cpp"/>
+    <File Name="../../Geo/gmshEdge.h"/>
+    <File Name="../../Geo/gmshEdgeDiscretize.cpp"/>
+    <File Name="../../Geo/gmshFace.cpp"/>
+    <File Name="../../Geo/gmshFace.h"/>
+    <File Name="../../Geo/gmshLevelset.cpp"/>
+    <File Name="../../Geo/gmshLevelset.h"/>
+    <File Name="../../Geo/gmshRegion.cpp"/>
+    <File Name="../../Geo/gmshRegion.h"/>
+    <File Name="../../Geo/gmshSurface.cpp"/>
+    <File Name="../../Geo/gmshSurface.h"/>
+    <File Name="../../Geo/gmshVertex.cpp"/>
+    <File Name="../../Geo/gmshVertex.h"/>
+    <File Name="../../Geo/GPoint.h"/>
+    <File Name="../../Geo/GRbf.cpp"/>
+    <File Name="../../Geo/GRbf.h"/>
+    <File Name="../../Geo/GRegion.cpp"/>
+    <File Name="../../Geo/GRegion.h"/>
+    <File Name="../../Geo/GRegionCompound.cpp"/>
+    <File Name="../../Geo/GRegionCompound.h"/>
+    <File Name="../../Geo/GVertex.cpp"/>
+    <File Name="../../Geo/GVertex.h"/>
+    <File Name="../../Geo/Homology.cpp"/>
+    <File Name="../../Geo/Homology.h"/>
+    <File Name="../../Geo/intersectCurveSurface.cpp"/>
+    <File Name="../../Geo/intersectCurveSurface.h"/>
+    <File Name="../../Geo/MEdge.cpp"/>
+    <File Name="../../Geo/MEdge.h"/>
+    <File Name="../../Geo/MEdgeHash.h"/>
+    <File Name="../../Geo/MElement.cpp"/>
+    <File Name="../../Geo/MElement.h"/>
+    <File Name="../../Geo/MElementCut.cpp"/>
+    <File Name="../../Geo/MElementCut.h"/>
+    <File Name="../../Geo/MElementOctree.cpp"/>
+    <File Name="../../Geo/MElementOctree.h"/>
+    <File Name="../../Geo/MFace.cpp"/>
+    <File Name="../../Geo/MFace.h"/>
+    <File Name="../../Geo/MFaceHash.h"/>
+    <File Name="../../Geo/MHexahedron.cpp"/>
+    <File Name="../../Geo/MHexahedron.h"/>
+    <File Name="../../Geo/MLine.cpp"/>
+    <File Name="../../Geo/MLine.h"/>
+    <File Name="../../Geo/MPoint.h"/>
+    <File Name="../../Geo/MPrism.cpp"/>
+    <File Name="../../Geo/MPrism.h"/>
+    <File Name="../../Geo/MPyramid.cpp"/>
+    <File Name="../../Geo/MPyramid.h"/>
+    <File Name="../../Geo/MQuadrangle.cpp"/>
+    <File Name="../../Geo/MQuadrangle.h"/>
+    <File Name="../../Geo/MSubElement.cpp"/>
+    <File Name="../../Geo/MSubElement.h"/>
+    <File Name="../../Geo/MTetrahedron.cpp"/>
+    <File Name="../../Geo/MTetrahedron.h"/>
+    <File Name="../../Geo/MTriangle.cpp"/>
+    <File Name="../../Geo/MTriangle.h"/>
+    <File Name="../../Geo/MTrihedron.cpp"/>
+    <File Name="../../Geo/MTrihedron.h"/>
+    <File Name="../../Geo/MVertex.cpp"/>
+    <File Name="../../Geo/MVertex.h"/>
+    <File Name="../../Geo/MVertexBoundaryLayerData.cpp"/>
+    <File Name="../../Geo/MVertexBoundaryLayerData.h"/>
+    <File Name="../../Geo/MVertexRTree.h"/>
+    <File Name="../../Geo/MZone.cpp"/>
+    <File Name="../../Geo/MZone.h"/>
+    <File Name="../../Geo/MZoneBoundary.cpp"/>
+    <File Name="../../Geo/MZoneBoundary.h"/>
+    <File Name="../../Geo/OCCEdge.cpp"/>
+    <File Name="../../Geo/OCCEdge.h"/>
+    <File Name="../../Geo/OCCFace.cpp"/>
+    <File Name="../../Geo/OCCFace.h"/>
+    <File Name="../../Geo/OCCMeshAttributes.h"/>
+    <File Name="../../Geo/OCCRegion.cpp"/>
+    <File Name="../../Geo/OCCRegion.h"/>
+    <File Name="../../Geo/OCCVertex.cpp"/>
+    <File Name="../../Geo/OCCVertex.h"/>
+    <File Name="../../Geo/Pair.h"/>
+    <File Name="../../Geo/partitionEdge.h"/>
+    <File Name="../../Geo/partitionFace.h"/>
+    <File Name="../../Geo/partitionVertex.h"/>
+    <File Name="../../Geo/Range.h"/>
+    <File Name="../../Geo/SBoundingBox3d.h"/>
+    <File Name="../../Geo/SOrientedBoundingBox.cpp"/>
+    <File Name="../../Geo/SOrientedBoundingBox.h"/>
+    <File Name="../../Geo/SPoint2.h"/>
+    <File Name="../../Geo/SPoint3.h"/>
+    <File Name="../../Geo/STensor3.cpp"/>
+    <File Name="../../Geo/STensor3.h"/>
+    <File Name="../../Geo/SVector3.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Mesh">
+    <File Name="../../Mesh/BackgroundMesh.cpp"/>
+    <File Name="../../Mesh/BackgroundMesh.h"/>
+    <File Name="../../Mesh/BackgroundMesh2D.cpp"/>
+    <File Name="../../Mesh/BackgroundMesh2D.h"/>
+    <File Name="../../Mesh/BackgroundMesh3D.cpp"/>
+    <File Name="../../Mesh/BackgroundMesh3D.h"/>
+    <File Name="../../Mesh/BackgroundMeshManager.cpp"/>
+    <File Name="../../Mesh/BackgroundMeshManager.h"/>
+    <File Name="../../Mesh/BackgroundMeshTools.cpp"/>
+    <File Name="../../Mesh/BackgroundMeshTools.h"/>
+    <File Name="../../Mesh/BDS.cpp"/>
+    <File Name="../../Mesh/BDS.h"/>
+    <File Name="../../Mesh/BGMBase.cpp"/>
+    <File Name="../../Mesh/BGMBase.h"/>
+    <File Name="../../Mesh/BoundaryLayers.cpp"/>
+    <File Name="../../Mesh/BoundaryLayers.h"/>
+    <File Name="../../Mesh/CMakeLists.txt"/>
+    <File Name="../../Mesh/cross3D.h"/>
+    <File Name="../../Mesh/delaunay3d.cpp"/>
+    <File Name="../../Mesh/delaunay3d.h"/>
+    <File Name="../../Mesh/delaunay3d_private.h"/>
+    <File Name="../../Mesh/delaunay_refinement.cpp"/>
+    <File Name="../../Mesh/delaunay_refinement.h"/>
+    <File Name="../../Mesh/directions3D.cpp"/>
+    <File Name="../../Mesh/directions3D.h"/>
+    <File Name="../../Mesh/DivideAndConquer.cpp"/>
+    <File Name="../../Mesh/DivideAndConquer.h"/>
+    <File Name="../../Mesh/Field.cpp"/>
+    <File Name="../../Mesh/Field.h"/>
+    <File Name="../../Mesh/FieldPython.h"/>
+    <File Name="../../Mesh/filterElements.cpp"/>
+    <File Name="../../Mesh/filterElements.h"/>
+    <File Name="../../Mesh/Generator.cpp"/>
+    <File Name="../../Mesh/Generator.h"/>
+    <File Name="../../Mesh/HighOrder.cpp"/>
+    <File Name="../../Mesh/HighOrder.h"/>
+    <File Name="../../Mesh/Levy3D.cpp"/>
+    <File Name="../../Mesh/Levy3D.h"/>
+    <File Name="../../Mesh/meshDiscreteRegion.cpp"/>
+    <File Name="../../Mesh/meshGEdge.cpp"/>
+    <File Name="../../Mesh/meshGEdge.h"/>
+    <File Name="../../Mesh/meshGEdgeExtruded.cpp"/>
+    <File Name="../../Mesh/meshGFace.cpp"/>
+    <File Name="../../Mesh/meshGFace.h"/>
+    <File Name="../../Mesh/meshGFaceBamg.cpp"/>
+    <File Name="../../Mesh/meshGFaceBamg.h"/>
+    <File Name="../../Mesh/meshGFaceBDS.cpp"/>
+    <File Name="../../Mesh/meshGFaceBDS.h"/>
+    <File Name="../../Mesh/meshGFaceDelaunayInsertion.cpp"/>
+    <File Name="../../Mesh/meshGFaceDelaunayInsertion.h"/>
+    <File Name="../../Mesh/meshGFaceExtruded.cpp"/>
+    <File Name="../../Mesh/meshGFaceLloyd.cpp"/>
+    <File Name="../../Mesh/meshGFaceLloyd.h"/>
+    <File Name="../../Mesh/meshGFaceOptimize.cpp"/>
+    <File Name="../../Mesh/meshGFaceOptimize.h"/>
+    <File Name="../../Mesh/meshGFaceOptimizeOld.cpp"/>
+    <File Name="../../Mesh/meshGFaceQuadrilateralize.cpp"/>
+    <File Name="../../Mesh/meshGFaceQuadrilateralize.h"/>
+    <File Name="../../Mesh/meshGFaceRecombine.cpp"/>
+    <File Name="../../Mesh/meshGFaceRecombine.h"/>
+    <File Name="../../Mesh/meshGFaceTransfinite.cpp"/>
+    <File Name="../../Mesh/meshGRegion.cpp"/>
+    <File Name="../../Mesh/meshGRegion.h"/>
+    <File Name="../../Mesh/meshGRegionBoundaryRecovery.cpp"/>
+    <File Name="../../Mesh/meshGRegionBoundaryRecovery.h"/>
+    <File Name="../../Mesh/meshGRegionCarveHole.cpp"/>
+    <File Name="../../Mesh/meshGRegionDelaunayInsertion.cpp"/>
+    <File Name="../../Mesh/meshGRegionDelaunayInsertion.h"/>
+    <File Name="../../Mesh/meshGRegionExtruded.cpp"/>
+    <File Name="../../Mesh/meshGRegionLocalMeshMod.cpp"/>
+    <File Name="../../Mesh/meshGRegionLocalMeshMod.h"/>
+    <File Name="../../Mesh/meshGRegionMMG3D.cpp"/>
+    <File Name="../../Mesh/meshGRegionMMG3D.h"/>
+    <File Name="../../Mesh/meshGRegionRelocateVertex.cpp"/>
+    <File Name="../../Mesh/meshGRegionRelocateVertex.h"/>
+    <File Name="../../Mesh/meshGRegionTransfinite.cpp"/>
+    <File Name="../../Mesh/meshMetric.cpp"/>
+    <File Name="../../Mesh/meshMetric.h"/>
+    <File Name="../../Mesh/meshPartition.cpp"/>
+    <File Name="../../Mesh/meshPartition.h"/>
+    <File Name="../../Mesh/meshPartitionObjects.h"/>
+    <File Name="../../Mesh/meshPartitionOptions.h"/>
+    <File Name="../../Mesh/meshRefine.cpp"/>
+    <File Name="../../Mesh/multiscalePartition.cpp"/>
+    <File Name="../../Mesh/multiscalePartition.h"/>
+    <File Name="../../Mesh/mwis.hpp"/>
+    <File Name="../../Mesh/pointInsertion.cpp"/>
+    <File Name="../../Mesh/pointInsertion.h"/>
+    <File Name="../../Mesh/pointInsertionRTreeTools.cpp"/>
+    <File Name="../../Mesh/pointInsertionRTreeTools.h"/>
+    <File Name="../../Mesh/QuadTriExtruded2D.cpp"/>
+    <File Name="../../Mesh/QuadTriExtruded2D.h"/>
+    <File Name="../../Mesh/QuadTriExtruded3D.cpp"/>
+    <File Name="../../Mesh/QuadTriExtruded3D.h"/>
+    <File Name="../../Mesh/QuadTriTransfinite3D.cpp"/>
+    <File Name="../../Mesh/QuadTriTransfinite3D.h"/>
+    <File Name="../../Mesh/QuadTriUtils.cpp"/>
+    <File Name="../../Mesh/QuadTriUtils.h"/>
+    <File Name="../../Mesh/qualityMeasures.cpp"/>
+    <File Name="../../Mesh/qualityMeasures.h"/>
+    <File Name="../../Mesh/qualityMeasuresJacobian.cpp"/>
+    <File Name="../../Mesh/qualityMeasuresJacobian.h"/>
+    <File Name="../../Mesh/search.hpp"/>
+    <File Name="../../Mesh/simple3D.cpp"/>
+    <File Name="../../Mesh/simple3D.h"/>
+    <File Name="../../Mesh/surfaceFiller.cpp"/>
+    <File Name="../../Mesh/surfaceFiller.h"/>
+    <File Name="../../Mesh/tetgenBR.cxx"/>
+    <File Name="../../Mesh/tetgenBR.h"/>
+    <File Name="../../Mesh/ThinLayer.cpp"/>
+    <File Name="../../Mesh/ThinLayer.h"/>
+    <File Name="../../Mesh/Voronoi3D.cpp"/>
+    <File Name="../../Mesh/Voronoi3D.h"/>
+    <File Name="../../Mesh/yamakawa.cpp"/>
+    <File Name="../../Mesh/yamakawa.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Numeric">
+    <File Name="../../Numeric/approximationError.cpp"/>
+    <File Name="../../Numeric/approximationError.h"/>
+    <File Name="../../Numeric/BasisFactory.cpp"/>
+    <File Name="../../Numeric/BasisFactory.h"/>
+    <File Name="../../Numeric/BergotBasis.cpp"/>
+    <File Name="../../Numeric/BergotBasis.h"/>
+    <File Name="../../Numeric/bezierBasis.cpp"/>
+    <File Name="../../Numeric/bezierBasis.h"/>
+    <File Name="../../Numeric/cartesian.h"/>
+    <File Name="../../Numeric/CMakeLists.txt"/>
+    <File Name="../../Numeric/CondNumBasis.cpp"/>
+    <File Name="../../Numeric/CondNumBasis.h"/>
+    <File Name="../../Numeric/ConjugateGradients.cpp"/>
+    <File Name="../../Numeric/ConjugateGradients.h"/>
+    <File Name="../../Numeric/decasteljau.cpp"/>
+    <File Name="../../Numeric/decasteljau.h"/>
+    <File Name="../../Numeric/discreteFrechetDistance.cpp"/>
+    <File Name="../../Numeric/discreteFrechetDistance.h"/>
+    <File Name="../../Numeric/ElementType.cpp"/>
+    <File Name="../../Numeric/ElementType.h"/>
+    <File Name="../../Numeric/fullMatrix.cpp"/>
+    <File Name="../../Numeric/fullMatrix.h"/>
+    <File Name="../../Numeric/FuncSpaceData.cpp"/>
+    <File Name="../../Numeric/FuncSpaceData.h"/>
+    <File Name="../../Numeric/GaussIntegration.cpp"/>
+    <File Name="../../Numeric/GaussIntegration.h"/>
+    <File Name="../../Numeric/GaussJacobi1D.cpp"/>
+    <File Name="../../Numeric/GaussJacobi1D.h"/>
+    <File Name="../../Numeric/GaussLegendre1D.h"/>
+    <File Name="../../Numeric/GaussLegendreSimplex.cpp"/>
+    <File Name="../../Numeric/GaussQuadratureHex.cpp"/>
+    <File Name="../../Numeric/GaussQuadratureLin.cpp"/>
+    <File Name="../../Numeric/GaussQuadraturePri.cpp"/>
+    <File Name="../../Numeric/GaussQuadraturePyr.cpp"/>
+    <File Name="../../Numeric/GaussQuadratureQuad.cpp"/>
+    <File Name="../../Numeric/GaussQuadratureTet.cpp"/>
+    <File Name="../../Numeric/GaussQuadratureTri.cpp"/>
+    <File Name="../../Numeric/hausdorffDistance.cpp"/>
+    <File Name="../../Numeric/hausdorffDistance.h"/>
+    <File Name="../../Numeric/HilbertCurve.cpp"/>
+    <File Name="../../Numeric/HilbertCurve.h"/>
+    <File Name="../../Numeric/Iso.cpp"/>
+    <File Name="../../Numeric/Iso.h"/>
+    <File Name="../../Numeric/JacobianBasis.cpp"/>
+    <File Name="../../Numeric/JacobianBasis.h"/>
+    <File Name="../../Numeric/jacobiPolynomials.cpp"/>
+    <File Name="../../Numeric/jacobiPolynomials.h"/>
+    <File Name="../../Numeric/legendrePolynomials.cpp"/>
+    <File Name="../../Numeric/legendrePolynomials.h"/>
+    <File Name="../../Numeric/mathEvaluator.cpp"/>
+    <File Name="../../Numeric/mathEvaluator.h"/>
+    <File Name="../../Numeric/miniBasis.cpp"/>
+    <File Name="../../Numeric/miniBasis.h"/>
+    <File Name="../../Numeric/nanoflann.hpp"/>
+    <File Name="../../Numeric/nodalBasis.cpp"/>
+    <File Name="../../Numeric/nodalBasis.h"/>
+    <File Name="../../Numeric/Numeric.cpp"/>
+    <File Name="../../Numeric/Numeric.h"/>
+    <File Name="../../Numeric/pointsGenerators.cpp"/>
+    <File Name="../../Numeric/pointsGenerators.h"/>
+    <File Name="../../Numeric/polynomialBasis.cpp"/>
+    <File Name="../../Numeric/polynomialBasis.h"/>
+    <File Name="../../Numeric/pyramidalBasis.cpp"/>
+    <File Name="../../Numeric/pyramidalBasis.h"/>
+    <File Name="../../Numeric/robustPredicates.cpp"/>
+    <File Name="../../Numeric/robustPredicates.h"/>
+    <File Name="../../Numeric/simpleFunction.h"/>
+    <File Name="../../Numeric/simpleFunctionPython.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="contrib">
+    <VirtualDirectory Name="ANN">
+      <VirtualDirectory Name="include">
+        <VirtualDirectory Name="ANN">
+          <File Name="../../contrib/ANN/include/ANN/ANN.h"/>
+          <File Name="../../contrib/ANN/include/ANN/ANNperf.h"/>
+          <File Name="../../contrib/ANN/include/ANN/ANNx.h"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="../../contrib/ANN/src/ANN.cpp"/>
+        <File Name="../../contrib/ANN/src/bd_fix_rad_search.cpp"/>
+        <File Name="../../contrib/ANN/src/bd_pr_search.cpp"/>
+        <File Name="../../contrib/ANN/src/bd_search.cpp"/>
+        <File Name="../../contrib/ANN/src/bd_tree.cpp"/>
+        <File Name="../../contrib/ANN/src/bd_tree.h"/>
+        <File Name="../../contrib/ANN/src/brute.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_dump.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_fix_rad_search.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_fix_rad_search.h"/>
+        <File Name="../../contrib/ANN/src/kd_pr_search.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_pr_search.h"/>
+        <File Name="../../contrib/ANN/src/kd_search.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_search.h"/>
+        <File Name="../../contrib/ANN/src/kd_split.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_split.h"/>
+        <File Name="../../contrib/ANN/src/kd_tree.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_tree.h"/>
+        <File Name="../../contrib/ANN/src/kd_util.cpp"/>
+        <File Name="../../contrib/ANN/src/kd_util.h"/>
+        <File Name="../../contrib/ANN/src/perf.cpp"/>
+        <File Name="../../contrib/ANN/src/pr_queue.h"/>
+        <File Name="../../contrib/ANN/src/pr_queue_k.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+</CodeLite_Project>

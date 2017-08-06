@@ -10,7 +10,7 @@
 #include "Numeric.h"
 #include "Context.h"
 #include "OS.h"
-#include "GModel.h"
+#include "Mesh/GModel.h"
 #include "MPoint.h"
 #include "MLine.h"
 #include "MTriangle.h"
@@ -27,7 +27,7 @@
 #include "BackgroundMesh.h"
 #include "BoundaryLayers.h"
 #include "HighOrder.h"
-#include "Generator.h"
+#include "Mesh/Generator.h"
 #include "meshGFaceLloyd.h"
 #include "GFaceCompound.h"
 #include "Field.h"
@@ -249,12 +249,6 @@ void GetStatistics(double stat[50], double quality[3][100])
 #endif
 }
 
-/**
- * @brief Function that is used to detect if the mesh size of a particular area is too large
- * @param m Pointer to the Geometry Model
- * @param dim The dimension of the problem
- * @return Returns true if the user does not want to use the large mesh. Otherwise, returns false.
- */
 static bool TooManyElements(GModel *m, int dim)
 {
   if(CTX::instance()->expertMode || !m->getNumVertices()) return false;
@@ -430,11 +424,11 @@ static void PrintMesh2dStatistics(GModel *m)
 
 static void Mesh2D(GModel *m)
 {
-  m->getFields()->initialize();// initilies the ANN structure within each field.
+  m->getFields()->initialize();
 
   if(TooManyElements(m, 2)) return;
   Msg::StatusBar(true, "Meshing 2D...");
-  double t1 = Cpu();// Used to calulate the amout of time passed for meshing
+  double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
     (*it)->meshStatistics.status = GFace::PENDING;
@@ -442,8 +436,7 @@ static void Mesh2D(GModel *m)
   // boundary layers are special: their generation (including vertices and curve
   // meshes) is global as it depends on a smooth normal field generated from the
   // surface mesh of the source surfaces
-  if(!Mesh2DWithBoundaryLayers(m))
-	  {
+  if(!Mesh2DWithBoundaryLayers(m)){
     std::set<GFace*, GEntityLessThan> cf, f;
     for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
       if ((*it)->geomType() == GEntity::CompoundSurface)

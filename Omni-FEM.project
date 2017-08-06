@@ -91,10 +91,13 @@
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig="Debug"/>
-      <File Name="src/Mesh/GEdge.cpp"/>
-      <File Name="src/Mesh/GFace.cpp"/>
-      <File Name="src/Mesh/GRegion.cpp"/>
-      <File Name="src/Mesh/GVertex.cpp"/>
+      <File Name="src/Mesh/GEdge.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/GFace.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/GRegion.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/GVertex.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/Generator.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/BackgroundMesh.cpp"/>
+      <File Name="src/Mesh/GEntity.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -180,10 +183,13 @@
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/GEdge.h"/>
-      <File Name="Include/Mesh/GFace.h"/>
-      <File Name="Include/Mesh/GRegion.h"/>
-      <File Name="Include/Mesh/GVertex.h"/>
+      <File Name="Include/Mesh/GEdge.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GFace.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GRegion.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GVertex.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/Generator.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/BackgroundMesh.h"/>
+      <File Name="Include/Mesh/GEntity.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

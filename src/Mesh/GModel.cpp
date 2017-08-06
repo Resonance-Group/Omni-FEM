@@ -9,7 +9,7 @@
 #include <stack>
 #include "GmshConfig.h"
 #include "GmshMessage.h"
-#include "GModel.h"
+#include "Mesh/GModel.h"
 #include "GModelIO_GEO.h"
 #include "GModelIO_OCC.h"
 #include "GModelFactory.h"
