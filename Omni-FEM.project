@@ -89,6 +89,13 @@
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
     </VirtualDirectory>
+    <VirtualDirectory Name="Mesh">
+      <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/GEdge.cpp"/>
+      <File Name="src/Mesh/GFace.cpp"/>
+      <File Name="src/Mesh/GRegion.cpp"/>
+      <File Name="src/Mesh/GVertex.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
     <VirtualDirectory Name="UI">
@@ -170,6 +177,13 @@
       </VirtualDirectory>
       <File Name="Include/common/plfcolony.h"/>
       <File Name="Include/common/ExteriorRegion.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="Mesh">
+      <File Name="Include/Mesh/GModel.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GEdge.h"/>
+      <File Name="Include/Mesh/GFace.h"/>
+      <File Name="Include/Mesh/GRegion.h"/>
+      <File Name="Include/Mesh/GVertex.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
