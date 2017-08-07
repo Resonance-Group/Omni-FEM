@@ -98,6 +98,7 @@
       <File Name="src/Mesh/Generator.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/BackgroundMesh.cpp"/>
       <File Name="src/Mesh/GEntity.cpp"/>
+      <File Name="src/Mesh/meshGFace.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -190,6 +191,8 @@
       <File Name="Include/Mesh/Generator.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/BackgroundMesh.h"/>
       <File Name="Include/Mesh/GEntity.h"/>
+      <File Name="Include/Mesh/meshGFace.h"/>
+      <File Name="Include/Mesh/GmshDefines.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

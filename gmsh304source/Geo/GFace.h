@@ -296,6 +296,10 @@ class GFace : public GEntity {
   // new interface for meshing
   virtual void mesh(bool verbose);
 
+	/*!
+		For the record, many of the mesh attributes within the block label
+		will go here
+	*/ 
   struct {
     // do we recombine the triangles of the mesh?
     int recombine;

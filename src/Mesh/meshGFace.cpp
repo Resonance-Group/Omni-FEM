@@ -2418,20 +2418,7 @@ void deMeshGFace::operator() (GFace *gf)
 int debugSurface = -1; //-100;
 
 /**
- * @brief This is the mesher. Or at least the function that will call the parts for the mesher.
- * 			The program will first need to set the GFace as the current mesh entity. The
- * 			program will then check if the surface is for debugging. If so, end the function.
- * 			THe program will also check to see if the face is a projection, is no mesh, or 
- * 			if it is only visible. IF any of these is true, then end the function.
- * 			Next, the program will destroy any pre-existing mesh that the face contains.
- * 			THe program will then mesh if the surface is transfinite or if the face is
- * 			on an extrusion. The program will then perform a check to make sure that 
- * 			the mesh master is not the same as the current face. If it is not, then
- * 			the mesh from the mesh master needs to be copied to the current
- * 			GFace. Afterwards, the mesher will need to set the correct Meshing 
- * 			algorithm.
- * 			will need to 
- * 			
+ * @brief This is the mesher. Or at least the function that will call the parts for the mesher
  * @param gf Pointer pointing to the 2D face to mesh
  * @param print Boolean specifying to print status of the mesh
  */
@@ -2457,68 +2444,38 @@ void meshGFace::operator() (GFace *gf, bool print)
   // because meshGenerator never called
   if(MeshTransfiniteSurface(gf)) return;
   if(MeshExtrudedSurface(gf)) return;
-  /*
-   * Basically my understanding of this is that the mesh master needs to be the same as the GFace
-   * that will be meshed. The mesh master is the entity from which the mesh will be copied.
-   * If it is anything other then the GFace, then this would mean that the mesh of the mesh master
-   * needs to be copied to the current GFace
-   */ 
-	if(gf->meshMaster() != gf)
-	{
-		GFace *gff = dynamic_cast<GFace*> (gf->meshMaster());// Cast the GEntity as a GFace pointer
-		if(gff)
-		{	// In order for the copy to be successful, the mesh of the mesh master needs to exist.
-			if (gff->meshStatistics.status != GFace::DONE)
-			{
-				gf->meshStatistics.status = GFace::PENDING;
-				return;
-			}
-			
-			Msg::Info("Meshing face %d (%s) as a copy of %d", gf->tag(),
+  if(gf->meshMaster() != gf){
+    GFace *gff = dynamic_cast<GFace*> (gf->meshMaster());
+    if(gff){
+      if (gff->meshStatistics.status != GFace::DONE){
+        gf->meshStatistics.status = GFace::PENDING;
+        return;
+      }
+      Msg::Info("Meshing face %d (%s) as a copy of %d", gf->tag(),
                 gf->getTypeString().c_str(), gf->meshMaster()->tag());
-				
-			copyMesh(gff, gf);
-			gf->meshStatistics.status = GFace::DONE;
-			return;
-		}
-		else
-			Msg::Warning("Unknown mesh master face %d", gf->meshMaster()->tag());
+      copyMesh(gff, gf);
+      gf->meshStatistics.status = GFace::DONE;
+      return;
+    }
+    else
+      Msg::Warning("Unknown mesh master face %d", gf->meshMaster()->tag());
   }
 
   const char *algo = "Unknown";
 
-  switch(gf->getMeshingAlgo())
-  {
-	case ALGO_2D_MESHADAPT: 
-		algo = "MeshAdapt";
-		break;
-	case ALGO_2D_FRONTAL:
-		algo = "Frontal";
-		break;
-	case ALGO_2D_FRONTAL_QUAD:
-		algo = "Frontal Quad"; 
-		break;
-	case ALGO_2D_DELAUNAY: 
-		algo = "Delaunay"; 
-		break;
-	case ALGO_2D_MESHADAPT_OLD: 
-		algo = "MeshAdapt (old)";
-		break;
-	case ALGO_2D_BAMG: 
-		algo = "Bamg"; 
-		break;
-	case ALGO_2D_PACK_PRLGRMS: 
-		algo = "Square Packing"; 
-		break;
-	case ALGO_2D_AUTO:
-		algo = (gf->geomType() == GEntity::Plane) ? "Delaunay" : "MeshAdapt";
-		break;
+  switch(gf->getMeshingAlgo()){
+  case ALGO_2D_MESHADAPT : algo = "MeshAdapt"; break;
+  case ALGO_2D_FRONTAL : algo = "Frontal"; break;
+  case ALGO_2D_FRONTAL_QUAD : algo = "Frontal Quad"; break;
+  case ALGO_2D_DELAUNAY : algo = "Delaunay"; break;
+  case ALGO_2D_MESHADAPT_OLD : algo = "MeshAdapt (old)"; break;
+  case ALGO_2D_BAMG : algo = "Bamg"; break;
+  case ALGO_2D_PACK_PRLGRMS : algo = "Square Packing"; break;
+  case ALGO_2D_AUTO :
+    algo = (gf->geomType() == GEntity::Plane) ? "Delaunay" : "MeshAdapt";
+    break;
   }
-	/*
-	 * Basically, if the choosen algorithm does not match up with the
-	 * ones above, then we will set it to MesAdapt.
-	 * Couldn't this be placed in a default label?
-	 */ 
+
   if (!algoDelaunay2D(gf)){
     algo = "MeshAdapt";
   }
@@ -2534,15 +2491,18 @@ void meshGFace::operator() (GFace *gf, bool print)
 
   quadMeshRemoveHalfOfOneDMesh halfmesh (gf);
 
-	if ((gf->getNativeType() != GEntity::AcisModel || (!gf->periodic(0) && !gf->periodic(1))) && (noSeam(gf) || gf->getNativeType() == GEntity::GmshModel || gf->edgeLoops.empty()))
-	{
-		meshGenerator(gf, 0, repairSelfIntersecting1dMesh, onlyInitialMesh, debugSurface >= 0 || debugSurface == -100);
-	}
-	else 
-	{
-		if(!meshGeneratorPeriodic(gf, debugSurface >= 0 || debugSurface == -100))
-			Msg::Error("Impossible to mesh periodic face %d", gf->tag());
-	}
+  if ((gf->getNativeType() != GEntity::AcisModel ||
+       (!gf->periodic(0) && !gf->periodic(1))) &&
+      (noSeam(gf) || gf->getNativeType() == GEntity::GmshModel ||
+       gf->edgeLoops.empty())){
+    meshGenerator(gf, 0, repairSelfIntersecting1dMesh, onlyInitialMesh,
+                  debugSurface >= 0 || debugSurface == -100);
+  }
+  else {
+    if(!meshGeneratorPeriodic
+       (gf, debugSurface >= 0 || debugSurface == -100))
+      Msg::Error("Impossible to mesh periodic face %d", gf->tag());
+  }
 
   Msg::Debug("Type %d %d triangles generated, %d internal vertices",
              gf->geomType(), gf->triangles.size(), gf->mesh_vertices.size());

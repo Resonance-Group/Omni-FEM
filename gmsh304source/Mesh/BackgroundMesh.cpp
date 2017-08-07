@@ -47,6 +47,9 @@ void backgroundMesh::setCrossFieldsByDistance(GFace *gf)
   _current = new backgroundMesh(gf, true);
 }
 
+/**
+ * @brief Deletes the _current variable and sets to zero to indicate that the mesh is not current
+ */
 void backgroundMesh::unset()
 {
   if (_current) delete _current;
