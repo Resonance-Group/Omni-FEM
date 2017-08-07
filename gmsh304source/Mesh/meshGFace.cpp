@@ -113,6 +113,7 @@ public:
       CTX::instance()->mesh.lcFactor *=2.0;
     }
   }
+  
   void subdivide ()
   {
     std::vector<MQuadrangle*> qnew;
@@ -201,6 +202,11 @@ public:
     _gf->quadrangles = qnew;
     //    printf("%d triangles %d quads\n",_gf->triangles.size(),_gf->quadrangles.size());
   }
+  
+  /**
+   * @brief This function does manyu differnt things. This is where the mesh recombinesfrom triangles into quads
+   * 		
+   */
   void finish ()
   {
     if((CTX::instance()->mesh.recombineAll || _gf->meshAttributes.recombine) &&
@@ -2429,7 +2435,9 @@ int debugSurface = -1; //-100;
  * 			the mesh master is not the same as the current face. If it is not, then
  * 			the mesh from the mesh master needs to be copied to the current
  * 			GFace. Afterwards, the mesher will need to set the correct Meshing 
- * 			algorithm.
+ * 			algorithm. Next, the program will perform some checks in order to 
+ * 			determine if the mesh generator for periodic face needs to be 
+ * 			called.
  * 			will need to 
  * 			
  * @param gf Pointer pointing to the 2D face to mesh
