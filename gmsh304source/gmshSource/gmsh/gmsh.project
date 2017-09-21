@@ -937,4 +937,15 @@
       </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
+  <VirtualDirectory Name="Parser">
+    <File Name="../../Parser/CMakeLists.txt"/>
+    <File Name="../../Parser/FunctionManager.cpp"/>
+    <File Name="../../Parser/FunctionManager.h"/>
+    <File Name="../../Parser/Gmsh.l"/>
+    <File Name="../../Parser/Gmsh.tab.cpp"/>
+    <File Name="../../Parser/Gmsh.tab.hpp"/>
+    <File Name="../../Parser/Gmsh.y"/>
+    <File Name="../../Parser/Gmsh.yy.cpp"/>
+    <File Name="../../Parser/Parser.h"/>
+  </VirtualDirectory>
 </CodeLite_Project>

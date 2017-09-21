@@ -11,10 +11,10 @@
 #include <set>
 #include <map>
 #include <string>
-#include "GVertex.h"
-#include "GEdge.h"
-#include "GFace.h"
-#include "GRegion.h"
+#include "Mesh/GVertex.h"
+#include "Mesh/GEdge.h"
+#include "Mesh/GFace.h"
+#include "Mesh/GRegion.h"
 #include "SPoint3.h"
 #include "SBoundingBox3d.h"
 
@@ -44,7 +44,7 @@ class GModelFactory;
  */
 class GModel {
  private:
-  friend class OCCFactory;
+ // friend class OCCFactory;
   std::multimap<std::pair<std::vector<int>, std::vector<int> >,
                 std::pair<std::string, std::vector<int> > > _homologyRequests;
   std::set<GRegion*, GEntityLessThan> _chainRegions;
@@ -58,6 +58,7 @@ class GModel {
                  double scalingFactor=1.0, int elementStartNum=0,
                  int saveSinglePartition=0, bool multipleView=false,
                  bool renumberVertices=true);
+				   
   int _writePartitionedMSH2(const std::string &baseName, bool binary=false,
                             bool saveAll=false, bool saveParametric=false,
                             double scalingFactor=1.0);
@@ -67,11 +68,11 @@ class GModel {
   int _checkPointedMaxVertexNum, _checkPointedMaxElementNum;
  protected:
   // the name of the model
-  std::string _name;
+  std::string _name = "None";
 
   // the name of the file the model was read from
-  std::string _fileName;
-  std::set<std::string> _fileNames;
+  std::string _fileName; // Not Needed
+  std::set<std::string> _fileNames; // Not Needed
 
   // the visibility flag
   char _visible;
@@ -92,26 +93,26 @@ class GModel {
   MElementOctree *_octree;
 
   // Geo (Gmsh native) model internal data
-  GEO_Internals *_geo_internals;
-  void _createGEOInternals();
-  void _deleteGEOInternals();
+  GEO_Internals *_geo_internals; // Not Needed
+  void _createGEOInternals(); // Not Needed
+  void _deleteGEOInternals(); // Not needed
 
   // OpenCascade model internal data
-  OCC_Internals *_occ_internals;
-  void _deleteOCCInternals();
-  void _resetOCCInternals();
+  OCC_Internals *_occ_internals; // Not needed
+  void _deleteOCCInternals(); // Not needed
+  void _resetOCCInternals(); // Not needed
 
   // ACIS model internal data
-  ACIS_Internals *_acis_internals;
-  void _deleteACISInternals();
+  ACIS_Internals *_acis_internals; // Not needed
+  void _deleteACISInternals(); // Not needed
 
   // Fourier model internal data
-  FM_Internals *_fm_internals;
-  void _createFMInternals();
-  void _deleteFMInternals();
+  FM_Internals *_fm_internals; // Not needed
+  void _createFMInternals(); // Not needed
+  void _deleteFMInternals(); // Not needed
 
   // CAD creation factory
-  GModelFactory *_factory;
+  GModelFactory *_factory; // Not needed
 
   // characteristic length (mesh size) fields
   FieldManager *_fields;
@@ -623,7 +624,7 @@ class GModel {
   GRegion *getRegionForOCCShape(const void *shape);
 
   // ACIS Model
-  int readACISSAT(const std::string &name);
+  int readACISSAT(const std::string &name);// Not needed
 
   // Gmsh mesh file format
   int readMSH(const std::string &name);

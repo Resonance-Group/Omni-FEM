@@ -1251,7 +1251,7 @@ static int _recombineIntoQuads(GFace *gf, double minqual, bool cubicGraph = 1)
           if (an == 100000 /*|| an == 1000*/){
             // toProcess.push_back(std::make_pair(n2t[i1],n2t[i2]));
             // Msg::Warning("Extra edge found in blossom algorithm, optimization "
-            //              "will be required");
+            //    recombineIntoQuads          "will be required");
           }
           else{
             MElement *t1 = n2t[i1];

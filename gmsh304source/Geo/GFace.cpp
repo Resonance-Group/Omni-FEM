@@ -1392,6 +1392,11 @@ bool GFace::fillPointCloud(double maxDist,
 
 
 #if defined(HAVE_MESH)
+/**
+ * @brief Mesh for a compound face
+ * @param gf Pointer to the GFace
+ * @param verbose Boolean used to print error messages
+ */
 static void meshCompound(GFace* gf, bool verbose)
 {
   discreteFace *df = new discreteFace (gf->model(), gf->tag() + 100000);

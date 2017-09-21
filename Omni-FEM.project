@@ -99,6 +99,12 @@
       <File Name="src/Mesh/BackgroundMesh.cpp"/>
       <File Name="src/Mesh/GEntity.cpp"/>
       <File Name="src/Mesh/meshGFace.cpp"/>
+      <File Name="src/Mesh/discreteFace.cpp"/>
+      <File Name="src/Mesh/Field.cpp"/>
+      <File Name="src/Mesh/meshGFaceExtruded.cpp"/>
+      <File Name="src/Mesh/meshGFaceOptimize.cpp"/>
+      <File Name="src/Mesh/meshGFaceOptimizeOld.cpp"/>
+      <File Name="src/Mesh/meshGFaceTransfinite.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -189,10 +195,14 @@
       <File Name="Include/Mesh/GRegion.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/GVertex.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/Generator.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/BackgroundMesh.h"/>
-      <File Name="Include/Mesh/GEntity.h"/>
-      <File Name="Include/Mesh/meshGFace.h"/>
-      <File Name="Include/Mesh/GmshDefines.h"/>
+      <File Name="Include/Mesh/BackgroundMesh.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GEntity.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/meshGFace.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GmshDefines.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/discreteFace.h"/>
+      <File Name="Include/Mesh/Field.h"/>
+      <File Name="Include/Mesh/meshGFaceOptimize.h"/>
+      <File Name="Include/Mesh/meshMaker.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
