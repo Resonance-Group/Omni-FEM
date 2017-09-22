@@ -105,6 +105,7 @@
       <File Name="src/Mesh/meshGFaceOptimize.cpp"/>
       <File Name="src/Mesh/meshGFaceOptimizeOld.cpp"/>
       <File Name="src/Mesh/meshGFaceTransfinite.cpp"/>
+      <File Name="src/Mesh/meshMaker.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">

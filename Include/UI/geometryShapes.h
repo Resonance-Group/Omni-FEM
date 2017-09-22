@@ -576,6 +576,15 @@ protected:
 		edge line shape (basically a segment)
 	*/ 
     node *_secondNode = nullptr;
+	
+	//! Boolean used to determine if the lines segment is an arc
+	bool p_isArc = false;
+	
+	//! ID number of the arc
+	unsigned long p_arcID = 0;
+	
+	//! Boolean used to describe if the line segment was visited for contour finding
+	bool p_isVisited = false;
     
 public:
 	//! Constructor for the generic class
@@ -583,6 +592,42 @@ public:
     {
         
     }
+	
+	/**
+	 * @brief Function that will return whether or not the segment is an arc 
+	 * @return Returns true if the line segment is an arc. Otherwise returns false
+	 */
+	bool isArc()
+	{
+		return p_isArc;
+	}
+	
+	/**
+	 * @brief Gets the arc ID associated with the line segment. This only applies to arcs
+	 * @return Returns a number that indicates the arc ID. If the edge is a line, then this will return 0
+	 */
+	unsigned long getArcID()
+	{
+		return p_arcID;
+	}
+	
+	/**
+	 * @brief Gets the state of the visited variable.
+	 * @return Returns true if the contour algorthim visisted the line segment. Otherwise, returns false
+	 */
+	bool getVisitedStatus()
+	{
+		return p_isVisited;
+	}
+	
+	/**
+	 * @brief Set the state of the visited variable.
+	 * @param state 
+	 */
+	void setVisitedStatus(bool state)
+	{
+		p_isVisited = state;
+	}
     
 	/**
 	 * @brief Sets the first node of the line segment
@@ -701,6 +746,8 @@ private:
 		ar & _arcAngle;
 		ar & _radius;
 		ar & _isCounterClockWise;
+		ar & p_isArc;
+		ar & p_arcID;
 	}
 	
 	unsigned int _numSegments = 3;
@@ -715,7 +762,7 @@ private:
 public:
 	arcShape()
     {
-        
+        p_isArc = true;
     }
 	
 	void setArcAngle(double angleOfArc)

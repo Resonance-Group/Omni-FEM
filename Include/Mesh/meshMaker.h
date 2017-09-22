@@ -33,6 +33,45 @@ private:
 	
 	//! Pointer to the global arc list
 	plf::colony<arcShape> *p_arcList;
+	
+	//! This is the total number of lines within the geometry. This is the number of lines and arcs
+	unsigned long p_numberofLines = 0;
+	
+	//! This data type is incremented when the program visists a new line
+	unsigned long p_numberVisisted = 0;
+	
+	/**
+	 * @brief 	This function is called in order to find all of the closed contours connected to 
+	 * 			a common edge. The function will then determine what the geometry pieces are within
+	 * 			the closed contour. This function is modeled off of the depth-first search algorthim
+	 */
+	void findContours();
+	
+	void contourRecombination();
+	
+	/**
+	 * @brief Function that will determine if the inpuit contour is a closed contour
+	 * @param contour The vector of the contour that will be tested for closed contour
+	 * @return Returns true if the contour is closed contour. Return false if it is open contour
+	 */
+	bool isClosedContour(std::vector<edgeLineShape> contour);
+	
+	/**
+	 * @brief 
+	Function that is called in order to remove any dangling lines from the path
+	 * 			Dangling lines are defined as lines that are not connected to form a closed contour.
+	 * 			This occurs when the contour loops on itself and ends at a position other then the
+	 * 			starting position.
+	 * @param contour REference to the contour list that will need to be modified
+	 */
+	void removeDanglingLines(std::vector<edgeLineShape> &contour);
+	
+	/**
+	 * @brief This function is called in order to create the mesh for hte geometry model.
+	 * 			This function needs to be called after the program sorts through and determines
+	 * 			the geometry pieces within the model
+	 */
+	void createMesh();
 public:
 	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
 	{
@@ -40,7 +79,27 @@ public:
 		p_blockLabelList = blockLabelList;
 		p_lineList = lineList;
 		p_arcList = arcList;
+		p_numberofLines = p_lineList->size() + p_arcList->size();
 	}
+	
+	/**
+	 * @brief Function that is used to check if the system has found all geometry pieces 
+	 * @return Returns true when the class has finished the procedure. Otherwise returns false
+	 */
+	bool geometryIsFound()
+	{
+		if(p_numberVisisted == p_numberofLines)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * @brief This function is called when the program is ready to create the mesh for the model.
+	 */
+	void findGeometry();
+	
+	
 };
 
 
