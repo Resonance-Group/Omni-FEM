@@ -319,6 +319,9 @@ private:
 		by determining how many nodes were created
 	*/ 
 	unsigned long _nodeNumber;
+	
+	//! Boolean used to describe if the node was visited. This is used in the mesh maker class.
+	bool p_isVisited = false;
 public:
 
     //! The constructor for the class
@@ -332,6 +335,16 @@ public:
     {
         
     }
+	
+	void setVisitedState(bool state)
+	{
+		p_isVisited = state;
+	}
+	
+	bool getVisitedState()
+	{
+		return p_isVisited;
+	}
     
 	/**
 	 * @brief This function is called when the program needs to draw the object on the 
@@ -729,6 +742,19 @@ public:
 	{
 		return p_secondNodeNumber;
 	}
+	
+	bool operator==(edgeLineShape edge)
+	{
+		if(!this->p_isArc && !edge.isArc())
+		{
+			if(((*this->getFirstNode()) == (*edge.getFirstNode())) && ((*this->getSecondNode()) == (*edge.getSecondNode()))
+				return true
+			else
+				return false;
+		}
+		else
+			return false;
+	}
 };
 
 
@@ -992,8 +1018,13 @@ public:
         return _radius * _arcAngle * (PI / 180.0);
     }
     
-
-	
+	bool operator==(arcShape arc)
+	{
+		if(((*this->getFirstNode()) == (*arc.getFirstNode())) && ((*this->getSecondNode()) == (*arc.getSecondNode())) && (this->getCenterXCoordinate() == arc.getCenterXCoordinate()) && (this->getCenterYCoordinate() == arc.getCenterYCoordinate()))
+			return true;
+		else
+			return false;
+	}
 };
 
 

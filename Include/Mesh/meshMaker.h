@@ -38,7 +38,7 @@ private:
 	unsigned long p_numberofLines = 0;
 	
 	//! This data type is incremented when the program visists a new line
-	unsigned long p_numberVisisted = 0;
+	unsigned long p_numberVisited = 0;
 	
 	/**
 	 * @brief 	This function is called in order to find all of the closed contours connected to 
@@ -72,6 +72,13 @@ private:
 	 * 			the geometry pieces within the model
 	 */
 	void createMesh();
+	
+	/**
+	 * @brief This function will take a edge segment and find all of the banches that are connected to that edge and return as a vector
+	 * @param segment The line segment that the program will find the connected branches to
+	 * @return Returns a vector containing all of the connected branches to the segment
+	 */
+	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::iterator &segment);
 public:
 	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
 	{
@@ -88,7 +95,7 @@ public:
 	 */
 	bool geometryIsFound()
 	{
-		if(p_numberVisisted == p_numberofLines)
+		if(p_numberVisited == p_numberofLines)
 			return true;
 		else
 			return false;
