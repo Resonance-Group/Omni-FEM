@@ -57,12 +57,14 @@ private:
 	bool isClosedContour(std::vector<edgeLineShape> contour);
 	
 	/**
-	 * @brief 
-	Function that is called in order to remove any dangling lines from the path
+	 * @brief 	Function that is called in order to remove any dangling lines from the path
 	 * 			Dangling lines are defined as lines that are not connected to form a closed contour.
 	 * 			This occurs when the contour loops on itself and ends at a position other then the
-	 * 			starting position.
-	 * @param contour REference to the contour list that will need to be modified
+	 * 			starting position. This occurs if the end line semgent is connected between 2
+	 * 			line segments within the contour. When this occurs, the program
+	 * 			needs to erase the line segments from the beginning to 1 - the current iterator
+	 * 			position.
+	 * @param contour Reference to the contour list that will need to be modified
 	 */
 	void removeDanglingLines(std::vector<edgeLineShape> &contour);
 	
