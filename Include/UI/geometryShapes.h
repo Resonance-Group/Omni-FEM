@@ -747,8 +747,8 @@ public:
 	{
 		if(!this->p_isArc && !edge.isArc())
 		{
-			if(((*this->getFirstNode()) == (*edge.getFirstNode())) && ((*this->getSecondNode()) == (*edge.getSecondNode()))
-				return true
+			if(((*this->getFirstNode()) == (*edge.getFirstNode())) && ((*this->getSecondNode()) == (*edge.getSecondNode())))
+				return true;
 			else
 				return false;
 		}

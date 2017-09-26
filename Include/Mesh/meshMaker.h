@@ -45,7 +45,7 @@ private:
 	 * 			a common edge. The function will then determine what the geometry pieces are within
 	 * 			the closed contour. This function is modeled off of the depth-first search algorthim
 	 */
-	void findContours();
+	std::vector<std::vector<edgeLineShape>> findContours();
 	
 	void contourRecombination();
 	
@@ -80,7 +80,7 @@ private:
 	 * @param segment The line segment that the program will find the connected branches to
 	 * @return Returns a vector containing all of the connected branches to the segment
 	 */
-	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::iterator &segment);
+	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::const_reference segment);
 public:
 	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
 	{

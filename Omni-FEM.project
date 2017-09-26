@@ -96,15 +96,15 @@
       <File Name="src/Mesh/GRegion.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/GVertex.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/Generator.cpp" ExcludeProjConfig="Debug"/>
-      <File Name="src/Mesh/BackgroundMesh.cpp"/>
-      <File Name="src/Mesh/GEntity.cpp"/>
-      <File Name="src/Mesh/meshGFace.cpp"/>
-      <File Name="src/Mesh/discreteFace.cpp"/>
-      <File Name="src/Mesh/Field.cpp"/>
-      <File Name="src/Mesh/meshGFaceExtruded.cpp"/>
-      <File Name="src/Mesh/meshGFaceOptimize.cpp"/>
-      <File Name="src/Mesh/meshGFaceOptimizeOld.cpp"/>
-      <File Name="src/Mesh/meshGFaceTransfinite.cpp"/>
+      <File Name="src/Mesh/BackgroundMesh.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/GEntity.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/meshGFace.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/discreteFace.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/Field.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/meshGFaceExtruded.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/meshGFaceOptimize.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/meshGFaceOptimizeOld.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/meshGFaceTransfinite.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/meshMaker.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
@@ -200,9 +200,9 @@
       <File Name="Include/Mesh/GEntity.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshGFace.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/GmshDefines.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/discreteFace.h"/>
-      <File Name="Include/Mesh/Field.h"/>
-      <File Name="Include/Mesh/meshGFaceOptimize.h"/>
+      <File Name="Include/Mesh/discreteFace.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/Field.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/meshGFaceOptimize.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshMaker.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
