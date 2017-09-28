@@ -17,6 +17,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			lineIsFound = true;
 			lineIterator->setVisitedStatus(true);
 			p_numberVisited++;
+			break;
 		}
 	}
 	
@@ -30,6 +31,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 				lineIsFound = true;
 				arcIterator->setVisitedStatus(true);
 				p_numberVisited++;
+				break;
 			}
 		}
 	}
@@ -45,7 +47,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 	
 	do
 	{
-		std::vector<edgeLineShape> branches = getConnectedPaths((pathContour.end()--));
+		std::vector<edgeLineShape> branches = getConnectedPaths(pathContour.back());
 		
 		// This part will check if any of the branches are already in the path contour vector.
 		// If so, then this means a closed contour has been formed
@@ -74,7 +76,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			 */ 
 			for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 			{
-				if(*lineIterator == *(pathContour.end()--))
+				if(*lineIterator == pathContour.back())
 				{
 					lineSet = true;
 					lineIterator->setVisitedStatus(true);
@@ -86,7 +88,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			{
 				for(plf::colony<arcShape>::iterator lineIterator = p_arcList->begin(); lineIterator != p_arcList->end(); lineIterator++)
 				{
-					if(*lineIterator == *(pathContour.end()--))
+					if(*lineIterator == pathContour.back())
 					{
 						lineSet = true;
 						lineIterator->setVisitedStatus(true);
@@ -203,7 +205,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 		// To do this, the search will be similiar to above
 		do
 		{
-			std::vector<edgeLineShape> branches = getConnectedPaths((pathContour.end()--));
+			std::vector<edgeLineShape> branches = getConnectedPaths(pathContour.back());
 			
 			// This part will check if any of the branches are already in the path contour vector.
 			// If so, then this means a closed contour has been formed
@@ -324,14 +326,15 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 
 
 
-std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShape>::iterator segment)
+std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShape>::reference segment)
 {
+	
 	std::vector<edgeLineShape> returnList;
 	
 	//Find all of the lines that are connected to the segment
 	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 	{
-		if(*lineIterator == *segment)
+		if(*lineIterator == segment)
 		{
 			if(!lineIterator->getFirstNode()->getVisitedState())
 				lineIterator->getFirstNode()->setVisitedState(true);
@@ -345,16 +348,16 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 		// If so, then we need to move on to the second node.
 		// If both of the nodes for the segment have already been visited then we can go ahead and
 		// skip that segment
-		if(!segment->getFirstNode()->getVisitedState())
+		if(!segment.getFirstNode()->getVisitedState())
 		{
-			if(*segment->getFirstNode() == *lineIterator->getFirstNode() || *segment->getFirstNode() == *lineIterator->getSecondNode())
+			if(*segment.getFirstNode() == *lineIterator->getFirstNode() || *segment.getFirstNode() == *lineIterator->getSecondNode())
 			{
 				returnList.push_back(*lineIterator);
 			}
 		}
-		else if(!segment->getSecondNode()->getVisitedState())
+		else if(!segment.getSecondNode()->getVisitedState())
 		{
-			if(*segment->getSecondNode() == *lineIterator->getFirstNode() || *segment->getSecondNode() == *lineIterator->getSecondNode())
+			if(*segment.getSecondNode() == *lineIterator->getFirstNode() || *segment.getSecondNode() == *lineIterator->getSecondNode())
 			{
 				returnList.push_back(*lineIterator);
 			}
@@ -364,7 +367,7 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 	// Find all of the arcs connected to the segment
 	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 	{
-		if(arcIterator->getArcID() == segment->getArcID())
+		if(arcIterator->getArcID() == segment.getArcID())
 		{
 			if(!arcIterator->getFirstNode()->getVisitedState())
 				arcIterator->getFirstNode()->setVisitedState(true);
@@ -374,16 +377,16 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 			continue;
 		}
 		
-		if(!segment->getFirstNode()->getVisitedState())
+		if(!segment.getFirstNode()->getVisitedState())
 		{
-			if(*segment->getFirstNode() == *arcIterator->getFirstNode() || *segment->getFirstNode() == *arcIterator->getSecondNode())
+			if(*segment.getFirstNode() == *arcIterator->getFirstNode() || *segment.getFirstNode() == *arcIterator->getSecondNode())
 			{
 				returnList.push_back(*arcIterator);
 			}
 		}
 		else
 		{
-			if(*segment->getSecondNode() == *arcIterator->getFirstNode() || *segment->getSecondNode() == *arcIterator->getSecondNode())
+			if(*segment.getSecondNode() == *arcIterator->getFirstNode() || *segment.getSecondNode() == *arcIterator->getSecondNode())
 			{
 				returnList.push_back(*arcIterator);
 			}
@@ -447,7 +450,7 @@ void meshMaker::removeDanglingLines(std::vector<edgeLineShape> &contour)
 
 void meshMaker::findGeometry()
 {
-	while(p_numberofLines <= p_numberVisited)
+	while(p_numberofLines >= p_numberVisited)
 	{
 		std::vector<std::vector<edgeLineShape>> temp = findContours();
 		p_closedContours.reserve(p_closedContours.size() + temp.size());
