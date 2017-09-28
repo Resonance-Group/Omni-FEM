@@ -80,7 +80,7 @@ private:
 	 * @param segment The line segment that the program will find the connected branches to
 	 * @return Returns a vector containing all of the connected branches to the segment
 	 */
-	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::const_reference segment);
+	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::iterator segment);
 public:
 	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
 	{

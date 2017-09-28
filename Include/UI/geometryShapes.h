@@ -593,7 +593,7 @@ protected:
 	//! Boolean used to determine if the lines segment is an arc
 	bool p_isArc = false;
 	
-	//! ID number of the arc
+	//! ID number of the arc. Will be zero for lines
 	unsigned long p_arcID = 0;
 	
 	//! Boolean used to describe if the line segment was visited for contour finding
@@ -752,6 +752,8 @@ public:
 			else
 				return false;
 		}
+		else if((this->p_isArc && edge.isArc()) && (this->getArcID() == edge.getArcID()))
+			return true;
 		else
 			return false;
 	}
@@ -1021,6 +1023,14 @@ public:
 	bool operator==(arcShape arc)
 	{
 		if(((*this->getFirstNode()) == (*arc.getFirstNode())) && ((*this->getSecondNode()) == (*arc.getSecondNode())) && (this->getCenterXCoordinate() == arc.getCenterXCoordinate()) && (this->getCenterYCoordinate() == arc.getCenterYCoordinate()))
+			return true;
+		else
+			return false;
+	}
+	
+	bool operator==(edgeLineShape edgeLine)
+	{
+		if(this->getArcID() == edgeLine.getArcID())
 			return true;
 		else
 			return false;

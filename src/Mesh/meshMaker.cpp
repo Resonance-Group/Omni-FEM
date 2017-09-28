@@ -45,7 +45,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 	
 	do
 	{
-		std::vector<edgeLineShape> branches = getConnectedPaths(pathContour.back());
+		std::vector<edgeLineShape> branches = getConnectedPaths((pathContour.end()--));
 		
 		// This part will check if any of the branches are already in the path contour vector.
 		// If so, then this means a closed contour has been formed
@@ -53,7 +53,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 		{
 			for(std::vector<edgeLineShape>::iterator pathIterator = pathContour.begin(); pathIterator != pathContour.end(); pathIterator++)
 			{
-				if(*listIterator == *pathContour)
+				if(*listIterator == *pathIterator)
 				{
 					closedContourFormed = true;
 					break;
@@ -74,8 +74,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			 */ 
 			for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 			{
-				edgeLineShape temp = *lineIterator;
-				if(temp == *(pathContour.back()))
+				if(*lineIterator == *(pathContour.end()--))
 				{
 					lineSet = true;
 					lineIterator->setVisitedStatus(true);
@@ -87,7 +86,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			{
 				for(plf::colony<arcShape>::iterator lineIterator = p_arcList->begin(); lineIterator != p_arcList->end(); lineIterator++)
 				{
-					if(*lineIterator == *pathContour.back())
+					if(*lineIterator == *(pathContour.end()--))
 					{
 						lineSet = true;
 						lineIterator->setVisitedStatus(true);
@@ -98,13 +97,20 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			
 			// First we will seach through the stack to see if the added branch was already in the stack
 			// If so, remove it from the stack
-			for(std::vector<edgeLineShape>::iterator stackIterator = branchStack.begin(); stackIterator != branchStack.end(); stackIterator++)
+			for(std::vector<edgeLineShape>::iterator stackIterator = branchStack.begin(); stackIterator != branchStack.end();)
 			{
 				if(branches.at(0) == *stackIterator)
 				{
-					branchStack.erase(stackIterator);
-					break;
+					if(*stackIterator == branchStack.back())
+					{
+						branchStack.clear();
+						break;
+					}
+					else
+						branchStack.erase(stackIterator++);
 				}
+				else
+					stackIterator++;
 			}
 			
 			branches.erase(branches.begin());// Now that the first element in the branches has been added to the path, we can remove it from the branches
@@ -115,13 +121,20 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			{
 				for(std::vector<edgeLineShape>::iterator stackIterator = branchStack.begin(); stackIterator != branchStack.end(); stackIterator++)
 				{
-					for(std::vector<edgeLineShape>::iterator branchIterator = branches.begin(); branchIterator != branches.end(); branchIterator++)
+					for(std::vector<edgeLineShape>::iterator branchIterator = branches.begin(); branchIterator != branches.end();)
 					{
 						if(*branchIterator == *stackIterator)
 						{
-							branches.erase(branchIterator);
-							break;
+							if(*branchIterator == branches.back())
+							{
+								branches.clear();
+								break;
+							}
+							else
+								branches.erase(branchIterator++);
 						}
+						else
+							branchIterator++;
 					}
 					
 					// If all of the branches are already in the stack, then we can stop checking the stack
@@ -190,7 +203,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 		// To do this, the search will be similiar to above
 		do
 		{
-			std::vector<edgeLineShape> branches = getConnectedPaths(pathContour.back());
+			std::vector<edgeLineShape> branches = getConnectedPaths((pathContour.end()--));
 			
 			// This part will check if any of the branches are already in the path contour vector.
 			// If so, then this means a closed contour has been formed
@@ -198,7 +211,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 			{
 				for(std::vector<edgeLineShape>::iterator pathIterator = pathContour.begin(); pathIterator != pathContour.end(); pathIterator++)
 				{
-					if(*listIterator == *pathContour)
+					if(*listIterator == *pathIterator)
 					{
 						closedContourFormed = true;
 						break;
@@ -219,7 +232,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 				 */ 
 				for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 				{
-					if(*lineIterator == *pathContour.back())
+					if(*lineIterator == *(pathContour.end()--))
 					{
 						lineUpdated = true;
 						lineIterator->setVisitedStatus(true);
@@ -230,12 +243,12 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 				
 				if(!lineUpdated)
 				{
-					for(plf::colony<edgeLineShape>::iterator lineIterator = p_arcList->begin(); lineIterator != p_arcList->end(); lineIterator++)
+					for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 					{
-						if(*lineIterator == *pathContour.back())
+						if((edgeLineShape)*arcIterator == *(pathContour.end()--))
 						{
 							lineUpdated = true;
-							lineIterator->setVisitedStatus(true);
+							arcIterator->setVisitedStatus(true);
 							p_numberVisited++;
 							break;
 						}
@@ -248,9 +261,16 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 				{
 					if(branches.at(0) == *stackIterator)
 					{
-						branchStack.erase(stackIterator);
-						break;
+						if(*stackIterator == branchStack.back())
+						{
+							branchStack.clear();
+							break;
+						}
+						else
+							branchStack.erase(stackIterator++);
 					}
+					else
+						stackIterator++;
 				}
 				
 				branches.erase(branches.begin());// Now that the first element in the branches has been added to the path, we can remove it from the branches
@@ -261,13 +281,20 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 				{
 					for(std::vector<edgeLineShape>::iterator stackIterator = branchStack.begin(); stackIterator != branchStack.end(); stackIterator++)
 					{
-						for(std::vector<edgeLineShape>::iterator branchIterator = branches.begin(); branchIterator != branches.end(); branchIterator++)
+						for(std::vector<edgeLineShape>::iterator branchIterator = branches.begin(); branchIterator != branches.end();)
 						{
 							if(*branchIterator == *stackIterator)
 							{
-								branches.erase(branchIterator);
-								break;
+								if(*branchIterator == branches.back())
+								{
+									branches.clear();
+									break;
+								}
+								else
+									branches.erase(branchIterator++);
 							}
+							else
+								branchIterator++;
 						}
 						
 						// If all of the branches are already in the stack, then we can stop checking the stack
@@ -297,7 +324,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 
 
 
-std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShape>::const_reference segment)
+std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShape>::iterator segment)
 {
 	std::vector<edgeLineShape> returnList;
 	
@@ -305,10 +332,19 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 	{
 		if(*lineIterator == *segment)
+		{
+			if(!lineIterator->getFirstNode()->getVisitedState())
+				lineIterator->getFirstNode()->setVisitedState(true);
+			else
+				lineIterator->getSecondNode()->setVisitedState(true);
+				
 			continue;
+		}
 		
 		// Checks to see if the first node on the line has already been scanned through for branches.
 		// If so, then we need to move on to the second node.
+		// If both of the nodes for the segment have already been visited then we can go ahead and
+		// skip that segment
 		if(!segment->getFirstNode()->getVisitedState())
 		{
 			if(*segment->getFirstNode() == *lineIterator->getFirstNode() || *segment->getFirstNode() == *lineIterator->getSecondNode())
@@ -316,7 +352,7 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 				returnList.push_back(*lineIterator);
 			}
 		}
-		else
+		else if(!segment->getSecondNode()->getVisitedState())
 		{
 			if(*segment->getSecondNode() == *lineIterator->getFirstNode() || *segment->getSecondNode() == *lineIterator->getSecondNode())
 			{
@@ -328,8 +364,15 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 	// Find all of the arcs connected to the segment
 	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 	{
-		if(*arcIterator == *segment)
+		if(arcIterator->getArcID() == segment->getArcID())
+		{
+			if(!arcIterator->getFirstNode()->getVisitedState())
+				arcIterator->getFirstNode()->setVisitedState(true);
+			else
+				arcIterator->getSecondNode()->setVisitedState(true);
+				
 			continue;
+		}
 		
 		if(!segment->getFirstNode()->getVisitedState())
 		{
@@ -347,10 +390,7 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 		}
 	}
 	
-	if(!segment->getFirstNode()->getVisitedState())
-		segment->getFirstNode()->setVisitedState(true);
-	else
-		segment->getSecondNode()->setVisitedState(true);
+	
 	
 	return returnList;
 }
@@ -381,14 +421,15 @@ void meshMaker::removeDanglingLines(std::vector<edgeLineShape> &contour)
 		 * Doesn't count since the previouse line segment in the list will always be
 		 * attached to the one in back
 		 */ 
-		if(*contourIterator == *contour.back() || (*contourIterator == *(--contour.back())))
+		std::vector<edgeLineShape>::iterator temp = contour.end() - 2;
+		if(*contourIterator == *(contour.end()--) || (*contourIterator == *(temp)))
 			continue;
 		else
 		{
-			if(	*contourIterator.getFirstNode() == *contour.back().getFirstNode() || 
-				*contourIterator.getSecondNode() == *contour.back().getFirstNode() || 
-				*contourIterator.getFirstNode() == *contour.back().getSecondNode() || 
-				*contourIterator.getSecondNode() == *contour.back().getSecondNode() )
+			if(	*contourIterator->getFirstNode() == *contour.back().getFirstNode() || 
+				*contourIterator->getSecondNode() == *contour.back().getFirstNode() || 
+				*contourIterator->getFirstNode() == *contour.back().getSecondNode() || 
+				*contourIterator->getSecondNode() == *contour.back().getSecondNode() )
 			{
 				numberConnections++;
 			}
