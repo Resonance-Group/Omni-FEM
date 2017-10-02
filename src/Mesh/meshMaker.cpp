@@ -432,7 +432,7 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 
 
 
-void meshMaker::contourRecombination()
+void meshMaker::contourRecombination(std::vector<std::vector<edgeLineShape>> &contourPaths)
 {
 	
 }
@@ -441,7 +441,14 @@ void meshMaker::contourRecombination()
 
 bool meshMaker::isClosedContour(std::vector<edgeLineShape> contour)
 {
-	
+	if(	*contour.begin()->getFirstNode() == *contour.back().getFirstNode() ||
+		*contour.begin()->getFirstNode() == *contour.back().getSecondNode() ||
+		*contour.begin()->getSecondNode() == *contour.back().getFirstNode() ||
+		*contour.begin()->getSecondNode() == *contour.back().getSecondNode()
+		)
+		return true;
+	else
+		return false;
 }
 
 
@@ -496,4 +503,28 @@ void meshMaker::findGeometry()
 	// TODO: Add in the interface to the GMSH API
 	// TODO: Mesh the model
 	// TODO: Return the mesh. The function return is void for now
+}
+
+
+
+bool meshMaker::shareCommonEdge(std::vector<edgeLineShape> path1, std::vector<edgeLineShape> path2)
+{
+	bool commonFound = false;
+	
+	for(auto pathIterator1 : path1)
+	{
+		for(auto pathIterator2 : path2)
+		{
+			if(pathIterator2 == pathIterator1)
+			{
+				commonFound = true;
+				break;
+			}
+		}
+		
+		if(commonFound)
+			break;
+	}
+	
+	return commonFound;
 }

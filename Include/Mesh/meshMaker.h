@@ -47,7 +47,10 @@ private:
 	 */
 	std::vector<std::vector<edgeLineShape>> findContours();
 	
-	void contourRecombination();
+	/**
+	 * @brief 
+	 */
+	void contourRecombination(std::vector<std::vector<edgeLineShape>> contourPaths);
 	
 	/**
 	 * @brief Function that will determine if the inpuit contour is a closed contour
@@ -81,6 +84,16 @@ private:
 	 * @return Returns a vector containing all of the connected branches to the segment
 	 */
 	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::reference segment, std::vector<edgeLineShape> &pathVector);
+	
+	/**
+	 * @brief 	This function will test if two paths share a common edge. It does not determine which edge is common. But
+	 * 			it tests if there is a common edge. The function does not determine how many common edges. Just that if
+	 * 			a common edge exists.
+	 * @param path1 The first path
+	 * @param path2 The second path
+	 * @return Returns true if a common edge exists. Otherwise, returns false
+	 */
+	bool shareCommonEdge(std::vector<edgeLineShape> path1, std::vector<edgeLineShape> path2);
 public:
 	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
 	{
