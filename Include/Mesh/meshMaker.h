@@ -50,7 +50,7 @@ private:
 	/**
 	 * @brief 
 	 */
-	void contourRecombination(std::vector<std::vector<edgeLineShape>> contourPaths);
+	bool contourRecombination(std::vector<edgeLineShape> &contourPath1, std::vector<edgeLineShape> &contourPath2);
 	
 	/**
 	 * @brief Function that will determine if the inpuit contour is a closed contour

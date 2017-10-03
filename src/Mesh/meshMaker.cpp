@@ -432,9 +432,105 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 
 
 
-void meshMaker::contourRecombination(std::vector<std::vector<edgeLineShape>> &contourPaths)
+bool meshMaker::contourRecombination(std::vector<edgeLineShape> &contourPath1, std::vector<edgeLineShape> &contourPath2)
 {
+	bool returnSuccess = true;
 	
+	if(shareCommonEdge(contourPath1, contourPath2))
+	{
+		std::vector<edgeLineShape> tempPath;
+		std::vector<edgeLineShape> localPath2Copy = contourPath2;
+		
+		/*
+		 * First we will scan through the two lists in order to determine where the common edges are located.
+		 * If a common edge is found, then we do not need to add it to the tempPath
+		 * If the contourPath1 iterator is not in the second list, then we can go ahead and add it to the 
+		 * tempPath vector.
+		 */ 
+		for(auto pathIterator1 : contourPath1)
+		{
+			bool segmentFound = false;
+			for(auto pathIterator2 = localPath2Copy.begin(); pathIterator2 != localPath2Copy.end();)
+			{
+				if(pathIterator1 == *pathIterator2)
+				{
+					localPath2Copy.erase(pathIterator2++);
+					segmentFound = true;
+					break;
+				}
+				else
+					pathIterator2++;
+			}
+			
+			if(!segmentFound)
+				tempPath.push_back(pathIterator1);
+		}
+		
+		/*
+		 * Any remaining size from the second path can now be added to the 
+		 * tempPath vector
+		 */ 
+		if(localPath2Copy.size() > 0)
+		{
+			tempPath.reserve(tempPath.size() + localPath2Copy.size());
+			tempPath.insert(tempPath.end(), localPath2Copy.begin(), localPath2Copy.end());
+		}
+		
+		// Now we need to rearrange the temp path vector to make sure all of the 
+		// edgeLineShapes are in connecting order
+		for(auto pathIterator = tempPath.begin(); pathIterator != tempPath.end();)
+		{
+			edgeLineShape switchShape;
+			// If we are already at the back, then we need to end the loop
+			if(*pathIterator == tempPath.back())
+				break;
+				
+			std::vector<edgeLineShape>::iterator oneNext = pathIterator + 1;
+			// If the next iterator is connected to the current on, then continue on to the next iterator
+			if(*pathIterator->getFirstNode() == *oneNext->getFirstNode() ||
+				*pathIterator->getFirstNode() == *oneNext->getSecondNode() ||
+				*pathIterator->getSecondNode() == *oneNext->getFirstNode() ||
+				*pathIterator->getSecondNode() == *oneNext->getSecondNode())
+			{
+				pathIterator++;
+			}
+			else
+			{
+				for(std::vector<edgeLineShape>::iterator pathIterator2 = pathIterator + 2; pathIterator2 != tempPath.end(); pathIterator2++)
+				{
+					if(	*pathIterator->getFirstNode() == *pathIterator2->getFirstNode() ||
+						*pathIterator->getFirstNode() == *pathIterator2->getSecondNode() ||
+						*pathIterator->getSecondNode() == *pathIterator2->getFirstNode() ||
+						*pathIterator->getSecondNode() == *pathIterator2->getSecondNode())
+					{
+						std::iter_swap(pathIterator, pathIterator2);
+						break;
+					}
+					
+				}
+				pathIterator++;
+			}
+			
+		}
+		
+		// The final checks
+		
+		if(isClosedContour(tempPath) && (tempPath.size() <= contourPath1.size() && tempPath.size() <= contourPath2.size()))
+		{
+			if(contourPath1.size() > contourPath2.size())
+				contourPath1 = tempPath;
+			else
+				contourPath2 = tempPath;
+				
+			returnSuccess = true;
+		}
+		else
+			returnSuccess = false;
+	}
+	else
+		returnSuccess = false;
+		
+	return returnSuccess;
 }
 
 
@@ -493,10 +589,17 @@ void meshMaker::findGeometry()
 	while((p_numberofLines != p_numberVisited) || (p_numberofLines > p_numberVisited))
 	{
 		std::vector<std::vector<edgeLineShape>> temp = findContours();
+		
 		p_closedContours.reserve(p_closedContours.size() + temp.size());
 		p_closedContours.insert(p_closedContours.end(), temp.begin(), temp.end());
-		// TODO: Add in the code to find all of the closed contours.
-		// TODO: Add in the code in order to add the contor(s) to the global list
+		
+		for(auto contourIterator = p_closedContours.begin(); contourIterator != p_closedContours.end(); contourIterator++)
+		{
+			if((contourIterator + 1) != p_closedContours.end())
+				contourRecombination(*contourIterator, *(contourIterator + 1));
+			else
+				break;
+		}
 	}
 	
 	// TODO: Check for an errors?
