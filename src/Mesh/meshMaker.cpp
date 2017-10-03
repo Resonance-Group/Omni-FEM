@@ -584,8 +584,10 @@ void meshMaker::removeDanglingLines(std::vector<edgeLineShape> &contour)
 
 
 
-void meshMaker::findGeometry()
+void meshMaker::mesh()
 {
+	bool canMakeMesh = true;
+	
 	while((p_numberofLines != p_numberVisited) || (p_numberofLines > p_numberVisited))
 	{
 		std::vector<std::vector<edgeLineShape>> temp = findContours();
@@ -600,6 +602,27 @@ void meshMaker::findGeometry()
 			else
 				break;
 		}
+	}
+	
+	// Another check here to ensure that all of the contours saved are actually closed contours
+	// Must be done before making the mesh and failing
+	for(auto contourIterator : p_closedContours)
+	{
+		if(!isClosedContour(contourIterator))
+		{
+			canMakeMesh = false;
+			break;
+		}
+	}
+	
+	if(canMakeMesh)
+	{
+		
+	}
+	else
+	{
+		// Error out and let the user know that the mesh
+		// can not be made
 	}
 	
 	// TODO: Check for an errors?

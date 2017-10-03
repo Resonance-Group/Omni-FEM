@@ -88,6 +88,7 @@
     <VirtualDirectory Name="common">
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
+      <File Name="src/common/OS.cpp" ExcludeProjConfig="Debug"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig="Debug"/>
@@ -106,6 +107,8 @@
       <File Name="src/Mesh/meshGFaceOptimizeOld.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/meshGFaceTransfinite.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/meshMaker.cpp"/>
+      <File Name="src/Mesh/Gmsh.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/robustPredicates.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -188,6 +191,7 @@
       </VirtualDirectory>
       <File Name="Include/common/plfcolony.h"/>
       <File Name="Include/common/ExteriorRegion.h"/>
+      <File Name="Include/common/OS.h" ExcludeProjConfig="Debug"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig="Debug"/>
@@ -204,6 +208,8 @@
       <File Name="Include/Mesh/Field.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshGFaceOptimize.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshMaker.h"/>
+      <File Name="Include/Mesh/Gmsh.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/robustPredicates.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

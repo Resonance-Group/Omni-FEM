@@ -9,7 +9,7 @@ void OmniFEMMainFrame::onCreateMesh(wxCommandEvent &event)
 {
 	//wxMessageBox("Mesh Created", "Create Mesh", wxOK | wxCANCEL | wxICON_EXCLAMATION);
 	meshMaker meshTest(_model->getModelNodeList(), _model->getModelBlockList(), _model->getModelLineList(), _model->getModelArcList());
-	meshTest.findGeometry();
+	meshTest.mesh();
 }
 
 

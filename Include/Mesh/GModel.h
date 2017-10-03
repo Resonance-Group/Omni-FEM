@@ -36,8 +36,6 @@ class GModelFactory;
 // A geometric model. The model is a "not yet" non-manifold B-Rep.
 /**
  * @class GModel
- * @author phillip
- * @date 05/08/17
  * @file GModel.h
  * @brief This is the most basic form of the mesh model. The GModal contains all information regarding
  * 			the mode itself such as the names, the edges, the regions, the vertices, and the faces

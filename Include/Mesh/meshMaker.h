@@ -5,6 +5,8 @@
 #include <UI/geometryShapes.h>
 #include <common/plfcolony.h>
 
+#include <Mesh/GModel.h>
+
 
 /**
  * @class meshMaker
@@ -19,6 +21,10 @@
 class meshMaker
 {
 private:
+
+	//! This is the GModel that will contain the mesh for the geometric model
+	GModel *p_meshModel = new GModel("meshModel");
+
 	//! Vector containing a list of all closed contours within the geometry. Which each closed contour is a vector of edge line shapes.
 	std::vector<std::vector<edgeLineShape>> p_closedContours;
 	
@@ -119,7 +125,7 @@ public:
 	/**
 	 * @brief This function is called when the program is ready to create the mesh for the model.
 	 */
-	void findGeometry();
+	void mesh();
 	
 	~meshMaker()
 	{
