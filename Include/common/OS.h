@@ -9,6 +9,9 @@
 #include <string>
 #include <stdio.h>
 
+#define LINUX
+#define __linux__
+
 FILE *Fopen(const char* f, const char *mode);
 const char *GetEnvironmentVar(const char *var);
 void SetEnvironmentVar(const char *var, const char *val);

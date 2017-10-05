@@ -88,7 +88,7 @@
     <VirtualDirectory Name="common">
       <File Name="src/common/ComplexNumber.cpp"/>
       <File Name="src/common/Vector.cpp"/>
-      <File Name="src/common/OS.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/common/OS.cpp" ExcludeProjConfig=""/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig="Debug"/>
@@ -107,8 +107,12 @@
       <File Name="src/Mesh/meshGFaceOptimizeOld.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/meshGFaceTransfinite.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/meshMaker.cpp"/>
-      <File Name="src/Mesh/Gmsh.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/Gmsh.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/robustPredicates.cpp"/>
+      <File Name="src/Mesh/Options.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/Context.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MElement.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MVertex.cpp" ExcludeProjConfig="Debug"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -191,7 +195,7 @@
       </VirtualDirectory>
       <File Name="Include/common/plfcolony.h"/>
       <File Name="Include/common/ExteriorRegion.h"/>
-      <File Name="Include/common/OS.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/common/OS.h" ExcludeProjConfig=""/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig="Debug"/>
@@ -208,8 +212,15 @@
       <File Name="Include/Mesh/Field.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshGFaceOptimize.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshMaker.h"/>
-      <File Name="Include/Mesh/Gmsh.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/Gmsh.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/robustPredicates.h"/>
+      <File Name="Include/Mesh/Options.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/Context.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/SPoint2.h"/>
+      <File Name="Include/Mesh/MPoint.h"/>
+      <File Name="Include/Mesh/GPoint.h"/>
+      <File Name="Include/Mesh/MElement.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/MVertex.h" ExcludeProjConfig="Debug"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

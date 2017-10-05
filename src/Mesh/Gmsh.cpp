@@ -5,44 +5,52 @@
 
 #include <string>
 #include <time.h>
-#include "GmshConfig.h"
+//#include "GmshConfig.h"
 #if !defined(HAVE_NO_STDINT_H)
 #include <stdint.h>
 #elif defined(HAVE_NO_INTPTR_T)
 typedef unsigned long intptr_t;
 #endif
-#include "GmshVersion.h"
-#include "GmshMessage.h"
-#include "GmshDefines.h"
-#include "GmshRemote.h"
-#include "Mesh/GModel.h"
-#include "OpenFile.h"
-#include "CreateFile.h"
-#include "Options.h"
+//#include "GmshVersion.h"
+//#include "GmshMessage.h"
+#include "Mesh/GmshDefines.h"
+//#include "GmshRemote.h"
+//#include "Mesh/GModel.h"
+//#include "OpenFile.h"
+//#include "CreateFile.h"
+//#include "Mesh/Options.h"
+
+/*
 #if defined(HAVE_PARSER)
 #include "Parser.h"
 #endif
+ */ 
+
 //#include "CommandLine.h"
-#include "Common/OS.h"
-#include "Context.h"
-#include "robustPredicates.h"
+#include "common/OS.h"
+//#include "Context.h"
+#include "Mesh/robustPredicates.h"
+
+/*
 #if defined(HAVE_POST)
 #include "PView.h"
 #include "PViewData.h"
 #include "PViewOptions.h"
 #endif
+ */ 
 
 /*
 #if defined(HAVE_ONELAB)
 #include "gmshLocalNetworkClient.h"
 #endif
  */ 
-
+/*
 #if defined(HAVE_MESH)
 #include "Generator.h"
 #include "Field.h"
 #include "meshPartition.h"
 #endif
+ */ 
 
 /*
 #if defined(HAVE_PLUGINS)
@@ -71,16 +79,16 @@ int GmshInitialize(int argc, char **argv)
 	isInitialized = true;
 
   // we need at least one model during option parsing
-	GModel *dummy = 0;
+//	GModel *dummy = 0;
 	
-	if(GModel::list.empty()) 
-		dummy = new GModel();
+//	if(GModel::list.empty()) 
+//		dummy = new GModel();
 
   // Initialize messages (parallel stuff, etc.)
 //  Msg::Init(argc, argv);
 
   // Load default options
-	InitOptions(0);
+//	InitOptions(0);
 	
 
   // Read configuration files and command line options
@@ -99,12 +107,13 @@ int GmshInitialize(int argc, char **argv)
   // size of the domain)
 	robustPredicates::exactinit(0, 1.0, 1.0, 1.0);
 
-	if(dummy) 
-		delete dummy;
+	//if(dummy) 
+	//	delete dummy;
 		
 	return 1;
 }
 
+/*
 int GmshSetMessageHandler(GmshMessage *callback)
 {
   Msg::SetCallback(callback);
@@ -115,7 +124,8 @@ GmshMessage *GmshGetMessageHandler()
 {
   return Msg::GetCallback();
 }
-
+ */ 
+/*
 int GmshSetBoundingBox(double xmin, double xmax,
                        double ymin, double ymax,
                        double zmin, double zmax)
@@ -211,22 +221,24 @@ unsigned int GmshGetColorOption(const std::string &category, const std::string &
   return value;
 }
 
+ */ 
 int GmshRestoreDefaultOptions()
 {
-  ReInitOptions(0);
-  InitOptionsGUI(0);
+//  ReInitOptions(0);
+ // InitOptionsGUI(0);
   return 1;
 }
 
+/*
 int GmshOpenProject(const std::string &fileName)
 {
-  OpenProject(fileName);
+//  OpenProject(fileName);
   return 1;
 }
 
 int GmshClearProject()
 {
-  ClearProject();
+//  ClearProject();
   return 1;
 }
 
@@ -267,6 +279,7 @@ int GmshFinalize()
   return 1;
 }
 
+/*
 int GmshBatch()
 {
   Msg::Info("Running '%s' [Gmsh %s, %d node%s, max. %d thread%s]",
@@ -445,3 +458,5 @@ int GmshFLTK(int argc, char **argv)
   return 0;
 #endif
 }
+
+*/

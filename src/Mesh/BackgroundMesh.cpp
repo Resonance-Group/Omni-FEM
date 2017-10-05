@@ -13,7 +13,7 @@
 #include "Mesh/GFace.h"
 #include "GFaceCompound.h"
 #include "Mesh/GModel.h"
-#include "OS.h"
+#include "Common/OS.h"
 #include "Field.h"
 #include "MElement.h"
 #include "MElementOctree.h"

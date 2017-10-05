@@ -813,10 +813,20 @@ void TestConformity(GModel *gm)
       }
     }
   }
-  if (!count)Msg::Info("Mesh Conformity: OK");
-  else Msg::Error ("Mesh is not conforming (%d hanging faces)!",count);
+  if (!count)
+  {
+	// TODO: Do something
+  }
+  else
+  {
+	// TODO: Do something else
+  }
+	//  Msg::Info("Mesh Conformity: OK");
+  //else Msg::Error ("Mesh is not conforming (%d hanging faces)!",count);
 }
 
+// This stuff is 3D, no need
+/*
 static void Mesh3D(GModel *m)
 {
   m->getFields()->initialize();
@@ -956,6 +966,7 @@ static void Mesh3D(GModel *m)
     Msg::ProgressMeter(100, 100, false, "Meshing 3D...");
   Msg::StatusBar(true, "Done meshing 3D (%g s)", CTX::instance()->meshTimer[2]);
 }
+  
 
 void OptimizeMeshNetgen(GModel *m)
 {
@@ -989,10 +1000,11 @@ void OptimizeMesh(GModel *m)
   double t2 = Cpu();
   Msg::StatusBar(true, "Done optimizing 3D mesh (%g s)", t2 - t1);
 }
+ */ 
 
 void SmoothMesh(GModel *m)
 {
-  Msg::StatusBar(true, "Smoothing 2D mesh...");
+//  Msg::StatusBar(true, "Smoothing 2D mesh...");
   double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
@@ -1002,9 +1014,10 @@ void SmoothMesh(GModel *m)
 
   CTX::instance()->mesh.changed = ENT_ALL;
   double t2 = Cpu();
-  Msg::StatusBar(true, "Done smoothing 2D mesh (%g s)", t2 - t1);
+//  Msg::StatusBar(true, "Done smoothing 2D mesh (%g s)", t2 - t1);
 }
 
+/*
 void AdaptMesh(GModel *m)
 {
   Msg::StatusBar(true, "Adapting 3D mesh...");
@@ -1017,6 +1030,7 @@ void AdaptMesh(GModel *m)
   double t2 = Cpu();
   Msg::StatusBar(true, "Done adaptating 3D mesh (%g s)", t2 - t1);
 }
+ */ 
 
 void RecombineMesh(GModel *m)
 {
@@ -1037,10 +1051,12 @@ void RecombineMesh(GModel *m)
 
 void GenerateMesh(GModel *m, int ask)
 {
-
+	if(ask >= 3)
+		return;
+		
   // ProfilerStart("gmsh.prof");
   if(CTX::instance()->lock) {
-    Msg::Info("I'm busy! Ask me that later...");
+  //  Msg::Info("I'm busy! Ask me that later...");
     return;
   }
   CTX::instance()->lock = 1;
@@ -1070,9 +1086,9 @@ void GenerateMesh(GModel *m, int ask)
   }
 
   // 3D mesh
-  if(ask == 3) {
-    Mesh3D(m);
-  }
+ // if(ask == 3) {
+//   Mesh3D(m);
+ // }
 
   // Orient the line and surface meshes so that they match the orientation of
   // the geometrical entities and/or the user orientation constraints
@@ -1082,6 +1098,7 @@ void GenerateMesh(GModel *m, int ask)
     std::for_each(m->firstFace(), m->lastFace(), orientMeshGFace());
 
   // Optimize quality of 3D tet mesh
+  /*
   if(m->getMeshStatus() == 3){
     for(int i = 0; i < std::max(CTX::instance()->mesh.optimize,
                                 CTX::instance()->mesh.optimizeNetgen); i++){
@@ -1089,12 +1106,13 @@ void GenerateMesh(GModel *m, int ask)
       if(CTX::instance()->mesh.optimizeNetgen > i) OptimizeMeshNetgen(m);
     }
   }
+   */ 
 
   // Subdivide into quads or hexas
   if(m->getMeshStatus() == 2 && CTX::instance()->mesh.algoSubdivide == 1)
     RefineMesh(m, CTX::instance()->mesh.secondOrderLinear, true);
-  else if(m->getMeshStatus() == 3 && CTX::instance()->mesh.algoSubdivide == 2)
-    RefineMesh(m, CTX::instance()->mesh.secondOrderLinear, false, true);
+//  else if(m->getMeshStatus() == 3 && CTX::instance()->mesh.algoSubdivide == 2)
+//    RefineMesh(m, CTX::instance()->mesh.secondOrderLinear, false, true);
 
   // Compute homology if necessary
   if(!Msg::GetErrorCount()) m->computeHomology();

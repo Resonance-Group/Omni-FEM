@@ -617,6 +617,7 @@ void meshMaker::mesh()
 	
 	if(canMakeMesh)
 	{
+		GmshInitialize();
 		
 	}
 	else

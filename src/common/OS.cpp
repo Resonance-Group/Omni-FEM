@@ -7,6 +7,7 @@
 // features and/or system calls
 
 // these are available on all OSes
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -14,9 +15,9 @@
 #include <signal.h>
 #include <time.h>
 #include <math.h>
-#include "GmshConfig.h"
-#include "StringUtils.h"
-#include "Context.h"
+//#include "GmshConfig.h"
+//#include "StringUtils.h"
+//#include "Context.h"
 
 /*
 #if defined(_OPENMP)
@@ -42,14 +43,14 @@
 #include <sys/sysinfo.h>
 //#endif
 
-/*
+
 #if !defined(WIN32) || defined(__CYGWIN__)
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #endif
   
-
+/*
 #if defined(WIN32)
 #include <windows.h>
 #include <process.h>
@@ -186,8 +187,8 @@ static unsigned int utf8FromUtf16(char* dst, unsigned int dstlen,
       else if (ucs >= 0xd800 && ucs <= 0xdbff && i < srclen &&
 	       src[i] >= 0xdc00 && src[i] <= 0xdfff) {
         /* surrogate pair */
-        unsigned int ucs2 = src[i++];
-        ucs = 0x10000U + ((ucs&0x3ff)<<10) + (ucs2&0x3ff);
+    //    unsigned int ucs2 = src[i++];
+     //   ucs = 0x10000U + ((ucs&0x3ff)<<10) + (ucs2&0x3ff);
         /* all surrogate pairs turn into 4-byte utf8 
         if (count+4 >= dstlen) {dst[count] = 0; count += 4; break;}
         dst[count++] = 0xf0 | (ucs >> 18);
@@ -242,7 +243,7 @@ static void setwbuf(int i, const char *f)
 }
 
 #endif
-*/
+
 
 FILE *Fopen(const char *f, const char *mode)
 {
@@ -270,6 +271,7 @@ const char *GetEnvironmentVar(const char *var)
   return getenv(var);
 #endif
 }
+*/
 
 void SetEnvironmentVar(const char *var, const char *val)
 {
@@ -279,7 +281,7 @@ void SetEnvironmentVar(const char *var, const char *val)
   _putenv((std::string(var) + "=" + std::string(val)).c_str());
 #else
  */ 
-  setenv(var, val, 1);
+//  setenv(var, val, 1);
 //#endif
 }
 
@@ -353,14 +355,14 @@ void CheckResources()
 
 double Cpu()
 {
-#if defined(_OPENMP)
-  return omp_get_wtime();
-#else
-  long mem = 0;
-  double s = 0.;
-  GetResources(&s, &mem);
-  return s;
-#endif
+//#if defined(_OPENMP)
+//  return omp_get_wtime();
+//#else
+	long mem = 0;
+	double s = 0.;
+	GetResources(&s, &mem);
+	return s;
+//#endif
 }
 
 double TotalRam()
@@ -419,7 +421,7 @@ int GetProcessId()
 
 std::string GetExecutableFileName()
 {
-  std::string name = "";
+/*  std::string name = "";
 #if defined(WIN32) && !defined(__CYGWIN__)
   wchar_t src[MAX_PATH];
   unsigned long size = GetModuleFileNameW(NULL, src, MAX_PATH);
@@ -446,11 +448,13 @@ std::string GetExecutableFileName()
   }
 #endif
   return name;
+   */
+	return "";
 }
 
 std::string GetAbsolutePath(const std::string &fileName)
 {
-#if defined(WIN32) && !defined(__CYGWIN__)
+/*#if defined(WIN32) && !defined(__CYGWIN__)
   setwbuf(0, fileName.c_str());
   wchar_t path[MAX_PATH];
   unsigned long size = GetFullPathNameW(wbuf[0], MAX_PATH, path, NULL);
@@ -472,10 +476,13 @@ std::string GetHostName()
   char host[256];
   gethostname(host, sizeof(host));
   return std::string(host);
+   * */
+   return "";
 }
 
 int UnlinkFile(const std::string &fileName)
 {
+	/*
 #if defined(WIN32) && !defined(__CYGWIN__)
   setwbuf(0, fileName.c_str());
   return _wunlink(wbuf[0]);
@@ -495,10 +502,14 @@ int StatFile(const std::string &fileName)
   int ret = stat(fileName.c_str(), &buf);
 #endif
   return ret;
+   */
+	return 0;
 }
 
 int CreateSingleDir(const std::string &dirName)
 {
+	return 0;
+	/*
 #if defined(WIN32) && !defined(__CYGWIN__)
   setwbuf(0, dirName.c_str());
   if(_wmkdir(wbuf[0])) return 0;
@@ -506,10 +517,12 @@ int CreateSingleDir(const std::string &dirName)
   if(mkdir(dirName.c_str(), 0777)) return 0;
 #endif
   return 1;
+   */ 
 }
 
 void CreatePath(const std::string &fullPath)
 {
+	/*
   size_t lastp = fullPath.find_last_of('/'); // TODO: handle backslash for win?
   if(lastp == std::string::npos) return;
   std::string dirname = std::string(fullPath, 0, lastp);
@@ -533,11 +546,14 @@ int KillProcess(int pid)
     return 0;
 #endif
   return 1;
+   */ 
 }
 
 int SystemCallExe(const std::string &exe, const std::string &argsOrCommand,
                   bool blocking)
 {
+	return 0;
+	/*
   // do we try to run a .py script, .m script or an .exe?
   std::vector<std::string> split = SplitFileName(exe);
   bool isPython = (split[2] == ".py" || split[2] == ".PY");
@@ -623,15 +639,18 @@ int SystemCallExe(const std::string &exe, const std::string &argsOrCommand,
   if(!system(cmd.c_str())) return 1;
 #endif
   return 0;
+   */ 
 }
 
 int SystemCall(const std::string &command, bool blocking)
 {
-  return SystemCallExe("", command, blocking);
+  //return SystemCallExe("", command, blocking);
+	return 0;
 }
 
 std::string GetCurrentWorkdir()
 {
+	/*
   char path[1024];
 
 #if defined(WIN32) && !defined(__CYGWIN__)
@@ -650,10 +669,13 @@ std::string GetCurrentWorkdir()
   str.append("/");
 #endif
   return str;
+   */
+	return "";
 }
 
 void RedirectIOToConsole()
 {
+	/*
 #if defined(WIN32) && !defined(__CYGWIN__)
   // Win32 GUI apps do not write to the DOS console; make it work again by
   // attaching to parent console, which allows to use the DOS shell to work with
@@ -704,10 +726,12 @@ void RedirectIOToConsole()
   // as well
   std::ios::sync_with_stdio();
 #endif
+ */ 
 }
 
 void UnzipFile(const std::string &fileName, const std::string &prependDir)
 {
+	/*
 #if defined(HAVE_ZIPPER)
   std::string dir = prependDir;
   if(dir.size() && dir[dir.size()-1] != '/' && dir[dir.size()-1] != '\\')
@@ -740,4 +764,5 @@ void UnzipFile(const std::string &fileName, const std::string &prependDir)
 #else
   Msg::Error("Gmsh must be compiled with Zipper support to extract zip files");
 #endif
+ */ 
 }

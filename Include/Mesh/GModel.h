@@ -14,9 +14,10 @@
 #include "Mesh/GVertex.h"
 #include "Mesh/GEdge.h"
 #include "Mesh/GFace.h"
-#include "Mesh/GRegion.h"
-#include "SPoint3.h"
-#include "SBoundingBox3d.h"
+/* We are not working with 3D */
+//#include "Mesh/GRegion.h"
+//#include "SPoint3.h"
+//#include "SBoundingBox3d.h"
 
 template <class scalar> class simpleFunction;
 

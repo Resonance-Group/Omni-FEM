@@ -3,13 +3,10 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include <sstream>
-#include <algorithm>
-#include "GModel.h"
-#include "GVertex.h"
-#include "GFace.h"
-#include "MPoint.h"
-#include "GmshMessage.h"
+#include "Mesh/GVertex.h"
+
+
+//#include "GmshMessage.h"
 
 GVertex::GVertex(GModel *m, int tag, double ms) : GEntity(m, tag), meshSize(ms)
 {
