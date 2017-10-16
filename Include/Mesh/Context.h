@@ -9,12 +9,13 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "CGNSOptions.h"
-#include "meshPartitionOptions.h"
+
+#include "Mesh/CGNSOptions.h"// Good
+#include "Mesh/meshPartitionOptions.h" // Good but may not be needed
 
 #define NUM_SOLVERS 10
 
-class GamePad;
+//class GamePad;
 
 // The interface-independent context.
 
@@ -94,163 +95,175 @@ class CTX {
   static CTX *instance();
  public:
   // files on the command line and various file names
-  std::vector<std::string> files;
-  std::string bgmFileName, outputFileName, defaultFileName, tmpFileName;
-  std::string sessionFileName, optionsFileName, errorFileName;
-  std::string meshStatReportFileName;
+//  std::vector<std::string> files;
+//  std::string bgmFileName, outputFileName, defaultFileName, tmpFileName;
+//  std::string sessionFileName, optionsFileName, errorFileName;
+ // std::string meshStatReportFileName;
   // filename of the executable, with full path
-  std::string exeFileName;
+//  std::string exeFileName;
   // the home directory
-  std::string homeDir;
+ // std::string homeDir;
   // file history
-  std::vector<std::string> recentFiles;
+//  std::vector<std::string> recentFiles;
+
   // create mesh statistics report (0: do nothing, 1: create, 2: append)
   int createAppendMeshStatReport;
+  
   // should we launch a solver at startup?
-  int launchSolverAtStartup ;
+ // int launchSolverAtStartup ;
   // save session/option file on exit?
-  int sessionSave, optionsSave;
+ // int sessionSave, optionsSave;
   // ask confirmation when overwriting files?
-  int confirmOverwrite;
+// int confirmOverwrite;
   // forced display host:0.0 under X11
-  std::string display;
+//  std::string display;
   // FLTK theme
-  std::string guiTheme;
+//  std::string guiTheme;
   // FLTK color scheme
-  int guiColorScheme;
+//  int guiColorScheme;
   // print messages on to the terminal?
-  int terminal;
+//  int terminal;
   // number of graphical windows/tiles
-  int numWindows, numTiles;
+ // int numWindows, numTiles;
   // text editor command (with included '%s')
-  std::string editor;
+//  std::string editor;
   // pattern of files to watch out for
-  std::string watchFilePattern;
+ // std::string watchFilePattern;
   // show tootips in the GUI?
-  int tooltips;
+//  int tooltips;
   // position and size of various windows in the GUI
-  int glPosition[2], glSize[2], msgSize, menuPosition[2], menuSize[2], detachedMenu;
-  int optPosition[2], visPosition[2], hotPosition[2], clipPosition[2], manipPosition[2];
-  int statPosition[2], ctxPosition[2];
-  int pluginPosition[2], pluginSize[2], fieldPosition[2], fieldSize[2];
-  int fileChooserPosition[2], extraPosition[2], extraSize[2];
+//  int glPosition[2], glSize[2], msgSize, menuPosition[2], menuSize[2], detachedMenu;
+//  int optPosition[2], visPosition[2], hotPosition[2], clipPosition[2], manipPosition[2];
+ // int statPosition[2], ctxPosition[2];
+//  int pluginPosition[2], pluginSize[2], fieldPosition[2], fieldSize[2];
+ // int fileChooserPosition[2], extraPosition[2], extraSize[2];
   // use the system menu bar on Mac OS X?
-  int systemMenuBar;
+ // int systemMenuBar;
   // use high-resolution opengl graphics (retina Macs)
-  int highResolutionGraphics;
+ // int highResolutionGraphics;
   // batch mode (-4: lua session, -3: server daemon, -2: check coherence, -1: write
   // geo, 0: full gfx, 1: 1D mesh, 2: 2D mesh, 3: 3D mesh, 4: adapt
   // mesh, 5: refine mesh)
-  int batch;
+ // int batch;
   // batch operations to apply after meshing (1: partition mesh)
-  int batchAfterMesh;
+ // int batchAfterMesh;
+ 
   // mesh discrete faces / edges
   int meshDiscrete;
+  
   // initial menu (0: automatic, 1: geom, 2: mesh, 3: solver, 4: post)
-  int initialContext;
+//  int initialContext;
   // show some windows on startup?
-  int showOptionsOnStartup, showMessagesOnStartup;
+//  int showOptionsOnStartup, showMessagesOnStartup;
   // never popup dialogs in scripts (use default values instead)?
-  int noPopup;
+//  int noPopup;
   // make all windows "non modal"?
-  int nonModalWindows;
+ // int nonModalWindows;
   // clipping plane distance factor
-  double clipFactor;
+ // double clipFactor;
   // display border factor (0 = model fits window size exactly)
-  double displayBorderFactor;
+ // double displayBorderFactor;
   // do or do not use the trackball for rotations
-  int useTrackball, trackballHyperbolicSheet;
+//  int useTrackball, trackballHyperbolicSheet;
   // gamepad controller
-  GamePad *gamepad;
+//  GamePad *gamepad;
   // point around which to rotate the scene
-  double rotationCenter[3];
+//  double rotationCenter[3];
   // rotate around the center of mass instead of rotationCenter[]
-  int rotationCenterCg;
+//  int rotationCenterCg;
   // "overall" x, y and z min used for drawing and lc computation
-  double min[3], max[3];
+//  double min[3], max[3];
   // "center of mass" of the current geometry, used for graphics only
-  double cg[3];
+ // double cg[3];
  // characteristic length for the whole problem (never used in mesh
   // generation ->only for geo/post)
-  double lc;
+ // double lc;
   // double buffer/antialias/stereo graphics?
-  int db, antialiasing, stereo, camera ;
-  bool fileread;
-  double eye_sep_ratio,focallength_ratio,camera_aperture;
+//  int db, antialiasing, stereo, camera ;
+//  bool fileread;
+ // double eye_sep_ratio,focallength_ratio,camera_aperture;
   // orthogonal projection?
-  int ortho;
+//  int ortho;
   // draw the bounding boxes and the rot center?
-  int drawBBox, drawRotationCenter;
+ // int drawBBox, drawRotationCenter;
   // draw simplified model during user interaction?
-  int fastRedraw;
+ // int fastRedraw;
   // small axes options
-  int smallAxes, smallAxesSize, smallAxesPos[2];
+//  int smallAxes, smallAxesSize, smallAxesPos[2];
   // large axes options
-  int axes, axesAutoPosition, axesMikado, axesForceValue;
-  double axesPosition[6], axesValue[6], axesTics[3];
-  std::string axesLabel[3], axesFormat[3];
+ // int axes, axesAutoPosition, axesMikado, axesForceValue;
+ // double axesPosition[6], axesValue[6], axesTics[3];
+//  std::string axesLabel[3], axesFormat[3];
   // simple dynamic lock (should be a mutex)
-  int lock;
+ // int lock;
   // enable alpha blending?
-  int alpha;
+ // int alpha;
   // mouse2 zoom coefficient
-  double zoomFactor;
+ // double zoomFactor;
   // draw background gradient?
-  int bgGradient;
+//int bgGradient;
   // draw background image?
-  std::string bgImageFileName;
-  double bgImagePosition[2], bgImageSize[2];
-  int bgImage3d, bgImagePage;
+ // std::string bgImageFileName;
+ // double bgImagePosition[2], bgImageSize[2];
+ // int bgImage3d, bgImagePage;
   // fltk font size (and delta for palette windows)
-  int fontSize, deltaFontSize;
+//  int fontSize, deltaFontSize;
   // font name, FLTK enum and size for opengl graphics
-  std::string glFont, glFontTitle, glFontEngine;
-  int glFontEnum, glFontEnumTitle, glFontSize, glFontSizeTitle;
+ // std::string glFont, glFontTitle, glFontEngine;
+ // int glFontEnum, glFontEnumTitle, glFontSize, glFontSizeTitle;
   // font size of messages
-  int msgFontSize;
+ // int msgFontSize;
   // point/line widths
-  double pointSize, lineWidth;
-  double highResolutionPointSizeFactor;
+ // double pointSize, lineWidth;
+ // double highResolutionPointSizeFactor;
   // light options
-  int light[6];
-  double lightPosition[6][4], shine, shineExponent;
+ // int light[6];
+ // double lightPosition[6][4], shine, shineExponent;
   // clipping plane options
-  double clipPlane[6][4];
-  int clipWholeElements, clipOnlyDrawIntersectingVolume, clipOnlyVolume;
+ // double clipPlane[6][4];
+ // int clipWholeElements, clipOnlyDrawIntersectingVolume, clipOnlyVolume;
   // polygon offset options
-  int polygonOffset, polygonOffsetAlways;
-  double polygonOffsetFactor, polygonOffsetUnits;
+ // int polygonOffset, polygonOffsetAlways;
+ // double polygonOffsetFactor, polygonOffsetUnits;
   // color scheme
-  int colorScheme;
+ // int colorScheme;
   // number of subdivisions for gluQuadrics
-  int quadricSubdivisions;
+ // int quadricSubdivisions;
   // vector display type and options (for normals, etc.)
-  int vectorType;
-  double arrowRelHeadRadius, arrowRelStemRadius, arrowRelStemLength;
+ // int vectorType;
+ // double arrowRelHeadRadius, arrowRelStemRadius, arrowRelStemLength;
+ 
   // records cpu times for 1-D, 2-D and 3-D mesh generation
   double meshTimer[3];
+  
   // dynamic variable tracking if the bbox is currently imposed
-  int forcedBBox;
+ // int forcedBBox;
   // enable selection/hover/picking using the mouse
-  int mouseSelection, mouseHoverMeshes, pickElements;
+ // int mouseSelection, mouseHoverMeshes, 
+	int pickElements;
   // disable some warnings for expert users?
-  int expertMode;
+ // int expertMode;
   // dynamic: equal to 1 while gmsh is printing
-  int printing;
+ // int printing;
   // hide all unselected entities?
-  int hideUnselected;
+ // int hideUnselected;
   // temporary storage of rotation, translation, scale (until the GUI
   // is ready)
-  double tmpRotation[3], tmpTranslation[3], tmpScale[3], tmpQuaternion[4];
+//  double tmpRotation[3], tmpTranslation[3], tmpScale[3], tmpQuaternion[4];
   // geometry options
-  contextGeometryOptions geom;
+  contextGeometryOptions geom; // Maybe?
+  
   // mesh options
   contextMeshOptions mesh;
+  
   // FIXME: putting these in the mesh struct (where they belong) causes
   // an LNK1179 error ("duplicate COMDAT") with MSVC...
-  meshPartitionOptions partitionOptions;
+  meshPartitionOptions partitionOptions;// Maybe?
+  
   CGNSOptions cgnsOptions;
+  
   // post processing options
+  /*
   struct{
     int draw, link, horizontalScales;
     int smooth, animCycle, animStep, combineTime, combineRemoveOrig;
@@ -313,6 +326,7 @@ class CTX {
   int unpackGreen(unsigned int X);
   int unpackBlue(unsigned int X);
   int unpackAlpha(unsigned int X);
+   */ 
 };
 
 #endif

@@ -9,9 +9,10 @@
 #include <stdio.h>
 #include <set>
 #include <map>
-#include "SPoint2.h"
-#include "SPoint3.h"
-#include "MVertexBoundaryLayerData.h"
+
+#include "Mesh/SPoint2.h"
+#include "Mesh/SPoint3.h"
+#include "Mesh/MVertexBoundaryLayerData.h"
 
 class GEntity;
 class GEdge;

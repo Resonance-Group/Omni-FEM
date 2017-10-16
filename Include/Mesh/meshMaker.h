@@ -2,10 +2,12 @@
 #define MESH_MAKER_H_
 
 #include <vector>
+
 #include <UI/geometryShapes.h>
 #include <common/plfcolony.h>
 
 #include <Mesh/Gmsh.h>
+#include <Mesh/Context.h>
 
 
 /**

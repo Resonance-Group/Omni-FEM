@@ -94,7 +94,6 @@
       <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/GEdge.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/GFace.cpp" ExcludeProjConfig="Debug"/>
-      <File Name="src/Mesh/GRegion.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/GVertex.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/Generator.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/BackgroundMesh.cpp" ExcludeProjConfig="Debug"/>
@@ -110,9 +109,43 @@
       <File Name="src/Mesh/Gmsh.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/robustPredicates.cpp"/>
       <File Name="src/Mesh/Options.cpp" ExcludeProjConfig="Debug"/>
-      <File Name="src/Mesh/Context.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/Context.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/MElement.cpp" ExcludeProjConfig="Debug"/>
       <File Name="src/Mesh/MVertex.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/meshPartition.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/fullMatrix.cpp" ExcludeProjConfig=""/>
+      <File Name="src/Mesh/VertexArray.cpp" ExcludeProjConfig=""/>
+      <File Name="src/Mesh/Numeric.cpp" ExcludeProjConfig=""/>
+      <File Name="src/Mesh/SOrientedBoundingBox.cpp"/>
+      <File Name="src/Mesh/MTriangle.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MQuadrangle.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MLine.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/ElementType.cpp"/>
+      <File Name="src/Mesh/GaussIntegration.cpp"/>
+      <File Name="src/Mesh/GaussQuadratureQuad.cpp"/>
+      <File Name="src/Mesh/GaussQuadratureTri.cpp"/>
+      <File Name="src/Mesh/GaussLegendreSimplex.cpp"/>
+      <File Name="src/Mesh/GaussQuadratureLin.cpp"/>
+      <File Name="src/Mesh/BasisFactory.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/polynomialBasis.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/nodalBasis.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/pointsGenerators.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/FuncSpaceData.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MVertexBoundaryLayerData.cpp"/>
+      <File Name="src/Mesh/MFace.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/GFaceCompound.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/discreteDiskFace.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MEdge.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/CondNumBasis.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/qualityMeasuresJacobian.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MSubElement.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/qualityMeasures.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/bezierBasis.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/miniBasis.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/JacobianBasis.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/BDS.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/MElementOctree.cpp" ExcludeProjConfig="Debug"/>
+      <File Name="src/Mesh/BGMBase.cpp" ExcludeProjConfig="Debug"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -201,13 +234,12 @@
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/GEdge.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/GFace.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/GRegion.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/GVertex.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/Generator.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/BackgroundMesh.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/GEntity.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshGFace.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/GmshDefines.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GmshDefines.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/discreteFace.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/Field.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/meshGFaceOptimize.h" ExcludeProjConfig="Debug"/>
@@ -215,12 +247,50 @@
       <File Name="Include/Mesh/Gmsh.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/robustPredicates.h"/>
       <File Name="Include/Mesh/Options.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/Context.h" ExcludeProjConfig="Debug"/>
-      <File Name="Include/Mesh/SPoint2.h"/>
-      <File Name="Include/Mesh/MPoint.h"/>
-      <File Name="Include/Mesh/GPoint.h"/>
+      <File Name="Include/Mesh/Context.h" ExcludeProjConfig=""/>
+      <File Name="Include/Mesh/SPoint2.h" ExcludeProjConfig=""/>
+      <File Name="Include/Mesh/MPoint.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GPoint.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/MElement.h" ExcludeProjConfig="Debug"/>
       <File Name="Include/Mesh/MVertex.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/CGNSOptions.h"/>
+      <File Name="Include/Mesh/meshPartition.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/meshPartitionOptions.h"/>
+      <File Name="Include/Mesh/fullMatrix.h" ExcludeProjConfig=""/>
+      <File Name="Include/Mesh/VertexArray.h" ExcludeProjConfig=""/>
+      <File Name="Include/Mesh/Numeric.h" ExcludeProjConfig=""/>
+      <File Name="Include/Mesh/Range.h"/>
+      <File Name="Include/Mesh/SOrientedBoundingBox.h"/>
+      <File Name="Include/Mesh/MTriangle.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/MQuadrangle.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/MLine.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/ElementType.h"/>
+      <File Name="Include/Mesh/GaussIntegration.h"/>
+      <File Name="Include/Mesh/GaussLegendre1D.h"/>
+      <File Name="Include/Mesh/BasisFactory.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/polynomialBasis.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/nodalBasis.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/pointsGenerators.h"/>
+      <File Name="Include/Mesh/FuncSpaceData.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/SPoint3.h"/>
+      <File Name="Include/Mesh/SVector3.h"/>
+      <File Name="Include/Mesh/MVertexBoundaryLayerData.h"/>
+      <File Name="Include/Mesh/MFace.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/GFaceCompound.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/discreteDiskFace.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/MEdge.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/CondNumBasis.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/qualityMeasuresJacobian.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/MSubElement.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/qualityMeasures.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/bezierBasis.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/miniBasis.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/JacobianBasis.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/BDS.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/STensor3.h"/>
+      <File Name="Include/Mesh/MElementOctree.h" ExcludeProjConfig="Debug"/>
+      <File Name="Include/Mesh/simpleFunction.h"/>
+      <File Name="Include/Mesh/BGMBase.h" ExcludeProjConfig="Debug"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

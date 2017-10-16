@@ -5,15 +5,16 @@
 
 #include <string.h>
 #include <math.h>
-#include "MVertex.h"
-#include "GModel.h"
-#include "GVertex.h"
-#include "GEdge.h"
-#include "GFace.h"
-#include "GFaceCompound.h"
-#include "discreteDiskFace.h"
-#include "GmshMessage.h"
-#include "StringUtils.h"
+
+#include "Mesh/MVertex.h"
+#include "Mesh/GModel.h"
+#include "Mesh/GVertex.h"
+#include "Mesh/GEdge.h"
+#include "Mesh/GFace.h"
+#include "Mesh/GFaceCompound.h"
+#include "Mesh/discreteDiskFace.h"
+//#include "GmshMessage.h"
+//#include "StringUtils.h"
 
 double angle3Vertices(const MVertex *p1, const MVertex *p2, const MVertex *p3)
 {

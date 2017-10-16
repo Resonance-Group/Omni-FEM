@@ -11,9 +11,11 @@
 #include <set>
 #include <map>
 #include <string>
+
 #include "Mesh/GVertex.h"
 #include "Mesh/GEdge.h"
 #include "Mesh/GFace.h"
+
 /* We are not working with 3D */
 //#include "Mesh/GRegion.h"
 //#include "SPoint3.h"

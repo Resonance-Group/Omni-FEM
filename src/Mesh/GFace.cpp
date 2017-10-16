@@ -4,20 +4,22 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include <sstream>
-#include "GmshConfig.h"
-#include "GmshMessage.h"
-#include "GModel.h"
-#include "GFace.h"
-#include "GEdge.h"
-#include "MTriangle.h"
-#include "MQuadrangle.h"
-#include "MElementCut.h"
-#include "VertexArray.h"
-#include "fullMatrix.h"
-#include "Numeric.h"
-#include "GaussLegendre1D.h"
-#include "Context.h"
-#include "OS.h"
+//#include "GmshConfig.h"
+//#include "GmshMessage.h"
+#include "Mesh/GModel.h" // Does not compile
+#include "Mesh/GFace.h" // Does not compile
+#include "Mesh/GEdge.h" // Does note compile
+#include "Mesh/MTriangle.h" // Does note compile
+#include "Mesh/MQuadrangle.h" // Does not compile
+
+//#include "MElementCut.h" // This needs to be evaluated 
+
+#include "Mesh/VertexArray.h"
+#include "Mesh/fullMatrix.h"
+#include "Mesh/Numeric.h"
+#include "Mesh/GaussLegendre1D.h"
+#include "Mesh/Context.h"
+#include "common/OS.h"
 #include "discreteFace.h"
 
 #if defined(HAVE_MESH)

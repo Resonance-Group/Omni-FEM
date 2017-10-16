@@ -9,10 +9,13 @@
 #include <list>
 #include <string>
 #include <vector>
-#include "Range.h"
-#include "SPoint3.h"
-#include "SBoundingBox3d.h"
-#include "SOrientedBoundingBox.h"
+
+#include "Mesh/Range.h"
+
+//#include "SPoint3.h"
+//#include "SBoundingBox3d.h"
+
+#include "Mesh/SOrientedBoundingBox.h"
 
 #define MAX_LC 1.e22
 
@@ -20,7 +23,7 @@ class GModel;
 class GVertex;
 class GEdge;
 class GFace;
-class GRegion;
+//class GRegion;
 class MVertex;
 class MElement;
 class VertexArray;
@@ -45,7 +48,7 @@ class GEntity {
   char _allElementsVisible;
 
   // the color of the entity (ignored if set to transparent blue)
-  unsigned int _color;
+//  unsigned int _color;
 
  protected:
   SOrientedBoundingBox *_obb;

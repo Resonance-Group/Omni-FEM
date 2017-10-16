@@ -4,21 +4,25 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include <sstream>
-#include "GModel.h"
-#include "GEntity.h"
-#include "MElement.h"
-#include "VertexArray.h"
-#include "Context.h"
-#include "GVertex.h"
-#include "GEdge.h"
-#include "GFace.h"
-#include "GRegion.h"
+
+#include "Mesh/GModel.h"
+#include "Mesh/GEntity.h"
+#include "Mesh/GVertex.h"
+#include "Mesh/GEdge.h"
+#include "Mesh/GFace.h"
+//#include "Mesh/GRegion.h"
+
+#include "Mesh/MElement.h"
+
+#include "Mesh/VertexArray.h"
+#include "Mesh/Context.h"
+
 
 GEntity::GEntity(GModel *m,int t)
   : _model(m), _tag(t),_meshMaster(this),_visible(1), _selection(0),
-    _allElementsVisible(1), _obb(0), va_lines(0), va_triangles(0)
+    _allElementsVisible(1), /*_obb(0),*/ va_lines(0), va_triangles(0)
 {
-  _color = CTX::instance()->packColor(0, 0, 255, 0);
+//  _color = CTX::instance()->packColor(0, 0, 255, 0);
 }
 
 void GEntity::deleteVertexArrays()
@@ -29,20 +33,25 @@ void GEntity::deleteVertexArrays()
 
 char GEntity::getVisibility()
 {
+	/*
   if(CTX::instance()->hideUnselected && !CTX::instance()->pickElements &&
      !getSelection() && geomType() != ProjectionFace)
     return false;
   return _visible;
+   */
+	return 1;
 }
 
 bool GEntity::useColor()
 {
+	/*
   int r = CTX::instance()->unpackRed(_color);
   int g = CTX::instance()->unpackGreen(_color);
   int b = CTX::instance()->unpackBlue(_color);
   int a = CTX::instance()->unpackAlpha(_color);
   if(r == 0 && g == 0 && b == 255 && a == 0)
     return false;
+	 */ 
   return true;
 }
 
@@ -83,7 +92,7 @@ void GEntity::setMeshMaster(GEntity* gMaster)
 
 void GEntity::setMeshMaster(GEntity* gMaster,const std::vector<double>& tfo)
 {
-  if (gMaster->dim() != dim()){
+  if (gMaster->dimu() != dim()){
     Msg::Error("Model entity %d of dimension %d cannot"
                "be the mesh master of entity %d of dimension %d",
                gMaster->tag(),gMaster->dim(),tag(),dim());

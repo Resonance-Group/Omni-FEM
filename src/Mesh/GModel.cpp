@@ -7,8 +7,10 @@
 #include <stdlib.h>
 #include <sstream>
 #include <stack>
+
 //#include "GmshConfig.h"
 //#include "GmshMessage.h"
+
 #include "Mesh/GModel.h"
 #include "GModelIO_GEO.h"
 #include "GModelIO_OCC.h"
@@ -37,9 +39,11 @@
 #include "StringUtils.h"
 #include "GEdgeLoop.h"
 #include "MVertexRTree.h"
+
 //#include "OpenFile.h"
 //#include "CreateFile.h"
 //#include "Options.h"
+
 #include "meshGEdge.h"
 #include "meshGFace.h"
 #include "meshGRegion.h"

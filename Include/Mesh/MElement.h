@@ -10,15 +10,17 @@
 #include <algorithm>
 #include <string>
 
-#include "GmshMessage.h"
-#include "ElementType.h"
-#include "MVertex.h"
-#include "MEdge.h"
-#include "MFace.h"
-#include "FuncSpaceData.h"
-#include "nodalBasis.h"
-#include "polynomialBasis.h"
-#include "GaussIntegration.h"
+//#include "GmshMessage.h"
+
+#include "Mesh/ElementType.h" // Good
+
+#include "Mesh/MVertex.h" // Not Good
+#include "Mesh/MEdge.h" // Not Good
+#include "Mesh/MFace.h" // Not Good
+#include "Mesh/FuncSpaceData.h" // Not Good
+#include "Mesh/nodalBasis.h" // Not Good
+#include "Mesh/polynomialBasis.h" // Not Good
+#include "Mesh/GaussIntegration.h" // Not Good
 
 class GModel;
 class JacobianBasis;

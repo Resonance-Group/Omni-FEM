@@ -6,27 +6,34 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits>
-#include "GmshConfig.h"
-#include "GmshMessage.h"
-#include "GModel.h"
-#include "MElement.h"
-#include "MPoint.h"
-#include "MLine.h"
-#include "MTriangle.h"
-#include "MQuadrangle.h"
-#include "MTetrahedron.h"
-#include "MHexahedron.h"
-#include "MPrism.h"
-#include "MPyramid.h"
-#include "MTrihedron.h"
-#include "MElementCut.h"
+
+//#include "GmshConfig.h"
+//#include "GmshMessage.h"
+
+#include "Mesh/GModel.h"
+#include "Mesh/MElement.h"
+#include "Mesh/MPoint.h"
+#include "Mesh/MLine.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/MQuadrangle.h"
+
+//#include "MTetrahedron.h"
+//#include "MHexahedron.h"
+//#include "MPrism.h"
+//#include "MPyramid.h"
+//#include "MTrihedron.h"
+
+// #include "MElementCut.h" // This needs to be evaluated
+
 #include "MSubElement.h"
-#include "GEntity.h"
-#include "StringUtils.h"
-#include "Numeric.h"
-#include "CondNumBasis.h"
-#include "Context.h"
-#include "qualityMeasuresJacobian.h"
+#include "Mesh/GEntity.h"
+
+//#include "StringUtils.h"
+
+#include "Mesh/Numeric.h"
+#include "Mesh/CondNumBasis.h"
+#include "Mesh/Context.h"
+#include "Mesh/qualityMeasuresJacobian.h"
 
 #define SQU(a)      ((a)*(a))
 
