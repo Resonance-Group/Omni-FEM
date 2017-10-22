@@ -8,10 +8,10 @@
 
 #include <map>
 #include <vector>
-#include "MElement.h"
-#include "MEdge.h"
-#include "meshGFaceDelaunayInsertion.h"
-#include "STensor3.h"
+#include "Mesh/MElement.h"
+#include "Mesh/MEdge.h"
+#include "Mesh/meshGFaceDelaunayInsertion.h"
+#include "Mesh/STensor3.h"
 
 class GFace;
 class GVertex;

@@ -10,20 +10,21 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "GEntity.h"
-#include "GPoint.h"
-#include "GEdgeLoop.h"
-#include "SPoint2.h"
-#include "SVector3.h"
-#include "Pair.h"
-#include "Numeric.h"
-#include "boundaryLayersData.h"
+
+#include "Mesh/GEntity.h"
+#include "Mesh/GPoint.h"
+#include "Mesh/GEdgeLoop.h"
+#include "Mesh/SPoint2.h"
+#include "Mesh/SVector3.h"
+#include "Mesh/Pair.h"
+#include "Mesh/Numeric.h"
+#include "Mesh/boundaryLayersData.h"
 
 class MElement;
 class MTriangle;
 class MQuadrangle;
-class MPolygon;
-class ExtrudeParams;
+//class MPolygon;
+//class ExtrudeParams;
 class GFaceCompound;
 
 struct surface_params

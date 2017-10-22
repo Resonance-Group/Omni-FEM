@@ -12,52 +12,52 @@
 //#include "GmshMessage.h"
 
 #include "Mesh/GModel.h"
-#include "GModelIO_GEO.h"
-#include "GModelIO_OCC.h"
-#include "GModelFactory.h"
-#include "GFaceCompound.h"
-#include "GEdgeCompound.h"
-#include "MPoint.h"
-#include "MLine.h"
-#include "MTriangle.h"
-#include "MQuadrangle.h"
-#include "MTetrahedron.h"
-#include "MHexahedron.h"
-#include "MPrism.h"
-#include "MPyramid.h"
-#include "MTrihedron.h"
-#include "MElementCut.h"
-#include "MElementOctree.h"
-#include "discreteRegion.h"
-#include "discreteFace.h"
-#include "discreteEdge.h"
-#include "discreteVertex.h"
-#include "gmshSurface.h"
-#include "SmoothData.h"
+#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/GModelIO_OCC.h"
+#include "Mesh/GModelFactory.h"
+#include "Mesh/GFaceCompound.h"
+#include "Mesh/GEdgeCompound.h"
+#include "Mesh/MPoint.h"
+#include "Mesh/MLine.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/MQuadrangle.h"
+//#include "MTetrahedron.h"
+//#include "MHexahedron.h"
+//#include "MPrism.h"
+//#include "MPyramid.h"
+//#include "MTrihedron.h"
+#include "Mesh/MElementCut.h"
+#include "Mesh/MElementOctree.h"
+//#include "Mesh/discreteRegion.h"
+#include "Mesh/discreteFace.h"
+#include "Mesh/discreteEdge.h"
+#include "Mesh/discreteVertex.h"
+#include "Mesh/gmshSurface.h"
+#include "Mesh/SmoothData.h"
 #include "Mesh/Context.h"
 #include "common/OS.h"
-#include "StringUtils.h"
-#include "GEdgeLoop.h"
-#include "MVertexRTree.h"
+//#include "Mesh/StringUtils.h"
+#include "Mesh/GEdgeLoop.h"
+#include "Mesh/MVertexRTree.h"
 
 //#include "OpenFile.h"
 //#include "CreateFile.h"
 //#include "Options.h"
 
-#include "meshGEdge.h"
-#include "meshGFace.h"
-#include "meshGRegion.h"
-#include "GModelCreateTopologyFromMesh.h"
+#include "Mesh/meshGEdge.h"
+#include "Mesh/meshGFace.h"
+//include "meshGRegion.h"
+#include "Mesh/GModelCreateTopologyFromMesh.h"
 
 #if defined(HAVE_MESH)
-#include "Field.h"
-#include "Generator.h"
-#include "meshGFaceOptimize.h"
-#include "meshPartition.h"
-#include "HighOrder.h"
-#include "meshMetric.h"
-#include "meshGRegionMMG3D.h"
-#include "meshGFaceBamg.h"
+#include "Mesh/Field.h"
+#include "Mesh/Generator.h"
+#include "Mesh/meshGFaceOptimize.h"
+#include "Mesh/meshPartition.h"
+#include "Mesh/HighOrder.h"
+#include "Mesh/meshMetric.h"
+//#include "Mesh/meshGRegionMMG3D.h"
+#include "Mesh/meshGFaceBamg.h"
 #endif
 
 #if defined(HAVE_KBIPACK)
@@ -127,18 +127,18 @@ void GModel::setFileName(std::string fileName)
   _fileName = fileName;
   _fileNames.insert(fileName);
 
-  Msg::SetOnelabString("Gmsh/Model name", fileName,
-                       Msg::GetNumOnelabClients() > 1, false, true, 0, "file");
-  Msg::SetOnelabString
-    ("Gmsh/Model absolute path", SplitFileName(GetAbsolutePath(fileName))[0],
-     false, false, true, 0);
-  Msg::SetWindowTitle(fileName);
+ // Msg::SetOnelabString("Gmsh/Model name", fileName,
+ //                      Msg::GetNumOnelabClients() > 1, false, true, 0, "file");
+ // Msg::SetOnelabString
+ //   ("Gmsh/Model absolute path", SplitFileName(GetAbsolutePath(fileName))[0],
+   //  false, false, true, 0);
+//  Msg::SetWindowTitle(fileName);
 }
 
 GModel *GModel::current(int index)
 {
   if(list.empty()){
-    Msg::Info("No current model available: creating one");
+  //  Msg::Info("No current model available: creating one");
     new GModel();
   }
   if(index >= 0) _current = index;
@@ -164,7 +164,7 @@ void GModel::setFactory(std::string name)
 #if defined(HAVE_OCC)
     _factory = new OCCFactory();
 #else
-    Msg::Error("Missing OpenCASCADE support: using Gmsh GEO factory instead");
+ //   Msg::Error("Missing OpenCASCADE support: using Gmsh GEO factory instead");
     _factory = new GeoFactory();
 #endif
   }
@@ -184,7 +184,7 @@ GModel *GModel::findByName(const std::string &name, const std::string &fileName)
 
 void GModel::destroy(bool keepName)
 {
-  Msg::Debug("Destroying model %s", getName().c_str());
+//  Msg::Debug("Destroying model %s", getName().c_str());
 
   if(!keepName){
     _name.clear();
@@ -416,7 +416,7 @@ void GModel::snapVertices()
         t = parb.high();
       }
       else{
-        Msg::Error("Weird vertex: impossible to snap");
+     //   Msg::Error("Weird vertex: impossible to snap");
         break;
       }
       GPoint gp = (*it)->point(t);
@@ -425,8 +425,8 @@ void GModel::snapVertices()
                       (gp.z() - (*vit)->z()) * (gp.z() - (*vit)->z()));
       if (d > tol){
         (*vit)->setPosition(gp);
-        Msg::Info("Snapping geometry vertex %d to curve control point (dist = %g)",
-                  (*vit)->tag(), d);
+    //    Msg::Info("Snapping geometry vertex %d to curve control point (dist = %g)",
+     //             (*vit)->tag(), d);
       }
     }
     vit++;
@@ -515,7 +515,7 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
         }
       }
       else{
-        Msg::Error("Unknown model region with tag %d", tag);
+   //     Msg::Error("Unknown model region with tag %d", tag);
         ret = false;
       }
     }
@@ -542,7 +542,7 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
         }
       }
       else{
-        Msg::Error("Unknown model face with tag %d", tag);
+    //    Msg::Error("Unknown model face with tag %d", tag);
         ret = false;
       }
     }
@@ -563,7 +563,7 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
         }
       }
       else{
-        Msg::Error("Unknown model edge with tag %d", tag);
+    //    Msg::Error("Unknown model edge with tag %d", tag);
         ret = false;
       }
     }
@@ -723,7 +723,7 @@ int GModel::getPhysicalNumber(const int &dim, const std::string &name)
   for(piter physIt = firstPhysicalName(); physIt != lastPhysicalName(); ++physIt)
     if(dim == physIt->first.first && name == physIt->second)
       return physIt->first.second;
-  Msg::Warning("No physical group found with the name '%s'", name.c_str());
+ // Msg::Warning("No physical group found with the name '%s'", name.c_str());
   return -1;
 }
 
@@ -786,13 +786,8 @@ SBoundingBox3d GModel::bounds(bool aroundVisible)
 
 int GModel::mesh(int dimension)
 {
-#if defined(HAVE_MESH)
   GenerateMesh(this, dimension);
   return true;
-#else
-  Msg::Error("Mesh module not compiled");
-  return false;
-#endif
 }
 
 bool GModel::setAllVolumesPositive()
@@ -817,11 +812,11 @@ static void addToMap
   else { //We found the neighbor face outFace
     faceToElement.insert(std::pair< MFace , MElement *>(face, el));
     if (faceToElement.count(face) > 2){
-      Msg::Error("Topological fault: Face sharing two other faces. Element %i. "
-                 "Number of nodes %i. Count of faces: %i Three first nodes %i %i %i",
-                 el->getNum(),face.getNumVertices(),faceToElement.count(face),
-                 face.getVertex(0)->getNum(),face.getVertex(1)->getNum(),
-                 face.getVertex(2)->getNum());
+  //    Msg::Error("Topological fault: Face sharing two other faces. Element %i. "
+    //             "Number of nodes %i. Count of faces: %i Three first nodes %i %i %i",
+    //             el->getNum(),face.getNumVertices(),faceToElement.count(face),
+    //             face.getVertex(0)->getNum(),face.getVertex(1)->getNum(),
+    //             face.getVertex(2)->getNum());
       return;
     }
     MFace outFace = fit->first;
@@ -847,8 +842,8 @@ static void checkConformity
   if (ElementType::ParentTypeFromTag(el->getType()) == TYPE_TRIH){
     //Each face of a trihedron should exist twice (no face on the boundary)
     if (connectivity != 2)
-      Msg::Error("Non conforming trihedron %i (nb connections for a face %i)",
-                 el->getNum(), faceToElement.count(face));
+   //   Msg::Error("Non conforming trihedron %i (nb connections for a face %i)",
+   //              el->getNum(), faceToElement.count(face));
   }
   else{
     //A face can exist  twice (inside) or once (boundary)
@@ -856,11 +851,11 @@ static void checkConformity
       for (int iV = 0; iV < face.getNumVertices(); iV++)
         if (face.getVertex(iV)->onWhat()->dim() == 3 || connectivity != 1){
           for (int jV = 0; jV < face.getNumVertices(); jV++)
-            Msg::Info("Vertex %i dim %i",face.getVertex(jV)->getNum(),
-                      face.getVertex(iV)->onWhat()->dim());
-          Msg::Error("Non conforming element %i (%i connection(s) for a face "
-                     "located on dim %i (vertex %i))",el->getNum(), connectivity,
-                     face.getVertex(iV)->onWhat()->dim(), face.getVertex(iV)->getNum());
+    //        Msg::Info("Vertex %i dim %i",face.getVertex(jV)->getNum(),
+    //                  face.getVertex(iV)->onWhat()->dim());
+    //      Msg::Error("Non conforming element %i (%i connection(s) for a face "
+     //                "located on dim %i (vertex %i))",el->getNum(), connectivity,
+     //                face.getVertex(iV)->onWhat()->dim(), face.getVertex(iV)->getNum());
         }
     }
   }
@@ -868,7 +863,7 @@ static void checkConformity
 
 void GModel::setAllVolumesPositiveTopology()
 {
-  Msg::Info("Orienting volumes according to topology");
+ // Msg::Info("Orienting volumes according to topology");
   std::map< MElement *, std::vector < std::pair < MElement *, bool> > > elToNeighbors;
   std::multimap< MFace , MElement *, Less_Face> faceToElement;
 
@@ -892,7 +887,10 @@ void GModel::setAllVolumesPositiveTopology()
   std::vector< std::pair <MElement *, bool > > queue;
   std::set<MElement*> queued;
   if ( (*regions.begin())->tetrahedra.size() == 0)
-    Msg::Fatal("setAllVolumePositiveTopology needs at least one tetrahedron to start");
+  {
+  //  Msg::Fatal("setAllVolumePositiveTopology needs at least one tetrahedron to start");
+	
+  }
   el = (*regions.begin())->tetrahedra[0];
   queue.push_back(std::make_pair(el, true));
   for (size_t i = 0; i < queue.size(); i++){
@@ -954,7 +952,6 @@ int GModel::adaptMesh(std::vector<int> technique,
   //    5) Same as 4, except that the transition in band E uses linear interpolation
   //       of h, instead of linear interpolation of metric
 
-#if defined(HAVE_MESH)
   // copy context (in order to allow multiple calls)
   CTX _backup = *(CTX::instance());
 
@@ -968,7 +965,7 @@ int GModel::adaptMesh(std::vector<int> technique,
   int ITER = 0;
   if (meshAll){
     while(1){
-      Msg::Info("-- adaptMesh (allDim) ITER =%d ", ITER);
+  //    Msg::Info("-- adaptMesh (allDim) ITER =%d ", ITER);
       fields->reset();
       meshMetric *metric = new meshMetric(this);
       for (unsigned int imetric = 0; imetric < technique.size(); imetric++){
@@ -1001,7 +998,7 @@ int GModel::adaptMesh(std::vector<int> technique,
   }
   else{ //adapt only upper most dimension
     while(1) {
-      Msg::Info("-- adaptMesh ITER =%d ", ITER);
+   //   Msg::Info("-- adaptMesh ITER =%d ", ITER);
       std::vector<MElement*> elements;
 
       if (getDim() == 2){
@@ -1065,35 +1062,21 @@ int GModel::adaptMesh(std::vector<int> technique,
   *(CTX::instance()) = _backup ;
 
   return 0;
-#else
-  Msg::Error("Mesh module not compiled");
-  return -1;
-#endif
 }
 
 int GModel::refineMesh(int linear)
 {
-#if defined(HAVE_MESH)
   RefineMesh(this, linear);
   return 1;
-#else
-  Msg::Error("Mesh module not compiled");
-  return 0;
-#endif
 }
 
 int GModel::optimizeMesh(const std::string &how)
 {
-#if defined(HAVE_MESH)
-  if(how == "Netgen")
-    OptimizeMeshNetgen(this);
-  else
+//  if(how == "Netgen")
+//    OptimizeMeshNetgen(this);
+ // else
     OptimizeMesh(this);
   return 1;
-#else
-  Msg::Error("Mesh module not compiled");
-  return 0;
-#endif
 }
 
 int GModel::partitionMesh(int numPart)
@@ -1110,13 +1093,8 @@ int GModel::partitionMesh(int numPart)
 
 int GModel::setOrderN(int order, int linear, int incomplete)
 {
-#if defined(HAVE_MESH)
   SetOrderN(this, order, linear, incomplete);
   return true;
-#else
-  Msg::Error("Mesh module not compiled");
-  return false;
-#endif
 }
 
 int GModel::getMeshStatus(bool countDiscrete)
@@ -1189,7 +1167,7 @@ int GModel::getNumMeshElements(unsigned c[6])
 MElement *GModel::getMeshElementByCoord(SPoint3 &p, int dim, bool strict)
 {
   if(!_octree){
-    Msg::Debug("Rebuilding mesh element octree");
+ //   Msg::Debug("Rebuilding mesh element octree");
     _octree = new MElementOctree(this);
   }
   return _octree->find(p.x(), p.y(), p.z(), dim, strict);
@@ -1198,7 +1176,7 @@ MElement *GModel::getMeshElementByCoord(SPoint3 &p, int dim, bool strict)
 std::vector<MElement*> GModel::getMeshElementsByCoord(SPoint3 &p, int dim, bool strict)
 {
   if(!_octree){
-    Msg::Debug("Rebuilding mesh element octree");
+//    Msg::Debug("Rebuilding mesh element octree");
     _octree = new MElementOctree(this);
   }
   return _octree->findAll(p.x(), p.y(), p.z(), dim, strict);
@@ -1215,14 +1193,14 @@ void GModel::deleteOctree()
 MVertex *GModel::getMeshVertexByTag(int n)
 {
   if(_vertexVectorCache.empty() && _vertexMapCache.empty()){
-    Msg::Debug("Rebuilding mesh vertex cache");
+//    Msg::Debug("Rebuilding mesh vertex cache");
     _vertexVectorCache.clear();
     _vertexMapCache.clear();
     bool dense = (getNumMeshVertices() == _maxVertexNum);
     std::vector<GEntity*> entities;
     getEntities(entities);
     if(dense){
-      Msg::Debug("Good: we have a dense vertex numbering in the cache");
+  //    Msg::Debug("Good: we have a dense vertex numbering in the cache");
       // numbering starts at 1
       _vertexVectorCache.resize(_maxVertexNum + 1);
       for(unsigned int i = 0; i < entities.size(); i++)
@@ -1272,14 +1250,14 @@ void GModel::getMeshVerticesForPhysicalGroup(int dim, int num, std::vector<MVert
 MElement *GModel::getMeshElementByTag(int n)
 {
   if(_elementVectorCache.empty() && _elementMapCache.empty()){
-    Msg::Debug("Rebuilding mesh element cache");
+  //  Msg::Debug("Rebuilding mesh element cache");
     _elementVectorCache.clear();
     _elementMapCache.clear();
     bool dense = (getNumMeshElements() == _maxElementNum);
     std::vector<GEntity*> entities;
     getEntities(entities);
     if(dense){
-      Msg::Debug("Good: we have a dense element numbering in the cache");
+    //  Msg::Debug("Good: we have a dense element numbering in the cache");
       // numbering starts at 1
       _elementVectorCache.resize(_maxElementNum + 1);
       for(unsigned int i = 0; i < entities.size(); i++)
@@ -1567,7 +1545,7 @@ void GModel::_createGeometryOfDiscreteEntities(bool force)
     exportDiscreteGEOInternals();
   }
   if (force || CTX::instance()->meshDiscrete){
-    Msg::Info("Creating the geometry of discrete curves");
+  //  Msg::Info("Creating the geometry of discrete curves");
     for(eiter it = firstEdge(); it != lastEdge(); ++it){
       if((*it)->geomType() == GEntity::DiscreteCurve) {
 	discreteEdge *de = dynamic_cast<discreteEdge*> (*it);
@@ -1576,7 +1554,7 @@ void GModel::_createGeometryOfDiscreteEntities(bool force)
     }
   }
   if (CTX::instance()->meshDiscrete){
-    Msg::Info("Creating the geometry of discrete surfaces");
+//    Msg::Info("Creating the geometry of discrete surfaces");
     for(fiter it = firstFace(); it != lastFace(); ++it){
       if((*it)->geomType() == GEntity::DiscreteSurface) {
 	discreteFace *df = dynamic_cast<discreteFace*> (*it);
@@ -1708,7 +1686,7 @@ static bool getVertices(int num, int *indices, std::map<int, MVertex*> &map,
 {
   for(int i = 0; i < num; i++){
     if(!map.count(indices[i])){
-      Msg::Error("Wrong vertex index %d", indices[i]);
+ //     Msg::Error("Wrong vertex index %d", indices[i]);
       return false;
     }
     else
@@ -1722,7 +1700,7 @@ static bool getVertices(int num, int *indices, std::vector<MVertex*> &vec,
 {
   for(int i = 0; i < num; i++){
     if(indices[i] < minVertex || indices[i] > (int)(vec.size() - 1 + minVertex)){
-      Msg::Error("Wrong vertex index %d", indices[i]);
+   //   Msg::Error("Wrong vertex index %d", indices[i]);
       return false;
     }
     else
@@ -1743,23 +1721,23 @@ GModel *GModel::createGModel(std::map<int, MVertex*> &vertexMap,
   int numElement = (int)elementNum.size();
 
   if(numElement != (int)vertexIndices.size()){
-    Msg::Error("Dimension in vertices numbers");
+  //  Msg::Error("Dimension in vertices numbers");
     return 0;
   }
   if(numElement != (int)elementType.size()){
-    Msg::Error("Dimension in elementType numbers");
+   // Msg::Error("Dimension in elementType numbers");
     return 0;
   }
   if(numElement != (int)physical.size()){
-    Msg::Error("Dimension in physical numbers");
+   // Msg::Error("Dimension in physical numbers");
     return 0;
   }
   if(numElement != (int)elementary.size()){
-    Msg::Error("Dimension in elementary numbers");
+   // Msg::Error("Dimension in elementary numbers");
     return 0;
   }
   if(numElement != (int)partition.size()){
-    Msg::Error("Dimension in partition numbers");
+   // Msg::Error("Dimension in partition numbers");
     return 0;
   }
 
@@ -1781,13 +1759,16 @@ GModel *GModel::createGModel(std::map<int, MVertex*> &vertexMap,
     maxVertex = std::max(maxVertex, num);
   }
   if(minVertex == std::numeric_limits<int>::max())
-    Msg::Error("Could not determine the min index of vertices");
+  {
+  //  Msg::Error("Could not determine the min index of vertices");
+	
+  }
 
   // if the vertex numbering is dense, transfer the map into a vector to speed
   // up element creation
   if((minVertex == 1 && maxVertex == numVertices) ||
      (minVertex == 0 && maxVertex == numVertices - 1)){
-    Msg::Info("Vertex numbering is dense");
+  //  Msg::Info("Vertex numbering is dense");
     vertexVector.resize(vertexMap.size() + 1);
     if(minVertex == 1)
       vertexVector[0] = 0;
@@ -1808,14 +1789,14 @@ GModel *GModel::createGModel(std::map<int, MVertex*> &vertexMap,
     indices = &vertexIndices[i][0];
     if(vertexVector.size()){
       if(!getVertices(nbVertices, indices, vertexVector, vertices)){
-        Msg::Error("Vertex not found aborting");
+   //     Msg::Error("Vertex not found aborting");
         delete gm;
         return 0;
       }
     }
     else{
       if(!getVertices(nbVertices, indices, vertexMap, vertices)){
-        Msg::Error("Vertex not found aborting");
+     //   Msg::Error("Vertex not found aborting");
         delete gm;
         return 0;
       }
@@ -1824,7 +1805,7 @@ GModel *GModel::createGModel(std::map<int, MVertex*> &vertexMap,
     MElementFactory f;
     MElement *e = f.create(elementType[i], vertices, num, partition[i]);
     if(!e){
-      Msg::Error("Unknown type of element %d", elementType[i]);
+    //  Msg::Error("Unknown type of element %d", elementType[i]);
       delete gm;
       return 0;
     }
@@ -1840,7 +1821,10 @@ GModel *GModel::createGModel(std::map<int, MVertex*> &vertexMap,
     case TYPE_TRIH : elements[8][elementary[i]].push_back(e); break;
     case TYPE_POLYG: elements[9][elementary[i]].push_back(e); break;
     case TYPE_POLYH: elements[10][elementary[i]].push_back(e); break;
-    default : Msg::Error("Wrong type of element"); delete gm; return 0;
+    default :
+	//	Msg::Error("Wrong type of element"); 
+		delete gm; 
+		return 0;
     }
     int dim = e->getDim();
     if(physical[i] && (!physicals[dim].count(elementary[i]) ||
@@ -1911,7 +1895,7 @@ void GModel::checkMeshCoherence(double tolerance)
   int numEle = getNumMeshElements();
   if(!numEle) return;
 
-  Msg::StatusBar(true, "Checking mesh coherence (%d elements)...", numEle);
+//  Msg::StatusBar(true, "Checking mesh coherence (%d elements)...", numEle);
 
   SBoundingBox3d bbox = bounds();
   double lc = bbox.empty() ? 1. : norm(SVector3(bbox.max(), bbox.min()));
@@ -1922,28 +1906,37 @@ void GModel::checkMeshCoherence(double tolerance)
 
   // check for duplicate mesh vertices
   {
-    Msg::Info("Checking for duplicate vertices...");
+  //  Msg::Info("Checking for duplicate vertices...");
     std::vector<MVertex*> vertices;
     for(unsigned int i = 0; i < entities.size(); i++)
       vertices.insert(vertices.end(), entities[i]->mesh_vertices.begin(),
                       entities[i]->mesh_vertices.end());
     MVertexRTree pos(eps);
     int num = pos.insert(vertices, true);
-    if(num) Msg::Error("%d duplicate vert%s", num, num > 1 ? "ices" : "ex");
+    if(num)
+	{
+		//Msg::Error("%d duplicate vert%s", num, num > 1 ? "ices" : "ex");
+	}
   }
 
   // check for duplicate elements
   {
-    Msg::Info("Checking for duplicate elements...");
+   // Msg::Info("Checking for duplicate elements...");
     std::vector<MVertex*> vertices;
     for(unsigned int i = 0; i < entities.size(); i++){
       for(unsigned int j = 0; j < entities[i]->getNumMeshElements(); j++){
         MElement *e = entities[i]->getMeshElement(j);
         double vol = e->getVolume();
         if(vol < 0)
-          Msg::Warning("Element %d has negative volume", e->getNum());
+		{
+        //  Msg::Warning("Element %d has negative volume", e->getNum());
+		  
+		}
         else if(vol < eps * eps * eps)
-          Msg::Warning("Element %d has zero volume", e->getNum());
+		{
+     //     Msg::Warning("Element %d has zero volume", e->getNum());
+		  
+		}
         SPoint3 p = e->barycenter();
         vertices.push_back(new MVertex(p.x(), p.y(), p.z()));
       }
@@ -1952,15 +1945,19 @@ void GModel::checkMeshCoherence(double tolerance)
     int num = pos.insert(vertices, true);
     for(unsigned int i = 0; i < vertices.size(); i++)
       delete vertices[i];
-    if(num) Msg::Error("%d duplicate element%s", num, num > 1 ? "s" : "");
+    if(num)
+	{ 
+	//	Msg::Error("%d duplicate element%s", num, num > 1 ? "s" : "");
+		
+	}
   }
 
-  Msg::StatusBar(true, "Done checking mesh coherence");
+ // Msg::StatusBar(true, "Done checking mesh coherence");
 }
 
 int GModel::removeDuplicateMeshVertices(double tolerance)
 {
-  Msg::StatusBar(true, "Removing duplicate mesh vertices...");
+ // Msg::StatusBar(true, "Removing duplicate mesh vertices...");
 
   SBoundingBox3d bbox = bounds();
   double lc = bbox.empty() ? 1. : norm(SVector3(bbox.max(), bbox.min()));
@@ -1997,10 +1994,10 @@ int GModel::removeDuplicateMeshVertices(double tolerance)
   }
 
   int num = (int)duplicates.size();
-  Msg::Info("Found %d duplicate vertices ", num);
+ // Msg::Info("Found %d duplicate vertices ", num);
 
   if(!num){
-    Msg::Info("No duplicate vertices found");
+   // Msg::Info("No duplicate vertices found");
     return 0;
   }
 
@@ -2056,9 +2053,12 @@ int GModel::removeDuplicateMeshVertices(double tolerance)
     delete to_delete[i];
 
   if(num)
-    Msg::Info("Removed %d duplicate mesh %s", num, num > 1 ? "vertices" : "vertex");
+  {
+  //  Msg::Info("Removed %d duplicate mesh %s", num, num > 1 ? "vertices" : "vertex");
+	
+  }
 
-  Msg::StatusBar(true, "Done removing duplicate mesh vertices");
+ // Msg::StatusBar(true, "Done removing duplicate mesh vertices");
   return num;
 }
 
@@ -2215,7 +2215,7 @@ static int connectedSurfaceBoundaries(std::set<MEdge, Less_Edge> &edges,
 
 void GModel::alignPeriodicBoundaries()
 {
-  Msg::Debug("Aligning periodic boundaries");
+//  Msg::Debug("Aligning periodic boundaries");
 
   // realigning edges
 
@@ -2231,8 +2231,12 @@ void GModel::alignPeriodicBoundaries()
       std::map<MEdge,MLine*,Less_Edge> srcLines;
       for (unsigned int i=0;i<src->getNumMeshElements();i++)  {
         MLine* srcLine = dynamic_cast<MLine*>(src->getMeshElement(i));
-        if (!srcLine) Msg::Error("Master element %d is not an edge ",
-                                 src->getMeshElement(i)->getNum());
+        if (!srcLine)
+		{
+	//		Msg::Error("Master element %d is not an edge ",
+      //                           src->getMeshElement(i)->getNum());
+								 
+		}
         srcLines[MEdge(srcLine->getVertex(0),
                        srcLine->getVertex(1))] = srcLine;
       }
@@ -2245,8 +2249,11 @@ void GModel::alignPeriodicBoundaries()
 
         MLine* tgtLine = dynamic_cast<MLine*> (tgt->getMeshElement(i));
 
-        if (!tgtLine) Msg::Error("Slave element %d is not an edge ",
-                            tgt->getMeshElement(i)->getNum());
+        if (!tgtLine)
+		{
+			Msg::Error("Slave element %d is not an edge ",tgt->getMeshElement(i)->getNum());
+		}
+                            
 
 
         MVertex* tgtVtcs[2];
@@ -2262,8 +2269,8 @@ void GModel::alignPeriodicBoundaries()
             //              tgtVtx->getNum(),tgt->tag(),ge->tag(),ge->dim());
             srcIter = geV2v.find(tgtVtx);
             if (srcIter == geV2v.end()) {
-              Msg::Error("Cannot find periodic counterpart of vertex %d on edge %d"
-                         " nor on %d",tgtVtx->getNum(),tgt->tag(),ge->tag());
+           //   Msg::Error("Cannot find periodic counterpart of vertex %d on edge %d"
+            //             " nor on %d",tgtVtx->getNum(),tgt->tag(),ge->tag());
             }
             else tgtVtcs[iVtx] = srcIter->second;
           }
@@ -2275,14 +2282,14 @@ void GModel::alignPeriodicBoundaries()
         std::map<MEdge,MLine*,Less_Edge>::iterator sIter = srcLines.find(tgtEdge);
 
         if (sIter == srcLines.end()) {
-          Msg::Error("Can't find periodic counterpart of edge %d-%d on edge %d"
-                     ", connected to edge %d-%d on %d",
-                     tgtLine->getVertex(0)->getNum(),
-                     tgtLine->getVertex(1)->getNum(),
-                     tgt->tag(),
-                     tgtVtcs[0]->getNum(),
-                     tgtVtcs[1]->getNum(),
-                     src->tag());
+        //  Msg::Error("Can't find periodic counterpart of edge %d-%d on edge %d"
+        //             ", connected to edge %d-%d on %d",
+        //             tgtLine->getVertex(0)->getNum(),
+        //             tgtLine->getVertex(1)->getNum(),
+        //             tgt->tag(),
+        //             tgtVtcs[0]->getNum(),
+         //            tgtVtcs[1]->getNum(),
+         //            src->tag());
         }
         else {
           MLine* srcLine = sIter->second;
@@ -2336,13 +2343,13 @@ void GModel::alignPeriodicBoundaries()
 
           std::map<MVertex*,MVertex*>::iterator vIter = v2v.find(vtx);
           if (vIter==v2v.end()) {
-            Msg::Info("Could not find copy of vertex %d in face %d"
-                      ", looking in entity %d of dimension %d",
-                      vtx->getNum(),tgt->tag(),ge->tag(), ge->dim());
+         //   Msg::Info("Could not find copy of vertex %d in face %d"
+          //            ", looking in entity %d of dimension %d",
+          //            vtx->getNum(),tgt->tag(),ge->tag(), ge->dim());
             vIter = geV2v.find(vtx);
             if (vIter == geV2v.end()) {
-              Msg::Error("Could not find copy of vertex %d in %d nor in %d",
-                         vtx->getNum(),tgt->tag(),ge->tag());
+           //   Msg::Error("Could not find copy of vertex %d in %d nor in %d",
+           //              vtx->getNum(),tgt->tag(),ge->tag());
             }
             else vtcs.push_back(vIter->second);
           }
@@ -2357,9 +2364,9 @@ void GModel::alignPeriodicBoundaries()
           for (int iVtx=0;iVtx<nbVtcs;iVtx++) {
             faceDef << vtcs[iVtx]->getNum() << " ";
           }
-          Msg::Error("Cannot find periodic counterpart of face %s in face %d "
-                     "connected to %d",faceDef.str().c_str(),
-                     tgt->tag(),src->tag());
+         // Msg::Error("Cannot find periodic counterpart of face %s in face %d "
+         //            "connected to %d",faceDef.str().c_str(),
+         //            tgt->tag(),src->tag());
 
         }
         else {
@@ -2375,13 +2382,13 @@ void GModel::alignPeriodicBoundaries()
           bool swap = false;
 
           if (!tgtFace.computeCorrespondence(srcFace,rotation,swap)) {
-            Msg::Error("Non-corresponding face %d-%d-%d (slave) %d-%d-%d (master)",
-                       tgtElmt->getVertex(0)->getNum(),
-                       tgtElmt->getVertex(1)->getNum(),
-                       tgtElmt->getVertex(2)->getNum(),
-                       srcElmt->getVertex(0)->getNum(),
-                       srcElmt->getVertex(1)->getNum(),
-                       srcElmt->getVertex(2)->getNum());
+        //    Msg::Error("Non-corresponding face %d-%d-%d (slave) %d-%d-%d (master)",
+        //               tgtElmt->getVertex(0)->getNum(),
+        //               tgtElmt->getVertex(1)->getNum(),
+        //               tgtElmt->getVertex(2)->getNum(),
+         //              srcElmt->getVertex(0)->getNum(),
+        //              srcElmt->getVertex(1)->getNum(),
+        //               srcElmt->getVertex(2)->getNum());
           }
 
           if (tgtTri) tgtTri->reorient(rotation,swap);
@@ -2390,12 +2397,12 @@ void GModel::alignPeriodicBoundaries()
       }
     }
   }
-  Msg::Debug("Done aligning periodic boundaries");
+  //Msg::Debug("Done aligning periodic boundaries");
 }
 
 void GModel::makeDiscreteRegionsSimplyConnected()
 {
-  Msg::Debug("Making discrete regions simply connected...");
+ // Msg::Debug("Making discrete regions simply connected...");
 
   std::vector<discreteRegion*> discRegions;
   for(riter it = firstRegion(); it != lastRegion(); it++)
@@ -2450,12 +2457,12 @@ void GModel::makeDiscreteRegionsSimplyConnected()
     }
   }
 
-  Msg::Debug("Done making discrete regions simply connected");
+ // Msg::Debug("Done making discrete regions simply connected");
 }
 
 void GModel::makeDiscreteFacesSimplyConnected()
 {
-  Msg::Debug("Making discrete faces simply connected...");
+ // Msg::Debug("Making discrete faces simply connected...");
 
   std::vector<discreteFace*> discFaces;
   for(fiter it = firstFace(); it != lastFace(); it++)
@@ -2507,12 +2514,12 @@ void GModel::makeDiscreteFacesSimplyConnected()
     }
   }
 
-  Msg::Debug("Done making discrete faces simply connected");
+ // Msg::Debug("Done making discrete faces simply connected");
 }
 
 void GModel::createTopologyFromMesh(int ignoreHoles)
 {
-  Msg::StatusBar(true, "Creating topology from mesh...");
+ // Msg::StatusBar(true, "Creating topology from mesh...");
   double t1 = Cpu();
   removeDuplicateMeshVertices(CTX::instance()->geom.tolerance);
   makeDiscreteRegionsSimplyConnected();
@@ -2523,7 +2530,7 @@ void GModel::createTopologyFromMesh(int ignoreHoles)
     createTopologyFromMeshNew ();
     exportDiscreteGEOInternals();
     double t2 = Cpu();
-    Msg::StatusBar(true, "Done creating topology from mesh (%g s)", t2 - t1);
+  //  Msg::StatusBar(true, "Done creating topology from mesh (%g s)", t2 - t1);
     return;
   }
 
@@ -2551,12 +2558,12 @@ void GModel::createTopologyFromMesh(int ignoreHoles)
 
   double t2 = Cpu();
 
-  Msg::StatusBar(true, "Done creating topology from mesh (%g s)", t2 - t1);
+ // Msg::StatusBar(true, "Done creating topology from mesh (%g s)", t2 - t1);
 }
 
 void GModel::createTopologyFromRegions(std::vector<discreteRegion*> &discRegions)
 {
-  Msg::Debug("Creating topology from regions...");
+ // Msg::Debug("Creating topology from regions...");
 
   // find boundary mesh faces of each discrete region and put them in
   // map_faces, which associates each MFace with the tags of the
@@ -2579,7 +2586,7 @@ void GModel::createTopologyFromRegions(std::vector<discreteRegion*> &discRegions
 
   while (!map_faces.empty()){
 
-    Msg::Debug("... %d mesh faces left to process", map_faces.size());
+   // Msg::Debug("... %d mesh faces left to process", map_faces.size());
 
     // get mesh faces with identical region connections (i.e., a part
     // of region boundaries that can be later defined as a discrete
@@ -2705,12 +2712,12 @@ void GModel::createTopologyFromRegions(std::vector<discreteRegion*> &discRegions
     }
   }
 
-  Msg::Debug("Done creating topology from regions");
+ // Msg::Debug("Done creating topology from regions");
 }
 
 void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int ignoreHoles)
 {
-  Msg::Debug("Creating topology from faces...");
+ // Msg::Debug("Creating topology from faces...");
 
   // find boundary mesh edges of each discrete face and put them in
   // map_edges, which associates each MEdge with the tags of the
@@ -2736,7 +2743,7 @@ void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int 
 
   while (!map_edges.empty()){
 
-    Msg::Debug("... %d mesh edges left to process", map_edges.size());
+ //   Msg::Debug("... %d mesh edges left to process", map_edges.size());
 
     // get mesh edges with identical face connections (i.e., a part of
     // face boundaries that can be later defined as a discrete edge)
@@ -2865,10 +2872,10 @@ void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int 
     }
   }
 
-  Msg::Debug("Done creating topology from faces");
+ // Msg::Debug("Done creating topology from faces");
 
-  Msg::Debug("Creating topology for %d edges...", discEdges.size());
-
+ // Msg::Debug("Creating topology for %d edges...", discEdges.size());
+//
   // for each discreteEdge, create topology
   //KH std::map<GFace*, std::map<MVertex*, MVertex*, std::less<MVertex*> > > face2Vert;
   //KH std::map<GRegion*, std::map<MVertex*, MVertex*, std::less<MVertex*> > > region2Vert;
@@ -2996,13 +3003,13 @@ void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int 
   std::set<GVertex*,GEntityLessThan>::iterator gvIter = vertices.begin();
   for (;gvIter!=vertices.end();++gvIter) (*gvIter)->updateVertices(old2new);
 
-  Msg::Debug("Done creating topology for edges");
+ // Msg::Debug("Done creating topology for edges");
 }
 
 void makeSimplyConnected(std::map<int, std::vector<MElement*> > elements[11])
 {
   //only for tetras and triangles
-  Msg::Info("Make simply connected regions and surfaces");
+ // Msg::Info("Make simply connected regions and surfaces");
   std::vector<int> regs;
   for(std::map<int, std::vector<MElement*> >::iterator it = elements[4].begin();
       it != elements[4].end(); it++)
@@ -3024,7 +3031,7 @@ void makeSimplyConnected(std::map<int, std::vector<MElement*> > elements[11])
       allElements.push_back(elements[4][ri][j]);
     std::vector<std::vector<MElement*> > conRegions;
     int nbConRegions = connectedVolumes(allElements, conRegions);
-    Msg::Info("%d connected regions (reg=%d)", nbConRegions, ri);
+ //  Msg::Info("%d connected regions (reg=%d)", nbConRegions, ri);
     unsigned int maxNumEl = 1;
     for(int j = 0; j < nbConRegions; j++)
       if(conRegions[j].size() > maxNumEl)
@@ -3067,7 +3074,10 @@ void makeSimplyConnected(std::map<int, std::vector<MElement*> > elements[11])
             }
             if(r2 != ri) break;
           }
-          if(r2 == ri) Msg::Warning("Element not found for simply connected regions");
+          if(r2 == ri)
+			{
+		//	 Msg::Warning("Element not found for simply connected regions");
+			}
         }
 
         for(unsigned int k = 0; k < conRegions[j].size(); k++){
@@ -3103,7 +3113,7 @@ void makeSimplyConnected(std::map<int, std::vector<MElement*> > elements[11])
       allElements.push_back(elements[2][fi][j]);
     std::vector<std::vector<MElement*> > conSurfaces;
     int nbConSurfaces = connectedSurfaces(allElements, conSurfaces);
-    Msg::Info("%d connected surfaces (reg=%d)", nbConSurfaces, fi);
+ //   Msg::Info("%d connected surfaces (reg=%d)", nbConSurfaces, fi);
     unsigned int maxNumEl = 1;
     for(int j = 0; j < nbConSurfaces; j++)
       if(conSurfaces[j].size() > maxNumEl)
@@ -3145,7 +3155,10 @@ void makeSimplyConnected(std::map<int, std::vector<MElement*> > elements[11])
             }
             if(f2 != fi) break;
           }
-          if(f2 == fi) Msg::Warning("Element not found for simply connected surfaces");
+          if(f2 == fi)
+			{
+			// Msg::Warning("Element not found for simply connected surfaces");
+			}
         }
         for(unsigned int k = 0; k < conSurfaces[j].size(); k++){
           MElement *el = conSurfaces[j][k];
@@ -3172,8 +3185,17 @@ GModel *GModel::buildCutGModel(gLevelset *ls, bool cutElem, bool saveTri)
   std::map<int, std::map<int, std::string> > physicals[4];
   std::map<int, MVertex*> vertexMap;
 
-  if(cutElem) Msg::Info("Cutting mesh...");
-  else Msg::Info("Splitting mesh...");
+  if(cutElem)
+  {
+
+	//Msg::Info("Cutting mesh...");
+ 
+  }
+  else
+  {
+	//Msg::Info("Splitting mesh...");
+ 
+  }
   double t1 = Cpu();
 
   GModel *cutGM = buildCutMesh(this, ls, elements, vertexMap, physicals, cutElem);
@@ -3197,8 +3219,14 @@ GModel *GModel::buildCutGModel(gLevelset *ls, bool cutElem, bool saveTri)
     }
   }
 
-  if(cutElem) Msg::Info("Mesh cutting completed (%g s)", Cpu() - t1);
-  else Msg::Info("Mesh splitting completed (%g s)", Cpu() - t1);
+  if(cutElem)
+	{
+	// Msg::Info("Mesh cutting completed (%g s)", Cpu() - t1);
+	}
+  else 
+  {
+	//  Msg::Info("Mesh splitting completed (%g s)", Cpu() - t1);
+  }
 
   return cutGM;
 }
@@ -3267,7 +3295,7 @@ static void factoryWarning()
 {
   static bool warn = true;
   if(warn){
-    Msg::Warning("GModelFactory is deprecated and will be removed in Gmsh 3.1");
+ //   Msg::Warning("GModelFactory is deprecated and will be removed in Gmsh 3.1");
     warn = false;
   }
 }
@@ -3593,7 +3621,7 @@ static void glueVerticesInEdges(GModel *model,
                                 std::multimap<GVertex*, GVertex*> &Unique2Duplicates,
                                 std::map<GVertex*, GVertex*> &Duplicates2Unique)
 {
-  Msg::Debug("Gluing Edges");
+ // Msg::Debug("Gluing Edges");
   for (GModel::eiter it = model->firstEdge(); it != model->lastEdge(); ++it){
     GEdge *e = *it;
     GVertex *v1 = e->getBeginVertex();
@@ -3601,7 +3629,7 @@ static void glueVerticesInEdges(GModel *model,
     GVertex *replacementOfv1 = Duplicates2Unique[v1];
     GVertex *replacementOfv2 = Duplicates2Unique[v2];
     if ((v1 != replacementOfv1) || (v2 != replacementOfv2)){
-      Msg::Debug("Model Edge %d is re-build", e->tag());
+     // Msg::Debug("Model Edge %d is re-build", e->tag());
       e->replaceEndingPoints (replacementOfv1, replacementOfv2);
     }
   }
@@ -3665,7 +3693,7 @@ static void glueEdgesInFaces(GModel *model,
                              std::multimap<GEdge*, GEdge*> &Unique2Duplicates,
                              std::map<GEdge*, GEdge*> &Duplicates2Unique)
 {
-  Msg::Debug("Gluing Model Faces");
+ // Msg::Debug("Gluing Model Faces");
   for (GModel::fiter it = model->firstFace(); it != model->lastFace(); ++it){
     GFace *f = *it;
     bool aDifferenceExists = false;
@@ -3678,7 +3706,7 @@ static void glueEdgesInFaces(GModel *model,
       }
     }
     if (aDifferenceExists){
-      Msg::Debug("Model Face %d is re-build", f->tag());
+   //   Msg::Debug("Model Face %d is re-build", f->tag());
       f->replaceEdges(enew);
     }
   }
@@ -3745,7 +3773,7 @@ static void glueFacesInRegions(GModel *model,
                                std::multimap<GFace*, GFace*> &Unique2Duplicates,
                                std::map<GFace*, GFace*> &Duplicates2Unique)
 {
-  Msg::Debug("Gluing Regions");
+ // Msg::Debug("Gluing Regions");
   for (GModel::riter it = model->firstRegion(); it != model->lastRegion();++it){
     GRegion *r = *it;
     bool aDifferenceExists = false;
@@ -3753,7 +3781,7 @@ static void glueFacesInRegions(GModel *model,
     for (std::list<GFace*>::iterator fit = old.begin(); fit != old.end(); fit++){
       std::map<GFace*, GFace*>::iterator itR = Duplicates2Unique.find(*fit);
       if (itR == Duplicates2Unique.end()){
-        Msg::Error("Error in the gluing process");
+   //     Msg::Error("Error in the gluing process");
         return;
       }
       GFace *temp = itR->second;;
@@ -3763,7 +3791,7 @@ static void glueFacesInRegions(GModel *model,
       }
     }
     if (aDifferenceExists){
-      Msg::Debug("Model Region %d is re-build", r->tag());
+   //   Msg::Debug("Model Region %d is re-build", r->tag());
       r->replaceFaces (fnew);
     }
   }
@@ -4118,7 +4146,7 @@ void GModel::computeHomology()
   for(std::multimap<dpair, tpair>::iterator it = _homologyRequests.begin();
       it != _homologyRequests.end(); it++)
     domains.insert(it->first);
-  Msg::Info("Number of cell complexes to construct: %d", domains.size());
+ // Msg::Info("Number of cell complexes to construct: %d", domains.size());
 
   for(std::set<dpair>::iterator it = domains.begin(); it != domains.end(); it++){
     std::pair<std::multimap<dpair, tpair>::iterator,
@@ -4153,21 +4181,21 @@ void GModel::computeHomology()
       std::string dims = ss.str();
 
       if(type != "Homology" && type != "Cohomology" && type != "Betti") {
-        Msg::Error("Unknown type of homology computation: %s", type.c_str());
+    //    Msg::Error("Unknown type of homology computation: %s", type.c_str());
       }
       else if(dim.empty() || type == "Betti") {
         homology->findBettiNumbers();
       }
       else if(type == "Homology" && !homology->isHomologyComputed(dim)) {
         homology->findHomologyBasis(dim);
-        Msg::Info("Homology space basis chains to save: %s", dims.c_str());
+     //   Msg::Info("Homology space basis chains to save: %s", dims.c_str());
         for(unsigned int i = 0; i < dim.size(); i++) {
           homology->addChainsToModel(dim.at(i));
         }
       }
       else if(type == "Cohomology" && !homology->isCohomologyComputed(dim)) {
         homology->findCohomologyBasis(dim);
-        Msg::Info("Cohomology space basis cochains to save: %s", dims.c_str());
+       // Msg::Info("Cohomology space basis cochains to save: %s", dims.c_str());
         for(unsigned int i = 0; i < dim.size(); i++) {
           homology->addCochainsToModel(dim.at(i));
         }
@@ -4179,11 +4207,11 @@ void GModel::computeHomology()
   Msg::Info("");
 
   double t2 = Cpu();
-  Msg::StatusBar(true, "Done homology and cohomology computation (%g s)",
-                 t2 - t1);
+ // Msg::StatusBar(true, "Done homology and cohomology computation (%g s)",
+  //               t2 - t1);
 
 #else
-  Msg::Error("Homology computation requires KBIPACK");
+  //Msg::Error("Homology computation requires KBIPACK");
 #endif
 }
 

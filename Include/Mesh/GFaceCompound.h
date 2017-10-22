@@ -8,19 +8,21 @@
 
 #include <list>
 #include <map>
-#include "GmshConfig.h"
-#include "GmshMessage.h"
-#include "GFace.h"
+//#include "GmshConfig.h"
+//#include "GmshMessage.h"
+#include "Mesh/GFace.h"
 template <class scalar> class simpleFunction;
+
+
 
 #if defined(HAVE_SOLVER) && defined(HAVE_ANN)
 
-#include "GEdge.h"
-#include "GEdgeCompound.h"
-#include "meshGFaceOptimize.h"
-#include "linearSystem.h"
-#include "GRbf.h"
-#include "MElementOctree.h"
+#include "Mesh/GEdge.h"
+#include "Mesh/GEdgeCompound.h"
+#include "Mesh/meshGFaceOptimize.h"
+#include "Mesh/linearSystem.h"
+#include "Mesh/GRbf.h"
+#include "Mesh/MElementOctree.h"
 class ANNkd_tree;
 
 #define AR_MAX 5 //maximal geometrical aspect ratio
@@ -203,7 +205,7 @@ class GFaceCompound : public GFace {
                 int allowPartition=1)
     : GFace(m, tag)
   {
-    Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
+  //  Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
   }
   GFaceCompound(GModel *m, int tag, std::list<GFace*> &compound,
                 std::list<GEdge*> &U0, std::list<GEdge*> &V0,
@@ -212,7 +214,7 @@ class GFaceCompound : public GFace {
                 int allowPartition=1)
     : GFace(m, tag)
   {
-    Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
+  //  Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
   }
   virtual ~GFaceCompound() {}
   virtual void deleteMesh() {}

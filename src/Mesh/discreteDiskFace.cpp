@@ -7,7 +7,7 @@
 
 #include <queue>
 #include <stdlib.h>
-#include "GmshConfig.h"
+//#include "GmshConfig.h"
 
 #if defined(HAVE_SOLVER) && defined(HAVE_ANN)
 
@@ -25,7 +25,7 @@
 #include "convexCombinationTerm.h"
 
 #if defined(HAVE_MESH)
-#include "qualityMeasuresJacobian.h"
+#include "Mesh/qualityMeasuresJacobian.h"
 #endif
 
 #if defined(HAVE_MUMPS)

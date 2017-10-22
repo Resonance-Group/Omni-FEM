@@ -3,15 +3,15 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "GmshDefines.h"
-#include "MLine.h"
-#include "nodalBasis.h"
-#include "BasisFactory.h"
-#include "GaussLegendre1D.h"
-#include "Context.h"
-#include "qualityMeasures.h"
-#include "decasteljau.h"
-#include "bezierBasis.h"
+#include "Mesh/GmshDefines.h"
+#include "Mesh/MLine.h"
+#include "Mesh/nodalBasis.h"
+#include "Mesh/BasisFactory.h"
+#include "Mesh/GaussLegendre1D.h"
+#include "Mesh/Context.h"
+#include "Mesh/qualityMeasures.h"
+#include "Mesh/decasteljau.h"
+#include "Mesh/bezierBasis.h"
 
 void MLine::getIntegrationPoints(int pOrder, int *npts, IntPt **pts)
 {

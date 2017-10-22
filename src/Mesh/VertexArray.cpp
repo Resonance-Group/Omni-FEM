@@ -57,7 +57,7 @@ void VertexArray::_addElement(MElement *ele)
   if(ele && CTX::instance()->pickElements) _elements.push_back(ele);
 }
 
-/*
+
 void VertexArray::add(double *x, double *y, double *z, SVector3 *n,
                       unsigned int *col, MElement *ele, bool unique, bool boundary)
 {
@@ -65,10 +65,10 @@ void VertexArray::add(double *x, double *y, double *z, SVector3 *n,
     unsigned char r[100], g[100], b[100], a[100];
     int npe = getNumVerticesPerElement();
     for(int i = 0; i < npe; i++){
-      r[i] = CTX::instance()->unpackRed(col[i]);
-      g[i] = CTX::instance()->unpackGreen(col[i]);
-      b[i] = CTX::instance()->unpackBlue(col[i]);
-      a[i] = CTX::instance()->unpackAlpha(col[i]);
+ //     r[i] = CTX::instance()->unpackRed(col[i]);
+ //     g[i] = CTX::instance()->unpackGreen(col[i]);
+ //     b[i] = CTX::instance()->unpackBlue(col[i]);
+ //     a[i] = CTX::instance()->unpackAlpha(col[i]);
     }
     add(x, y, z, n, r, g, b, a, ele, unique, boundary);
   }
@@ -114,7 +114,7 @@ void VertexArray::add(double *x, double *y, double *z, SVector3 *n, unsigned cha
     _addElement(ele);
   }
 }
- */ 
+
 
 void VertexArray::finalize()
 {
@@ -224,7 +224,7 @@ double VertexArray::getMemoryInMb()
   return (double)bytes / 1024. / 1024.;
 }
 
-/*
+
 char *VertexArray::toChar(int num, std::string name, int type, double min, double max,
                           int numsteps, double time, SBoundingBox3d bbox, int &len)
 {
@@ -260,9 +260,9 @@ char *VertexArray::toChar(int num, std::string name, int type, double min, doubl
   if(cs){ memcpy(&bytes[index], &_colors[0], cs); index += cs; }
   return bytes;
 }
- */ 
 
-/*
+
+
 int VertexArray::decodeHeader(int length, const char *bytes, int swap,
                               std::string &name, int &tag, int &type,
                               double &min, double &max, int &numSteps, double &time,
@@ -272,12 +272,12 @@ int VertexArray::decodeHeader(int length, const char *bytes, int swap,
   int is = sizeof(int), ds = sizeof(double);
 
   if(length < 4 * is + 9 * ds){
-    Msg::Error("Too few bytes to create vertex array: %d", length);
+ //   Msg::Error("Too few bytes to create vertex array: %d", length);
     return 0;
   }
 
   if(swap){
-    Msg::Error("Should swap bytes in vertex array--not implemented yet");
+ //   Msg::Error("Should swap bytes in vertex array--not implemented yet");
     return 0;
   }
 
@@ -302,9 +302,9 @@ int VertexArray::decodeHeader(int length, const char *bytes, int swap,
   memcpy(&zmax, &bytes[index], ds); index += ds;
   return index;
 }
- */ 
 
-/*
+
+
 void VertexArray::fromChar(int length, const char *bytes, int swap)
 {
   std::string name;
@@ -333,7 +333,7 @@ void VertexArray::fromChar(int length, const char *bytes, int swap)
     memcpy(&_colors[0], &bytes[index], cs); index += cs;
   }
 }
- */ 
+ 
 
 void VertexArray::merge(VertexArray* va)
 {

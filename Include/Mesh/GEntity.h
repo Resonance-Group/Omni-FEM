@@ -12,7 +12,7 @@
 
 #include "Mesh/Range.h"
 
-//#include "SPoint3.h"
+#include "Mesh/SPoint3.h"
 //#include "SBoundingBox3d.h"
 
 #include "Mesh/SOrientedBoundingBox.h"

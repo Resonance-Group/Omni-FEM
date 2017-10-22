@@ -6,8 +6,8 @@
 #ifndef _MLINE_H_
 #define _MLINE_H_
 
-#include "MElement.h"
-#include "nodalBasis.h"
+#include "Mesh/MElement.h"
+#include "Mesh/nodalBasis.h"
 
 /*
  * MLine

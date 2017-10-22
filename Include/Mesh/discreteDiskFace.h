@@ -6,9 +6,9 @@
 #ifndef _DISCRETE_DISK_FACE_H_
 #define _DISCRETE_DISK_FACE_H_
 
-#include "GmshConfig.h"
+//#include "GmshConfig.h"
 
-// Cool, we do not need this file
+// Cool, we do not need this files
 
 #if defined(HAVE_SOLVER) && defined(HAVE_ANN)
 

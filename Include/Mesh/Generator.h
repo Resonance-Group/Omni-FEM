@@ -7,8 +7,8 @@
 #define _GENERATOR_H_
 
 class GModel;
-class GRegion;
-#include "fullMatrix.h"
+//class GRegion;
+#include "Mesh/fullMatrix.h"
 
 void GetStatistics(double stat[50], double quality[4][100]=0);
 void AdaptMesh(GModel *m);

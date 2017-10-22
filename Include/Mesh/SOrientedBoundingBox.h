@@ -13,11 +13,11 @@
 #include <vector>
 
 //#include <list>
-//#include "SVector3.h"
+#include "Mesh/SVector3.h"
 
 #include "Mesh/SPoint2.h" // This include file may not be necessary
 
-//#include "Pair.h"
+#include "Mesh/Pair.h"
 
 // THis is for 2D
 class SOrientedBoundingRectangle {
@@ -52,7 +52,7 @@ class SOrientedBoundingRectangle {
 };
 
 // This is for 3D
-/*
+
 class SOrientedBoundingBox {
  private:
   SVector3 center;
@@ -102,6 +102,6 @@ class SOrientedBoundingBox {
 
   static double compare(SOrientedBoundingBox &obb1, SOrientedBoundingBox &obb2);
 };
- */ 
+
 
 #endif

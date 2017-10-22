@@ -8,7 +8,7 @@
 
 #include "Mesh/SVector3.h"
 #include "Mesh/fullMatrix.h"
-#include "MEsh/Numeric.h"
+#include "Mesh/Numeric.h"
 
 // concrete class for symmetric positive definite 3x3 matrix
 class SMetric3 {

@@ -17,9 +17,9 @@
 
 #include "Mesh/SOrientedBoundingBox.h"
 
-//#include "Mesh/fullMatrix.h"
+#include "Mesh/fullMatrix.h"
 
-//#include "SBoundingBox3d.h"
+#include "Mesh/SBoundingBox3d.h"
 
 /*
 #if defined(HAVE_MESH)
@@ -28,7 +28,7 @@
  */ 
 
 
-/*
+
 void SOrientedBoundingBox::fillp()
 {
   double dx = 0.5 * size[0];
@@ -218,7 +218,7 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
   Msg::Debug("%f %f %f", covariance(0,0),covariance(0,1),covariance(0,2) );
   Msg::Debug("%f %f %f", covariance(1,0),covariance(1,1),covariance(1,2) );
   Msg::Debug("%f %f %f", covariance(2,0),covariance(2,1),covariance(2,2) );
-  //* Commment this section out
+  //*/
 
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
@@ -324,7 +324,7 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
     record.MakeMeshWithPoints();
   }
   catch(const char *err){
-    Msg::Error("%s", err);
+  //  Msg::Error("%s", err);
   }
 
   std::vector<Segment> convex_hull;
@@ -542,11 +542,11 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
   Msg::Info("Box axis 3 : %f %f %f",Axis3[0],Axis3[1],Axis3[2]);
 
   Msg::Info("Volume : %f", size[0]*size[1]*size[2]);
-  //*
+  //*/
   return (new SOrientedBoundingBox(center,
           size[0], size[1], size[2], Axis1, Axis2, Axis3));
 #else
-  Msg::Error("SOrientedBoundingBox requires mesh module");
+ // Msg::Error("SOrientedBoundingBox requires mesh module");
   return 0;
 #endif
 }
@@ -574,4 +574,4 @@ double SOrientedBoundingBox::compare(SOrientedBoundingBox& obb1,
 
   return (center_term + size_term + orientation_term);
 }
- */ 
+ 

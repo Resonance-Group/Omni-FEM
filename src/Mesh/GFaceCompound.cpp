@@ -7,13 +7,14 @@
 //   Emilie Marchandise
 //
 
-#include "GmshConfig.h"
-#include "GmshDefines.h"
-#include "GFaceCompound.h"
-#include "GEdgeCompound.h"
-#include "intersectCurveSurface.h"
-#include "OS.h"
+//#include "GmshConfig.h"
+#include "Mesh/GmshDefines.h"
+#include "Mesh/GFaceCompound.h"
+#include "Mesh/GEdgeCompound.h"
+#include "Mesh/intersectCurveSurface.h"
+#include "common/OS.h"
 
+// Don't need to worry about these guys
 #if defined(HAVE_SOLVER) && defined(HAVE_ANN)
 
 #include "Options.h"
@@ -466,7 +467,7 @@ void GFaceCompound::fillNeumannBCS_Plane() const
 {
 #if defined(HAVE_MESH)
 
-  Msg::Debug("Meshing %d interior holes with planes ", _interior_loops.size()-1);
+//  Msg::Debug("Meshing %d interior holes with planes ", _interior_loops.size()-1);
 
   fillTris.clear();
   fillNodes.clear();
@@ -631,7 +632,7 @@ bool GFaceCompound::checkOverlap(std::vector<MVertex *> &vert) const
 	  //std::set<MVertex *>::iterator it2 = ov.find(v2);
 	  vert.push_back(v1);
 	  vert.push_back(v2);
-	  Msg::Info("=== Overlap");
+//	  Msg::Info("=== Overlap");
 	  return has_overlap;
 	}
       }
@@ -667,15 +668,23 @@ bool GFaceCompound::checkOrientation(int iter, bool moveBoundaries) const
   int iterMax = 15;
   if(!oriented && iter < iterMax){
     if (moveBoundaries){
-      if (iter ==0) Msg::Info("--- Flipping : moving boundaries.");
-      Msg::Debug("--- Moving Boundary - iter %d -",iter);
+      if (iter ==0) 
+	  {
+		  //	  Msg::Info("--- Flipping : moving boundaries.");
+	  }
+	
+   //   Msg::Debug("--- Moving Boundary - iter %d -",iter);
       convexBoundary(nTot/fabs(nTot));
       printStuff(iter);
       return checkOrientation(iter+1, moveBoundaries);
     }
     else if (!moveBoundaries){
-      if (iter ==0) Msg::Info("--- Flipping : applying cavity checks.");
-      Msg::Debug("--- Cavity Check - iter %d -",iter);
+      if (iter ==0) 
+	  {
+		//  Msg::Info("--- Flipping : applying cavity checks.");
+		  
+	  }
+   //   Msg::Debug("--- Cavity Check - iter %d -",iter);
       oriented = one2OneMap();
       printStuff(iter);
       iter++;
@@ -684,7 +693,7 @@ bool GFaceCompound::checkOrientation(int iter, bool moveBoundaries) const
   }
 
   if (iter > 0 && iter < iterMax){
-    Msg::Info("--- Flipping : no more flips (%d iter)", iter);
+  //  Msg::Info("--- Flipping : no more flips (%d iter)", iter);
   }
 
   return oriented;
@@ -888,7 +897,7 @@ bool GFaceCompound::parametrize() const
   if (_type != SQUARE){
     bool success = orderVertices(_U0, _ordered, _coords);
     if(!success) {
-      Msg::Error("Could not order vertices on boundary");
+    //  Msg::Error("Could not order vertices on boundary");
       return false;
     }
   }
@@ -898,7 +907,7 @@ bool GFaceCompound::parametrize() const
 
   // Convex parametrization
   if (_mapping == CONVEX){
-    Msg::Info("Parametrizing surface %d with 'convex map'", tag());
+  //  Msg::Info("Parametrizing surface %d with 'convex map'", tag());
     parametrize(ITERU,CONVEX);
     parametrize(ITERV,CONVEX);
     if (_type==MEANPLANE){
@@ -907,7 +916,7 @@ bool GFaceCompound::parametrize() const
   }
   // Laplace parametrization
   else if (_mapping == HARMONIC){
-    Msg::Info("Parametrizing surface %d with 'harmonic map'", tag());
+   // Msg::Info("Parametrizing surface %d with 'harmonic map'", tag());
     parametrize(ITERU,HARMONIC);
     parametrize(ITERV,HARMONIC);
     if (_type == MEANPLANE) checkOrientation(0, true);
@@ -917,23 +926,23 @@ bool GFaceCompound::parametrize() const
     std::vector<MVertex *> vert;
     bool oriented, overlap;
     if (_type == SPECTRAL){
-      Msg::Info("Parametrizing surface %d with 'spectral conformal map'", tag());
+   //   Msg::Info("Parametrizing surface %d with 'spectral conformal map'", tag());
       overlap = parametrize_conformal_spectral();
     }
     else {
-      Msg::Info("Parametrizing surface %d with 'FE conformal map'", tag());
+     // Msg::Info("Parametrizing surface %d with 'FE conformal map'", tag());
       overlap = parametrize_conformal(0, NULL, NULL);
     }
     //printStuff(55);
     oriented = checkOrientation(0);
     //printStuff(77);
     if (_type==SPECTRAL &&  (!oriented || overlap) ){
-      Msg::Warning("Parametrization switched to 'FE conformal' map");
+   //   Msg::Warning("Parametrization switched to 'FE conformal' map");
       overlap = parametrize_conformal(0, NULL, NULL);
       oriented = checkOrientation(0);
     }
     if (!oriented || overlap){
-      Msg::Warning("Parametrization switched to 'convex' map");
+  //    Msg::Warning("Parametrization switched to 'convex' map");
       _type  = UNITCIRCLE;
       parametrize(ITERU,CONVEX);
       parametrize(ITERV,CONVEX);
@@ -941,7 +950,7 @@ bool GFaceCompound::parametrize() const
   }
   // Radial-Basis Function parametrization
   else if (_mapping == RBF){
-    Msg::Debug("Parametrizing surface %d with 'RBF' ", tag());
+  //  Msg::Debug("Parametrizing surface %d with 'RBF' ", tag());
     int variableEps = 0;
     int radFunInd = 1; // 1 MQ RBF , 0 GA
     double sizeBox = getSizeH();
@@ -971,7 +980,7 @@ bool GFaceCompound::parametrize() const
   if (_mapping != RBF){
     if (!checkOrientation(0)){
       printStuff(22);
-      Msg::Info("### parametrization switched to 'convex map' onto circle");
+  //    Msg::Info("### parametrization switched to 'convex map' onto circle");
       printStuff(33);
       _type = UNITCIRCLE;
       coordinates.clear();
@@ -1251,7 +1260,7 @@ GFaceCompound::GFaceCompound(GModel *m, int tag, std::list<GFace*> &compound,
 
   for(std::list<GFace*>::iterator it = _compound.begin(); it != _compound.end(); ++it){
     if(!(*it)){
-      Msg::Error("Incorrect face in compound surface %d\n", tag);
+   //   Msg::Error("Incorrect face in compound surface %d\n", tag);
       return;
     }
   }
@@ -1296,7 +1305,7 @@ GFaceCompound::GFaceCompound(GModel *m, int tag, std::list<GFace*> &compound,
 
   for(std::list<GFace*>::iterator it = _compound.begin(); it != _compound.end(); ++it){
     if(!(*it)){
-      Msg::Error("Incorrect face in compound surface %d\n", tag);
+    //  Msg::Error("Incorrect face in compound surface %d\n", tag);
       return;
     }
   }
@@ -1443,12 +1452,12 @@ SPoint2 GFaceCompound::getCoordinates(MVertex *v) const
           MVertex *vR = l->getVertex(1);
           itL = coordinates.find(vL);
           if(itL == coordinates.end()){
-            Msg::Error("Vertex %p (%g %g %g) not found", vL, vL->x(), vL->y(), vL->z());
+       //     Msg::Error("Vertex %p (%g %g %g) not found", vL, vL->x(), vL->y(), vL->z());
             return SPoint2(0, 0);
           }
           itR = coordinates.find(vR);
           if(itR == coordinates.end()){
-            Msg::Error("Vertex %p (%g %g %g) not found", vR, vR->x(), vR->y(), vR->z());
+        //    Msg::Error("Vertex %p (%g %g %g) not found", vR, vR->x(), vR->y(), vR->z());
             return SPoint2(0, 0);
           }
           double xi, uloc, vloc;
@@ -1477,14 +1486,14 @@ SPoint2 GFaceCompound::getCoordinates(MVertex *v) const
             if(vR->getPolynomialOrder() > 1){ j++; continue; }
             vR->getParameter(0, tR);
             if(!vR->getParameter(0, tR)) {
-              Msg::Error("Vertex vr %p not an MEdgeVertex", vR);
+       //       Msg::Error("Vertex vr %p not an MEdgeVertex", vR);
               return SPoint2();
             }
             if(tLoc > tL && tLoc < tR){
               found = true;
               itR = coordinates.find(vR);
               if(itR == coordinates.end()){
-                Msg::Error("Vertex %p (%g %g %g) not found", vR, vR->x(), vR->y(), vR->z());
+           //     Msg::Error("Vertex %p (%g %g %g) not found", vR, vR->x(), vR->y(), vR->z());
                 return SPoint2(0, 0);
               }
               break;
@@ -1612,7 +1621,7 @@ void GFaceCompound::parametrize(iterationStep step, typeOfMapping tom) const
     }
   }
   else{
-    Msg::Error("Unknown type of parametrization");
+  //  Msg::Error("Unknown type of parametrization");
     return;
   }
 
@@ -1633,9 +1642,9 @@ void GFaceCompound::parametrize(iterationStep step, typeOfMapping tom) const
     myAssembler.numberVertex(t->getVertex(2), 0, 1);
   }
 
-  Msg::Debug("Creating term %d dofs numbered %d fixed",
-             myAssembler.sizeOfR(), myAssembler.sizeOfF());
-
+ // Msg::Debug("Creating term %d dofs numbered %d fixed",
+  //           myAssembler.sizeOfR(), myAssembler.sizeOfF());
+///
   double t1 = Cpu();
 
   femTerm<double> *mapping;
@@ -1658,9 +1667,9 @@ void GFaceCompound::parametrize(iterationStep step, typeOfMapping tom) const
   }
 
   double t2 = Cpu();
-  Msg::Debug("Assembly done in %8.3f seconds", t2 - t1);
+//  Msg::Debug("Assembly done in %8.3f seconds", t2 - t1);
   lsys->systemSolve();
-  Msg::Debug("System solved");
+//  Msg::Debug("System solved");
 
   for(std::set<MVertex *>::iterator itv = allNodes.begin(); itv !=allNodes.end() ; ++itv){
     MVertex *v = *itv;
@@ -1684,7 +1693,7 @@ void GFaceCompound::parametrize(iterationStep step, typeOfMapping tom) const
 bool GFaceCompound::parametrize_conformal_spectral() const
 {
 #if !defined(HAVE_PETSC) && !defined(HAVE_SLEPC)
-  Msg::Warning("Slepc not installed: parametrization switched to 'FE conformal' map");
+//  Msg::Warning("Slepc not installed: parametrization switched to 'FE conformal' map");
   return parametrize_conformal(0, NULL, NULL);
 #else
 
@@ -1791,7 +1800,7 @@ bool GFaceCompound::parametrize_conformal_spectral() const
     delete lsysB;
   }
   else{
-    Msg::Warning("Slepc not converged: parametrization switched to 'FE conformal' map");
+  //  Msg::Warning("Slepc not converged: parametrization switched to 'FE conformal' map");
     return parametrize_conformal(0,NULL,NULL);
   }
 
@@ -1870,9 +1879,9 @@ bool GFaceCompound::parametrize_conformal(int iter, MVertex *v1, MVertex *v2) co
     cross21.addToMatrix(myAssembler, &se);
   }
 
-  Msg::Debug("Assembly done");
+//  Msg::Debug("Assembly done");
   lsys->systemSolve();
-  Msg::Debug("System solved");
+ // Msg::Debug("System solved");
 
   for(std::set<MVertex *>::iterator itv = allNodes.begin();
       itv != allNodes.end() ; ++itv){
@@ -1949,7 +1958,7 @@ double GFaceCompound::curvatureMax(const SPoint2 &param) const
   else if (lt->gf->geomType() == GEntity::DiscreteSurface) {
     Curvature& curvature = Curvature::getInstance();
     if( !Curvature::valueAlreadyComputed() ) {
-      Msg::Info("Need to compute discrete curvature for isotropic remesh (in GFace)");
+  //    Msg::Info("Need to compute discrete curvature for isotropic remesh (in GFace)");
       Curvature::typeOfCurvature type = Curvature::RUSIN;
       curvature.computeCurvature(model(), type);
     }
@@ -1983,7 +1992,7 @@ double GFaceCompound::curvatures(const SPoint2 &param, SVector3 *dirMax, SVector
   else if (lt->gf->geomType() == GEntity::DiscreteSurface){
     Curvature& curvature = Curvature::getInstance();
     if( !Curvature::valueAlreadyComputed() ) {
-      Msg::Info("Need to compute discrete curvature for anisotropic remesh (in GFace)");
+ //     Msg::Info("Need to compute discrete curvature for anisotropic remesh (in GFace)");
       Curvature::typeOfCurvature type = Curvature::RUSIN; //RBF
       curvature.computeCurvature(model(), type);
     }
@@ -2156,7 +2165,7 @@ GPoint GFaceCompound::pointInRemeshedOctree(double par1, double par2) const
 
     if (gp.succeeded()) return gp;
     else{
-      Msg::Error("NOT found point with ANN %g %g", par1, par2);
+ //     Msg::Error("NOT found point with ANN %g %g", par1, par2);
       GPoint gp (30,30,30,this);
       gp.setNoSuccess();
       return gp;
@@ -2621,44 +2630,44 @@ bool GFaceCompound::checkTopology() const
   if (G != 0 || Nb < 1){
     correctTopo = false;
     nbSplit = std::max(G+2, 2);
-    Msg::Info("Wrong topology: Genus=%d, Nb boundaries=%d, AR=%g", G, Nb, H/D);
+  //  Msg::Info("Wrong topology: Genus=%d, Nb boundaries=%d, AR=%g", G, Nb, H/D);
     if (_allowPartition){
-      Msg::Info("-----------------------------------------------------------");
-      Msg::Info("--- Split surface %d in %d parts with Multilevel Mesh partitioner",
-                tag(), nbSplit);
+  //    Msg::Info("-----------------------------------------------------------");
+  //    Msg::Info("--- Split surface %d in %d parts with Multilevel Mesh partitioner",
+  //             tag(), nbSplit);
     }
     else{
-      Msg::Fatal("For remeshing your geometry, you should enable the automatic "
-                 "remeshing algorithm. Add 'Mesh.RemeshAlgorithm=1;' in your "
-                 "geo file or through the Fltk window (Options > Mesh > General)");
+   //   Msg::Fatal("For remeshing your geometry, you should enable the automatic "
+   //             "remeshing algorithm. Add 'Mesh.RemeshAlgorithm=1;' in your "
+    //             "geo file or through the Fltk window (Options > Mesh > General)");
     }
   }
   else if (G == 0 && AR > AR_MAX){
     correctTopo = false;
-    Msg::Info("Wrong topology: Aspect ratio is too high AR=%d (AR1=%d AR2=%d)",
-              AR, AR1, AR2);
+ //   Msg::Info("Wrong topology: Aspect ratio is too high AR=%d (AR1=%d AR2=%d)",
+ //             AR, AR1, AR2);
     if (_allowPartition == 1){
       nbSplit = -2;
-      Msg::Info("-----------------------------------------------------------");
-      Msg::Info("--- Split surface %d in 2 parts with Laplacian Mesh partitioner",
-                tag());
+  //    Msg::Info("-----------------------------------------------------------");
+  //    Msg::Info("--- Split surface %d in 2 parts with Laplacian Mesh partitioner",
+   //             tag());
     }
     else if (_allowPartition == 2){
       nbSplit = 2;
-      Msg::Info("-----------------------------------------------------------");
-      Msg::Info("--- Split surface %d in %d parts with Multilevel Mesh partitioner",
-                tag(), nbSplit);
+    //  Msg::Info("-----------------------------------------------------------");
+    //  Msg::Info("--- Split surface %d in %d parts with Multilevel Mesh partitioner",
+    //            tag(), nbSplit);
     }
     else if (_allowPartition == 0){
-      Msg::Debug("The geometrical aspect ratio of your geometry is quite high.\n "
-		 "You should enable partitioning of the mesh by activating the\n"
-		 "automatic remeshing algorithm. Add 'Mesh.RemeshAlgorithm=1;'\n "
-		 "in your geo file or through the Fltk window (Options > Mesh >\n "
-		 "General)");
+   ///   Msg::Debug("The geometrical aspect ratio of your geometry is quite high.\n "
+	//	 "You should enable partitioning of the mesh by activating the\n"
+	//	 "automatic remeshing algorithm. Add 'Mesh.RemeshAlgorithm=1;'\n "
+	//	 "in your geo file or through the Fltk window (Options > Mesh >\n "
+	//	 "General)");
     }
   }
   else{
-    Msg::Debug("Correct topology: Genus=%d and Nb boundaries=%d, AR=%g", G, Nb, H/D);
+   // Msg::Debug("Correct topology: Genus=%d and Nb boundaries=%d, AR=%g", G, Nb, H/D);
   }
 
   return correctTopo;
@@ -2710,10 +2719,10 @@ double GFaceCompound::checkAspectRatio() const
   double AR = M_PI*area3D/(tot_length*tot_length);
 
   if (nb > 3 && areaMin > 0 && areaMin < limit) {
-    Msg::Warning("Too small triangles in mapping (a_2D=%g)", areaMin);
+  //  Msg::Warning("Too small triangles in mapping (a_2D=%g)", areaMin);
   }
   else {
-    Msg::Debug("Geometrical aspect ratio is OK :-)");
+  //  Msg::Debug("Geometrical aspect ratio is OK :-)");
   }
 
   return AR;
@@ -2722,8 +2731,8 @@ double GFaceCompound::checkAspectRatio() const
 void GFaceCompound::coherencePatches() const
 {
   if (_mapping == RBF) return;
-  Msg::Info("Re-orient all %d compound patches normals coherently",
-            _compound.size());
+//  Msg::Info("Re-orient all %d compound patches normals coherently",
+//            _compound.size());
 
   std::map<MEdge, std::set<MElement*>, Less_Edge > edge2elems;
   std::vector<MElement*> allElems;
@@ -2781,7 +2790,7 @@ void GFaceCompound::coherencePatches() const
 void GFaceCompound::coherenceNormals()
 {
   if(!getNumMeshElements()) return;
-  Msg::Info("Re-orient all %d face normals coherently", getNumMeshElements());
+ // Msg::Info("Re-orient all %d face normals coherently", getNumMeshElements());
 
   std::map<MEdge, std::set<MElement*>, Less_Edge > edge2elems;
   for(unsigned int i = 0; i <  getNumMeshElements(); i++){
@@ -2888,20 +2897,20 @@ void GFaceCompound::printStuff(int iNewton) const
 
   FILE * uvx = Fopen(name1,"w");
   if(!uvx){
-    Msg::Error("Could not open file '%s'", name1);
+ //   Msg::Error("Could not open file '%s'", name1);
     return;
   }
   FILE * uvy = Fopen(name2,"w");
   if(!uvy){
     fclose(uvx);
-    Msg::Error("Could not open file '%s'", name2);
+ //   Msg::Error("Could not open file '%s'", name2);
     return;
   }
   FILE * uvz = Fopen(name3,"w");
   if(!uvz){
     fclose(uvx);
     fclose(uvy);
-    Msg::Error("Could not open file '%s'", name3);
+ //   Msg::Error("Could not open file '%s'", name3);
     return;
   }
   FILE * xyzu = Fopen(name4,"w");
@@ -2909,7 +2918,7 @@ void GFaceCompound::printStuff(int iNewton) const
     fclose(uvx);
     fclose(uvy);
     fclose(uvz);
-    Msg::Error("Could not open file '%s'", name4);
+  //  Msg::Error("Could not open file '%s'", name4);
     return;
   }
   FILE * xyzv = Fopen(name5,"w");
@@ -2918,7 +2927,7 @@ void GFaceCompound::printStuff(int iNewton) const
     fclose(uvy);
     fclose(uvz);
     fclose(xyzu);
-    Msg::Error("Could not open file '%s'", name5);
+  //  Msg::Error("Could not open file '%s'", name5);
     return;
   }
 
@@ -3075,7 +3084,7 @@ GPoint GFaceCompound::intersectionWithCircle(const SVector3 &n1, const SVector3 
   }
   GPoint pp(0);
   pp.setNoSuccess();
-  Msg::Debug("ARGG no success intersection circle");
+//  Msg::Debug("ARGG no success intersection circle");
   return pp;
 }
 

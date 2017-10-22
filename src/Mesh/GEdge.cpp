@@ -5,18 +5,18 @@
 
 #include <sstream>
 #include <algorithm>
-#include "GmshConfig.h"
+//#include "GmshConfig.h"
 #include "GmshDefines.h"
-#include "GmshMessage.h"
-#include "GModel.h"
-#include "GEdge.h"
-#include "GFace.h"
-#include "MLine.h"
-#include "GaussLegendre1D.h"
-#include "Context.h"
-#include "closestPoint.h"
+//#include "GmshMessage.h"
+#include "Mesh/GModel.h"
+#include "Mesh/GEdge.h"
+#include "Mesh/GFace.h"
+#include "Mesh/MLine.h"
+#include "Mesh/GaussLegendre1D.h"
+#include "Mesh/Context.h"
+#include "Mesh/closestPoint.h"
 #if defined(HAVE_MESH)
-#include "meshGEdge.h"
+#include "Mesh/meshGEdge.h"
 #endif
 
 GEdge::GEdge(GModel *model, int tag, GVertex *_v0, GVertex *_v1)
@@ -120,7 +120,7 @@ void GEdge::setMeshMaster(GEdge* ge,const std::vector<double>& tfo)
     return;
   }
 
-  Msg::Info("Error in transformation from edge %d (%d-%d) to %d (%d-%d)"
+ /* Msg::Info("Error in transformation from edge %d (%d-%d) to %d (%d-%d)"
             "(minimal transformed node distances %g %g, tolerance %g)",
             ge->tag(),ge->getBeginVertex()->tag(),ge->getEndVertex()->tag(),
             this->tag(),
@@ -128,6 +128,7 @@ void GEdge::setMeshMaster(GEdge* ge,const std::vector<double>& tfo)
             this->getEndVertex()->tag(),
             fwd ? d00.norm() : d01.norm(),
             fwd ? d11.norm() : d10.norm(),tol);
+			 */ 
 }
 
 void GEdge::reverse()

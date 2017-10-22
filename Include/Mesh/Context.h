@@ -177,7 +177,7 @@ class CTX {
  // double cg[3];
  // characteristic length for the whole problem (never used in mesh
   // generation ->only for geo/post)
- // double lc;
+  double lc;
   // double buffer/antialias/stereo graphics?
 //  int db, antialiasing, stereo, camera ;
 //  bool fileread;

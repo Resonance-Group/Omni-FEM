@@ -9,9 +9,9 @@
 #include <vector>
 #include <set>
 #include <list>
-#include "SPoint2.h"
-#include "SVector3.h"
-#include "MElementOctree.h"
+#include "Mesh/SPoint2.h"
+#include "Mesh/SVector3.h"
+#include "Mesh/MElementOctree.h"
 
 class GEdge;
 class GFace;

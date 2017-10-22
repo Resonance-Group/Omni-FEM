@@ -6,6 +6,9 @@
 #ifndef _GMSH_DEFINES_H_
 #define _GMSH_DEFINES_H_
 
+/* Omni-FEM Defines */
+#define HAVE_MATHEX
+
 // IO file formats (numbers should not be changed)
 #define FORMAT_MSH   1
 #define FORMAT_UNV   2
@@ -262,5 +265,7 @@
 #define QUADTRI_NOVERTS_1             3
 #define QUADTRI_NOVERTS_1_RECOMB      4
 #define TRANSFINITE_QUADTRI_1         5
+
+#define HAVE_MESH
 
 #endif

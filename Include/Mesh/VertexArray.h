@@ -8,8 +8,8 @@
 
 #include <vector>
 #include <set>
-//#include "SVector3.h"
-//#include "SBoundingBox3d.h"
+#include "Mesh/SVector3.h"
+#include "Mesh/SBoundingBox3d.h"
 
 class MElement;
 
@@ -20,7 +20,7 @@ class ElementData {
   unsigned char _r[N], _g[N], _b[N], _a[N];
   MElement *_ele;
 public:
- /*
+
   ElementData(double *x, double *y, double *z, SVector3 *n, unsigned char *r,
               unsigned char *g, unsigned char *b, unsigned char *a, MElement *ele)
   {
@@ -46,7 +46,7 @@ public:
     }
     _ele = ele;
   }
-   */ 
+
   inline float x(int i) const { return _x[i]; }
   inline float y(int i) const { return _y[i]; }
   inline float z(int i) const { return _z[i]; }
@@ -59,7 +59,7 @@ public:
   inline unsigned char a(int i) const { return _a[i]; }
   inline MElement *ele() const { return _ele; }
   
-  /*
+
   SPoint3 barycenter() const
   {
     SPoint3 p(0., 0., 0.);
@@ -73,7 +73,7 @@ public:
     p[2] /= (double)N;
     return p;
   }
-   */ 
+
 };
 
 
@@ -82,7 +82,7 @@ class ElementDataLessThan{
  public:
   static float tolerance;
   
-  /*
+
   bool operator()(const ElementData<N> &e1, const ElementData<N> &e2) const
   {
     SPoint3 p1 = e1.barycenter();
@@ -94,7 +94,7 @@ class ElementDataLessThan{
     if(p1.z() - p2.z() >  tolerance) return true;
     return false;
   }
-   */ 
+
 };
 
 
@@ -134,14 +134,14 @@ class BarycenterHash {
 
 class BarycenterEqual {
 public:
- /*
+
   bool operator ()(const Barycenter &a, const Barycenter &b) const
   {
     return (fabs(a.x()-b.x()) < BarycenterLessThan::tolerance &&
             fabs(a.y()-b.y()) < BarycenterLessThan::tolerance &&
             fabs(a.z()-b.z()) < BarycenterLessThan::tolerance);
   }
-   */ 
+
 };
 
 //#include <tr1/unordered_set>
@@ -197,13 +197,13 @@ class VertexArray{
   // add element data in the arrays (if unique is set, only add the
   // element if another one with the same barycenter is not already
   // present)
-  /*
+
   void add(double *x, double *y, double *z, SVector3 *n, unsigned int *col,
            MElement *ele=0, bool unique=true, bool boundary=false);
   void add(double *x, double *y, double *z, SVector3 *n, unsigned char *r=0,
            unsigned char *g=0, unsigned char *b=0, unsigned char *a=0,
            MElement *ele=0, bool unique=true, bool boundary=false);
-		    */ 
+
   // finalize the arrays
   void finalize();
   // sort the arrays with elements back to front wrt the eye position
@@ -212,7 +212,7 @@ class VertexArray{
   double getMemoryInMb();
   // serialize the vertex array into a string (for sending over the
   // network)
-  /*
+
   char *toChar(int num, std::string name, int type, double min, double max,
                int numsteps, double time, SBoundingBox3d bbox, int &len);
   void fromChar(int length, const char *bytes, int swap);
@@ -221,7 +221,7 @@ class VertexArray{
                           double &min, double &max, int &numSteps, double &time,
                           double &xmin, double &ymin, double &zmin,
                           double &xmax, double &ymax, double &zmax);
-						   */
+
  
   // merge another vertex array into this one
   void merge(VertexArray *va);

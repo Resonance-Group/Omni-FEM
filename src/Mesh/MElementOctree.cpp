@@ -8,7 +8,7 @@
 #include "Mesh/MElementOctree.h"
 #include "Mesh/Octree.h"
 #include "Mesh/Context.h"
-#include "MEsh/fullMatrix.h"
+#include "Mesh/fullMatrix.h"
 #include "Mesh/bezierBasis.h"
 #include "Mesh/BasisFactory.h"
 #include "Mesh/FuncSpaceData.h"

@@ -11,7 +11,7 @@
 #include "Mesh/BasisFactory.h"
 
 #if defined(HAVE_MESH)
-#include "qualityMeasures.h"
+#include "Mesh/qualityMeasures.h"
 #endif
 
 #include <cstring>

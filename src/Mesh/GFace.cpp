@@ -23,16 +23,18 @@
 #include "discreteFace.h"
 
 #if defined(HAVE_MESH)
-#include "meshGFace.h"
-#include "meshGFaceOptimize.h"
-#include "meshGFaceLloyd.h"
-#include "BackgroundMeshTools.h"
+#include "Mesh/meshGFace.h"
+#include "Mesh/meshGFaceOptimize.h"
+#include "Mesh/meshGFaceLloyd.h"
+#include "Mesh/BackgroundMeshTools.h"
 #endif
 
+/*
 #if defined(HAVE_BFGS)
 #include "stdafx.h"
 #include "optimization.h"
 #endif
+ */ 
 
 #define SQU(a)      ((a)*(a))
 

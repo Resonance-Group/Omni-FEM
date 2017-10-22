@@ -16,18 +16,19 @@
 #include <string.h>
 #include <sstream>
 #include <algorithm>
-#include "Common/GmshConfig.h"
-#include "Common/Context.h"
+
+//#include "Common/GmshConfig.h"
+#include "Mesh/Context.h"
 #include "Mesh/Field.h"
-#include "Geo/GModel.h"
-#include "Geo/GModelIO_GEO.h"
-#include "Common/GmshMessage.h"
-#include "Numeric/Numeric.h"
-#include "Numeric/mathEvaluator.h"
+#include "Mesh/GModel.h"
+#include "Mesh/GModelIO_GEO.h"
+//#include "Common/GmshMessage.h"
+#include "Mesh/Numeric.h"
+#include "Mesh/mathEvaluator.h"
 #include "Mesh/BackgroundMeshTools.h"
-#include "Geo/STensor3.h"
+#include "Mesh/STensor3.h"
 #include "Mesh/meshMetric.h"
-#include "Geo/ExtrudeParams.h"
+#include "Mesh/ExtrudeParams.h"
 
 #if defined(HAVE_POST)
 #include "PView.h"

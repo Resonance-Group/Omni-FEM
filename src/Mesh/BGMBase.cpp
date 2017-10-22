@@ -8,7 +8,7 @@
 #include <iostream>
 #include "Mesh/OS.h"
 #include "Mesh/GPoint.h"
-#include "MEsh/GFace.h"
+#include "Mesh/GFace.h"
 #include "Mesh/GmshDefines.h"
 #include "Mesh/MElementOctree.h"
 

@@ -11,12 +11,12 @@
 #include <vector>
 #include <set>
 #include <stdio.h>
-#include "GmshMessage.h"
-#include "GEntity.h"
-#include "GVertex.h"
-#include "SVector3.h"
-#include "SPoint3.h"
-#include "SPoint2.h"
+//#include "GmshMessage.h"
+#include "Mesh/GEntity.h"
+#include "Mesh/GVertex.h"
+#include "Mesh/SVector3.h"
+#include "Mesh/SPoint3.h"
+#include "Mesh/SPoint2.h"
 
 class MElement;
 class MLine;
@@ -146,10 +146,16 @@ class GEdge : public GEntity {
   bool isMeshDegenerated() const
   {
     if (_tooSmall)
-      Msg::Debug("degenerated mesh on edge %d: too small", tag());
+	{
+		
+	}
+    //  Msg::Debug("degenerated mesh on edge %d: too small", tag());
     if (v0 == v1 && mesh_vertices.size() < 2)
-      Msg::Debug("degenerated mesh on edge %d: %d mesh vertices", tag(),
-                 (int)mesh_vertices.size());
+	{
+		
+	}
+  //    Msg::Debug("degenerated mesh on edge %d: %d mesh vertices", tag(),
+   //              (int)mesh_vertices.size());
     return _tooSmall || (v0 == v1 && mesh_vertices.size() < 2);
   }
 
