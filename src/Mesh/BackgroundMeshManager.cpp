@@ -8,8 +8,8 @@
 #include "Mesh/BackgroundMesh2D.h"
 #include "Mesh/GEntity.h"
 #include "Mesh/GFace.h"
-#include "Mesh/GRegion.h"
-#include "Mesh/BackgroundMesh3D.h"
+//#include "Mesh/GRegion.h"
+//#include "Mesh/BackgroundMesh3D.h"
 
 map<GEntity*,BGMBase*> BGMManager::data = map<GEntity*,BGMBase*>();
 BGMBase* BGMManager::latest2Dbgm = NULL;
@@ -23,6 +23,7 @@ void BGMManager::set_use_cross_field(bool b)
   BGMManager::use_cross_field = b;
 }
 
+/*
 BGMBase* BGMManager::get(GRegion* gf)
 {
   map<GEntity*,BGMBase*>::iterator itfind = data.find(gf);
@@ -40,6 +41,7 @@ BGMBase* BGMManager::get(GRegion* gf)
   data.insert(make_pair(gf,bgm));
   return bgm;
 }
+ */ 
 
 BGMBase* BGMManager::get(GFace* gf)
 {

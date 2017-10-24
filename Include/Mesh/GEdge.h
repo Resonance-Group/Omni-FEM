@@ -12,6 +12,7 @@
 #include <set>
 #include <stdio.h>
 //#include "GmshMessage.h"
+#include "Mesh/GPoint.h"
 #include "Mesh/GEntity.h"
 #include "Mesh/GVertex.h"
 #include "Mesh/SVector3.h"
@@ -87,7 +88,7 @@ class GEdge : public GEntity {
   virtual SOrientedBoundingBox getOBB();
 
   // regions that are boundedby this entity
-  virtual std::list<GRegion*> regions() const;
+//  virtual std::list<GRegion*> regions() const;
 
   // faces that this entity bounds
   virtual std::list<GFace*> faces() const { return l_faces; }

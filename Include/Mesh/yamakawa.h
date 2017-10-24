@@ -40,8 +40,8 @@ class Hex {
   }
   void compute_quality()
   {
-    MHexahedron elt(vertices_);
-    quality = jacobianBasedQuality::minIGEMeasure(&elt, false, true);
+    //MHexahedron elt(vertices_);
+  //  quality = jacobianBasedQuality::minIGEMeasure(&elt, false, true);
   }
   void initialize()
   {
@@ -257,6 +257,7 @@ class Tuple{
 
 // Class in charge of answering connectivity requests on the input tetraedral
 // mesh
+/*
 class TetMeshConnectivity {
 public:
   typedef std::set<MVertex*> VertexSet;
@@ -265,7 +266,7 @@ public:
   ~TetMeshConnectivity() {};
   void initialize(GRegion* region)
   {
-    Msg::Info("Initialize Connectivity Information...");
+    //Msg::Info("Initialize Connectivity Information...");
     clear();
     initialize_vertex_to_vertices(region);
     initialize_vertex_to_elements(region);
@@ -322,6 +323,7 @@ public:
   // TODO Change this costly  implementation
   // Replace maps by vectors and store adjacent vertices whose
   // index is bigger
+
   void initialize_vertex_to_vertices(GRegion* region)
   {
     int nbtets = region->getNumMeshElements();
@@ -348,6 +350,7 @@ public:
       }
     }
   }
+
   void initialize_vertex_to_elements(GRegion* region)
   {
     int nbtets = region->getNumMeshElements();
@@ -368,10 +371,12 @@ public:
       }
     }
   }
+
  private:
   std::map<MVertex*, std::set<MVertex*> > vertex_to_vertices_;
   std::map<MVertex*, std::set<MElement*> > vertex_to_elements_;
 };
+*/
 
 class Recombinator{
  public:
@@ -389,13 +394,15 @@ class Recombinator{
 
  protected:
   // ---- Initialization of the structures
+  /*
   virtual void initialize_structures(GRegion* region) {
     set_current_region(region);
-    tet_mesh.initialize(current_region);
+    //tet_mesh.initialize(current_region);
     build_tuples();
     init_markings();
     // What happens when the mesh of the region is not only constituted of tets? JP
   }
+   */ 
   void init_markings();
   void build_tuples();
   void set_current_region(GRegion* region) { current_region = region; }
@@ -418,7 +425,7 @@ class Recombinator{
     pattern1();
     pattern2();
     pattern3();
-    Msg::Info("Number of potential hexes %d", potential.size());
+  //  Msg::Info("Number of potential hexes %d", potential.size());
   }
   void pattern1();
   void pattern2();
@@ -471,7 +478,7 @@ class Recombinator{
  protected:
   // Object in charge of answering connectivity request
   // in the initial region tetrahedral mesh
-  TetMeshConnectivity tet_mesh;
+  //TetMeshConnectivity tet_mesh;
 
   GRegion* current_region;
   double hex_threshold_quality;
@@ -981,7 +988,7 @@ public:
   void create_quads_on_boundary(MVertex*,MVertex*,MVertex*,MVertex*);
 
   //returns the geometrical validity of the pyramid
-  bool valid(MPyramid *pyr);
+ // bool valid(MPyramid *pyr);
 
   bool four(MElement*);
   bool fourTrih(MElement*);

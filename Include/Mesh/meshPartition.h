@@ -7,8 +7,8 @@
 #define _MESH_PARTITION_H_
 
 #include <vector>
-#include "partitionEdge.h"
-#include "GFaceCompound.h"
+#include "Mesh/partitionEdge.h"
+#include "Mesh/GFaceCompound.h"
 #include "Mesh/GFace.h"
 
 class GModel;

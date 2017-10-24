@@ -7,19 +7,19 @@
 #include <queue>
 #include <complex>
 #include <stdlib.h>
-#include "GmshConfig.h"
-#include "GmshMessage.h"
-#include "discreteFace.h"
-#include "discreteDiskFace.h"
-#include "GModelIO_GEO.h"
-#include "Geo.h"
-#include "GFaceCompound.h"
-#include "Context.h"
-#include "OS.h"
-#include "meshPartitionObjects.h"
-#include "meshPartitionOptions.h"
-#include "meshPartition.h"
-#include "MPoint.h"
+//#include "GmshConfig.h"
+//#include "GmshMessage.h"
+#include "Mesh/discreteFace.h"
+#include "Mesh/discreteDiskFace.h"
+#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/Geo.h"
+#include "Mesh/GFaceCompound.h"
+#include "Mesh/Context.h"
+#include "common/OS.h"
+#include "Mesh/meshPartitionObjects.h"
+#include "Mesh/meshPartitionOptions.h"
+#include "Mesh/meshPartition.h"
+#include "Mesh/MPoint.h"
 
 #if defined(HAVE_PETSC)
 #include "linearSystemPETSc.h"
@@ -92,7 +92,7 @@ void discreteFace::setBoundEdges(const std::vector<int> &tagEdges)
       ge->addFace(this);
     }
     else{
-      Msg::Error("Unknown model edge %d", tagEdges[i]);
+      //Msg::Error("Unknown model edge %d", tagEdges[i]);
     }
   }
 }
@@ -101,7 +101,7 @@ void discreteFace::setBoundEdges(const std::vector<int> &tagEdges,
                                  const std::vector<int> &signEdges)
 {
   if(signEdges.size() != tagEdges.size()){
-    Msg::Error("Wrong number of edge signs in setBoundEdges");
+   // Msg::Error("Wrong number of edge signs in setBoundEdges");
     setBoundEdges(tagEdges);
   }
   for (unsigned int i = 0; i != tagEdges.size(); i++){
@@ -112,7 +112,7 @@ void discreteFace::setBoundEdges(const std::vector<int> &tagEdges,
       ge->addFace(this);
     }
     else{
-      Msg::Error("Unknown model edge %d", tagEdges[i]);
+    //  Msg::Error("Unknown model edge %d", tagEdges[i]);
     }
   }
 }
@@ -151,7 +151,7 @@ void discreteFace::findEdges(std::map<MEdge, std::vector<int>, Less_Edge> &map_e
 
 GPoint discreteFace::point(double par1, double par2) const
 {
-  Msg::Error("Cannot evaluate point on discrete face");
+ // Msg::Error("Cannot evaluate point on discrete face");
   return GPoint();
 }
 
@@ -547,7 +547,7 @@ void discreteFace::splitDiscreteEdge(GEdge *de , GVertex *gv, discreteEdge* newE
 	df->setBoundEdges(tagEdges);
       }
       else{
-        Msg::Error("splitDiscreteEdge only applies to discrete geometries");
+        //Msg::Error("splitDiscreteEdge only applies to discrete geometries");
         return;
       }
     }

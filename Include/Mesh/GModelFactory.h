@@ -32,17 +32,17 @@ class GModelFactory {
   virtual GEdge *addLine(GModel *, GVertex *v1, GVertex *v2) = 0;
   virtual GFace *addPlanarFace(GModel *gm, std::vector<std::vector<GEdge *> > edges) = 0;
   virtual GFace *addPlanarFace(GModel *gm, const std::vector<std::vector<GEdgeSigned> > &edges) = 0;
-  virtual GRegion*addVolume(GModel *gm, std::vector<std::vector<GFace *> > faces) = 0;
+ // virtual GRegion* addVolume(GModel *gm, std::vector<std::vector<GFace *> > faces) = 0;
   virtual GEdge *addCircleArc(GModel *gm, GVertex *start, GVertex *center, GVertex *end)
   {
-    Msg::Error("addCircleArc not implemented yet");
+ //   Msg::Error("addCircleArc not implemented yet");
     return 0;
   }
   virtual GEdge *addCircleArc(GModel *gm, const arcCreationMethod &method,
                               GVertex *start, GVertex *end,
                               const SPoint3 &aPoint)
   {
-    Msg::Error("addCircleArc not implemented yet");
+  //  Msg::Error("addCircleArc not implemented yet");
     return 0;
   }
   virtual GEdge *addSpline(GModel *gm,const splineType &type,
@@ -50,7 +50,7 @@ class GModelFactory {
                            GVertex *end,
                            std::vector<std::vector<double> > controlPoints)
   {
-    Msg::Error("addSpline not implemented yet");
+ //   Msg::Error("addSpline not implemented yet");
     return 0;
   }
   virtual GEdge *addNURBS(GModel *gm, GVertex *start, GVertex *end,
@@ -59,7 +59,7 @@ class GModelFactory {
         std::vector<double> weights,
         std::vector<int> multiplicity)
   {
-    Msg::Error("addNURBS not implemented yet");
+ //   Msg::Error("addNURBS not implemented yet");
     return 0;
   }
   // this one tries to build a model face with one single list of
@@ -68,23 +68,23 @@ class GModelFactory {
   virtual std::vector<GFace *> addRuledFaces(GModel *gm,
                std::vector<std::vector<GEdge *> > edges)
   {
-    Msg::Error("addRuledFaces not implemented yet");
+  //  Msg::Error("addRuledFaces not implemented yet");
     return std::vector<GFace*>();
   }
   virtual GFace *addFace(GModel *gm, std::vector<GEdge *> edges,
                          std::vector< std::vector<double > > points)
   {
-    Msg::Error("addFace not implemented yet");
+ //   Msg::Error("addFace not implemented yet");
     return 0;
   }
   virtual GFace *add2Drect(GModel *gm,double x0, double y0, double dx, double dy)
   {
-    Msg::Error("add2Drect not implemented yet");
+  //  Msg::Error("add2Drect not implemented yet");
     return 0;
   }
   virtual GFace *add2Dellips(GModel *gm,double xc, double yc, double rx, double ry)
   {
-    Msg::Error("add2Dellips not implemented yet");
+ //   Msg::Error("add2Dellips not implemented yet");
     return 0;
   }
 
@@ -92,31 +92,31 @@ class GModelFactory {
   virtual GEntity *revolve(GModel *gm, GEntity*, std::vector<double> p1,
                            std::vector<double> p2, double angle)
   {
-    Msg::Error("revolve not implemented yet");
+ //   Msg::Error("revolve not implemented yet");
     return 0;
   }
   virtual GEntity *extrude(GModel *gm, GEntity*, std::vector<double> p1,
                            std::vector<double> p2)
   {
-    Msg::Error("extrude not implemented yet");
+ ///   Msg::Error("extrude not implemented yet");
     return 0;
   }
   virtual std::vector<GEntity*> extrudeBoundaryLayer(GModel *gm, GEntity *e,
                                                      int nbLayers, double hLayers,
                                                      int dir, int view)
   {
-    Msg::Error("extrude normals not implemented yet");
+  //  Msg::Error("extrude normals not implemented yet");
     std::vector<GEntity*> empty;
     return empty;
   }
   virtual GEntity *addPipe(GModel *gm, GEntity *base, std::vector<GEdge *> wire)
   {
-    Msg::Error("addPipe not implemented yet");
+  //  Msg::Error("addPipe not implemented yet");
     return 0;
   }
   virtual GEntity *addThruSections(GModel *gm, std::vector<std::vector<GEdge *> > wire)
   {
-    Msg::Error("addThruSections not implemented yet");
+  //  Msg::Error("addThruSections not implemented yet");
     return 0;
   }
 
@@ -124,39 +124,39 @@ class GModelFactory {
   virtual GEntity *addSphere(GModel *gm, double cx, double cy, double cz,
                              double radius)
   {
-    Msg::Error("addSphere not implemented yet");
+  //  Msg::Error("addSphere not implemented yet");
     return 0;
   }
   virtual GEntity *addCylinder(GModel *gm, std::vector<double> p1,
                                std::vector<double> p2, double radius)
   {
-    Msg::Error("addCylinder not implemented yet");
+  //  Msg::Error("addCylinder not implemented yet");
     return 0;
   }
   virtual GEntity *addTorus(GModel *gm, std::vector<double> p1,
                             std::vector<double> p2, double radius1,
                             double radius2)
   {
-    Msg::Error("addTorus not implemented yet");
+  //  Msg::Error("addTorus not implemented yet");
     return 0;
   }
   virtual GEntity *addBlock(GModel *gm, std::vector<double> p1,
                             std::vector<double> p2)
   {
-    Msg::Error("addBlock not implemented yet");
+  //  Msg::Error("addBlock not implemented yet");
     return 0;
   }
   virtual GEntity *add3DBlock(GModel *gm, std::vector<double> p1,
                             double dx, double dy, double dz)
   {
-    Msg::Error("add3DBlock not implemented yet");
+  //  Msg::Error("add3DBlock not implemented yet");
     return 0;
   }
   virtual GEntity *addCone(GModel *gm, std::vector<double> p1,
                            std::vector<double> p2, double radius1,
                            double radius2)
   {
-    Msg::Error("addCone not implemented yet");
+  //  Msg::Error("addCone not implemented yet");
     return 0;
   }
 
@@ -164,48 +164,48 @@ class GModelFactory {
   // to get those automatically ... wait and see
   virtual void fillet(GModel *gm, std::vector<int> edges, double radius)
   {
-    Msg::Error("fillet not implemented yet");
+  //  Msg::Error("fillet not implemented yet");
   }
 
   // rigid body motions
   virtual void translate(GModel *gm, std::vector<double> dx, int addToTheModel)
   {
-    Msg::Error("translate not implemented yet");
+  //  Msg::Error("translate not implemented yet");
   }
   virtual void rotate(GModel *gm, std::vector<double> p1,std::vector<double> p2,
                       double angle, int addToTheModel)
   {
-    Msg::Error("rotate not implemented yet");
+  //  Msg::Error("rotate not implemented yet");
   }
 
   // boolean operators acting on 2 GModels
   virtual GModel *computeBooleanUnion(GModel *obj, GModel*tool, int createNewModel)
   {
-    Msg::Error("computeBooleanUnion not implemented yet");
+  //  Msg::Error("computeBooleanUnion not implemented yet");
     return 0;
   }
   virtual GModel *computeBooleanIntersection(GModel *obj, GModel*tool,
                                              int createNewModel)
   {
-    Msg::Error("computeBooleanIntersection not implemented yet");
+  //  Msg::Error("computeBooleanIntersection not implemented yet");
     return 0;
   }
   virtual GModel *computeBooleanDifference(GModel *obj, GModel*tool,
                                            int createNewModel)
   {
-    Msg::Error("computeBooleanDifference not implemented yet");
+ //   Msg::Error("computeBooleanDifference not implemented yet");
     return 0;
   }
 
   virtual void setPeriodicAllFaces(GModel *gm, std::vector<double> FaceTranslationVector)
   {
-    Msg::Error("findperiodic not implemented yet");
+  //  Msg::Error("findperiodic not implemented yet");
   }
   virtual void setPeriodicPairOfFaces(GModel *gm, int numFaceMaster,
                                       std::vector<int> EdgeListMaster,
                                       int numFaceSlave, std::vector<int> EdgeListSlave)
   {
-    Msg::Error("setPeriodicPairOfFaces not implemented yet");
+  //  Msg::Error("setPeriodicPairOfFaces not implemented yet");
   }
   ;
   virtual void healGeometry(GModel *gm, double tolerance = -1.) = 0;

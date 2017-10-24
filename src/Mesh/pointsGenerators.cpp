@@ -5,8 +5,8 @@
 
 #include "Mesh/pointsGenerators.h"
 #include "Mesh/GmshDefines.h"
-#include "MTriangle.h"
-#include "MQuadrangle.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/MQuadrangle.h"
 /*
 #include "MTetrahedron.h"
 #include "MHexahedron.h"
@@ -53,8 +53,8 @@ void gmshGeneratePoints(FuncSpaceData data, fullMatrix<double> &points)
                                                 data.spaceIsSerendipity());
       return;
     default :
-      Msg::Error("Unknown element type %d (tag %d) for points generation",
-          data.elementType(), data.elementTag());
+      //Msg::Error("Unknown element type %d (tag %d) for points generation",
+    //      data.elementType(), data.elementTag());
       return;
   }
 }
@@ -198,8 +198,8 @@ void gmshGenerateMonomials(FuncSpaceData data, fullMatrix<double> &monomials)
                                                       data.spaceIsSerendipity());
       return;
     default :
-      Msg::Error("Unknown element type %d (tag %d) for monomials generation",
-          data.elementType(), data.elementTag());
+      //Msg::Error("Unknown element type %d (tag %d) for monomials generation",
+      //    data.elementType(), data.elementTag());
       return;
   }
 }
@@ -345,7 +345,7 @@ fullMatrix<double> gmshGenerateMonomialsQuadSerendipity(int order)
   }
   return monomials;
 }
-
+/*
 //KH : caveat : node coordinates are not yet coherent with node numbering associated
 //              to numbering of principal vertices of face !!!!
 fullMatrix<double> gmshGenerateMonomialsTetrahedron(int order, bool serendip)
@@ -1134,4 +1134,4 @@ fullMatrix<double> gmshGenerateMonomialsPyramidGeneral(
 
   return monomials;
 }
-
+*/

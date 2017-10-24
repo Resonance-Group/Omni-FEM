@@ -3,27 +3,27 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "BackgroundMesh2D.h"
-#include "BackgroundMeshTools.h"
+#include "Mesh/BackgroundMesh2D.h"
+#include "Mesh/BackgroundMeshTools.h"
 
-#include "GmshMessage.h"
-#include "GModel.h"
-#include "GVertex.h"
-#include "GEdge.h"
-#include "GEdgeCompound.h"
-#include "GFace.h"
-#include "GFaceCompound.h"
-#include "MElement.h"
-#include "MElementOctree.h"
-#include "MTriangle.h"
-#include "MVertex.h"
-#include "Numeric.h"
-#include "MLine.h"
-#include "MTriangle.h"
-#include "Field.h"
-#include "OS.h"
-#include "Context.h"
-#include "meshGFaceOptimize.h"
+//#include "GmshMessage.h"
+#include "Mesh/GModel.h"
+#include "Mesh/GVertex.h"
+#include "Mesh/GEdge.h"
+#include "Mesh/GEdgeCompound.h"
+#include "Mesh/GFace.h"
+#include "Mesh/GFaceCompound.h"
+#include "Mesh/MElement.h"
+#include "Mesh/MElementOctree.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/MVertex.h"
+#include "Mesh/Numeric.h"
+#include "Mesh/MLine.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/Field.h"
+#include "common/OS.h"
+#include "Mesh/Context.h"
+#include "Mesh/meshGFaceOptimize.h"
 
 #if defined(HAVE_SOLVER)
 #include "dofManager.h"
@@ -62,7 +62,7 @@ void backgroundMesh2D::create_face_mesh()
 {
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+  //  Msg::Error("Entity is not a face in background mesh");
     return;
   }
 
@@ -94,7 +94,7 @@ void backgroundMesh2D::create_face_mesh()
 MElementOctree* backgroundMesh2D::getOctree()
 {
   if(!octree){
-    Msg::Debug("Rebuilding BackgroundMesh element octree");
+ //   Msg::Debug("Rebuilding BackgroundMesh element octree");
     octree = new MElementOctree(elements);
   }
   return octree;
@@ -143,7 +143,7 @@ void backgroundMesh2D::create_mesh_copy()
   //std::set<SPoint2> myBCNodes;
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+  //  Msg::Error("Entity is not a face in background mesh");
     return;
   }
   for (unsigned int i = 0; i < face->triangles.size(); i++){
@@ -174,7 +174,7 @@ GPoint backgroundMesh2D::get_GPoint_from_MVertex(const MVertex *v)const
 {
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+ //   Msg::Error("Entity is not a face in background mesh");
     return GPoint();
   }
   return face->point(SPoint2(v->x(),v->y()));
@@ -190,7 +190,10 @@ backgroundMesh2D::backgroundMesh2D(GFace *_gf, bool erase_2D3D):BGMBase(2,_gf),s
     // from GFace, back to the previous one !
     GFace *face = dynamic_cast<GFace*>(gf);
     if(!face)
-      Msg::Error("Entity is not a face in background mesh");
+	{
+     // Msg::Error("Entity is not a face in background mesh");
+	  
+	}
     else
       face->triangles = tempTR;
   }
@@ -232,7 +235,7 @@ void backgroundMesh2D::propagateValues(DoubleStorageType &dirichlet,
   std::set<MVertex*> vs;
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+   // Msg::Error("Entity is not a face in background mesh");
     delete _lsys;
     return;
   }
@@ -286,7 +289,7 @@ void backgroundMesh2D::computeSizeField()
 {
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+ //   Msg::Error("Entity is not a face in background mesh");
     return;
   }
 
@@ -354,7 +357,7 @@ void backgroundMesh2D::updateSizes()
     else{
       GFace *face = dynamic_cast<GFace*>(gf);
       if(!face){
-        Msg::Error("Entity is not a face in background mesh");
+    //    Msg::Error("Entity is not a face in background mesh");
         return;
       }
       reparamMeshVertexOnFace(v, face, p);
@@ -402,7 +405,10 @@ frameFieldBackgroundMesh2D::frameFieldBackgroundMesh2D(GFace *_gf):backgroundMes
   // from GFace, back to the previous one !
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face)
-    Msg::Error("Entity is not a face in background mesh");
+  {
+   // Msg::Error("Entity is not a face in background mesh");
+	
+  }
   else
     face->triangles = tempTR;
 }
@@ -479,7 +485,7 @@ void frameFieldBackgroundMesh2D::computeCrossField(simpleFunction<double> &eval_
   list<GEdge*> e;
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+  //  Msg::Error("Entity is not a face in background mesh");
     return;
   }
 
@@ -570,7 +576,7 @@ void frameFieldBackgroundMesh2D::eval_crossfield(MVertex *vert, STensor3 &cf)
   SPoint2 parampoint;
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+  //  Msg::Error("Entity is not a face in background mesh");
     return;
   }
   reparamMeshVertexOnFace(vert, face, parampoint);
@@ -623,7 +629,7 @@ void frameFieldBackgroundMesh2D::exportCrossField(const std::string &filename)
 {
   FILE *f = Fopen(filename.c_str(), "w");
   if(!f){
-    Msg::Error("Could not open file '%s'", filename.c_str());
+  //  Msg::Error("Could not open file '%s'", filename.c_str());
     return;
   }
   fprintf(f,"View \"Cross Field\"{\n");
@@ -652,7 +658,7 @@ Pair<SVector3, SVector3> frameFieldBackgroundMesh2D::compute_crossfield_directio
   // get the unit normal at that point
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+  //  Msg::Error("Entity is not a face in background mesh");
     return Pair<SVector3,SVector3>(SVector3(), SVector3());
   }
 
@@ -691,7 +697,7 @@ bool frameFieldBackgroundMesh2D::compute_RK_infos(double u,double v, double x, d
   // get the unit normal at that point
   GFace *face = dynamic_cast<GFace*>(gf);
   if(!face){
-    Msg::Error("Entity is not a face in background mesh");
+   // Msg::Error("Entity is not a face in background mesh");
     return false;
   }
 
@@ -745,13 +751,13 @@ bool frameFieldBackgroundMesh2D::compute_RK_infos(double u,double v, double x, d
   double rhs1[2] = {dot(t1,s1),dot(t1,s2)};
   bool singular = false;
   if (!sys2x2(metric,rhs1,covar1)){
-    Msg::Info("Argh surface %d %g %g %g -- %g %g %g -- %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z(),size_1,size_2);
+   // Msg::Info("Argh surface %d %g %g %g -- %g %g %g -- %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z(),size_1,size_2);
     covar1[1] = 1.0; covar1[0] = 0.0;
     singular = true;
   }
   double rhs2[2] = {dot(t2,s1),dot(t2,s2)};
   if (!sys2x2(metric,rhs2,covar2)){
-    Msg::Info("Argh surface %d %g %g %g -- %g %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z());
+   // Msg::Info("Argh surface %d %g %g %g -- %g %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z());
     covar2[0] = 1.0; covar2[1] = 0.0;
     singular = true;
   }

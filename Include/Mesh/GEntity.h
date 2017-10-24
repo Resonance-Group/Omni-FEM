@@ -9,11 +9,12 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Mesh/Range.h"
 
 #include "Mesh/SPoint3.h"
-//#include "SBoundingBox3d.h"
+#include "Mesh/SBoundingBox3d.h"
 
 #include "Mesh/SOrientedBoundingBox.h"
 
@@ -197,7 +198,7 @@ class GEntity {
   virtual int dim() const { return -1; }
 
   // regions that bound this entity or that this entity bounds.
-  virtual std::list<GRegion*> regions() const { return std::list<GRegion*>(); }
+//  virtual std::list<GRegion*> regions() const { return std::list<GRegion*>(); }
 
   // faces that bound this entity or that this entity bounds.
   virtual std::list<GFace*> faces() const { return std::list<GFace*>(); }
@@ -209,12 +210,13 @@ class GEntity {
   virtual std::list<GVertex*> vertices() const { return std::list<GVertex*>(); }
 
   // for Python, temporary solution while iterator are not binded
-  std::vector<GRegion*> bindingsGetRegions()
+/*  std::vector<GRegion*> bindingsGetRegions()
   {
     // NOTE: two-line to not create two different lists with diff pointers
     std::list<GRegion*> r = regions();
     return std::vector<GRegion*> (r.begin(), r.end());
   }
+   */ 
   std::vector<GFace*> bindingsGetFaces()
   {
     std::list<GFace*> f = faces();
@@ -302,8 +304,8 @@ class GEntity {
   virtual void setSelection(char val){ _selection = val; }
 
   // get/set the color
-  virtual unsigned int getColor(){ return _color; }
-  virtual void setColor(unsigned color, bool recursive=false){ _color = color; }
+//  virtual unsigned int getColor(){ return _color; }
+//  virtual void setColor(unsigned color, bool recursive=false){ _color = color; }
 
   // return true if we should use this color to represent the entity
   virtual bool useColor();
@@ -354,7 +356,7 @@ class GEntity {
   GVertex *cast2Vertex();
   GEdge   *cast2Edge();
   GFace   *cast2Face();
-  GRegion *cast2Region();
+ // GRegion *cast2Region();
 
   // update all vertex lists, including periodic connections
   void updateVertices(const std::map<MVertex*,MVertex*>&);

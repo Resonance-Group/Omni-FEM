@@ -80,7 +80,7 @@ class MQuadrangle : public MElement {
         sign = -1; return;
       }
     }
-    Msg::Error("Could not get edge information for quadranglee %d", getNum());
+    //Msg::Error("Could not get edge information for quadranglee %d", getNum());
   }
   virtual int getNumEdgesRep(bool curved){ return 4; }
   virtual void getEdgeRep(bool curved, int num, double *x, double *y, double *z, SVector3 *n);
@@ -442,7 +442,7 @@ class MQuadrangleN : public MQuadrangle {
     if(_order== 8 && _vs.size() + 4 == 32) return MSH_QUA_32;
     if(_order== 9 && _vs.size() + 4 == 36) return MSH_QUA_36I;
     if(_order==10 && _vs.size() + 4 == 40) return MSH_QUA_40;
-    Msg::Error("no tag matches a p%d quadrangle with %d vertices", _order, 4+_vs.size());
+ //   Msg::Error("no tag matches a p%d quadrangle with %d vertices", _order, 4+_vs.size());
     return 0;
   }
   virtual int getTypeForVTK() const

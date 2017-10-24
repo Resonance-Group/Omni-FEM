@@ -8,7 +8,7 @@
 
 #include "Mesh/GModel.h"
 #include "Mesh/GVertex.h"
-#include "MEsh/MVertex.h"
+#include "Mesh/MVertex.h"
 
 class discreteVertex : public GVertex {
  public:

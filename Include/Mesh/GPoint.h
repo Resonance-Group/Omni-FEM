@@ -15,17 +15,17 @@ class GEntity;
 class GPoint
 {
 private:
-	double X, Y;
+	double X, Y, Z;
 	const GEntity *e;
 	double par[2];
 	bool success;
 public:
 	inline double x() const { return X; }
 	inline double y() const { return Y; }
-//  inline double z() const { return Z; }
+	inline double z() const { return Z; }
 	inline double &x() { return X; }
 	inline double &y() { return Y; }
-//  inline double &z() { return Z; }
+	inline double &z() { return Z; }
 	inline double u() const { return par[0]; }
 	inline double v() const { return par[1]; }
 	inline const GEntity* g() const { return e; }
@@ -51,7 +51,7 @@ public:
   {
     double dx = X - p.x();
     double dy = Y - p.y();
-//    double dz = Z - p.z();
+    double dz = Z - p.z();
     return sqrt(dx * dx + dy * dy + dz * dz);
   }
   bool succeeded() const{ return success; }

@@ -84,7 +84,7 @@ class MTriangle : public MElement {
         sign = -1; return;
       }
     }
-    Msg::Error("Could not get edge information for triangle %d", getNum());
+    //Msg::Error("Could not get edge information for triangle %d", getNum());
   }
   virtual int getNumEdgesRep(bool curved){ return 3; }
   virtual void getEdgeRep(bool curved, int num, double *x, double *y, double *z, SVector3 *n);
@@ -333,7 +333,7 @@ class MTriangleN : public MTriangle {
     if(_order == 8 && _vs.size() == 21) return MSH_TRI_24;
     if(_order == 9 && _vs.size() == 24) return MSH_TRI_27;
     if(_order ==10 && _vs.size() == 27) return MSH_TRI_30;
-    Msg::Error("no tag matches a p%d triangle with %d vertices", _order, 3+_vs.size());
+ //   Msg::Error("no tag matches a p%d triangle with %d vertices", _order, 3+_vs.size());
     return 0;
   }
   virtual int getTypeForVTK() const

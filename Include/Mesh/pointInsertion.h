@@ -35,7 +35,7 @@ class Filler3D{
  public:
   Filler3D();
   ~Filler3D();
-  virtual bool treat_region(GRegion*);
+//  virtual bool treat_region(GRegion*);
   static int get_nbr_new_vertices();
   static MVertex* get_new_vertex(int);
 };

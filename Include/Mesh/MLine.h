@@ -206,7 +206,7 @@ class MLineN : public MLine {
     if(_vs.size() == 7) return MSH_LIN_9;
     if(_vs.size() == 8) return MSH_LIN_10;
     if(_vs.size() == 9) return MSH_LIN_11;
-    Msg::Error("no tag matches a line with %d vertices", 8+_vs.size());
+    //Msg::Error("no tag matches a line with %d vertices", 8+_vs.size());
     return 0;
   }
   virtual void reverse()

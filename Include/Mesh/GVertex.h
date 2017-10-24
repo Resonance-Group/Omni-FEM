@@ -46,8 +46,8 @@ public:
 	virtual GPoint point() const = 0;
 	virtual double x() const = 0;
 	virtual double y() const = 0;
-//  virtual double z() const = 0;
-//  virtual SPoint3 xyz() const { return SPoint3(x(), y(), z()); }
+	virtual double z() const = 0;
+	virtual SPoint3 xyz() const { return SPoint3(x(), y(), z()); }
 	virtual void setPosition(GPoint &p);
 
   // add/delete an edge bounded by this vertex

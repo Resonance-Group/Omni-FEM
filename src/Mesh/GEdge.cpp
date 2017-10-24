@@ -6,7 +6,7 @@
 #include <sstream>
 #include <algorithm>
 //#include "GmshConfig.h"
-#include "GmshDefines.h"
+#include "Mesh/GmshDefines.h"
 //#include "GmshMessage.h"
 #include "Mesh/GModel.h"
 #include "Mesh/GEdge.h"
@@ -262,11 +262,13 @@ void GEdge::setVisibility(char val, bool recursive)
 
 void GEdge::setColor(unsigned int val, bool recursive)
 {
+	/*
   GEntity::setColor(val);
   if(recursive){
     if(v0) v0->setColor(val);
     if(v1) v1->setColor(val);
   }
+   */ 
 }
 
 std::string GEdge::getAdditionalInfoString()
@@ -556,6 +558,7 @@ void GEdge::replaceEndingPoints(GVertex *replOfv0, GVertex *replOfv1)
 }
 
 // regions that bound this entity or that this entity bounds.
+/*
 std::list<GRegion*> GEdge::regions() const
 {
   std::list<GFace*> _faces = faces();
@@ -569,6 +572,7 @@ std::list<GRegion*> GEdge::regions() const
   ret.insert (ret.begin(), _r.begin(), _r.end());
   return ret;
 }
+ */ 
 
 void GEdge::relocateMeshVertices()
 {

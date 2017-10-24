@@ -8,15 +8,15 @@
 #include <iostream>
 #include <string>
 #include <numeric>
-#include "BackgroundMesh3D.h"
-#include "MElement.h"
-#include "GFace.h"
-#include "GRegion.h"
-#include "BackgroundMeshManager.h"
-#include "BackgroundMesh2D.h"
-#include "MElementOctree.h"
-#include "MTetrahedron.h"
-#include "OS.h"
+#include "Mesh/BackgroundMesh3D.h"
+#include "Mesh/MElement.h"
+#include "Mesh/GFace.h"
+//#include "GRegion.h"
+#include "Mesh/BackgroundMeshManager.h"
+#include "Mesh/BackgroundMesh2D.h"
+#include "Mesh/MElementOctree.h"
+//#include "Mesh/MTetrahedron.h"
+#include "common/OS.h"
 
 #if defined(HAVE_PETSC)
 #include "dofManager.h"
@@ -46,7 +46,7 @@ static int signof(int i)
 //};
 
 backgroundMesh3D::backgroundMesh3D(GRegion *_gr)
- : BGMBase(3,_gr), debug(false), verbose(false)
+ : /*BGMBase(3,_gr),*/ debug(false), verbose(false)
 {
   computeSizeField();
 }
@@ -57,6 +57,7 @@ backgroundMesh3D::~backgroundMesh3D()
 
 void backgroundMesh3D::computeSizeField()
 {
+	/*
   cout << "backgroundMesh3D::computeSizeField() " << endl;
 
   // fills dirichlet BC
@@ -94,12 +95,14 @@ void backgroundMesh3D::computeSizeField()
   propagateValues(sizeField,ONE);
 
   //  cout << "backgroundMesh3D::size of sizeField: " << sizeField.size()  << endl;
+   */ 
 }
 
 void backgroundMesh3D::propagateValues(DoubleStorageType &dirichlet,
                                        simpleFunction<double> &eval_diffusivity,
                                        bool in_parametric_plane)
 {
+	/*
   // same as Size_field::solve()
   GRegion *gr = dynamic_cast<GRegion*>(gf);
   if(!gr){
@@ -171,11 +174,13 @@ void backgroundMesh3D::propagateValues(DoubleStorageType &dirichlet,
 
   delete system;
 #endif
+ */ 
 }
 
 GPoint backgroundMesh3D::get_GPoint_from_MVertex(const MVertex *v)const
 {
-  return GPoint(v->x(),v->y(),v->z(),dynamic_cast<GRegion*>(gf));
+ // return GPoint(v->x(),v->y(),v->z(),dynamic_cast<GRegion*>(gf));
+  return GPoint();
 }
 
 MVertex* backgroundMesh3D::get_nearest_neighbor(const MVertex *v)
@@ -205,6 +210,7 @@ MVertex* backgroundMesh3D::get_nearest_neighbor(double x, double y, double z,
 
 MElementOctree* backgroundMesh3D::getOctree()
 {
+	/*
   if(!octree){
     GRegion *gr = dynamic_cast<GRegion*>(gf);
     if(!gr){
@@ -220,6 +226,7 @@ MElementOctree* backgroundMesh3D::getOctree()
     octree = new MElementOctree(copy);
   }
   return octree;
+   */ 
 }
 
 MVertex* backgroundMesh3D::get_nearest_neighbor(const double* xyz, double & distance )
@@ -589,6 +596,7 @@ void frameFieldBackgroundMesh3D::computeCrossField()
 
 void frameFieldBackgroundMesh3D::initiate_crossfield()
 {
+	/*
   crossField.clear();
   MVertex *v;
 
@@ -645,6 +653,7 @@ void frameFieldBackgroundMesh3D::initiate_crossfield()
       crossField[v] = crossField[closer_on_bnd];// prend l'info Bnd (ANN) la plus proche...
     }
   }
+   */ 
 }
 
 MVertex* frameFieldBackgroundMesh3D::get_nearest_neighbor_on_boundary(MVertex* v)
@@ -744,6 +753,7 @@ double frameFieldBackgroundMesh3D::get_vectorial_smoothness(const int idir,
 
 void frameFieldBackgroundMesh3D::build_vertex_to_element_table()
 {
+	/*
   GRegion *gr = dynamic_cast<GRegion*>(gf);
   if(!gr){
     Msg::Error("Entity is not a region in background mesh");
@@ -769,26 +779,33 @@ void frameFieldBackgroundMesh3D::build_vertex_to_element_table()
       }
     }
   }
+   */ 
 }
 
 const MElement* backgroundMesh3D::getElement(unsigned int i)const
 {
+	/*
   GRegion *gr = dynamic_cast<GRegion*>(gf);
   if(!gr){
     Msg::Error("Entity is not a region in background mesh");
     return 0;
   }
   return gr->getMeshElement(i);
+   */
+	return 0; 
 }
 
 unsigned int backgroundMesh3D::getNumMeshElements()const
 {
+	/*
   GRegion *gr = dynamic_cast<GRegion*>(gf);
   if(!gr){
     Msg::Error("Entity is not a region in background mesh");
     return 0;
   }
   return gr->getNumMeshElements();
+   */ 
+   return 0; 
 }
 
 // this function fills the multimap "graph": vertex to direct neighbors, or
@@ -1175,9 +1192,10 @@ void frameFieldBackgroundMesh3D::get_rotation_angle_and_axis
 
 void frameFieldBackgroundMesh3D::exportVectorialSmoothness(const string &filename)
 {
+	/*
   FILE *f = Fopen(filename.c_str(), "w");
   if(!f){
-    Msg::Error("Could not open file '%s'", filename.c_str());
+//    Msg::Error("Could not open file '%s'", filename.c_str());
     return;
   }
 
@@ -1203,4 +1221,5 @@ void frameFieldBackgroundMesh3D::exportVectorialSmoothness(const string &filenam
   }
   fprintf(f,"};\n");
   fclose(f);
+   */ 
 }

@@ -594,11 +594,12 @@ void qmQuadrangle::NCJAndGradients(const SPoint3 &p0, const SPoint3 &p1, const S
 //  }
 }
 
-
+/*
 double qmTetrahedron::qm(MTetrahedron *t, const Measures &cr, double *volume)
 {
   return qm(t->getVertex(0), t->getVertex(1), t->getVertex(2), t->getVertex(3), cr, volume);
 }
+ */ 
 
 
 double qmTetrahedron::qm(const MVertex *v1, const MVertex *v2, const MVertex *v3,
@@ -740,7 +741,7 @@ static double prismNCJ(const MVertex* a, const MVertex* b, const MVertex* c, con
   return fact*fabs(val)/(l1*l2*l3);
 }
 
-
+/*
 double qmPrism::minNCJ(const MPrism *el) {
   const MVertex *a = el->getVertex(0),*b= el->getVertex(1), *c= el->getVertex(2);
   const MVertex *d = el->getVertex(3),*e= el->getVertex(4), *f= el->getVertex(5);
@@ -754,6 +755,7 @@ double qmPrism::minNCJ(const MPrism *el) {
   const double result = *std::min_element(j,j+6);
   return result;
 }
+ */ 
 
 
 //void qmPrism::NCJ(const double &x0, const double &y0, const double &z0,
@@ -780,6 +782,7 @@ double qmPrism::minNCJ(const MPrism *el) {
 
 
 // TODO: Remove this (useless as quality measure)
+/*
 double qmHexahedron::angles(MHexahedron *el)
 {
   double angleMax = 0.0;
@@ -807,3 +810,4 @@ double qmHexahedron::angles(MHexahedron *el)
   zeta = 1.-std::max((angleMax-0.5*M_PI)/(0.5*M_PI),(0.5*M_PI-angleMin)/(0.5*M_PI));
   return zeta;
 }
+ */ 

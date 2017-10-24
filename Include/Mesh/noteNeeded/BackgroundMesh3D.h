@@ -42,7 +42,7 @@ private:
 
 
 // difference with BackgroundMesh2D: no copy of components, working directly on the vertices and elements of GRegion
-
+/*
 class backgroundMesh3D : public BGMBase {
 protected:
   virtual void computeSizeField();
@@ -68,9 +68,10 @@ public:
   virtual MVertex* get_nearest_neighbor(double x, double y, double z);
   virtual MVertex* get_nearest_neighbor(double x, double y, double z, double &distance );
 };
+ */ 
 
 
-
+/*
 class frameFieldBackgroundMesh3D : public backgroundMesh3D{
 public:
   //    typedef tr1::unordered_map<hash_key_ptr, std::set<MElement*> > vert2elemtype;
@@ -158,6 +159,7 @@ public:
   //    STensor3 get_random_cross()const;
 
 };
+ */ 
 
 
 #endif

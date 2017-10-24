@@ -416,7 +416,10 @@ void MQuadrangleN::reorient(int rot, bool swap) {
         if (swap) for (int i=0;i<4;i++) tmp.push_back(_vs[idx + (7-i+rot)%4]);
         else      for (int i=0;i<4;i++) tmp.push_back(_vs[idx + (4+i-rot)%4]);
         idx += 4;
-        if (order > 4) Msg::Error("Reorientation of quad not supported above order 4");
+        if (order > 4) 
+			{
+				//Msg::Error("Reorientation of quad not supported above order 4");
+			}
       }
     }
     tmp.push_back(_vs[idx]);

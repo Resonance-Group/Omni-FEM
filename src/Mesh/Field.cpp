@@ -62,7 +62,7 @@ FieldOption *Field::getOption(const std::string optionName)
 {
   std::map<std::string, FieldOption*>::iterator it = options.find(optionName);
   if (it == options.end()) {
-    Msg::Error("field option :%s does not exist", optionName.c_str());
+    //Msg::Error("field option :%s does not exist", optionName.c_str());
     return NULL;
   }
   return it->second;
@@ -86,11 +86,11 @@ Field *FieldManager::get(int id)
 Field *FieldManager::newField(int id, std::string type_name)
 {
   if(find(id) != end()) {
-    Msg::Error("Field id %i is already defined", id);
+  //  Msg::Error("Field id %i is already defined", id);
     return 0;
   }
   if(map_type_name.find(type_name) == map_type_name.end()) {
-    Msg::Error("Unknown field type \"%s\"", type_name.c_str());
+   // Msg::Error("Unknown field type \"%s\"", type_name.c_str());
     return 0;
   }
   Field *f = (*map_type_name[type_name]) ();
@@ -222,7 +222,7 @@ class StructuredField : public Field
       }
       catch(...) {
         error_status = true;
-        Msg::Error("Field %i : error reading file %s", this->id, file_name.c_str());
+        //Msg::Error("Field %i : error reading file %s", this->id, file_name.c_str());
       }
       update_needed = false;
     }
@@ -757,8 +757,8 @@ class GradientField : public Field
          (*field) (x, y, z - delta / 2)) / delta;
       return sqrt(gx * gx + gy * gy + gz * gz);
     default:
-      Msg::Error("Field %i : Unknown kind (%i) of gradient", this->id,
-                 kind);
+      //Msg::Error("Field %i : Unknown kind (%i) of gradient", this->id,
+        //         kind);
       return MAX_LC;
     }
   }
@@ -1094,8 +1094,11 @@ class MathEvalField : public Field
   {
     if(update_needed) {
       if(!expr.set_function(f))
-        Msg::Error("Field %i: Invalid matheval expression \"%s\"",
-                   this->id, f.c_str());
+	  {
+      //  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
+      //             this->id, f.c_str());
+				   
+	  }
       update_needed = false;
     }
     return expr.evaluate(x, y, z);
@@ -1144,8 +1147,11 @@ class MathEvalFieldAniso : public Field
     if(update_needed) {
       for (int i=0;i<6;i++){
 	if(!expr.set_function(i,f[i]))
-	  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
-		     this->id, f[i].c_str());
+	{
+	//  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
+	//	     this->id, f[i].c_str());
+			 
+	}
       }
       update_needed = false;
     }
@@ -1156,8 +1162,11 @@ class MathEvalFieldAniso : public Field
     if(update_needed) {
       for (int i = 0; i < 6; i++){
 	if(!expr.set_function(i, f[i]))
-	  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
-		     this->id, f[i].c_str());
+	{
+	//  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
+	//	     this->id, f[i].c_str());
+			 
+	}
       }
       update_needed = false;
     }
@@ -1436,8 +1445,11 @@ class ParametricField : public Field
     if(update_needed) {
       for(int i = 0; i < 3; i++) {
         if(!expr[i].set_function(f[i]))
-          Msg::Error("Field %i : Invalid matheval expression \"%s\"",
-                     this->id, f[i].c_str());
+		{
+      //    Msg::Error("Field %i : Invalid matheval expression \"%s\"",
+       //              this->id, f[i].c_str());
+					 
+		}
       }
       update_needed = false;
     }
@@ -1747,7 +1759,7 @@ class MaxField : public Field
   }
   double operator() (double x, double y, double z, GEntity *ge=0)
   {
-    double v = -MAX_LC;annDeallocPts
+    double v = -MAX_LC;
     for(std::list<int>::iterator it = idlist.begin(); it != idlist.end(); it++) {
       Field *f = (GModel::current()->getFields()->get(*it));
       if(f && *it != id) {
@@ -1779,7 +1791,7 @@ class RestrictField : public FieldannDeallocPts
   RestrictField()
   {
     iField = 1;
-    options["IField"] = new FieldOptionInt(iField, "Field index");
+//    options["IField"] = new FieldOptionInt(iField, "Field index");
     options["VerticesList"] = new FieldOptionList(vertices, "Point indices");
     options["EdgesList"] = new FieldOptionList(edges, "Curve indices");
     options["FacesList"] = new FieldOptionList(faces, "Surface indices");
@@ -1790,6 +1802,7 @@ class RestrictField : public FieldannDeallocPts
     return "Restrict the application of a field to a given list of geometrical "
       "points, curves, surfaces or volumes.";
   }
+  
   double operator() (double x, double y, double z, GEntity *ge=0)
   {
     Field *f = (GModel::current()->getFields()->get(iField));
@@ -2899,7 +2912,7 @@ FieldManager::FieldManager()
 #if defined(HAVE_ANN)
   map_type_name["Octree"] = new FieldFactoryT<OctreeField>();
 #endif
-  map_type_name["Distance"] = new FieldFactoryT<DistanceField>();
+ // map_type_name["Distance"] = new FieldFactoryT<DistanceField>();
   map_type_name["Restrict"] = new FieldFactoryT<RestrictField>();
   map_type_name["Min"] = new FieldFactoryT<MinField>();
   map_type_name["MinAniso"] = new FieldFactoryT<MinAnisoField>();
@@ -3018,7 +3031,7 @@ double GenericField::operator() (double x, double y, double z, GEntity *ge){
   for (std::vector<double>::iterator it = sizes.begin();it!=sizes.end();it++,itdata++,itcbs++){
     bool ok = (*itcbs)(x,y,z,(*itdata),(*it));
     if (!ok){
-      Msg::Warning("GenericField::ERROR from callback ");
+ //     Msg::Warning("GenericField::ERROR from callback ");
       std::cout << "GenericField::ERROR from callback number " << std::distance(sizes.begin(),it) << std::endl;
     }
 //    std::cout << "callback " << std::distance(sizes.begin(),it) << ": size set to " << *it << std::endl;

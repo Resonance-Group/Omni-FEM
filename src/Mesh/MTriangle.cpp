@@ -8,6 +8,7 @@
 #include "Mesh/Numeric.h"
 #include "Mesh/Context.h"
 #include "Mesh/BasisFactory.h"
+#include "Mesh/HighOrder.h"
 
 //#if defined(HAVE_MESH)
 #include "Mesh/qualityMeasures.h"
@@ -298,7 +299,7 @@ void MTriangle::reorient(int rot,bool swap)
   else      for (int i=0;i<3;i++) _v[i] = tmp[(3+i-rot)%3];
 }
 
-#include "HighOrder.h"
+
 
 void MTriangle6::reorient(int rot, bool swap)
 {
@@ -344,7 +345,10 @@ void MTriangleN::reorient(int rot, bool swap)
       else      for(int i=0;i<3;i++) tmp.push_back(_vs[idx+(3+i-rot)%3]);
     }
     if (order >=5)
-      Msg::Error("Reorientation of a triangle not supported above order 4");
+	{
+    //  Msg::Error("Reorientation of a triangle not supported above order 4");
+	  
+	}
   }
   _vs = tmp;
 }

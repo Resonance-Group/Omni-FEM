@@ -7,6 +7,7 @@
 #define _GEDGE_LOOP_H_
 
 #include "Mesh/GEdge.h"
+ 
 
 class GEdgeSigned
 {
@@ -25,6 +26,7 @@ class GEdgeSigned
   void print() const;
   int getSign() const { return _sign; }
 };
+
 
 class GEdgeLoop
 {

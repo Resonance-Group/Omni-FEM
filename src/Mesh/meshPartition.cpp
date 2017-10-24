@@ -5,9 +5,9 @@
 //
 // Partition.cpp - Copyright (C) 2008 S. Guzik, C. Geuzaine, J.-F. Remacle
 
-#include "GmshConfig.h"
-#include "meshPartition.h"
-#include "meshPartitionOptions.h"
+//#include "GmshConfig.h"
+#include "Mesh/meshPartition.h"
+#include "Mesh/meshPartitionOptions.h"
 
 #if defined(HAVE_CHACO) || defined(HAVE_METIS)
 
@@ -1366,7 +1366,7 @@ template void MakeGraphDIM<3, GModel::riter, GModel::fiter>
 
 int PartitionMesh(GModel *const model, meshPartitionOptions &options)
 {
-  Msg::Error("Gmsh must be compiled with METIS or Chaco support to partition meshes");
+  //Msg::Error("Gmsh must be compiled with METIS or Chaco support to partition meshes");
   return 0;
 }
 

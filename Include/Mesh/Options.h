@@ -7,7 +7,7 @@
 #define _OPTIONS_H_
 
 #include <string>
-#include "ColorTable.h"
+//#include "ColorTable.h"
 
 #define GMSH_SET         (1<<0)
 #define GMSH_GET         (1<<1)
@@ -863,7 +863,7 @@ bool NumberOption(int action, const char *category, int num,
 bool ColorOption(int action, const char *category, int num,
                  const char *name, unsigned int &val, bool warnIfUnknown=true);
 
-GmshColorTable *GetColorTable(int num);
+//GmshColorTable *GetColorTable(int num);
 int GetColorForString(int alpha, const char *string, int *FlagError);
 bool GetRGBForString(const char *string, int &r, int &g, int &b);
 

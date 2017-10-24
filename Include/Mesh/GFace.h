@@ -13,6 +13,7 @@
 
 #include "Mesh/GEntity.h"
 #include "Mesh/GPoint.h"
+#include "Mesh/GEdge.h"
 #include "Mesh/GEdgeLoop.h"
 #include "Mesh/SPoint2.h"
 #include "Mesh/SVector3.h"
@@ -23,8 +24,8 @@
 class MElement;
 class MTriangle;
 class MQuadrangle;
-//class MPolygon;
-//class ExtrudeParams;
+class MPolygon;
+class ExtrudeParams;
 class GFaceCompound;
 
 struct surface_params
@@ -32,7 +33,7 @@ struct surface_params
   double radius, radius2, height, cx, cy, cz;
 };
 
-class GRegion;
+//class GRegion;
 
 // A model face.
 class GFace : public GEntity {
@@ -41,7 +42,7 @@ class GFace : public GEntity {
   // the face + directions)
   std::list<GEdge *> l_edges;
   std::list<int> l_dirs;
-  GRegion *r1, *r2;
+ // GRegion *r1, *r2;
   mean_plane meanPlane;
   std::list<GEdge *> embedded_edges;
   std::list<GVertex *> embedded_vertices;
@@ -82,6 +83,7 @@ class GFace : public GEntity {
   virtual void deleteMesh();
 
   // add/delete regions that are bounded by the face
+  /*
   void addRegion(GRegion *r)
   {
     if(r == r1 || r == r2) return;
@@ -98,6 +100,7 @@ class GFace : public GEntity {
     for (int i = 0; i <numRegions(); i++) r.push_back(getRegion(i));
     return r;
   }
+   */ 
 
   // add embedded vertices/edges
   void addEmbeddedVertex(GVertex *v){ embedded_vertices.push_back(v); }

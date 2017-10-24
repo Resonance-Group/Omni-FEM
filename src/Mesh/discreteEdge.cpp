@@ -276,9 +276,9 @@ void discreteEdge::setBoundVertices()
     _pars[0]=0   _pars[1]=1    _pars[2]=2             _pars[N+1]=N+1
 */
 void discreteEdge::parametrize(std::map<GFace*, std::map<MVertex*, MVertex*,
-                               std::less<MVertex*> > > &face2Vert,
-                               std::map<GRegion*, std::map<MVertex*, MVertex*,
-                               std::less<MVertex*> > > &region2Vert)
+                               std::less<MVertex*> > > &face2Vert)
+                           //    std::map<GRegion*, std::map<MVertex*, MVertex*,
+                            //   std::less<MVertex*> > > &region2Vert)
 {
   if (_pars.empty()){
     for (unsigned int i = 0; i < lines.size() + 1; i++){
@@ -337,7 +337,7 @@ void discreteEdge::parametrize(std::map<GFace*, std::map<MVertex*, MVertex*,
      //     mapVert.insert(*it);
      //   itmap->second = mapVert;
      // }
-
+/*
      // do the same for regions
      for ( int j = 0; j < (*iFace)->numRegions(); j++){
        GRegion *r = (*iFace)->getRegion(j);
@@ -357,6 +357,7 @@ void discreteEdge::parametrize(std::map<GFace*, std::map<MVertex*, MVertex*,
        //     }
      }
    }
+    */ 
 }
 
 

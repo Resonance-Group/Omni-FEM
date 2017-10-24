@@ -7,7 +7,7 @@
 #include <map>
 #include <algorithm>
 //#include "GmshMessage.h"
-#include "Mesh/OS.h"
+#include "common/OS.h"
 #include "Mesh/robustPredicates.h"
 #include "Mesh/BackgroundMesh.h"
 #include "Mesh/surfaceFiller.h"

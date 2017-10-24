@@ -9,14 +9,15 @@
 #ifndef _MSUBELEMENT_H_
 #define _MSUBELEMENT_H_
 
-#include "GmshMessage.h"
-#include "MElement.h"
-#include "MTetrahedron.h"
-#include "MTriangle.h"
-#include "MLine.h"
-#include "MPoint.h"
+//#include "GmshMessage.h"
+#include "Mesh/MElement.h"
+//#include "MTetrahedron.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/MLine.h"
+#include "Mesh/MPoint.h"
 
 // A sub tetrahedron, contained in another element
+/*
 class MSubTetrahedron : public MTetrahedron
 {
   friend class MElementFactory;
@@ -83,6 +84,7 @@ class MSubTetrahedron : public MTetrahedron
   virtual const MElement *getBaseElement() const {if(!_base) _base=new MTetrahedron(*this); return _base;}
   virtual MElement *getBaseElement() {if(!_base) _base=new MTetrahedron(*this); return _base;}
 };
+*/
 
 // A sub triangle, contained in another element
 class MSubTriangle : public MTriangle

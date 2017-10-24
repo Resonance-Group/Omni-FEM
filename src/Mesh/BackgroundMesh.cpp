@@ -3,24 +3,24 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "GmshMessage.h"
-#include "BackgroundMesh.h"
-#include "Numeric.h"
-#include "Context.h"
+//#include "GmshMessage.h"
+#include "Mesh/BackgroundMesh.h"
+#include "Mesh/Numeric.h"
+#include "Mesh/Context.h"
 #include "Mesh/GVertex.h"
 #include "Mesh/GEdge.h"
-#include "GEdgeCompound.h"
+#include "Mesh/GEdgeCompound.h"
 #include "Mesh/GFace.h"
-#include "GFaceCompound.h"
+#include "Mesh/GFaceCompound.h"
 #include "Mesh/GModel.h"
-#include "Common/OS.h"
-#include "Field.h"
-#include "MElement.h"
-#include "MElementOctree.h"
-#include "MLine.h"
-#include "MTriangle.h"
-#include "MQuadrangle.h"
-#include "MVertex.h"
+#include "common/OS.h"
+#include "Mesh/Field.h"
+#include "Mesh/MElement.h"
+#include "Mesh/MElementOctree.h"
+#include "Mesh/MLine.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/MQuadrangle.h"
+#include "Mesh/MVertex.h"
 
 #if defined(HAVE_SOLVER)
 #include "dofManager.h"
@@ -60,7 +60,7 @@ backgroundMesh::backgroundMesh(GFace *_gf, bool cfd)
 {
 
   if (cfd){
-    Msg::Info("Building A Cross Field Using Closest Distance");
+    //Msg::Info("Building A Cross Field Using Closest Distance");
     propagateCrossFieldByDistance(_gf);
     return;
   }
@@ -269,7 +269,7 @@ crossField2d::crossField2d(MVertex* v, GEdge* ge)
   double p;
   bool success = reparamMeshVertexOnEdge(v, ge, p);
   if (!success){
-    Msg::Warning("cannot reparametrize a point in crossField");
+    //Msg::Warning("cannot reparametrize a point in crossField");
     _angle = 0;
     return;
   }
@@ -569,7 +569,7 @@ double backgroundMesh::operator() (double u, double v, double w) const
     e = _octree->find(pnew.x(), pnew.y(), 0.0, 2, true);
 #endif
     if(!e){
-      Msg::Error("BGM octree: cannot find UVW=%g %g %g", u, v, w);
+  //    Msg::Error("BGM octree: cannot find UVW=%g %g %g", u, v, w);
       return -1000.0;//0.4;
     }
   }
@@ -631,7 +631,7 @@ double backgroundMesh::getAngle(double u, double v, double w) const
     e = _octree->find(pnew.x(), pnew.y(), 0., 2, true);
 #endif
     if(!e){
-      Msg::Error("BGM octree angle: cannot find UVW=%g %g %g", u, v, w);
+  //    Msg::Error("BGM octree angle: cannot find UVW=%g %g %g", u, v, w);
       return -1000.0;
     }
   }
@@ -657,7 +657,7 @@ void backgroundMesh::print(const std::string &filename, GFace *gf,
 {
   FILE *f = Fopen(filename.c_str(), "w");
   if(!f){
-    Msg::Error("Could not open file '%s'", filename.c_str());
+ //   Msg::Error("Could not open file '%s'", filename.c_str());
     return;
   }
   fprintf(f, "View \"Background Mesh\"{\n");
@@ -710,7 +710,7 @@ MElementOctree* backgroundMesh::get_octree(){
 MElement *backgroundMesh::getMeshElementByCoord(double u, double v, double w, bool strict)
 {
   if(!_octree){
-    Msg::Debug("Rebuilding BackgroundMesh element octree");
+ //   Msg::Debug("Rebuilding BackgroundMesh element octree");
     _octree = new MElementOctree(_triangles);
   }
   return _octree->find(u,v,w, 2, strict);

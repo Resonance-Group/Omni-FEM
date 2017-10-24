@@ -46,11 +46,11 @@ const nodalBasis* BasisFactory::getNodalBasis(int tag)
       case(TYPE_HEX):
         F = new polynomialBasis(tag);
         break;
-      case(TYPE_PYR):
-        F = new pyramidalBasis(tag);
-        break;
+    //  case(TYPE_PYR):
+    //    F = new pyramidalBasis(tag);
+    //    break;
       default:
-        Msg::Error("Unknown type of element %d (in BasisFactory)", tag);
+        //Msg::Error("Unknown type of element %d (in BasisFactory)", tag);
         return NULL;
     }
   }

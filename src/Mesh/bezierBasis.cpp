@@ -13,7 +13,7 @@
 //#include "pyramidalBasis.h"
 #include "Mesh/pointsGenerators.h"
 #include "Mesh/BasisFactory.h"
-#include "MEsh/Numeric.h"
+#include "Mesh/Numeric.h"
 
 namespace {
 // Sub Control Points
@@ -1027,8 +1027,11 @@ void bezierBasisRaiser::computeCoeff(const fullVector<double> &coeffA,
     }
   }
   else
+  {
    // Msg::Error("bezierBasisRaiser::computeCoeff not implemented for A == B != C "
        //        "or A != B == C");
+	   
+	}
 }
 
 void bezierBasisRaiser::computeCoeff(const fullMatrix<double> &coeffA,

@@ -15,24 +15,25 @@
 #include "Mesh/GVertex.h"
 #include "Mesh/GEdge.h"
 #include "Mesh/GFace.h"
+//#include "Mesh/GEdgeLoop.h"
 
 /* We are not working with 3D */
 //#include "Mesh/GRegion.h"
-//#include "SPoint3.h"
-//#include "SBoundingBox3d.h"
+#include "Mesh/SPoint3.h"
+#include "Mesh/SBoundingBox3d.h"
 
 template <class scalar> class simpleFunction;
 
-class FM_Internals;
+//class FM_Internals;
 class GEO_Internals;
 class OCC_Internals;
-class ACIS_Internals;
+//class ACIS_Internals;
 class smooth_normals;
 class FieldManager;
 class CGNSOptions;
 class gLevelset;
 class discreteFace;
-class discreteRegion;
+//class discreteRegion;
 class MElementOctree;
 class GModelFactory;
 
@@ -48,7 +49,7 @@ class GModel {
  // friend class OCCFactory;
   std::multimap<std::pair<std::vector<int>, std::vector<int> >,
                 std::pair<std::string, std::vector<int> > > _homologyRequests;
-  std::set<GRegion*, GEntityLessThan> _chainRegions;
+ // std::set<GRegion*, GEntityLessThan> _chainRegions;
   std::set<GFace*, GEntityLessThan> _chainFaces;
   std::set<GEdge*, GEntityLessThan> _chainEdges;
   std::set<GVertex*, GEntityLessThan> _chainVertices;
@@ -104,11 +105,11 @@ class GModel {
   void _resetOCCInternals(); // Not needed
 
   // ACIS model internal data
-  ACIS_Internals *_acis_internals; // Not needed
+ // ACIS_Internals *_acis_internals; // Not needed
   void _deleteACISInternals(); // Not needed
 
   // Fourier model internal data
-  FM_Internals *_fm_internals; // Not needed
+ // FM_Internals *_fm_internals; // Not needed
   void _createFMInternals(); // Not needed
   void _deleteFMInternals(); // Not needed
 
@@ -152,7 +153,7 @@ class GModel {
  protected:
   // the sets of geometrical regions, faces, edges and vertices in the
   // model
-  std::set<GRegion*, GEntityLessThan> regions;
+ // std::set<GRegion*, GEntityLessThan> regions;
   std::set<GFace*, GEntityLessThan> faces;
   std::set<GEdge*, GEntityLessThan> edges;
   std::set<GVertex*, GEntityLessThan> vertices;
@@ -220,8 +221,8 @@ class GModel {
   GEO_Internals *getGEOInternals(){ return _geo_internals; }
   void createOCCInternals();
   OCC_Internals *getOCCInternals(){ return _occ_internals; }
-  FM_Internals *getFMInternals() { return _fm_internals; }
-  ACIS_Internals *getACISInternals(){ return _acis_internals; }
+  //FM_Internals *getFMInternals() { return _fm_internals; }
+ // ACIS_Internals *getACISInternals(){ return _acis_internals; }
 
   // access characteristic length (mesh size) fields
   FieldManager *getFields(){ return _fields; }
@@ -246,7 +247,7 @@ class GModel {
   void setCompoundVisibility();
 
   // get the number of entities in this model
-  int getNumRegions() const { return regions.size(); }
+ // int getNumRegions() const { return regions.size(); }
   int getNumFaces() const { return faces.size(); }
   int getNumEdges() const { return edges.size(); }
   int getNumVertices() const { return vertices.size(); }
@@ -256,34 +257,34 @@ class GModel {
   bool empty() const;
 
   // region, face, edge and vertex iterators
-  typedef std::set<GRegion*, GEntityLessThan>::iterator riter;
+//  typedef std::set<GRegion*, GEntityLessThan>::iterator riter;
   typedef std::set<GFace*, GEntityLessThan>::iterator fiter;
   typedef std::set<GEdge*, GEntityLessThan>::iterator eiter;
   typedef std::set<GVertex*, GEntityLessThan>::iterator viter;
 
   // get an iterator initialized to the first/last entity in this model
-  riter firstRegion() { return regions.begin(); }
+  //riter firstRegion() { return regions.begin(); }
   fiter firstFace() { return faces.begin(); }
   eiter firstEdge() { return edges.begin(); }
   viter firstVertex() { return vertices.begin(); }
-  riter lastRegion() { return regions.end(); }
+//  riter lastRegion() { return regions.end(); }
   fiter lastFace() { return faces.end(); }
   eiter lastEdge() { return edges.end(); }
   viter lastVertex() { return vertices.end(); }
 
   // find the entity with the given tag
-  GRegion *getRegionByTag(int n) const;
+ // GRegion *getRegionByTag(int n) const;
   GFace *getFaceByTag(int n) const;
   GEdge *getEdgeByTag(int n) const;
   GVertex *getVertexByTag(int n) const;
   GEntity *getEntityByTag(int dim, int n) const;
 
   // add/remove an entity in the model
-  void add(GRegion *r) { regions.insert(r); }
+//  void add(GRegion *r) { regions.insert(r); }
   void add(GFace *f) { faces.insert(f); }
   void add(GEdge *e) { edges.insert(e); }
   void add(GVertex *v) { vertices.insert(v); }
-  void remove(GRegion *r);
+ // void remove(GRegion *r);
   void remove(GFace *f);
   void remove(GEdge *e);
   void remove(GVertex *v);
@@ -447,7 +448,7 @@ class GModel {
   // create topology from mesh
   void createTopologyFromMeshNew();
   void createTopologyFromMesh(int ignoreHoles=0);
-  void createTopologyFromRegions(std::vector<discreteRegion*> &discRegions);
+ // void createTopologyFromRegions(std::vector<discreteRegion*> &discRegions);
   void createTopologyFromFaces(std::vector<discreteFace*> &pFaces, int ignoreHoles=0);
   void makeDiscreteRegionsSimplyConnected();
   void makeDiscreteFacesSimplyConnected();
@@ -529,13 +530,13 @@ class GModel {
   std::vector<GFace *> addRuledFaces(std::vector<std::vector<GEdge *> > edges);
   GFace *addFace(std::vector<GEdge *> edges, std::vector< std::vector<double > > points);
   GFace *addPlanarFace(std::vector<std::vector<GEdge *> > edges);
-  GFace *addPlanarFace (std::vector<std::vector<GEdgeSigned> > edges);
+ // GFace *addPlanarFace (std::vector<std::vector<GEdgeSigned> > edges);
   GFace *add2Drect(double x0, double y0, double dx, double dy);
   GFace *add2Dellips(double xc, double yc, double rx, double ry);
 
   GEdge *addCompoundEdge(std::vector<GEdge*> edges, int num=-1);
   GFace *addCompoundFace(std::vector<GFace*> faces, int type, int split, int num=-1);
-  GRegion *addVolume(std::vector<std::vector<GFace*> > faces);
+//  GRegion *addVolume(std::vector<std::vector<GFace*> > faces);
 
   // create solid geometry primitives using the factory
   GEntity *addSphere(double cx, double cy, double cz, double radius);
@@ -622,7 +623,7 @@ class GModel {
   GVertex *getVertexForOCCShape(const void *shape);
   GEdge *getEdgeForOCCShape(const void *shape);
   GFace *getFaceForOCCShape(const void *shape);
-  GRegion *getRegionForOCCShape(const void *shape);
+ // GRegion *getRegionForOCCShape(const void *shape);
 
   // ACIS Model
   int readACISSAT(const std::string &name);// Not needed

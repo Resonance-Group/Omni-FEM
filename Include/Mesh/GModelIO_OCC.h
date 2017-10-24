@@ -393,7 +393,7 @@ class OCC_Internals {
 private:
   bool _error(std::string what)
   {
-    Msg::Error("Gmsh requires OpenCASCADE to %s", what.c_str());
+    //Msg::Error("Gmsh requires OpenCASCADE to %s", what.c_str());
     return false;
   }
 public:

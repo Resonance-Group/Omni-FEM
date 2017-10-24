@@ -9,16 +9,16 @@
 #include <set>
 #include <fstream>
 #include <time.h>
-#include "meshGFaceLloyd.h"
-#include "DivideAndConquer.h"
-#include "GFace.h"
-#include "MElement.h"
-#include "MVertex.h"
-#include "MTriangle.h"
-#include "Context.h"
-#include "meshGFace.h"
-#include "BackgroundMesh.h"
-#include "GmshConfig.h"
+#include "Mesh/meshGFaceLloyd.h"
+#include "Mesh/DivideAndConquer.h"
+#include "Mesh/GFace.h"
+#include "Mesh/MElement.h"
+#include "Mesh/MVertex.h"
+#include "Mesh/MTriangle.h"
+#include "Mesh/Context.h"
+#include "Mesh/meshGFace.h"
+#include "Mesh/BackgroundMesh.h"
+//#include "Mesh/GmshConfig.h"
 
 #if defined(HAVE_BFGS)
 

@@ -7,7 +7,7 @@
 #include <math.h>
 #include <stdio.h>
 //#include "GmshMessage.h"
-#include "Mesh/OS.h"
+#include "common/OS.h"
 #include "Mesh/robustPredicates.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/BDS.h"
@@ -349,7 +349,7 @@ BDS_Edge *BDS_Mesh::recover_edge(int num1, int num2, bool &_fatal,
               e2r->find(EdgeToRecover(num1, num2, 0));
        //     Msg::Debug("edge %d %d on model edge %d cannot be recovered because"
         //               " it intersects %d %d on model edge %d", num1, num2, itr2->ge->tag(),
-                       e->p1->iD, e->p2->iD, itr1->ge->tag());
+       //                e->p1->iD, e->p2->iD, itr1->ge->tag());
             // now throw a class that contains the diagnostic
             not_recovered->insert(EdgeToRecover(num1, num2, itr2->ge));
             not_recovered->insert(EdgeToRecover(e->p1->iD, e->p2->iD, itr1->ge));

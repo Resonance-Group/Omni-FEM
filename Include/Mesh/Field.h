@@ -212,7 +212,7 @@ class BoundaryLayerField : public Field {
   virtual std::string getDescription(){ return ""; }
   BoundaryLayerField()
   {
-    Msg::Error("You must compile with ANN to use BoundaryLayerField");
+    //Msg::Error("You must compile with ANN to use BoundaryLayerField");
   }
   ~BoundaryLayerField() {}
   virtual double operator() (double x, double y, double z, GEntity *ge=0){ return 0.; }

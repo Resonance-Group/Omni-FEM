@@ -25,8 +25,8 @@ namespace {
   {
     if(monomial.size1() != point.size1() || monomial.size2() != point.size2()){
      // Msg::Fatal("Wrong sizes for Lagrange coefficients generation %d %d -- %d %d",
-           monomial.size1(), point.size1(),
-           monomial.size2(), point.size2() );
+      //     monomial.size1(), point.size1(),
+       //    monomial.size2(), point.size2() );
       return fullMatrix<double>(1, 1);
     }
 

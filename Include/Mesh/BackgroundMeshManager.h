@@ -13,12 +13,12 @@ using namespace std;
 
 class GEntity;
 class GFace;
-class GRegion;
+//class GRegion;
 
 class BGMManager{
 public:
   static BGMBase* get(GFace *gf);
-  static BGMBase* get(GRegion *gf);
+//  static BGMBase* get(GRegion *gf);
   static BGMBase* current2D();
   static void set_use_cross_field(bool b);
 private:

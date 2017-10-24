@@ -11,8 +11,8 @@
 #include <math.h>
 #include <queue>
 #include "Mesh/MVertex.h"
-#include "MEsh/STensor3.h"
-#include "MEsh/BackgroundMesh3D.h"
+#include "Mesh/STensor3.h"
+//#include "Mesh/BackgroundMesh3D.h"
 #include "Mesh/GEntity.h"
 #include "Mesh/rtree.h"
 
@@ -96,7 +96,7 @@ extern bool rtree_callback(surfacePointWithExclusionRegion *neighbour,void* poin
 extern bool inExclusionZone (SPoint2 &p,
                              RTree<surfacePointWithExclusionRegion*,double,2,double> &rtree,
                              std::vector<surfacePointWithExclusionRegion*> & all);
-
+/*
 class Wrapper3D{
 private:
   static frameFieldBackgroundMesh3D* bgmesh;
@@ -130,10 +130,11 @@ public:
   SVector3* get_direction(){ return vec; }
   double* get_size(){ return size; }
 };
+ */ 
 
 extern double infinity_distance_3D(const MVertex *v1,const MVertex *v2,STensor3 &cf);
-extern bool rtree_callback_3D(MVertex* neighbour,void* w);
-extern bool far_from_boundary_3D(frameFieldBackgroundMesh3D *bgm, MVertex* v, double h);
+//extern bool rtree_callback_3D(MVertex* neighbour,void* w);
+//extern bool far_from_boundary_3D(frameFieldBackgroundMesh3D *bgm, MVertex* v, double h);
 extern void fill_min_max(double x,double y,double z,double h,double *min,double *max);
 
 // TODO: this is not a pair anymore, the name has to be changed; this will be in
@@ -200,7 +201,7 @@ public:
   virtual int get_first_layer(){ return (*points.begin())->layer; }
   virtual SVector3 get_first_direction()
   {
-    Msg::Error("listOfPointsScalarSmoothness::get_first_direction NOT applicable");
+    //Msg::Error("listOfPointsScalarSmoothness::get_first_direction NOT applicable");
     return SVector3(0.);
   }
   virtual void erase_first()
@@ -242,7 +243,7 @@ public:
   virtual int get_first_layer(){ return (points.front())->layer; }
   virtual SVector3 get_first_direction()
   {
-    Msg::Error("listOfPointsFifo::get_first_direction NOT applicable");
+   // Msg::Error("listOfPointsFifo::get_first_direction NOT applicable");
     return SVector3(0.);
   }
   virtual void erase_first()

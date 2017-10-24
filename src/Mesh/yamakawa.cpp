@@ -5185,6 +5185,7 @@ void PostOp::erase_vertex_to_hexPrism(MElement* element) {
 
 
 //Angle between two triangular faces located on the boundary should be high enough
+/*
 bool PostOp::valid(MPyramid *pyr) {
   MVertex *V[4] = { pyr->getVertex(0), pyr->getVertex(1), pyr->getVertex(2), pyr->getVertex(3) };
   MVertex *apex = pyr->getVertex(4);
@@ -5208,6 +5209,7 @@ bool PostOp::valid(MPyramid *pyr) {
   }
   return true;
 }
+ */ 
 
 // Why template?
 template <class T>

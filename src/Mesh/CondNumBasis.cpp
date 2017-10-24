@@ -9,7 +9,7 @@
 //#include "GmshMessage.h"
 
 #include <vector>
-#include "polynomialBasis.h"
+#include "Mesh/polynomialBasis.h"
 //#include "pyramidalBasis.h"
 #include "Mesh/pointsGenerators.h"
 #include "Mesh/BasisFactory.h"

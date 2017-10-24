@@ -4003,6 +4003,7 @@ GFace* GModel::getFaceForOCCShape(const void *shape)
 #endif
 }
 
+/*
 GRegion* GModel::getRegionForOCCShape(const void *shape)
 {
   if(!_occ_internals) return 0;
@@ -4012,3 +4013,4 @@ GRegion* GModel::getRegionForOCCShape(const void *shape)
   return 0;
 #endif
 }
+ */ 

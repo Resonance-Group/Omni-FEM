@@ -17,9 +17,9 @@
 //#include "GmshConfig.h"
 #include "Mesh/GmshDefines.h"
 //#include "GmshMessage.h"
-#include "StringUtils.h"
+//#include "StringUtils.h"
 #include "Mesh/GModel.h"
-#include "Context.h"
+#include "Mesh/Context.h"
 #include "Mesh/Options.h"
 #include "common/OS.h"
 //#include "Colors.h"
@@ -40,6 +40,7 @@
 bool StringOption(int action, const char *category, int num,
                   const char *name, std::string &val, bool warnIfUnknown)
 {
+	/*
   StringXString *s = 0;
   if(!strcmp(category, "General"))
     s = GeneralOptions_String;
@@ -81,6 +82,7 @@ bool StringOption(int action, const char *category, int num,
     val = s[i].function(num, action | GMSH_SET, s[i].def);
   else
     val = s[i].function(num, action, val);
+	 */ 
   return true;
 }
 
@@ -122,8 +124,10 @@ static void PrintStringOptions(int num, int level, int diff, int help,
             if(tmp[i] == '\n' || tmp[i] == '\t' || tmp[i] == '\r') tmp[i] = ' ';
           if(vec)
             vec->push_back(std::string(tmp) + '\0' + "string");
-          else
-            Msg::Direct("%s", tmp);
+          else{
+          //  Msg::Direct("%s", tmp);
+			
+		  }
         }
       }
     }
@@ -168,6 +172,7 @@ static void PrintStringOptionsDoc(StringXString s[], const char *prefix, FILE *f
 bool NumberOption(int action, const char *category, int num,
                   const char *name, double &val, bool warnIfUnknown)
 {
+	/*
   StringXNumber *s = 0;
   if(!strcmp(category, "General"))
     s = GeneralOptions_Number;
@@ -203,6 +208,7 @@ bool NumberOption(int action, const char *category, int num,
     val = s[i].function(num, action | GMSH_SET, s[i].def);
   else
     val = s[i].function(num, action, val);
+	 */ 
 
   return true;
 }
@@ -241,8 +247,10 @@ static void PrintNumberOptions(int num, int level, int diff, int help,
           fprintf(file, "%s\n", tmp);
         else if(vec)
           vec->push_back(std::string(tmp) + '\0' + "number");
-        else
-          Msg::Direct(tmp);
+        else{
+      //    Msg::Direct(tmp);
+		  
+		}
       }
     }
     i++;
@@ -266,6 +274,7 @@ static void PrintNumberOptionsDoc(StringXNumber s[], const char *prefix, FILE * 
 bool ColorOption(int action, const char *category, int num,
                  const char *name, unsigned int &val, bool warnIfUnknown)
 {
+	/*
   StringXColor *s = 0;
   if(!strcmp(category, "General"))
     s = GeneralOptions_Color;
@@ -309,11 +318,13 @@ bool ColorOption(int action, const char *category, int num,
                         (s[i].def1[0], s[i].def1[1], s[i].def1[2], s[i].def1[3]));
   else
     val = s[i].function(num, action, val);
+	 */ 
   return true;
 }
-
+/*
 int GetColorForString(int alpha, const char *str, int *FlagError)
 {
+	
   int i = 0;
   while(ColorString[i].str && strcmp(ColorString[i].str, str))
     i++;
@@ -325,6 +336,7 @@ int GetColorForString(int alpha, const char *str, int *FlagError)
     return CTX::instance()->packColor
       (ColorString[i].int1, ColorString[i].int2, ColorString[i].int3,
        ColorString[i].int4);
+
 }
 
 bool GetRGBForString(const char *str, int &r, int &g, int &b)
@@ -447,25 +459,26 @@ static void PrintColorOptionsDoc(StringXColor s[], const char *prefix, FILE * fi
     i++;
   }
 }
+ */ 
 
 // General routines
 
 void InitOptions(int num)
 {
   // Default string options
-  SetDefaultStringOptions(num, GeneralOptions_String);
-  SetDefaultStringOptions(num, GeometryOptions_String);
-  SetDefaultStringOptions(num, MeshOptions_String);
+//  SetDefaultStringOptions(num, GeneralOptions_String);
+//  SetDefaultStringOptions(num, GeometryOptions_String);
+//  SetDefaultStringOptions(num, MeshOptions_String);
 //  SetDefaultStringOptions(num, SolverOptions_String);
 //  SetDefaultStringOptions(num, PostProcessingOptions_String);
 //  SetDefaultStringOptions(num, ViewOptions_String);
 //  SetDefaultStringOptions(num, PrintOptions_String);
 
   // Default number options
-  SetDefaultNumberOptions(num, GeneralOptions_Number);
-  SetDefaultNumberOptions(num, GeometryOptions_Number);
-  SetDefaultNumberOptions(num, MeshOptions_Number);
-  SetDefaultNumberOptions(num, SolverOptions_Number);
+ // SetDefaultNumberOptions(num, GeneralOptions_Number);
+  //SetDefaultNumberOptions(num, GeometryOptions_Number);
+ // SetDefaultNumberOptions(num, MeshOptions_Number);
+  //SetDefaultNumberOptions(num, SolverOptions_Number);
 //  SetDefaultNumberOptions(num, PostProcessingOptions_Number);
 //  SetDefaultNumberOptions(num, ViewOptions_Number);
 //  SetDefaultNumberOptions(num, PrintOptions_Number);
@@ -542,12 +555,13 @@ static void PrintOptionCategory(int level, int diff, int help, const char *cat,
     vec->push_back("//");
   }
   else{
-    Msg::Direct("//");
-    Msg::Direct("// %s", cat);
-    Msg::Direct("//");
+//    Msg::Direct("//");
+ //   Msg::Direct("// %s", cat);
+ //   Msg::Direct("//");
   }
 }
 
+/*
 GmshColorTable *GetColorTable(int num)
 {
 #if defined(HAVE_POST)
@@ -564,6 +578,7 @@ GmshColorTable *GetColorTable(int num)
   return 0;
 #endif
 }
+ */ 
 
 static void PrintColorTable(int num, int diff, const char *prefix, FILE *file,
                             std::vector<std::string> *vec)
@@ -623,6 +638,7 @@ void Sanitize_String_Texi(std::string &s)
 void PrintOptions(int num, int level, int diff, int help, const char *filename,
                   std::vector<std::string> *vec)
 {
+	/*
 #if defined(HAVE_FLTK)
   if(FlGui::available())
     FlGui::instance()->storeCurrentWindowsInfo();
@@ -735,10 +751,12 @@ void PrintOptions(int num, int level, int diff, int help, const char *filename,
   PrintColorOptions(num, level, diff, help, PrintOptions_Color, "Print.", file, vec);
 
   if(filename) fclose(file);
+  */
 }
 
 void PrintOptionsDoc()
 {
+	/*
   const char *warn =
     "@c\n"
     "@c This file is generated automatically by running \"gmsh -doc\".\n"
@@ -976,6 +994,7 @@ void PrintOptionsDoc()
     fprintf(file, "@end ftable\n");
     fclose(file);
   }
+    
 }
 
 #define GET_VIEW(error_val)                             \
@@ -1017,13 +1036,16 @@ void PrintOptionsDoc()
       return (error_val);                               \
     }                                                   \
     view = PView::list[num];                            \
-    data = view->getData();                             \
+    data = view->getData();
+*/                             \
   }
+
 
 // String option routines
 
 std::string opt_general_axes_label0(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->axesLabel[0] = val;
 #if defined(HAVE_FLTK)
@@ -1044,10 +1066,13 @@ std::string opt_general_axes_label1(OPT_ARGS_STR)
       (CTX::instance()->axesLabel[1].c_str());
 #endif
   return CTX::instance()->axesLabel[1];
+   */ 
+   return "";
 }
 
 std::string opt_general_axes_label2(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->axesLabel[2] = val;
 #if defined(HAVE_FLTK)
@@ -1080,10 +1105,13 @@ std::string opt_general_axes_format1(OPT_ARGS_STR)
       (CTX::instance()->axesFormat[1].c_str());
 #endif
   return CTX::instance()->axesFormat[1];
+   */ 
+   return "";
 }
 
 std::string opt_general_axes_format2(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->axesFormat[2] = val;
 #if defined(HAVE_FLTK)
@@ -1092,17 +1120,23 @@ std::string opt_general_axes_format2(OPT_ARGS_STR)
       (CTX::instance()->axesFormat[2].c_str());
 #endif
   return CTX::instance()->axesFormat[2];
+   */
+	return "";
 }
 
 std::string opt_general_display(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->display = val;
   return CTX::instance()->display;
+   */
+	return ""; 
 }
 
 std::string opt_general_background_image_filename(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET){
 #if defined(HAVE_FLTK)
     if(CTX::instance()->bgImageFileName != val && FlGui::available()){
@@ -1115,6 +1149,8 @@ std::string opt_general_background_image_filename(OPT_ARGS_STR)
     CTX::instance()->bgImageFileName = val;
   }
   return CTX::instance()->bgImageFileName;
+   */
+	return "";
 }
 
 std::string opt_general_filename(OPT_ARGS_STR)
@@ -1124,11 +1160,13 @@ std::string opt_general_filename(OPT_ARGS_STR)
 
 std::string opt_general_executable_filename(OPT_ARGS_STR)
 {
-  return CTX::instance()->exeFileName;
+ // return CTX::instance()->exeFileName;
+  return "";
 }
 
 std::string opt_general_default_filename(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->defaultFileName = val;
 #if defined(HAVE_FLTK)
@@ -1137,108 +1175,153 @@ std::string opt_general_default_filename(OPT_ARGS_STR)
       (CTX::instance()->defaultFileName.c_str());
 #endif
   return CTX::instance()->defaultFileName;
+   */
+	return "";
 }
 
 std::string opt_general_tmp_filename(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->tmpFileName = val;
   return CTX::instance()->tmpFileName;
+   */
+	return ""; 
 }
 
 std::string opt_general_error_filename(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->errorFileName = val;
   return CTX::instance()->errorFileName;
+   */
+	return "";
 }
 
 std::string opt_general_session_filename(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->sessionFileName = val;
   return CTX::instance()->sessionFileName;
+   */
+	return "";
 }
 
 std::string opt_general_options_filename(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->optionsFileName = val;
   return CTX::instance()->optionsFileName;
+   */
+	return "";
 }
 
 std::string opt_general_recent_file0(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[0] = val;
   return CTX::instance()->recentFiles[0];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file1(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[1] = val;
   return CTX::instance()->recentFiles[1];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file2(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[2] = val;
   return CTX::instance()->recentFiles[2];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file3(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[3] = val;
   return CTX::instance()->recentFiles[3];
+   */
+	return ""; 
 }
 
 std::string opt_general_recent_file4(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[4] = val;
   return CTX::instance()->recentFiles[4];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file5(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[5] = val;
   return CTX::instance()->recentFiles[5];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file6(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[6] = val;
   return CTX::instance()->recentFiles[6];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file7(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[7] = val;
   return CTX::instance()->recentFiles[7];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file8(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[8] = val;
   return CTX::instance()->recentFiles[8];
+   */
+	return "";
 }
 
 std::string opt_general_recent_file9(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->recentFiles[9] = val;
   return CTX::instance()->recentFiles[9];
+   */
+	return "";
 }
 
 std::string opt_general_editor(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->editor = val;
 #if defined(HAVE_FLTK)
@@ -1247,24 +1330,33 @@ std::string opt_general_editor(OPT_ARGS_STR)
       (CTX::instance()->editor.c_str());
 #endif
   return CTX::instance()->editor;
+   */
+	return "";
 }
 
 std::string opt_general_watch_file_pattern(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->watchFilePattern = val;
   return CTX::instance()->watchFilePattern;
+   */
+	return "";
 }
 
 std::string opt_general_gui_theme(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->guiTheme = val;
   return CTX::instance()->guiTheme;
+   */
+	return "";
 }
 
 std::string opt_general_graphics_font(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->glFont = val;
 #if defined(HAVE_FLTK)
@@ -1279,10 +1371,13 @@ std::string opt_general_graphics_font(OPT_ARGS_STR)
   }
 #endif
   return CTX::instance()->glFont;
+   */
+	return "";
 }
 
 std::string opt_general_graphics_font_title(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->glFontTitle = val;
 #if defined(HAVE_FLTK)
@@ -1297,10 +1392,13 @@ std::string opt_general_graphics_font_title(OPT_ARGS_STR)
   }
 #endif
   return CTX::instance()->glFontTitle;
+   */
+	return "";
 }
 
 std::string opt_general_graphics_font_engine(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->glFontEngine = val;
 
@@ -1331,38 +1429,53 @@ std::string opt_general_graphics_font_engine(OPT_ARGS_STR)
 #endif
 
   return CTX::instance()->glFontEngine;
+   */
+	return "";
 }
 
 std::string opt_geometry_double_clicked_point_command(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->geom.doubleClickedPointCommand = val;
   return CTX::instance()->geom.doubleClickedPointCommand;
+   */
+	return "";
 }
 
 std::string opt_geometry_double_clicked_line_command(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->geom.doubleClickedLineCommand = val;
   return CTX::instance()->geom.doubleClickedLineCommand;
+   */
+	return "";
 }
 
 std::string opt_geometry_double_clicked_surface_command(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->geom.doubleClickedSurfaceCommand = val;
   return CTX::instance()->geom.doubleClickedSurfaceCommand;
+   */
+	return "";
 }
 
 std::string opt_geometry_double_clicked_volume_command(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->geom.doubleClickedVolumeCommand = val;
   return CTX::instance()->geom.doubleClickedVolumeCommand;
+   */
+	return "";
 }
 
 std::string opt_solver_socket_name(OPT_ARGS_STR)
 {
+	/*
   if(action & GMSH_SET)
     CTX::instance()->solver.socketName = val;
 #if defined(HAVE_FLTK)
@@ -1371,124 +1484,152 @@ std::string opt_solver_socket_name(OPT_ARGS_STR)
       (CTX::instance()->solver.socketName.c_str());
 #endif
   return CTX::instance()->solver.socketName;
+   */
+	return "";
 }
 
 std::string opt_solver_name(OPT_ARGS_STR)
 {
+	/*
   if(num < 0 || num > NUM_SOLVERS - 1) return "";
   if(action & GMSH_SET)
     CTX::instance()->solver.name[num] = val;
   return CTX::instance()->solver.name[num];
+   */
+	return "";
 }
 
 std::string opt_solver_name0(OPT_ARGS_STR)
 {
-  return opt_solver_name(0, action, val);
+ // return opt_solver_name(0, action, val);
+ return "";
 }
 
 std::string opt_solver_name1(OPT_ARGS_STR)
 {
-  return opt_solver_name(1, action, val);
+ // return opt_solver_name(1, action, val);
+ return "";
 }
 
 std::string opt_solver_name2(OPT_ARGS_STR)
 {
-  return opt_solver_name(2, action, val);
+//  return opt_solver_name(2, action, val);
+return "";
 }
 
 std::string opt_solver_name3(OPT_ARGS_STR)
 {
-  return opt_solver_name(3, action, val);
+//  return opt_solver_name(3, action, val);
+return "";
 }
 
 std::string opt_solver_name4(OPT_ARGS_STR)
 {
-  return opt_solver_name(4, action, val);
+ // return opt_solver_name(4, action, val);
+ return "";
 }
 
 std::string opt_solver_name5(OPT_ARGS_STR)
 {
-  return opt_solver_name(5, action, val);
+  //return opt_solver_name(5, action, val);
+  return "";
 }
 
 std::string opt_solver_name6(OPT_ARGS_STR)
 {
-  return opt_solver_name(6, action, val);
+  //return opt_solver_name(6, action, val);
+  return "";
 }
 
 std::string opt_solver_name7(OPT_ARGS_STR)
 {
-  return opt_solver_name(7, action, val);
+  //return opt_solver_name(7, action, val);
+  return "";
 }
 
 std::string opt_solver_name8(OPT_ARGS_STR)
 {
-  return opt_solver_name(8, action, val);
+  //return opt_solver_name(8, action, val);
+  return "";
 }
 
 std::string opt_solver_name9(OPT_ARGS_STR)
 {
-  return opt_solver_name(9, action, val);
+  //return opt_solver_name(9, action, val);
+  return "";
 }
 
 std::string opt_solver_extension(OPT_ARGS_STR)
 {
+	/*
   if(num < 0 || num > NUM_SOLVERS - 1) return "";
   if(action & GMSH_SET)
     CTX::instance()->solver.extension[num] = val;
   return CTX::instance()->solver.extension[num];
+   */
+	return "";
 }
 
 std::string opt_solver_extension0(OPT_ARGS_STR)
 {
-  return opt_solver_extension(0, action, val);
+  //return opt_solver_extension(0, action, val);
+  return "";
 }
 
 std::string opt_solver_extension1(OPT_ARGS_STR)
 {
-  return opt_solver_extension(1, action, val);
+  //return opt_solver_extension(1, action, val);
+  return "";
 }
 
 std::string opt_solver_extension2(OPT_ARGS_STR)
 {
-  return opt_solver_extension(2, action, val);
+  //return opt_solver_extension(2, action, val);
+  return "";
 }
 
 std::string opt_solver_extension3(OPT_ARGS_STR)
 {
-  return opt_solver_extension(3, action, val);
+  //return opt_solver_extension(3, action, val);
+  return "";
 }
 
 std::string opt_solver_extension4(OPT_ARGS_STR)
 {
-  return opt_solver_extension(4, action, val);
+  //return opt_solver_extension(4, action, val);
+  return "";
 }
 
 std::string opt_solver_extension5(OPT_ARGS_STR)
 {
-  return opt_solver_extension(5, action, val);
+  //return opt_solver_extension(5, action, val);
+  return "";
 }
 
 std::string opt_solver_extension6(OPT_ARGS_STR)
 {
-  return opt_solver_extension(6, action, val);
+  //return opt_solver_extension(6, action, val);
+  return "";
 }
 
 std::string opt_solver_extension7(OPT_ARGS_STR)
 {
-  return opt_solver_extension(7, action, val);
+  //return opt_solver_extension(7, action, val);
+  return "";
 }
 
 std::string opt_solver_extension8(OPT_ARGS_STR)
 {
-  return opt_solver_extension(8, action, val);
+  //return opt_solver_extension(8, action, val);
+  return "";
 }
 
 std::string opt_solver_extension9(OPT_ARGS_STR)
 {
-  return opt_solver_extension(9, action, val);
+  //return opt_solver_extension(9, action, val);
+  return "";
 }
-
+/*
 std::string opt_solver_executable(OPT_ARGS_STR)
 {
   if(num < 0 || num > NUM_SOLVERS - 1) return "";
@@ -1886,6 +2027,7 @@ std::string opt_view_gen_raise2(OPT_ARGS_STR)
   return "";
 #endif
 }
+ */ 
 
 int _h2d(char c)
 {
@@ -2074,7 +2216,7 @@ std::string opt_view_attributes(OPT_ARGS_STR)
   return "";
 #endif
 }
-
+/*
 std::string opt_print_parameter_command(OPT_ARGS_STR)
 {
   if(action & GMSH_SET)
@@ -3041,6 +3183,7 @@ double opt_general_draw_bounding_box(OPT_ARGS_NUM)
 #endif
   return CTX::instance()->drawBBox;
 }
+ */ 
 
 double opt_general_xmin(OPT_ARGS_NUM)
 {
@@ -3082,7 +3225,7 @@ double opt_general_lc(OPT_ARGS_NUM)
 {
   return CTX::instance()->lc;
 }
-
+/*
 double opt_general_axes(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
@@ -3622,7 +3765,7 @@ double opt_general_stereo_mode(OPT_ARGS_NUM)
   /*
     if(FlGui::available() && (action & GMSH_GUI))
     FlGui::instance()->options->general.butt[17]->value(CTX::instance()->stereo);
-  */
+
 #endif
   return CTX::instance()->stereo ;
 }
@@ -3636,7 +3779,7 @@ double opt_general_eye_sep_ratio(OPT_ARGS_NUM)
   if(FlGui::available() && (action & GMSH_GUI))
     FlGui::instance()->options->general.value[29]->value
       (CTX::instance()->eye_sep_ratio) ;
-  */
+
 #endif
   return CTX::instance()->eye_sep_ratio ;
 }
@@ -3648,7 +3791,7 @@ double opt_general_focallength_ratio(OPT_ARGS_NUM)
 #if defined(HAVE_FLTK)/*
   if(FlGui::available() && (action & GMSH_GUI))
     FlGui::instance()->options->general.value[30]->value
-    (CTX::instance()->focallength_ratio) ;*/
+    (CTX::instance()->focallength_ratio) ;
 #endif
   return CTX::instance()->focallength_ratio ;
 }
@@ -3660,7 +3803,7 @@ double opt_general_camera_aperture(OPT_ARGS_NUM)
 #if defined(HAVE_FLTK)/*
   if(FlGui::available() && (action & GMSH_GUI))
     FlGui::instance()->options->general.value[31]->value
-    (CTX::instance()->camera_aperture);*/
+    (CTX::instance()->camera_aperture);
 #endif
   return CTX::instance()->camera_aperture;
 }
@@ -3677,7 +3820,7 @@ double opt_general_camera_mode(OPT_ARGS_NUM)
     FlGui::instance()->options->activate("general_camera");
 
   }
-  */
+  
 #endif
   return CTX::instance()->camera ;
 }
@@ -4229,6 +4372,7 @@ double opt_general_light53(OPT_ARGS_NUM)
     CTX::instance()->lightPosition[5][3] = val;
   return CTX::instance()->lightPosition[5][3];
 }
+ */ 
 
 double opt_geometry_transform(OPT_ARGS_NUM)
 {
@@ -4908,7 +5052,10 @@ double opt_mesh_optimize(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.optimize)
-      Msg::SetOnelabChanged(2);
+	{
+      //Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.optimize = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -4923,7 +5070,10 @@ double opt_mesh_optimize_threshold(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.optimizeThreshold)
-      Msg::SetOnelabChanged(2);
+	{
+   //   Msg::SetOnelabChanged(2);
+   
+	}
     CTX::instance()->mesh.optimizeThreshold = val;
   }
   return CTX::instance()->mesh.optimizeThreshold;
@@ -4934,7 +5084,10 @@ double opt_mesh_optimize_netgen(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.optimizeNetgen)
-      Msg::SetOnelabChanged(2);
+	{
+      //Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.optimizeNetgen = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -4956,7 +5109,10 @@ double opt_mesh_refine_steps(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.refineSteps)
-      Msg::SetOnelabChanged(2);
+	{
+      //Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.refineSteps = (int)val;
   }
   return CTX::instance()->mesh.refineSteps;
@@ -5024,7 +5180,10 @@ double opt_mesh_scaling_factor(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.scalingFactor)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.scalingFactor = val;
   }
   return CTX::instance()->mesh.scalingFactor;
@@ -5035,7 +5194,10 @@ double opt_mesh_lc_factor(OPT_ARGS_NUM)
   if(action & GMSH_SET){
     if(val > 0){
       if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.lcFactor)
-        Msg::SetOnelabChanged(2);
+	  {
+    //    Msg::SetOnelabChanged(2);
+		
+	  }
       CTX::instance()->mesh.lcFactor = val;
     }
   }
@@ -5051,7 +5213,10 @@ double opt_mesh_lc_min(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.lcMin)
-      Msg::SetOnelabChanged(2);
+	{
+     // Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.lcMin = val;
   }
 #if defined(HAVE_FLTK)
@@ -5066,7 +5231,10 @@ double opt_mesh_lc_max(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.lcMax)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.lcMax = val;
   }
 #if defined(HAVE_FLTK)
@@ -5081,7 +5249,10 @@ double opt_mesh_tolerance_edge_length(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.toleranceEdgeLength)
-      Msg::SetOnelabChanged(2);
+	{
+   //   Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.toleranceEdgeLength = val;
   }
   return CTX::instance()->mesh.toleranceEdgeLength;
@@ -5091,7 +5262,10 @@ double opt_mesh_tolerance_initial_delaunay(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.toleranceInitialDelaunay)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.toleranceInitialDelaunay = val;
   }
   return CTX::instance()->mesh.toleranceInitialDelaunay;
@@ -5101,7 +5275,10 @@ double opt_mesh_lc_from_curvature(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.lcFromCurvature)
-      Msg::SetOnelabChanged(2);
+	{
+     // Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.lcFromCurvature = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -5116,7 +5293,10 @@ double opt_mesh_lc_from_points(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.lcFromPoints)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+
+	}
     CTX::instance()->mesh.lcFromPoints = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -5131,7 +5311,11 @@ double opt_mesh_lc_extend_from_boundary(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.lcExtendFromBoundary)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
+
     CTX::instance()->mesh.lcExtendFromBoundary = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -5146,7 +5330,10 @@ double opt_mesh_lc_integration_precision(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.lcIntegrationPrecision)
-      Msg::SetOnelabChanged(2);
+	{
+  //    Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.lcIntegrationPrecision = val;
   }
   return CTX::instance()->mesh.lcIntegrationPrecision;
@@ -5156,7 +5343,10 @@ double opt_mesh_rand_factor(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && val != CTX::instance()->mesh.randFactor)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.randFactor = val;
   }
   return CTX::instance()->mesh.randFactor;
@@ -5793,7 +5983,10 @@ double opt_mesh_algo2d(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.algo2d)
-      Msg::SetOnelabChanged(2);
+	{
+     // Msg::SetOnelabChanged(2);
+
+	}
     CTX::instance()->mesh.algo2d = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -5828,7 +6021,10 @@ double opt_mesh_algo_recombine(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.algoRecombine)
-      Msg::SetOnelabChanged(2);
+	{
+     // Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.algoRecombine = (int)val;
     if(CTX::instance()->mesh.algoRecombine < 0 &&
        CTX::instance()->mesh.algoRecombine > 1)
@@ -5847,7 +6043,10 @@ double opt_mesh_recombine_all(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.recombineAll)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.recombineAll = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -5862,7 +6061,10 @@ double opt_mesh_recombine3d_all(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.recombine3DAll)
-      Msg::SetOnelabChanged(2);
+	{
+     // Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.recombine3DAll = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -5972,7 +6174,10 @@ double opt_mesh_algo_subdivide(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.algoSubdivide)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.algoSubdivide = (int)val;
     if(CTX::instance()->mesh.algoSubdivide < 0 &&
        CTX::instance()->mesh.algoSubdivide > 2)
@@ -5991,7 +6196,10 @@ double opt_mesh_algo3d(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.algo3d)
-      Msg::SetOnelabChanged(2);
+	{
+      //Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.algo3d = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -6029,7 +6237,10 @@ double opt_mesh_mesh_only_visible(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.meshOnlyVisible)
-      Msg::SetOnelabChanged(2);
+	{
+      //Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.meshOnlyVisible = (int)val;
   }
   return CTX::instance()->mesh.meshOnlyVisible;
@@ -6039,7 +6250,10 @@ double opt_mesh_min_circ_points(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.minCircPoints)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.minCircPoints = (int)val;
   }
   return CTX::instance()->mesh.minCircPoints;
@@ -6062,8 +6276,12 @@ double opt_mesh_min_curv_points(OPT_ARGS_NUM)
 double opt_mesh_order(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
+	  
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.order)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.order = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -6138,7 +6356,10 @@ double opt_mesh_second_order_linear(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.secondOrderLinear)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.secondOrderLinear = (int)val;
   }
   return CTX::instance()->mesh.secondOrderLinear;
@@ -6148,7 +6369,10 @@ double opt_mesh_second_order_incomplete(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET){
     if(!(action & GMSH_SET_DEFAULT) && (int)val != CTX::instance()->mesh.secondOrderIncomplete)
-      Msg::SetOnelabChanged(2);
+	{
+    //  Msg::SetOnelabChanged(2);
+	  
+	}
     CTX::instance()->mesh.secondOrderIncomplete = (int)val;
   }
 #if defined(HAVE_FLTK)
@@ -6597,7 +6821,7 @@ double opt_mesh_ignore_periodicity(OPT_ARGS_NUM)
   return CTX::instance()->mesh.ignorePeriodicity;
 }
 
-
+/*
 double opt_solver_listen(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET)
@@ -6838,6 +7062,7 @@ double opt_post_double_clicked_view(OPT_ARGS_NUM)
     CTX::instance()->post.doubleClickedView = (int)val;
   return CTX::instance()->post.doubleClickedView;
 }
+ */ 
 
 double opt_view_nb_timestep(OPT_ARGS_NUM)
 {

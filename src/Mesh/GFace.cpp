@@ -12,7 +12,7 @@
 #include "Mesh/MTriangle.h" // Does note compile
 #include "Mesh/MQuadrangle.h" // Does not compile
 
-//#include "MElementCut.h" // This needs to be evaluated 
+#include "Mesh/MElementCut.h" // This needs to be evaluated 
 
 #include "Mesh/VertexArray.h"
 #include "Mesh/fullMatrix.h"
@@ -20,7 +20,7 @@
 #include "Mesh/GaussLegendre1D.h"
 #include "Mesh/Context.h"
 #include "common/OS.h"
-#include "discreteFace.h"
+#include "Mesh/discreteFace.h"
 
 #if defined(HAVE_MESH)
 #include "Mesh/meshGFace.h"
@@ -91,7 +91,7 @@ void GFace::delFreeEdge(GEdge *e)
   std::list<int>::iterator itd = l_dirs.begin();
   while(ite != l_edges.end()){
     if(e == *ite){
-      Msg::Debug("Erasing edge %d from edge list in face %d", e->tag(), tag());
+      //Msg::Debug("Erasing edge %d from edge list in face %d", e->tag(), tag());
       l_edges.erase(ite);
       if(itd != l_dirs.end()) l_dirs.erase(itd);
       break;
@@ -105,7 +105,7 @@ void GFace::delFreeEdge(GEdge *e)
       it != edgeLoops.end(); it++){
     for(GEdgeLoop::iter it2 = it->begin(); it2 != it->end(); it2++){
       if(e == it2->ge){
-        Msg::Debug("Erasing edge %d from edge loop in face %d", e->tag(), tag());
+    //    Msg::Debug("Erasing edge %d from edge loop in face %d", e->tag(), tag());
         it->erase(it2);
         break;
       }
@@ -279,7 +279,7 @@ surface_params GFace::getSurfaceParams() const
 {
   surface_params p;
   p.radius = p.radius2 = p.height = p.cx = p.cy = p.cz = 0.;
-  Msg::Error("Empty surface parameters for this type of surface");
+//  Msg::Error("Empty surface parameters for this type of surface");
   return p;
 }
 
@@ -331,11 +331,13 @@ void GFace::setVisibility(char val, bool recursive)
 
 void GFace::setColor(unsigned int val, bool recursive)
 {
+	/*
   GEntity::setColor(val);
   if(recursive){
     for (std::list<GEdge*>::iterator it = l_edges.begin(); it != l_edges.end(); ++it)
       (*it)->setColor(val, recursive);
   }
+   */ 
 }
 
 std::string GFace::getAdditionalInfoString()
@@ -392,7 +394,7 @@ void GFace::writeGEO(FILE *fp)
       fprintf(fp, "Surface(%d) = {%d};\n", tag(), tag());
     }
     else{
-      Msg::Error("Skipping surface %d in export", tag());
+  //    Msg::Error("Skipping surface %d in export", tag());
     }
   }
 
@@ -497,7 +499,7 @@ void GFace::computeMeanPlane()
   }
 
   if(colinear){
-    Msg::Debug("Adding edge points (%d) to compute mean plane of face %d", pts.size(), tag());
+  //  Msg::Debug("Adding edge points (%d) to compute mean plane of face %d", pts.size(), tag());
     std::list<GEdge*> edg = edges();
     for(std::list<GEdge*>::const_iterator ite = edg.begin(); ite != edg.end(); ite++){
       const GEdge *e = *ite;
@@ -603,7 +605,7 @@ void GFace::computeMeanPlane(const std::vector<SPoint3> &points)
     angplan = myatan2(sinc, cosc);
     angplan = angle_02pi(angplan) * 180. / M_PI;
     if((angplan > 70 && angplan < 110) || (angplan > 260 && angplan < 280)) {
-      Msg::Info("SVD failed (angle=%g): using rough algo...", angplan);
+ //     Msg::Info("SVD failed (angle=%g): using rough algo...", angplan);
       res[0] = res2[0];
       res[1] = res2[1];
       res[2] = res2[2];
@@ -629,7 +631,7 @@ end:
 
   fillMeanPlane(res, t1, t2, meanPlane);
 
-  Msg::Debug("Surface: %d", tag());
+ /* Msg::Debug("Surface: %d", tag());
   Msg::Debug("SVD    : %g,%g,%g (min=%d)", svd[0], svd[1], svd[2], min);
   Msg::Debug("Plane  : (%g x + %g y + %g z = %g)",
              meanPlane.a, meanPlane.b, meanPlane.c, meanPlane.d);
@@ -639,6 +641,7 @@ end:
   Msg::Debug("t2     : (%g , %g , %g )", t2[0], t2[1], t2[2]);
   Msg::Debug("pt     : (%g , %g , %g )",
              meanPlane.x, meanPlane.y, meanPlane.z);
+			  */ 
 
   //check coherence for plane surfaces
   if(geomType() == Plane) {
@@ -651,10 +654,11 @@ end:
       double d = meanPlane.a * v->x() + meanPlane.b * v->y() +
         meanPlane.c * v->z() - meanPlane.d;
       if(fabs(d) > lc * 1.e-3) {
-        Msg::Debug("Plane surface %d (%gx+%gy+%gz=%g) is not plane!",
+  /*      Msg::Debug("Plane surface %d (%gx+%gy+%gz=%g) is not plane!",
                    tag(), meanPlane.a, meanPlane.b, meanPlane.c, meanPlane.d);
         Msg::Debug("Control point %d = (%g,%g,%g), val=%g",
                    v->tag(), v->x(), v->y(), v->z(), d);
+				    */ 
         break;
       }
     }
@@ -819,7 +823,7 @@ double GFace::curvatures(const SPoint2 &param, SVector3 *dirMax, SVector3 *dirMi
 
 double GFace::getMetricEigenvalue(const SPoint2 &)
 {
-  Msg::Error("Metric eigenvalue is not implemented for this type of surface");
+//  Msg::Error("Metric eigenvalue is not implemented for this type of surface");
   return 0.;
 }
 
@@ -879,14 +883,14 @@ void GFace::getMetricEigenVectors(const SPoint2 &param,
     eigVec[3] = vr(1, 1);
   }
   else{
-    Msg::Error("Problem in eigen vectors computation");
-    Msg::Error(" N = [ %f %f ]", N(0, 0), N(0, 1));
-    Msg::Error("     [ %f %f ]", N(1, 0), N(1, 1));
+ //   Msg::Error("Problem in eigen vectors computation");
+ //   Msg::Error(" N = [ %f %f ]", N(0, 0), N(0, 1));
+ //   Msg::Error("     [ %f %f ]", N(1, 0), N(1, 1));
     for(int i = 0; i < 2; i++) eigVal[i] = 0.;
     for(int i = 0; i < 4; i++) eigVec[i] = 0.;
   }
   if (fabs(di(0)) > 1.e-12 || fabs(di(1)) > 1.e-12) {
-    Msg::Error("Found imaginary eigenvalues");
+  //  Msg::Error("Found imaginary eigenvalues");
   }
 }
 
@@ -969,9 +973,9 @@ void GFace::XYZtoUV(double X, double Y, double Z, double &U, double &V,
 
         if (onSurface && err2 > 1.e-4 * CTX::instance()->lc &&
             !CTX::instance()->mesh.NewtonConvergenceTestXYZ){
-          Msg::Warning("Converged for i=%d j=%d (err=%g iter=%d) BUT "
-                       "xyz error = %g in point (%e,%e,%e) on surface %d",
-                       i, j, err, iter, err2, X, Y, Z, tag());
+   //       Msg::Warning("Converged for i=%d j=%d (err=%g iter=%d) BUT "
+   //                    "xyz error = %g in point (%e,%e,%e) on surface %d",
+    //                   i, j, err, iter, err2, X, Y, Z, tag());
         }
 
         if(onSurface && err2 > 1.e-4 * CTX::instance()->lc &&
@@ -989,9 +993,12 @@ void GFace::XYZtoUV(double X, double Y, double Z, double &U, double &V,
   if(!onSurface) return;
 
   if(relax < 1.e-6)
-    Msg::Error("Could not converge: surface mesh will be wrong");
+  {
+ //   Msg::Error("Could not converge: surface mesh will be wrong");
+	
+  }
   else {
-    Msg::Info("point %g %g %g : Relaxation factor = %g", X, Y, Z, 0.75 * relax);
+  //  Msg::Info("point %g %g %g : Relaxation factor = %g", X, Y, Z, 0.75 * relax);
     XYZtoUV(X, Y, Z, U, V, 0.75 * relax);
   }
 }
@@ -1104,7 +1111,7 @@ GPoint GFace::closestPoint(const SPoint3 &queryPoint, const double initialGuess[
   return pntF;
 
 #else
-  Msg::Error("Closest point not implemented for this type of surface");
+ // Msg::Error("Closest point not implemented for this type of surface");
   SPoint2 p = parFromPoint(queryPoint, false);
   return point(p);
 #endif
@@ -1264,8 +1271,8 @@ bool GFace::fillVertexArray(bool force)
   if(stl_triangles.empty()) return false;
 
   va_geom_triangles = new VertexArray(3, stl_triangles.size() / 3);
-  unsigned int c = CTX::instance()->color.geom.surface;
-  unsigned int col[4] = {c, c, c, c};
+ // unsigned int c = CTX::instance()->color.geom.surface;
+//  unsigned int col[4] = {c, c, c, c};
   for (unsigned int i = 0; i < stl_triangles.size(); i += 3){
     SPoint2 &p1(stl_vertices[stl_triangles[i]]);
     SPoint2 &p2(stl_vertices[stl_triangles[i + 1]]);
@@ -1277,7 +1284,7 @@ bool GFace::fillVertexArray(bool force)
     double y[3] = {gp1.y(), gp2.y(), gp3.y()};
     double z[3] = {gp1.z(), gp2.z(), gp3.z()};
     SVector3 n[3] = {normal(p1), normal(p2), normal(p3)};
-    va_geom_triangles->add(x, y, z, n, col);
+  //  va_geom_triangles->add(x, y, z, n, col);
   }
   va_geom_triangles->finalize();
   return true;
@@ -1517,7 +1524,7 @@ void GFace::setMeshMaster(GFace* master, const std::vector<double>& tfo)
   std::list<GEdge*>::iterator eIter;
   std::list<GVertex*>::iterator vIter;
 
-  Msg::Info("Setting mesh master using transformation ");
+ // Msg::Info("Setting mesh master using transformation ");
 
   // list all vertices and construct vertex to edge correspondence for local edge
 
@@ -1571,16 +1578,16 @@ void GFace::setMeshMaster(GFace* master, const std::vector<double>& tfo)
   // check topological correspondence
 
   if (l_vertices.size() != m_vertices.size()) {
-    Msg::Error("Periodic connection specified between topologically "
-               "incompatible surfaces %d and %d (that have %d vs %d model vertices)",
-               master->tag(),tag(),l_vertices.size(),m_vertices.size());
+ //   Msg::Error("Periodic connection specified between topologically "
+  //             "incompatible surfaces %d and %d (that have %d vs %d model vertices)",
+  //             master->tag(),tag(),l_vertices.size(),m_vertices.size());
     return;
   }
 
   if (l_vtxToEdge.size() != m_vtxToEdge.size()) {
-    Msg::Error("Periodic connection specified between topologically "
-               "incompatible surfaces %d and %d (that have %d vs %d model edges)",
-               master->tag(),tag(),l_vtxToEdge.size(),m_vtxToEdge.size());
+ //  Msg::Error("Periodic connection specified between topologically "
+  //             "incompatible surfaces %d and %d (that have %d vs %d model edges)",
+  //             master->tag(),tag(),l_vtxToEdge.size(),m_vtxToEdge.size());
     return;
   }
 
@@ -1618,20 +1625,20 @@ void GFace::setMeshMaster(GFace* master, const std::vector<double>& tfo)
     }
 
     if (l_vertex==NULL) {
-      Msg::Error("Was not able to find corresponding node %d "
-                 "for periodic connection of surface %d to %d "
-                 "using the specified transformation"
-                 "Minimum distance is %g with a tolerance of %g",
-                 m_vertex->tag(),master->tag(),tag(),dist_min, CTX::instance()->geom.tolerance * CTX::instance()->lc);
+   //   Msg::Error("Was not able to find corresponding node %d "
+   //              "for periodic connection of surface %d to %d "
+   //              "using the specified transformation"
+   //              "Minimum distance is %g with a tolerance of %g",
+  //               m_vertex->tag(),master->tag(),tag(),dist_min, CTX::instance()->geom.tolerance * CTX::instance()->lc);
       return;
     }
     gVertexCounterparts[l_vertex] = m_vertex;
   }
 
   if (gVertexCounterparts.size() != m_vertices.size()) {
-    Msg::Error("Could not find all node correspondances "
-               "for the periodic connection from surface %d to %d",
-               master->tag(),tag());
+  //  Msg::Error("Could not find all node correspondances "
+  //             "for the periodic connection from surface %d to %d",
+ //              master->tag(),tag());
     return;
   }
 
@@ -1656,20 +1663,20 @@ void GFace::setMeshMaster(GFace* master, const std::vector<double>& tfo)
     }
 
     if (mv2eIter == m_vtxToEdge.end()) {
-      Msg::Error("Could not find periodic copy of edge %d-%d "
-                 "(corresponding to vertices %d %d) in face %d",
-                 lPair.first->tag(),lPair.second->tag(),
-                 mPair.first->tag(),mPair.second->tag(),
-                 master->tag());
+    //  Msg::Error("Could not find periodic copy of edge %d-%d "
+    //             "(corresponding to vertices %d %d) in face %d",
+   // //             lPair.first->tag(),lPair.second->tag(),
+    //             mPair.first->tag(),mPair.second->tag(),
+   //              master->tag());
       return;
     }
     GEdge* masterEdge = mv2eIter->second;
 
     if (masterEdge->meshMaster() != localEdge) {
       localEdge->setMeshMaster(masterEdge,tfo);
-      Msg::Info("Setting edge master %d - %d",
-                localEdge->tag(),
-                masterEdge->tag());
+    //  Msg::Info("Setting edge master %d - %d",
+    //            localEdge->tag(),
+   //             masterEdge->tag());
     }
     gEdgeCounterparts[localEdge] = std::make_pair(masterEdge,sign);
   }
@@ -1710,7 +1717,7 @@ struct myLine {
   {
     t = crossprod(p1.n, p2.n);
     if (t.norm() == 0.0){
-      Msg::Error("parallel planes do not intersect");
+    //  Msg::Error("parallel planes do not intersect");
     }
     else
       t.normalize();
@@ -1726,7 +1733,7 @@ struct myLine {
 	double ay[2][2] = {{p1.n.x(), p1.n.z()}, {p2.n.x(), p2.n.z()}};
 	double by[2] = {-p1.a, -p2.a};
 	if (!sys2x2(ay,by,x)){
-	  Msg::Error("parallel planes do not intersect");
+	 // Msg::Error("parallel planes do not intersect");
 	}
 	else {
 	  p = SPoint3(x[0], 0., x[1]);
@@ -1766,8 +1773,8 @@ void GFace::setMeshMaster(GFace* master,const std::map<int,int>& edgeCopies)
       adnksd = edgeCopies.find(-(*it)->tag());
       if(adnksd != edgeCopies.end()) source_e = adnksd->second;
       else{
-        Msg::Error("Could not find edge counterpart %d in slave surface %d",
-                   (*it)->tag(), master->tag());
+    //    Msg::Error("Could not find edge counterpart %d in slave surface %d",
+     //              (*it)->tag(), master->tag());
         return;
       }
     }
@@ -1808,8 +1815,8 @@ void GFace::setMeshMaster(GFace* master,const std::map<int,int>& edgeCopies)
   std::vector<double> tfo(16);
 
   if (translation) {
-    Msg::Info("Periodic mesh translation found between %d and %d: dx = (%g,%g,%g)",
-              tag(),master->tag(),DX.x(), DX.y(), DX.z());
+   // Msg::Info("Periodic mesh translation found between %d and %d: dx = (%g,%g,%g)",
+    //          tag(),master->tag(),DX.x(), DX.y(), DX.z());
 
     for (size_t i=0;i<16;i++) tfo[i] = 0;
     for (size_t i=0;i<4;i++)  tfo[i*4+i] = 1;
@@ -1880,9 +1887,9 @@ void GFace::setMeshMaster(GFace* master,const std::map<int,int>& edgeCopies)
     }
 
     if (rotation){
-      Msg::Info("Periodic mesh rotation found: axis (%g,%g,%g) point (%g %g %g) angle %g",
-                LINE.t.x(), LINE.t.y(), LINE.t.z(), LINE.p.x(), LINE.p.y(), LINE.p.z(),
-                ANGLE * 180 / M_PI);
+    //  Msg::Info("Periodic mesh rotation found: axis (%g,%g,%g) point (%g %g %g) angle %g",
+    //            LINE.t.x(), LINE.t.y(), LINE.t.z(), LINE.p.x(), LINE.p.y(), LINE.p.z(),
+    //            ANGLE * 180 / M_PI);
 
       double ux = LINE.t.x();
       double uy = LINE.t.y();
@@ -1909,9 +1916,9 @@ void GFace::setMeshMaster(GFace* master,const std::map<int,int>& edgeCopies)
 
     }
     else {
-      Msg::Error("Only rotations or translations can currently be computed "
-                 "automatically for periodic faces: face %d not meshed",
-                 tag());
+    //  Msg::Error("Only rotations or translations can currently be computed "
+    //             "automatically for periodic faces: face %d not meshed",
+     //            tag());
       return;
     }
   }

@@ -91,7 +91,7 @@ public:
           (*ite)->mesh_vertices.clear();
           for(unsigned int i = 0; i< (*ite)->lines.size(); i+=2){
             if (i+1 >= (*ite)->lines.size()){
-              Msg::Error("1D mesh cannot be divided by 2");
+       //       Msg::Error("1D mesh cannot be divided by 2");
               break;
             }
             MVertex *v1 = (*ite)->lines[i]->getVertex(0);
@@ -245,8 +245,8 @@ static void copyMesh(GFace *source, GFace *target)
   std::list<GVertex*> t_vtcs = target->vertices();
 
   if (s_vtcs.size() != t_vtcs.size()) {
-    Msg::Info("Periodicity imposed on topologically incompatible surfaces"
-              "(%d vs %d bounding vertices)",s_vtcs.size(),t_vtcs.size());
+  //  Msg::Info("Periodicity imposed on topologically incompatible surfaces"
+   //           "(%d vs %d bounding vertices)",s_vtcs.size(),t_vtcs.size());
   }
 
   std::set<GVertex*> checkVtcs;
@@ -258,20 +258,22 @@ static void copyMesh(GFace *source, GFace *target)
     std::map<GVertex*,GVertex*>::iterator gvsIter = target->vertexCounterparts.find(gvt);
 
     if (gvsIter == target->vertexCounterparts.end()) {
-      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                "vertex %d has no periodic counterpart",
-                target->tag(),source->tag(),gvt->tag());
+   //   Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+    //            "vertex %d has no periodic counterpart",
+    //            target->tag(),source->tag(),gvt->tag());
     }
 
     GVertex* gvs = gvsIter->second;
     if (checkVtcs.find(gvs) == checkVtcs.end()) {
-      if (gvs) Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                         "vertex %d has periodic counterpart %d outside of source surface",
-                         target->tag(),source->tag(),gvt->tag(),gvs->tag());
+      if (gvs){// Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+                  //       "vertex %d has periodic counterpart %d outside of source surface",
+                   //      target->tag(),source->tag(),gvt->tag(),gvs->tag());
+	  }
 
-      else Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                     "vertex %d has no periodic counterpart",
-                     target->tag(),source->tag(),gvt->tag());
+      else {//Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+              //       "vertex %d has no periodic counterpart",
+               //      target->tag(),source->tag(),gvt->tag());
+	  }
     }
 
     MVertex* vs = gvs->mesh_vertices[0];
@@ -296,24 +298,24 @@ static void copyMesh(GFace *source, GFace *target)
     std::map<GEdge*,std::pair<GEdge*,int> >::iterator gesIter =
       target->edgeCounterparts.find(get);
     if (gesIter == target->edgeCounterparts.end()) {
-      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                "edge %d has no periodic counterpart",
-                target->tag(),source->tag(),get->tag());
+    //  Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+    //            "edge %d has no periodic counterpart",
+      //          target->tag(),source->tag(),get->tag());
     }
 
     GEdge* ges = gesIter->second.first;
     if (checkEdges.find(ges) == checkEdges.end()) {
-      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                "edge %d has periodic counterpart %d outside of get surface",
-                target->tag(),source->tag(),get->tag(),ges->tag());
+   //   Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+    //            "edge %d has periodic counterpart %d outside of get surface",
+     //           target->tag(),source->tag(),get->tag(),ges->tag());
     }
 
     if (get->mesh_vertices.size() != ges->mesh_vertices.size()) {
-      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                "edge %d has %d vertices, whereas correspondant %d has %d",
-                target->tag(),source->tag(),
-                get->tag(),get->mesh_vertices.size(),
-                ges->tag(),ges->mesh_vertices.size());
+     // Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+     //           "edge %d has %d vertices, whereas correspondant %d has %d",
+      //          target->tag(),source->tag(),
+      //          get->tag(),get->mesh_vertices.size(),
+      //          ges->tag(),ges->mesh_vertices.size());
     }
 
     int orientation = gesIter->second.second;
@@ -358,10 +360,10 @@ static void copyMesh(GFace *source, GFace *target)
       vt[j] = vs2vt[vs];
     }
     if (!vt[0] || !vt[1] ||!vt[2]){
-      Msg::Error("Problem in mesh copying procedure %p %p %p %d %d %d",
-                 vt[0], vt[1], vt[2], source->triangles[i]->getVertex(0)->onWhat()->dim(),
-                 source->triangles[i]->getVertex(1)->onWhat()->dim(),
-                 source->triangles[i]->getVertex(2)->onWhat()->dim());
+   //   Msg::Error("Problem in mesh copying procedure %p %p %p %d %d %d",
+    //             vt[0], vt[1], vt[2], source->triangles[i]->getVertex(0)->onWhat()->dim(),
+     //            source->triangles[i]->getVertex(1)->onWhat()->dim(),
+     //            source->triangles[i]->getVertex(2)->onWhat()->dim());
       return;
     }
     target->triangles.push_back(new MTriangle(vt[0], vt[1], vt[2]));
@@ -373,12 +375,12 @@ static void copyMesh(GFace *source, GFace *target)
     MVertex *v3 = vs2vt[source->quadrangles[i]->getVertex(2)];
     MVertex *v4 = vs2vt[source->quadrangles[i]->getVertex(3)];
     if (!v1 || !v2 || !v3 || !v4){
-      Msg::Error("Problem in mesh copying procedure %p %p %p %p %d %d %d %d",
-                 v1, v2, v3, v4,
-                 source->quadrangles[i]->getVertex(0)->onWhat()->dim(),
-                 source->quadrangles[i]->getVertex(1)->onWhat()->dim(),
-                 source->quadrangles[i]->getVertex(2)->onWhat()->dim(),
-                 source->quadrangles[i]->getVertex(3)->onWhat()->dim());
+   //   Msg::Error("Problem in mesh copying procedure %p %p %p %p %d %d %d %d",
+     //            v1, v2, v3, v4,
+     //            source->quadrangles[i]->getVertex(0)->onWhat()->dim(),
+     //            source->quadrangles[i]->getVertex(1)->onWhat()->dim(),
+     //            source->quadrangles[i]->getVertex(2)->onWhat()->dim(),
+      //           source->quadrangles[i]->getVertex(3)->onWhat()->dim());
     }
     target->quadrangles.push_back(new MQuadrangle(v1, v2, v3, v4));
   }
@@ -555,8 +557,8 @@ static bool recoverEdge(BDS_Mesh *m, GEdge *ge,
         if(e) e->g = g;
         else {
           if (_fatallyFailed){
-            Msg::Error("Unable to recover the edge %d (%d/%d) on GEdge %d (on GFace %d)",
-                       ge->lines[i]->getNum(),i+1,ge->lines.size(),ge->tag(),ge->faces().back()->tag());
+       //     Msg::Error("Unable to recover the edge %d (%d/%d) on GEdge %d (on GFace %d)",
+        //               ge->lines[i]->getNum(),i+1,ge->lines.size(),ge->tag(),ge->faces().back()->tag());
 	    outputScalarField(m->triangles, "wrongmesh.pos", 0);
 	    outputScalarField(m->triangles,"wrongparam.pos",1);
 	  }
@@ -1033,13 +1035,16 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
       }
     }
     else
-      Msg::Debug("Degenerated mesh on edge %d", (*ite)->tag());
+	{
+   //   Msg::Debug("Degenerated mesh on edge %d", (*ite)->tag());
+	  
+	}
     ++ite;
   }
 
 
   if(boundary.size()){
-    Msg::Error("The 1D mesh seems not to be forming a closed loop");
+  //  Msg::Error("The 1D mesh seems not to be forming a closed loop");
     gf->meshStatistics.status = GFace::FAILED;
     return false;
   }
@@ -1076,9 +1081,9 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
 
   if(all_vertices.size() < 3){
-    Msg::Warning("Mesh Generation of Model Face %d Skipped: "
-                 "Only %d mesh vertices on the contours",
-                 gf->tag(), all_vertices.size());
+  //  Msg::Warning("Mesh Generation of Model Face %d Skipped: "
+  //               "Only %d mesh vertices on the contours",
+    //             gf->tag(), all_vertices.size());
     gf->meshStatistics.status = GFace::DONE;
     return true;
   }
@@ -1171,14 +1176,14 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
     //   -) It does not necessary recover the boundaries
       //   -) It contains triangles outside the domain (the first edge
       //      loop is the outer one)
-    Msg::Debug("Meshing of the convex hull (%d points)", points.size());
+  //  Msg::Debug("Meshing of the convex hull (%d points)", points.size());
     try{
       doc.MakeMeshWithPoints();
     }
     catch(const char *err){
-      Msg::Error("%s", err);
+   //   Msg::Error("%s", err);
     }
-    Msg::Debug("Meshing of the convex hull (%d points) done", points.size());
+  //  Msg::Debug("Meshing of the convex hull (%d points) done", points.size());
 
 
     for(int i = 0; i < doc.numTriangles; i++) {
@@ -1187,7 +1192,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
       int c = doc.triangles[i].c;
       int n = doc.numPoints;
       if(a < 0 || a >= n || b < 0 || b >= n || c < 0 || c >= n){
-        Msg::Warning("Skipping bad triangle %d", i);
+    //    Msg::Warning("Skipping bad triangle %d", i);
         continue;
       }
       BDS_Point *p1 = (BDS_Point*)doc.points[doc.triangles[i].a].data;
@@ -1251,7 +1256,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
   // Recover the boundary edges and compute characteristic lenghts
   // using mesh edge spacing. If two of these edges intersect, then
   // the 1D mesh have to be densified
-  Msg::Debug("Recovering %d model Edges", edges.size());
+ // Msg::Debug("Recovering %d model Edges", edges.size());
   std::set<EdgeToRecover> edgesToRecover;
   std::set<EdgeToRecover> edgesNotRecovered;
   ite = edges.begin();
@@ -1281,18 +1286,21 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
     ++ite;
   }
 
-  Msg::Debug("Recovering %d mesh Edges (%d not recovered)", edgesToRecover.size(),
-             edgesNotRecovered.size());
+ // Msg::Debug("Recovering %d mesh Edges (%d not recovered)", edgesToRecover.size(),
+ //            edgesNotRecovered.size());
 
   if(edgesNotRecovered.size()){
     std::ostringstream sstream;
     for(std::set<EdgeToRecover>::iterator itr = edgesNotRecovered.begin();
         itr != edgesNotRecovered.end(); ++itr)
       sstream << " " << itr->ge->tag();
-    Msg::Warning(":-( There are %d intersections in the 1D mesh (curves%s)",
-                 edgesNotRecovered.size(), sstream.str().c_str());
+  //  Msg::Warning(":-( There are %d intersections in the 1D mesh (curves%s)",
+  //               edgesNotRecovered.size(), sstream.str().c_str());
     if (repairSelfIntersecting1dMesh)
-      Msg::Warning("8-| Gmsh splits those edges and tries again");
+	{
+   //   Msg::Warning("8-| Gmsh splits those edges and tries again");
+	  
+	}
 
     if(debug){
       char name[245];
@@ -1312,7 +1320,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
         int p1 = itr->p1;
         int p2 = itr->p2;
         int tag = itr->ge->tag();
-        Msg::Error("Edge not recovered: %d %d %d", p1, p2, tag);
+     //   Msg::Error("Edge not recovered: %d %d %d", p1, p2, tag);
         //_error[3 * I + 0] = p1;
         //_error[3 * I + 1] = p2;
         //_error[3 * I + 2] = tag;
@@ -1331,10 +1339,13 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
   }
 
   if(RECUR_ITER > 0)
-    Msg::Warning(":-) Gmsh was able to recover all edges after %d iterations",
-                 RECUR_ITER);
+  {
+ //   Msg::Warning(":-) Gmsh was able to recover all edges after %d iterations",
+  //               RECUR_ITER);
+				 
+  }
 
-  Msg::Debug("Boundary Edges recovered for surface %d", gf->tag());
+ // Msg::Debug("Boundary Edges recovered for surface %d", gf->tag());
 
   // look for a triangle that has a negative node and recursively
   // tag all exterior triangles
@@ -1412,8 +1423,8 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
   // compute characteristic lengths at vertices
   if (CTX::instance()->mesh.algo2d != ALGO_2D_BAMG && !onlyInitialMesh){
-      Msg::Debug("Computing mesh size field at mesh vertices %d",
-                 edgesToRecover.size());
+   //   Msg::Debug("Computing mesh size field at mesh vertices %d",
+    //             edgesToRecover.size());
       std::set<BDS_Point*, PointLessThan>::iterator it = m->points.begin();
       for(; it != m->points.end();++it){
         //      for(int i = 0; i < doc.numPoints; i++){
@@ -1503,7 +1514,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
   {
     int nb_swap;
-    Msg::Debug("Delaunizing the initial mesh");
+  //  Msg::Debug("Delaunizing the initial mesh");
     delaunayizeBDS(gf, *m, nb_swap);
   }
   //gf->triangles.clear();
@@ -1514,7 +1525,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
   // we should not do)
   gf->GFace::deleteMesh();
 
-  Msg::Debug("Starting to add internal points");
+ // Msg::Debug("Starting to add internal points");
   // start mesh generation
   if(!algoDelaunay2D(gf) && !onlyInitialMesh){
     // if(CTX::instance()->mesh.recombineAll || gf->meshAttributes.recombine || 1) {
@@ -1742,7 +1753,7 @@ static bool buildConsecutiveListOfVertices(GFace *gf, GEdgeLoop &gel,
         if(seam && seam_the_first){
           coords = ((*it)._sign == 1) ? mesh1d_seam : mesh1d_seam_reversed;
           found = (*it);
-          Msg::Info("This test case would have failed in previous Gmsh versions ;-)");
+  //        Msg::Info("This test case would have failed in previous Gmsh versions ;-)");
         }
         else{
           coords = ((*it)._sign == 1) ? mesh1d : mesh1d_reversed;
@@ -1941,7 +1952,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
       }
       if(!ok){
         gf->meshStatistics.status = GFace::FAILED;
-        Msg::Error("The 1D mesh seems not to be forming a closed loop");
+   //     Msg::Error("The 1D mesh seems not to be forming a closed loop");
         delete m;
         return false;
       }
@@ -1951,9 +1962,9 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
   }
 
   if(nbPointsTotal < 3){
-    Msg::Warning("Mesh Generation of Model Face %d Skipped: "
-                 "Only %d Mesh Vertices on The Contours",
-                 gf->tag(), nbPointsTotal);
+  //  Msg::Warning("Mesh Generation of Model Face %d Skipped: "
+    //             "Only %d Mesh Vertices on The Contours",
+    //             gf->tag(), nbPointsTotal);
     gf->meshStatistics.status = GFace::DONE;
     delete m;
     return true;
@@ -2025,13 +2036,13 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
     //   -) It does not necessary recover the boundaries
     //   -) It contains triangles outside the domain (the first edge
     //      loop is the outer one)
-    Msg::Debug("Meshing of the convex hull (%d points)", nbPointsTotal);
+ //   Msg::Debug("Meshing of the convex hull (%d points)", nbPointsTotal);
 
     try{
       doc.MakeMeshWithPoints();
     }
     catch(const char *err){
-      Msg::Error("%s", err);
+   //   Msg::Error("%s", err);
     }
 
     for(int i = 0; i < doc.numTriangles; i++){
@@ -2040,7 +2051,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
       int c = doc.triangles[i].c;
       int n = doc.numPoints;
       if(a < 0 || a >= n || b < 0 || b >= n || c < 0 || c >= n){
-        Msg::Warning("Skipping bad triangle %d", i);
+  //      Msg::Warning("Skipping bad triangle %d", i);
         continue;
       }
       BDS_Point *p1 = (BDS_Point*)doc.points[doc.triangles[i].a].data;
@@ -2126,8 +2137,8 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
       BDS_Edge * e = m->recover_edge
         (edgeLoop_BDS[j]->iD, edgeLoop_BDS[(j + 1) % edgeLoop_BDS.size()]->iD, _fatallyFailed);
       if(!e){
-        Msg::Error("Impossible to recover the edge %d %d", edgeLoop_BDS[j]->iD,
-                   edgeLoop_BDS[(j + 1) % edgeLoop_BDS.size()]->iD);
+     //   Msg::Error("Impossible to recover the edge %d %d", edgeLoop_BDS[j]->iD,
+     //              edgeLoop_BDS[(j + 1) % edgeLoop_BDS.size()]->iD);
         gf->meshStatistics.status = GFace::FAILED;
         delete m;
         return false;
@@ -2281,7 +2292,10 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
           mv2 = new MVertex (mv1->x(),mv1->y(),mv1->z(),mv1->onWhat());
         }
         else
-          Msg::Error("Could not reconstruct seam");
+		{
+  //        Msg::Error("Could not reconstruct seam");
+		  
+		}
         if(mv2){
           it->second = mv2;
           equivalence[mv2] = mv1;
@@ -2297,7 +2311,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
     }
     // recoverMap.insert(new_relations.begin(), new_relations.end());
   }
-  Msg::Info("%d points that are duplicated for Delaunay meshing", equivalence.size());
+ // Msg::Info("%d points that are duplicated for Delaunay meshing", equivalence.size());
 
   // fill the small gmsh structures
   {
@@ -2451,14 +2465,17 @@ void meshGFace::operator() (GFace *gf, bool print)
         gf->meshStatistics.status = GFace::PENDING;
         return;
       }
-      Msg::Info("Meshing face %d (%s) as a copy of %d", gf->tag(),
-                gf->getTypeString().c_str(), gf->meshMaster()->tag());
+    //  Msg::Info("Meshing face %d (%s) as a copy of %d", gf->tag(),
+    //            gf->getTypeString().c_str(), gf->meshMaster()->tag());
       copyMesh(gff, gf);
       gf->meshStatistics.status = GFace::DONE;
       return;
     }
     else
-      Msg::Warning("Unknown mesh master face %d", gf->meshMaster()->tag());
+	{
+    //  Msg::Warning("Unknown mesh master face %d", gf->meshMaster()->tag());
+	  
+	}
   }
 
   const char *algo = "Unknown";
@@ -2481,13 +2498,16 @@ void meshGFace::operator() (GFace *gf, bool print)
   }
 
   if (print)
-    Msg::Info("Meshing surface %d (%s, %s)", gf->tag(), gf->getTypeString().c_str(), algo);
+  {
+ //   Msg::Info("Meshing surface %d (%s, %s)", gf->tag(), gf->getTypeString().c_str(), algo);
+	
+  }
 
   // compute loops on the fly (indices indicate start and end points
   // of a loop; loops are not yet oriented)
-  Msg::Debug("Computing edge loops");
+//  Msg::Debug("Computing edge loops");
 
-  Msg::Debug("Generating the mesh");
+//  Msg::Debug("Generating the mesh");
 
   quadMeshRemoveHalfOfOneDMesh halfmesh (gf);
 
@@ -2501,11 +2521,14 @@ void meshGFace::operator() (GFace *gf, bool print)
   else {
     if(!meshGeneratorPeriodic
        (gf, debugSurface >= 0 || debugSurface == -100))
-      Msg::Error("Impossible to mesh periodic face %d", gf->tag());
+	   {
+    //  Msg::Error("Impossible to mesh periodic face %d", gf->tag());
+	  
+	   }
   }
 
-  Msg::Debug("Type %d %d triangles generated, %d internal vertices",
-             gf->geomType(), gf->triangles.size(), gf->mesh_vertices.size());
+//  Msg::Debug("Type %d %d triangles generated, %d internal vertices",
+ //            gf->geomType(), gf->triangles.size(), gf->mesh_vertices.size());
 
   halfmesh.finish();
 }
@@ -2606,8 +2629,8 @@ void partitionAndRemesh(GFaceCompound *gf)
     GFace *pf =  gf->model()->getFaceByTag(numf+i);//partition face
     int num_gfc = numf + NF + i ;
     f_compound.push_back(pf);
-    Msg::Info("Parametrize Compound Surface (%d) = %d discrete face",
-              num_gfc, pf->tag());
+   // Msg::Info("Parametrize Compound Surface (%d) = %d discrete face",
+   //           num_gfc, pf->tag());
 
     GFaceCompound *gfc = new GFaceCompound(gf->model(), num_gfc, f_compound, U0,
                                            gf->getTypeOfCompound());
@@ -2619,17 +2642,17 @@ void partitionAndRemesh(GFaceCompound *gf)
   }
 
   double t1 = Cpu();
-  Msg::Info("*** Parametrize compounds done (%g s)", t1-t0);
-  Msg::Info("*** Starting meshing 1D edges ...:");
+//  Msg::Info("*** Parametrize compounds done (%g s)", t1-t0);
+ // Msg::Info("*** Starting meshing 1D edges ...:");
   for (int i = 0; i < NE; i++){
     GEdge *gec = gf->model()->getEdgeByTag(nume + NE + i);
     meshGEdge mge;
     mge(gec);
   }
   double t2 = Cpu();
-  Msg::Info("*** Meshing 1D edges done (%gs)", t2-t1);
+ // Msg::Info("*** Meshing 1D edges done (%gs)", t2-t1);
 
-  Msg::Info("*** Starting Mesh of surface %d ...", gf->tag());
+ // Msg::Info("*** Starting Mesh of surface %d ...", gf->tag());
 
   for (int i=0; i < NF; i++){
     GFace *gfc =  gf->model()->getFaceByTag(numf + NF + i );
@@ -2742,9 +2765,9 @@ void partitionAndRemesh(GFaceCompound *gf)
   }
 
   double t3 = Cpu();
-  Msg::Info("*** Mesh of surface %d done by assembly %d remeshed faces (%g s)",
-            gf->tag(), NF, t3-t2);
-  Msg::Info("-----------------------------------------------------------");
+//  Msg::Info("*** Mesh of surface %d done by assembly %d remeshed faces (%g s)",
+ //           gf->tag(), NF, t3-t2);
+ // Msg::Info("-----------------------------------------------------------");
 
   gf->coherenceNormals();
   gf->meshStatistics.status = GFace::DONE;
@@ -2851,7 +2874,7 @@ void orientMeshGFace::operator()(GFace *gf)
 
     // Exit if could not determine orientation of both non-BL el. and BL el.
     if ((orientNonBL == 0) && (orientBL == 0)) {
-      Msg::Warning("Could not orient mesh in face %d", gf->tag());
+   //   Msg::Warning("Could not orient mesh in face %d", gf->tag());
       return;
     }
 

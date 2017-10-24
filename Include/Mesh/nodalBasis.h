@@ -6,6 +6,8 @@
 #ifndef NODALBASIS_H
 #define NODALBASIS_H
 
+#include <vector>
+
 #include "Mesh/fullMatrix.h"
 #include "Mesh/GmshDefines.h"
 
@@ -33,8 +35,8 @@ class nodalBasis {
   virtual void f(const fullMatrix<double> &coord, fullMatrix<double> &sf) const = 0;
   virtual void df(double u, double v, double w, double grads[][3]) const = 0;
   virtual void df(const fullMatrix<double> &coord, fullMatrix<double> &dfm) const = 0;
-  virtual void ddf(double u, double v, double w, double grads[][3][3]) const {Msg::Fatal("Not implemented");}
-  virtual void dddf(double u, double v, double w, double grads[][3][3][3]) const {Msg::Fatal("Not implemented");}
+  virtual void ddf(double u, double v, double w, double grads[][3][3]) const {/*Msg::Fatal("Not implemented"); */}
+  virtual void dddf(double u, double v, double w, double grads[][3][3][3]) const {/*Msg::Fatal("Not implemented"); */}
 
   // closures is the list of the nodes of each face, in the order of
   // the polynomialBasis of the face; fullClosures is mapping of the

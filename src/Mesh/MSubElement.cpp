@@ -6,12 +6,12 @@
 // Contributor(s):
 //   Frederic Duboeuf
 
-#include "MSubElement.h"
-#include "Numeric.h"
-#include "GModel.h"
+#include "Mesh/MSubElement.h"
+#include "Mesh/Numeric.h"
+#include "Mesh/GModel.h"
 
 // MSubTetrahedron
-
+/*
 MSubTetrahedron::~MSubTetrahedron()
 {
   if(_pts) delete [] _pts;
@@ -205,6 +205,7 @@ void MSubTetrahedron::getIntegrationPoints(int pOrder, int *npts, IntPt **pts)
   *npts = _npts;
   *pts = _pts;
 }
+ */ 
 
 
 // MSubTriangle

@@ -117,7 +117,7 @@ public:
       else
 	return getColumn(v, N-1);
     }
-    Msg::Error("Cannot handle embedded lines in boundary layers");
+    //Msg::Error("Cannot handle embedded lines in boundary layers");
     static BoundaryLayerData error;
     return error;
   }
@@ -138,7 +138,7 @@ public:
 
 BoundaryLayerField* getBLField(GModel *gm);
 bool buildAdditionalPoints2D (GFace *gf ) ;
-bool buildAdditionalPoints3D (GRegion *gr) ;
+//bool buildAdditionalPoints3D (GRegion *gr) ;
 void buildMeshMetric(GFace *gf, double *uv, SMetric3 &m, double metric[3]);
 
 #endif

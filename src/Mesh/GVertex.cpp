@@ -34,7 +34,7 @@ void GVertex::resetMeshAttributes()
 
 void GVertex::setPosition(GPoint &p)
 {
-  Msg::Error("Cannot set position of this kind of vertex");
+  //Msg::Error("Cannot set position of this kind of vertex");
 }
 
 void GVertex::addEdge(GEdge *e)
@@ -113,6 +113,7 @@ std::list<GFace*> GVertex::faces() const
 }
 
 // regions that bound this entity or that this entity bounds.
+/*
 std::list<GRegion*> GVertex::regions() const
 {
   std::list<GFace*> _faces = faces();
@@ -126,6 +127,7 @@ std::list<GRegion*> GVertex::regions() const
   ret.insert (ret.begin(), _r.begin(), _r.end());
   return ret;
 }
+ */ 
 
 void GVertex::relocateMeshVertices()
 {

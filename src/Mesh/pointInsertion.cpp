@@ -13,10 +13,10 @@
 #include "Mesh/pointInsertion.h"
 #include "Mesh/BackgroundMeshManager.h"
 #include "Mesh/BackgroundMesh2D.h"
-#include "Mesh/BackgroundMesh3D.h"
+//#include "Mesh/BackgroundMesh3D.h"
 #include "Mesh/GFace.h"
-#include "GRegion.h"
-#include "Mesh/OS.h"
+//#include "GRegion.h"
+#include "common/OS.h"
 #include "Mesh/Context.h"
 //#include "meshGRegion.h"
 #include "Mesh/pointInsertionRTreeTools.h"
@@ -177,7 +177,7 @@ bool computeFourNeighbors (frameFieldBackgroundMesh2D *bgm,
           //	    printf("OK\n");
         }
         else{
-          Msg::Debug("Cannot put a new point on Surface %d",gf->tag());
+          //Msg::Debug("Cannot put a new point on Surface %d",gf->tag());
           // printf("NOT OK\n");
         }
       }
@@ -195,6 +195,7 @@ bool computeFourNeighbors (frameFieldBackgroundMesh2D *bgm,
 void computeTwoNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
                          vector<MVertex*> &spawns, SVector3 dir, double h)
 {
+	/*
   // using approximate size, RK1...
   double x = parent->x();
   double y = parent->y();
@@ -211,11 +212,13 @@ void computeTwoNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
   newy = y - h * dir(1);
   newz = z - h * dir(2);
   spawns[1] = new MVertex(newx,newy,newz,gr,0);
+   */ 
 }
 
 void computeSixNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
                          vector<MVertex*> &spawns, STensor3 dir, double h)
 {
+	/*
   // using approximate size, RK1...
   double x = parent->x();
   double y = parent->y();
@@ -234,6 +237,7 @@ void computeSixNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
     newz = z - h * dir(2,i);
     spawns[i*2+1] = new MVertex(newx,newy,newz,gr,0);
   }
+   */ 
 }
 
 double Filler2D::time_bgm_and_smoothing = 0.;
@@ -296,7 +300,7 @@ void Filler2D::pointInsertion2D(GFace* gf,  vector<MVertex*> &packed,
   time_bgm_and_smoothing += (Cpu() - a);
 
   if (!bgm){
-    Msg::Error("BGM dynamic cast failed in filler2D::pointInsertion2D");
+  //  Msg::Error("BGM dynamic cast failed in filler2D::pointInsertion2D");
     return;
   }
 
@@ -429,6 +433,7 @@ void Filler2D::pointInsertion2D(GFace* gf,  vector<MVertex*> &packed,
   }
 }
 
+/*
 bool Filler3D::treat_region(GRegion *gr)
 {
   BGMManager::set_use_cross_field(true);
@@ -745,6 +750,7 @@ bool Filler3D::treat_region(GRegion *gr)
 
   return true;
 }
+ */ 
 
 int Filler3D::get_nbr_new_vertices()
 {

@@ -122,7 +122,7 @@ bool inExclusionZone
   return false;
 }
 
-frameFieldBackgroundMesh3D* Wrapper3D::bgmesh = NULL;
+//frameFieldBackgroundMesh3D* Wrapper3D::bgmesh = NULL;
 
 double infinity_distance_3D(const MVertex *v1,const MVertex *v2,STensor3 &cf)
 {
@@ -157,10 +157,11 @@ void fill_min_max(double x,double y,double z,double h,double *min,double *max)
   max[2] = z + sqrt3*h;
 };
 
+/*
 bool rtree_callback_3D(MVertex* neighbour,void* w)
 {
-  Wrapper3D* wrapper;
-  wrapper = static_cast<Wrapper3D*>(w);
+  //Wrapper3D* wrapper;
+ // wrapper = static_cast<Wrapper3D*>(w);
   const MVertex* individual = wrapper->get_individual();
   const MVertex *parent = wrapper->get_parent();
   if (parent==neighbour) return true;
@@ -179,7 +180,9 @@ bool rtree_callback_3D(MVertex* neighbour,void* w)
   }
   return true;
 };
+ */ 
 
+/*
 bool far_from_boundary_3D(frameFieldBackgroundMesh3D *bgm, MVertex* v, double h)
 {
   // check if the box (v->point +- k2*h) is in domain
@@ -197,3 +200,4 @@ bool far_from_boundary_3D(frameFieldBackgroundMesh3D *bgm, MVertex* v, double h)
 
   return true;
 };
+ */ 

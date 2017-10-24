@@ -18,18 +18,20 @@
 class gLevelset;
 class GModel;
 
+/*
 class MPolyhedron : public MElement {
  protected:
   bool _owner;
   MElement* _orig;
   IntPt *_intpt;
-  std::vector<MTetrahedron*> _parts;
+ // std::vector<MTetrahedron*> _parts;
   std::vector<MVertex*> _vertices;
   std::vector<MVertex*> _innerVertices;
   std::vector<MEdge> _edges;
   std::vector<MFace> _faces;
   void _init();
- public:
+public:
+
   MPolyhedron(std::vector<MVertex*> v, int num = 0, int part = 0,
               bool owner = false, MElement* orig = NULL)
     : MElement(num, part), _owner(owner), _orig(orig), _intpt(0)
@@ -42,6 +44,7 @@ class MPolyhedron : public MElement {
       _parts.push_back(new MTetrahedron(v[i], v[i + 1], v[i + 2], v[i + 3]));
     _init();
   }
+    
   MPolyhedron(std::vector<MTetrahedron*> vT, int num = 0, int part = 0,
               bool owner = false, MElement* orig = NULL)
     : MElement(num, part), _owner(owner), _orig(orig), _intpt(0)
@@ -58,6 +61,7 @@ class MPolyhedron : public MElement {
       delete _parts[i];
     if(_intpt) delete [] _intpt;
   }
+
   virtual int getDim() const { return 3; }
   virtual int getNumVertices() const { return _vertices.size() + _innerVertices.size(); }
   virtual int getNumVolumeVertices() const { return _innerVertices.size(); }
@@ -177,6 +181,7 @@ class MPolyhedron : public MElement {
         verts[i * 4 + j] = _parts[i]->getVertex(j)->getIndex();
   }
 };
+*/
 
 class MPolygon : public MElement {
  protected:

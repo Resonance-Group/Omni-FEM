@@ -221,7 +221,10 @@ namespace ClosureGen {
         int n1 = cl[edges[iEdge + 1]];
         int oEdge = nodes2edges[n0][n1];
         if (oEdge == -1)
-          Msg::Error("invalid p1 closure or invalid edges list");
+		{
+         // Msg::Error("invalid p1 closure or invalid edges list");
+		  
+		}
         for (int i = 0 ; i < order - 1; i++)
           cl.push_back(numNodes + oEdge/2 * (order - 1) + ((oEdge % 2) ?  order - 2 - i : i));
       }
@@ -457,7 +460,7 @@ namespace ClosureGen {
     else if (!isTriangle && order > 2)
       reorderFaceClosure(iSign, iRotate, closure, idx, order-2, isTriangle);
   }
-
+/*
   void getFaceClosurePrism(int iFace, int iSign, int iRotate,
                            nodalBasis::closure &closure, int order)
   {
@@ -609,6 +612,7 @@ namespace ClosureGen {
 
   }
 
+ */ 
   void generate2dEdgeClosure(nodalBasis::clCont &closure, int order, int nNod = 3)
   {
     closure.clear();
@@ -705,8 +709,8 @@ nodalBasis::nodalBasis(int tag)
       closureRef.resize(48, 0);
     }
     else {
-      generateFaceClosurePrism(closures, order);
-      generateFaceClosurePrismFull(fullClosures, closureRef, order);
+   //   generateFaceClosurePrism(closures, order);
+  //    generateFaceClosurePrismFull(fullClosures, closureRef, order);
     }
     break;
   case TYPE_HEX :

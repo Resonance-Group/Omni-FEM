@@ -37,12 +37,12 @@
 #include "Mesh/Context.h"
 #include "common/OS.h"
 //#include "Mesh/StringUtils.h"
-#include "Mesh/GEdgeLoop.h"
+//#include "Mesh/GEdgeLoop.h"
 #include "Mesh/MVertexRTree.h"
 
 //#include "OpenFile.h"
 //#include "CreateFile.h"
-//#include "Options.h"
+#include "Mesh/Options.h"
 
 #include "Mesh/meshGEdge.h"
 #include "Mesh/meshGFace.h"
@@ -71,7 +71,7 @@ GModel::GModel(std::string name)
   : _maxVertexNum(0), _maxElementNum(0),
     _checkPointedMaxVertexNum(0), _checkPointedMaxElementNum(0),
     _name(name), _visible(1), _octree(0), _geo_internals(0),
-    _occ_internals(0), _acis_internals(0), _fm_internals(0),
+    _occ_internals(0), /*_acis_internals(0), _fm_internals(0),*/
     _factory(0), _fields(0), _currentMeshEntity(0),
     normals(0)
 {
@@ -193,10 +193,11 @@ void GModel::destroy(bool keepName)
 
   _maxVertexNum = _maxElementNum = 0;
   _checkPointedMaxVertexNum = _checkPointedMaxElementNum = 0;
-
+/*
   for(riter it = firstRegion(); it != lastRegion(); ++it)
     delete *it;
   regions.clear();
+   */ 
 
   std::vector<GFace*> to_keep;
   for(fiter it = firstFace(); it != lastFace(); ++it){
@@ -244,8 +245,8 @@ void GModel::destroyMeshCaches()
 
 void GModel::deleteMesh()
 {
-  for(riter it = firstRegion(); it != lastRegion();++it)
-    (*it)->deleteMesh();
+ // for(riter it = firstRegion(); it != lastRegion();++it)
+ //   (*it)->deleteMesh();
   for(fiter it = firstFace(); it != lastFace();++it)
     (*it)->deleteMesh();
   for(eiter it = firstEdge(); it != lastEdge();++it)
@@ -257,9 +258,10 @@ void GModel::deleteMesh()
 
 bool GModel::empty() const
 {
-  return vertices.empty() && edges.empty() && faces.empty() && regions.empty();
+  return vertices.empty() && edges.empty() && faces.empty();
 }
 
+/*
 GRegion *GModel::getRegionByTag(int n) const
 {
   GEntity tmp((GModel*)this, n);
@@ -269,6 +271,7 @@ GRegion *GModel::getRegionByTag(int n) const
   else
     return 0;
 }
+ */ 
 
 GFace *GModel::getFaceByTag(int n) const
 {
@@ -306,7 +309,7 @@ GEntity *GModel::getEntityByTag(int dim, int n) const
   case 0: return getVertexByTag(n);
   case 1: return getEdgeByTag(n);
   case 2: return getFaceByTag(n);
-  case 3: return getRegionByTag(n);
+//  case 3: return getRegionByTag(n);
   }
   return 0;
 }
@@ -324,11 +327,13 @@ std::vector<int> GModel::getTagsForPhysicalName(int dim, const std::string tag)
   return tags;
 }
 
+/*
 void GModel::remove(GRegion *r)
 {
   riter it = std::find(firstRegion(), lastRegion(), r);
   if(it != (riter)regions.end()) regions.erase(it);
 }
+ */
 
 void GModel::remove(GFace *f)
 {
@@ -352,6 +357,7 @@ void GModel::remove(int dim, int tag, bool recursive)
 {
   // we don't check dependencies when removing entities (we just erase them from
   // the set), so we can go ahead with a brute force recursion
+  /*
   if(dim == 3){
     GRegion *gr = getRegionByTag(tag);
     if(gr){
@@ -363,7 +369,8 @@ void GModel::remove(int dim, int tag, bool recursive)
       }
     }
   }
-  else if(dim == 2){
+   */ 
+  if(dim == 2){
     GFace *gf = getFaceByTag(tag);
     if(gf){
       remove(gf);
@@ -446,14 +453,14 @@ void GModel::getEntities(std::vector<GEntity*> &entities, int dim) const
   case 2:
     entities.insert(entities.end(), faces.begin(), faces.end());
     break;
-  case 3:
-    entities.insert(entities.end(), regions.begin(), regions.end());
-    break;
+ // case 3:
+  //  entities.insert(entities.end(), regions.begin(), regions.end());
+  //  break;
   default:
     entities.insert(entities.end(), vertices.begin(), vertices.end());
     entities.insert(entities.end(), edges.begin(), edges.end());
     entities.insert(entities.end(), faces.begin(), faces.end());
-    entities.insert(entities.end(), regions.begin(), regions.end());
+//    entities.insert(entities.end(), regions.begin(), regions.end());
     break;
   }
 }
@@ -492,7 +499,7 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
     int dim = inDimTags[i].first;
     int tag = std::abs(inDimTags[i].second); // abs for backward compatibility
     bool reverse = (inDimTags[i].second < 0);
-    if(dim == 3){
+  /*  if(dim == 3){
       GRegion *gr = getRegionByTag(tag);
       if(gr){
         if(recursive){
@@ -519,7 +526,8 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
         ret = false;
       }
     }
-    else if(dim == 2){
+	 */ 
+    if(dim == 2){
       GFace *gf = getFaceByTag(tag);
       if(gf){
         if(recursive){
@@ -729,7 +737,7 @@ int GModel::getPhysicalNumber(const int &dim, const std::string &name)
 
 int GModel::getDim() const
 {
-  if(getNumRegions() > 0) return 3;
+ // if(getNumRegions() > 0) return 3;
   if(getNumFaces() > 0) return 2;
   if(getNumEdges() > 0) return 1;
   if(getNumVertices() > 0) return 0;
@@ -793,10 +801,11 @@ int GModel::mesh(int dimension)
 bool GModel::setAllVolumesPositive()
 {
   bool ok = true;
-  for(riter it = regions.begin(); it != regions.end(); ++it)
+ /* for(riter it = regions.begin(); it != regions.end(); ++it)
     for (unsigned int i = 0; i < (*it)->getNumMeshElements(); ++i)
       if(!(*it)->getMeshElement(i)->setVolumePositive())
         ok = false;
+		 */ 
   return ok;
 }
 
@@ -863,6 +872,7 @@ static void checkConformity
 
 void GModel::setAllVolumesPositiveTopology()
 {
+	/*
  // Msg::Info("Orienting volumes according to topology");
   std::map< MElement *, std::vector < std::pair < MElement *, bool> > > elToNeighbors;
   std::multimap< MFace , MElement *, Less_Face> faceToElement;
@@ -910,6 +920,7 @@ void GModel::setAllVolumesPositiveTopology()
         queued.insert(neigh[iN].first);
       }
   }
+   */ 
 }
 
 int GModel::adaptMesh(std::vector<int> technique,
@@ -2561,6 +2572,7 @@ void GModel::createTopologyFromMesh(int ignoreHoles)
  // Msg::StatusBar(true, "Done creating topology from mesh (%g s)", t2 - t1);
 }
 
+/*
 void GModel::createTopologyFromRegions(std::vector<discreteRegion*> &discRegions)
 {
  // Msg::Debug("Creating topology from regions...");
@@ -2714,6 +2726,7 @@ void GModel::createTopologyFromRegions(std::vector<discreteRegion*> &discRegions
 
  // Msg::Debug("Done creating topology from regions");
 }
+ */ 
 
 void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int ignoreHoles)
 {
@@ -3400,6 +3413,7 @@ GFace* GModel::addPlanarFace (std::vector<std::vector<GEdge *> > edges)
   return 0;
 }
 
+/*
 GFace* GModel::addPlanarFace (std::vector<std::vector<GEdgeSigned> > edges)
 {
   factoryWarning();
@@ -3407,7 +3421,9 @@ GFace* GModel::addPlanarFace (std::vector<std::vector<GEdgeSigned> > edges)
     return _factory->addPlanarFace(this, edges);
   return 0;
 }
+ */ 
 
+/*
 GRegion* GModel::addVolume (std::vector<std::vector<GFace *> > faces)
 {
   factoryWarning();
@@ -3415,6 +3431,7 @@ GRegion* GModel::addVolume (std::vector<std::vector<GFace *> > faces)
     return _factory->addVolume(this, faces);
   return 0;
 }
+ */ 
 
 GFace *GModel::add2Drect(double x0, double y0, double dx, double dy)
 {

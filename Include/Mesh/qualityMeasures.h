@@ -68,7 +68,7 @@ class qmTetrahedron
 {
 public:
   enum Measures {QMTET_GAMMA, QMTET_ETA, QMTET_ONE, QMTET_COND};
-  static double qm(MTetrahedron *t, const Measures &cr, double *volume = 0);
+//  static double qm(MTetrahedron *t, const Measures &cr, double *volume = 0);
   static double qm(const BDS_Point *p1, const BDS_Point *p2, const BDS_Point *p3);
   static double qm(const MVertex *v1, const MVertex *v2, const MVertex *v3,
       const MVertex *v4, const Measures &cr, double *volume = 0);
@@ -92,7 +92,7 @@ public:
                      const double &x3, const double &y3, const double &z3,
                      const double &x4, const double &y4, const double &z4,
                      double *volume = 0);
-  static double minNCJ(const MTetrahedron *e);
+ // static double minNCJ(const MTetrahedron *e);
 //  static void NCJRange(const MTetrahedron *e, double &valMin, double &valMax);
   static inline int numNCJVal() { return 4; }
 //  static void NCJ(const double &x0, const double &y0, const double &z0,
@@ -111,7 +111,7 @@ public:
 class qmPrism
 {
 public:
-  static double minNCJ(const MPrism *el);
+//  static double minNCJ(const MPrism *el);
   static inline int numNCJVal() { return 6; }
 //  static void NCJ(const double &x0, const double &y0, const double &z0,
 //                  const double &x1, const double &y1, const double &z1,
@@ -125,7 +125,7 @@ public:
 class qmHexahedron
 {
 public:
-  static double angles(MHexahedron *el);
+ // static double angles(MHexahedron *el);
   static inline int numNCJVal() { return 8; }
 //  static void NCJ(const double &x0, const double &y0, const double &z0,
 //                  const double &x1, const double &y1, const double &z1,

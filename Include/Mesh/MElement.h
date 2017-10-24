@@ -91,13 +91,13 @@ class MElement
   }
   virtual void setVertex(int num, MVertex *v)
   {
-    Msg::Error("Vertex set not supported for this element");
+ //   Msg::Error("Vertex set not supported for this element");
   }
 
   // give an MVertex as input and get its local number
   virtual void getVertexInfo(const MVertex *vertex, int &ithVertex) const
   {
-    Msg::Error("Vertex information not available for this element");
+ //   Msg::Error("Vertex information not available for this element");
   }
 
   // get the vertex using the I-deas UNV ordering
@@ -139,7 +139,7 @@ class MElement
   // give an MEdge as input and get its local number and sign
   virtual void getEdgeInfo(const MEdge & edge, int &ithEdge, int &sign) const
   {
-    Msg::Error("Edge information not available for this element");
+   // Msg::Error("Edge information not available for this element");
   }
 
   // get an edge representation for drawing
@@ -155,7 +155,7 @@ class MElement
   virtual void getFaceInfo(const MFace & face, int &ithFace, int &sign,
                            int &rot) const
   {
-    Msg::Error("Face information not available for this element");
+ //   Msg::Error("Face information not available for this element");
   }
 
   // get a face representation for drawing
@@ -361,8 +361,8 @@ class MElement
   // integration routines
   virtual void getIntegrationPoints(int pOrder, int *npts, IntPt **pts)
   {
-    Msg::Error("No integration points defined for this type of element: %d",
-               this->getType());
+  //  Msg::Error("No integration points defined for this type of element: %d",
+    //           this->getType());
   }
   double integrate(double val[], int pOrder, int stride=1, int order=-1);
   // val[] must contain interpolation data for face/edge vertices of given edge/face
