@@ -34,7 +34,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 ********************************************************************************/
 #include <stdlib.h>
 #include "Mesh/Geo.h"
-#include "MEsh/QuadTriUtils.h"
+#include "Mesh/QuadTriUtils.h"
 
 // By Geuzaine, Remacle...
 static void addTriangle(MVertex* v1, MVertex* v2, MVertex* v3,
@@ -46,7 +46,7 @@ static void addTriangle(MVertex* v1, MVertex* v2, MVertex* v3,
 
 // this determines if a face is a non-lateral face in a structured toroidal volume extrusion with at
 // least one QuadToTri region...
-int IsInToroidalQuadToTri(GFace *face)
+/*int IsInToroidalQuadToTri(GFace *face)
 {
    if(!face)
      return false;
@@ -178,7 +178,7 @@ int IsInToroidalQuadToTri(GFace *face)
     }
     else
       return 0;
-}
+}*/
 
 // replace boundary quads in a source surface for toroidal quadtri extrusion
 void ReplaceBndQuadsInFace(GFace *face)
@@ -468,7 +468,7 @@ std::vector<double> QtFindVertsCentroid(std::vector<MVertex*> v)
   const int v_size = v.size();
 
   if( v_size != 6 && v_size != 8 && v_size != 3 && v_size != 4 ){
-    Msg::Error("In QtFindVertsCentroid(), number of vertices is not 3, 4, 6, or 8.");
+    //Msg::Error("In QtFindVertsCentroid(), number of vertices is not 3, 4, 6, or 8.");
     return v_return;
   }
 
@@ -510,7 +510,7 @@ MVertex* QtMakeCentroidVertex(std::vector<MVertex*> v, std::vector<MVertex*> *ta
 {
   int v_size = v.size();
   if( v_size != 6 && v_size != 8 && v_size != 3 && v_size != 4){
-    Msg::Error("In makeCentroidVertex(), number of vertices does not equal 3, 4, 6, or 8.");
+    //Msg::Error("In makeCentroidVertex(), number of vertices does not equal 3, 4, 6, or 8.");
     return (MVertex*)(NULL);
   }
 
@@ -560,7 +560,7 @@ std::pair<int, int> FindDiagonalEdgeIndices( std::vector<MVertex*> verts,
                                                            unsigned int index_guess)
 {
   if( verts.size() != 4 ){
-    Msg::Error("FindDiagonalEdgeIndices(), size of verts array not equal 4.");
+    //Msg::Error("FindDiagonalEdgeIndices(), size of verts array not equal 4.");
     return std::pair<int,int>(0,0);
   }
   if( !lateral ){
@@ -574,7 +574,7 @@ std::pair<int, int> FindDiagonalEdgeIndices( std::vector<MVertex*> verts,
     if( s != 0 && !wrong_guess  ){
       wrong_guess = true;
       if( !face->quadrangles.size() )
-	Msg::Error("FindDiagonalEdgeIndices() encountered unexpected surface configuration.");
+	{/*Msg::Error("FindDiagonalEdgeIndices() encountered unexpected surface configuration.");*/}
     }
     int v_count0 = 0,  v_count1 = 0;
     elem_tmp = (MElement*)(face->triangles[(s+index_guess)%s_max]);
@@ -602,9 +602,9 @@ std::pair<int, int> FindDiagonalEdgeIndices( std::vector<MVertex*> verts,
   }
 
   if( !face->quadrangles.size() )
-    Msg::Error("In FindDiagonalEdgeIndices(), could not "
+    {/*Msg::Error("In FindDiagonalEdgeIndices(), could not "
              "find a diagonal on surface %d.",
-             face->tag() );
+	face->tag() );*/}
   return std::pair<int,int>(0,0);
 
 }
@@ -823,7 +823,7 @@ GFace* findRootSourceFaceForFace(GFace *face)
     iter_counter++;
     source_face = model->getFaceByTag( std::abs(ep_iter->geo.Source) );
     if( !source_face ){
-      Msg::Error("findRootSourceFaceForFace() could not find valid surface for tag %d.", ep->geo.Source );
+      //Msg::Error("findRootSourceFaceForFace() could not find valid surface for tag %d.", ep->geo.Source );
       return (GFace*)(NULL);
     }
     ep_iter = source_face->meshAttributes.extrude;
@@ -831,7 +831,7 @@ GFace* findRootSourceFaceForFace(GFace *face)
       return source_face;
   }
 
-  Msg::Error("findRootSourceFaceForFace() failed to find root source.");
+  //Msg::Error("findRootSourceFaceForFace() failed to find root source.");
   return (GFace*)(NULL);
 
 }

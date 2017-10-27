@@ -10,8 +10,8 @@
 #include "Mesh/robustPredicates.h"
 //#include "GRegion.h"
 
-std::map<MVertex*,std::vector<MTetrahedron*> > ThinLayer::VertexToTets;
-std::map<MTetrahedron*,MTet4*> ThinLayer::TetToTet4;
+//std::map<MVertex*,std::vector<MTetrahedron*> > ThinLayer::VertexToTets;
+//std::map<MTetrahedron*,MTet4*> ThinLayer::TetToTet4;
 std::map<MVertex*,std::vector<CorrespVertices*> > ThinLayer::VertexToCorresp;
 std::vector<std::vector<CorrespVertices*> > ThinLayer::vecOfThinSheets;
 const double ThinLayer::epsilon = 0.00001;
@@ -31,10 +31,10 @@ void CorrespVertices::setStartNormal(SVector3 v){
 }
 void CorrespVertices::setEndNormal(SVector3 v){
   this->EndNormal = v;
-}
+}/*
 void CorrespVertices::setEndTriangle(faceXtet f){
   this->EndTriangle = f;
-}
+}*/
 void CorrespVertices::setdistP2P(double d){
   this->distP2P = d;
 }
@@ -64,10 +64,10 @@ SVector3 CorrespVertices::getStartNormal(){
 }
 SVector3 CorrespVertices::getEndNormal(){
   return EndNormal;
-}
+}/*
 faceXtet CorrespVertices::getEndTriangle(){
   return EndTriangle;
-}
+}*/
 double CorrespVertices::getdistP2P(){
   return distP2P;
 }
@@ -94,7 +94,7 @@ ThinLayer::~ThinLayer(){}
 void ThinLayer::perform()
 {
   ThinLayer::fillVertexToTets();
-  ThinLayer::fillTetToTet4();
+//  ThinLayer::fillTetToTet4();
   std::map<MVertex*,double> AllDist = ThinLayer::computeAllDistToOppSide();
   ThinLayer::checkOppositeTriangles();
   ThinLayer::fillvecOfThinSheets();
@@ -108,11 +108,11 @@ void ThinLayer::checkOppositeTriangles()
          VertexToCorresp.begin();it1 != VertexToCorresp.end();it1++){
     std::vector<CorrespVertices*> vecCorr = (*it1).second;
     for (unsigned int i = 0;i < vecCorr.size();i++){
-      CorrespVertices* currentCorr = vecCorr[i];
-      faceXtet currentEndTri = currentCorr->getEndTriangle();
-      MVertex* endP0 = currentEndTri.v[0];
-      MVertex* endP1 = currentEndTri.v[1];
-      MVertex* endP2 = currentEndTri.v[2];
+     /* CorrespVertices* currentCorr = vecCorr[i];
+   //   faceXtet currentEndTri = currentCorr->getEndTriangle();
+   //   MVertex* endP0 = currentEndTri.v[0];
+  //    MVertex* endP1 = currentEndTri.v[1];
+   //   MVertex* endP2 = currentEndTri.v[2];
       std::map<MVertex*,std::vector<CorrespVertices*> >::iterator it2 =
         VertexToCorresp.find(endP0);
       std::map<MVertex*,std::vector<CorrespVertices*> >::iterator it3 =
@@ -132,13 +132,13 @@ void ThinLayer::checkOppositeTriangles()
             }
           }
         }
-      }
+      }*/
     }
   }
 }
 
 void ThinLayer::fillvecOfThinSheets(){
-  for (std::map<MVertex*,std::vector<CorrespVertices*> >::iterator it1 =
+/*  for (std::map<MVertex*,std::vector<CorrespVertices*> >::iterator it1 =
          VertexToCorresp.begin();it1 != VertexToCorresp.end();it1++){
     std::vector<CorrespVertices*> vecCorr = (*it1).second;
     for (unsigned int i = 0;i < vecCorr.size();i++){
@@ -205,7 +205,7 @@ void ThinLayer::fillvecOfThinSheets(){
         vecOfThinSheets.push_back(MasterSheet);
       }
     }
-  }
+  }*/
 }
 
 std::map<MVertex*,double> ThinLayer::computeAllDistToOppSide()
@@ -215,7 +215,7 @@ std::map<MVertex*,double> ThinLayer::computeAllDistToOppSide()
   // std::vector<MElement*> crackElements;
   std::set<MVertex*> BoundaryVertices;
 
-  for (GModel::riter itr= m->firstRegion();itr != m->lastRegion();itr++){
+ /* for (GModel::riter itr= m->firstRegion();itr != m->lastRegion();itr++){
     GRegion* rTmp = (*itr);
     for(unsigned int i = 0; i < rTmp->tetrahedra.size(); i++){
       MTet4* tet4Tmp = TetToTet4[rTmp->tetrahedra[i]];
@@ -235,7 +235,7 @@ std::map<MVertex*,double> ThinLayer::computeAllDistToOppSide()
         }
       }
     }
-  }
+  }*/
   for(std::set<MVertex*>::iterator it = BoundaryVertices.begin();
       it != BoundaryVertices.end(); it++){
     MVertex* toCompute = (*it);
@@ -248,7 +248,7 @@ std::map<MVertex*,double> ThinLayer::computeAllDistToOppSide()
 
 double ThinLayer::computeDistToOppSide(MVertex* v)
 {
-  double DistToOppSide = 0.;
+ /* double DistToOppSide = 0.;
   //We assume v is on the boundary
   //First we need to get the internal normal
   SVector3 InteriorNormal = ThinLayer::computeInteriorNormal(v);
@@ -296,12 +296,13 @@ double ThinLayer::computeDistToOppSide(MVertex* v)
   }
   CVTemp.setTagMaster(-2);
   VertexToCorresp[v].push_back(&CVTemp);
-  return DistToOppSide;
+  return DistToOppSide;*/
+  return 0;
 }
 
 SVector3 ThinLayer::computeInteriorNormal(MVertex* v)
 {
-  SPoint3 InteriorNormal(0.0,0.0,0.0);
+ /* SPoint3 InteriorNormal(0.0,0.0,0.0);
   std::vector<MTetrahedron*> currentVecTet = VertexToTets[v];
   std::vector<SPoint3> vecInteriorNodes;
   std::vector<SPoint3> vecFirstDir;
@@ -410,9 +411,10 @@ SVector3 ThinLayer::computeInteriorNormal(MVertex* v)
   // InteriorNormal.x() = InteriorNormal.x() / norme;
   // InteriorNormal.y() = InteriorNormal.y() / norme;
   // InteriorNormal.z() = InteriorNormal.z() / norme;
-  return InteriorNormal;
+  return InteriorNormal;*/
+  return SVector3(0, 0, 0);
 }
-
+/*
 MTet4* ThinLayer::getTetFromPoint(MVertex* v, SVector3 InteriorNormal)
 {
   MTet4* TetToGet = 0;
@@ -449,7 +451,7 @@ MTet4* ThinLayer::getTetFromPoint(MVertex* v, SVector3 InteriorNormal)
     }
   }
   return TetToGet;
-}
+}*/
 
 bool ThinLayer::IsPositivOrientation(SVector3 a, SVector3 b, SVector3 c)
 {
@@ -462,7 +464,7 @@ bool ThinLayer::IsPositivOrientation(SVector3 a, SVector3 b, SVector3 c)
   }
   return result;
 }
-
+/*
 void ThinLayer::FindNewPoint(SPoint3* CurrentPoint, int* CurrentTri,
                              MTet4* CurrentTet, SVector3 InteriorNormal)
 {
@@ -560,11 +562,11 @@ void ThinLayer::FindNewPoint(SPoint3* CurrentPoint, int* CurrentTri,
     (*CurrentTri) = triToGet;
     CurrentTet = CurrentTet->getNeigh(triToGet);
   }
-}
+}*/
 
 void ThinLayer::fillVertexToTets()
 {
-  GModel *m = GModel::current();
+ /* GModel *m = GModel::current();
   for (GModel::riter itr= m->firstRegion();itr != m->lastRegion();itr++){
     GRegion* rTmp = (*itr);
     for (unsigned int i = 0; i < rTmp->tetrahedra.size();i++){
@@ -604,5 +606,5 @@ void ThinLayer::fillTetToTet4(){
       vecAllTet4.clear();
     }
   }
-  connectTets(vecAllTet4);
+  connectTets(vecAllTet4);*/
 }

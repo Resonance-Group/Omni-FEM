@@ -3940,7 +3940,7 @@ int GModel::readOCCIGES(const std::string &fn)
 int GModel::writeOCCBREP(const std::string &fn)
 {
   if(!_occ_internals){
-    Msg::Error("No OpenCASCADE model found");
+    //Msg::Error("No OpenCASCADE model found");
     return 0;
   }
   _occ_internals->exportShapes(fn, "brep");
@@ -3950,7 +3950,7 @@ int GModel::writeOCCBREP(const std::string &fn)
 int GModel::writeOCCSTEP(const std::string &fn)
 {
   if(!_occ_internals){
-    Msg::Error("No OpenCASCADE model found");
+   // Msg::Error("No OpenCASCADE model found");
     return 0;
   }
   _occ_internals->exportShapes(fn, "step");
@@ -3965,11 +3965,11 @@ int GModel::importOCCShape(const void *shape)
   std::vector<std::pair<int, int> > outDimTags;
   _occ_internals->importShapes((TopoDS_Shape*)shape, false, outDimTags);
 #else
-  Msg::Error("Gmsh requires OpenCASCADE to import TopoDS_Shape");
+ // Msg::Error("Gmsh requires OpenCASCADE to import TopoDS_Shape");
 #endif
   _occ_internals->synchronize(this);
   snapVertices();
-  SetBoundingBox();
+  //SetBoundingBox();
   return 1;
 }
 

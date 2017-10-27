@@ -117,8 +117,8 @@ void createTopologyFromMesh1D(GModel *gm, int &num)
 	it->first->setEndVertex(*it2);
       }
       else {
-	Msg::Error("FIXME: create simply connected edges in CreateTopology "
-                   "(%d vertices bounding one GEdge)", l.size());
+	//Msg::Error("FIXME: create simply connected edges in CreateTopology "
+       //            "(%d vertices bounding one GEdge)", l.size());
       }
 
       for (std::list<GVertex*>::iterator it2 =  l.begin(); it2 != l.end(); ++it2)
@@ -210,8 +210,8 @@ void ensureManifoldFace(GFace *gf)
     _sub.push_back (_f);
   }
 
-  Msg::Info ("Face %d is non-manifold: splitting it in %d parts",
-             gf->tag(), _sub.size());
+  //Msg::Info ("Face %d is non-manifold: splitting it in %d parts",
+      //       gf->tag(), _sub.size());
 
   for (unsigned int i=0 ; i<_sub.size() ; i++){
     if (i == 0) assignFace (gf, _sub[i]);
@@ -286,8 +286,8 @@ std::vector<GEdge*> ensureSimplyConnectedEdge(GEdge *ge)
 
   if (_parts.size() == 1) return _all;
 
-  Msg::Info ("Edge %d is not simply connected: splitting it in %d parts",
-             ge->tag(),_parts.size());
+  //Msg::Info ("Edge %d is not simply connected: splitting it in %d parts",
+     //        ge->tag(),_parts.size());
 
   for (size_t i = 0; i < _parts.size() ; i++){
     if (i == 0)ge->lines = _parts[i];
@@ -505,7 +505,7 @@ public:
     return v[0].second;
   }
 };
-
+/*
 inline MYFACE builder (MElement *e, int num)
 {
 #ifdef _USE_MFACE__
@@ -627,7 +627,7 @@ void createTopologyFromMesh3D(GModel *gm, int &num)
         (*it2)->addRegion(it->first);
     }
   }
-}
+}*/
 
 void GModel::createTopologyFromMeshNew()
 {
@@ -639,10 +639,10 @@ void GModel::createTopologyFromMeshNew()
     return;
   }
 
-  Msg::Info("createTopologyFromMeshNew --> creating a topology from the mesh");
+ // Msg::Info("createTopologyFromMeshNew --> creating a topology from the mesh");
   int numF=0,numE=0,numV=0;
-  if (dim >= 3) createTopologyFromMesh3D (this, numF);
-  else ensureManifoldFaces ( this );
+  //if (dim >= 3) createTopologyFromMesh3D (this, numF);
+ // else ensureManifoldFaces ( this );
   if (dim >= 2) createTopologyFromMesh2D ( this , numE);
   if (dim >= 1) createTopologyFromMesh1D ( this, numV);
 
@@ -660,5 +660,5 @@ void GModel::createTopologyFromMeshNew()
   _storeVerticesInEntities(cc);
 
   double t2 = Cpu();
-  Msg::Info("createTopologyFromMeshNew done in %3.f sec.)",t2-t1);
+//  Msg::Info("createTopologyFromMeshNew done in %3.f sec.)",t2-t1);
 }

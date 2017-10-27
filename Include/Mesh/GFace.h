@@ -14,7 +14,7 @@
 #include "Mesh/GEntity.h"
 #include "Mesh/GPoint.h"
 #include "Mesh/GEdge.h"
-#include "Mesh/GEdgeLoop.h"
+//#include "Mesh/GEdgeLoop.h"
 #include "Mesh/SPoint2.h"
 #include "Mesh/SVector3.h"
 #include "Mesh/Pair.h"
@@ -27,6 +27,8 @@ class MQuadrangle;
 class MPolygon;
 class ExtrudeParams;
 class GFaceCompound;
+class GEdge;
+class GEdgeLoop;
 
 struct surface_params
 {
@@ -123,8 +125,8 @@ class GFace : public GEntity {
   virtual std::list<int> edgeOrientations() const { return l_dirs; }
   inline bool containsEdge (int iEdge) const
   {
-    for (std::list<GEdge*>::const_iterator it = l_edges.begin(); it !=l_edges.end(); ++it)
-      if ((*it)->tag() == iEdge) return true;
+   // for (std::list<GEdge*>::const_iterator it = l_edges.begin(); it !=l_edges.end(); ++it)
+   //   if ((*it)->tag() == iEdge) return true;
     return false;
   }
 

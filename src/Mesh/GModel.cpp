@@ -851,8 +851,11 @@ static void checkConformity
   if (ElementType::ParentTypeFromTag(el->getType()) == TYPE_TRIH){
     //Each face of a trihedron should exist twice (no face on the boundary)
     if (connectivity != 2)
+	{
    //   Msg::Error("Non conforming trihedron %i (nb connections for a face %i)",
    //              el->getNum(), faceToElement.count(face));
+   
+	}
   }
   else{
     //A face can exist  twice (inside) or once (boundary)
@@ -860,11 +863,14 @@ static void checkConformity
       for (int iV = 0; iV < face.getNumVertices(); iV++)
         if (face.getVertex(iV)->onWhat()->dim() == 3 || connectivity != 1){
           for (int jV = 0; jV < face.getNumVertices(); jV++)
+		  {
     //        Msg::Info("Vertex %i dim %i",face.getVertex(jV)->getNum(),
     //                  face.getVertex(iV)->onWhat()->dim());
+		  }
     //      Msg::Error("Non conforming element %i (%i connection(s) for a face "
      //                "located on dim %i (vertex %i))",el->getNum(), connectivity,
      //                face.getVertex(iV)->onWhat()->dim(), face.getVertex(iV)->getNum());
+	 
         }
     }
   }
@@ -989,7 +995,7 @@ int GModel::adaptMesh(std::vector<int> technique,
       opt_mesh_algo3d(0, GMSH_SET, 7.0); //mmg3d
       opt_mesh_lc_from_points(0, GMSH_SET, 0.0); //do not mesh lines with lc
 
-      std::for_each(firstRegion(), lastRegion(), deMeshGRegion());
+  //    std::for_each(firstRegion(), lastRegion(), deMeshGRegion());
       std::for_each(firstFace(), lastFace(), deMeshGFace());
       std::for_each(firstEdge(), lastEdge(), deMeshGEdge());
 
@@ -998,7 +1004,7 @@ int GModel::adaptMesh(std::vector<int> technique,
 
       char name[256];
       sprintf(name, "meshAdapt-%d.msh", ITER);
-      writeMSH(name);
+//      writeMSH(name);
       //metric->exportInfo(name);
 
       if (ITER++ >= niter)  break;
@@ -1020,6 +1026,7 @@ int GModel::adaptMesh(std::vector<int> technique,
           }
         }
       }
+	  /*
       else if (getDim() == 3){
         for (riter rit = firstRegion(); rit != lastRegion(); ++rit){
           if ((*rit)->hexahedra.size())return -1;
@@ -1028,6 +1035,7 @@ int GModel::adaptMesh(std::vector<int> technique,
           }
         }
       }
+	  */
 
       if (elements.size() == 0) return -1;
 
@@ -1048,6 +1056,7 @@ int GModel::adaptMesh(std::vector<int> technique,
           _octree = 0;
         }
       }
+	  /*
       else if (getDim() == 3){
         for (riter rit = firstRegion(); rit != lastRegion(); ++rit){
           refineMeshMMG(*rit);
@@ -1055,10 +1064,11 @@ int GModel::adaptMesh(std::vector<int> technique,
           _octree = 0;
         }
       }
+	   */ 
 
       char name[256];
       sprintf(name, "meshAdapt-%d.msh", ITER);
-      writeMSH(name);
+//      writeMSH(name);
 
       nbElems = getNumMeshElements();
       if (++ITER >= niter) break;
@@ -1086,7 +1096,7 @@ int GModel::optimizeMesh(const std::string &how)
 //  if(how == "Netgen")
 //    OptimizeMeshNetgen(this);
  // else
-    OptimizeMesh(this);
+//    OptimizeMesh(this);// TODO: Find this one
   return 1;
 }
 
@@ -1097,7 +1107,7 @@ int GModel::partitionMesh(int numPart)
   PartitionMesh(this, CTX::instance()->partitionOptions);
   return 1;
 #else
-  Msg::Error("Mesh module not compiled");
+ // Msg::Error("Mesh module not compiled");
   return 0;
 #endif
 }
@@ -1110,12 +1120,14 @@ int GModel::setOrderN(int order, int linear, int incomplete)
 
 int GModel::getMeshStatus(bool countDiscrete)
 {
+	/*
   for(riter it = firstRegion(); it != lastRegion(); ++it)
     if((countDiscrete || ((*it)->geomType() != GEntity::DiscreteVolume &&
                           (*it)->meshAttributes.method != MESH_NONE)) &&
        ((*it)->tetrahedra.size() ||(*it)->hexahedra.size() ||
         (*it)->prisms.size() || (*it)->pyramids.size() ||
         (*it)->polyhedra.size() || (*it)->trihedra.size())) return 3;
+		 */ 
   for(fiter it = firstFace(); it != lastFace(); ++it)
     if((countDiscrete || ((*it)->geomType() != GEntity::DiscreteSurface &&
                           (*it)->meshAttributes.method != MESH_NONE)) &&
@@ -1163,9 +1175,9 @@ int GModel::getNumMeshParentElements()
 int GModel::getNumMeshElements(unsigned c[6])
 {
   c[0] = 0; c[1] = 0; c[2] = 0; c[3] = 0; c[4] = 0; c[5] = 0;
-  for(riter it = firstRegion(); it != lastRegion(); ++it)
-    (*it)->getNumMeshElements(c);
-  if(c[0] + c[1] + c[2] + c[3] + c[4] + c[5]) return 3;
+ // for(riter it = firstRegion(); it != lastRegion(); ++it)
+  //  (*it)->getNumMeshElements(c);
+  //if(c[0] + c[1] + c[2] + c[3] + c[4] + c[5]) return 3;
   for(fiter it = firstFace(); it != lastFace(); ++it)
     (*it)->getNumMeshElements(c);
   if(c[0] + c[1] + c[2]) return 2;
@@ -1322,7 +1334,7 @@ static void removeInvisible(std::vector<T*> &elements, bool all)
 
 void GModel::removeInvisibleElements()
 {
-  for(riter it = firstRegion(); it != lastRegion(); ++it){
+ /* for(riter it = firstRegion(); it != lastRegion(); ++it){
     bool all = !(*it)->getVisibility();
     removeInvisible((*it)->tetrahedra, all);
     removeInvisible((*it)->hexahedra, all);
@@ -1331,7 +1343,7 @@ void GModel::removeInvisibleElements()
     removeInvisible((*it)->trihedra, all);
     removeInvisible((*it)->polyhedra, all);
     (*it)->deleteVertexArrays();
-  }
+  }*/
   for(fiter it = firstFace(); it != lastFace(); ++it){
     bool all = !(*it)->getVisibility();
     removeInvisible((*it)->triangles, all);
@@ -1455,7 +1467,7 @@ void GModel::storeChain(int dim,
     if(dim == 0) _chainVertices.insert(getVertexByTag(it->first));
     else if(dim == 1) _chainEdges.insert(getEdgeByTag(it->first));
     else if(dim == 2) _chainFaces.insert(getFaceByTag(it->first));
-    else if(dim == 3) _chainRegions.insert(getRegionByTag(it->first));
+//    else if(dim == 3) _chainRegions.insert(getRegionByTag(it->first));
   }
 }
 
@@ -1509,7 +1521,8 @@ void GModel::_storeElementsInEntities(std::map< int, std::vector<MElement* > >& 
       }
       break;
     case TYPE_TET: case TYPE_HEX: case TYPE_PYR:
-    case TYPE_TRIH: case TYPE_PRI: case TYPE_POLYH:
+		break;
+  /*  case TYPE_TRIH: case TYPE_PRI: case TYPE_POLYH:
       {
         GRegion *r = getRegionByTag(it->first);
         if(!r){
@@ -1523,7 +1536,7 @@ void GModel::_storeElementsInEntities(std::map< int, std::vector<MElement* > >& 
         else if(type == TYPE_TRIH) _addElements(r->trihedra, it->second);
         else _addElements(r->polyhedra, it->second);
       }
-      break;
+      break;*/
     }
   }
 }
@@ -1581,14 +1594,14 @@ void GModel::_associateEntityWithMeshVertices()
   // entity pointer in the the elements' vertices (this way we
   // associate the entity of lowest geometrical degree with each
   // vertex)
-  for(riter it = firstRegion(); it != lastRegion(); ++it){
+/*  for(riter it = firstRegion(); it != lastRegion(); ++it){
     _associateEntityWithElementVertices(*it, (*it)->tetrahedra);
     _associateEntityWithElementVertices(*it, (*it)->hexahedra);
     _associateEntityWithElementVertices(*it, (*it)->prisms);
     _associateEntityWithElementVertices(*it, (*it)->pyramids);
     _associateEntityWithElementVertices(*it, (*it)->trihedra);
     _associateEntityWithElementVertices(*it, (*it)->polyhedra);
-  }
+  }*/
   for(fiter it = firstFace(); it != lastFace(); ++it){
     _associateEntityWithElementVertices(*it, (*it)->triangles);
     _associateEntityWithElementVertices(*it, (*it)->quadrangles);
@@ -1646,14 +1659,14 @@ void GModel::pruneMeshVertexAssociations()
   }
   _associateEntityWithMeshVertices();
   // associate mesh vertices primarily with chain entities
-  for(riter it = _chainRegions.begin(); it != _chainRegions.end(); ++it){
+  /*for(riter it = _chainRegions.begin(); it != _chainRegions.end(); ++it){
     _associateEntityWithElementVertices(*it, (*it)->tetrahedra, true);
     _associateEntityWithElementVertices(*it, (*it)->hexahedra, true);
     _associateEntityWithElementVertices(*it, (*it)->prisms, true);
     _associateEntityWithElementVertices(*it, (*it)->pyramids, true);
     _associateEntityWithElementVertices(*it, (*it)->trihedra, true);
     _associateEntityWithElementVertices(*it, (*it)->polyhedra, true);
-  }
+  }*/
   for(fiter it = _chainFaces.begin(); it != _chainFaces.end(); ++it){
     _associateEntityWithElementVertices(*it, (*it)->triangles, true);
     _associateEntityWithElementVertices(*it, (*it)->quadrangles, true);
@@ -1678,7 +1691,7 @@ void GModel::_storePhysicalTagsInEntities(int dim,
     case 0: ge = getVertexByTag(it->first); break;
     case 1: ge = getEdgeByTag(it->first); break;
     case 2: ge = getFaceByTag(it->first); break;
-    case 3: ge = getRegionByTag(it->first); break;
+//    case 3: ge = getRegionByTag(it->first); break;
     }
     if(ge){
       std::map<int, std::string>::const_iterator it2 = it->second.begin();
@@ -2262,7 +2275,7 @@ void GModel::alignPeriodicBoundaries()
 
         if (!tgtLine)
 		{
-			Msg::Error("Slave element %d is not an edge ",tgt->getMeshElement(i)->getNum());
+			//Msg::Error("Slave element %d is not an edge ",tgt->getMeshElement(i)->getNum());
 		}
                             
 
@@ -2415,14 +2428,14 @@ void GModel::makeDiscreteRegionsSimplyConnected()
 {
  // Msg::Debug("Making discrete regions simply connected...");
 
-  std::vector<discreteRegion*> discRegions;
+  /*std::vector<discreteRegion*> discRegions;
   for(riter it = firstRegion(); it != lastRegion(); it++)
     if((*it)->geomType() == GEntity::DiscreteVolume)
-      discRegions.push_back((discreteRegion*) *it);
+      discRegions.push_back((discreteRegion*) *it);*/
 
   std::set<MVertex*> touched;
 
-  for(std::vector<discreteRegion*>::iterator itR = discRegions.begin();
+  /*for(std::vector<discreteRegion*>::iterator itR = discRegions.begin();
       itR != discRegions.end(); itR++){
 
     std::vector<MElement*> allElements((*itR)->getNumMeshElements());
@@ -2466,7 +2479,7 @@ void GModel::makeDiscreteRegionsSimplyConnected()
       r->mesh_vertices.insert
         (r->mesh_vertices.begin(), myVertices.begin(), myVertices.end());
     }
-  }
+  }*/
 
  // Msg::Debug("Done making discrete regions simply connected");
 }
@@ -2546,11 +2559,11 @@ void GModel::createTopologyFromMesh(int ignoreHoles)
   }
 
   // create topology for all discrete regions
-  std::vector<discreteRegion*> discRegions;
+ /* std::vector<discreteRegion*> discRegions;
   for(riter it = firstRegion(); it != lastRegion(); it++)
     if((*it)->geomType() == GEntity::DiscreteVolume)
       discRegions.push_back((discreteRegion*) *it);
-  createTopologyFromRegions(discRegions);
+  createTopologyFromRegions(discRegions);*/
 
   // create topology for all discrete faces
   std::vector<discreteFace*> discFaces;
@@ -2958,7 +2971,7 @@ void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int 
   //        iRegion = region2Vert.begin(); iRegion != region2Vert.end(); iRegion++){
   //   std::map<MVertex*, MVertex*, std::less<MVertex*> > old2new = iRegion->second;
   //   GRegion *gr = iRegion->first;
-  for (std::set<GRegion*,GEntityLessThan>::iterator rIter = regions.begin();
+ /* for (std::set<GRegion*,GEntityLessThan>::iterator rIter = regions.begin();
        rIter!=regions.end();++rIter) {
 
     GRegion* gr = *rIter;
@@ -3003,7 +3016,7 @@ void GModel::createTopologyFromFaces(std::vector<discreteFace*> &discFaces, int 
     gr->prisms = newPrisms;
     gr->pyramids = newPyramids;
     gr->trihedra = newTrihedra;
-  }
+  }*/
 
   // -- now correct periodicity information
 
@@ -3246,31 +3259,31 @@ GModel *GModel::buildCutGModel(gLevelset *ls, bool cutElem, bool saveTri)
 
 void GModel::load(std::string fileName)
 {
-  GModel *temp = GModel::current();
+/*  GModel *temp = GModel::current();
   GModel::setCurrent(this);
   MergeFile(fileName, true);
-  GModel::setCurrent(temp);
+  GModel::setCurrent(temp);*/
 }
 
 void GModel::save(std::string fileName)
 {
-  GModel *temp = GModel::current();
+ /* GModel *temp = GModel::current();
   GModel::setCurrent(this);
   int guess = GuessFileFormatFromFileName(fileName);
   CreateOutputFile(fileName, guess);
-  GModel::setCurrent(temp);
+  GModel::setCurrent(temp);*/
 }
 
 int GModel::readGEO(const std::string &name)
 {
-  // readGEO is static, because it can create several models
+ /* // readGEO is static, because it can create several models
   ParseFile(name, true);
   // sync OCC first, as GEO_Internals currently contains attributes (physicals)
   // that should also be applied to entities from OCC_Internals
   if(GModel::current()->getOCCInternals())
     GModel::current()->getOCCInternals()->synchronize(GModel::current());
   GModel::current()->getGEOInternals()->synchronize(GModel::current());
-  return true;
+  return true;*/
 }
 
 GEdge* GModel::addCompoundEdge(std::vector<GEdge*> edges, int num)
@@ -3791,7 +3804,7 @@ static void glueFacesInRegions(GModel *model,
                                std::map<GFace*, GFace*> &Duplicates2Unique)
 {
  // Msg::Debug("Gluing Regions");
-  for (GModel::riter it = model->firstRegion(); it != model->lastRegion();++it){
+ /* for (GModel::riter it = model->firstRegion(); it != model->lastRegion();++it){
     GRegion *r = *it;
     bool aDifferenceExists = false;
     std::list<GFace*> old = r->faces(), fnew;
@@ -3811,7 +3824,7 @@ static void glueFacesInRegions(GModel *model,
    //   Msg::Debug("Model Region %d is re-build", r->tag());
       r->replaceFaces (fnew);
     }
-  }
+  }*/
 }
 
 void GModel::glue(double eps)
@@ -3968,7 +3981,7 @@ void GModel::classifyFaces(std::set<GFace*> &_faces)
   // now we have all faces coloured. If some regions were existing, replace
   // their faces by the new ones
 
-  for (riter rit = firstRegion(); rit != lastRegion(); ++rit){
+  /*for (riter rit = firstRegion(); rit != lastRegion(); ++rit){
     std::list<GFace *> _xfaces = (*rit)->faces();
     std::set<GFace *> _newFaces;
     for (std::list<GFace *>::iterator itf = _xfaces.begin(); itf != _xfaces.end(); ++itf){
@@ -3980,7 +3993,7 @@ void GModel::classifyFaces(std::set<GFace*> &_faces)
     std::list<GFace *> _temp;
     _temp.insert(_temp.begin(),_newFaces.begin(),_newFaces.end());
     (*rit)->set(_temp);
-  }
+  }*/
 
   // color some lines
   it = tris.begin();

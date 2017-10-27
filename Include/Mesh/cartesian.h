@@ -177,7 +177,7 @@ class cartesianBox {
   double getValueContainingPoint(double x, double y, double z)
   {
 
-    SVector3 DP (x - _X0, y - _Y0, z - _Z0);
+  /*  SVector3 DP (x - _X0, y - _Y0, z - _Z0);
 
     int t = getCellContainingPoint(x, y,z);
     int i, j, k;
@@ -247,7 +247,8 @@ class cartesianBox {
     delete v7;
     delete v8;
 
-    return val;
+    return val;*/
+	return 0;
   }
   int getCellContainingPoint(double x, double y, double z) const
   {

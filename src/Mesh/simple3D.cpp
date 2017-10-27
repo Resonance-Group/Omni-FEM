@@ -302,7 +302,7 @@ Node* Wrapper::get_parent(){
 Filler::Filler(){}
 
 Filler::~Filler(){}
-
+/*
 void Filler::treat_model()
 {
   GRegion* gr;
@@ -317,6 +317,7 @@ void Filler::treat_model()
     }
   }
 }
+
 
 void Filler::treat_region(GRegion* gr)
 {
@@ -498,6 +499,7 @@ void Filler::treat_region(GRegion* gr)
   Size_field::clear();
   Frame_field::clear();
 }
+ */ 
 
 Metric Filler::get_metric(double x,double y,double z)
 {

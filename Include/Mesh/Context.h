@@ -195,7 +195,7 @@ class CTX {
  // double axesPosition[6], axesValue[6], axesTics[3];
 //  std::string axesLabel[3], axesFormat[3];
   // simple dynamic lock (should be a mutex)
- // int lock;
+  int lock;
   // enable alpha blending?
  // int alpha;
   // mouse2 zoom coefficient

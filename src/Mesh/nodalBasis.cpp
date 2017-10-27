@@ -687,7 +687,7 @@ nodalBasis::nodalBasis(int tag)
       generate2dEdgeClosureFull(fullClosures, closureRef, order, 4, serendip);
     }
     break;
-  case TYPE_TET :
+/*  case TYPE_TET :
     numFaces = 4;
     points = gmshGeneratePointsTetrahedron(order, serendip);
     if (order == 0) {
@@ -722,7 +722,7 @@ nodalBasis::nodalBasis(int tag)
   case TYPE_PYR :
     numFaces = 5;
     points = gmshGeneratePointsPyramid(order, serendip);
-    break;
+    break;*/
   }
 
 }

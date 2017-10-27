@@ -257,7 +257,7 @@ class dofManager : public dofManagerBase{
       val =  it->second;
     }
 	else{
-	  Msg::Error("getFixedDof: Dof is not fixed");
+	  //Msg::Error("getFixedDof: Dof is not fixed");
 	  return;
 	}
 
@@ -554,7 +554,7 @@ class dofManager : public dofManagerBase{
     if(it != _linearSystems.end())
       _current = it->second;
     else{
-      Msg::Error("Current matrix %s not found ", name.c_str());
+      //Msg::Error("Current matrix %s not found ", name.c_str());
       throw;
     }
   }

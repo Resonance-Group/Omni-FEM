@@ -1399,10 +1399,13 @@ void bowyerWatsonFrontal(GFace *gf,
     if (!worst->isDeleted() && isActive(worst, LIMIT_, active_edge) &&
         worst->getRadius() > LIMIT_){
       if(ITER++ % 5000 == 0)
+	  {
    //     Msg::Debug("%7d points created -- Worst tri radius is %8.3f",
    //                gf->mesh_vertices.size(), worst->getRadius());
+   
+		}
       double newPoint[2], metric[3];
-      //optimalPointFrontal (gf,worst,active_edge,Us,Vs,vSizes,vSizesBGM,newPoint,metric);
+  //    optimalPointFrontal(gf,worst,active_edge,Us,Vs,vSizes,vSizesBGM,newPoint,metric);
       if (optimalPointFrontalB (gf,worst,active_edge,DATA,newPoint,metric)){
 	insertAPoint(gf, AllTris.end(), newPoint, metric, DATA, AllTris, &ActiveTris, worst);
       }
@@ -1652,11 +1655,15 @@ void bowyerWatsonFrontalLayers(GFace *gf, bool quad,
         // Msg::Info("%7d points created -- Worst tri infinite radius is %8.3f -- "
         //           "front size %6d", vSizes.size(), worst->getRadius(),_front.size());
         if(ITER++ % 5000 == 0)
+		{
        //   Msg::Debug("%7d points created -- Worst tri infinite radius is %8.3f -- "
        //       "front size %6d", DATA.vSizes.size(), worst->getRadius(),_front.size());
 
         // compute the middle point of the edge
-        double newPoint[2],metric[3]={1,0,1};
+		
+		}
+        double newPoint[2];
+		double metric[3]={1,0,1};
         if (quad) optimalPointFrontalQuadB (gf,worst,active_edge,DATA,newPoint,metric);
         else optimalPointFrontalB (gf,worst,active_edge,DATA,newPoint,metric);
 

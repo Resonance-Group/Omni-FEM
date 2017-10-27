@@ -35,22 +35,22 @@ void gmshGeneratePoints(FuncSpaceData data, fullMatrix<double> &points)
                                             data.spaceIsSerendipity());
       return;
     case TYPE_TET :
-      points = gmshGeneratePointsTetrahedron(data.spaceOrder(),
-                                             data.spaceIsSerendipity());
+ //     points = gmshGeneratePointsTetrahedron(data.spaceOrder(),
+ //                                            data.spaceIsSerendipity());
       return;
     case TYPE_PRI :
-      points = gmshGeneratePointsPrism(data.spaceOrder(),
-                                       data.spaceIsSerendipity());
+ //     points = gmshGeneratePointsPrism(data.spaceOrder(),
+  //                                     data.spaceIsSerendipity());
       return;
     case TYPE_HEX :
-      points = gmshGeneratePointsHexahedron(data.spaceOrder(),
-                                            data.spaceIsSerendipity());
+  //    points = gmshGeneratePointsHexahedron(data.spaceOrder(),
+  //                                          data.spaceIsSerendipity());
       return;
     case TYPE_PYR :
-      points = gmshGeneratePointsPyramidGeneral(data.isPyramidalSpace(),
-                                                data.nij(),
-                                                data.nk(),
-                                                data.spaceIsSerendipity());
+//      points = gmshGeneratePointsPyramidGeneral(data.isPyramidalSpace(),
+ //                                               data.nij(),
+ ////                                               data.nk(),
+ //                                               data.spaceIsSerendipity());
       return;
     default :
       //Msg::Error("Unknown element type %d (tag %d) for points generation",
@@ -88,10 +88,10 @@ fullMatrix<double> gmshGeneratePointsQuadrangle(int order, bool serendip)
   points.add(-1.);
   return points;
 }
-
+/*
 fullMatrix<double> gmshGeneratePointsTetrahedron(int order, bool serendip)
 {
-  fullMatrix<double> points = gmshGenerateMonomialsTetrahedron(order, serendip);
+//  fullMatrix<double> points = gmshGenerateMonomialsTetrahedron(order, serendip);
 
   if (order == 0) return points;
 
@@ -101,7 +101,7 @@ fullMatrix<double> gmshGeneratePointsTetrahedron(int order, bool serendip)
 
 fullMatrix<double> gmshGeneratePointsHexahedron(int order, bool serendip)
 {
-  fullMatrix<double> points = gmshGenerateMonomialsHexahedron(order, serendip);
+//  fullMatrix<double> points = gmshGenerateMonomialsHexahedron(order, serendip);
 
   if (order == 0) return points;
 
@@ -112,7 +112,7 @@ fullMatrix<double> gmshGeneratePointsHexahedron(int order, bool serendip)
 
 fullMatrix<double> gmshGeneratePointsPrism(int order, bool serendip)
 {
-  fullMatrix<double> points = gmshGenerateMonomialsPrism(order, serendip);
+//  fullMatrix<double> points = gmshGenerateMonomialsPrism(order, serendip);
 
   if (order == 0) return points;
 
@@ -129,7 +129,7 @@ fullMatrix<double> gmshGeneratePointsPrism(int order, bool serendip)
 
 fullMatrix<double> gmshGeneratePointsPyramid(int order, bool serendip)
 {
-  fullMatrix<double> points = gmshGenerateMonomialsPyramid(order, serendip);
+//  fullMatrix<double> points = gmshGenerateMonomialsPyramid(order, serendip);
 
   if (order == 0) return points;
 
@@ -145,8 +145,8 @@ fullMatrix<double> gmshGeneratePointsPyramid(int order, bool serendip)
 
 fullMatrix<double> gmshGeneratePointsPyramidGeneral(bool pyr, int nij, int nk, bool forSerendipPoints)
 {
-  fullMatrix<double> points =
-      gmshGenerateMonomialsPyramidGeneral(pyr, nij, nk, forSerendipPoints);
+//  fullMatrix<double> points =
+ //     gmshGenerateMonomialsPyramidGeneral(pyr, nij, nk, forSerendipPoints);
 
   if (points.size1() == 1) return points;
 
@@ -158,7 +158,7 @@ fullMatrix<double> gmshGeneratePointsPyramidGeneral(bool pyr, int nij, int nk, b
     points(i, 1) = scale * (-1 + points(i, 1) * 2. / div);
   }
   return points;
-}
+}*/
 
 // Monomials Generators
 
@@ -180,22 +180,22 @@ void gmshGenerateMonomials(FuncSpaceData data, fullMatrix<double> &monomials)
                                                   data.spaceIsSerendipity());
       return;
     case TYPE_TET :
-      monomials = gmshGenerateMonomialsTetrahedron(data.spaceOrder(),
-                                                   data.spaceIsSerendipity());
+//      monomials = gmshGenerateMonomialsTetrahedron(data.spaceOrder(),
+       //                                            data.spaceIsSerendipity());
       return;
     case TYPE_PRI :
-      monomials = gmshGenerateMonomialsPrism(data.spaceOrder(),
-                                             data.spaceIsSerendipity());
+//      monomials = gmshGenerateMonomialsPrism(data.spaceOrder(),
+       //                                      data.spaceIsSerendipity());
       return;
     case TYPE_HEX :
-      monomials = gmshGenerateMonomialsHexahedron(data.spaceOrder(),
-                                                  data.spaceIsSerendipity());
+//      monomials = gmshGenerateMonomialsHexahedron(data.spaceOrder(),
+      //                                            data.spaceIsSerendipity());
       return;
     case TYPE_PYR :
-      monomials = gmshGenerateMonomialsPyramidGeneral(data.isPyramidalSpace(),
-                                                      data.nij(),
-                                                      data.nk(),
-                                                      data.spaceIsSerendipity());
+//      monomials = gmshGenerateMonomialsPyramidGeneral(data.isPyramidalSpace(),
+     //                                                 data.nij(),
+     //                                                 data.nk(),
+     //                                                 data.spaceIsSerendipity());
       return;
     default :
       //Msg::Error("Unknown element type %d (tag %d) for monomials generation",

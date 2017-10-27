@@ -15,6 +15,7 @@
 #include "Mesh/Context.h"
 #include "Mesh/MTriangle.h"
 #include "Mesh/VertexArray.h"
+#include "Mesh/GEdgeLoop.h"
 
 #if defined(HAVE_MESH)
 #include "Mesh/Field.h"
@@ -64,7 +65,7 @@ void gmshFace::resetNativePtr(Surface *face)
       nums.push_back(c->Num);
     }
     else
-      Msg::Error("Unknown curve %d", c->Num);
+  {/*Msg::Error("Unknown curve %d", c->Num);*/}
   }
   for(int i = 0; i < List_Nbr(s->GeneratricesByTag); i++){
     int j;
@@ -75,7 +76,7 @@ void gmshFace::resetNativePtr(Surface *face)
       nums.push_back(j);
     }
     else
-      Msg::Error("Unknown curve %d", j);
+     { /*Msg::Error("Unknown curve %d", j);*/}
   }
 
   std::list<GEdge*> l_wire;
@@ -140,7 +141,7 @@ void gmshFace::resetMeshAttributes()
       if(gv)
         meshAttributes.corners.push_back(gv);
       else
-        Msg::Error("Unknown vertex %d in transfinite attributes", corn->Num);
+        {/*Msg::Error("Unknown vertex %d in transfinite attributes", corn->Num);*/}
     }
   }
   meshAttributes.reverseMesh = s->ReverseMesh;
@@ -192,10 +193,10 @@ SVector3 gmshFace::normal(const SPoint2 &param) const
       }
       if(fabs(angle) < 0.5){ // we're outside
         NP *= 2;
-        Msg::Debug("Could not compute normal of surface %d - retrying with %d points",
-                   tag(), NP);
+        //Msg::Debug("Could not compute normal of surface %d - retrying with %d points",
+             //      tag(), NP);
         if(tries > 10){
-          Msg::Warning("Could not orient normal of surface %d", tag());
+         // Msg::Warning("Could not orient normal of surface %d", tag());
           return SVector3(n[0], n[1], n[2]);
         }
       }
@@ -424,7 +425,7 @@ bool gmshFace::buildSTLTriangulation(bool force)
   }
 
   va_geom_triangles = new VertexArray(3, stl_triangles.size() / 3);
-  unsigned int c = CTX::instance()->color.geom.surface;
+  /*unsigned int c = CTX::instance()->color.geom.surface;
   unsigned int col[4] = {c, c, c, c};
   for (unsigned int i = 0; i < stl_triangles.size(); i += 3){
     SPoint2 &p1(stl_vertices[stl_triangles[i]]);
@@ -438,7 +439,7 @@ bool gmshFace::buildSTLTriangulation(bool force)
     double z[3] = {gp1.z(), gp2.z(), gp3.z()};
     SVector3 n[3] = {normal(p1), normal(p2), normal(p3)};
     va_geom_triangles->add(x, y, z, n, col);
-  }
+  }*/
   va_geom_triangles->finalize();
   return true;
 }

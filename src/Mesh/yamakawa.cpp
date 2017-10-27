@@ -303,14 +303,15 @@ namespace {
     }
   }
   */
+  /*
   unsigned int nb_tets_sharing_vertices(MVertex* v1, MVertex* v2, MVertex* v3,
     TetMeshConnectivity& tet_mesh)
   {
     TetMeshConnectivity::TetSet tets;
     tet_mesh.tets_around_vertices(v1, v2, v3, tets);
     return tets.size();
-  }
-
+  }*/
+/*
   // Check that the given facet of the input hex
   // can be combinatorially built from two tet facets
   // i.e. we check that for either of the subdivision of the facet into
@@ -345,13 +346,13 @@ namespace {
       }
     }
     return true;
-  }
+  }*/
 
   double eta(MVertex* a, MVertex* b, MVertex* c, MVertex* d) {
     MQuadrangle quad(a, b, c, d);
     return quad.etaShapeMeasure();
   }
-
+/*
   // If all etaShapeMeasure for the 6 hex facets are above the required min_eta
   // return the result of validFaces
   // otherwise return false
@@ -367,7 +368,7 @@ namespace {
       }
     }
     return validFaces(hex, tet_mesh);
-  }
+  }*/
 
   // Returns true if the hex contains all the tet vertices
   bool hex_contains_tet(const Hex& hex, MElement* tet) {
@@ -377,7 +378,7 @@ namespace {
       && hex.contains((tet)->getVertex(3));
   }
 
-
+/*
   // For all tets around the input vertex
   // Check if its 4 vertices are vertices of the input hex
   // Insert the tet in the final set if they are
@@ -390,13 +391,13 @@ namespace {
         result.insert(*tet);
       }
     }
-  }
+  }*/
 
-  void find(const Hex& hex, std::set<MElement*>& result, TetMeshConnectivity& tet_mesh) {
+ /* void find(const Hex& hex, std::set<MElement*>& result, TetMeshConnectivity& tet_mesh) {
     for (unsigned int v = 0; v < 8; ++v) {
       find(hex.getVertex(v), hex, result, tet_mesh);
     }
-  }
+  }*/
 
   MVertex* last_tet_vertex(MElement* tet, MVertex* v1, MVertex* v2, MVertex* v3) {
     for (unsigned int i = 0; i < 4; ++i) {
@@ -482,7 +483,7 @@ namespace {
 } // anonymous namespace
 
 
-
+/*
 void export_gregion_mesh(GRegion *gr, string filename)
 {
   // FIXME: use MElement::writeMSH
@@ -579,6 +580,7 @@ void export_gregion_mesh(GRegion *gr, string filename)
   out << "$EndElements" << endl;
   out.close();
 }
+ */ 
 
 
 /**************************************************/
@@ -602,7 +604,7 @@ Recombinator::~Recombinator() {
     delete *it;
   }
 }
-
+/*
 void Recombinator::execute() {
   GModel* model = GModel::current();
   // Backup the current mesh
@@ -617,6 +619,7 @@ void Recombinator::execute() {
     }
   }
 }
+
 
 void Recombinator::execute(GRegion* gr) {
   Msg::Info(" ................HEXAHEDRA.... RECOMBINATOR................\n");
@@ -633,6 +636,7 @@ void Recombinator::execute(GRegion* gr) {
   print_statistics();
 
 }
+ */ 
 
 void Recombinator::print_all_potential_hex() const  {
   // SORTIE TOUS HEX POT
@@ -645,7 +649,7 @@ void Recombinator::print_all_potential_hex() const  {
 }
 
 
-
+/*
 // This way to flag the tets already included in
 // one hex of the final mesh is probably quite pricy. JP
 // TODO Replace by a big vector of booleans
@@ -909,7 +913,7 @@ void Recombinator::add_or_free_potential_hex(Hex * candidate)
 void add_hex_to_region(GRegion* region, const Hex& hex) {
   region->addHexahedron(new MHexahedron(hex.vertices()));
 }
-
+*/
 
 bool Recombinator::are_all_tets_free(const std::set<MElement*>& tets) const {
   for (std::set<MElement*>::const_iterator it = tets.begin(); it != tets.end(); it++) {
@@ -940,7 +944,7 @@ void remove_slivers(std::set<MElement*>& tets, const Hex& hex, std::set<MElement
     }
   }
 }
-
+/*
 // Delete the region tets and put back those which are not marked
 // as being part of an hex
 void Recombinator::delete_marked_tets_in_region() const {
@@ -982,7 +986,7 @@ bool Recombinator::add_hex_to_region_if_valid(const Hex& hex)
   }
   return valid_hex;
 }
-
+*/
 void Recombinator::merge() {
   clear_hash_tables();
 
@@ -996,25 +1000,25 @@ void Recombinator::merge() {
     if (hex.get_quality() < hex_threshold_quality) {
       break;
     }
-    bool hex_added = add_hex_to_region_if_valid(hex);
+ //   bool hex_added = add_hex_to_region_if_valid(hex);
 
     // Compute tet quality statistics
-    if (hex_added) {
-      total_quality += hex.get_quality();
-      nb_final_hex++;
-    }
+   // if (hex_added) {
+   //   total_quality += hex.get_quality();
+   //   nb_final_hex++;
+   // }
   }
   if (nb_final_hex > 0) {
-    delete_marked_tets_in_region();
+ //   delete_marked_tets_in_region();
   }
 
-  Msg::Info("Number of hexaedra: %d", nb_final_hex);
+ // Msg::Info("Number of hexaedra: %d", nb_final_hex);
 
   double average_quality = nb_final_hex == 0 ? 0 : total_quality / nb_final_hex;
-  Msg::Info("hexahedra average quality (0->1) : %f\n", average_quality);
+ // Msg::Info("hexahedra average quality (0->1) : %f\n", average_quality);
 }
 
-
+/*
 void Recombinator::set_region_elements_positive(){
   for (unsigned int i = 0; i < current_region->getNumMeshElements(); i++) {
     MElement* element = current_region->getMeshElement(i);
@@ -1119,7 +1123,7 @@ void Recombinator::delete_quad_triangles_in_boundary() const {
     }
   }
 }
-
+*/
 
 
 // For the two possible triangulations
@@ -1583,7 +1587,7 @@ bool Prism::operator<(const Prism& prism) const {
 Supplementary::Supplementary() {}
 
 Supplementary::~Supplementary() {}
-
+/*
 void Supplementary::execute() {
   GRegion* gr;
   GModel* model = GModel::current();
@@ -1688,8 +1692,8 @@ void Supplementary::init_markings(GRegion* gr) {
       markings.insert(std::pair<MElement*, bool>(element, false));
     }
   }
-}
-
+}*/
+/*
 void Supplementary::pattern(GRegion* gr) {
   size_t i;
   int j, k;
@@ -1976,7 +1980,7 @@ void Supplementary::create_quads_on_boundary(GRegion* gr) {
       gf->triangles.push_back((MTriangle*)opt[i]);
     }
   }
-}
+}*/
 
 void Supplementary::create_quads_on_boundary(MVertex* a, MVertex* b, MVertex* c, MVertex* d) {
   bool flag1, flag2;
@@ -2712,7 +2716,7 @@ bool Supplementary::faces_statuquo(MVertex* a, MVertex* b, MVertex* c, MVertex* 
 
   return ok;
 }
-
+/*
 void Supplementary::build_vertex_to_vertices(GRegion* gr) {
   size_t i;
   int j;
@@ -2778,7 +2782,7 @@ void Supplementary::build_vertex_to_tetrahedra(GRegion* gr) {
       }
     }
   }
-}
+}*/
 
 void Supplementary::build_hash_tableA(Prism prism) {
   MVertex *a, *b, *c;
@@ -3000,7 +3004,7 @@ double Supplementary::min_scaled_jacobian(Prism prism) {
 PostOp::PostOp() {}
 
 PostOp::~PostOp() {}
-
+/*
 void PostOp::execute(int level, int conformity) {
   GRegion* gr;
   GModel* model = GModel::current();
@@ -3125,7 +3129,7 @@ void PostOp::executeNew(GRegion* gr)
 
     // make pyramids
   }
-}
+}*/
 
 void PostOp::removeElseAdd(std::set<Facet> &set, MVertex *a, MVertex *b, MVertex *c)
 {
@@ -3192,7 +3196,7 @@ MFace PostOp::find_quadFace(MVertex* v1, MVertex* v2, MVertex* v3)
     intersection(buf, it3->second, final);
   }
 
-  if (final.size() > 1) Msg::Error("This shouldn't happen ...");
+  if (final.size() > 1){/* Msg::Error("This shouldn't happen ...");*/}
 
   element_set_itr it;
   for (it = final.begin(); it != final.end(); ++it) {
@@ -3266,7 +3270,7 @@ void PostOp::matchQuadFace(MFace &f, MVertex* v1, MVertex* v2, MVertex* v3)
   }
 }
 
-
+/*
 void PostOp::execute(GRegion* gr, int level, int conformity) {
   printf("................PYRAMIDS................\n");
   estimate1 = 0;
@@ -3721,7 +3725,7 @@ int PostOp::nonConformDiag(MVertex* a, MVertex* b, MVertex* c, MVertex* d, GRegi
 }
 
 
-
+/*
 void PostOp::pyramids1(GRegion* gr) {
   unsigned int i;
   MVertex *a, *b, *c, *d;
@@ -3951,7 +3955,7 @@ void PostOp::pyramids1(MVertex* a, MVertex* b, MVertex* c, MVertex* d, GRegion* 
   }
 }
 
-
+/*
 void PostOp::trihedra(GRegion* gr) {
   unsigned int i;
   MVertex *a, *b, *c, *d;
@@ -4506,7 +4510,7 @@ void PostOp::create_quads_on_boundary(GRegion* gr) {
       gf->triangles.push_back((MTriangle*)opt[i]);
     }
   }
-}
+}*/
 
 void PostOp::create_quads_on_boundary(MVertex* a, MVertex* b, MVertex* c, MVertex* d) {
   bool flag1, flag2;
@@ -4796,7 +4800,7 @@ void PostOp::mean(const std::set<MVertex*>& Ns, MVertex* mid, const std::vector<
 
   iterations = iterations + j;
 }
-
+/*
 double PostOp::workaround(MElement* element) {
   double volume;
   MTetrahedron* temp1;
@@ -4813,7 +4817,7 @@ double PostOp::workaround(MElement* element) {
   }
 
   return volume;
-}
+}*/
 
 //For an element find a getVertex which is in a face inluding in but not out
 MVertex* PostOp::findInTriFace(MVertex* in0, MVertex* in1, MVertex* out0, MVertex* out1, MElement* element) {
@@ -5030,7 +5034,7 @@ void PostOp::find_pyramids(MVertex* v1, MVertex* v2, std::set<MElement*>& final)
 void PostOp::intersection(const std::set<MElement*>& bin1, const std::set<MElement*>& bin2, std::set<MElement*>& final) {
   std::set_intersection(bin1.begin(), bin1.end(), bin2.begin(), bin2.end(), std::inserter(final, final.end()));
 }
-
+/*
 void PostOp::build_vertex_to_tetrahedra(GRegion* gr) {
   unsigned int i;
   MElement* element;
@@ -5043,7 +5047,7 @@ void PostOp::build_vertex_to_tetrahedra(GRegion* gr) {
       build_vertex_to_tetrahedra(element);
     }
   }
-}
+}*/
 
 void PostOp::build_vertex_to_tetrahedra(MElement* element) {
   int i;
@@ -5080,7 +5084,7 @@ void PostOp::erase_vertex_to_tetrahedra(MElement* element) {
     }
   }
 }
-
+/*
 void PostOp::build_vertex_to_pyramids(GRegion* gr) {
   unsigned int i;
   MElement* element;
@@ -5093,7 +5097,7 @@ void PostOp::build_vertex_to_pyramids(GRegion* gr) {
       build_vertex_to_pyramids(element);
     }
   }
-}
+}*/
 
 void PostOp::build_vertex_to_pyramids(MElement* element) {
   int i;
@@ -5131,7 +5135,7 @@ void PostOp::erase_vertex_to_pyramids(MElement* element) {
   }
 }
 
-
+/*
 void PostOp::build_vertex_to_hexPrism(GRegion* gr) {
   unsigned int i;
   MElement* element;
@@ -5144,7 +5148,7 @@ void PostOp::build_vertex_to_hexPrism(GRegion* gr) {
       build_vertex_to_hexPrism(element);
     }
   }
-}
+}*/
 
 void PostOp::build_vertex_to_hexPrism(MElement* element) {
   int i;
@@ -5346,13 +5350,13 @@ void clique_stop_criteria<T>::export_corresponding_mesh
       tets.erase(*ittet);
     }
     // create MHexahedron
-    Hex* hex = *it;
+  /*  Hex* hex = *it;
     MHexahedron *h = new MHexahedron(hex->getVertex(0), hex->getVertex(1), hex->getVertex(2), hex->getVertex(3), hex->getVertex(4), hex->getVertex(5), hex->getVertex(6), hex->getVertex(7));
     for (int i = 0; i < 8; i++) {
       vertices.insert(make_pair(hex->getVertex(i), counterv));
       counterv++;
     }
-    hexs.insert(h);
+    hexs.insert(h);*/
   }
 
   // export mesh FIXME: why not use MElement::writeMSH
@@ -5921,17 +5925,17 @@ void Recombinator_Graph::fill_tet_to_hex_table(Hex *hex) {
     cout << endl;
   }
 
-  if (!valid(*hex, tet_mesh)) {
+ /* if (!valid(*hex, tet_mesh)) {
     if (very_verbose) cout << "NOT VALID hex !!! " << endl;
     delete hex;
     return;
-  }
+  }*/
 
   MElement *element;
   std::set<MElement*> parts;
   // recovering all the tets forming the current hex
   parts.clear();
-  ::find(*hex, parts, tet_mesh);
+ // ::find(*hex, parts, tet_mesh);
 
   if (!valid(*hex, parts)) {
     if (very_verbose) cout << " NOT VALID hex (parts) " << endl;
@@ -6037,7 +6041,7 @@ void Recombinator_Graph::fill_tet_to_hex_table(Hex *hex) {
 
 
 void Recombinator_Graph::buildGraphOnly(unsigned int max_nb_cliques, string filename) {
-  GRegion* gr;
+  /*GRegion* gr;
   GModel* model = GModel::current();
   GModel::riter it;
 
@@ -6047,10 +6051,10 @@ void Recombinator_Graph::buildGraphOnly(unsigned int max_nb_cliques, string file
     if (gr->getNumMeshElements() > 0) {
       buildGraphOnly(gr, max_nb_cliques, filename);
     }
-  }
+  }*/
 }
 
-
+/*
 void Recombinator_Graph::buildGraphOnly(GRegion* gr, unsigned int max_nb_cliques, string filename) {
 
   set_current_region(gr);
@@ -6069,10 +6073,10 @@ void Recombinator_Graph::buildGraphOnly(GRegion* gr, unsigned int max_nb_cliques
   found_the_ultimate_max_clique = false;
 }
 
-
+*/
 
 void Recombinator_Graph::execute_blossom(unsigned int max_nb_cliques, string filename) {
-  GRegion* gr;
+  /*GRegion* gr;
   GModel* model = GModel::current();
   GModel::riter it;
 
@@ -6084,7 +6088,7 @@ void Recombinator_Graph::execute_blossom(unsigned int max_nb_cliques, string fil
     if (gr->getNumMeshElements() > 0) {
       execute_blossom(gr, max_nb_cliques, filename);
     }
-  }
+  }*/
 }
 
 
@@ -6103,7 +6107,7 @@ Recombinator_Graph::~Recombinator_Graph() {
 
 void Recombinator_Graph::createBlossomInfo() {
 
-  throw;
+ /* throw;
 
 
   GRegion* gr;
@@ -6116,10 +6120,10 @@ void Recombinator_Graph::createBlossomInfo() {
     //    if(gr->getNumMeshElements()>0){
     createBlossomInfo(gr);
     //    }
-  }
+  }*/
 }
 
-
+/*
 void Recombinator_Graph::createBlossomInfo(GRegion *gr) {
 
   throw;
@@ -6225,9 +6229,9 @@ void Recombinator_Graph::createBlossomInfo(GRegion *gr) {
 
 
 }
+*/
 
-
-
+/*
 void Recombinator_Graph::execute_blossom(GRegion* gr, unsigned int max_nb_cliques, string filename) {
 
   throw;
@@ -6302,7 +6306,7 @@ void Recombinator_Graph::execute_blossom(GRegion* gr, unsigned int max_nb_clique
   //
   //  create_quads_on_boundary(gr);
 }
-
+*/
 
 // return the triangular face ijk if it exists. If not, creates it and returns it.
 PETriangle* Recombinator_Graph::get_triangle(MElement *element, int i, int j, int k) {
@@ -6327,7 +6331,7 @@ Recombinator_Graph::Recombinator_Graph(unsigned int _n, string filename) :max_nb
 }
 
 
-
+/*
 void Recombinator_Graph::execute(GRegion* gr) {
   printf("................HEXAHEDRA...GRAPH RECOMBINATOR................\n");
 
@@ -6422,8 +6426,8 @@ void Recombinator_Graph::execute(GRegion* gr) {
   print_statistics();
   create_quads_on_boundary();
 }
-
-
+*/
+/*
 void Recombinator_Graph::merge_clique(GRegion* gr, cliques_losses_graph<Hex*> &cl, int clique_number) {
 
   multimap<int, set<Hex*> >::reverse_iterator it_all = cl.allQ.rbegin();
@@ -6459,7 +6463,7 @@ void Recombinator_Graph::merge_clique(GRegion* gr, cliques_losses_graph<Hex*> &c
     }
   }
 }
-
+*//*
 bool Recombinator_Graph::merge_hex(GRegion *gr, Hex *hex) {
   if (!post_check_validation(hex))
     return false;
@@ -6487,13 +6491,13 @@ bool Recombinator_Graph::merge_hex(GRegion *gr, Hex *hex) {
 
   return true;
 }
-
+*/
 
 
 // Why derive then ?? this is quite stupid
-void Recombinator_Graph::merge(GRegion* gr) {
+/*void Recombinator_Graph::merge(GRegion* gr) {
   throw;
-}
+}*/
 
 
 void Recombinator_Graph::export_tets(set<MElement*> &tetset, Hex* hex, string s) {
@@ -6627,7 +6631,7 @@ void Recombinator_Graph::export_single_hex_faces(Hex* hex, string s) {
 }
 
 
-
+/*
 void Recombinator_Graph::export_hex_init_degree(GRegion *gr, const std::map<Hex*, int> &init_degree, const vector<Hex*> &chosen_hex) {
   stringstream ss;
   ss << "init_degree";
@@ -6658,7 +6662,7 @@ void Recombinator_Graph::export_hex_init_degree(GRegion *gr, const std::map<Hex*
 
   out.close();
 }
-
+*/
 
 void Recombinator_Graph::export_hexmesh_so_far(int &file) {
   stringstream ss;
@@ -6676,8 +6680,7 @@ void Recombinator_Graph::export_hexmesh_so_far(int &file) {
   out.close();
 }
 
-
-
+/*
 void Recombinator_Graph::export_all_hex(int &file, GRegion *gr) {
   stringstream ss;
   stringstream ssinit;
@@ -6716,7 +6719,7 @@ void Recombinator_Graph::export_all_hex(int &file, GRegion *gr) {
 
   out.close();
 }
-
+*/
 
 // check if the hex is good enough to be put into the graph. If not in the graph, it cannot be chosen...
 bool Recombinator_Graph::is_not_good_enough(Hex* hex) {
@@ -6865,7 +6868,7 @@ void print_stats_graph(const Recombinator_Graph::graph& in) {
     << "   #connectivité moyenne: " << average_connectivity << endl;
 }
 
-
+/*
 void Recombinator_Graph::create_losses_graph(GRegion *gr)
 {
   incompatibility_graph.clear();
@@ -6874,7 +6877,7 @@ void Recombinator_Graph::create_losses_graph(GRegion *gr)
 
   print_stats_graph(incompatibility_graph);
 };
-
+*/
 
 // fills incompatibility_graph if two hex are incompatible direct neighbors,
 // i.e. (they DO NOT have one tet in common) and (they are neighbors (face(s) in common) but DO NOT pass the compatibility tests)

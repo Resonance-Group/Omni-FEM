@@ -20,7 +20,7 @@
 #endif
 
 //---------------------------------------- MPolyhedron ----------------------------
-
+/*
 void MPolyhedron::_init()
 {
   if(_parts.size() == 0) return;
@@ -154,6 +154,7 @@ void MPolyhedron::getIntegrationPoints(int pOrder, int *npts, IntPt **pts)
   }
   *pts = _intpt;
 }
+ */ 
 
 //------------------------------------------- MPolygon ------------------------------
 

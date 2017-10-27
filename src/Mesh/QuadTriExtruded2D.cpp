@@ -53,7 +53,7 @@ static void addTriangle(MVertex* v1, MVertex* v2, MVertex* v3,
 // Added 2010-12-09.
 int IsValidQuadToTriLateral(GFace *face, int *tri_quad_flag, bool *detectQuadToTriLateral)
 {
-  (*tri_quad_flag) = 0;
+ /* (*tri_quad_flag) = 0;
   (*detectQuadToTriLateral) = false;
 
   GModel *model = face->model();
@@ -61,15 +61,15 @@ int IsValidQuadToTriLateral(GFace *face, int *tri_quad_flag, bool *detectQuadToT
   ExtrudeParams *ep = face->meshAttributes.extrude;
 
   if(!ep || !ep->mesh.ExtrudeMesh || !(ep->geo.Mode == EXTRUDED_ENTITY)){
-    Msg::Error("In IsValidQuadToTriLateral(), face %d is not a structured extrusion.",
-               face->tag() );
+    //Msg::Error("In IsValidQuadToTriLateral(), face %d is not a structured extrusion.",
+       //        face->tag() );
     return 0;
   }
 
   GEdge *face_source = model->getEdgeByTag(std::abs(ep->geo.Source));
   if(!face_source){
-    Msg::Error("In IsValidQuadToTriLateral(), face %d has no source edge.",
-               face->tag());
+   // Msg::Error("In IsValidQuadToTriLateral(), face %d has no source edge.",
+   //            face->tag());
   }
 
   // It seems the member pointers to neighboring regions for extruded lateral
@@ -80,8 +80,8 @@ int IsValidQuadToTriLateral(GFace *face, int *tri_quad_flag, bool *detectQuadToT
   // (including whether the region is even extruded).  After that information is
   // determined, function can test for QuadToTri neighbor conflicts.
 
-  std::vector<GRegion *> lateral_regions;
-  std::vector<GRegion *> adjacent_regions;
+ // std::vector<GRegion *> lateral_regions;
+ // std::vector<GRegion *> adjacent_regions;
   int numRegions = 0;
   int numLateralRegions = 0;
 
@@ -199,7 +199,7 @@ int IsValidQuadToTriLateral(GFace *face, int *tri_quad_flag, bool *detectQuadToT
 
   if(detect_conflict)
     return 0;
-  else
+  else*/
     return 1;
 
 }
@@ -219,7 +219,7 @@ int IsValidQuadToTriTop(GFace *face, int *quadToTri, bool *detectQuadToTriTop)
 
   int is_toroidal_quadtri = 0;
 
-  GModel *model = face->model();
+ // GModel *model = face->model();
 
   // First thing is first: determine if this is a toroidal quadtri extrusion.
   // if so, can skip the rest
@@ -233,11 +233,11 @@ int IsValidQuadToTriTop(GFace *face, int *quadToTri, bool *detectQuadToTriTop)
   // QuadToTri neighbor conflicts.
 
   // first determine if this is toroidal quadtotri
-  is_toroidal_quadtri = IsInToroidalQuadToTri(face);
+//  is_toroidal_quadtri = IsInToroidalQuadToTri(face);
 
   if( is_toroidal_quadtri )
     (*detectQuadToTriTop) = true;
-  else{
+  /*else{
     std::vector<GRegion *> top_regions;
     std::vector<GRegion *> adjacent_regions;
     std::vector<GRegion *> all_regions;
@@ -338,7 +338,7 @@ int IsValidQuadToTriTop(GFace *face, int *quadToTri, bool *detectQuadToTriTop)
       return 0;
     }
 
-  }  // end of else that executes if NOT toroidal extrusion
+  }*/  // end of else that executes if NOT toroidal extrusion
 
     // this is technically redundant...but if changes are made, it's good to
     // keep this here at the end for safety
@@ -389,8 +389,8 @@ static int MeshQuadToTriTopUnstructured(GFace *from, GFace *to, MVertexRTree &po
                   x, y, z);
       MVertex *tmp = pos.find(x, y, z);
       if(!tmp) {
-        Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-                   x, y, z, to->tag());
+        //Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+        //           x, y, z, to->tag());
         to->triangles.reserve(to->triangles.size() + 1);
         return 0;
       }
@@ -398,9 +398,9 @@ static int MeshQuadToTriTopUnstructured(GFace *from, GFace *to, MVertexRTree &po
     }
 
     if(verts.size() != 4){
-      Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
-                 "in quad of source surface %d.", to->tag(), verts.size(),
-                 from->tag() );
+      //Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
+          //       "in quad of source surface %d.", to->tag(), verts.size(),
+         //        from->tag() );
       return 0;
     }
 
@@ -451,8 +451,8 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
 
   ExtrudeParams *ep = to->meshAttributes.extrude;
   if(!ep || !ep->mesh.ExtrudeMesh || !(ep->geo.Mode == COPIED_ENTITY)){
-    Msg::Error("In MeshQuadToTriTopSurface(), incomplete or no "
-               "extrude information for top face %d.", to->tag() );
+    //Msg::Error("In MeshQuadToTriTopSurface(), incomplete or no "
+     //          "extrude information for top face %d.", to->tag() );
     return 0;
   }
 
@@ -484,9 +484,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
                     x, y, z);
         MVertex *tmp = pos.find(x, y, z);
         if(!tmp) {
-          Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
-                     "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-                     x, y, z, to->tag());
+          //Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
+          //           "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+         //            x, y, z, to->tag());
           to->triangles.reserve(to->triangles.size() + 1);
           return 0;
         }
@@ -494,9 +494,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
       }
 
       if(verts.size() != 4){
-        Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
-                   "in quad of source surface %d.", to->tag(), verts.size(),
-                   from->tag());
+       // Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
+       //            "in quad of source surface %d.", to->tag(), verts.size(),
+        //           from->tag());
         return 0;
       }
 
@@ -577,9 +577,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
                     x, y, z);
         MVertex *tmp = pos.find(x, y, z);
         if(!tmp) {
-          Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
-                     "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-                     x, y, z, to->tag());
+          //Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
+         //            "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+         //            x, y, z, to->tag());
           to->triangles.reserve(to->triangles.size() + 1);
           return 0;
         }
@@ -587,9 +587,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
       }
 
       if(verts.size() != 4){
-        Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
-                   "in quad of source surface %d.", to->tag(), verts.size(),
-                   from->tag() );
+        //Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
+         //          "in quad of source surface %d.", to->tag(), verts.size(),
+         //          from->tag() );
         return 0;
       }
 

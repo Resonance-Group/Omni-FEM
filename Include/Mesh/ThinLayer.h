@@ -10,10 +10,10 @@
 
 #include "Mesh/MVertex.h"
 #include "Mesh/MTriangle.h"
-#include "Mesh/meshGRegionDelaunayInsertion.h"
+//#include "Mesh/meshGRegionDelaunayInsertion.h"
 
 static int faces[4][3] = {{0,1,2}, {0,2,3}, {0,3,1}, {1,3,2}};
-
+/*
 struct faceXtet{
   MVertex *v[3],*unsorted[3];
   MTet4 *t1;
@@ -63,7 +63,7 @@ struct faceXtet{
     double o = robustPredicates :: orient3d(a,b,c,d);
     return o < 0;
   }
-};
+};*/
 
 class CorrespVertices{
 private:
@@ -71,7 +71,7 @@ private:
   SPoint3 EndPoint;
   SVector3 StartNormal;
   SVector3 EndNormal;
-  faceXtet EndTriangle;
+  //faceXtet EndTriangle;
   double distP2P;
   double angleProd;
   bool Active;
@@ -85,7 +85,7 @@ public:
   void setEndPoint(SPoint3 p);
   void setStartNormal(SVector3 v);
   void setEndNormal(SVector3 v);
-  void setEndTriangle(faceXtet f);
+ // void setEndTriangle(faceXtet f);
   void setdistP2P(double d);
   void setangleProd(double a);
   void setActive(bool b);
@@ -96,7 +96,7 @@ public:
   SPoint3 getEndPoint();
   SVector3 getStartNormal();
   SVector3 getEndNormal();
-  faceXtet getEndTriangle();
+ // faceXtet getEndTriangle();
   double getdistP2P();
   double getangleProd();
   bool getActive();
@@ -116,12 +116,12 @@ public:
   static std::map<MVertex*,double> computeAllDistToOppSide();
   static double computeDistToOppSide(MVertex* v);
   static SVector3 computeInteriorNormal(MVertex* v);
-  static MTet4* getTetFromPoint(MVertex* v, SVector3 InteriorNormal);
+ // static MTet4* getTetFromPoint(MVertex* v, SVector3 InteriorNormal);
   static bool IsPositivOrientation(SVector3 a, SVector3 b, SVector3 c);
-  static void FindNewPoint(SPoint3* CurrentPoint, int* CurrentTri,
-                           MTet4* CurrentTet, SVector3 InteriorNormal);
-  static std::map<MVertex*,std::vector<MTetrahedron*> > VertexToTets;
-  static std::map<MTetrahedron*,MTet4*> TetToTet4;
+  //static void FindNewPoint(SPoint3* CurrentPoint, int* CurrentTri,
+  //                         MTet4* CurrentTet, SVector3 InteriorNormal);
+ // static std::map<MVertex*,std::vector<MTetrahedron*> > VertexToTets;
+ // static std::map<MTetrahedron*,MTet4*> TetToTet4;
   static std::map<MVertex*,std::vector<CorrespVertices*> > VertexToCorresp;
   static std::vector<std::vector<CorrespVertices*> > vecOfThinSheets;
   static const double epsilon;

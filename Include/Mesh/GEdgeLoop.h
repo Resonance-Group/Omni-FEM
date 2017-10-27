@@ -8,6 +8,7 @@
 
 #include "Mesh/GEdge.h"
  
+//class GEdge;
 
 class GEdgeSigned
 {

@@ -125,7 +125,7 @@ static SMetric3 metric_based_on_surface_curvature(const GEdge *ge, double u, boo
           ((*it)->geomType() != GEntity::DiscreteSurface)){
         SPoint2 par = ge->reparamOnFace((*it), u, 1);
         SMetric3 m = metric_based_on_surface_curvature (*it, par.x(), par.y(), iso_surf);
-        curvMetric = intersection_conserveM1(curvMetric,m);
+//        curvMetric = intersection_conserveM1(curvMetric,m);
       }
       ++it;
     }
@@ -147,7 +147,7 @@ static SMetric3 metric_based_on_surface_curvature(const GVertex *gv, bool iso_su
     // This is because we want to call the function
     // metric_based_on_surface_curvature(const GEdge *ge, double u) for the case when
     // ge is a compound edge
-    if (_myGEdge->geomType() == GEntity::CompoundCurve){
+  /*  if (_myGEdge->geomType() == GEntity::CompoundCurve){
       if (gv == _myGEdge->getBeginVertex())
         mesh_size = intersection
           (mesh_size,
@@ -157,9 +157,12 @@ static SMetric3 metric_based_on_surface_curvature(const GVertex *gv, bool iso_su
           (mesh_size,
            metric_based_on_surface_curvature(_myGEdge, bounds.high(), iso_surf));
     }
-  }
-  return mesh_size;
+  }*/
+  
+	   }
+	   return mesh_size;
 }
+
 
 SMetric3 LC_MVertex_CURV_ANISO(GEntity *ge, double U, double V)
 {
@@ -329,15 +332,15 @@ SMetric3 BGM_MeshMetric(GEntity *ge,
 	const double L = (*f)(X, Y, Z, ge);
         l4 = SMetric3(1/(L*L));
       }
-      m1 = intersection(l4, m0);
+//      m1 = intersection(l4, m0);
     }
   }
 
   // Intersect with metrics from curvature if applicable
-  SMetric3 m = (CTX::instance()->mesh.lcFromCurvature && ge->dim() < 3) ?
-      intersection(m1, LC_MVertex_CURV_ANISO(ge, U, V)) : m1;
+ // SMetric3 m = (CTX::instance()->mesh.lcFromCurvature && ge->dim() < 3) ?
+ //     intersection(m1, LC_MVertex_CURV_ANISO(ge, U, V)) : m1;
 
-  return m;
+  return SMetric3(0.0);
 }
 
 bool Extend1dMeshIn2dSurfaces()
@@ -375,7 +378,7 @@ SMetric3 max_edge_curvature_metric(const GVertex *gv)
       double l_n = 1.e12;
       cc = buildMetricTangentToCurve(t,l_t,l_n);
     }
-    val = intersection(val,cc);
+//    val = intersection(val,cc);
   }
   return val;
 }

@@ -21,6 +21,7 @@
 #include "Mesh/Geo.h"
 #include "Mesh/Parser.h"
 #include "Mesh/GmshDefines.h"
+#include "Mesh/GEdgeLoop.h"
 
 GVertex *GeoFactory::addVertex(GModel *gm, double x, double y, double z, double lc)
 {
@@ -88,7 +89,7 @@ GFace *GeoFactory::addPlanarFace(GModel *gm, const std::vector<std::vector<GEdge
 {
   return _addPlanarFace(gm, edges, false);
 }
-
+/*
 GRegion* GeoFactory::addVolume (GModel *gm, std::vector<std::vector<GFace *> > faces)
 {
   //create surface loop
@@ -128,11 +129,11 @@ GRegion* GeoFactory::addVolume (GModel *gm, std::vector<std::vector<GFace *> > f
   v->Recombine3D = 0;
 
   //gmsh volume
-  GRegion *gr = new gmshRegion(gm,v);
-  gm->add(gr);
+//  GRegion *gr = new gmshRegion(gm,v);
+ // gm->add(gr);
 
   return gr;
-}
+}*/
 
 GEdge* GeoFactory::addCircleArc(GModel *gm,GVertex *begin, GVertex *center, GVertex *end)
 {
@@ -257,7 +258,7 @@ std::vector<GEntity*> GeoFactory::extrudeBoundaryLayer(GModel *gm, GEntity *e,
     ((GFace*)e)->meshAttributes.extrude = ep;
     Surface *s = FindSurface(e->tag());
     if(!s) {
-      Msg::Error("Surface %d not found", e->tag());
+      //Msg::Error("Surface %d not found", e->tag());
       return extrudedEntities;
     }
     shape.Num = s->Num;
@@ -302,9 +303,9 @@ std::vector<GEntity*> GeoFactory::extrudeBoundaryLayer(GModel *gm, GEntity *e,
     List_Read(list_out, 0, &s);
     List_Read(list_out, 1, &v);
     GFace *gf = gm->getFaceByTag(s.Num);
-    GRegion *gr = gm->getRegionByTag(v.Num);
+  //  GRegion *gr = gm->getRegionByTag(v.Num);
     extrudedEntities.push_back((GEntity*)gf);
-    extrudedEntities.push_back((GEntity*)gr);
+   // extrudedEntities.push_back((GEntity*)gr);
     for (int j=2; j<nbout; j++){
       Shape sl;
       List_Read(list_out, j, &sl);

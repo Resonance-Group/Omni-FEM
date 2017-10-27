@@ -35,7 +35,7 @@ class groupOfElements {
   groupOfElements(){}
   groupOfElements (int dim, int physical) { addPhysical (dim, physical); }
   groupOfElements (GFace*);
-  groupOfElements (GRegion*);
+ // groupOfElements (GRegion*);
   groupOfElements(std::vector<MElement*> &elems);
 
   virtual ~groupOfElements(){}

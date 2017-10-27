@@ -127,7 +127,7 @@ void FieldManager::deleteField(int id)
 {
   iterator it = find(id);
   if(it == end()) {
-    Msg::Error("Cannot delete field id %i, it does not exist", id);
+    //Msg::Error("Cannot delete field id %i, it does not exist", id);
     return;
   }
   delete it->second;
@@ -1783,6 +1783,7 @@ class MaxField : public Field
   }
 };
 
+/*
 class RestrictField : public FieldannDeallocPts
 {
   int iField;
@@ -1833,7 +1834,8 @@ struct AttractorInfo{
   int ent,dim;
   double u,v;
 };
-
+ */ 
+/*
 class AttractorAnisoCurveField : public Field {
   ANNkd_tree *kdtree;
   ANNpointArray zeronodes;
@@ -2204,10 +2206,10 @@ public:
     double d = dist[0];
     return sqrt(d);
   }
-};
+};*/
 
 //------------------------ N A N O F L A N N -------------------------------------------------------------------------
-#include <nanoflann.hpp>
+#include <Mesh/nanoflann.hpp>
 using namespace nanoflann;
 // This is an exampleof a custom data set class
 struct PointCloud
@@ -2542,7 +2544,7 @@ class OctreeField : public Field {
     return _root->evaluate((X-xmin.x())/_l0,(Y-xmin.y())/_l0,(Z-xmin.z())/_l0);
   }
 };
-
+/*
 const char *BoundaryLayerField::getName()
 {
   return "BoundaryLayer";
@@ -2891,7 +2893,7 @@ void BoundaryLayerField::operator() (double x, double y, double z,
       v = intersection_conserveM1(v, hop[i]);
   metr = v;
 }
-#endif
+//#endif*/
 
 FieldManager::FieldManager()
 {
@@ -2913,7 +2915,7 @@ FieldManager::FieldManager()
   map_type_name["Octree"] = new FieldFactoryT<OctreeField>();
 #endif
  // map_type_name["Distance"] = new FieldFactoryT<DistanceField>();
-  map_type_name["Restrict"] = new FieldFactoryT<RestrictField>();
+//  map_type_name["Restrict"] = new FieldFactoryT<RestrictField>();
   map_type_name["Min"] = new FieldFactoryT<MinField>();
   map_type_name["MinAniso"] = new FieldFactoryT<MinAnisoField>();
   map_type_name["IntersectAniso"] = new FieldFactoryT<IntersectAnisoField>();

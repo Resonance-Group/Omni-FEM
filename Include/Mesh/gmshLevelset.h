@@ -147,7 +147,7 @@ class gLevelsetPrimitive : public gLevelset
     std::vector<gLevelset *> p; return p;
   }
   double choose(double d1, double d2) const {
-    Msg::Error("Cannot use function \"choose\" with a primitive!\n");
+    //Msg::Error("Cannot use function \"choose\" with a primitive!\n");
     return d1;
   }
   virtual int type() const = 0;

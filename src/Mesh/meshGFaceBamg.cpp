@@ -297,8 +297,8 @@ void meshGFaceBamg(GFace *gf){
 
 void meshGFaceBamg(GFace *gf)
 {
-  Msg::Error("This version of Gmsh is not compiled with Bidimensional "
-             "Anisotropic Mesh Generator (BAMG) support");
+  //Msg::Error("This version of Gmsh is not compiled with Bidimensional "
+    //         "Anisotropic Mesh Generator (BAMG) support");
 }
 
 #endif

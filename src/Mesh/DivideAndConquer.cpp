@@ -20,7 +20,7 @@
 #include "Mesh/Numeric.h"
 #include "Mesh/robustPredicates.h"
 #include "Mesh/BackgroundMeshTools.h"
-#include "Mesh/OS.h"
+#include "common/OS.h"
 #include "Mesh/GPoint.h"
 #include "Mesh/GFace.h"
 #include "Mesh/GEdgeCompound.h"
@@ -570,7 +570,7 @@ void DocRecord::voronoiCell(PointNumero pt, std::vector<SPoint2> &pts) const
 
 void DocRecord::makePosView(std::string fileName, GFace *gf)
 {
-  FILE *f = Fopen(fileName.c_str(),"w");
+  FILE *f = std::fopen(fileName.c_str(),"w");
   if(!f){
  //   Msg::Error("Could not open file '%s'", fileName.c_str());
     return;
@@ -610,7 +610,7 @@ void DocRecord::makePosView(std::string fileName, GFace *gf)
 
 void DocRecord::printMedialAxis(Octree *_octree, std::string fileName, GFace *gf, GEdge *ge)
 {
-  FILE *f = Fopen(fileName.c_str(),"w");
+  FILE *f = std::fopen(fileName.c_str(),"w");
   if(!f){
   //  Msg::Error("Could not open file '%s'", fileName.c_str());
     return;

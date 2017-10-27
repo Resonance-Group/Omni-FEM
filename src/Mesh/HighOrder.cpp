@@ -13,7 +13,7 @@
 #include "Mesh/HighOrder.h"
 #include "Mesh/MLine.h"
 #include "Mesh/MTriangle.h"
-#include "MQuadrangle.h"
+#include "Mesh/MQuadrangle.h"
 //#include "MTetrahedron.h"
 //#include "MHexahedron.h"
 //#include "MPrism.h"
@@ -323,6 +323,7 @@ static void getEdgeVertices(GFace *gf, MElement *ele, std::vector<MVertex*> &ve,
 }
 
 // Get new interior vertices for an edge in a 3D element
+/*
 static void getEdgeVertices(GRegion *gr, MElement *ele, std::vector<MVertex*> &ve,
                             std::vector<MVertex*> &newHOVert,
                             edgeContainer &edgeVertices,
@@ -353,7 +354,7 @@ static void getEdgeVertices(GRegion *gr, MElement *ele, std::vector<MVertex*> &v
     ve.insert(ve.end(), veEdge.begin(), veEdge.end());
   }
 }
-
+*/
 // --------- Creation of high-order face vertices -----------
 
 static void reorientTrianglePoints(std::vector<MVertex*> &vtcs, int orientation,
@@ -634,6 +635,7 @@ static void getFaceVertices(GFace *gf, MElement *incomplete, MElement *ele,
 }
 
 // Get new face (excluding edge) vertices for a face of a 3D element
+/*
 static void getFaceVertices(GRegion *gr, MElement *incomplete, MElement *ele,
                             std::vector<MVertex*> &vf, std::vector<MVertex*> &newHOVert,
                             faceContainer &faceVertices, edgeContainer &edgeVertices,
@@ -750,7 +752,7 @@ static void getFaceVertices(GRegion *gr, MElement *incomplete, MElement *ele,
     index += numVert;
   }
 }
-
+*/
 // --------- Creation of high-order volume vertices -----------
 
 static int getNewVolumePoints(MElement *incomplete, int nPts, fullMatrix<double> &points)
@@ -839,6 +841,7 @@ static int getNewVolumePoints(MElement *incomplete, int nPts, fullMatrix<double>
 }
 
 // Get new interior vertices for a 3D element (except pyramid)
+/*
 static void getVolumeVertices(GRegion *gr, MElement *incomplete, MElement *ele,
                               std::vector<MVertex*> &vr,
                               std::vector<MVertex*> &newHOVert,
@@ -858,9 +861,10 @@ static void getVolumeVertices(GRegion *gr, MElement *incomplete, MElement *ele,
     newHOVert.push_back(v);
     vr.push_back(v);
   }
-}
+}*/
 
 // Get new interior vertices for a pyramid
+/*
 static void getVolumeVerticesPyramid(GRegion *gr, MElement *ele,
                                      const std::vector<MVertex*> &ve,
                                      std::vector<MVertex*> &vr,
@@ -977,7 +981,7 @@ static void getVolumeVerticesPyramid(GRegion *gr, MElement *ele,
     }
   }
 }
-
+*/
 
 // --------- Creation of high-order elements -----------
 
@@ -1087,7 +1091,7 @@ static void setHighOrder(GFace *gf, std::vector<MVertex*> &newHOVert,
   gf->quadrangles = quadrangles2;
   gf->deleteVertexArrays();
 }
-
+/*
 static MTetrahedron *setHighOrder(MTetrahedron *t, GRegion *gr,
                                   std::vector<MVertex*> &newHOVert,
                                   edgeContainer &edgeVertices,
@@ -1294,7 +1298,7 @@ static void setHighOrder(GRegion *gr, std::vector<MVertex*> &newHOVert,
   gr->pyramids = pyramids2;
 
   gr->deleteVertexArrays();
-}
+}*/
 
 
 // --------- High-level functions -----------
@@ -1491,12 +1495,12 @@ void SetOrder1(GModel *m, bool onlyVisible)
     setFirstOrder(*it, (*it)->triangles, onlyVisible);
     setFirstOrder(*it, (*it)->quadrangles, onlyVisible);
   }
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
+ /* for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
     setFirstOrder(*it, (*it)->tetrahedra, onlyVisible);
     setFirstOrder(*it, (*it)->hexahedra, onlyVisible);
     setFirstOrder(*it, (*it)->prisms, onlyVisible);
     setFirstOrder(*it, (*it)->pyramids, onlyVisible);
-  }
+  }*/
 
   // remove all high order vertices
   std::vector<MVertex*> newHOVert;
@@ -1504,8 +1508,8 @@ void SetOrder1(GModel *m, bool onlyVisible)
     updateHighOrderVertices(*it, newHOVert, onlyVisible);
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
     updateHighOrderVertices(*it, newHOVert, onlyVisible);
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
-    updateHighOrderVertices(*it, newHOVert, onlyVisible);
+ // for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
+ //   updateHighOrderVertices(*it, newHOVert, onlyVisible);
 
   updatePeriodicEdgesAndFaces(m);
 }
@@ -1567,7 +1571,7 @@ void checkHighOrderTetrahedron(const char* cc, GModel *m,
   minJGlob = 1.0;
   double avg = 0.0;
   int count = 0, nbfair = 0;
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
+ /* for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
     for(unsigned int i = 0; i < (*it)->tetrahedra.size(); i++){
       MTetrahedron *t = (*it)->tetrahedra[i];
       double disto_ = t->distoShapeMeasure();
@@ -1576,7 +1580,7 @@ void checkHighOrderTetrahedron(const char* cc, GModel *m,
       if (disto_ < 0) bad.push_back(t);
       else if (disto_ < 0.2) nbfair++;
     }
-  }
+  }*/
   if(!count) return;
 
   if (minJGlob > 0)
@@ -1598,13 +1602,13 @@ void getMeshInfoForHighOrder(GModel *gm, int &meshOrder, bool &complete,
   meshOrder = -1;
   CAD = true;
   complete = 1;
-  for (GModel::riter itr = gm->firstRegion(); itr != gm->lastRegion(); ++itr) {
+ /* for (GModel::riter itr = gm->firstRegion(); itr != gm->lastRegion(); ++itr) {
     if ((*itr)->getNumMeshElements()){
       meshOrder = (*itr)->getMeshElement(0)->getPolynomialOrder();
       complete = (meshOrder <= 2) ? 1 :  (*itr)->getMeshElement(0)->getNumVolumeVertices();
       break;
     }
-  }
+  }*/
   for (GModel::fiter itf = gm->firstFace(); itf != gm->lastFace(); ++itf) {
     if ((*itf)->getNumMeshElements()){
       if (meshOrder == -1) {
@@ -1654,7 +1658,7 @@ void SetOrderN(GModel *m, int order, bool linear, bool incomplete, bool onlyVisi
 
  // Msg::ResetProgressMeter();
 
-  int counter = 0, nTot = m->getNumEdges() + m->getNumFaces() + m->getNumRegions();
+  int counter = 0, nTot = m->getNumEdges() + m->getNumFaces() /*+ m->getNumRegions()*/;
 
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); ++it) {
  //   Msg::Info("Meshing curve %d order %d", (*it)->tag(), order);
@@ -1671,21 +1675,21 @@ void SetOrderN(GModel *m, int order, bool linear, bool incomplete, bool onlyVisi
     if ((*it)->getColumns() != 0) (*it)->getColumns()->clearElementData();
   }
 
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it) {
+ /* for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it) {
  //   Msg::Info("Meshing volume %d order %d", (*it)->tag(), order);
  //   Msg::ProgressMeter(++counter, nTot, false, msg);
     if (onlyVisible && !(*it)->getVisibility())continue;
     setHighOrder(*it, newHOVert[*it], edgeVertices, faceVertices, linear, incomplete, nPts);
     if ((*it)->getColumns() != 0) (*it)->getColumns()->clearElementData();
-  }
+  }*/
 
   // Update all high order vertices
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); ++it)
     updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
     updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
-    updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);
+  /*for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
+    updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);*/
 
 #if defined(HAVE_OPTHOM)
   // Determine mesh dimension and curve BL elements

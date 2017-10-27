@@ -191,11 +191,11 @@ bool computeFourNeighbors (frameFieldBackgroundMesh2D *bgm,
 
   return true;
 }
-
+/*
 void computeTwoNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
                          vector<MVertex*> &spawns, SVector3 dir, double h)
 {
-	/*
+	
   // using approximate size, RK1...
   double x = parent->x();
   double y = parent->y();
@@ -212,13 +212,13 @@ void computeTwoNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
   newy = y - h * dir(1);
   newz = z - h * dir(2);
   spawns[1] = new MVertex(newx,newy,newz,gr,0);
-   */ 
-}
-
+    
+}*/
+/*
 void computeSixNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
                          vector<MVertex*> &spawns, STensor3 dir, double h)
 {
-	/*
+	
   // using approximate size, RK1...
   double x = parent->x();
   double y = parent->y();
@@ -237,8 +237,8 @@ void computeSixNeighbors(frameFieldBackgroundMesh3D *bgm, MVertex *parent,
     newz = z - h * dir(2,i);
     spawns[i*2+1] = new MVertex(newx,newy,newz,gr,0);
   }
-   */ 
-}
+   
+}*/
 
 double Filler2D::time_bgm_and_smoothing = 0.;
 double Filler2D::time_insertion = 0.;
@@ -415,7 +415,7 @@ void Filler2D::pointInsertion2D(GFace* gf,  vector<MVertex*> &packed,
   // add the vertices as additional vertices in the
   // surface mesh
   char ccc[256]; sprintf(ccc,"points%d.pos",gf->tag());
-  FILE *f = Fopen(ccc,"w");
+  FILE *f = std::fopen(ccc,"w");
   if(f){
     fprintf(f,"View \"\"{\n");
     for (unsigned int i=0;i<vertices.size();i++){

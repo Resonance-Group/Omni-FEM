@@ -93,15 +93,15 @@ polynomialBasis::polynomialBasis(int tag) : nodalBasis(tag)
     gmshGenerateMonomialsQuadrangle(order);
     break;
   case TYPE_TET :
-    monomials = gmshGenerateMonomialsTetrahedron(order, serendip);
+//    monomials = gmshGenerateMonomialsTetrahedron(order, serendip);
     break;
   case TYPE_PRI :
-    monomials = serendip ? gmshGenerateMonomialsPrismSerendipity(order) :
-    gmshGenerateMonomialsPrism(order);
+//    monomials = serendip ? gmshGenerateMonomialsPrismSerendipity(order) :
+ //   gmshGenerateMonomialsPrism(order);
     break;
   case TYPE_HEX :
-    monomials = serendip ? gmshGenerateMonomialsHexaSerendipity(order) :
-    gmshGenerateMonomialsHexahedron(order);
+ //   monomials = serendip ? gmshGenerateMonomialsHexaSerendipity(order) :
+//    gmshGenerateMonomialsHexahedron(order);
     break;
   }
 

@@ -9297,6 +9297,7 @@ double opt_view_closed(OPT_ARGS_NUM)
 #endif
 }
 
+/*
 double opt_print_file_format(OPT_ARGS_NUM)
 {
   if(action & GMSH_SET)
@@ -10001,6 +10002,7 @@ unsigned int opt_mesh_color_(int i, OPT_ARGS_COL)
   return CTX::instance()->color.mesh.carousel[i];
 }
 
+
 unsigned int opt_mesh_color_0(OPT_ARGS_COL){ return opt_mesh_color_(0, num, action, val); }
 unsigned int opt_mesh_color_1(OPT_ARGS_COL){ return opt_mesh_color_(1, num, action, val); }
 unsigned int opt_mesh_color_2(OPT_ARGS_COL){ return opt_mesh_color_(2, num, action, val); }
@@ -10021,7 +10023,7 @@ unsigned int opt_mesh_color_16(OPT_ARGS_COL){ return opt_mesh_color_(16, num, ac
 unsigned int opt_mesh_color_17(OPT_ARGS_COL){ return opt_mesh_color_(17, num, action, val); }
 unsigned int opt_mesh_color_18(OPT_ARGS_COL){ return opt_mesh_color_(18, num, action, val); }
 unsigned int opt_mesh_color_19(OPT_ARGS_COL){ return opt_mesh_color_(19, num, action, val); }
-
+*/
 unsigned int opt_view_color_points(OPT_ARGS_COL)
 {
 #if defined(HAVE_POST)

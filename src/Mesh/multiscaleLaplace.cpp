@@ -630,7 +630,7 @@ static void printCut(std::map<MEdge,MVertex*,Less_Edge> &cutEdges,
 {
    printf("Writing points.pos \n");
    std::map<MEdge,MVertex*,Less_Edge>::iterator ite = cutEdges.begin();
-   FILE *f1 = Fopen("points.pos","w");
+   FILE *f1 = std::fopen("points.pos","w");
    if(f1){
      fprintf(f1,"View\"\"{\n");
      for ( ; ite != cutEdges.end();++ite){
@@ -646,7 +646,7 @@ static void printCut(std::map<MEdge,MVertex*,Less_Edge> &cutEdges,
 
    printf("Writing edges.pos \n");
    std::set<MEdge,Less_Edge>::iterator itc = theCut.begin();
-   FILE *f2 = Fopen("edges.pos","w");
+   FILE *f2 = std::fopen("edges.pos","w");
    if(f2){
      fprintf(f2,"View\"\"{\n");
      for ( ; itc != theCut.end();++itc){
@@ -673,9 +673,9 @@ static void printLevel(const char* fn,
       vs.insert(elements[i]->getVertex(j));
 
   bool binary = false;
-  FILE *fp = Fopen (fn, "w");
+  FILE *fp = std::fopen (fn, "w");
   if(!fp){
-    Msg::Error("Could not open file '%s'", fn);
+    //Msg::Error("Could not open file '%s'", fn);
     return;
   }
   fprintf(fp, "$MeshFormat\n");
@@ -945,8 +945,8 @@ void multiscaleLaplace::parametrize(multiscaleLaplaceLevel & level)
    printLevel_onlysmall (name3.c_str(),level.elements,&level.coordinates,2.2,1.e-15);
 
   //For every small region compute a new parametrization
-  Msg::Info("Level (%d-%d): %d connected small regions",
-            level.recur, level.region, regions.size());
+  //Msg::Info("Level (%d-%d): %d connected small regions",
+         //   level.recur, level.region, regions.size());
   for (unsigned int i = 0; i < regions.size(); i++){
     std::set<MVertex*> tooSmallv;
     tooSmallv.clear();
@@ -985,8 +985,8 @@ void multiscaleLaplace::parametrize(multiscaleLaplaceLevel & level)
     }
     // recursively continue if tooSmall is not empty
     if (!tooSmallv.empty()){
-      Msg::Info("Level (%d-%d) Multiscale Laplace (reg[%d] =  %d too small)",
-                level.recur,level.region, i, tooSmallv.size());
+      //Msg::Info("Level (%d-%d) Multiscale Laplace (reg[%d] =  %d too small)",
+          //      level.recur,level.region, i, tooSmallv.size());
       level.children.push_back(nextLevel);
       parametrize(*nextLevel);
     }
@@ -1088,8 +1088,8 @@ void multiscaleLaplace::cutElems(std::vector<MElement *> &elements)
 
    connected_left_right(left, right);
    if (left.size() == 0 || right.size() == 0) {
-     Msg::Error("KO size left=%d, right=%d  not good (zero elems)",
-                (int) left.size(), (int) right.size() );
+     //Msg::Error("KO size left=%d, right=%d  not good (zero elems)",
+     //           (int) left.size(), (int) right.size() );
      return;
    }
 
@@ -1126,8 +1126,8 @@ void multiscaleLaplace::splitElems(std::vector<MElement *> &elements)
   // printLevel_onlysmall ("Rootsplit-all-param15.msh",elements,&root->coordinates,2.2,1.e-15);
 
   if ( elements.size() != left.size()+right.size()) {
-    Msg::Error("Cutting laplace wrong nb elements (%d) != left + right (%d)",
-               elements.size(), left.size()+right.size());
+    //Msg::Error("Cutting laplace wrong nb elements (%d) != left + right (%d)",
+    //           elements.size(), left.size()+right.size());
     return;
   }
 

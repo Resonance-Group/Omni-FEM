@@ -217,6 +217,10 @@
       <File Name="src/Mesh/QuadTriExtruded2D.cpp"/>
       <File Name="src/Mesh/QuadTriUtils.cpp"/>
       <File Name="src/Mesh/StringUtils.cpp"/>
+      <File Name="src/Mesh/meshRefine.cpp"/>
+      <File Name="src/Mesh/STensor3.cpp"/>
+      <File Name="src/Mesh/GModelIO_MSH.cpp"/>
+      <File Name="src/Mesh/GModelIO_MSH2.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -451,6 +455,7 @@
       <File Name="Include/Mesh/QuadTriUtils.h"/>
       <File Name="Include/Mesh/meshPartitionObjects.h"/>
       <File Name="Include/Mesh/StringUtils.h"/>
+      <File Name="Include/Mesh/nanoflann.hpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

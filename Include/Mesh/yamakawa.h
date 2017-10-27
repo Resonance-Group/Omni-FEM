@@ -11,19 +11,21 @@
 
 //#include "GRegion.h"
 #include "Mesh/MVertex.h"
+#include "Mesh/MFace.h"
 //#include "MHexahedron.h"
 #include "Mesh/qualityMeasuresJacobian.h"
 
 #include <set>
 #include <map>
 #include <iterator>
+#include <algorithm>
 
 //#include <tr1/unordered_set>
 //#include <tr1/unordered_map>
 
 using namespace std;
 
-extern void export_gregion_mesh(GRegion *gr, string filename);
+//extern void export_gregion_mesh(GRegion *gr, string filename);
 
 class Hex {
  private:
@@ -77,7 +79,7 @@ class Hex {
       return vertices_[i];
     }
     else {
-      cout << "Hex: unknown vertex number " << i << endl;
+  //    cout << "Hex: unknown vertex number " << i << endl;
       throw;
       return NULL;
     }
@@ -386,11 +388,11 @@ class Recombinator{
   typedef std::map<MVertex*, std::set<MVertex*> > Vertex2Vertices;
   typedef std::map<MVertex*, std::set<MElement*> > Vertex2Elements;
 
-  Recombinator() :current_region(NULL), hex_threshold_quality(0.6) {};
+ // Recombinator() :current_region(NULL), hex_threshold_quality(0.6) {};
   virtual ~Recombinator();
 
-  virtual void execute();
-  virtual void execute(GRegion*);
+ // virtual void execute();
+//  virtual void execute(GRegion*);
 
  protected:
   // ---- Initialization of the structures
@@ -403,18 +405,18 @@ class Recombinator{
     // What happens when the mesh of the region is not only constituted of tets? JP
   }
    */ 
-  void init_markings();
-  void build_tuples();
-  void set_current_region(GRegion* region) { current_region = region; }
+ // void init_markings();
+ // void build_tuples();
+//  void set_current_region(GRegion* region) { current_region = region; }
 
   // ---- Create the final mesh -------
   virtual void merge();
-  virtual void merge(GRegion*){}
+//  virtual void merge(GRegion*){}
 
-  void delete_marked_tets_in_region() const;
+//  void delete_marked_tets_in_region() const;
   // Check if the hex is valid and compatible with the
   // previously built hexes and add it to the region
-  bool add_hex_to_region_if_valid(const Hex& hex);
+//  bool add_hex_to_region_if_valid(const Hex& hex);
 
   // ---- Computation of potential hexes
   virtual void clear_potential_hex_info() {
@@ -422,15 +424,15 @@ class Recombinator{
   }
   void compute_potential_hexes() {
     clear_potential_hex_info();
-    pattern1();
-    pattern2();
-    pattern3();
+ //   pattern1();
+ //   pattern2();
+  //  pattern3();
   //  Msg::Info("Number of potential hexes %d", potential.size());
   }
-  void pattern1();
-  void pattern2();
-  void pattern3();
-  virtual void add_or_free_potential_hex(Hex* candidate);
+//  void pattern1();
+//  void pattern2();
+//  void pattern3();
+  //virtual void add_or_free_potential_hex(Hex* candidate);
 
   // ----- Helpers to debug -------
   void print_all_potential_hex() const;
@@ -460,27 +462,27 @@ class Recombinator{
 
   // -----  Post-processing -------
   void improve_final_mesh() {
-    set_region_elements_positive();
-    create_quads_on_boundary();
+   // set_region_elements_positive();
+ //   create_quads_on_boundary();
   }
   // Reverse of of built elements with a negative volume
-  void set_region_elements_positive();
-  void create_quads_on_boundary();
+ // void set_region_elements_positive();
+ // void create_quads_on_boundary();
   void create_quads_on_boundary(MVertex*, MVertex*, MVertex*, MVertex*);
-  void delete_quad_triangles_in_boundary() const;
+ // void delete_quad_triangles_in_boundary() const;
 
   // ---- Functions that should not be part of the class
   double scaled_jacobian(MVertex*, MVertex*, MVertex*, MVertex*);
   double max_scaled_jacobian(MElement*, int&);
   double min_scaled_jacobian(Hex&);
-  void print_statistics();
+ // void print_statistics();
 
  protected:
   // Object in charge of answering connectivity request
   // in the initial region tetrahedral mesh
   //TetMeshConnectivity tet_mesh;
 
-  GRegion* current_region;
+//  GRegion* current_region;
   double hex_threshold_quality;
 
   std::vector<Hex*> potential;
@@ -754,15 +756,15 @@ protected:
   void evaluate_hex_couple(Hex* hex, Hex* other_hex);
 
   // if two hex are not connected in the incompatibility_graph, they are compatible
-  void create_losses_graph(GRegion *gr);
+ // void create_losses_graph(GRegion *gr);
 
-  void merge_clique(GRegion* gr, cliques_losses_graph<Hex*> &cl,int clique_number=0);
+//  void merge_clique(GRegion* gr, cliques_losses_graph<Hex*> &cl,int clique_number=0);
 
   /*
    * Tries to merge tetrahedra into one hexahedron. Returns false if the hex
    * that would be created does not pass some conformity checks.
    */
-  bool merge_hex(GRegion *gr, Hex *hex);
+ // bool merge_hex(GRegion *gr, Hex *hex);
 
   void fill_tet_to_hex_table(Hex *hex);
 
@@ -776,11 +778,11 @@ protected:
     tet_to_hex.clear();
     created_potential_hex.clear();
   }
-  virtual void initialize_structures(GRegion* region) {
+/*  virtual void initialize_structures(GRegion* region) {
     set_current_region(region);
     tet_mesh.initialize(current_region);
     build_tuples();
-  }
+  }*/
 
   void clear_and_build_hash_tables(const Hex& hex) {
     hash_tableA.clear();
@@ -792,7 +794,7 @@ protected:
   }
 
   // Throw an assertion
-  void merge(GRegion*);
+  //void merge(GRegion*);
 
   // ------- exports --------
   // ---- seems that it won't export nothing since the
@@ -802,24 +804,24 @@ protected:
   void export_single_hex(Hex* hex,string s);
   void export_single_hex_faces(Hex* hex,string s);
   void export_single_hex_tet(Hex* hex,string s);
-  void export_all_hex(int &file,GRegion *gr);
+ // void export_all_hex(int &file,GRegion *gr);
   void export_hexmesh_so_far(int &file);
   void export_direct_neighbor_table(int max);
-  void export_hex_init_degree(GRegion *gr, const std::map<Hex*,int> &init_degree, const vector<Hex*> &chosen_hex);
+ // void export_hex_init_degree(GRegion *gr, const std::map<Hex*,int> &init_degree, const vector<Hex*> &chosen_hex);
 
 public:
   Recombinator_Graph(unsigned int max_nb_cliques, string filename=string());
   virtual ~Recombinator_Graph();
-  virtual void execute(GRegion*);
+ // virtual void execute(GRegion*);
 
   virtual void buildGraphOnly(unsigned int max_nb_cliques, string filename=string());
-  virtual void buildGraphOnly(GRegion*, unsigned int max_nb_cliques, string filename=string());
+ // virtual void buildGraphOnly(GRegion*, unsigned int max_nb_cliques, string filename=string());
   virtual void execute_blossom(unsigned int max_nb_cliques, string filename=string());
   // What is this function supposed to do?
   // Right now it throws at the first line. JP
-  virtual void execute_blossom(GRegion*, unsigned int max_nb_cliques, string filename=string());
+ // virtual void execute_blossom(GRegion*, unsigned int max_nb_cliques, string filename=string());
   virtual void createBlossomInfo();
-  void createBlossomInfo(GRegion *gr);
+ // void createBlossomInfo(GRegion *gr);
 
   const std::set<Hex*>& getHexInGraph() const { return set_of_all_hex_in_graph; };
   bool found_the_ultimate_max_clique;
@@ -873,16 +875,16 @@ public:
   Supplementary();
   ~Supplementary();
 
-  void execute();
-  void execute(GRegion*);
+ // void execute();
+ // void execute(GRegion*);
 
-  void init_markings(GRegion*);
-  void pattern(GRegion*);
-  void merge(GRegion*);
-  void rearrange(GRegion*);
-  void statistics(GRegion*);
-  void build_tuples(GRegion*);
-  void create_quads_on_boundary(GRegion*);
+ // void init_markings(GRegion*);
+ // void pattern(GRegion*);
+ // void merge(GRegion*);
+ // void rearrange(GRegion*);
+ // void statistics(GRegion*);
+ // void build_tuples(GRegion*);
+ // void create_quads_on_boundary(GRegion*);
   void create_quads_on_boundary(MVertex*,MVertex*,MVertex*,MVertex*);
 
   bool four(MElement*);
@@ -916,8 +918,8 @@ public:
   bool faces_statuquo(Prism);
   bool faces_statuquo(MVertex*,MVertex*,MVertex*,MVertex*);
 
-  void build_vertex_to_vertices(GRegion*);
-  void build_vertex_to_tetrahedra(GRegion*);
+//  void build_vertex_to_vertices(GRegion*);
+//  void build_vertex_to_tetrahedra(GRegion*);
 
   void build_hash_tableA(Prism);
   void build_hash_tableA(MVertex*,MVertex*,MVertex*,MVertex*);
@@ -959,32 +961,32 @@ public:
   void execute(int, int);
   //level - 0: hex, 1: hex+prisms, 2: hex+prism+pyramids
   //conformity - 0: nonconforming, 1: trihedra, 2: pyramids+trihedra, 3:pyramids+hexPrismSplit+trihedra, 4:hexPrismSplit+trihedra
-  void execute(GRegion*,int level, int conformity);
-  void executeNew(GRegion*);
+//  void execute(GRegion*,int level, int conformity);
+ // void executeNew(GRegion*);
 
   inline int get_nb_hexahedra()const{return nbr8;};
   inline double get_vol_hexahedra()const{return vol8;};
   inline int get_nb_elements()const{return nbr;};
   inline double get_vol_elements()const{return vol;};
 
-  void init_markings(GRegion*);
-  void init_markings_hex(GRegion*);
-  void init_markings_pri(GRegion*);
-  void init_markings_pyr(GRegion*);
-  void pyramids1(GRegion*);
-  void pyramids2(GRegion*, bool allowNonConforming=false);
-  void trihedra(GRegion*);
-  void split_hexahedra(GRegion*);
-  void split_prisms(GRegion*);
-  void split_pyramids(GRegion*);
-  int nonConformDiag(MVertex* a,MVertex* b,MVertex* c,MVertex* d,GRegion* gr);
-  void pyramids1(MVertex*,MVertex*,MVertex*,MVertex*,GRegion*);
-  void pyramids2(MVertex*,MVertex*,MVertex*,MVertex*,GRegion*, bool allowNonConforming);
-  void trihedra(MVertex*,MVertex*,MVertex*,MVertex*,GRegion*);
-  void rearrange(GRegion*);
-  void statistics(GRegion*);
-  void build_tuples(GRegion*);
-  void create_quads_on_boundary(GRegion*);
+//  void init_markings(GRegion*);
+//  void init_markings_hex(GRegion*);
+ // void init_markings_pri(GRegion*);
+//  void init_markings_pyr(GRegion*);
+//  void pyramids1(GRegion*);
+//  void pyramids2(GRegion*, bool allowNonConforming=false);
+ // void trihedra(GRegion*);
+//  void split_hexahedra(GRegion*);
+//  void split_prisms(GRegion*);
+//  void split_pyramids(GRegion*);
+ // int nonConformDiag(MVertex* a,MVertex* b,MVertex* c,MVertex* d,GRegion* gr);
+//  void pyramids1(MVertex*,MVertex*,MVertex*,MVertex*,GRegion*);
+ // void pyramids2(MVertex*,MVertex*,MVertex*,MVertex*,GRegion*, bool allowNonConforming);
+//  void trihedra(MVertex*,MVertex*,MVertex*,MVertex*,GRegion*);
+ // void rearrange(GRegion*);
+ // void statistics(GRegion*);
+ // void build_tuples(GRegion*);
+ // void create_quads_on_boundary(GRegion*);
   void create_quads_on_boundary(MVertex*,MVertex*,MVertex*,MVertex*);
 
   //returns the geometrical validity of the pyramid
@@ -1002,7 +1004,7 @@ public:
   MVertex* other(MElement*,MVertex*,MVertex*);
   MVertex* other(MElement*,MVertex*,MVertex*,MVertex*);
   void mean(const std::set<MVertex*>&,MVertex*,const std::vector<MElement*>&);
-  double workaround(MElement*);
+ // double workaround(MElement*);
 
   MVertex* find(MVertex*,MVertex*,MVertex*,MVertex*,MElement*);
   MVertex* findInTriFace(MVertex* in0,MVertex* in1,MVertex* out0,MVertex* out1,MElement* element);
@@ -1014,15 +1016,15 @@ public:
 
   void intersection(const std::set<MElement*>&,const std::set<MElement*>&,std::set<MElement*>&);
 
-  void build_vertex_to_tetrahedra(GRegion*);
+ // void build_vertex_to_tetrahedra(GRegion*);
   void build_vertex_to_tetrahedra(MElement*);
   void erase_vertex_to_tetrahedra(MElement*);
 
-  void build_vertex_to_pyramids(GRegion*);
+ // void build_vertex_to_pyramids(GRegion*);
   void build_vertex_to_pyramids(MElement*);
   void erase_vertex_to_pyramids(MElement*);
 
-  void build_vertex_to_hexPrism(GRegion*);
+ // void build_vertex_to_hexPrism(GRegion*);
   void build_vertex_to_hexPrism(MElement*);
   void erase_vertex_to_hexPrism(MElement*);
 

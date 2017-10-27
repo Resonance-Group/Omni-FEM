@@ -17,16 +17,16 @@
 static bool looksOk(int tag, std::vector<GEdge*> &compound)
 {
   if(compound.empty()){
-    Msg::Error("Empty edge compound %d", tag);
+    //Msg::Error("Empty edge compound %d", tag);
     return false;
   }
   for(unsigned int i = 0; i < compound.size(); i++){
     if(!compound[i]->getBeginVertex() || !compound[i]->getEndVertex()){
-      Msg::Error("Edge compound %d with missing begin/end vertex", tag);
+    //  Msg::Error("Edge compound %d with missing begin/end vertex", tag);
       return false;
     }
     if(compound.size() > 1 && compound[i]->getBeginVertex() == compound[i]->getEndVertex()){
-      Msg::Warning("Edge compound %d with subloop", tag);
+    //  Msg::Warning("Edge compound %d with subloop", tag);
       return true;
     }
   }
@@ -47,7 +47,7 @@ GEdgeCompound::GEdgeCompound(GModel *m, int tag, std::vector<GEdge*> &compound,
     v1->addEdge(this);
   }
   else{
-    Msg::Error("Wrong input data for compound edge %d", tag);
+    //Msg::Error("Wrong input data for compound edge %d", tag);
     return;
   }
 
@@ -59,7 +59,7 @@ GEdgeCompound::GEdgeCompound(GModel *m, int tag, std::vector<GEdge*> &compound,
 
   for(std::vector<GEdge*>::iterator it = _compound.begin(); it != _compound.end(); ++it){
     if(!(*it)){
-      Msg::Error("Incorrect edge in compound edge %d", tag);
+   //   Msg::Error("Incorrect edge in compound edge %d", tag);
       return;
     }
   }
@@ -81,7 +81,7 @@ GEdgeCompound::GEdgeCompound(GModel *m, int tag, std::vector<GEdge*> &compound)
     v1->addEdge(this);
   }
   else{
-    Msg::Error("Wrong input data for compound edge %d", tag);
+    //Msg::Error("Wrong input data for compound edge %d", tag);
     return;
   }
 
@@ -108,7 +108,7 @@ void GEdgeCompound::orderEdges()
     GVertex *v1 = (*it)->getBeginVertex();
     GVertex *v2 = (*it)->getEndVertex();
     if(!v1 || !v2){
-      Msg::Error("Compounds don't support curves without two bounding vertices");
+      //Msg::Error("Compounds don't support curves without two bounding vertices");
       return;
     }
     std::map<GVertex*, GEdge*>::iterator it1 = tempv.find(v1);
@@ -139,7 +139,7 @@ void GEdgeCompound::orderEdges()
     edges.erase(edges.begin());
   }
   else{
-    Msg::Error("EdgeCompound %d is wrong (it has %d end points)", tag(), tempv.size());
+    //Msg::Error("EdgeCompound %d is wrong (it has %d end points)", tag(), tempv.size());
     return;
   }
 
@@ -184,7 +184,7 @@ void GEdgeCompound::orderEdges()
         _orientation[0] = 0;
       }
       else {
-        Msg::Error("Compound Edge %d is wrong", tag());
+        //Msg::Error("Compound Edge %d is wrong", tag());
         return;
       }
     }
@@ -226,7 +226,7 @@ GEdgeCompound::~GEdgeCompound()
 Range<double> GEdgeCompound::parBounds(int i) const
 {
   if(_pars.empty()){
-    Msg::Error("Edge compound has no parametrization");
+    //Msg::Error("Edge compound has no parametrization");
     return Range<double>(0, 1);
   }
   return Range<double>(0, _pars[_compound.size()]);
@@ -243,7 +243,7 @@ bool GEdgeCompound::getLocalParameter(const double &t,
                                       double &tLoc) const
 {
   if(_pars.empty()){
-    Msg::Error("Edge compound has no parametrization");
+    //Msg::Error("Edge compound has no parametrization");
     return false;
   }
   for (iEdge = 0; iEdge < (int)_compound.size(); iEdge++){
@@ -290,7 +290,7 @@ double GEdgeCompound::curvatures(const double par, SVector3 *dirMax, SVector3 *d
   if( _compound[iEdge]->geomType() == GEntity::DiscreteCurve){
     Curvature& curvature = Curvature::getInstance();
     if( !Curvature::valueAlreadyComputed() ){
-      Msg::Info("Need to compute discrete curvature for anisotropic remesh (in GFace)");
+      //Msg::Info("Need to compute discrete curvature for anisotropic remesh (in GFace)");
       Curvature::typeOfCurvature type = Curvature::RUSIN; //RBF
       curvature.computeCurvature(model(), type);
     }
@@ -316,7 +316,7 @@ double GEdgeCompound::curvatures(const double par, SVector3 *dirMax, SVector3 *d
     return *curvMax;
   }
   else{
-    Msg::Error("Case of CAD Geometry, don't know what to do here...");
+    //Msg::Error("Case of CAD Geometry, don't know what to do here...");
   }
   return 0.0;
 }

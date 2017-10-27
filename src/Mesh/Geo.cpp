@@ -405,12 +405,12 @@ void EndCurve(Curve *c)
     c->Circle.incl = A4;
     c->Circle.f1 = f1;
     c->Circle.f2 = f2;
-    if(!CTX::instance()->expertMode && c->Num > 0 && A3 - A1 > 1.01 * M_PI){
+ //   if(!CTX::instance()->expertMode && c->Num > 0 && A3 - A1 > 1.01 * M_PI){
    //   Msg::Error("Circle or ellipse arc %d greater than Pi (angle=%g)", c->Num, A3-A1);
    //   Msg::Error("(If you understand what this implies, you can disable this error");
    //   Msg::Error("message by selecting `Enable expert mode' in the option dialog.");
    //   Msg::Error("Otherwise, please subdivide the arc in smaller pieces.)");
-    }
+  //  }
   }
 
   if (c->Typ == MSH_SEGM_COMPOUND) {
@@ -460,8 +460,11 @@ void EndCurve(Curve *c)
         }
       }
       if (tmp.size() == nbCurrent)
+	  {
    //     Msg::Error("Could not order compound edge %d to find begin and end vertex",
    //                c->Num);
+   
+		}
     }
     c->beg = vtcs.first;
     c->end = vtcs.second;

@@ -655,7 +655,7 @@ double backgroundMesh::getAngle(double u, double v, double w) const
 void backgroundMesh::print(const std::string &filename, GFace *gf,
                            const std::map<MVertex*,double> &_whatToPrint, int smooth)
 {
-  FILE *f = Fopen(filename.c_str(), "w");
+/*  FILE *f = Fopen(filename.c_str(), "w");
   if(!f){
  //   Msg::Error("Could not open file '%s'", filename.c_str());
     return;
@@ -699,7 +699,7 @@ void backgroundMesh::print(const std::string &filename, GFace *gf,
     }
   }
   fprintf(f, "};\n");
-  fclose(f);
+  fclose(f);*/
 }
 
 MElementOctree* backgroundMesh::get_octree(){

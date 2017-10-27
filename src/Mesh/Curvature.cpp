@@ -878,7 +878,7 @@ void Curvature::computeCurvature(GModel* model, typeOfCurvature typ)
   _model = model;
 
   double t0 = Cpu();
-  Msg::StatusBar(true, "(C) Computing Curvature");
+  //Msg::StatusBar(true, "(C) Computing Curvature");
   if (typ == RUSIN)
     computeCurvature_Rusinkiewicz(0);
   else if (typ == RBF)
@@ -887,7 +887,7 @@ void Curvature::computeCurvature(GModel* model, typeOfCurvature typ)
     computeCurvature_Simple();
 
   double t1 = Cpu();
-  Msg::StatusBar(true, "(C) Done Computing Curvature (%g s)", t1-t0);
+  //Msg::StatusBar(true, "(C) Done Computing Curvature (%g s)", t1-t0);
 
   //writeToMshFile("curvature.msh");
   //writeToPosFile("curvature.pos");
@@ -1533,7 +1533,7 @@ void Curvature::vertexNodalValuesAndDirections(MVertex *A, SVector3* dMax, SVect
 double Curvature::getAtVertex(const MVertex *v) const {
   std::map<int,int>::const_iterator it = _VertexToInt.find(v->getNum());
   if (it == _VertexToInt.end()) {
-    Msg::Error("curvature has not been computed for vertex %i (%i)", v->getNum(), _VertexToInt.size());
+    //Msg::Error("curvature has not been computed for vertex %i (%i)", v->getNum(), _VertexToInt.size());
     return 1;
   }
   return _VertexCurve[it->second];

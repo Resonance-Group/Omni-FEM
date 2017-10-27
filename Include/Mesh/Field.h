@@ -149,7 +149,7 @@ class FieldManager : public std::map<int, Field*> {
 
 #if defined(HAVE_ANN)
 class AttractorField;
-
+// This stuff is commented out in the Field.cpp file
 class BoundaryLayerField : public Field {
  private:
   std::list<AttractorField *> _att_fields;

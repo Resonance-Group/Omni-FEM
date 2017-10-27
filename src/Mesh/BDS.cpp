@@ -19,7 +19,7 @@ void outputScalarField(std::list<BDS_Face*> t, const char *iii, int param, GFace
 {
 
   if (gf){
-    FILE* view_c = Fopen("param_c.pos","w");
+    FILE* view_c = std::fopen("param_c.pos","w");
     if(!view_c){
  //     Msg::Error("Could not open file 'param_c.pos");
       return;
@@ -53,7 +53,7 @@ void outputScalarField(std::list<BDS_Face*> t, const char *iii, int param, GFace
   }
 
 
-  FILE *f = Fopen(iii, "w");
+  FILE *f = std::fopen(iii, "w");
   if(!f){
   //  Msg::Error("Could not open file '%s'", iii);
     return;

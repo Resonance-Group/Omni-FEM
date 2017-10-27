@@ -29,7 +29,7 @@ meshMetric::meshMetric(GModel *gm)
       }
     }
   }
-  else if (_dim == 3){
+  /*else if (_dim == 3){
     for (GModel::riter rit = gm->firstRegion(); rit != gm->lastRegion(); ++rit){
       for (unsigned int i=0;i<(*rit)->getNumMeshElements();i++){
         MElement *e = (*rit)->getMeshElement(i);
@@ -37,7 +37,7 @@ meshMetric::meshMetric(GModel *gm)
         _elements.push_back(copy);
       }
     }
-  }
+  }*/
   _octree = new MElementOctree(_elements);
   buildVertexToElement (_elements,_adj);
 }
@@ -90,10 +90,10 @@ void meshMetric::updateMetrics()
 
     if (setOfMetrics.size() > 1)
       for (unsigned int i=1;i<setOfMetrics.size();i++){
-        _nodalMetrics[ver] = (_dim == 3) ?
-          intersection_conserve_mostaniso(_nodalMetrics[ver],setOfMetrics[i][ver]) :
-          intersection_conserve_mostaniso_2d(_nodalMetrics[ver],setOfMetrics[i][ver]);
-        _nodalSizes[ver] = std::min(_nodalSizes[ver],setOfSizes[i][ver]);
+     //   _nodalMetrics[ver] = (_dim == 3) ?
+//          intersection_conserve_mostaniso(_nodalMetrics[ver],setOfMetrics[i][ver]) :
+//          intersection_conserve_mostaniso_2d(_nodalMetrics[ver],setOfMetrics[i][ver]);
+     //   _nodalSizes[ver] = std::min(_nodalSizes[ver],setOfSizes[i][ver]);
       }
   }
   needMetricUpdate=false;
@@ -619,13 +619,13 @@ void meshMetric::scaleMetric(int nbElementsTarget,
     SMetric3 m2 = nmt[e->getVertex(1)];
     SMetric3 m3 = nmt[e->getVertex(2)];
     if (_dim == 2){
-      SMetric3 m =  interpolation(m1,m2,m3,0.3333,0.3333);
-      N += sqrt(m.determinant()) * e->getVolume()  * 4./sqrt(3.0); //3.0
+//      SMetric3 m =  interpolation(m1,m2,m3,0.3333,0.3333);
+    //  N += sqrt(m.determinant()) * e->getVolume()  * 4./sqrt(3.0); //3.0
     }
     else{
       SMetric3 m4 = nmt[e->getVertex(3)];
-      SMetric3 m =  interpolation(m1,m2,m3,m4,0.25,0.25,0.25);
-      N += sqrt(m.determinant()) * e->getVolume() * 12./sqrt(2.0); //4.0;
+//      SMetric3 m =  interpolation(m1,m2,m3,m4,0.25,0.25,0.25);
+    //  N += sqrt(m.determinant()) * e->getVolume() * 12./sqrt(2.0); //4.0;
     }
   }
   double scale = pow ((double)nbElementsTarget/N,2.0/_dim);
@@ -773,10 +773,10 @@ void meshMetric::operator() (double x, double y, double z, SMetric3 &metr, GEnti
 	  SMetric3 m2 = setOfMetrics[iMetric][e->getVertex(1)];
 	  SMetric3 m3 = setOfMetrics[iMetric][e->getVertex(2)];
 	  if (_dim == 2)
-	    metric =  interpolation(m1,m2,m3,uvw[0],uvw[1]);
+	    {/*metric =  interpolation(m1,m2,m3,uvw[0],uvw[1]);*/}
 	  else {
 	    SMetric3 m4 = setOfMetrics[iMetric][e->getVertex(3)];
-	    metric =  interpolation(m1,m2,m3,m4,uvw[0],uvw[1],uvw[2]);
+//	    metric =  interpolation(m1,m2,m3,m4,uvw[0],uvw[1],uvw[2]);
 	  }
 	  newSetOfMetrics[iMetric] = metric;
 	}
@@ -788,7 +788,7 @@ void meshMetric::operator() (double x, double y, double z, SMetric3 &metr, GEnti
     //intersect metrics here
     metr = newSetOfMetrics[0];
     for (int i=1;i<nbMetrics;i++)
-      metr = intersection_conserve_mostaniso(metr,newSetOfMetrics[i]);
+      {/*metr = intersection_conserve_mostaniso(metr,newSetOfMetrics[i]);*/}
   }
   //INTERPOLATE DISCRETE MESH METRIC
   else{
@@ -804,10 +804,10 @@ void meshMetric::operator() (double x, double y, double z, SMetric3 &metr, GEnti
       SMetric3 m2 = _nodalMetrics[e->getVertex(1)];
       SMetric3 m3 = _nodalMetrics[e->getVertex(2)];
       if (_dim == 2)
-	metr =  interpolation(m1,m2,m3,uvw[0],uvw[1]);
+{/*	metr =  interpolation(m1,m2,m3,uvw[0],uvw[1]);*/}
       else {
 	SMetric3 m4 = _nodalMetrics[e->getVertex(3)];
-	metr =  interpolation(m1,m2,m3,m4,uvw[0],uvw[1],uvw[2]);
+//	metr =  interpolation(m1,m2,m3,m4,uvw[0],uvw[1],uvw[2]);
       }
 
     }

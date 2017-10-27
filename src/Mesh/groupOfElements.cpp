@@ -12,13 +12,13 @@ groupOfElements::groupOfElements(GFace*gf)
   elementFilterTrivial filter;
   addElementary(gf, filter);
 }
-
+/*
 groupOfElements::groupOfElements(GRegion*gr)
 {
   elementFilterTrivial filter;
   addElementary(gr, filter);
 }
-
+*/
 groupOfElements::groupOfElements(std::vector<MElement*> &elems)
 {
   elementFilterTrivial filter;

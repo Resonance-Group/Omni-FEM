@@ -519,7 +519,7 @@ void meshGEdge::operator() (GEdge *ge)
   deMeshGEdge dem;
   dem(ge);
 
-  if(MeshExtrudedCurve(ge)) return;
+//  if(MeshExtrudedCurve(ge)) return;
 
   if(ge->meshMaster() != ge){
     GEdge *gef = dynamic_cast<GEdge*> (ge->meshMaster());

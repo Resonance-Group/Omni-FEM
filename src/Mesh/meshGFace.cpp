@@ -6,6 +6,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include <map>
+#include <stdio.h>
 #include "Mesh/meshGFace.h"
 #include "Mesh/meshGFaceBDS.h"
 #include "Mesh/meshGFaceDelaunayInsertion.h"
@@ -45,6 +46,7 @@
 #include "Mesh/meshGFaceLloyd.h"
 #include "Mesh/boundaryLayersData.h"
 #include "Mesh/filterElements.h"
+#include "Mesh/GEdgeLoop.h"
 
 // define this to use the old initial delaunay
 #define OLD_CODE_DELAUNAY 1
@@ -663,7 +665,7 @@ static void modifyInitialMeshForTakingIntoAccountBoundaryLayers(GFace *gf,
   std::list<GEdge*> embedded_edges = gf->embeddedEdges();
   edges.insert(edges.begin(), embedded_edges.begin(),embedded_edges.end());
   std::list<GEdge*>::iterator ite = edges.begin();
-  FILE *ff2 = Fopen ("tato.pos","w");
+  FILE *ff2 = std::fopen ("tato.pos","w");
   if(ff2) fprintf(ff2,"View \" \"{\n");
 
   std::vector<MLine*> _lines;
@@ -808,7 +810,7 @@ static void modifyInitialMeshForTakingIntoAccountBoundaryLayers(GFace *gf,
   std::list<GEdge*> hop;
   std::set<MEdge,Less_Edge>::iterator it =  bedges.begin();
 
-  FILE *ff = Fopen ("toto.pos","w");
+  FILE *ff = std::fopen ("toto.pos","w");
   if(ff) fprintf(ff,"View \" \"{\n");
   for (; it != bedges.end(); ++it){
     ne.lines.push_back(new MLine (it->getVertex(0),it->getVertex(1)));
@@ -1306,7 +1308,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
       char name[245];
       sprintf(name, "surface%d-not_yet_recovered-real-%d.msh", gf->tag(),
               RECUR_ITER);
-      gf->model()->writeMSH(name);
+//      gf->model()->writeMSH(name);
     }
 
     std::list<GFace *> facesToRemesh;

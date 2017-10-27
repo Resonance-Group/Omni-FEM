@@ -13,6 +13,8 @@
 
 #include "Mesh/Range.h"
 
+//#include "Mesh/GEdge.h"
+
 #include "Mesh/SPoint3.h"
 #include "Mesh/SBoundingBox3d.h"
 

@@ -82,7 +82,7 @@ std::vector< fullMatrix<double> > generateSubPointsTetrahedron(int order)
   fullMatrix<double> prox1;
   fullMatrix<double> prox2;
 
-  subPoints[0] = gmshGenerateMonomialsTetrahedron(order);
+//  subPoints[0] = gmshGenerateMonomialsTetrahedron(order);
   subPoints[0].scale(.5/order);
 
   subPoints[1].copy(subPoints[0]);
@@ -151,7 +151,7 @@ std::vector< fullMatrix<double> > generateSubPointsPrism(int order)
   std::vector< fullMatrix<double> > subPoints(8);
   fullMatrix<double> prox;
 
-  subPoints[0] = gmshGenerateMonomialsPrism(order);
+//  subPoints[0] = gmshGenerateMonomialsPrism(order);
   subPoints[0].scale(.5/order);
 
   subPoints[1].copy(subPoints[0]);
@@ -191,7 +191,7 @@ std::vector< fullMatrix<double> > generateSubPointsHex(int order)
   std::vector< fullMatrix<double> > subPoints(8);
   fullMatrix<double> prox;
 
-  subPoints[0] = gmshGenerateMonomialsHexahedron(order);
+//  subPoints[0] = gmshGenerateMonomialsHexahedron(order);
   subPoints[0].scale(.5/order);
 
   subPoints[1].copy(subPoints[0]);
@@ -231,7 +231,7 @@ std::vector< fullMatrix<double> > generateSubPointsPyr(int nij, int nk)
     std::vector< fullMatrix<double> > subPoints(4);
     fullMatrix<double> prox;
 
-    subPoints[0] = gmshGenerateMonomialsPyramidGeneral(false, nij, nk);
+//    subPoints[0] = gmshGenerateMonomialsPyramidGeneral(false, nij, nk);
     subPoints[0].scale(.5/nij);
 
     subPoints[1].copy(subPoints[0]);
@@ -252,7 +252,7 @@ std::vector< fullMatrix<double> > generateSubPointsPyr(int nij, int nk)
     std::vector< fullMatrix<double> > subPoints(8);
     fullMatrix<double> ref, prox;
 
-    subPoints[0] = gmshGenerateMonomialsPyramidGeneral(false, nij, nk);
+//    subPoints[0] = gmshGenerateMonomialsPyramidGeneral(false, nij, nk);
     prox.setAsProxy(subPoints[0], 2, 1);
     prox.scale(-1);
     prox.add(nk);
@@ -631,21 +631,21 @@ void bezierBasis::_construct()
     case TYPE_TET : {
       _numLagCoeff = order ? 4 : 1;
       _dimSimplex = 3;
-      _exponents = gmshGenerateMonomialsTetrahedron(order);
+//      _exponents = gmshGenerateMonomialsTetrahedron(order);
       subPoints = generateSubPointsTetrahedron(order);
       break;
     }
     case TYPE_PRI : {
       _numLagCoeff = order ? 6 : 1;
       _dimSimplex = 2;
-      _exponents = gmshGenerateMonomialsPrism(order);
+//      _exponents = gmshGenerateMonomialsPrism(order);
       subPoints = generateSubPointsPrism(order);
       break;
     }
     case TYPE_HEX : {
       _numLagCoeff = order ? 8 : 1;
       _dimSimplex = 0;
-      _exponents = gmshGenerateMonomialsHexahedron(order);
+//      _exponents = gmshGenerateMonomialsHexahedron(order);
       subPoints = generateSubPointsHex(order);
       break;
     }

@@ -396,7 +396,7 @@ bool GEO_Internals::addSurfaceFilling(int &tag, const std::vector<int> &wireTags
   int ll = (int)std::abs(wireTags[0]);
   EdgeLoop *el = FindEdgeLoop(ll);
   if(!el){
-    Msg::Error("Unknown line loop %d", ll);
+    //Msg::Error("Unknown line loop %d", ll);
     return false;
   }
   int j = List_Nbr(el->Curves), type = MSH_SURF_PLAN;
@@ -1136,13 +1136,13 @@ void GEO_Internals::synchronize(GModel *model)
         toRemove.push_back(std::pair<int, int>(2, gf->tag()));
     }
   }
-  for(GModel::riter it = model->firstRegion(); it != model->lastRegion(); ++it){
+  /*for(GModel::riter it = model->firstRegion(); it != model->lastRegion(); ++it){
     GRegion *gr = *it;
     if(gr->getNativeType() == GEntity::GmshModel){
       if(!FindVolume(gr->tag()))
         toRemove.push_back(std::pair<int, int>(3, gr->tag()));
     }
-  }
+  }*/
  // Msg::Debug("Sync is removing %d model entities", toRemove.size());
   model->remove(toRemove);
 
@@ -1292,7 +1292,7 @@ void GEO_Internals::synchronize(GModel *model)
     List_Delete(surfaces);
   }
 
-  if(Tree_Nbr(Volumes)) {
+ /* if(Tree_Nbr(Volumes)) {
     List_T *volumes = Tree2List(Volumes);
     for(int i = 0; i < List_Nbr(volumes); i++){
       Volume *v;
@@ -1319,7 +1319,7 @@ void GEO_Internals::synchronize(GModel *model)
       }
     }
     List_Delete(volumes);
-  }
+  }*/
 
   // we might want to store physical groups directly in GModel; but this is OK
   // for now. We always start from scratch in GModel, as physical groups are
@@ -1337,7 +1337,7 @@ void GEO_Internals::synchronize(GModel *model)
       case MSH_PHYSICAL_POINT:   ge = model->getVertexByTag(tag); break;
       case MSH_PHYSICAL_LINE:    ge = model->getEdgeByTag(tag); break;
       case MSH_PHYSICAL_SURFACE: ge = model->getFaceByTag(tag); break;
-      case MSH_PHYSICAL_VOLUME:  ge = model->getRegionByTag(tag); break;
+  //    case MSH_PHYSICAL_VOLUME:  ge = model->getRegionByTag(tag); break;
       }
       int pnum = CTX::instance()->geom.orientedPhysicals ?
         (gmsh_sign(num) * p->Num) : p->Num;
@@ -1360,7 +1360,7 @@ void GEO_Internals::synchronize(GModel *model)
       switch(dim) {
       case 1: ent = model->getEdgeByTag(tag); break;
       case 2: ent = model->getFaceByTag(tag); break;
-      case 3: ent = model->getRegionByTag(tag); break;
+     // case 3: ent = model->getRegionByTag(tag); break;
       default :
 		continue;
 		//Msg::Error("compound mesh with dimension %d",dim);
@@ -1523,20 +1523,20 @@ class writePhysicalGroupGEO {
       fprintf(geo, "};\n");
     }
 };
-
+/*
 static bool skipRegion(GRegion *gr)
 {
   if(gr->physicals.size()) return false;
   return true;
-}
+}*/
 
 static bool skipFace(GFace *gf)
 {
   if(gf->physicals.size()) return false;
-  std::list<GRegion*> regions(gf->regions());
-  for(std::list<GRegion*>::iterator itr = regions.begin(); itr != regions.end(); itr++){
+ // std::list<GRegion*> regions(gf->regions());
+ /* for(std::list<GRegion*>::iterator itr = regions.begin(); itr != regions.end(); itr++){
     if(!skipRegion(*itr)) return false;
-  }
+  }*/
   return true;
 }
 
@@ -1561,8 +1561,8 @@ static bool skipVertex(GVertex *gv)
 }
 
 int GModel::writeGEO(const std::string &name, bool printLabels, bool onlyPhysicals)
-{
-  FILE *fp = Fopen(name.c_str(), "w");
+{/*
+//  FILE *fp = Fopen(name.c_str(), "w");
   if(!fp){
   //  Msg::Error("Could not open file '%s'", name.c_str());
     return 0;
@@ -1593,7 +1593,7 @@ int GModel::writeGEO(const std::string &name, bool printLabels, bool onlyPhysica
     if(!onlyPhysicals || !skipFace(*it))
       (*it)->writeGEO(fp);
   }
-  for(riter it = firstRegion(); it != lastRegion(); it++){
+ /* for(riter it = firstRegion(); it != lastRegion(); it++){
     if(!onlyPhysicals || !skipRegion(*it))
       (*it)->writeGEO(fp);
   }
@@ -1617,7 +1617,7 @@ int GModel::writeGEO(const std::string &name, bool printLabels, bool onlyPhysica
   if(getFields()->getBackgroundField() > 0)
     fprintf(fp, "Background Field = %i;\n", getFields()->getBackgroundField());
 
-  fclose(fp);
+  fclose(fp);*/
   return 1;
 }
 

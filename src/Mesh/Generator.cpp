@@ -50,7 +50,7 @@
 #include "PView.h"
 #include "PViewData.h"
 #endif
-
+/*
 class TEST_IF_MESH_IS_COMPATIBLE_WITH_EMBEDDED_ENTITIES {
 public:
   void operator () (GRegion *gr) {
@@ -117,8 +117,9 @@ public:
       fclose(f);
     }
   }
-};
+};*/
 
+class instance;
 template<class T>
 static void GetQualityMeasure(std::vector<T*> &ele,
                               double &gamma, double &gammaMin, double &gammaMax,
@@ -158,7 +159,7 @@ void GetStatistics(double stat[50], double quality[3][100])
   stat[0] = m->getNumVertices();
   stat[1] = m->getNumEdges();
   stat[2] = m->getNumFaces();
-  stat[3] = m->getNumRegions();
+ // stat[3] = m->getNumRegions();
 
   std::map<int, std::vector<GEntity*> > physicals[4];
   m->getPhysicalGroups(physicals);
@@ -176,14 +177,14 @@ void GetStatistics(double stat[50], double quality[3][100])
     //}
   }
 
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
+ /* for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
     stat[6] += (*it)->mesh_vertices.size();
     stat[9] += (*it)->tetrahedra.size();
     stat[10] += (*it)->hexahedra.size();
     stat[11] += (*it)->prisms.size();
     stat[12] += (*it)->pyramids.size();
     stat[13] += (*it)->trihedra.size();
-  }
+  }*/
 
   stat[14] = CTX::instance()->meshTimer[0];
   stat[15] = CTX::instance()->meshTimer[1];
@@ -198,7 +199,7 @@ void GetStatistics(double stat[50], double quality[3][100])
     double gamma = 0., gammaMin = 1., gammaMax = 0.;
 
     double N = stat[9] + stat[10] + stat[11] + stat[12] + stat[13];
-    if(N){ // if we have 3D elements
+   /* if(N){ // if we have 3D elements
       for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it){
         GetQualityMeasure((*it)->tetrahedra, gamma, gammaMin, gammaMax,
                           minSICN, minSICNMin, minSICNMax,
@@ -213,8 +214,8 @@ void GetStatistics(double stat[50], double quality[3][100])
                           minSICN, minSICNMin, minSICNMax,
                           minSIGE, minSIGEMin, minSIGEMax, quality);
       }
-    }
-    else{ // 2D elements
+    }*/
+    /*else*/{ // 2D elements
       N = stat[7] + stat[8];
       for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
         GetQualityMeasure((*it)->quadrangles, gamma, gammaMin, gammaMax,
@@ -250,8 +251,8 @@ void GetStatistics(double stat[50], double quality[3][100])
 }
 
 static bool TooManyElements(GModel *m, int dim)
-{
-  if(CTX::instance()->expertMode || !m->getNumVertices()) return false;
+{/*
+  if(/*CTX::instance()->expertMode || !m->getNumVertices()) return false;
 
   // try to detect obvious mistakes in characteristic lenghts (one of
   // the most common cause for erroneous bug reports on the mailing
@@ -266,12 +267,12 @@ static bool TooManyElements(GModel *m, int dim)
        "large mesh. Do you really want to continue?\n\n"
        "(To disable this warning in the future, select `Enable expert mode'\n"
        "in the option dialog.)", 1, "Cancel", "Continue");
-  return false;
+  return false;*/
 }
 
 static bool CancelDelaunayHybrid(GModel *m)
 {
-  if(CTX::instance()->expertMode) return false;
+ /* if(CTX::instance()->expertMode) return false;
   int n = 0;
   for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
     n += (*it)->getNumMeshElements();
@@ -283,7 +284,7 @@ static bool CancelDelaunayHybrid(GModel *m)
        "algorithm instead.) Do you really want to continue with the Delaunay?\n\n"
        "(To disable this warning in the future, select `Enable expert mode'\n"
        "in the option dialog.)", 1, "Cancel", "Continue");
-  return false;
+  return false;*/
 }
 
 static void Mesh0D(GModel *m)
@@ -316,7 +317,7 @@ static void Mesh1D(GModel *m)
   m->getFields()->initialize();
 
   if(TooManyElements(m, 1)) return;
-  Msg::StatusBar(true, "Meshing 1D...");
+  //Msg::StatusBar(true, "Meshing 1D...");
   double t1 = Cpu();
 
 
@@ -326,27 +327,27 @@ static void Mesh1D(GModel *m)
     temp.push_back(*it);
   }
 
-  Msg::ResetProgressMeter();
+  //Msg::ResetProgressMeter();
 
   int nIter = 0, nTot = m->getNumEdges();
   while(1){
     int nPending = 0;
     const size_t sss = temp.size();
-#if defined(_OPENMP)
-#pragma omp parallel for schedule (dynamic)
-#endif
+//#if defined(_OPENMP)
+//#pragma omp parallel for schedule (dynamic)
+//#endif
     for(size_t K = 0 ; K < sss ; K++){
       GEdge *ed = temp[K];
       if (ed->meshStatistics.status == GEdge::PENDING){
 	ed->mesh(true);
-#if defined(_OPENMP)
-#pragma omp critical
-#endif
+//#if defined(_OPENMP)
+//#pragma omp critical
+//#endif
 	{
 	  nPending++;
 	}
       }
-      if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 1D...");
+     // if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 1D...");
     }
 
     if(!nPending) break;
@@ -355,13 +356,13 @@ static void Mesh1D(GModel *m)
 
   double t2 = Cpu();
   CTX::instance()->meshTimer[0] = t2 - t1;
-  Msg::StatusBar(true, "Done meshing 1D (%g s)", CTX::instance()->meshTimer[0]);
+//  Msg::StatusBar(true, "Done meshing 1D (%g s)", CTX::instance()->meshTimer[0]);
 }
 
 static void PrintMesh2dStatistics(GModel *m)
 {
   FILE *statreport = 0;
-  if(CTX::instance()->createAppendMeshStatReport == 1)
+ /* if(CTX::instance()->createAppendMeshStatReport == 1)
     statreport = Fopen(CTX::instance()->meshStatReportFileName.c_str(), "w");
   else if(CTX::instance()->createAppendMeshStatReport == 2)
     statreport = Fopen(CTX::instance()->meshStatReportFileName.c_str(), "a");
@@ -372,7 +373,7 @@ static void PrintMesh2dStatistics(GModel *m)
     Msg::Error("Could not open file '%s'",
                CTX::instance()->meshStatReportFileName.c_str());
     return;
-  }
+  }*/
 
   double worst = 1, best = 0, avg = 0;
   double e_long = 0, e_short = 1.e22, e_avg = 0;
@@ -408,8 +409,8 @@ static void PrintMesh2dStatistics(GModel *m)
     }
   }
 
-  Msg::Info("*** Efficiency index for surface mesh tau=%g ",
-            100*exp(e_avg/(double)nTotE));
+  //Msg::Info("*** Efficiency index for surface mesh tau=%g ",
+ //           100*exp(e_avg/(double)nTotE));
 
   fprintf(statreport,"\t%16s\t%d\t\t%d\t\t", m->getName().c_str(), numFaces,
           nUnmeshed);
@@ -427,7 +428,7 @@ static void Mesh2D(GModel *m)
   m->getFields()->initialize();
 
   if(TooManyElements(m, 2)) return;
-  Msg::StatusBar(true, "Meshing 2D...");
+  //Msg::StatusBar(true, "Meshing 2D...");
   double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
@@ -444,16 +445,16 @@ static void Mesh2D(GModel *m)
       else
         f.insert(*it);
 
-    Msg::ResetProgressMeter();
+    //Msg::ResetProgressMeter();
 
     int nIter = 0, nTot = m->getNumFaces();
     while(1){
       int nPending = 0;
       std::vector<GFace*> temp;
       temp.insert(temp.begin(), f.begin(), f.end());
-#if defined(_OPENMP)
-#pragma omp parallel for schedule (dynamic)
-#endif
+//#if defined(_OPENMP)
+//#pragma omp parallel for schedule (dynamic)
+//#endif
       for(size_t K = 0 ; K < temp.size() ; K++){
         if (temp[K]->meshStatistics.status == GFace::PENDING){
           backgroundMesh::current()->unset();
@@ -479,18 +480,18 @@ static void Mesh2D(GModel *m)
             }
           }
 #endif
-#if defined(_OPENMP)
-#pragma omp critical
-#endif
+//#if defined(_OPENMP)
+//#pragma omp critical
+//#endif
           {
             nPending++;
           }
         }
-        if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 2D...");
+     //   if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 2D...");
       }
-#if defined(_OPENMP)
-#pragma omp master
-#endif
+//#if defined(_OPENMP)
+//#pragma omp master
+//#endif
       for(std::set<GFace*, GEntityLessThan>::iterator it = cf.begin();
           it != cf.end(); ++it){
         if ((*it)->meshStatistics.status == GFace::PENDING){
@@ -519,7 +520,7 @@ static void Mesh2D(GModel *m)
 #endif
           nPending++;
         }
-        if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 2D...");
+     //   if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 2D...");
       }
       if(!nPending) break;
       if(nIter++ > 10) break;
@@ -530,11 +531,11 @@ static void Mesh2D(GModel *m)
 
   double t2 = Cpu();
   CTX::instance()->meshTimer[1] = t2 - t1;
-  Msg::StatusBar(true, "Done meshing 2D (%g s)", CTX::instance()->meshTimer[1]);
+//  Msg::StatusBar(true, "Done meshing 2D (%g s)", CTX::instance()->meshTimer[1]);
 
   PrintMesh2dStatistics(m);
 }
-
+/*
 static void FindConnectedRegions(const std::vector<GRegion*> &del,
                                  std::vector<std::vector<GRegion*> > &connected)
 {
@@ -571,7 +572,7 @@ static void FindConnectedRegions(const std::vector<GRegion*> &del,
   }
   Msg::Info("Delaunay Meshing %d volumes with %d connected components",
             nbVolumes, connected.size());
-}
+}*/
 
 template <class ITERATOR>
 void fillv_(std::multimap<MVertex*, MElement*> &vertexToElement,
@@ -585,7 +586,7 @@ void fillv_(std::multimap<MVertex*, MElement*> &vertexToElement,
     }
   }
 }
-
+/*
 int LaplaceSmoothing(GRegion *gr)
 {
   std::multimap<MVertex*, MElement*> vertexToElement;
@@ -623,7 +624,7 @@ int LaplaceSmoothing(GRegion *gr)
     if (minQual < minQual2) N++;
   }
   return N;
-}
+}*/
 
 // JFR : use hex-splitting to resolve non conformity
 //     : if howto == 1 ---> split hexes
@@ -639,7 +640,7 @@ int LaplaceSmoothing(GRegion *gr)
   x--------x
   v0       v1
  */
-
+/*
 void buildUniqueFaces (GRegion *gr, std::set<MFace,Less_Face> &bnd)
 {
   for (unsigned int i=0;i<gr->getNumMeshElements();i++){
@@ -651,11 +652,11 @@ void buildUniqueFaces (GRegion *gr, std::set<MFace,Less_Face> &bnd)
       else bnd.erase(it);
     }
   }
-}
+}*/
 
 bool MakeMeshConformal(GModel *gm, int howto)
 {
-  fs_cont search;
+  /*fs_cont search;
   buildFaceSearchStructure(gm, search);
   std::set<MFace,Less_Face> bnd;
   for (GModel::riter rit = gm->firstRegion(); rit != gm->lastRegion(); ++rit){
@@ -780,14 +781,14 @@ bool MakeMeshConformal(GModel *gm, int howto)
       }
     }
     gr->prisms = remainingPrisms;
-  }
+  }*/
 
   return true;
 }
 
 void TestConformity(GModel *gm)
 {
-  fs_cont search;
+ /* fs_cont search;
   buildFaceSearchStructure(gm, search);
   int count = 0;
   for (GModel::riter rit = gm->firstRegion(); rit != gm->lastRegion(); ++rit){
@@ -822,7 +823,7 @@ void TestConformity(GModel *gm)
 	// TODO: Do something else
   }
 	//  Msg::Info("Mesh Conformity: OK");
-  //else Msg::Error ("Mesh is not conforming (%d hanging faces)!",count);
+  //else Msg::Error ("Mesh is not conforming (%d hanging faces)!",count);*/
 }
 
 // This stuff is 3D, no need
@@ -1034,7 +1035,7 @@ void AdaptMesh(GModel *m)
 
 void RecombineMesh(GModel *m)
 {
-  Msg::StatusBar(true, "Recombining 2D mesh...");
+  //Msg::StatusBar(true, "Recombining 2D mesh...");
   double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
@@ -1044,7 +1045,7 @@ void RecombineMesh(GModel *m)
 
   CTX::instance()->mesh.changed = ENT_ALL;
   double t2 = Cpu();
-  Msg::StatusBar(true, "Done recombining 2D mesh (%g s)", t2 - t1);
+ // Msg::StatusBar(true, "Done recombining 2D mesh (%g s)", t2 - t1);
 }
 
 //#include <google/profiler.h>
@@ -1061,7 +1062,7 @@ void GenerateMesh(GModel *m, int ask)
   }
   CTX::instance()->lock = 1;
 
-  Msg::ResetErrorCounter();
+ // Msg::ResetErrorCounter();
 
   int old = m->getMeshStatus(false);
 
@@ -1073,7 +1074,7 @@ void GenerateMesh(GModel *m, int ask)
 
   // 1D mesh
   if(ask == 1 || (ask > 1 && old < 1)) {
-    std::for_each(m->firstRegion(), m->lastRegion(), deMeshGRegion());
+  //  std::for_each(m->firstRegion(), m->lastRegion(), deMeshGRegion());
     std::for_each(m->firstFace(), m->lastFace(), deMeshGFace());
     Mesh0D(m);
     Mesh1D(m);
@@ -1081,7 +1082,7 @@ void GenerateMesh(GModel *m, int ask)
 
   // 2D mesh
   if(ask == 2 || (ask > 2 && old < 2)) {
-    std::for_each(m->firstRegion(), m->lastRegion(), deMeshGRegion());
+ //   std::for_each(m->firstRegion(), m->lastRegion(), deMeshGRegion()); // TODO: NOt sure about this one
     Mesh2D(m);
   }
 
@@ -1115,7 +1116,7 @@ void GenerateMesh(GModel *m, int ask)
 //    RefineMesh(m, CTX::instance()->mesh.secondOrderLinear, false, true);
 
   // Compute homology if necessary
-  if(!Msg::GetErrorCount()) m->computeHomology();
+ // if(!Msg::GetErrorCount()) m->computeHomology();
 
   // Create high order elements
   if(m->getMeshStatus() && CTX::instance()->mesh.order > 1)
@@ -1138,14 +1139,14 @@ void GenerateMesh(GModel *m, int ask)
       HighOrderMeshOptimizer(GModel::current(), p);
     }
 #else
-    Msg::Error("High-order mesh optimization requires the OPTHOM module");
+  //  Msg::Error("High-order mesh optimization requires the OPTHOM module");
 #endif
   }
 
-  Msg::Info("%d vertices %d elements",
-            m->getNumMeshVertices(), m->getNumMeshElements());
+ // Msg::Info("%d vertices %d elements",
+  //          m->getNumMeshVertices(), m->getNumMeshElements());
 
-  Msg::PrintErrorCounter("Mesh generation error summary");
+ // Msg::PrintErrorCounter("Mesh generation error summary");
 
   CTX::instance()->lock = 0;
   CTX::instance()->mesh.changed = ENT_ALL;

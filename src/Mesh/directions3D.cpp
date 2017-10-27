@@ -28,7 +28,7 @@
 #endif
 
 Frame_field::Frame_field(){}
-
+/*
 void Frame_field::init_region(GRegion* gr)
 {
 #if defined(HAVE_ANN)
@@ -60,7 +60,7 @@ void Frame_field::init_region(GRegion* gr)
 
   kd_tree = new ANNkd_tree(duplicate,field.size(),3);
 #endif
-}
+}*/
 
 void Frame_field::init_face(GFace* gf)
 {
@@ -266,7 +266,7 @@ void Frame_field::print_field1()
 
   file << "};\n";
 }
-
+/*
 void Frame_field::print_field2(GRegion* gr)
 {
   // Saves a file with the cross fields inside the given GRegion, excluding the
@@ -334,7 +334,7 @@ GRegion* Frame_field::test()
   GModel* model = GModel::current();
   gr = *(model->firstRegion());
   return gr;
-}
+}*/
 
 void Frame_field::clear()
 {
@@ -607,7 +607,7 @@ void Frame_field::initFace(GFace* gf)
   checkAnnData(gf, "zzz.pos");
   deleteAnnData();
 }
-
+/*
 void Frame_field::initRegion(GRegion* gr, int n)
 {
   std::list<GFace*> faces = gr->faces();
@@ -631,7 +631,7 @@ void Frame_field::initRegion(GRegion* gr, int n)
   }
   deleteAnnData();
   buildAnnData(gr,3);
-}
+}*/
 
 STensor3 Frame_field::findCross(double x, double y, double z)
 {
@@ -791,7 +791,7 @@ double Frame_field::smoothFace(GFace *gf, int n)
   }
   return energy;
 }
-
+/*
 double Frame_field::smoothRegion(GRegion *gr, int n)
 {
   double energy=0;
@@ -803,7 +803,7 @@ double Frame_field::smoothRegion(GRegion *gr, int n)
     std::cout << "energy = " << energy << std::endl;
   }
   return energy;
-}
+}*/
 
 double Frame_field::smooth()
 {
@@ -941,10 +941,10 @@ void Frame_field::recur_connect_vert(FILE *fi, int count,
         printf("orient OK Id=%d %d %d\n", Id(0), Id(1), Id(2));
       else{
         printf("change orientation  Id=%d %d %d \n",  Id(0), Id(1), Id(2));
-        cross.print("cross ");
-        nextCross.print("nextCross ");
-        prod.print("product");
-        newcross.print("newcross");
+//        cross.print("cross ");
+ //       nextCross.print("nextCross ");
+ //       prod.print("product");
+ //       newcross.print("newcross");
       }
 
       if(fi)
@@ -956,7 +956,7 @@ void Frame_field::recur_connect_vert(FILE *fi, int count,
 
   }
 }
-
+/*
 void Frame_field::continuousCrossField(GRegion *gr, GFace *gf)
 {
   printf("continuous cross field \n");
@@ -1005,7 +1005,7 @@ void Frame_field::continuousCrossField(GRegion *gr, GFace *gf)
     fclose (fi);
   }
   //printf("touched =%d vert =%d \n", touched.size(), vertex_to_vertices.size());
-}
+}*/
 
 void Frame_field::saveCrossField(const std::string& filename, double scale, bool full)
 {
@@ -1090,7 +1090,7 @@ void Frame_field::checkAnnData(GEntity* ge, const std::string& filename)
   file.close();
 #endif
 }
-
+/*
 void Frame_field::save_energy(GRegion* gr, const std::string& filename)
 {
 #if defined(HAVE_POST)
@@ -1147,10 +1147,10 @@ void Frame_field::save_energy(GRegion* gr, const std::string& filename)
   data->writeMSH(filename + ".msh");
   data->finalize();
 #endif
-}
+}*/
 
 Size_field::Size_field(){}
-
+/*
 void Size_field::init_region(GRegion* gr)
 {
 #if defined(HAVE_ANN)
@@ -1302,7 +1302,7 @@ void Size_field::solve(GRegion* gr)
 
   delete system;
 #endif
-}
+}*/
 
 double Size_field::search(double x,double y,double z)
 {
@@ -1345,7 +1345,7 @@ double Size_field::search(double x,double y,double z)
 
   return val;
 }
-
+/*
 void Size_field::print_field(GRegion* gr)
 {
   size_t i;
@@ -1440,7 +1440,7 @@ GRegion* Size_field::test()
   gr = *(model->firstRegion());
 
   return gr;
-}
+}*/
 
 void Size_field::clear()
 {
@@ -1456,7 +1456,7 @@ void Size_field::clear()
 }
 
 Nearest_point::Nearest_point(){}
-
+/*
 void Nearest_point::init_region(GRegion* gr)
 {
 #if defined(HAVE_ANN)
@@ -1539,7 +1539,7 @@ void Nearest_point::init_region(GRegion* gr)
 
   kd_tree = new ANNkd_tree(duplicate,field.size(),3);
 #endif
-}
+}*/
 
 bool Nearest_point::search(double x,double y,double z,SVector3& vec)
 {
@@ -1705,7 +1705,7 @@ double Nearest_point::clamp(double x,double min,double max)
 
   return val;
 }
-
+/*
 void Nearest_point::print_field(GRegion* gr)
 {
   unsigned int i;
@@ -1737,7 +1737,7 @@ void Nearest_point::print_field(GRegion* gr)
   }
 
   file << "};\n";
-}
+}*/
 
 void Nearest_point::print_segment(SPoint3 p1,SPoint3 p2,std::ofstream& file)
 {
@@ -1746,7 +1746,7 @@ void Nearest_point::print_segment(SPoint3 p1,SPoint3 p2,std::ofstream& file)
   << p2.x() << ", " << p2.y() << ", " << p2.z() << ")"
   << "{10, 20};\n";
 }
-
+/*
 GRegion* Nearest_point::test()
 {
   GRegion* gr;
@@ -1755,7 +1755,7 @@ GRegion* Nearest_point::test()
   gr = *(model->firstRegion());
 
   return gr;
-}
+}*/
 
 void Nearest_point::clear()
 {

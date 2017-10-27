@@ -10,7 +10,7 @@
 #include <string>
 //#include "GmshConfig.h"
 //#include "GmshMessage.h"
-
+#if defined(HAVE_MATHEX)
 
 #include "common/mathex.h"
 
@@ -48,5 +48,5 @@ class mathEvaluator{
   }
 };
 
-
+#endif
 #endif

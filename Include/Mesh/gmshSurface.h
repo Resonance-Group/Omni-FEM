@@ -15,6 +15,7 @@
 #include "Mesh/SVector3.h"
 #include "Mesh/SBoundingBox3d.h"
 #include "Mesh/Numeric.h"
+#include "Mesh/mathEvaluator.h"
 
 class gmshSurface
 {

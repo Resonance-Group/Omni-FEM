@@ -27,14 +27,14 @@ void add_infile(const std::string &text, const std::string &fileNameOrEmpty)
 {
   std::string fileName = fileNameOrEmpty;
   if(fileName.empty()){
-    std::string base = (getenv("PWD") ? "" : CTX::instance()->homeDir);
-    GModel::current()->setFileName(base + CTX::instance()->defaultFileName);
+  //  std::string base = (getenv("PWD") ? "" : CTX::instance()->homeDir);
+   // GModel::current()->setFileName(base + CTX::instance()->defaultFileName);
     GModel::current()->setName("");
   }
 
-  Msg::Debug("Adding `%s' to file `%s'", text.c_str(), fileName.c_str());
-  std::vector<std::string> split = SplitFileName(fileName);
-  std::string noExt = split[0] + split[1], ext = split[2];
+ // Msg::Debug("Adding `%s' to file `%s'", text.c_str(), fileName.c_str());
+ // std::vector<std::string> split = SplitFileName(fileName);
+ // std::string noExt = split[0] + split[1], ext = split[2];
 #if defined(HAVE_COMPRESSED_IO) && defined(HAVE_LIBZ)
   bool compressed = false;
   if(ext == ".gz"){
@@ -44,7 +44,7 @@ void add_infile(const std::string &text, const std::string &fileNameOrEmpty)
 #endif
   // make sure we don't add stuff in a non-geo file
   static bool proceed = false;
-  if(!CTX::instance()->expertMode && !proceed) {
+ /* if(!CTX::instance()->expertMode && !proceed) {
     if(ext.size() && ext != ".geo" && ext != ".GEO" ){
       std::ostringstream sstream;
       sstream <<
@@ -82,7 +82,7 @@ void add_infile(const std::string &text, const std::string &fileNameOrEmpty)
       else if(ret == 0)
         return;
     }
-  }
+  }*/
 
 #if defined(HAVE_PARSER)
   std::string tmpFileName = CTX::instance()->homeDir + CTX::instance()->tmpFileName;
@@ -139,22 +139,22 @@ void add_infile(const std::string &text, const std::string &fileNameOrEmpty)
 #endif
 
 #else
-  Msg::Error("GEO file creation not available without Gmsh parser");
+  //Msg::Error("GEO file creation not available without Gmsh parser");
 #endif
 
   // mark Gmsh data as changed in onelab
   if(text.find("Physical") != std::string::npos){
     // re-import the physical groups in onelab, and only ask to re-save the mesh
-    Msg::ImportPhysicalGroupsInOnelab();
-    Msg::SetOnelabChanged(1);
+    //Msg::ImportPhysicalGroupsInOnelab();
+    //Msg::SetOnelabChanged(1);
   }
   else if(text.find("Characteristic") != std::string::npos){
     // only ask to remesh and re-save
-    Msg::SetOnelabChanged(2);
+    //Msg::SetOnelabChanged(2);
   }
   else{
     // ask to reload the geometry, remesh and re-save
-    Msg::SetOnelabChanged(3);
+    //Msg::SetOnelabChanged(3);
   }
 }
 
@@ -196,7 +196,7 @@ static std::string dimTags2String(const std::vector<std::pair<int, int> > &l)
 
 static void check_occ(std::ostringstream &sstream)
 {
-  if(gmsh_yyfactory != "OpenCASCADE") sstream << "SetFactory(\"OpenCASCADE\");\n";
+//  if(gmsh_yyfactory != "OpenCASCADE") sstream << "SetFactory(\"OpenCASCADE\");\n";
 }
 
 void add_charlength(const std::string &fileName, const std::vector<int> &l,
@@ -431,7 +431,7 @@ void add_compound(const std::string &fileName, const std::string &type,
                   const std::vector<int> &l)
 {
   std::ostringstream sstream;
-  if(SplitFileName(fileName)[2] != ".geo") sstream << "CreateTopology;\n";
+ // if(SplitFileName(fileName)[2] != ".geo") sstream << "CreateTopology;\n";
   if (type == "Surface"){
     sstream << "Compound " << type << "("
             << GModel::current()->getMaxElementaryNumber(2) + 1 << ") = {"

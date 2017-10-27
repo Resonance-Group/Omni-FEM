@@ -270,7 +270,7 @@ static unsigned int FixErasedExtrScaleFlags(GModel *m,
                                             std::map<int, bool> &faceSkipScaleCalc,
                                             std::map<int, bool> &edgeSkipScaleCalc)
 {
-  unsigned int num_changed = 0;
+/*  unsigned int num_changed = 0;
   std::set<GRegion *, GEntityLessThan>::iterator itreg;
   // fix all extruded faces bordering ScaleLast regions
   for( itreg = m->firstRegion(); itreg != m->lastRegion(); itreg++ ){
@@ -314,7 +314,7 @@ static unsigned int FixErasedExtrScaleFlags(GModel *m,
     }
   }
 
-  return num_changed;
+  return num_changed;*/return 0;
 }
 
 int Mesh2DWithBoundaryLayers(GModel *m)
@@ -458,9 +458,15 @@ int Mesh2DWithBoundaryLayers(GModel *m)
     ExtrudeParams::normals[i] = new smooth_data();
   }
   if(sourceFaces.empty())
-    addExtrudeNormals(sourceEdges, sourceEdgeInfo, edgeSkipScaleCalc);
+  {
+    //addExtrudeNormals(sourceEdges, sourceEdgeInfo, edgeSkipScaleCalc);
+	
+  }
   else
-    addExtrudeNormals(sourceFaces, sourceFaceInfo, faceSkipScaleCalc);
+  {
+   // addExtrudeNormals(sourceFaces, sourceFaceInfo, faceSkipScaleCalc);
+	
+  }
 
   // set the position of boundary layer points using the smooth normal field
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); it++){
@@ -500,7 +506,7 @@ int Mesh2DWithBoundaryLayers(GModel *m)
    //   Msg::Info("Meshing curve %d", ge->tag());
       deMeshGEdge dem;
       dem(ge);
-      MeshExtrudedCurve(ge);
+//      MeshExtrudedCurve(ge);
     }
   }
 

@@ -14,6 +14,7 @@
 #include "Mesh/Context.h"
 //#include "GmshMessage.h"
 #include "Mesh/Numeric.h"
+#include "Mesh/GEdgeLoop.h"
 
 #define SQU(a)      ((a)*(a))
 
@@ -47,6 +48,7 @@ void findTransfiniteCorners(GFace *gf, std::vector<MVertex*> &corners)
     // try to find the corners automatically
     std::list<GEdge*> fedges = gf->edges();
     GEdgeLoop el(fedges);
+	// TODO: EdgeLoop iterator used here
     for(GEdgeLoop::iter it = el.begin(); it != el.end(); it++)
       corners.push_back(it->getBeginVertex()->mesh_vertices[0]);
 

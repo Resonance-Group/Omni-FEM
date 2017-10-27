@@ -117,13 +117,13 @@ std::string GetFileNameWithoutPath(const std::string &fileName)
 
 std::string ConvertFileToString(const std::string &fileName)
 {
-  FILE *fp = Fopen(fileName.c_str(), "r");
+/*  FILE *fp = Fopen(fileName.c_str(), "r");
   if(!fp) return "";
   std::string out;
   char str[256];
   while(!feof(fp) && fgets(str, sizeof(str), fp)) out += str;
   fclose(fp);
-  return out;
+  return out;*/
 }
 
 void ReplaceSubStringInPlace(const std::string &olds, const std::string &news,

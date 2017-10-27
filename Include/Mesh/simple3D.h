@@ -15,6 +15,7 @@
 #include <list>
 //#include "GRegion.h"
 #include "Mesh/MElementOctree.h"
+#include "Mesh/MVertex.h"
 
 class Node;
 class Metric;
@@ -37,8 +38,8 @@ class Filler{
  public:
   Filler();
   ~Filler();
-  void treat_model();
-  void treat_region(GRegion*);
+ // void treat_model();
+ // void treat_region(GRegion*);
   static int get_nbr_new_vertices();
   static MVertex* get_new_vertex(int);
 };

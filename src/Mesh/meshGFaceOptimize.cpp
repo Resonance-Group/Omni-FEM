@@ -1445,10 +1445,10 @@ void recombineIntoQuads(GFace *gf,
   if(gf->geomType() == GEntity::DiscreteSurface && !gf->getCompound())
     haveParam = false;
 
-  if (saveAll) gf->model()->writeMSH("before.msh");
+ // if (saveAll) gf->model()->writeMSH("before.msh");
   int success = _recombineIntoQuads(gf, minqual);
   
-  if (saveAll) gf->model()->writeMSH("raw.msh");
+ // if (saveAll) gf->model()->writeMSH("raw.msh");
 
   if(haveParam && nodeRepositioning){
     RelocateVertices (gf,CTX::instance()->mesh.nbSmoothing);
@@ -1457,7 +1457,7 @@ void recombineIntoQuads(GFace *gf,
   if(success && CTX::instance()->mesh.algoRecombine != 0){
     if(topologicalOpti){
       if(haveParam){
-        if (saveAll) gf->model()->writeMSH("smoothed.msh");
+  //      if (saveAll) gf->model()->writeMSH("smoothed.msh");
         int ITER=0;
         std::set<MEdge,Less_Edge> prioritory;
         int nbTwoQuadNodes = 1;

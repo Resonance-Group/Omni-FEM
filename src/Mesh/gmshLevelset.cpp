@@ -17,6 +17,7 @@
 #include "Mesh/MElement.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/cartesian.h"
+//#include "comm"
 //#include "GmshConfig.h"
 #if defined(HAVE_ANN)
 #include "ANN/ANN.h"
@@ -244,8 +245,8 @@ inline double evalRadialFnDer(int p, int index, double dx, double dy, double dz,
 }
 
 inline void printNodes(fullMatrix<double> &myNodes, fullMatrix<double> &surf)
-{
-  FILE * xyz = Fopen("myNodes.pos","w");
+{/*
+//  FILE * xyz = Fopen("myNodes.pos","w");
   if(xyz){
     fprintf(xyz,"View \"\"{\n");
     for(int itv = 1; itv != myNodes.size1(); ++itv){
@@ -254,7 +255,7 @@ inline void printNodes(fullMatrix<double> &myNodes, fullMatrix<double> &surf)
     }
     fprintf(xyz,"};\n");
     fclose(xyz);
-  }
+  }*/
 }
 
 // extrude a list of the primitive levelsets with a "Level-order traversal sequence"
@@ -553,7 +554,7 @@ gLevelsetPoints::gLevelsetPoints(const gLevelsetPoints &lv)
 double gLevelsetPoints::operator()(double x, double y, double z) const
 {
   if(mapP.empty())
-    Msg::Info("Levelset Points : call computeLS() before calling operator()\n");
+    {/*Msg::Info("Levelset Points : call computeLS() before calling operator()\n");*/}
 
   SPoint3 sp(x,y,z);
   std::map<SPoint3,double>::const_iterator it = mapP.find(sp);
