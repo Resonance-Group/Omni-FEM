@@ -16,7 +16,7 @@ class GVertex;
 class GEdge;
 class GEdgeSigned;
 class GFace;
-class GRegion;
+//class GRegion;
 class GModel;
 class SPoint3;
 

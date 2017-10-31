@@ -1,4 +1,5 @@
 #include <Mesh/meshMaker.h>
+#include <Mesh/GModel.h>
 #include <iterator>
 
 std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
@@ -617,7 +618,87 @@ void meshMaker::mesh()
 	
 	if(canMakeMesh)
 	{
+		std::vector<GVertex*> vertexModelList;
+		std::vector<std::vector<std::vector<GEdge*>>> compeleteLineLoop;
+		
+		vertexModelList.reserve(p_nodeList->size());
+		GModel meshModel;
 		GmshInitialize();
+		
+		meshModel.setFactory("Gmsh");
+		
+		for(auto nodeIterator : *p_nodeList)
+		{
+			double test1 = nodeIterator.getCenterXCoordinate();
+			double test2 = nodeIterator.getCenterYCoordinate();
+			vertexModelList.push_back(meshModel.addVertex(test1, test2, 0.0, 0.1));
+		}
+		
+		for(auto contourIterator : p_closedContours)
+		{
+			std::vector<GEdge*> contourLoop;
+			
+			std::vector<edgeLineShape> contour = contourIterator;
+			for(auto lineIterator : contour)
+			{
+				GVertex *firstNode = nullptr;
+				GVertex *secondNode = nullptr;
+				
+				//GVertex test;
+				
+				
+				for(auto vertexIterator : vertexModelList)
+				{
+					double xValueVertex = vertexIterator->x();
+					double yValueVertex = vertexIterator->y();
+					double firstNodeCenterX = lineIterator.getFirstNode()->getCenterXCoordinate();
+					double firstNodeCenterY = lineIterator.getFirstNode()->getCenterYCoordinate();
+					double secondNodeCenterX = lineIterator.getSecondNode()->getCenterXCoordinate();
+					double secondNodeCenterY = lineIterator.getSecondNode()->getCenterYCoordinate();
+					if(((xValueVertex == firstNodeCenterX) && (yValueVertex == firstNodeCenterY)) ||
+						((xValueVertex == secondNodeCenterX) && (yValueVertex == secondNodeCenterY)))
+						{
+							if(firstNode)
+							{
+								secondNode = vertexIterator;
+								break;
+							}
+							else
+								firstNode = vertexIterator;
+						}
+				}
+				
+				if(lineIterator.isArc())
+				{
+					// Throw in the code here in order to create a Bspline within the mesh model
+					//GEdge *test = meshModel->addBezier()
+				}
+				else
+				{
+					contourLoop.push_back(meshModel.addLine(firstNode, secondNode));
+				}
+				delete firstNode;
+				delete secondNode;
+			}
+			
+			std::vector<std::vector<GEdge*>> test;
+			test.push_back(contourLoop);
+			// Now, we need to test if the contour is a hole to another contour
+			// Or, if the contour lies outside of a set of contours
+			// Or if the contour is not related to any of the already added contours
+			// And add it in the correct place of the complete line loop
+			// For now, we will just add it to the model directly
+			GFace *testFace = meshModel.addPlanarFace(test);
+			testFace->meshAttributes.meshSize = 0.1;
+			testFace->setMeshingAlgo(ALGO_2D_DELAUNAY); // Found in GmshDefines.h
+			
+		}
+		
+		meshModel.mesh(2);
+		
+		meshModel.writeMSH("/home/phillip/Desktop/test.msh");
+		
+		//meshModel.Addv
 		
 	}
 	else

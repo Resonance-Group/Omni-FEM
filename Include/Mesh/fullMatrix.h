@@ -781,9 +781,9 @@ class fullMatrix
     int nj = size2();
     fullMatrix<scalar> cof(ni - 1, nj - 1);
     for(int I = 0; I < ni; I++)
-      for(int J = 0; J < nj; J++)
-        if(J != j && I != i)
-          cof(I < i ? I : I - 1, J < j ? J : J - 1) = (*this)(I, J);
+      for(int k = 0; k < nj; k++)
+        if(k != j && I != i)
+          cof(I < i ? I : I - 1, k < j ? k : k - 1) = (*this)(I, k);
     return cof;
   }
   scalar determinant() const;

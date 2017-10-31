@@ -1093,6 +1093,7 @@ int GModel::refineMesh(int linear)
 
 int GModel::optimizeMesh(const std::string &how)
 {
+	// This is for 3D optimizing
 //  if(how == "Netgen")
 //    OptimizeMeshNetgen(this);
  // else
@@ -3329,7 +3330,8 @@ static void factoryWarning()
 GVertex *GModel::addVertex(double x, double y, double z, double lc)
 {
   factoryWarning();
-  if(_factory) return _factory->addVertex(this, x, y, z, lc);
+  if(_factory) 
+	  return _factory->addVertex(this, x, y, z, lc);
   return 0;
 }
 

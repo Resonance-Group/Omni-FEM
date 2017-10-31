@@ -13,15 +13,15 @@
 #include <sstream>
 #include <algorithm>
 
-#include "Mesh/GEntity.h"// Not Good
-#include "Mesh/GModel.h"// Not Good
-#include "Mesh/GFace.h"// Not Good
+#include "Mesh/GEntity.h"
+#include "Mesh/GModel.h"
+#include "Mesh/GFace.h"
 
-#include "Mesh/GPoint.h"// Not Good
-#include "Mesh/SPoint2.h" // Good
-#include "Mesh/MPoint.h" // Not Good
+#include "Mesh/GPoint.h"
+#include "Mesh/SPoint2.h" 
+#include "Mesh/MPoint.h" 
 
-//#include "SPoint3.h"
+#include "Mesh/SPoint3.h"
 
 class MElement;
 class MPoint;

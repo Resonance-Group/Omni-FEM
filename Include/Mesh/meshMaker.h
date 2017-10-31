@@ -9,6 +9,10 @@
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
 
+#include <Mesh/GVertex.h>
+#include <Mesh/GEdge.h>
+#include <Mesh/GFace.h>
+
 
 /**
  * @class meshMaker

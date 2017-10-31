@@ -72,7 +72,7 @@ struct contextGeometryOptions {
   int pointType, lineType, surfaceType, numSubEdges;
   int oldCircle, oldNewreg, oldRuledSurface;
   int extrudeSplinePoints, extrudeReturnLateral;
-  double normals, tangents, scalingFactor;
+  double normals, tangents, scalingFactor = 1;
   int autoCoherence, highlightOrphans, clip, useTransform;
   double tolerance, toleranceBoolean, snap[3], transform[3][3], offset[3];
   int occFixDegenerated, occFixSmallEdges, occFixSmallFaces;
