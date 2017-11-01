@@ -658,13 +658,13 @@ void meshMaker::mesh()
 					if(((xValueVertex == firstNodeCenterX) && (yValueVertex == firstNodeCenterY)) ||
 						((xValueVertex == secondNodeCenterX) && (yValueVertex == secondNodeCenterY)))
 						{
-							if(firstNode)
-							{
-								secondNode = vertexIterator;
-								break;
-							}
-							else
+							if(xValueVertex == firstNodeCenterX && yValueVertex == firstNodeCenterY)
 								firstNode = vertexIterator;
+							else if (xValueVertex == secondNodeCenterX && yValueVertex == secondNodeCenterY)
+								secondNode = vertexIterator;
+							
+							if(firstNode && secondNode)
+								break;
 						}
 				}
 				
@@ -677,8 +677,8 @@ void meshMaker::mesh()
 				{
 					contourLoop.push_back(meshModel.addLine(firstNode, secondNode));
 				}
-				delete firstNode;
-				delete secondNode;
+				//delete firstNode;
+				//delete secondNode;
 			}
 			
 			std::vector<std::vector<GEdge*>> test;
@@ -697,6 +697,8 @@ void meshMaker::mesh()
 		meshModel.mesh(2);
 		
 		meshModel.writeMSH("/home/phillip/Desktop/test.msh");
+		
+		meshModel.writeVTK("/home/phillip/Desktop/test.msh");
 		
 		//meshModel.Addv
 		

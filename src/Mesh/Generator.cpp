@@ -251,8 +251,8 @@ void GetStatistics(double stat[50], double quality[3][100])
 }
 
 static bool TooManyElements(GModel *m, int dim)
-{/*
-  if(/*CTX::instance()->expertMode || !m->getNumVertices()) return false;
+{
+  //if(CTX::instance()->expertMode || !m->getNumVertices()) return false;
 
   // try to detect obvious mistakes in characteristic lenghts (one of
   // the most common cause for erroneous bug reports on the mailing
@@ -262,12 +262,16 @@ static bool TooManyElements(GModel *m, int dim)
     sumAllLc += (*it)->prescribedMeshSizeAtVertex() * CTX::instance()->mesh.lcFactor;
   sumAllLc /= (double)m->getNumVertices();
   if(!sumAllLc || pow(CTX::instance()->lc / sumAllLc, dim) > 1.e10)
-    return !Msg::GetAnswer
-      ("Your choice of mesh element sizes will likely produce a very\n"
-       "large mesh. Do you really want to continue?\n\n"
-       "(To disable this warning in the future, select `Enable expert mode'\n"
-       "in the option dialog.)", 1, "Cancel", "Continue");
-  return false;*/
+  {
+  //  return !Msg::GetAnswer
+   //   ("Your choice of mesh element sizes will likely produce a very\n"
+   //    "large mesh. Do you really want to continue?\n\n"
+    //   "(To disable this warning in the future, select `Enable expert mode'\n"
+    //   "in the option dialog.)", 1, "Cancel", "Continue");
+	std::string variable;
+	variable = "Hey, I am just a variable to stop the debugger to indicate that there are probably too many elements :(";
+  }
+  return false;
 }
 
 static bool CancelDelaunayHybrid(GModel *m)
@@ -533,7 +537,7 @@ static void Mesh2D(GModel *m)
   CTX::instance()->meshTimer[1] = t2 - t1;
 //  Msg::StatusBar(true, "Done meshing 2D (%g s)", CTX::instance()->meshTimer[1]);
 
-  PrintMesh2dStatistics(m);
+ // PrintMesh2dStatistics(m);
 }
 /*
 static void FindConnectedRegions(const std::vector<GRegion*> &del,
@@ -1056,11 +1060,11 @@ void GenerateMesh(GModel *m, int ask)
 		return;
 		
   // ProfilerStart("gmsh.prof");
-  if(CTX::instance()->lock) {
+ // if(CTX::instance()->lock) {
   //  Msg::Info("I'm busy! Ask me that later...");
-    return;
-  }
-  CTX::instance()->lock = 1;
+ //   return;
+ // }
+ // CTX::instance()->lock = 1;
 
  // Msg::ResetErrorCounter();
 

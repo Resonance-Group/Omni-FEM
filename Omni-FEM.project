@@ -221,6 +221,7 @@
       <File Name="src/Mesh/STensor3.cpp"/>
       <File Name="src/Mesh/GModelIO_MSH.cpp"/>
       <File Name="src/Mesh/GModelIO_MSH2.cpp"/>
+      <File Name="src/Mesh/GModelIO_VTK.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -456,6 +457,7 @@
       <File Name="Include/Mesh/meshPartitionObjects.h"/>
       <File Name="Include/Mesh/StringUtils.h"/>
       <File Name="Include/Mesh/nanoflann.hpp"/>
+      <File Name="Include/Mesh/DefaultOptions.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

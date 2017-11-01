@@ -25,7 +25,7 @@
 //#include "Colors.h"
 //#include "CommandLine.h"
 //#include "GamePad.h"
-//#include "DefaultOptions.h"
+#include "Mesh/DefaultOptions.h"
 
 //#if defined(HAVE_MESH)
 #include "Mesh/Generator.h"
@@ -475,9 +475,9 @@ void InitOptions(int num)
 //  SetDefaultStringOptions(num, PrintOptions_String);
 
   // Default number options
- // SetDefaultNumberOptions(num, GeneralOptions_Number);
-  //SetDefaultNumberOptions(num, GeometryOptions_Number);
- // SetDefaultNumberOptions(num, MeshOptions_Number);
+  //SetDefaultNumberOptions(num, GeneralOptions_Number);
+  SetDefaultNumberOptions(num, GeometryOptions_Number);
+  SetDefaultNumberOptions(num, MeshOptions_Number);
   //SetDefaultNumberOptions(num, SolverOptions_Number);
 //  SetDefaultNumberOptions(num, PostProcessingOptions_Number);
 //  SetDefaultNumberOptions(num, ViewOptions_Number);

@@ -15,10 +15,10 @@ typedef unsigned long intptr_t;
 //#include "GmshMessage.h"
 #include "Mesh/GmshDefines.h"
 //#include "GmshRemote.h"
-//#include "Mesh/GModel.h"
+#include "Mesh/GModel.h"
 //#include "OpenFile.h"
 //#include "CreateFile.h"
-//#include "Mesh/Options.h"
+#include "Mesh/Options.h"
 
 /*
 #if defined(HAVE_PARSER)
@@ -28,7 +28,7 @@ typedef unsigned long intptr_t;
 
 //#include "CommandLine.h"
 #include "common/OS.h"
-//#include "Context.h"
+#include "Mesh/Context.h"
 #include "Mesh/robustPredicates.h"
 
 /*
@@ -44,13 +44,13 @@ typedef unsigned long intptr_t;
 #include "gmshLocalNetworkClient.h"
 #endif
  */ 
-/*
+
 #if defined(HAVE_MESH)
-#include "Generator.h"
-#include "Field.h"
-#include "meshPartition.h"
+#include "Mesh/Generator.h"
+#include "Mesh/Field.h"
+#include "Mesh/meshPartition.h"
 #endif
- */ 
+ 
 
 /*
 #if defined(HAVE_PLUGINS)
@@ -88,7 +88,7 @@ int GmshInitialize(int argc, char **argv)
 //  Msg::Init(argc, argv);
 
   // Load default options
-//	InitOptions(0);
+	InitOptions(0);
 	
 
   // Read configuration files and command line options
