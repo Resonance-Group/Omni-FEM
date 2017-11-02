@@ -609,7 +609,7 @@ void meshGEdge::operator() (GEdge *ge)
        a = Integration(ge, t_begin, t_end, F_Lc, Points,
                       CTX::instance()->mesh.lcIntegrationPrecision);
     }
-
+	unsigned int pointSize = Points.size();
     // we should maybe provide an option to disable the smoothing
     for (unsigned int i = 0; i < Points.size(); i++){
       IntPoint &pt = Points[i];

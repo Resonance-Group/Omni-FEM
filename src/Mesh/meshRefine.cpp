@@ -24,7 +24,7 @@ void subdivide_pyramid(MElement* element,
 		       GRegion* gr,
 		       faceContainer &faceVertices,
 		       std::vector<MHexahedron*> &dwarfs88);
-
+*/
 class MVertexLessThanParam{
  public:
   bool operator()(const MVertex *v1, const MVertex *v2) const
@@ -34,7 +34,7 @@ class MVertexLessThanParam{
     v2->getParameter(0, u2);
     return u1 < u2;
   }
-};*/
+};
 
 // Set BM data on vertex
 static void setBLData(MVertex *v)
@@ -85,7 +85,7 @@ static bool setBLData(MElement *el)
 
 static void Subdivide(GEdge *ge)
 {
- /* std::vector<MLine*> lines2;
+  std::vector<MLine*> lines2;
   for(unsigned int i = 0; i < ge->lines.size(); i++){
     MLine *l = ge->lines[i];
     if(l->getNumVertices() == 3){
@@ -102,7 +102,7 @@ static void Subdivide(GEdge *ge)
             MVertexLessThanParam());
   for(unsigned int i = 0; i < ge->mesh_vertices.size(); i++)
     ge->mesh_vertices[i]->setPolynomialOrder(1);
-  ge->deleteVertexArrays();*/
+  ge->deleteVertexArrays();
 }
 
 static void Subdivide(GFace *gf, bool splitIntoQuads, bool splitIntoHexas,
@@ -449,8 +449,8 @@ static void Subdivide(GRegion *gr, bool splitIntoHexas, faceContainer &faceVerti
 */
 void RefineMesh(GModel *m, bool linear, bool splitIntoQuads, bool splitIntoHexas = false)
 {
-  //  splitIntoQuads = true;
-  //  splitIntoHexas = true;
+    splitIntoQuads = true;
+    splitIntoHexas = false;
 
  // Msg::StatusBar(true, "Refining mesh...");
   double t1 = Cpu();
@@ -466,13 +466,13 @@ void RefineMesh(GModel *m, bool linear, bool splitIntoQuads, bool splitIntoHexas
   // mesh
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); ++it)
     Subdivide(*it);
-/*  for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
+  for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
     Subdivide(*it, splitIntoQuads, splitIntoHexas, faceVertices);
-    //if(splitIntoQuads) recombineIntoQuads(*it, true, true);
+    if(splitIntoQuads) recombineIntoQuads(*it, true, true);
   }
-  for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
-    Subdivide(*it, splitIntoHexas, faceVertices);
-*/
+ // for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
+  //  Subdivide(*it, splitIntoHexas, faceVertices);
+
   // Check all 3D elements for negative volume and reverse if needed
   m->setAllVolumesPositive();
 

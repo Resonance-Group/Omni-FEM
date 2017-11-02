@@ -675,7 +675,11 @@ void meshMaker::mesh()
 				}
 				else
 				{
-					contourLoop.push_back(meshModel.addLine(firstNode, secondNode));
+					GEdge *temp = meshModel.addLine(firstNode, secondNode);
+					temp->meshAttributes.meshSize = 0.001;
+					
+				//	temp->meshAttributes.meshSize
+					contourLoop.push_back(temp);
 				}
 				//delete firstNode;
 				//delete secondNode;
@@ -689,16 +693,25 @@ void meshMaker::mesh()
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
 			GFace *testFace = meshModel.addPlanarFace(test);
-			testFace->meshAttributes.meshSize = 0.1;
+			testFace->meshAttributes.meshSize = 0.001;
+			double temp = testFace->getMeshSize();
+			//testFace->meshSize = 0.001;
 			testFace->setMeshingAlgo(ALGO_2D_DELAUNAY); // Found in GmshDefines.h
 			
 		}
 		
+		CTX::instance()->mesh.recombineAll = 1;
+		CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
+		CTX::instance()->mesh.algoSubdivide = 1;
+		
+		//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
+		
 		meshModel.mesh(2);
 		
-		meshModel.writeMSH("/home/phillip/Desktop/test.msh");
 		
-		meshModel.writeVTK("/home/phillip/Desktop/test.msh");
+		//meshModel.writeMSH("/home/phillip/Desktop/test.msh");
+		
+		meshModel.writeVTK("/home/phillip/Desktop/test.vtk");
 		
 		//meshModel.Addv
 		
