@@ -676,8 +676,8 @@ void meshMaker::mesh()
 				else
 				{
 					GEdge *temp = meshModel.addLine(firstNode, secondNode);
-					temp->meshAttributes.meshSize = 0.001;
-					
+					//temp->meshAttributes.meshSize = 1000;
+					temp->resetMeshAttributes();
 				//	temp->meshAttributes.meshSize
 					contourLoop.push_back(temp);
 				}
@@ -693,7 +693,8 @@ void meshMaker::mesh()
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
 			GFace *testFace = meshModel.addPlanarFace(test);
-			testFace->meshAttributes.meshSize = 0.001;
+			//testFace->meshAttributes.meshSize = 1000;
+			testFace->resetMeshAttributes();
 			double temp = testFace->getMeshSize();
 			//testFace->meshSize = 0.001;
 			testFace->setMeshingAlgo(ALGO_2D_DELAUNAY); // Found in GmshDefines.h
