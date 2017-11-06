@@ -473,16 +473,17 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-O0;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes);" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="/usr/local/include/wx-3.1"/>
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
+        <IncludePath Value="/usr/include/wx-3.1-unofficial"/>
         <IncludePath Value="/usr/include/GL"/>
         <IncludePath Value="/usr/include/wx-3.0"/>
         <IncludePath Value="/usr/include/freetype2"/>
         <IncludePath Value="/usr/include/boost"/>
       </Compiler>
-      <Linker Options="-lglut;-lGL;-lGLU;$(shell /usr/local/bin/wx-config --debug=yes --libs --unicode=yes --libs all);/usr/local/boost_1_64_0/stage/lib/libboost_exception.a" Required="yes">
+      <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all);" Required="yes">
         <LibraryPath Value="/usr/lib/x86_64-linux-gnu"/>
         <LibraryPath Value="/usr/lib/"/>
         <Library Value="libfreetype"/>

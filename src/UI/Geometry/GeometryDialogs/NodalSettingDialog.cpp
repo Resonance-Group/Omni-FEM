@@ -192,14 +192,14 @@ void setNodalPropertyDialog::getNodalSettings(nodeSetting &settings)
     
     settings.setPhysicsProblem(_nodeSetting.getPhysicsProblem());
     
-    settings.setNodalPropertyName(_nodePropertyComboBox->GetString(_nodePropertyComboBox->GetSelection()));
+    settings.setNodalPropertyName(_nodePropertyComboBox->GetString(_nodePropertyComboBox->GetSelection()).ToStdString());
 
     _groupTextCtrl->GetValue().ToLong(&value);
     settings.setGroupNumber((unsigned int)value);
     
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        settings.setConductorPropertyName(_conductorsComboBox->GetString(_conductorsComboBox->GetSelection()));
+        settings.setConductorPropertyName(_conductorsComboBox->GetString(_conductorsComboBox->GetSelection()).ToStdString());
     }
 }
 

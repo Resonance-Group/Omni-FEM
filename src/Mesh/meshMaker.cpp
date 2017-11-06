@@ -631,7 +631,7 @@ void meshMaker::mesh()
 		{
 			double test1 = nodeIterator.getCenterXCoordinate();
 			double test2 = nodeIterator.getCenterYCoordinate();
-			vertexModelList.push_back(meshModel.addVertex(test1, test2, 0.0, 0.1));
+			vertexModelList.push_back(meshModel.addVertex(test1, test2, 0.0, 1e+22));
 		}
 		
 		for(auto contourIterator : p_closedContours)
@@ -704,6 +704,7 @@ void meshMaker::mesh()
 		CTX::instance()->mesh.recombineAll = 1;
 		CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
 		CTX::instance()->mesh.algoSubdivide = 1;
+		CTX::instance()->mesh.order = 2;
 		
 		//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
 		

@@ -370,7 +370,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
     double value;
     long value2;
     
-    property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()));
+    property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()).ToStdString());
     
     property.setAutoMeshState(_autoMeshCheckBox->GetValue());
     
@@ -383,7 +383,7 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
     
     if(_problem == physicProblems::PROB_MAGNETICS)
     {
-        property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()));
+        property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()).ToStdString());
         
         _numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
         property.setNumberOfTurns(value2);

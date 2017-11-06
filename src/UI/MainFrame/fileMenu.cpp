@@ -71,7 +71,7 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 		this->SetTitle(appendedTitle);
 		_saveFilePath = openFileDialog.GetPath();
 		_problemDefinition.defintionClear();
-		load(openFileDialog.GetPath());
+		load(openFileDialog.GetPath().ToStdString());
 	}
 }
 

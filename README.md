@@ -8,7 +8,7 @@ Please see wiki for more inforation
 
 # Requirements
 
-Must have wxWidgets v3.0.2 installed
+Must have wxWidgets v3.1.0 installed
 Must have support for openGL V2.1
 For font rendering in the canvas, we are using the freetype library. The current version that the program uses in FreeType2.7
 The font that the program uses is called DejaVuSansMono. 
@@ -19,11 +19,14 @@ A helpful tool, the project was built using the Code Lite IDE. It can be downloa
 For building the project, run the command:
 
 sudo apt-get install freeglut3-dev
+sudo apt-get install libglew-dev
 
 This will get the OpenGL libraries. Double check compiler settings to make sure that -lglut, -lGL, and -lGLU are placed in their approiate places (This does matter).
 
 To install wxwidgets, follow these instructions:
-http://codelite.org/LiteEditor/WxWidgets30Binaries
+http://codelite.org/LiteEditor/WxWidgets31Binaries#toc2
+
+The current version of Omni-FEM is running wxwidgets v3.1.0
 
 The icons that are used by the UI are the default kde4 icons that are suppose to be located in the folder /usr/share/icons
 
@@ -39,3 +42,6 @@ In order to install and run the fonts, you have to first install the microsoft c
 sudo apt-get install ttf-mscorefonts-installer
 sudo fc-cache -f -v
 sudo apt-get install ubuntu-restricted-extras
+
+An easy way to install boost on ubuntu is to run the following command:
+sudo apt-get install libboost-all-dev

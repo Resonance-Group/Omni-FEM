@@ -257,7 +257,7 @@ void segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
     
     property.setPhysicsProblem(_problem);
 
-    property.setBoundaryName(_boundaryListCombo->GetString(_boundaryListCombo->GetSelection()));
+    property.setBoundaryName(_boundaryListCombo->GetString(_boundaryListCombo->GetSelection()).ToStdString());
         
     property.setMeshAutoState(_meshSpacingAutoCheckbox->GetValue());
     
@@ -269,7 +269,7 @@ void segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
         
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()));
+        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()).ToStdString());
     }
         
     property.setHiddenState(_hideSegmentCheckbox->GetValue());
