@@ -462,7 +462,7 @@ static void Mesh2D(GModel *m)
       for(size_t K = 0 ; K < temp.size() ; K++){
         if (temp[K]->meshStatistics.status == GFace::PENDING){
           backgroundMesh::current()->unset();
-	   meshGFace mesher(true);
+//	   meshGFace mesher(true);
           temp[K]->mesh(true);
 #if defined(HAVE_BFGS)
           if(CTX::instance()->mesh.optimizeLloyd){
