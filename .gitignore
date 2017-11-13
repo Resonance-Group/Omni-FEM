@@ -25,6 +25,7 @@ Debug/femm.log
 *.list
 *.supp
 *.d
+gmsh304source/build/
 .codelite
 Debug
 
