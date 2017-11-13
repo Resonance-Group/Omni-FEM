@@ -625,6 +625,16 @@ void meshMaker::mesh()
 		GModel meshModel;
 		GmshInitialize();
 		
+		CTX::instance()->mesh.recombineAll = 0;
+		CTX::instance()->mesh.recombinationTestNewStrat = 0;
+		CTX::instance()->mesh.nProc = 0;
+		CTX::instance()->mesh.nbProc = 0;
+		CTX::instance()->mesh.remeshParam = 0;
+		CTX::instance()->mesh.order = 1;
+		CTX::instance()->lc = 2.3323807574381199;
+		CTX::instance()->mesh.multiplePasses = 0;
+		
+		
 		meshModel.setFactory("Gmsh");
 		
 		for(auto nodeIterator : *p_nodeList)
@@ -693,7 +703,7 @@ void meshMaker::mesh()
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
 			GFace *testFace = meshModel.addPlanarFace(test);
-			//testFace->meshAttributes.meshSize = 1000;
+			testFace->meshAttributes.meshSize = 0.01;
 			testFace->resetMeshAttributes();
 			double temp = testFace->getMeshSize();
 			//testFace->meshSize = 0.001;
@@ -701,10 +711,10 @@ void meshMaker::mesh()
 			
 		}
 		
-		CTX::instance()->mesh.recombineAll = 1;
+	//	CTX::instance()->mesh.recombineAll = 1;
 		CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
 		CTX::instance()->mesh.algoSubdivide = 1;
-		CTX::instance()->mesh.order = 2;
+	//	CTX::instance()->mesh.order = 2;
 		
 		//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
 		
