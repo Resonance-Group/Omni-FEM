@@ -590,9 +590,7 @@ bool meshMaker::lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4)
 	    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 BOOL CFemmeDoc::GetIntersection*/
     Vector pNode0, pNode1, iNode0, iNode1;
     Vector tempNode0, tempNode1;
-    // First check to see if there are any commmon end points. If so, there is no intersection
-    if(	P1 == P3 || P1 == P4 || P2 == P3 || P2 == P4)
-        return false;
+    
         
     pNode0 = P1;
     pNode1 = P2;
@@ -762,9 +760,13 @@ void meshMaker::mesh()
 		int testCounter = 0;// Only for debugging
 		for(auto contourIterator : p_closedContours)
 		{
+			/* This section here will transfer the found closed contours into a vector 
+			 * of GEdges
+			 */ 
 			std::vector<GEdge*> contourLoop;
 			
 			std::vector<edgeLineShape> contour = contourIterator;
+			
 			for(auto lineIterator : contour)
 			{
 				GVertex *firstNode = nullptr;
@@ -794,6 +796,8 @@ void meshMaker::mesh()
 				if(lineIterator.isArc())
 				{
 					// Throw in the code here in order to create a Bspline within the mesh model
+					// look at the code: bool GEO_Internals::addBezier(int &tag, const std::vector<int> &vertexTags)
+					// located in GMODELIO_GEO.cpp file on added in a Bezier curve to the model
 					//GEdge *test = meshModel->addBezier()
 				}
 				else
@@ -804,13 +808,13 @@ void meshMaker::mesh()
 			}
 			
 			std::vector<std::vector<GEdge*>> test;
-			test.push_back(contourLoop);
+			
 			// Now, we need to test if the contour is a hole to another contour
 			// Or, if the contour lies outside of a set of contours
 			// Or if the contour is not related to any of the already added contours
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
-			
+			test.push_back(contourLoop);
 			GFace *testFace = meshModel.addPlanarFace(test);
 			
 			/* TODO: Next, we need to create an algorthim that will determine which block labels lie
@@ -822,28 +826,47 @@ void meshMaker::mesh()
 			{
 				int numberOfIntersections = 0;
 				
-				for(auto rayContourIterator : contourLoop)
+				for(auto rayContourIterator : test)
 				{
-					std::vector<std::vector<GEdge*>> temp = rayContourIterator;
+					std::vector<GEdge*> temp = rayContourIterator;
+					bool isConnectedToCommonEdgeAndAccounted = false; 
 					for(auto lineSegmentIterator : temp)
 					{
-						if(lineSegmentIterator.isArc())
+						// We will need to throu in a test here to determine if the line is an arc
+					/*	if(lineSegmentIterator.isArc())
 						{
 							// Need to check if the blockIterator intersects with the arc
 						}
-						else
+						else*/
 						{
-							bool test = lineIntersectsLine(	Vector(blockIterator.getCenterXCoordinate(), blockIterator.getCenterYCoordinate()),
-															Vector(aBox.max().x(), aBox.max().y()),
-															Vector(lineSegmentIterator.getFirstNode()->getCenterXCoordinate(), lineSegmentIterator.getFirstNode()->getCenterYCoordinate()),
-															Vector(lineSegmentIterator.getSecondNode()->getCenterXCoordinate(), lineSegmentIterator.getSecondNode()->getCenterYCoordinate()))
+					//		GEdge temp2;
+					//		temp2.getEndVertex()->x();
+					//		temp2.getBeginVertex()->x();
+					//		lineSegmentIterator
+							bool test = false;
+							Vector blockPoint = Vector(blockIterator.getCenterXCoordinate(), blockIterator.getCenterYCoordinate());
+							Vector maxBBPoint = Vector(Vector(aBox.max().x(), aBox.max().y()));// The factor here will ensure that the point is not on the same point as a vertex
+							Vector beginPoint = Vector(lineSegmentIterator->getBeginVertex()->x(), lineSegmentIterator->getBeginVertex()->y());
+							Vector endPoint = Vector(lineSegmentIterator->getEndVertex()->x(), lineSegmentIterator->getEndVertex()->y());
+							
+							if((maxBBPoint == beginPoint || maxBBPoint == endPoint) && !isConnectedToCommonEdgeAndAccounted)
+							{
+								test = true;
+								isConnectedToCommonEdgeAndAccounted = true;
+							}
+							else
+								test = lineIntersectsLine( blockPoint, maxBBPoint, beginPoint, endPoint);
+								
 							if(test)
 								numberOfIntersections++;
 						}
 					}
+					/* Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
+					 */ 
 				}
 				if(numberOfIntersections % 2 == 1)
 				{
+					double checkMesh = blockIterator.getProperty()->getMeshSize();
 					testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
 					break;
 				}

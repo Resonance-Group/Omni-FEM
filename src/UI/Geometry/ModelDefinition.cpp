@@ -263,12 +263,14 @@ void modelDefinition::editSelection()
     {
         blockPropertyDialog *dialog;
         blockProperty selectedBlockLabel;
+		plf::colony<blockLabel>::iterator selectedBlock;
         
         for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getIsSelectedState())
             {
                 selectedBlockLabel = *blockIterator->getProperty();
+				selectedBlock = blockIterator;
                 break;
             }
         }
@@ -282,6 +284,7 @@ void modelDefinition::editSelection()
         {
             bool firstIsSet = false;
             dialog->getBlockProperty(selectedBlockLabel);
+			selectedBlock->setPorperty(selectedBlockLabel);
             
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {

@@ -38,6 +38,7 @@ private:
 		ar & _groupNumber;
 		ar & _isExternalRegion;
 		ar & _isDefault;
+		ar & _meshSize;
 	}
     //! Datatype used to store if the mesh is extremely fine->extremely Coarse or a custom mesh size
     /*!
