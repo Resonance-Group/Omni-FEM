@@ -4,7 +4,9 @@
 #include <vector>
 
 #include <UI/geometryShapes.h>
+
 #include <common/plfcolony.h>
+#include <common/Vector.h>
 
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
@@ -12,6 +14,8 @@
 #include <Mesh/GVertex.h>
 #include <Mesh/GEdge.h>
 #include <Mesh/GFace.h>
+
+#include <Mesh/SBoundingBox3d.h>
 
 
 /**
@@ -106,6 +110,28 @@ private:
 	 * @return Returns true if a common edge exists. Otherwise, returns false
 	 */
 	bool shareCommonEdge(std::vector<edgeLineShape> path1, std::vector<edgeLineShape> path2);
+	
+	/**
+	 * @brief This function will chech if a vector consisting of two points intersects an arc.
+	 * @param P1 The first point of a vector. In this instance, the vector data type is acting more as a point datatype.
+	 * @param P2 The second point of a vector. In this instance, the vector data type is acting more as a point datatype.
+	 * @param intersectingArc The arc that is in question if the vector intersects
+	 * @return Returns the number of intersections
+	 */
+	int lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc);
+	
+	/**
+	 * @brief Function that will be used to determine if a set of points intersect each other
+	 * 			This function was adapted from a line to line intersection. Instead of utilizing lines, the
+	 * 			Vectors are beign utilize as points. The "lines" are being created within the function. 
+	 * 			P1 and P2 is a line with points P1 and P2. P3 and P4 are another line with points P3, P4.
+	 * @param P1 The point that is the first point for the line. This will be the block point
+	 * @param P2 The second endpoint of the line, this will be the max point of the bounding box.
+	 * @param P3 The first endpoint of the line on the geometry.
+	 * @param P4 The second endpoint of the line on the geometry.
+	 * @return Returns true if the pairs P1/P2 and P3/P4 intersect
+	 */
+	bool lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4);
 public:
 	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
 	{

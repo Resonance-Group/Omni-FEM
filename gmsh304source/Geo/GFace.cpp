@@ -1392,11 +1392,6 @@ bool GFace::fillPointCloud(double maxDist,
 
 
 #if defined(HAVE_MESH)
-/**
- * @brief Mesh for a compound face
- * @param gf Pointer to the GFace
- * @param verbose Boolean used to print error messages
- */
 static void meshCompound(GFace* gf, bool verbose)
 {
   discreteFace *df = new discreteFace (gf->model(), gf->tag() + 100000);
@@ -1430,27 +1425,22 @@ static void meshCompound(GFace* gf, bool verbose)
 void GFace::mesh(bool verbose)
 {
 #if defined(HAVE_MESH)
-	meshGFace mesher;
-	mesher(this, verbose);
-	if (!_compound.empty())
-	{ // Some faces are meshed together
-		if (_compound[0] == this)
-		{ //  I'm the one that makes the compound job
-			bool ok = true;
-			for (unsigned int i = 0; i < _compound.size(); i++)
-			{
-				GFace *gf = (GFace*)_compound[i];
-				ok &= (gf->meshStatistics.status == GFace::DONE);
-			}
-			if (!ok)
-				meshStatistics.status = GFace::PENDING;
-			else 
-			{
-				meshCompound(this, verbose);
-				return;
-			}
-		}
-	}
+  meshGFace mesher;
+  mesher(this, verbose);
+  if (!_compound.empty()){ // Some faces are meshed together
+    if (_compound[0] == this){ //  I'm the one that makes the compound job
+      bool ok = true;
+      for (unsigned int i = 0; i < _compound.size(); i++){
+	GFace *gf = (GFace*)_compound[i];
+	ok &= (gf->meshStatistics.status == GFace::DONE);
+      }
+      if (!ok)meshStatistics.status = GFace::PENDING;
+      else {
+	meshCompound(this, verbose);
+	return;
+      }
+    }
+  }
 #endif
 }
 

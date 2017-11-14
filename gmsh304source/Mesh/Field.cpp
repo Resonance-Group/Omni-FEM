@@ -16,18 +16,18 @@
 #include <string.h>
 #include <sstream>
 #include <algorithm>
-#include "Common/GmshConfig.h"
-#include "Common/Context.h"
-#include "Mesh/Field.h"
-#include "Geo/GModel.h"
-#include "Geo/GModelIO_GEO.h"
-#include "Common/GmshMessage.h"
-#include "Numeric/Numeric.h"
-#include "Numeric/mathEvaluator.h"
-#include "Mesh/BackgroundMeshTools.h"
-#include "Geo/STensor3.h"
-#include "Mesh/meshMetric.h"
-#include "Geo/ExtrudeParams.h"
+#include "GmshConfig.h"
+#include "Context.h"
+#include "Field.h"
+#include "GModel.h"
+#include "GModelIO_GEO.h"
+#include "GmshMessage.h"
+#include "Numeric.h"
+#include "mathEvaluator.h"
+#include "BackgroundMeshTools.h"
+#include "STensor3.h"
+#include "meshMetric.h"
+#include "ExtrudeParams.h"
 
 #if defined(HAVE_POST)
 #include "PView.h"
@@ -1746,7 +1746,7 @@ class MaxField : public Field
   }
   double operator() (double x, double y, double z, GEntity *ge=0)
   {
-    double v = -MAX_LC;annDeallocPts
+    double v = -MAX_LC;
     for(std::list<int>::iterator it = idlist.begin(); it != idlist.end(); it++) {
       Field *f = (GModel::current()->getFields()->get(*it));
       if(f && *it != id) {
@@ -1770,7 +1770,7 @@ class MaxField : public Field
   }
 };
 
-class RestrictField : public FieldannDeallocPts
+class RestrictField : public Field
 {
   int iField;
   std::list<int> vertices, edges, faces, regions;

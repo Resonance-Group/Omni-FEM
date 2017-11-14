@@ -36,7 +36,7 @@ class GModelFactory;
 // A geometric model. The model is a "not yet" non-manifold B-Rep.
 class GModel {
  private:
-  friend class OCCFactory; // Not needed
+  friend class OCCFactory;
   std::multimap<std::pair<std::vector<int>, std::vector<int> >,
                 std::pair<std::string, std::vector<int> > > _homologyRequests;
   std::set<GRegion*, GEntityLessThan> _chainRegions;

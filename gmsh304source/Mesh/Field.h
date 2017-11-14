@@ -10,8 +10,8 @@
 #include <map>
 #include <vector>
 #include <list>
-#include "Common/GmshConfig.h"
-#include "Geo/STensor3.h"
+#include "GmshConfig.h"
+#include "STensor3.h"
 #include <fstream>
 #include <string>
 #include <string.h>

@@ -585,9 +585,118 @@ void meshMaker::removeDanglingLines(std::vector<edgeLineShape> &contour)
 
 
 
+bool meshMaker::lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4)
+{
+	    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 BOOL CFemmeDoc::GetIntersection*/
+    Vector pNode0, pNode1, iNode0, iNode1;
+    Vector tempNode0, tempNode1;
+    // First check to see if there are any commmon end points. If so, there is no intersection
+    if(	P1 == P3 || P1 == P4 || P2 == P3 || P2 == P4)
+        return false;
+        
+    pNode0 = P1;
+    pNode1 = P2;
+    iNode0 = P3;
+    iNode1 = P4;
+    
+    tempNode0 = iNode0;
+    tempNode1 = iNode1;
+    
+    double ee = min(Vabs(pNode1 - pNode0), Vabs(iNode1 - iNode0)) * 1.0e-8;
+    
+    iNode0 = (iNode0 - pNode0) / (pNode1 - pNode0);
+    iNode1 = (iNode1 - pNode0) / (pNode1 - pNode0);
+    
+    if(iNode0.getXComponent() <= 0 && iNode1.getXComponent() <= 0)
+        return false;
+    else if(iNode0.getXComponent() >= 1.0 && iNode1.getXComponent() >= 1.0)
+        return false;
+    else if(iNode0.getYComponent() <= 0 && iNode1.getYComponent() <= 0)
+        return false;
+    else if(iNode0.getYComponent() >= 0 && iNode1.getYComponent() >= 0)
+        return false;
+        
+    double z = iNode0.getYComponent() / (iNode0 - iNode1).getYComponent();
+    
+    double x = ((1.0 - z) * iNode0 + z * iNode1).getXComponent();
+    if((x < ee) || (x > (1.0 - ee)))
+        return false;
+        
+  //  pNode0 = (1.0 - z) * tempNode0 + z * tempNode1;
+    
+ //   intersectionXPoint = pNode0.getXComponent();
+ //   intersectionYPoint = pNode0.getYComponent();
+    
+    return true;
+}
+
+int meshMaker::lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc)
+{
+	    /* Note: this function has not yet been verified to be working. Logical bugs could still exist */
+    // This function was ported from CbeladrawDoc::GetLineArcIntersection
+    
+	Vector arcSegVec1, arcSegVec2, unitVec1, tempVec2, arcCenterPoint;
+	Vector *pointVec;
+	double distance, length, radius, z;
+	int intersectionCounter = 0;
+	
+	arcSegVec1.Set(intersectingArc.getFirstNode()->getCenterXCoordinate(), intersectingArc.getFirstNode()->getCenterYCoordinate());
+	arcSegVec2.Set(intersectingArc.getSecondNode()->getCenterXCoordinate(), intersectingArc.getSecondNode()->getCenterYCoordinate());
+	
+	distance = Vabs(arcSegVec2 - arcSegVec1);
+	
+    radius = intersectingArc.getRadius();
+    
+    arcCenterPoint.Set(intersectingArc.getCenterXCoordinate(), intersectingArc.getCenterYCoordinate());
+    
+    // Determining the distance between the line and the circle's center
+	distance = Vabs(P2 - P1);
+	unitVec1 = (P2 - P1) / distance;
+	tempVec2 = (arcCenterPoint - P1) / unitVec1;
+	
+	if(fabs(tempVec2.getYComponent()) > radius)
+		return 0;
+		
+	length = sqrt(pow(radius, 2) - pow(tempVec2.getYComponent(), 2));
+	// If the line is a tangent, make it a tangent
+	if((length / radius) < 1.0e-05)
+	{
+		pointVec[intersectionCounter] = P1 + tempVec2.getXComponent() * unitVec1;
+		radius = ((pointVec[intersectionCounter] - P1) / unitVec1).getXComponent();
+		z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
+		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (intersectingArc.getArcAngle() * PI / 180.0)))
+			intersectionCounter++;
+		delete pointVec;
+		return intersectionCounter;
+	}
+	
+    // First intersection
+	pointVec[intersectionCounter] = P1 + (tempVec2.getXComponent() + length) * unitVec1;
+	radius = ((pointVec[intersectionCounter] - P1) / unitVec1).getXComponent();
+	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (intersectingArc.getArcAngle() * PI / 180.0)))
+    {
+		intersectionCounter++;
+    }
+    
+    // Second intersection
+	pointVec[intersectionCounter] = P1 + (tempVec2.getXComponent() - length) * unitVec1;
+	radius = ((pointVec[intersectionCounter] - P1) / unitVec1).getXComponent();
+	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
+	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (intersectingArc.getArcAngle() * PI / 180.0)))
+    {
+		intersectionCounter++;
+    }
+	
+	delete pointVec;	
+	return intersectionCounter;
+}
+
+
 void meshMaker::mesh()
 {
 	bool canMakeMesh = true;
+	bool meshCreated = false;
 	
 	while((p_numberofLines != p_numberVisited) || (p_numberofLines > p_numberVisited))
 	{
@@ -616,6 +725,10 @@ void meshMaker::mesh()
 		}
 	}
 	
+	/* This is the section where the mesh will be created. Where the user defined geometry is 
+	 * converted into the geometry for GMSH
+	 * Afterwards, the faces will be determined and their corresponding mesh sizes will be assigned properly
+	 */ 
 	if(canMakeMesh)
 	{
 		std::vector<GVertex*> vertexModelList;
@@ -633,6 +746,9 @@ void meshMaker::mesh()
 		CTX::instance()->mesh.order = 1;
 		CTX::instance()->lc = 2.3323807574381199;
 		CTX::instance()->mesh.multiplePasses = 0;
+		CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
+		CTX::instance()->mesh.algoSubdivide = 1;
+		//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
 		
 		
 		meshModel.setFactory("Gmsh");
@@ -643,7 +759,7 @@ void meshMaker::mesh()
 			double test2 = nodeIterator.getCenterYCoordinate();
 			vertexModelList.push_back(meshModel.addVertex(test1, test2, 0.0, 1e+22));
 		}
-		
+		int testCounter = 0;// Only for debugging
 		for(auto contourIterator : p_closedContours)
 		{
 			std::vector<GEdge*> contourLoop;
@@ -653,10 +769,7 @@ void meshMaker::mesh()
 			{
 				GVertex *firstNode = nullptr;
 				GVertex *secondNode = nullptr;
-				
-				//GVertex test;
-				
-				
+		
 				for(auto vertexIterator : vertexModelList)
 				{
 					double xValueVertex = vertexIterator->x();
@@ -686,13 +799,8 @@ void meshMaker::mesh()
 				else
 				{
 					GEdge *temp = meshModel.addLine(firstNode, secondNode);
-					//temp->meshAttributes.meshSize = 1000;
-					temp->resetMeshAttributes();
-				//	temp->meshAttributes.meshSize
 					contourLoop.push_back(temp);
 				}
-				//delete firstNode;
-				//delete secondNode;
 			}
 			
 			std::vector<std::vector<GEdge*>> test;
@@ -702,26 +810,57 @@ void meshMaker::mesh()
 			// Or if the contour is not related to any of the already added contours
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
+			
 			GFace *testFace = meshModel.addPlanarFace(test);
-			testFace->meshAttributes.meshSize = 0.01;
-			testFace->resetMeshAttributes();
-			double temp = testFace->getMeshSize();
-			//testFace->meshSize = 0.001;
-			testFace->setMeshingAlgo(ALGO_2D_DELAUNAY); // Found in GmshDefines.h
+			
+			/* TODO: Next, we need to create an algorthim that will determine which block labels lie
+			 * within the boundary of the face and from there, extra the mesh size (or no Mesh) 
+			 */ 
+			SBoundingBox3d aBox = testFace->bounds();
+			
+			for(auto blockIterator : *p_blockLabelList)
+			{
+				int numberOfIntersections = 0;
+				
+				for(auto rayContourIterator : contourLoop)
+				{
+					std::vector<std::vector<GEdge*>> temp = rayContourIterator;
+					for(auto lineSegmentIterator : temp)
+					{
+						if(lineSegmentIterator.isArc())
+						{
+							// Need to check if the blockIterator intersects with the arc
+						}
+						else
+						{
+							bool test = lineIntersectsLine(	Vector(blockIterator.getCenterXCoordinate(), blockIterator.getCenterYCoordinate()),
+															Vector(aBox.max().x(), aBox.max().y()),
+															Vector(lineSegmentIterator.getFirstNode()->getCenterXCoordinate(), lineSegmentIterator.getFirstNode()->getCenterYCoordinate()),
+															Vector(lineSegmentIterator.getSecondNode()->getCenterXCoordinate(), lineSegmentIterator.getSecondNode()->getCenterYCoordinate()))
+							if(test)
+								numberOfIntersections++;
+						}
+					}
+				}
+				if(numberOfIntersections % 2 == 1)
+				{
+					testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
+					break;
+				}
+			}
+			
+		/*	if(testCounter == 0)
+				testFace->meshAttributes.meshSize = 0.01;
+			else
+				testFace->meshAttributes.meshSize = 0.052;
+				 */ 
+				
+			testCounter++;
+			//testFace->setMeshingAlgo(ALGO_2D_DELAUNAY); // Found in GmshDefines.h
 			
 		}
 		
-	//	CTX::instance()->mesh.recombineAll = 1;
-		CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
-		CTX::instance()->mesh.algoSubdivide = 1;
-	//	CTX::instance()->mesh.order = 2;
-		
-		//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
-		
 		meshModel.mesh(2);
-		
-		
-		//meshModel.writeMSH("/home/phillip/Desktop/test.msh");
 		
 		meshModel.writeVTK("/home/phillip/Desktop/test.vtk");
 		

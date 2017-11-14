@@ -132,12 +132,6 @@ static void computeEdgeLoops(const GFace *gf, std::vector<MVertex*> &all_mvertic
   }
 }
 
-/**
- * @brief This function will mesh any face that has been labeled as Transfinite
- * @param gf A pointer to the face that 
- * @return 	Returns 0 if the face is not transfinite or if the program cannot mesh the transfinite face. Otherwise
- * 			return 1.
- */
 int MeshTransfiniteSurface(GFace *gf)
 {
   if(gf->meshAttributes.method != MESH_TRANSFINITE) return 0;
@@ -354,9 +348,6 @@ int MeshTransfiniteSurface(GFace *gf)
     }
   }
 
- * @param gf
- * @return 
- */
   // should we apply the elliptic smoother?
   int numSmooth = 0;
   if(gf->meshAttributes.transfiniteSmoothing < 0 && CTX::instance()->mesh.nbSmoothing > 1)

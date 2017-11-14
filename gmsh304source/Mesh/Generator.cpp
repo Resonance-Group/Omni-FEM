@@ -249,12 +249,6 @@ void GetStatistics(double stat[50], double quality[3][100])
 #endif
 }
 
-/**
- * @brief Function that is used to detect if the mesh size of a particular area is too large
- * @param m Pointer to the Geometry Model
- * @param dim The dimension of the problem
- * @return Returns true if the user does not want to use the large mesh. Otherwise, returns false.
- */
 static bool TooManyElements(GModel *m, int dim)
 {
   if(CTX::instance()->expertMode || !m->getNumVertices()) return false;
@@ -428,28 +422,13 @@ static void PrintMesh2dStatistics(GModel *m)
   fclose(statreport);
 }
 
-/**
- * @brief This is the function that is called in order to mes a model.
- * 			First, the function will initilize a KD tree containing data points
- * 			of the nearest neighbor. Then it will "start" a timer to measure that amount
- * 			of time it takes for the program to mesh the model. Next, the program
- * 			set the status of all faces to pending to indicate that the face 
- * 			is set for meshing. Next, the program will check if model contains boundary layers and if
- * 			so then no meshing will be done. Next, the program will sort out the faces that are a compound
- * 			entity and those that are not. The program will then create a temporary vector of GFaces from 
- * 			the set that is not a compound surface. First, those that are not marked as a compound 
- * 			surface are meshed.
- * 
- * 			For the 
- * @param m Pointer to the GModel that is to be meshed
- */
 static void Mesh2D(GModel *m)
 {
-  m->getFields()->initialize();// initilies the ANN structure within each field.
+  m->getFields()->initialize();
 
   if(TooManyElements(m, 2)) return;
   Msg::StatusBar(true, "Meshing 2D...");
-  double t1 = Cpu();// Used to calulate the amout of time passed for meshing
+  double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
     (*it)->meshStatistics.status = GFace::PENDING;
@@ -457,8 +436,7 @@ static void Mesh2D(GModel *m)
   // boundary layers are special: their generation (including vertices and curve
   // meshes) is global as it depends on a smooth normal field generated from the
   // surface mesh of the source surfaces
-  if(!Mesh2DWithBoundaryLayers(m))
-	  {
+  if(!Mesh2DWithBoundaryLayers(m)){
     std::set<GFace*, GEntityLessThan> cf, f;
     for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
       if ((*it)->geomType() == GEntity::CompoundSurface)
@@ -476,37 +454,26 @@ static void Mesh2D(GModel *m)
 #if defined(_OPENMP)
 #pragma omp parallel for schedule (dynamic)
 #endif
-      for(size_t K = 0 ; K < temp.size() ; K++)
-		  {
+      for(size_t K = 0 ; K < temp.size() ; K++){
         if (temp[K]->meshStatistics.status == GFace::PENDING){
           backgroundMesh::current()->unset();
 	  // meshGFace mesher(true);
           temp[K]->mesh(true);
 #if defined(HAVE_BFGS)
-          if(CTX::instance()->mesh.optimizeLloyd)
-			  {
+          if(CTX::instance()->mesh.optimizeLloyd){
             if (temp[K]->geomType()==GEntity::CompoundSurface ||
                 temp[K]->geomType()==GEntity::Plane ||
-                temp[K]->geomType()==GEntity::RuledSurface) 
-					{
+                temp[K]->geomType()==GEntity::RuledSurface) {
               if (temp[K]->meshAttributes.method != MESH_TRANSFINITE &&
-                  !temp[K]->meshAttributes.extrude) 
-					  {
+                  !temp[K]->meshAttributes.extrude) {
                 smoothing smm(CTX::instance()->mesh.optimizeLloyd, 6);
                 //m->writeMSH("beforeLLoyd.msh");
                 smm.optimize_face(temp[K]);
-				/*
-				 * Performs a check to see if recombine is required.
-				 * For Quads, I am assuming that this is needed. If 
-				 * recombining did not occur, then the mesh would still be in 
-				 * triangles. In order for the mesh to be recombined, either the specific
-				 * face should be set to recombine or the entire model needs to be recombine.
-				 * The last check is needed to ensure that the model is not 3D, maybe
-				 */ 
-                bool rec = ((CTX::instance()->mesh.recombineAll || temp[K]->meshAttributes.recombine) && !CTX::instance()->mesh.recombine3DAll);
+                int rec = ((CTX::instance()->mesh.recombineAll ||
+                            temp[K]->meshAttributes.recombine) &&
+                           !CTX::instance()->mesh.recombine3DAll);
                 //m->writeMSH("afterLLoyd.msh");
-                if (rec) 
-					recombineIntoQuads(temp[K]);
+                if (rec) recombineIntoQuads(temp[K]);
                 //m->writeMSH("afterRecombine.msh");
               }
             }

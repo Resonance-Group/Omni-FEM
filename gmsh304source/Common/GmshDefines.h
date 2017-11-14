@@ -251,7 +251,7 @@
 #define ALGO_3D_RTREE          9
 
 // Meshing methods
-#define MESH_NONE         0 // This is obviously no mesh
+#define MESH_NONE         0
 #define MESH_TRANSFINITE  1
 #define MESH_UNSTRUCTURED 2
 
