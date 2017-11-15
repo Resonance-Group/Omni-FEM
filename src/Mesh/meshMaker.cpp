@@ -218,7 +218,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 					pathContour.push_back(*branchStack.begin());
 					
 					branchStack.erase(branchStack.begin());
-					
+					p_numberVisited++;
 					backPathFound = true;
 					
 					break;
