@@ -7,6 +7,7 @@
 
 #include <common/plfcolony.h>
 #include <common/Vector.h>
+#include <common/enums.h>
 
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>

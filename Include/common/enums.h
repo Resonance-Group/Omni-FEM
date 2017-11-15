@@ -10,7 +10,7 @@
 */ 
 enum meshSize
 {
-    MESH_NONE,/*!< Value to indicate that there is no mesh size for the designated area */
+    MESH_NONE_,/*!< Value to indicate that there is no mesh size for the designated area */
     MESH_EXTREMELY_FINE,/*!< Values to indicate that the mesh needs to contain the smallest element size possible */
     MESH_EXTRA_FINE,/*!< Values to indicate that the mesh needs to contain very small element sizes */
     MESH_FINER,/*!< Value to indicate that the mesh needes to contain small element sizes */

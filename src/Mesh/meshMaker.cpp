@@ -757,7 +757,8 @@ void meshMaker::mesh()
 			double test2 = nodeIterator.getCenterYCoordinate();
 			vertexModelList.push_back(meshModel.addVertex(test1, test2, 0.0, 1e+22));
 		}
-		int testCounter = 0;// Only for debugging
+		
+		/* Now we create the faces */
 		for(auto contourIterator : p_closedContours)
 		{
 			/* This section here will transfer the found closed contours into a vector 
@@ -771,6 +772,7 @@ void meshMaker::mesh()
 			{
 				GVertex *firstNode = nullptr;
 				GVertex *secondNode = nullptr;
+				//numberOfIntersections = 0;
 		
 				for(auto vertexIterator : vertexModelList)
 				{
@@ -822,6 +824,15 @@ void meshMaker::mesh()
 			 */ 
 			SBoundingBox3d aBox = testFace->bounds();
 			
+			/* Now we enter into the ray casting algorthim.
+			 * The idea behind this is that a point from far awa is "drawn". A 
+			 * line connecting the blocklabel and this far point is "created". 
+			 * The algorithm will then determine the number of times that the 
+			 * line intersects with a line of the face. If it is an odd number
+			 * of times, then this means that the block label exists within the face
+			 * if it is an even number of times, then this means that the block label 
+			 * exists outside of the face
+			 */ 
 			for(auto blockIterator : *p_blockLabelList)
 			{
 				int numberOfIntersections = 0;
@@ -832,62 +843,44 @@ void meshMaker::mesh()
 					bool isConnectedToCommonEdgeAndAccounted = false; 
 					for(auto lineSegmentIterator : temp)
 					{
-						// We will need to throu in a test here to determine if the line is an arc
-					/*	if(lineSegmentIterator.isArc())
+						bool test = false;
+						Vector blockPoint = Vector(blockIterator.getCenterXCoordinate(), blockIterator.getCenterYCoordinate());
+						Vector maxBBPoint = Vector(Vector(aBox.max().x(), aBox.max().y()));// The factor here will ensure that the point is not on the same point as a vertex
+						Vector beginPoint = Vector(lineSegmentIterator->getBeginVertex()->x(), lineSegmentIterator->getBeginVertex()->y());
+						Vector endPoint = Vector(lineSegmentIterator->getEndVertex()->x(), lineSegmentIterator->getEndVertex()->y());
+						
+						if((maxBBPoint == beginPoint || maxBBPoint == endPoint) && !isConnectedToCommonEdgeAndAccounted)
 						{
-							// Need to check if the blockIterator intersects with the arc
+							test = true;
+							isConnectedToCommonEdgeAndAccounted = true;
 						}
-						else*/
-						{
-					//		GEdge temp2;
-					//		temp2.getEndVertex()->x();
-					//		temp2.getBeginVertex()->x();
-					//		lineSegmentIterator
-							bool test = false;
-							Vector blockPoint = Vector(blockIterator.getCenterXCoordinate(), blockIterator.getCenterYCoordinate());
-							Vector maxBBPoint = Vector(Vector(aBox.max().x(), aBox.max().y()));// The factor here will ensure that the point is not on the same point as a vertex
-							Vector beginPoint = Vector(lineSegmentIterator->getBeginVertex()->x(), lineSegmentIterator->getBeginVertex()->y());
-							Vector endPoint = Vector(lineSegmentIterator->getEndVertex()->x(), lineSegmentIterator->getEndVertex()->y());
+						else
+							test = lineIntersectsLine( blockPoint, maxBBPoint, beginPoint, endPoint);
 							
-							if((maxBBPoint == beginPoint || maxBBPoint == endPoint) && !isConnectedToCommonEdgeAndAccounted)
-							{
-								test = true;
-								isConnectedToCommonEdgeAndAccounted = true;
-							}
-							else
-								test = lineIntersectsLine( blockPoint, maxBBPoint, beginPoint, endPoint);
-								
-							if(test)
-								numberOfIntersections++;
-						}
+						if(test)
+							numberOfIntersections++;
 					}
-					/* Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
-					 */ 
 				}
-				if(numberOfIntersections % 2 == 1)
+				/* Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
+				 */ 
+				 
+				 if(numberOfIntersections % 2 == 1)
 				{
-					double checkMesh = blockIterator.getProperty()->getMeshSize();
-					testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
+					if(blockIterator.getProperty()->getMeshsizeType() != MESH_NONE_)
+					{
+						double checkMesh = blockIterator.getProperty()->getMeshSize();
+						testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
+					}
+					else
+						testFace->meshAttributes.method = MESH_NONE;
+					
 					break;
 				}
 			}
-			
-		/*	if(testCounter == 0)
-				testFace->meshAttributes.meshSize = 0.01;
-			else
-				testFace->meshAttributes.meshSize = 0.052;
-				 */ 
-				
-			testCounter++;
-			//testFace->setMeshingAlgo(ALGO_2D_DELAUNAY); // Found in GmshDefines.h
-			
 		}
 		
 		meshModel.mesh(2);
-		
 		meshModel.writeVTK("/home/phillip/Desktop/test.vtk");
-		
-		//meshModel.Addv
 		
 	}
 	else
@@ -900,6 +893,18 @@ void meshMaker::mesh()
 	// TODO: Add in the interface to the GMSH API
 	// TODO: Mesh the model
 	// TODO: Return the mesh. The function return is void for now
+	
+	// No matter what happens, we need to reset the visited state for arcs and lines 
+	// lines visited state back to false!
+	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+	{
+		lineIterator->setVisitedStatus(false);
+	}
+	
+	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
+	{
+		arcIterator->setVisitedStatus(false);
+	}
 }
 
 
