@@ -11,10 +11,10 @@
 
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
-
 #include <Mesh/GVertex.h>
 #include <Mesh/GEdge.h>
 #include <Mesh/GFace.h>
+#include <Mesh/GModel.h>
 
 #include <Mesh/SBoundingBox3d.h>
 
@@ -158,7 +158,7 @@ public:
 	/**
 	 * @brief This function is called when the program is ready to create the mesh for the model.
 	 */
-	void mesh();
+	void mesh(GModel *meshModel);
 	
 	~meshMaker()
 	{

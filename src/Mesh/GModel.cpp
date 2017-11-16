@@ -1233,13 +1233,14 @@ MVertex *GModel::getMeshVertexByTag(int n)
             entities[i]->mesh_vertices[j];
     }
     else{
+		//_vertexMapCache.resize(_maxVertexNum + 1);
       for(unsigned int i = 0; i < entities.size(); i++)
         for(unsigned int j = 0; j < entities[i]->mesh_vertices.size(); j++)
-          _vertexMapCache[entities[i]->mesh_vertices[j]->getNum()] =
-            entities[i]->mesh_vertices[j];
+          _vertexMapCache[entities[i]->mesh_vertices[j]->getNum()] = entities[i]->mesh_vertices[j];
     }
   }
-
+	int temp = (int)_vertexVectorCache.size();
+	int temp2 = (int)_vertexMapCache.size();
   if(n < (int)_vertexVectorCache.size())
     return _vertexVectorCache[n];
   else

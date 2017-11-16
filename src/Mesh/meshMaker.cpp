@@ -1,5 +1,5 @@
 #include <Mesh/meshMaker.h>
-#include <Mesh/GModel.h>
+
 #include <iterator>
 
 std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
@@ -691,10 +691,25 @@ int meshMaker::lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc)
 }
 
 
-void meshMaker::mesh()
+void meshMaker::mesh(GModel *meshModel)
 {
 	bool canMakeMesh = true;
 	bool meshCreated = false;
+	
+	//GModel meshModel;
+	GmshInitialize();
+	
+	CTX::instance()->mesh.recombineAll = 0;
+	CTX::instance()->mesh.recombinationTestNewStrat = 0;
+	CTX::instance()->mesh.nProc = 0;
+	CTX::instance()->mesh.nbProc = 0;
+	CTX::instance()->mesh.remeshParam = 0;
+	CTX::instance()->mesh.order = 1;
+	CTX::instance()->lc = 2.3323807574381199;
+	CTX::instance()->mesh.multiplePasses = 0;
+	CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
+	CTX::instance()->mesh.algoSubdivide = 1;
+	//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
 	
 	while((p_numberofLines != p_numberVisited) || (p_numberofLines > p_numberVisited))
 	{
@@ -733,29 +748,18 @@ void meshMaker::mesh()
 		std::vector<std::vector<std::vector<GEdge*>>> compeleteLineLoop;
 		
 		vertexModelList.reserve(p_nodeList->size());
-		GModel meshModel;
-		GmshInitialize();
+		meshModel->destroy();
+		meshModel->setFactory("Gmsh");
+//		meshModel->deleteMesh();
+//		meshModel->deleteMeshPartitions();
+//		meshModel->destroyMeshCaches();
 		
-		CTX::instance()->mesh.recombineAll = 0;
-		CTX::instance()->mesh.recombinationTestNewStrat = 0;
-		CTX::instance()->mesh.nProc = 0;
-		CTX::instance()->mesh.nbProc = 0;
-		CTX::instance()->mesh.remeshParam = 0;
-		CTX::instance()->mesh.order = 1;
-		CTX::instance()->lc = 2.3323807574381199;
-		CTX::instance()->mesh.multiplePasses = 0;
-		CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
-		CTX::instance()->mesh.algoSubdivide = 1;
-		//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
-		
-		
-		meshModel.setFactory("Gmsh");
 		
 		for(auto nodeIterator : *p_nodeList)
 		{
 			double test1 = nodeIterator.getCenterXCoordinate();
 			double test2 = nodeIterator.getCenterYCoordinate();
-			vertexModelList.push_back(meshModel.addVertex(test1, test2, 0.0, 1e+22));
+			vertexModelList.push_back(meshModel->addVertex(test1, test2, 0.0, 1e+22));
 		}
 		
 		/* Now we create the faces */
@@ -804,7 +808,7 @@ void meshMaker::mesh()
 				}
 				else
 				{
-					GEdge *temp = meshModel.addLine(firstNode, secondNode);
+					GEdge *temp = meshModel->addLine(firstNode, secondNode);
 					contourLoop.push_back(temp);
 				}
 			}
@@ -817,7 +821,7 @@ void meshMaker::mesh()
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
 			test.push_back(contourLoop);
-			GFace *testFace = meshModel.addPlanarFace(test);
+			GFace *testFace = meshModel->addPlanarFace(test);
 			
 			/* TODO: Next, we need to create an algorthim that will determine which block labels lie
 			 * within the boundary of the face and from there, extra the mesh size (or no Mesh) 
@@ -879,8 +883,14 @@ void meshMaker::mesh()
 			}
 		}
 		
-		meshModel.mesh(2);
-		meshModel.writeVTK("/home/phillip/Desktop/test.vtk");
+		meshModel->mesh(2);
+		
+		// Next set any output mesh options
+		// such as different files to output the mesh. Be it VTK or some other format
+		meshModel->writeVTK("/home/phillip/Desktop/test.vtk");
+		
+		//meshModel.getMesh
+		
 		
 	}
 	else
@@ -905,6 +915,11 @@ void meshMaker::mesh()
 	{
 		arcIterator->setVisitedStatus(false);
 	}
+
+	if(meshModel->getNumMeshVertices() > 0)
+		meshModel->indexMeshVertices(true, 0, true);
+		
+//	return meshModel;
 }
 
 

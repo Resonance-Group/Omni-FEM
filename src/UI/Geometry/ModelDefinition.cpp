@@ -1,4 +1,5 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
+#include <Mesh/MVertex.h>
 
 wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
@@ -355,7 +356,8 @@ void modelDefinition::editSelection()
         }
     }
     
-    
+    p_drawMesh = false;
+	//p_modelMesh.deleteMesh();
     this->Refresh();
     return;
 }
@@ -2616,6 +2618,54 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     updateProjection();
     drawGrid();
     glMatrixMode(GL_MODELVIEW);
+	
+	if(p_drawMesh)
+	{
+		glColor3d(0.0, 1.0, 0.0); // Set the mesh color
+		
+		glPointSize(5.0); // Set the point size first
+		glLineWidth(1.0);
+		
+		glBegin(GL_POINTS);
+		
+			int temp = p_modelMesh.getNumMeshVertices();
+			//p_modelMesh.ver
+			for(unsigned int i = 0; i < p_modelMesh.getNumMeshVertices(); i++)
+			{
+				MVertex *meshVertex = p_modelMesh.getMeshVertexByTag(i + 1);
+				if(meshVertex)
+					glVertex2d(meshVertex->x(), meshVertex->y());
+			}
+		
+		glEnd();
+		
+		std::vector<GEntity*> entityList;
+		entityList.reserve(p_modelMesh.getNumFaces()); 
+		p_modelMesh.getEntities(entityList, 2);
+		
+		glBegin(GL_LINES);
+            
+			for(auto entityIterator : entityList)
+			{
+				unsigned int temp2 = entityIterator->getNumMeshElements();
+				for(unsigned int i = 0; i < entityIterator->getNumMeshElements(); i++)
+				{
+					std::vector<MVertex*> vertexList;
+					vertexList.reserve(entityIterator->getMeshElement(i)->getNumVertices());
+					entityIterator->getMeshElement(i)->getVertices(vertexList);
+					unsigned int temp3 = vertexList.size();
+					for(unsigned int j = 0; j < vertexList.size() - 1; j++)
+					{
+						glVertex2d(vertexList[j]->x(), vertexList[j]->y());
+						glVertex2d(vertexList[j + 1]->x(), vertexList[j + 1]->y());
+					}
+					
+				}
+			}
+
+        glEnd();
+		
+	}
     
     for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
     {

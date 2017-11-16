@@ -33,6 +33,10 @@
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
 
+#include <Mesh/GModel.h>
+#include <Mesh/GEntity.h>
+#include <Mesh/MVertex.h>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
@@ -257,6 +261,16 @@ private:
         is set to true only when the user selects a node that is to be used for creating lines/arcs
     */ 
     bool _geometryIsSelected = false;
+	
+	//! Boolean used to indicate if the program should draw the mesh on the canvas
+	/*!
+		This boolean is used as a status variable in order to determine if the 
+		mesh should be drawn on the canvas. This variable is set in the
+		setAndDraw function. If the mesh is valid, the boolean will be true and the 
+		mesh will be drawn. If the user edits the geometry in any way, this variable will
+		be set to false.
+	*/ 
+	bool p_drawMesh = false;
     
     //! This variable specifies the starting point of the a mirror line/zoom window/selection box
     /*!
@@ -287,6 +301,14 @@ private:
         http://oglft.sourceforge.net/
     */ 
     OGLFT::Grayscale *_fontRender;
+	
+	//! This is the variable that will contain the mesh for the geometry
+	/*!
+		This variable contains the mesh for the model that the user draws. Note that this module
+		does not create the mesh. That would be found in the meshMaker.cpp/.h files located
+		in the Mesh folder. This variable will only store the mesh so that it can be drawn
+	*/ 
+	GModel p_modelMesh;
     
     //! A function that converts the x pixel coordinate into a cartesian/polar coordinate
     /*!
@@ -1008,6 +1030,38 @@ public:
 		_zoomY = otherParam.at(1);
 		_cameraX = otherParam.at(2);
 		_cameraY = otherParam.at(3);
+	}
+	
+	/**
+	 * @brief 	This function is called when the program is ready to set the mesh for drawing and storing
+	 * 			The function will check if the mesh is valid and if so, set a boolean to true
+	 * 			in order to allow the program to draw the mesh. 
+	 * @param mesh The mesh that is to be set and drawn
+	 */
+	void setAndDrawMesh(GModel mesh)
+	{
+		if(mesh.getNumMeshVertices() > 0)
+		{
+			p_modelMesh = mesh;
+			p_drawMesh = true;
+		}
+		else
+			p_drawMesh = false;
+	}
+	
+	GModel *getMeshModel()
+	{
+		return &p_modelMesh;
+	}
+	
+	bool checkModelIsValid()
+	{
+		if(p_modelMesh.getNumMeshVertices() > 0)
+			p_drawMesh = true;
+		else
+			p_drawMesh = false;
+			
+		return p_drawMesh;
 	}
 
 private:
