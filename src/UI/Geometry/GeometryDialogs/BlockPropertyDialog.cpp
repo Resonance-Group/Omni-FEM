@@ -86,7 +86,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     line1Sizer->Add(materialText, 0, wxCENTER | wxALL, 6);
     line1Sizer->Add(_materialComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let DealII Choose Mesh Size");
+    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let GMSH Choose Mesh Size");
     _autoMeshCheckBox->SetValue(property.getAutoMeshState());
     _autoMeshCheckBox->SetFont(*font);
     
@@ -285,7 +285,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     line1Sizer->Add(materialText, 0, wxCENTER | wxALL, 6);
     line1Sizer->Add(_materialComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let DealII Choose Mesh Size");
+    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let GMSH Choose Mesh Size");
     _autoMeshCheckBox->SetValue(property.getAutoMeshState());
     _autoMeshCheckBox->SetFont(*font);
     

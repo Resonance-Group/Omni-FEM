@@ -2,6 +2,7 @@
 #define MESH_MAKER_H_
 
 #include <vector>
+#include <algorithm>
 
 #include <UI/geometryShapes.h>
 

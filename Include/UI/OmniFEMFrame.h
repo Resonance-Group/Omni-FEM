@@ -38,7 +38,7 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
 
 #include <common/enums.h>
-
+#include "common/OmniFEMMessage.h"
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -85,6 +85,11 @@ public:
         \param pos The starting position of the frame
     */ 
     OmniFEMMainFrame(const wxString &title, const wxPoint &pos);
+	
+	~OmniFEMMainFrame()
+	{
+		delete OmniFEMMsg::instance();
+	}
 private:
 
     /************

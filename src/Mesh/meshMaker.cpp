@@ -1,5 +1,7 @@
 #include <Mesh/meshMaker.h>
 
+#include <common/OmniFEMMessage.h>
+
 #include <iterator>
 
 std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
@@ -312,7 +314,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 				
 				// First we will seach through the stack to see if the added branch was already in the stack
 				// If so, remove it from the stack
-				for(std::vector<edgeLineShape>::iterator stackIterator = branchStack.begin(); stackIterator != branchStack.end(); stackIterator++)
+				for(std::vector<edgeLineShape>::iterator stackIterator = branchStack.begin(); stackIterator != branchStack.end(); )
 				{
 					if(pathContour.back() == *stackIterator)
 					{
@@ -590,8 +592,7 @@ bool meshMaker::lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4)
 	    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 BOOL CFemmeDoc::GetIntersection*/
     Vector pNode0, pNode1, iNode0, iNode1;
     Vector tempNode0, tempNode1;
-    
-        
+
     pNode0 = P1;
     pNode1 = P2;
     iNode0 = P3;
@@ -710,8 +711,9 @@ void meshMaker::mesh(GModel *meshModel)
 	CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
 	CTX::instance()->mesh.algoSubdivide = 1;
 	//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
-	
-	while((p_numberofLines != p_numberVisited) || (p_numberofLines > p_numberVisited))
+	OmniFEMMsg::instance()->MsgStatus("Creating GMSH Geometry from Omni-FEM geometry");
+	OmniFEMMsg::instance()->MsgStatus("Finding contours");
+	while(p_numberVisited < p_numberofLines)
 	{
 		std::vector<std::vector<edgeLineShape>> temp = findContours();
 		
@@ -726,6 +728,7 @@ void meshMaker::mesh(GModel *meshModel)
 				break;
 		}
 	}
+	OmniFEMMsg::instance()->MsgStatus("Contours found");
 	
 	// Another check here to ensure that all of the contours saved are actually closed contours
 	// Must be done before making the mesh and failing
@@ -744,17 +747,15 @@ void meshMaker::mesh(GModel *meshModel)
 	 */ 
 	if(canMakeMesh)
 	{
+		OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
 		std::vector<GVertex*> vertexModelList;
 		std::vector<std::vector<std::vector<GEdge*>>> compeleteLineLoop;
 		
 		vertexModelList.reserve(p_nodeList->size());
-		meshModel->destroy();
+
 		meshModel->setFactory("Gmsh");
-//		meshModel->deleteMesh();
-//		meshModel->deleteMeshPartitions();
-//		meshModel->destroyMeshCaches();
 		
-		
+		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH Vertices");
 		for(auto nodeIterator : *p_nodeList)
 		{
 			double test1 = nodeIterator.getCenterXCoordinate();
@@ -763,6 +764,7 @@ void meshMaker::mesh(GModel *meshModel)
 		}
 		
 		/* Now we create the faces */
+		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
 		for(auto contourIterator : p_closedContours)
 		{
 			/* This section here will transfer the found closed contours into a vector 
@@ -853,18 +855,21 @@ void meshMaker::mesh(GModel *meshModel)
 						Vector beginPoint = Vector(lineSegmentIterator->getBeginVertex()->x(), lineSegmentIterator->getBeginVertex()->y());
 						Vector endPoint = Vector(lineSegmentIterator->getEndVertex()->x(), lineSegmentIterator->getEndVertex()->y());
 						
-						if((maxBBPoint == beginPoint || maxBBPoint == endPoint) && !isConnectedToCommonEdgeAndAccounted)
+						if(	blockPoint.getYComponent() < std::max(lineSegmentIterator->getBeginVertex()->y(), lineSegmentIterator->getEndVertex()->y()) &&
+							blockPoint.getYComponent() > std::min(lineSegmentIterator->getBeginVertex()->y(), lineSegmentIterator->getEndVertex()->y()))
 						{
-							test = true;
-							isConnectedToCommonEdgeAndAccounted = true;
-						}
-						else
-							test = lineIntersectsLine( blockPoint, maxBBPoint, beginPoint, endPoint);
+							maxBBPoint.Set(maxBBPoint.getXComponent() + 0.1, blockPoint.getYComponent());
 							
+							test = lineIntersectsLine( blockPoint, maxBBPoint, beginPoint, endPoint);
+							if(!test)
+								test = lineIntersectsLine(beginPoint, endPoint, blockPoint, maxBBPoint);
+						}
+						
 						if(test)
 							numberOfIntersections++;
 					}
 				}
+				
 				/* Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
 				 */ 
 				 
@@ -883,10 +888,12 @@ void meshMaker::mesh(GModel *meshModel)
 			}
 		}
 		
+		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
 		meshModel->mesh(2);
 		
 		// Next set any output mesh options
 		// such as different files to output the mesh. Be it VTK or some other format
+		OmniFEMMsg::instance()->MsgStatus("Saving Mesh file");
 		meshModel->writeVTK("/home/phillip/Desktop/test.vtk");
 		
 		//meshModel.getMesh
@@ -918,7 +925,8 @@ void meshMaker::mesh(GModel *meshModel)
 
 	if(meshModel->getNumMeshVertices() > 0)
 		meshModel->indexMeshVertices(true, 0, true);
-		
+	
+	OmniFEMMsg::instance()->MsgStatus("Meshing Finished");
 //	return meshModel;
 }
 

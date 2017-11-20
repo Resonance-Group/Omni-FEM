@@ -84,6 +84,8 @@
         <File Name="src/UI/ViewMenu/ZoomWindow.cpp"/>
         <File Name="src/UI/ViewMenu/LuaConsole.cpp"/>
       </VirtualDirectory>
+      <File Name="src/UI/StatusWindow.cpp"/>
+      <File Name="src/UI/OmniFEMMessage.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ComplexNumber.cpp"/>
@@ -278,6 +280,7 @@
         <File Name="Include/UI/ModelDefinition/OGLFT.h"/>
       </VirtualDirectory>
       <File Name="Include/UI/GeometryEditor2D.h"/>
+      <File Name="Include/UI/StatusWindow.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -306,6 +309,7 @@
       <File Name="Include/common/ExteriorRegion.h"/>
       <File Name="Include/common/OS.h" ExcludeProjConfig=""/>
       <File Name="Include/common/mathex.h"/>
+      <File Name="Include/common/OmniFEMMessage.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig=""/>

@@ -308,7 +308,7 @@ private:
 		does not create the mesh. That would be found in the meshMaker.cpp/.h files located
 		in the Mesh folder. This variable will only store the mesh so that it can be drawn
 	*/ 
-	GModel p_modelMesh;
+	GModel *p_modelMesh = new GModel();
     
     //! A function that converts the x pixel coordinate into a cartesian/polar coordinate
     /*!
@@ -571,6 +571,18 @@ private:
         After execution, _doZoomWindow is false.
     */ 
     void doZoomWindow();
+	
+	/**
+	 * @brief 	Function that is called in order to completely delete everything in the GModel
+	 * 			This will reset the mesh in order for the mesh to be drawn again. This function is called whenever
+	 * 			there is a change to the mesh.
+	 */
+	void deleteMesh()
+	{
+		delete p_modelMesh;
+		p_modelMesh = new GModel();
+		p_drawMesh = false;
+	}
     
 public:
     //! This is the constructor for the class
@@ -1042,7 +1054,7 @@ public:
 	{
 		if(mesh.getNumMeshVertices() > 0)
 		{
-			p_modelMesh = mesh;
+			//p_modelMesh = mesh;
 			p_drawMesh = true;
 		}
 		else
@@ -1051,12 +1063,12 @@ public:
 	
 	GModel *getMeshModel()
 	{
-		return &p_modelMesh;
+		return p_modelMesh;
 	}
 	
 	bool checkModelIsValid()
 	{
-		if(p_modelMesh.getNumMeshVertices() > 0)
+		if(p_modelMesh->getNumMeshVertices() > 0)
 			p_drawMesh = true;
 		else
 			p_drawMesh = false;

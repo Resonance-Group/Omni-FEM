@@ -10,6 +10,8 @@ bool OmniFEMApp::OnInit()
 {
    OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50));
    frame->Show(true);
+   OmniFEMMsg::instance()->displayWindow(Status_Windows::LOG_STATUS_WINDOW);
+   OmniFEMMsg::instance()->MsgStatus("This is a test");
    return true; 
 }
 

@@ -43,6 +43,12 @@ void modelDefinition::deleteSelection()
     {
         if(nodeIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
              * The deletion of the arc/line occurs later in the code*/
             
@@ -89,9 +95,16 @@ void modelDefinition::deleteSelection()
     {
         if(arcIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             if(arcIterator == _editor.getArcList()->back())
             {
                 _editor.getArcList()->erase(arcIterator);
+				
                 break;
             }
             else
@@ -109,6 +122,12 @@ void modelDefinition::deleteSelection()
     {
         if(lineIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             /* Bug fix: At first the code did not check if the line iterator was on the back
              * This causes problems becuase if the last iterator was deleted, then we are incrementing an invalidated iterator
              * which creates another invalidated iterator that is not equal to the end iterator of the list.
@@ -122,7 +141,7 @@ void modelDefinition::deleteSelection()
             }
             else
                 _editor.getLineList()->erase(lineIterator++);
-            
+			
             if(_editor.getLineList()->size() == 0)
                 break;
         }
@@ -135,6 +154,12 @@ void modelDefinition::deleteSelection()
     {
         if(blockIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             if(blockIterator == _editor.getBlockLabelList()->back())
             {
                 _editor.getBlockLabelList()->erase(blockIterator);
@@ -142,7 +167,7 @@ void modelDefinition::deleteSelection()
             }
             else
                 _editor.getBlockLabelList()->erase(blockIterator++);
-            
+			
             if(_editor.getBlockLabelList()->size() == 0)
                 break;
         }
@@ -358,6 +383,8 @@ void modelDefinition::editSelection()
     
     p_drawMesh = false;
 	//p_modelMesh.deleteMesh();
+	delete p_modelMesh;
+	p_modelMesh = new GModel();
     this->Refresh();
     return;
 }
@@ -721,6 +748,12 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 {
     // First, we are going to scan through all of the lines/arcs and check the nodes that are to be moved (and uncheck all of the lines/arcs)
     
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(!_geometryGroupIsSelected)
     {
         if(_arcsAreSelected)
@@ -844,6 +877,12 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 
 void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint aboutPoint)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(!_geometryGroupIsSelected)
     {
         // If we have a specific type of geometry selected, mark the corresponding nodes for moving and deselect the actual geometry
@@ -986,6 +1025,12 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
 
 void modelDefinition::scaleSelection(double scalingFactor, wxRealPoint basePoint)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     // This function was based off of the FEMM function located in CbeladrawDoc::ScaleMove
     if(_nodesAreSelected)
     {
@@ -1115,6 +1160,11 @@ void modelDefinition::scaleSelection(double scalingFactor, wxRealPoint basePoint
 
 void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
     /*
      * Currently, there are three cases that we need to consider.
      * First, if the slope of the mirror line is 0 (this is a horizontal line).
@@ -1693,6 +1743,12 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
 
 void modelDefinition::copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(_linesAreSelected || _geometryGroupIsSelected)
     {
         plf::colony<edgeLineShape> selectedLines;
@@ -1894,6 +1950,12 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
 
 void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(_linesAreSelected || _geometryGroupIsSelected)
     {
         double tempShift = -angularShift;// I am not sure why this is necessary but for some reason, the program does not like a -i in the loop.
@@ -2131,6 +2193,12 @@ void modelDefinition::displayDanglingNodes()
 
 void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     for(unsigned int i = 0; i < numberLayers + 1; i++)
     {
         // These guys are used to make sure that we can add another arc in the same process since the add arc function will reset the indexes.
@@ -2384,7 +2452,13 @@ void modelDefinition::createFillet(double filletRadius)
     // A check to ensure that the _editor.createFillet is never executed with a negative radius
     if(filletRadius < 0)
         return;
-        
+		
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     _editor.createFillet(filletRadius);
     this->Refresh();
     return;
@@ -2628,11 +2702,9 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 		
 		glBegin(GL_POINTS);
 		
-			int temp = p_modelMesh.getNumMeshVertices();
-			//p_modelMesh.ver
-			for(unsigned int i = 0; i < p_modelMesh.getNumMeshVertices(); i++)
+			for(int i = 0; i < p_modelMesh->getNumMeshVertices(); i++)
 			{
-				MVertex *meshVertex = p_modelMesh.getMeshVertexByTag(i + 1);
+				MVertex *meshVertex = p_modelMesh->getMeshVertexByTag(i + 1);
 				if(meshVertex)
 					glVertex2d(meshVertex->x(), meshVertex->y());
 			}
@@ -2640,20 +2712,18 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 		glEnd();
 		
 		std::vector<GEntity*> entityList;
-		entityList.reserve(p_modelMesh.getNumFaces()); 
-		p_modelMesh.getEntities(entityList, 2);
+		entityList.reserve(p_modelMesh->getNumFaces()); 
+		p_modelMesh->getEntities(entityList, 2);
 		
 		glBegin(GL_LINES);
             
 			for(auto entityIterator : entityList)
 			{
-				unsigned int temp2 = entityIterator->getNumMeshElements();
 				for(unsigned int i = 0; i < entityIterator->getNumMeshElements(); i++)
 				{
 					std::vector<MVertex*> vertexList;
 					vertexList.reserve(entityIterator->getMeshElement(i)->getNumVertices());
 					entityIterator->getMeshElement(i)->getVertices(vertexList);
-					unsigned int temp3 = vertexList.size();
 					for(unsigned int j = 0; j < vertexList.size() - 1; j++)
 					{
 						glVertex2d(vertexList[j]->x(), vertexList[j]->y());
@@ -3093,6 +3163,8 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                     
                 _editor.getNodeList()->erase(_editor.getLastNodeAdd());
                 _editor.addNode(tempX, tempY, getTolerance() / 8.0);
+				
+				deleteMesh();
             }
         }
         else
@@ -3111,6 +3183,8 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                     _editor.addBlockLabel(tempX, tempY, getTolerance() / 1.2);
                 }
                 
+				deleteMesh();
+				
                 /* Now we want to scan through the entire block label list to finc if there is one that is
                  * set to defualt, if there is, then copy the settings to the newly created label
                  */

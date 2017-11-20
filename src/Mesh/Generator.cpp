@@ -7,6 +7,7 @@
 #include <stack>
 //#include "GmshConfig.h"
 //#include "GmshMessage.h"
+#include "common/OmniFEMMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/Context.h"
 #include "common/OS.h"
@@ -321,7 +322,7 @@ static void Mesh1D(GModel *m)
   m->getFields()->initialize();
 
   if(TooManyElements(m, 1)) return;
-  //Msg::StatusBar(true, "Meshing 1D...");
+  OmniFEMMsg::instance()->MsgStatus(std::string("Meshing 1D..."));
   double t1 = Cpu();
 
 
@@ -351,6 +352,7 @@ static void Mesh1D(GModel *m)
 	  nPending++;
 	}
       }
+	  
      // if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 1D...");
     }
 
@@ -360,6 +362,7 @@ static void Mesh1D(GModel *m)
 
   double t2 = Cpu();
   CTX::instance()->meshTimer[0] = t2 - t1;
+  OmniFEMMsg::instance()->wxMsgStatus(wxString("Done meshing 1D ") + wxString(std::to_string(CTX::instance()->meshTimer[0]) + wxString(" s")));
 //  Msg::StatusBar(true, "Done meshing 1D (%g s)", CTX::instance()->meshTimer[0]);
 }
 
