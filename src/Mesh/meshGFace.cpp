@@ -93,7 +93,7 @@ public:
           (*ite)->mesh_vertices.clear();
           for(unsigned int i = 0; i< (*ite)->lines.size(); i+=2){
             if (i+1 >= (*ite)->lines.size()){
-       //       Msg::Error("1D mesh cannot be divided by 2");
+				OmniFEMMsg::instance()->MsgError("1D mesh cannot be divided by 2");
               break;
             }
             MVertex *v1 = (*ite)->lines[i]->getVertex(0);
@@ -210,7 +210,7 @@ public:
       // recombine the elements on the half mesh
       CTX::instance()->mesh.lcFactor /=2.0;
       recombineIntoQuads(_gf,true,true,.1,true);
-      //      Msg::Info("subdividing");
+	  OmniFEMMsg::instance()->MsgInfo("Subdividing");
       subdivide();
       //      _gf->model()->writeMSH("hop2.msh");
       restore();
@@ -247,8 +247,9 @@ static void copyMesh(GFace *source, GFace *target)
   std::list<GVertex*> t_vtcs = target->vertices();
 
   if (s_vtcs.size() != t_vtcs.size()) {
-  //  Msg::Info("Periodicity imposed on topologically incompatible surfaces"
-   //           "(%d vs %d bounding vertices)",s_vtcs.size(),t_vtcs.size());
+	  OmniFEMMsg::instance()->MsgInfo("Periodicity imposed on topologically incompatible surfaces " + 
+										'(' + std::to_string(s_vtcs.size()) + " vs " + 
+										std::to_string(t_vtcs.size()) + " bounding vertices)");
   }
 
   std::set<GVertex*> checkVtcs;
@@ -260,21 +261,24 @@ static void copyMesh(GFace *source, GFace *target)
     std::map<GVertex*,GVertex*>::iterator gvsIter = target->vertexCounterparts.find(gvt);
 
     if (gvsIter == target->vertexCounterparts.end()) {
-   //   Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-    //            "vertex %d has no periodic counterpart",
-    //            target->tag(),source->tag(),gvt->tag());
+		OmniFEMMsg::instance()->MsgInfo("Error during periodic meshing of surface " + std::to_string(target->tag()) + 
+										" with surface " + std::to_string(source->tag()) + ":" + "vertex " + 
+										std::to_string(gvt->tag()) + " has no periodic counterpart");
     }
 
     GVertex* gvs = gvsIter->second;
     if (checkVtcs.find(gvs) == checkVtcs.end()) {
-      if (gvs){// Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-                  //       "vertex %d has periodic counterpart %d outside of source surface",
-                   //      target->tag(),source->tag(),gvt->tag(),gvs->tag());
+      if (gvs){
+		  OmniFEMMsg::instance()->MsgInfo("Error during periodic meshing of surface " + std::to_string(target->tag()) + 
+										" with surface " + std::to_string(source->tag()) + ":" + "vertex " + 
+										std::to_string(gvt->tag()) + " has periodic counterpart " + std::to_string(gvs->tag()) + 
+										" outside of source surface");
 	  }
 
-      else {//Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-              //       "vertex %d has no periodic counterpart",
-               //      target->tag(),source->tag(),gvt->tag());
+      else {
+		  OmniFEMMsg::instance()->MsgInfo("Error during periodic meshing of surface " + std::to_string(target->tag()) + 
+										" with surface " + std::to_string(source->tag()) + ":" + "vertex " + 
+										std::to_string(gvt->tag()) + " has no periodic counterpart");
 	  }
     }
 
@@ -313,6 +317,7 @@ static void copyMesh(GFace *source, GFace *target)
     }
 
     if (get->mesh_vertices.size() != ges->mesh_vertices.size()) {
+		
      // Msg::Info("Error during periodic meshing of surface %d with surface %d:"
      //           "edge %d has %d vertices, whereas correspondant %d has %d",
       //          target->tag(),source->tag(),
@@ -1038,15 +1043,14 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
     }
     else
 	{
-   //   Msg::Debug("Degenerated mesh on edge %d", (*ite)->tag());
-	  
+		OmniFEMMsg::instance()->MsgInfo("Degenerated mesh on edge " + std::to_string((*ite)->tag()));
 	}
     ++ite;
   }
 
 
   if(boundary.size()){
-  //  Msg::Error("The 1D mesh seems not to be forming a closed loop");
+	  OmniFEMMsg::instance()->MsgError("The 1D mesh seems to not to be forming a closed loop");
     gf->meshStatistics.status = GFace::FAILED;
     return false;
   }
@@ -1083,9 +1087,8 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
 
   if(all_vertices.size() < 3){
-  //  Msg::Warning("Mesh Generation of Model Face %d Skipped: "
-  //               "Only %d mesh vertices on the contours",
-    //             gf->tag(), all_vertices.size());
+	  OmniFEMMsg::instance()->MsgWarning(	"Mesh Generation of Model Face " + std::to_string(gf->tag()) + " skipped/n" + 
+											"Only " + std::to_string(all_vertices.size()) + " mesh vertices on the contours");
     gf->meshStatistics.status = GFace::DONE;
     return true;
   }
@@ -1178,12 +1181,12 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
     //   -) It does not necessary recover the boundaries
       //   -) It contains triangles outside the domain (the first edge
       //      loop is the outer one)
-  //  Msg::Debug("Meshing of the convex hull (%d points)", points.size());
+	  OmniFEMMsg::instance()->MsgInfo("Meshing of the convex hull (" + std::to_string(points.size()) + " points)");
     try{
       doc.MakeMeshWithPoints();
     }
     catch(const char *err){
-   //   Msg::Error("%s", err);
+		OmniFEMMsg::instance()->wxMsgError(wxString(err));
     }
   //  Msg::Debug("Meshing of the convex hull (%d points) done", points.size());
 
@@ -1194,7 +1197,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
       int c = doc.triangles[i].c;
       int n = doc.numPoints;
       if(a < 0 || a >= n || b < 0 || b >= n || c < 0 || c >= n){
-    //    Msg::Warning("Skipping bad triangle %d", i);
+		  OmniFEMMsg::instance()->MsgWarning("Skipping bad triangle " + std::to_string(i));;
         continue;
       }
       BDS_Point *p1 = (BDS_Point*)doc.points[doc.triangles[i].a].data;
@@ -1258,7 +1261,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
   // Recover the boundary edges and compute characteristic lenghts
   // using mesh edge spacing. If two of these edges intersect, then
   // the 1D mesh have to be densified
- // Msg::Debug("Recovering %d model Edges", edges.size());
+  OmniFEMMsg::instance()->MsgInfo("Recovering " + std::to_string(edges.size()) + " model Edges");
   std::set<EdgeToRecover> edgesToRecover;
   std::set<EdgeToRecover> edgesNotRecovered;
   ite = edges.begin();
@@ -1287,21 +1290,20 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
     }
     ++ite;
   }
-
- // Msg::Debug("Recovering %d mesh Edges (%d not recovered)", edgesToRecover.size(),
- //            edgesNotRecovered.size());
+	OmniFEMMsg::instance()->MsgInfo("Recovering " + std::to_string(edgesToRecover.size()) + " mesh Edges (" + 
+										std::to_string(edgesNotRecovered.size()) + " not recovered)");
 
   if(edgesNotRecovered.size()){
     std::ostringstream sstream;
     for(std::set<EdgeToRecover>::iterator itr = edgesNotRecovered.begin();
         itr != edgesNotRecovered.end(); ++itr)
       sstream << " " << itr->ge->tag();
-  //  Msg::Warning(":-( There are %d intersections in the 1D mesh (curves%s)",
-  //               edgesNotRecovered.size(), sstream.str().c_str());
+	  OmniFEMMsg::instance()->MsgWarning("There are " + std::to_string(edgesNotRecovered.size()) + " intersections in the 1D mesh (curves " + 
+											sstream.str() + ")");
+
     if (repairSelfIntersecting1dMesh)
 	{
-   //   Msg::Warning("8-| Gmsh splits those edges and tries again");
-	  
+		OmniFEMMsg::instance()->MsgWarning("Gmsh splits those edges and tries again");
 	}
 
     if(debug){
@@ -1322,7 +1324,8 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
         int p1 = itr->p1;
         int p2 = itr->p2;
         int tag = itr->ge->tag();
-     //   Msg::Error("Edge not recovered: %d %d %d", p1, p2, tag);
+		OmniFEMMsg::instance()->MsgError("Edge not recovered: " + std::to_string(p1) + " " + std::to_string(p2) + " " + 
+											std::to_string(tag));
         //_error[3 * I + 0] = p1;
         //_error[3 * I + 1] = p2;
         //_error[3 * I + 2] = tag;
@@ -1342,12 +1345,10 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
   if(RECUR_ITER > 0)
   {
- //   Msg::Warning(":-) Gmsh was able to recover all edges after %d iterations",
-  //               RECUR_ITER);
+	  OmniFEMMsg::instance()->MsgWarning("Gmsh was able to recover all edges after " + std::to_string(RECUR_ITER) + " iterations");
 				 
   }
-
- // Msg::Debug("Boundary Edges recovered for surface %d", gf->tag());
+	OmniFEMMsg::instance()->MsgInfo("Boundary Edges recovered for surface " + std::to_string(gf->tag()));
 
   // look for a triangle that has a negative node and recursively
   // tag all exterior triangles
@@ -1425,8 +1426,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
   // compute characteristic lengths at vertices
   if (CTX::instance()->mesh.algo2d != ALGO_2D_BAMG && !onlyInitialMesh){
-   //   Msg::Debug("Computing mesh size field at mesh vertices %d",
-    //             edgesToRecover.size());
+	  OmniFEMMsg::instance()->MsgInfo("Computing mesh size field at mesh vertices " + std::to_string(edgesToRecover.size()));
       std::set<BDS_Point*, PointLessThan>::iterator it = m->points.begin();
       for(; it != m->points.end();++it){
         //      for(int i = 0; i < doc.numPoints; i++){
@@ -1516,7 +1516,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
 
   {
     int nb_swap;
-  //  Msg::Debug("Delaunizing the initial mesh");
+	OmniFEMMsg::instance()->MsgInfo("Delaunizing the initial mesh");
     delaunayizeBDS(gf, *m, nb_swap);
   }
   //gf->triangles.clear();
@@ -1526,8 +1526,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
   // gf->deleteMesh() would also destroy e.g. the data in a compound face, which
   // we should not do)
   gf->GFace::deleteMesh();
-
- // Msg::Debug("Starting to add internal points");
+	OmniFEMMsg::instance()->MsgInfo("Starting to add internal points");
   // start mesh generation
   if(!algoDelaunay2D(gf) && !onlyInitialMesh){
     // if(CTX::instance()->mesh.recombineAll || gf->meshAttributes.recombine || 1) {
@@ -2440,6 +2439,7 @@ int debugSurface = -1; //-100;
  */
 void meshGFace::operator() (GFace *gf, bool print)
 {
+	// TODO: Add in messaging here
   gf->model()->setCurrentMeshEntity(gf);
 
   if(debugSurface >= 0 && gf->tag() != debugSurface){
@@ -2475,12 +2475,11 @@ void meshGFace::operator() (GFace *gf, bool print)
     }
     else
 	{
-    //  Msg::Warning("Unknown mesh master face %d", gf->meshMaster()->tag());
-	  
+		OmniFEMMsg::instance()->MsgWarning("Unknown mesh master face " + std::to_string(gf->meshMaster()->tag()));
 	}
   }
 
-  const char *algo = "Unknown";
+  std::string algo = "Unknown";
 
   switch(gf->getMeshingAlgo()){
   case ALGO_2D_MESHADAPT : algo = "MeshAdapt"; break;
@@ -2501,16 +2500,14 @@ void meshGFace::operator() (GFace *gf, bool print)
 
   if (print)
   {
- //   Msg::Info("Meshing surface %d (%s, %s)", gf->tag(), gf->getTypeString().c_str(), algo);
+	  OmniFEMMsg::instance()->MsgInfo("Meshing surface " + std::to_string(gf->tag()) + " (" + gf->getTypeString() + ", " + algo + ")");
 	
   }
 
   // compute loops on the fly (indices indicate start and end points
   // of a loop; loops are not yet oriented)
-//  Msg::Debug("Computing edge loops");
-
-//  Msg::Debug("Generating the mesh");
-
+  OmniFEMMsg::instance()->MsgInfo("Computing edge loops");
+  OmniFEMMsg::instance()->MsgInfo("Generating 2D Mesh");
   quadMeshRemoveHalfOfOneDMesh halfmesh (gf);
 
   if ((gf->getNativeType() != GEntity::AcisModel ||
@@ -2524,13 +2521,11 @@ void meshGFace::operator() (GFace *gf, bool print)
     if(!meshGeneratorPeriodic
        (gf, debugSurface >= 0 || debugSurface == -100))
 	   {
-    //  Msg::Error("Impossible to mesh periodic face %d", gf->tag());
-	  
+		   OmniFEMMsg::instance()->MsgError("Impossible to mesh periodic face " + std::to_string(gf->tag()));
 	   }
   }
-
-//  Msg::Debug("Type %d %d triangles generated, %d internal vertices",
- //            gf->geomType(), gf->triangles.size(), gf->mesh_vertices.size());
+	OmniFEMMsg::instance()->MsgInfo(	"Type " + std::to_string(gf->geomType()) + " " + std::to_string(gf->triangles.size()) + 
+										" triangles generated, " + std::to_string(gf->mesh_vertices.size()) + " internal vertices");
 
   halfmesh.finish();
 }

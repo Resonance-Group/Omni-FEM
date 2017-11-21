@@ -164,7 +164,7 @@ void GModel::setFactory(std::string name)
 #if defined(HAVE_OCC)
     _factory = new OCCFactory();
 #else
- //   Msg::Error("Missing OpenCASCADE support: using Gmsh GEO factory instead");
+	OmniFEMMsg::instance()->MsgError("Missing OpenCASCADE support: using Gmsh GEO factory instead");
     _factory = new GeoFactory();
 #endif
   }
@@ -184,8 +184,7 @@ GModel *GModel::findByName(const std::string &name, const std::string &fileName)
 
 void GModel::destroy(bool keepName)
 {
-//  Msg::Debug("Destroying model %s", getName().c_str());
-
+	//OmniFEMMsg::MsgInfo("Destorying model " + getName());
   if(!keepName){
     _name.clear();
     _fileNames.clear();
@@ -423,7 +422,7 @@ void GModel::snapVertices()
         t = parb.high();
       }
       else{
-     //   Msg::Error("Weird vertex: impossible to snap");
+		OmniFEMMsg::instance()->MsgError("Weird vertex: impossible to snap");
         break;
       }
       GPoint gp = (*it)->point(t);
@@ -432,8 +431,8 @@ void GModel::snapVertices()
                       (gp.z() - (*vit)->z()) * (gp.z() - (*vit)->z()));
       if (d > tol){
         (*vit)->setPosition(gp);
-    //    Msg::Info("Snapping geometry vertex %d to curve control point (dist = %g)",
-     //             (*vit)->tag(), d);
+		OmniFEMMsg::instance()->MsgInfo("Snapping geometry vertex " + std::to_string((*vit)->tag()) + 
+										" to curve control point (dist = " + std::to_string(d) + ")");
       }
     }
     vit++;
@@ -550,7 +549,7 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
         }
       }
       else{
-    //    Msg::Error("Unknown model face with tag %d", tag);
+		  OmniFEMMsg::instance()->MsgError("Unknown model face with tag " + std::to_string(tag));
         ret = false;
       }
     }
@@ -570,8 +569,9 @@ bool GModel::getBoundaryTags(const std::vector<std::pair<int, int> > &inDimTags,
             outDimTags.push_back(std::pair<int, int>(0, ge->getEndVertex()->tag()));
         }
       }
-      else{
-    //    Msg::Error("Unknown model edge with tag %d", tag);
+      else
+	  {
+		  OmniFEMMsg::instance()->MsgError("Unknown model edge with tag " + std::to_string(tag));
         ret = false;
       }
     }
@@ -731,7 +731,7 @@ int GModel::getPhysicalNumber(const int &dim, const std::string &name)
   for(piter physIt = firstPhysicalName(); physIt != lastPhysicalName(); ++physIt)
     if(dim == physIt->first.first && name == physIt->second)
       return physIt->first.second;
- // Msg::Warning("No physical group found with the name '%s'", name.c_str());
+	  OmniFEMMsg::instance()->MsgWarning("No physical group found with the name " + name);
   return -1;
 }
 
@@ -821,11 +821,12 @@ static void addToMap
   else { //We found the neighbor face outFace
     faceToElement.insert(std::pair< MFace , MElement *>(face, el));
     if (faceToElement.count(face) > 2){
-  //    Msg::Error("Topological fault: Face sharing two other faces. Element %i. "
-    //             "Number of nodes %i. Count of faces: %i Three first nodes %i %i %i",
-    //             el->getNum(),face.getNumVertices(),faceToElement.count(face),
-    //             face.getVertex(0)->getNum(),face.getVertex(1)->getNum(),
-    //             face.getVertex(2)->getNum());
+		OmniFEMMsg::instance()->wxMsgError(wxString("Topological fault: Face sharing two other faces.") + 
+											wxString("Element ") + wxString(std::to_string(el->getNum())) + wxString(".") + 
+											wxString("Number of nodes ") + wxString(std::to_string(face.getNumVertices())) + wxString(".") +
+											wxString("Count of faces: ") + wxString(std::to_string(faceToElement.count(face))) + 
+											wxString("Three first nodes") + wxString(std::to_string(face.getVertex(0)->getNum())) + " " + 
+											wxString(std::to_string(face.getVertex(1)->getNum())) + " " + wxString(std::to_string(face.getVertex(2)->getNum())));
       return;
     }
     MFace outFace = fit->first;
@@ -848,7 +849,7 @@ static void checkConformity
    MFace face, MElement *el)
 {
   int connectivity = faceToElement.count(face);
-  if (ElementType::ParentTypeFromTag(el->getType()) == TYPE_TRIH){
+ /* if (ElementType::ParentTypeFromTag(el->getType()) == TYPE_TRIH){
     //Each face of a trihedron should exist twice (no face on the boundary)
     if (connectivity != 2)
 	{
@@ -857,15 +858,15 @@ static void checkConformity
    
 	}
   }
-  else{
+  else{*/
     //A face can exist  twice (inside) or once (boundary)
     if (connectivity != 2){
       for (int iV = 0; iV < face.getNumVertices(); iV++)
         if (face.getVertex(iV)->onWhat()->dim() == 3 || connectivity != 1){
           for (int jV = 0; jV < face.getNumVertices(); jV++)
 		  {
-    //        Msg::Info("Vertex %i dim %i",face.getVertex(jV)->getNum(),
-    //                  face.getVertex(iV)->onWhat()->dim());
+			  OmniFEMMsg::instance()->MsgInfo("Vertex " + std::to_string(face.getVertex(jV)->getNum()) + 
+												" dim " + std::to_string(face.getVertex(iV)->onWhat()->dim()));
 		  }
     //      Msg::Error("Non conforming element %i (%i connection(s) for a face "
      //                "located on dim %i (vertex %i))",el->getNum(), connectivity,
@@ -873,7 +874,7 @@ static void checkConformity
 	 
         }
     }
-  }
+//  }
 }
 
 void GModel::setAllVolumesPositiveTopology()
@@ -982,7 +983,7 @@ int GModel::adaptMesh(std::vector<int> technique,
   int ITER = 0;
   if (meshAll){
     while(1){
-  //    Msg::Info("-- adaptMesh (allDim) ITER =%d ", ITER);
+		OmniFEMMsg::instance()->MsgInfo("--- adaptMesh (allDim) ITER = " + std::to_string(ITER));
       fields->reset();
       meshMetric *metric = new meshMetric(this);
       for (unsigned int imetric = 0; imetric < technique.size(); imetric++){
@@ -1015,7 +1016,7 @@ int GModel::adaptMesh(std::vector<int> technique,
   }
   else{ //adapt only upper most dimension
     while(1) {
-   //   Msg::Info("-- adaptMesh ITER =%d ", ITER);
+		OmniFEMMsg::instance()->MsgInfo("--- adaptMesh ITER = " + std::to_string(ITER));
       std::vector<MElement*> elements;
 
       if (getDim() == 2){
@@ -1108,7 +1109,7 @@ int GModel::partitionMesh(int numPart)
   PartitionMesh(this, CTX::instance()->partitionOptions);
   return 1;
 #else
- // Msg::Error("Mesh module not compiled");
+	OmniFEMMsg::instance()->MsgError("Mesh module not compiled or no METIS or no CHACO");
   return 0;
 #endif
 }

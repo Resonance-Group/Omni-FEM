@@ -73,6 +73,31 @@ public:
 		instance()->getStatusWindows()[(int)displayWindowNum]->displayWindow();
 	}
 	
+	void incrementProgressBar(unsigned int value, Status_Windows window, int progressBar)
+	{
+		if(progressBar == 1)
+			instance()->getStatusWindows()[(int)window]->incrementProgressBarOne(value);
+		else if(progressBar == 2)
+			instance()->getStatusWindows()[(int)window]->incrementProgressBarTwo(value);
+	}
+	
+	void setProgressBarValue(unsigned int value, Status_Windows window, int progressBar)
+	{
+		if(progressBar == 1)
+			instance()->getStatusWindows()[(int)window]->updateProgressBarOne(value);
+		else if(progressBar == 2)
+			instance()->getStatusWindows()[(int)window]->updateProgressBarTwo(value);
+	}
+	
+	void resetProgressBar(Status_Windows window, bool resetBarOne, bool resetBarTwo = false)
+	{
+		if(resetBarOne)
+			instance()->getStatusWindows()[(int)window]->resetProgressBarOne();
+		
+		if(resetBarTwo)
+			instance()->getStatusWindows()[(int)window]->resetProgressBarTwo();
+	}
+	
 	static OmniFEMMsg *instance()
 	{
 		if(!p_instance)

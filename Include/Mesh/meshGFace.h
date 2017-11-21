@@ -13,6 +13,8 @@
 #include "Mesh/SVector3.h"
 #include "Mesh/MElementOctree.h"
 
+#include "common/OmniFEMMessage.h"
+
 class GEdge;
 class GFace;
 class MVertex;

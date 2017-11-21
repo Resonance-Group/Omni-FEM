@@ -176,7 +176,7 @@ static double F_Transfinite(GEdge *ge, double t_)
 {
   double length = ge->length();
   if(length == 0.0){
-  //  Msg::Error("Zero-length curve %d in transfinite mesh", ge->tag());
+	OmniFEMMsg::instance()->MsgError("Zero-length curve " + std::to_string(ge->tag()) + " in transfinite mesh");
     return 1.;
   }
 
@@ -230,7 +230,7 @@ static double F_Transfinite(GEdge *ge, double t_)
       break;
 
     default:
-  //    Msg::Warning("Unknown case in Transfinite Line mesh");
+		OmniFEMMsg::instance()->MsgWarning("Unknown case in Transfinite Line Mesh");
       val = 1.;
       break;
     }
@@ -397,7 +397,7 @@ static void filterPoints(GEdge*ge, int nMinimumPoints)
   for (unsigned int i=0;i<ge->mesh_vertices.size();i++){
     MEdgeVertex *v = dynamic_cast<MEdgeVertex*> (ge->mesh_vertices[i]);
     if (!v){
-  //    Msg::Error("in 1D mesh filterPoints");
+		OmniFEMMsg::instance()->MsgError("In 1D mesh filterPoints");
       return;
     }
     double d = distance (v,v0);
@@ -484,18 +484,16 @@ static void addBoundaryLayerPoints(GEdge *ge, double &t_begin, double &t_end,
   GVertex *gve = ge->getEndVertex();
   if(blf->isEndNode(gvb->tag())){
     if(ge->geomType() != GEntity::Line){
-   //   Msg::Error("Boundary layer end point %d should lie on a straight line",
-   //              gvb->tag());
-      return;
+		OmniFEMMsg::instance()->MsgError("Boundary layer end point " + std::to_string(gvb->tag()) + " should lie on a straight line");
+		return;
     }
     createPoints(gvb, ge, blf, _addBegin, dir);
     if(!_addBegin.empty()) _addBegin[_addBegin.size()-1]->getParameter(0, t_begin);
   }
   if (blf->isEndNode(gve->tag())){
     if (ge->geomType() != GEntity::Line){
-   //   Msg::Error("Boundary layer end point %d should lie on a straight line",
-   //              gve->tag());
-      return;
+		OmniFEMMsg::instance()->MsgError("Boundary layer end point " + std::to_string(gve->tag()) + " should lie on a straight line");
+		return;
     }
     createPoints(gve, ge, blf, _addEnd, dir * -1.0);
     if(!_addEnd.empty()) _addEnd[_addEnd.size()-1]->getParameter(0, t_end);
@@ -505,6 +503,7 @@ static void addBoundaryLayerPoints(GEdge *ge, double &t_begin, double &t_end,
 
 void meshGEdge::operator() (GEdge *ge)
 {
+	//TODO: Add in the messaging
   ge->model()->setCurrentMeshEntity(ge);
 
   // if(ge->geomType() == GEntity::DiscreteCurve) return;
@@ -524,33 +523,41 @@ void meshGEdge::operator() (GEdge *ge)
   if(ge->meshMaster() != ge){
     GEdge *gef = dynamic_cast<GEdge*> (ge->meshMaster());
     if (gef->meshStatistics.status == GEdge::PENDING) return;
- //   Msg::Info("Meshing curve %d (%s) as a copy of %d", ge->tag(),
-   //           ge->getTypeString().c_str(), ge->meshMaster()->tag());
+   OmniFEMMsg::instance()->MsgInfo("Meshing curve " + std::to_string(ge->tag()) +
+									" (" + ge->getTypeString() + ") as a copy of " + 
+									std::to_string(ge->meshMaster()->tag()));
     copyMesh(gef, ge, ge->masterOrientation);
     ge->meshStatistics.status = GEdge::DONE;
     return;
   }
 
   if(ge->model()->getNumEdges() > 100000){
-    if (ge->tag() % 100000 == 1){
-  //    Msg::Info("Meshing curve %d/%d (%s)", ge->tag(), ge->model()->getNumEdges(),
-  //              ge->getTypeString().c_str());
+    if (ge->tag() % 100000 == 1)
+	{
+		OmniFEMMsg::instance()->MsgInfo(	"Meshing curve " + std::to_string(ge->tag()) + "/" + 
+											std::to_string(ge->model()->getNumEdges()) + " (" +
+											ge->getTypeString() + ")");
     }
   }
   else if(ge->model()->getNumEdges() > 10000){
-    if (ge->tag() % 10000 == 1){
-   //   Msg::Info("Meshing curve %d/%d (%s)", ge->tag(), ge->model()->getNumEdges(),
-   //             ge->getTypeString().c_str());
+    if (ge->tag() % 10000 == 1)
+	{
+		OmniFEMMsg::instance()->MsgInfo(	"Meshing curve " + std::to_string(ge->tag()) + "/" + 
+											std::to_string(ge->model()->getNumEdges()) + " (" +
+											ge->getTypeString() + ")");
     }
   }
   else if(ge->model()->getNumEdges() > 1000){
-    if (ge->tag() % 1000 == 1){
-  //    Msg::Info("Meshing curve %d/%d (%s)", ge->tag(), ge->model()->getNumEdges(),
-  //              ge->getTypeString().c_str());
+    if (ge->tag() % 1000 == 1)
+	{
+		OmniFEMMsg::instance()->MsgInfo(	"Meshing curve " + std::to_string(ge->tag()) + "/" + 
+											std::to_string(ge->model()->getNumEdges()) + " (" +
+											ge->getTypeString() + ")");
     }
   }
   else{
-   // Msg::Info("Meshing curve %d (%s)", ge->tag(), ge->getTypeString().c_str());
+	  OmniFEMMsg::instance()->MsgInfo(	"Meshing curve " + std::to_string(ge->tag()) + "(" +
+										ge->getTypeString() + ")");
   }
 
   // compute bounds
@@ -585,7 +592,7 @@ void meshGEdge::operator() (GEdge *ge)
   int N;
   int filterMinimumN = 1;
   if(length == 0. && CTX::instance()->mesh.toleranceEdgeLength == 0.){
- //   Msg::Debug("Curve %d has a zero length", ge->tag());
+	OmniFEMMsg::instance()->MsgInfo("Curve " + std::to_string(ge->tag()) + " has a zero length");
     a = 0.;
     N = 1;
   }
@@ -653,13 +660,13 @@ void meshGEdge::operator() (GEdge *ge)
   // necessary at the same location
   GPoint beg_p, end_p;
   if(!ge->getBeginVertex() && !ge->getEndVertex()){
-   // Msg::Warning("Skipping curve with no begin nor end vertex");
+   OmniFEMMsg::instance()->MsgWarning("Skipping curve with no beginning or ending vertex");
     return;
   }
   else if(ge->getBeginVertex() == ge->getEndVertex() &&
           ge->getBeginVertex()->edges().size() == 1){
     end_p = beg_p = ge->point(t_begin);
-   // Msg::Debug("Meshing periodic closed curve");
+   OmniFEMMsg::instance()->MsgInfo("Meshing periodic closed curve");
   }
   else{
     MVertex *v0 = ge->getBeginVertex()->mesh_vertices[0];

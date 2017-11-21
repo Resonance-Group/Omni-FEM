@@ -6,6 +6,8 @@
 #ifndef _GENERATOR_H_
 #define _GENERATOR_H_
 
+#include "common/OmniFEMMessage.h"
+
 class GModel;
 //class GRegion;
 #include "Mesh/fullMatrix.h"

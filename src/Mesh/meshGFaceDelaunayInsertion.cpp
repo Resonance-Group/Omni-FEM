@@ -1998,12 +1998,13 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
     double AVG_CAVSIZE = 0;
 
     double t1 = Cpu();
-
-    //  Msg::Info("Delaunay 2D SORTING");
+	
+	OmniFEMMsg::instance()->MsgInfo("Delaunay 2D SORTING");
     if(hilbertSort) SortHilbert(v);
 
     double ta=0,tb=0,tc=0,td=0,T;
-    //  Msg::Info("Delaunay 2D INSERTING");
+
+	OmniFEMMsg::instance()->MsgInfo("Delaunay 2D INSERTING");
     for (size_t i=0;i<v.size();i++){
       MVertex *pv = v[i];
 
@@ -2013,7 +2014,7 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
       ta += Cpu()-T;
       AVG_ITER += (double)NITER;
       if(!found) {
- //       Msg::Error("Cannot insert a point in 2D Delaunay");
+		  OmniFEMMsg::instance()->MsgError("Cannot insert a point in 2D Delaunay");
         continue;
       }
       shell.clear();
@@ -2069,10 +2070,13 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
     }
 
     double t2 = Cpu();
-  //  Msg::Debug("Delaunay 2D done for %d points : CPU = %g, %d global searches, AVG walk size %g , AVG cavity size %g",
-  //      v.size(), t2-t1,NB_GLOBAL_SEARCH,1.+AVG_ITER/v.size(),AVG_CAVSIZE/v.size());
+	OmniFEMMsg::instance()->MsgInfo("Delaunay 2D done for " + std::to_string(v.size()) + " points : CPU = " + 
+										std::to_string(t2 - t1) + ", " + std::to_string(NB_GLOBAL_SEARCH) + 
+										" global searches, AVG walk size " + std::to_string(1. + AVG_ITER / v.size()) + 
+										" , AVG cavity size " + std::to_string(AVG_CAVSIZE / v.size()));
 
-    if (edgesToRecover)recoverEdges (t,*edgesToRecover);
+    if (edgesToRecover)
+		recoverEdges(t,*edgesToRecover);
 
     for (size_t i = 0;i<t.size();i++){
       if (t[i]->isDeleted() || (removeBox && triOnBox (t[i]->tri(),box))) delete t[i]->tri();
@@ -2181,8 +2185,8 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
       if (setOfMeshEdges.find(edges[i])==setOfMeshEdges.end())
         edgesToRecover.push_back(edges[i]);
     }
-
- //   Msg::Info("%d edges to recover among %d edges",edgesToRecover.size(),edges.size());
+		OmniFEMMsg::instance()->MsgInfo(std::to_string(edgesToRecover.size()) + "edges to recover among " + 
+										std::to_string(edges.size()) + " edges");
     //  int iter = 0;
     //  char name[256];
     //  sprintf(name,"iter%d.pos",iter++);
@@ -2190,7 +2194,7 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
     for (unsigned int i=0;i<edgesToRecover.size();i++){
       MVertex *mstart = edgesToRecover[i].getVertex(0);
       MVertex *mend = edgesToRecover[i].getVertex(1);
-  //    Msg::Info("recovering edge %d %d",mstart->getNum(),mend->getNum());
+	  OmniFEMMsg::instance()->MsgInfo("Recovering edge " + std::to_string(mstart->getNum()) + " of " + std::to_string(mend->getNum()));
       //int iter;
       while(recoverEdgeBySwaps (t, mstart, mend,edges)) {
         //iter ++;

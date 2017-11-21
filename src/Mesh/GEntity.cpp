@@ -33,12 +33,6 @@ void GEntity::deleteVertexArrays()
 
 char GEntity::getVisibility()
 {
-	/*
-  if(CTX::instance()->hideUnselected && !CTX::instance()->pickElements &&
-     !getSelection() && geomType() != ProjectionFace)
-    return false;
-  return _visible;
-   */
 	return 1;
 }
 

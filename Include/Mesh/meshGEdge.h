@@ -6,6 +6,8 @@
 #ifndef _MESH_GEDGE_H_
 #define _MESH_GEDGE_H_
 
+#include "common/OmniFEMMessage.h"
+
 class GEdge;
 
 // Create the mesh of the edge

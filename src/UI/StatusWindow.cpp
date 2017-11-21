@@ -15,7 +15,7 @@ statusWindow::statusWindow(std::string windowName, bool drawProgressBar1, bool d
 			p_progressBarOneSizer = new wxStaticBoxSizer(wxVERTICAL, this, "Progress Bar 1");
 			p_progressBarOneSizer->GetStaticBox()->SetFont(font);
 			
-			p_gaugeOne = new wxGauge(p_progressBarOneSizer->GetStaticBox(), wxID_ANY, 100, wxDefaultPosition, wxSize(270, 20));
+			p_gaugeOne = new wxGauge(p_progressBarOneSizer->GetStaticBox(), wxID_ANY, 100, wxDefaultPosition, wxSize(320, 20));
 			p_progressBarOneSizer->Add(p_gaugeOne, 0, wxCENTER | wxALL, 6);
 		}
 		
@@ -24,12 +24,12 @@ statusWindow::statusWindow(std::string windowName, bool drawProgressBar1, bool d
 			p_progressBarTwoSizer = new wxStaticBoxSizer(wxVERTICAL, this, "Progress Bar 2");
 			p_progressBarTwoSizer->GetStaticBox()->SetFont(font);
 			
-			p_gaugeTwo = new wxGauge(p_progressBarTwoSizer->GetStaticBox(), wxID_ANY, 100, wxDefaultPosition, wxSize(270, 20));
+			p_gaugeTwo = new wxGauge(p_progressBarTwoSizer->GetStaticBox(), wxID_ANY, 100, wxDefaultPosition, wxSize(320, 20));
 			p_progressBarTwoSizer->Add(p_gaugeTwo, 0, wxCENTER | wxALL, 6);
 		}
 	}
 	
-	p_messageOutput = new wxTextCtrl(logSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(270, 120), wxTE_MULTILINE | wxTE_READONLY);
+	p_messageOutput = new wxTextCtrl(logSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(320, 140), wxTE_MULTILINE | wxTE_READONLY  | wxHSCROLL);
 	p_messageOutput->SetFont(font);
 	logSizer->Add(p_messageOutput, 0, wxCENTER | wxALL, 6);
 	
@@ -49,11 +49,11 @@ statusWindow::statusWindow(std::string windowName, bool drawProgressBar1, bool d
 	}
 	
 	if(drawProgressBar1 || drawProgresssBar2)
-		topSizer->Add(logSizer, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
+		topSizer->Add(logSizer, 0, wxLEFT | wxRIGHT, 6);
 	else
 		topSizer->Add(logSizer, 0, wxALL, 6);
 		
-	topSizer->Add(footerSizer, 0, wxALIGN_RIGHT, 6);
+	topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
 	
 	SetSizerAndFit(topSizer);
 }

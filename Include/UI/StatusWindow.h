@@ -17,15 +17,15 @@ private:
 	
 	bool p_progressBarTwoDisplayed = false;
 	
-	wxGauge *p_gaugeOne;
+	wxGauge *p_gaugeOne = nullptr;
 	
-	wxGauge *p_gaugeTwo;
+	wxGauge *p_gaugeTwo = nullptr;
 	
-	wxTextCtrl *p_messageOutput;
+	wxTextCtrl *p_messageOutput = nullptr;
 	
-	wxStaticBoxSizer *p_progressBarOneSizer;
+	wxStaticBoxSizer *p_progressBarOneSizer = nullptr;
 	
-	wxStaticBoxSizer *p_progressBarTwoSizer;
+	wxStaticBoxSizer *p_progressBarTwoSizer = nullptr;
 	
 	void onClose(wxCloseEvent &event)
 	{
@@ -64,7 +64,7 @@ public:
 	
 	void updateProgressBarOne(unsigned int value)
 	{
-		if(p_gaugeOne && value < p_gaugeOne->GetRange())
+		if(p_gaugeOne && value <= p_gaugeOne->GetRange())
 		{
 			p_gaugeOne->SetValue(value);
 		}
@@ -83,16 +83,25 @@ public:
 	
 	void resetProgressBars()
 	{
+		resetProgressBarOne();
+		resetProgressBarTwo();
+	}
+	
+	void resetProgressBarOne()
+	{
 		if(p_gaugeOne)
 			p_gaugeOne->SetValue(0);
-		
+	}
+	
+	void resetProgressBarTwo()
+	{
 		if(p_gaugeTwo)
 			p_gaugeTwo->SetValue(0);
 	}
 	
 	void updateProgressBarTwo(unsigned int value)
 	{
-		if(p_gaugeTwo && value < p_gaugeTwo->GetRange())
+		if(p_gaugeTwo && value <= p_gaugeTwo->GetRange())
 		{
 			p_gaugeTwo->SetValue(value);
 		}

@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <stack>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
-#include "common/OmniFEMMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/Context.h"
 #include "common/OS.h"
@@ -264,11 +262,7 @@ static bool TooManyElements(GModel *m, int dim)
   sumAllLc /= (double)m->getNumVertices();
   if(!sumAllLc || pow(CTX::instance()->lc / sumAllLc, dim) > 1.e10)
   {
-  //  return !Msg::GetAnswer
-   //   ("Your choice of mesh element sizes will likely produce a very\n"
-   //    "large mesh. Do you really want to continue?\n\n"
-    //   "(To disable this warning in the future, select `Enable expert mode'\n"
-    //   "in the option dialog.)", 1, "Cancel", "Continue");
+	  OmniFEMMsg::instance()->MsgWarning("Your choice of mesh element size will likeyl produce a very large mesh");
 	std::string variable;
 	variable = "Hey, I am just a variable to stop the debugger to indicate that there are probably too many elements :(";
   }
@@ -332,8 +326,8 @@ static void Mesh1D(GModel *m)
     temp.push_back(*it);
   }
 
-  //Msg::ResetProgressMeter();
-
+  OmniFEMMsg::instance()->resetProgressBar(Status_Windows::MESH_STATUS_WINDOW, true);
+  
   int nIter = 0, nTot = m->getNumEdges();
   while(1){
     int nPending = 0;
@@ -352,8 +346,11 @@ static void Mesh1D(GModel *m)
 	  nPending++;
 	}
       }
-	  
-     // if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 1D...");
+	  if(!nIter)
+	  {
+		  unsigned int value = (unsigned int)(((double)nPending / (double)nTot) * 100.0);
+		  OmniFEMMsg::instance()->setProgressBarValue(value, Status_Windows::MESH_STATUS_WINDOW, 1);
+	  }
     }
 
     if(!nPending) break;
@@ -363,11 +360,11 @@ static void Mesh1D(GModel *m)
   double t2 = Cpu();
   CTX::instance()->meshTimer[0] = t2 - t1;
   OmniFEMMsg::instance()->wxMsgStatus(wxString("Done meshing 1D ") + wxString(std::to_string(CTX::instance()->meshTimer[0]) + wxString(" s")));
-//  Msg::StatusBar(true, "Done meshing 1D (%g s)", CTX::instance()->meshTimer[0]);
 }
 
 static void PrintMesh2dStatistics(GModel *m)
 {
+	// TODO: Update the printing code to log the statistics
   FILE *statreport = 0;
  /* if(CTX::instance()->createAppendMeshStatReport == 1)
     statreport = Fopen(CTX::instance()->meshStatReportFileName.c_str(), "w");
@@ -386,7 +383,11 @@ static void PrintMesh2dStatistics(GModel *m)
   double e_long = 0, e_short = 1.e22, e_avg = 0;
   int nTotT = 0, nTotE = 0, nTotGoodLength = 0, nTotGoodQuality = 0;
   int nUnmeshed = 0, numFaces = 0;
-
+  
+  OmniFEMMsg::instance()->wxMsgInfo(wxString("2D stats\t name\t\tfaces\t\tfail\t\t") +
+            wxString("\t\tQavg\t\tQbest\t\tQworst\t\tQ>90\t\tQ>90\t") +
+            wxString("\t\ttau\t\tgood\t\tgood\tCPU \n"));
+/*
   if(CTX::instance()->createAppendMeshStatReport == 1){
     fprintf(statreport, "2D stats\tname\t\t#faces\t\t#fail\t\t"
             "#t\t\tQavg\t\tQbest\t\tQworst\t\t#Q>90\t\t#Q>90/#t\t"
@@ -415,9 +416,7 @@ static void PrintMesh2dStatistics(GModel *m)
       numFaces++;
     }
   }
-
-  //Msg::Info("*** Efficiency index for surface mesh tau=%g ",
- //           100*exp(e_avg/(double)nTotE));
+	OmniFEMMsg::instance()->MsgInfo("*** Efficiency index for surface mesh tau = " + std::to_string(100*exp(e_avg/(double)nTotE)));
 
   fprintf(statreport,"\t%16s\t%d\t\t%d\t\t", m->getName().c_str(), numFaces,
           nUnmeshed);
@@ -428,6 +427,7 @@ static void PrintMesh2dStatistics(GModel *m)
           nTotE, exp(e_avg / (double)nTotE), nTotGoodLength,
           (double)nTotGoodLength / nTotE, CTX::instance()->meshTimer[1]);
   fclose(statreport);
+   */ 
 }
 
 static void Mesh2D(GModel *m)
@@ -435,7 +435,7 @@ static void Mesh2D(GModel *m)
   m->getFields()->initialize();
 
   if(TooManyElements(m, 2)) return;
-  //Msg::StatusBar(true, "Meshing 2D...");
+  OmniFEMMsg::instance()->MsgStatus("Meshing 2D...");
   double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
@@ -452,8 +452,8 @@ static void Mesh2D(GModel *m)
       else
         f.insert(*it);
 
-    //Msg::ResetProgressMeter();
-
+	OmniFEMMsg::instance()->resetProgressBar(Status_Windows::MESH_STATUS_WINDOW, true);
+	
     int nIter = 0, nTot = m->getNumFaces();
     while(1){
       int nPending = 0;
@@ -494,7 +494,12 @@ static void Mesh2D(GModel *m)
             nPending++;
           }
         }
-     //   if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 2D...");
+		if(!nIter)
+		{
+			unsigned int value = (unsigned int)(((double)nPending / (double)nTot) * 100);
+			OmniFEMMsg::instance()->setProgressBarValue(value, Status_Windows::MESH_STATUS_WINDOW, 1);
+			OmniFEMMsg::instance()->MsgStatus("Meshing 2D...");
+		}
       }
 //#if defined(_OPENMP)
 //#pragma omp master
@@ -527,7 +532,12 @@ static void Mesh2D(GModel *m)
 #endif
           nPending++;
         }
-     //   if(!nIter) Msg::ProgressMeter(nPending, nTot, false, "Meshing 2D...");
+		if(!nIter)
+		{
+			unsigned int value = (unsigned int)(((double)nPending / (double)nTot) * 100);
+			OmniFEMMsg::instance()->setProgressBarValue(value, Status_Windows::MESH_STATUS_WINDOW, 1);
+			OmniFEMMsg::instance()->MsgStatus("Meshing 2D...");
+		}
       }
       if(!nPending) break;
       if(nIter++ > 10) break;
@@ -538,9 +548,9 @@ static void Mesh2D(GModel *m)
 
   double t2 = Cpu();
   CTX::instance()->meshTimer[1] = t2 - t1;
-//  Msg::StatusBar(true, "Done meshing 2D (%g s)", CTX::instance()->meshTimer[1]);
+  OmniFEMMsg::instance()->MsgStatus("Done meshing 2D (" + std::to_string(CTX::instance()->meshTimer[1]) + " s)");
 
- // PrintMesh2dStatistics(m);
+	PrintMesh2dStatistics(m);
 }
 /*
 static void FindConnectedRegions(const std::vector<GRegion*> &del,
