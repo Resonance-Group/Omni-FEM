@@ -3180,7 +3180,7 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_editor.getLastBlockLabelAdded()->getDraggingState())
                 {
                     _editor.getBlockLabelList()->erase(_editor.getLastBlockLabelAdded()); 
-                    _editor.addBlockLabel(tempX, tempY, getTolerance() / 1.2);
+                    _editor.addBlockLabel(tempX, tempY, getTolerance() / 10);
                 }
                 
 				deleteMesh();

@@ -11,15 +11,37 @@ globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences 
 }
 
 
+/*
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref, meshSettings &settings)
+{
+    _problem = physicProblems::PROB_MAGNETICS;
+    _magneticPreference = pref;
+    _preferences = gridPref;
+	p_meshSetting = settings;
+    createDialog(par);
+}
+ */ 
+
+
 
 globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref)
 {
-    // A comment
     _problem = physicProblems::PROB_ELECTROSTATIC;
     _electricalPreference = pref;
     _preferences = gridPref;
     createDialog(par);
 }
+
+/*
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref, meshSettings &meshSettings)
+{
+    _problem = physicProblems::PROB_ELECTROSTATIC;
+    _electricalPreference = pref;
+    _preferences = gridPref;
+	p_meshSetting = meshSettings
+    createDialog(par);
+}
+ */ 
 
 
 
@@ -37,12 +59,14 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     
     wxPanel *gridSettingPanel = new wxPanel(base);
     wxPanel *physicsProblemPreferencesPanel = new wxPanel(base);
+	wxPanel *meshSettingsPanel = new wxPanel(base);
   //  GetBookCtrl()->AddPage(panel, "Input Settings");
     
     wxArrayString lengthName;
     wxArrayString problemTypeNameArray;
     wxArrayString coordianteNameArray;
     wxArrayString acSovlerNameArray;
+	
     
     lengthName.Add("Inches");
     lengthName.Add("Millimeters");
@@ -62,6 +86,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     
     wxBoxSizer *documentSettingsSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *gridSettingsSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer *meshSettingsSizer = new wxBoxSizer(wxVERTICAL);
     
     wxBoxSizer *documentSettingLine1 = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *documentSettingLine2 = new wxBoxSizer(wxHORIZONTAL);
@@ -260,12 +285,203 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     {
         _depthTextCtrl->Enable(false);
     }
+// -------------- This section is for the creation of the mesh options ---------------
+
+	wxArrayString structuredMeshArray;
+	wxArrayString meshArrangmentArray;
+	wxArrayString meshAlgorthimArray;
+	wxArrayString meshRecombinationArray;
+	wxArrayString remeshingAlgorithmArray;
+	wxArrayString remeshParameterizationArray;
+	
+	structuredMeshArray.Add("Unstructured");
+	structuredMeshArray.Add("Structured");
+	
+	meshArrangmentArray.Add("Left");
+	meshArrangmentArray.Add("Right");
+	meshArrangmentArray.Add("Alternating");
+	
+	meshAlgorthimArray.Add("Automatic");
+	meshAlgorthimArray.Add("MeshAdapt");
+	meshAlgorthimArray.Add("Delaunay");
+	meshAlgorthimArray.Add("Frontal");
+	
+	meshRecombinationArray.Add("Standard");
+	meshRecombinationArray.Add("Blossom");
+	
+	remeshingAlgorithmArray.Add("No Split");
+	remeshingAlgorithmArray.Add("Automatic");
+	
+	remeshParameterizationArray.Add("Harmonic");
+	remeshParameterizationArray.Add("Conformal");
+	remeshParameterizationArray.Add("Rbf Harmonic");
+	
+	// _problemTypeComboBox->Create(physicsProblemPreferencesPanel, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), problemTypeNameArray)
+	wxBoxSizer *stucturedMeshSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *meshArrangmentSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *meshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *meshRecombinationSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *reMeshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *reMeshParamSizer = new wxBoxSizer(wxHORIZONTAL);
+	
+	wxStaticText *text1 = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Structure:");
+	text1->SetFont(*font);
+	
+	p_structuredComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox2, wxEmptyString, wxDefaultPosition, wxDefaultSize, structuredMeshArray);
+	p_structuredComboBox->SetFont(*font);
+	
+	if(!p_meshSetting.getStructuredState())
+	{
+		p_structuredComboBox->SetSelection(0);
+		OmniFEMMsg::instance()->MsgInfo("Mesh structure loaded as unstructured");
+	}
+	else
+	{
+		p_structuredComboBox->SetSelection(1);
+		OmniFEMMsg::instance()->MsgInfo("Mesh structure loaded as structured");
+	}
+	
+	stucturedMeshSizer->Add(text1, 0, wxCENTER | wxALL, 6);
+	stucturedMeshSizer->Add(p_structuredComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticText *meshArrangmentText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Face Mesh Arrangement: ");
+	meshArrangmentText->SetFont(*font);
+	
+	p_meshArrangementComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox3, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshArrangmentArray);
+	p_meshArrangementComboBox->SetFont(*font);
+	
+	switch(p_meshSetting.getMeshArrangment())
+	{
+		case StructuredArrangement::ARRANGMENT_LEFT:
+			p_meshArrangementComboBox->SetSelection(0);
+			OmniFEMMsg::instance()->MsgInfo("Face Mesh Arrangment loaded as Left");
+			break;
+		case StructuredArrangement::ARRANGMENT_RIGHT:
+			p_meshArrangementComboBox->SetSelection(1);
+			OmniFEMMsg::instance()->MsgInfo("Face Mesh Arrangment loaded as Right");
+			break;
+		case StructuredArrangement::ARRANGMENT_ALTERNATED:
+			p_meshArrangementComboBox->SetSelection(2);
+			OmniFEMMsg::instance()->MsgInfo("Face Mesh Arrangment loaded as Alternated");
+			break;
+	}
+	
+	if(!p_meshSetting.getStructuredState())
+		p_meshArrangementComboBox->Enable(false);
+	else
+		p_meshArrangementComboBox->Enable(true);
+		
+	meshArrangmentSizer->Add(meshArrangmentText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	meshArrangmentSizer->Add(p_meshArrangementComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticText *meshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Algorithm:");
+	meshAlgoText->SetFont(*font);
+	
+	p_meshAlgothimComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox4, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshAlgorthimArray);
+	p_meshAlgothimComboBox->SetFont(*font);
+	
+	switch(p_meshSetting.getMeshAlgorithm())
+	{
+		case MeshAlgorthim::MESH_ALGO_AUTOMATIC:
+			p_meshAlgothimComboBox->SetSelection(0);
+			OmniFEMMsg::instance()->MsgInfo("Mesh Algorithm loaded as Automatic");
+			break;
+		case MeshAlgorthim::MESH_ALGO_MESHADAPT:
+			p_meshAlgothimComboBox->SetSelection(1);
+			OmniFEMMsg::instance()->MsgInfo("Mesh Algorithm loaded as MeshAdapt");
+			break;
+		case MeshAlgorthim::MESH_ALGO_DELAUNAY:
+			p_meshAlgothimComboBox->SetSelection(2);
+			OmniFEMMsg::instance()->MsgInfo("Mesh Algorithm loaded as Delaunay");
+			break;
+		case MeshAlgorthim::MESH_ALGO_FRONTAL:
+			p_meshAlgothimComboBox->SetSelection(3);
+			OmniFEMMsg::instance()->MsgInfo("Mesh Algorithm loaded as Frontal");
+			break;
+	}
+	
+	meshAlgoSizer->Add(meshAlgoText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	meshAlgoSizer->Add(p_meshAlgothimComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticText *meshRecombinationText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Recombination Algorithm:");
+	meshRecombinationText->SetFont(*font);
+	
+	p_meshRecombinationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox5, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshRecombinationArray);
+	p_meshRecombinationComboBox->SetFont(*font);
+	
+	if(!p_meshSetting.getBlossomRecombinationState())
+	{
+		OmniFEMMsg::instance()->MsgInfo("Mesh Recombination Loaded as Standard");
+		p_meshRecombinationComboBox->SetSelection(0);
+	}
+	else
+	{
+		OmniFEMMsg::instance()->MsgInfo("Mesh Recombination Loaded as Blossom");
+		p_meshRecombinationComboBox->SetSelection(1);
+	}
+	
+	meshRecombinationSizer->Add(meshRecombinationText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	meshRecombinationSizer->Add(p_meshRecombinationComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticText *remeshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remeshing Algorithm:");
+	remeshAlgoText->SetFont(*font);
+	
+	p_remeshAlgorithmComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox6, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshingAlgorithmArray);
+	p_remeshAlgorithmComboBox->SetFont(*font);
+	
+	if(!p_meshSetting.getAutoRemeshingState())
+	{
+		OmniFEMMsg::instance()->MsgInfo("Remesh Algorithm loaded as No Split");
+		p_remeshAlgorithmComboBox->SetSelection(0);
+	}
+	else
+	{
+		OmniFEMMsg::instance()->MsgInfo("Remesh Algorithm loaded as Automatic");
+		p_remeshAlgorithmComboBox->SetSelection(1);
+	}
+	
+	reMeshAlgoSizer->Add(remeshAlgoText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	reMeshAlgoSizer->Add(p_remeshAlgorithmComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticText *remeshParamText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remesh Parameterization:");
+	remeshParamText->SetFont(*font);
+	
+	p_remeshParamterizationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox7, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshParameterizationArray);
+	p_remeshParamterizationComboBox->SetFont(*font);
+	
+	switch(p_meshSetting.getRemeshParameter())
+	{
+		case MeshParametrization::MESH_PARAM_HARMONIC:
+			OmniFEMMsg::instance()->MsgInfo("Remesh Parametrization loaded as Harmonic");
+			p_remeshParamterizationComboBox->SetSelection(0);
+			break;
+		case MeshParametrization::MESH_PARAM_CONFORMAL:
+			OmniFEMMsg::instance()->MsgInfo("Remesh Parametrization loaded as Conformal");
+			p_remeshParamterizationComboBox->SetSelection(1);
+			break;
+		case MeshParametrization::MESH_PARAM_RBFHARMONIC:
+			OmniFEMMsg::instance()->MsgInfo("Remesh Parametrization loaded as Rbf Harmonic");
+			p_remeshParamterizationComboBox->SetSelection(2);
+			break;
+	}
+	
+	reMeshParamSizer->Add(remeshParamText, 0, wxCENTER | wxLEFT | wxBOTTOM | wxRIGHT, 6);
+	reMeshParamSizer->Add(p_remeshParamterizationComboBox, 0, wxRIGHT | wxBOTTOM, 6);
+	
+	meshSettingsSizer->Add(stucturedMeshSizer);
+	meshSettingsSizer->Add(meshArrangmentSizer);
+	meshSettingsSizer->Add(meshAlgoSizer);
+	meshSettingsSizer->Add(meshRecombinationSizer);
+	meshSettingsSizer->Add(reMeshAlgoSizer);
+	meshSettingsSizer->Add(reMeshParamSizer);
     
     gridSettingPanel->SetSizerAndFit(gridSettingsSizer);
     physicsProblemPreferencesPanel->SetSizerAndFit(documentSettingsSizer);
+	meshSettingsPanel->SetSizerAndFit(meshSettingsSizer);
     
     base->AddPage(gridSettingPanel, "Grid Settings");
     base->AddPage(physicsProblemPreferencesPanel, "Problem Settings");
+	base->AddPage(meshSettingsPanel, "Mesh Settings");
     
     LayoutDialog();
 }
@@ -279,9 +495,11 @@ void globalPreferencesDialog::onProblemTypeComboBox(wxCommandEvent &event)
     {
         case 0:// This first case is if the user selected the problem type to be planar
             _depthTextCtrl->Enable(true);
+			OmniFEMMsg::instance()->MsgStatus("Problem set to Planar");
             break;
         case 1:// This second case is if the user selected the problem type to be axisymmetric
             _depthTextCtrl->Enable(false);
+			OmniFEMMsg::instance()->MsgStatus("Problem set to Axisymmetric");
             break;
         default:// Everything else
             break;
@@ -289,6 +507,122 @@ void globalPreferencesDialog::onProblemTypeComboBox(wxCommandEvent &event)
 }
 
 
+
+void globalPreferencesDialog::onMeshStructureComboBox(wxCommandEvent &event)
+{
+	switch(p_structuredComboBox->GetSelection())
+	{
+		case 0:
+			p_meshArrangementComboBox->Enable(false);
+			OmniFEMMsg::instance()->MsgStatus("Mesh structure set to unstructured");
+			break;
+		case 1:
+			p_meshArrangementComboBox->Enable(true);
+			OmniFEMMsg::instance()->MsgStatus("Mesh structure set to structured");
+			break;
+		default:
+			break;
+	}
+	
+	p_meshSetting.setStructuredState(p_structuredComboBox->GetSelection() & 1);
+}
+
+
+
+void globalPreferencesDialog::onMeshArrangemesntComboBox(wxCommandEvent &event)
+{
+	switch(p_meshArrangementComboBox->GetSelection())
+	{
+		case 0:
+			OmniFEMMsg::instance()->MsgStatus("Face mesh Arrangment set to Left");
+			break;
+		case 1:
+			OmniFEMMsg::instance()->MsgStatus("Face Mesh Arrangment set to Right");
+			break;
+		case 2:
+			OmniFEMMsg::instance()->MsgStatus("Face Mesh Arrangment set to Alternate");
+			break;
+	}
+	
+	p_meshSetting.setMeshArrangment((StructuredArrangement)p_meshArrangementComboBox->GetSelection());
+}
+
+
+
+void globalPreferencesDialog::onMeshAlgoComboBox(wxCommandEvent &event)
+{
+	switch(p_meshAlgothimComboBox->GetSelection())
+	{
+		case 0:
+			OmniFEMMsg::instance()->MsgStatus("Mesh Algorithm Set as Automatic");
+			break;
+		case 1:
+			OmniFEMMsg::instance()->MsgStatus("Mesh Algorithm Set as MeshAdapt");
+			break;
+		case 2:
+			OmniFEMMsg::instance()->MsgStatus("Mesh Algorithm Set as Delaunay");
+			break;
+		case 3:
+			OmniFEMMsg::instance()->MsgStatus("Mesh Algorithm Set as Frontal");
+			break;
+	}
+	
+	p_meshSetting.setMeshAlgorithm((MeshAlgorthim)p_meshArrangementComboBox->GetSelection());
+}
+
+
+
+void globalPreferencesDialog::onMeshRecombinationComboBox(wxCommandEvent &event)
+{
+	switch(p_meshRecombinationComboBox->GetSelection())
+	{
+		case 0:
+			OmniFEMMsg::instance()->MsgStatus("Mesh Recombination set to Standard");
+			break;
+		case 1:
+			OmniFEMMsg::instance()->MsgStatus("Mesh Recombination set to Blossom");
+			break;
+	}
+	
+	p_meshSetting.setBlossomRecombinationState(p_meshRecombinationComboBox->GetSelection() & 1);
+}
+
+
+
+void globalPreferencesDialog::onRemeshAlgo(wxCommandEvent &event)
+{
+	switch(p_remeshAlgorithmComboBox->GetSelection())
+	{
+		case 0:
+			OmniFEMMsg::instance()->MsgStatus("Remesh Algorithm set to No Split");
+			break;
+		case 1:
+			OmniFEMMsg::instance()->MsgStatus("Remesh Algorithm set to Automatic");
+			break;
+	}
+	
+	p_meshSetting.setAutoRemeshingState(p_remeshAlgorithmComboBox->GetSelection() & 1);
+}
+
+
+
+void globalPreferencesDialog::onRemeshParam(wxCommandEvent &event)
+{
+	switch(p_remeshParamterizationComboBox->GetSelection())
+	{
+		case 0:
+			OmniFEMMsg::instance()->MsgStatus("Remesh Parameterization set to Harmonic");
+			break;
+		case 1:
+			OmniFEMMsg::instance()->MsgStatus("Remesh Parameterization set to Conformal");
+			break;
+		case 2:
+			OmniFEMMsg::instance()->MsgStatus("Remesh Parameterization set to Rbf Harmonic");
+			break;
+	}
+	
+	p_meshSetting.setRemeshParameter((MeshParametrization)p_remeshParamterizationComboBox->GetSelection());
+}
 
 void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPref)
 {
@@ -353,4 +687,10 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref)
 
 wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, globalPreferencesDialog::onProblemTypeComboBox)
+	EVT_COMBOBOX(generalFrameButton::ID_ComboBox2, globalPreferencesDialog::onMeshStructureComboBox)
+	EVT_COMBOBOX(generalFrameButton::ID_ComboBox3, globalPreferencesDialog::onMeshArrangemesntComboBox)
+	EVT_COMBOBOX(generalFrameButton::ID_ComboBox4, globalPreferencesDialog::onMeshAlgoComboBox)
+	EVT_COMBOBOX(generalFrameButton::ID_ComboBox5, globalPreferencesDialog::onMeshRecombinationComboBox)
+	EVT_COMBOBOX(generalFrameButton::ID_ComboBox6, globalPreferencesDialog::onRemeshAlgo)
+	EVT_COMBOBOX(generalFrameButton::ID_ComboBox7, globalPreferencesDialog::onRemeshParam)
 wxEND_EVENT_TABLE()

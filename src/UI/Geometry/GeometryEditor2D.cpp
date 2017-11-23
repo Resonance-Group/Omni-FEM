@@ -135,6 +135,7 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint, double tolera
     // Make sure that the block label is not placed ontop of a line
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
+		double temp = calculateShortestDistance(newLabel, *lineIterator);
 		if(fabs(calculateShortestDistance(newLabel, *lineIterator)) < tolerance)
         {
             _lastBlockLabelAdded = _blockLabelList.begin();

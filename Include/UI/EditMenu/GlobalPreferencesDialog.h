@@ -21,6 +21,8 @@
 #include <common/GridPreferences.h>
 #include <common/MagneticPreference.h>
 #include <common/ElectrostaticPreference.h>
+#include <common/MeshSettings.h>
+#include <common/OmniFEMMessage.h>
 
 
 //! Class that handles the creation of the dialog to edit all preferences
@@ -53,6 +55,8 @@ private:
         the user is working with an mangetic simulation
     */ 
     magneticPreference _magneticPreference;
+	
+	meshSettings p_meshSetting;
     
     //! Pointer to the grid preferences of the simulation
     /*!
@@ -160,6 +164,18 @@ private:
         http://docs.wxwidgets.org/trunk/classwx_combo_box.html
     */ 
     wxComboBox *_coordinateComboBox = new wxComboBox();
+	
+	wxComboBox *p_structuredComboBox = new wxComboBox();
+	
+	wxComboBox *p_meshArrangementComboBox = new wxComboBox();
+	
+	wxComboBox *p_meshAlgothimComboBox = new wxComboBox();
+	
+	wxComboBox *p_meshRecombinationComboBox = new wxComboBox();
+	
+	wxComboBox *p_remeshAlgorithmComboBox = new wxComboBox();
+	
+	wxComboBox *p_remeshParamterizationComboBox = new wxComboBox();
     
     //! Check box used to toggle the show grid state
     /*!
@@ -226,6 +242,18 @@ private:
         For axisymmetric problems, the depth text box will be disabled
     */
     void onProblemTypeComboBox(wxCommandEvent &event);
+	
+	void onMeshStructureComboBox(wxCommandEvent &event);
+	
+	void onMeshArrangemesntComboBox(wxCommandEvent &event);
+	
+	void onMeshAlgoComboBox(wxCommandEvent &event);
+	
+	void onMeshRecombinationComboBox(wxCommandEvent &event);
+	
+	void onRemeshAlgo(wxCommandEvent &event);
+	
+	void onRemeshParam(wxCommandEvent &event);
     
 public:
 

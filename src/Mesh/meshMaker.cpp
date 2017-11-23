@@ -760,7 +760,7 @@ void meshMaker::mesh(GModel *meshModel)
 		{
 			double test1 = nodeIterator.getCenterXCoordinate();
 			double test2 = nodeIterator.getCenterYCoordinate();
-			vertexModelList.push_back(meshModel->addVertex(test1, test2, 0.0, 1e+22));
+			vertexModelList.push_back(meshModel->addVertex(test1, test2, 0.0, 1.0));
 		}
 		
 		/* Now we create the faces */

@@ -310,6 +310,7 @@
       <File Name="Include/common/OS.h" ExcludeProjConfig=""/>
       <File Name="Include/common/mathex.h"/>
       <File Name="Include/common/OmniFEMMessage.h"/>
+      <File Name="Include/common/MeshSettings.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig=""/>

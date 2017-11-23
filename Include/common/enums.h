@@ -335,6 +335,11 @@ enum generalFrameButton
 {
     ID_ComboBox1,
     ID_ComboBox2,
+	ID_ComboBox3,
+	ID_ComboBox4,
+	ID_ComboBox5,
+	ID_ComboBox6,
+	ID_ComboBox7,
     ID_RadioButton1,
     ID_RadioButton2, 
     ID_CHECKBOX1, 
