@@ -136,7 +136,17 @@ private:
         http://docs.wxwidgets.org/trunk/classwx_text_ctrl.html
     */
     wxTextCtrl *_frequencyTextCtrl = new wxTextCtrl();
-    
+	
+	wxTextCtrl *p_smoothingStepsTextCtrl = new wxTextCtrl();
+	
+	wxTextCtrl *p_elementSizeFactorTextCtrl = new wxTextCtrl();
+	
+	wxTextCtrl *p_minElementSizeTextCtrl = new wxTextCtrl();
+	
+	wxTextCtrl *p_maxElementSizeTextCtrl = new wxTextCtrl();
+	
+	wxTextCtrl *p_ElementOrderTextCtrl = new wxTextCtrl();
+	
     //! Combo box used to select the AC solver of the problem
     /*!
         Can be either Succisive Approxamation or Newton.
@@ -224,6 +234,8 @@ private:
         http://docs.wxwidgets.org/3.1.0/classwx_check_box.html
     */ 
     wxCheckBox *_reverseMouseZoomCheckBox = new wxCheckBox();
+	
+	wxButton *p_meshResetDefaultsButton = new wxButton();
     
     //! Function that is called to draw the screen
     /*!
@@ -254,6 +266,8 @@ private:
 	void onRemeshAlgo(wxCommandEvent &event);
 	
 	void onRemeshParam(wxCommandEvent &event);
+	
+	void onMeshDefaultsReset(wxCommandEvent &event);
     
 public:
 
@@ -262,14 +276,14 @@ public:
         This cosntructor will setup the variables and draw the 
         preferences screen for a magnetic simulation
     */ 
-    globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref);
+    globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref, meshSettings settings);
     
     //! Constructor for the class.
     /*!
         This cosntructor will setup the variables and draw the 
         preferences screen for an electrostatic simulation
     */ 
-    globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref);
+    globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref, meshSettings settings);
     
     //! Retrieves the preferences for electrical simulations
     /*!
@@ -279,7 +293,7 @@ public:
         \param electricPref The electroStaticPreference object that will take on
                             the values that the user selects in the dialog
     */ 
-    void getPreferences(electroStaticPreference &electricPref);
+    void getPreferences(electroStaticPreference &electricPref, meshSettings &settings);
     
     //! Retrieves the preferences for magnetic simulations
     /*!
@@ -289,7 +303,7 @@ public:
         \param magneticPref The magneticPreference object that will take on
                             the values that the user selects in the dialog
     */ 
-    void getPreferences(magneticPreference &magneticPref);
+    void getPreferences(magneticPreference &magneticPref, meshSettings &settings);
     
 private:
     //! Required for proper event precedure working

@@ -51,7 +51,7 @@ private:
 	
 	double p_maxElementSize = 1.0 * pow(10, 22);
 	
-	unsigned char p_elementOrder = 1;
+	unsigned int p_elementOrder = 1;
 	
 //---- Section is for structured meshes	
 
@@ -157,12 +157,12 @@ public:
 		return p_maxElementSize;
 	}
 	
-	void setElementOrder(unsigned char order)
+	void setElementOrder(unsigned int order)
 	{
 		p_elementOrder = order;
 	}
 	
-	unsigned char getElementOrder()
+	unsigned int getElementOrder()
 	{
 		return p_elementOrder;
 	}

@@ -19,6 +19,8 @@
 
 #include <common/ExteriorRegion.h>
 
+#include <common/MeshSettings.h>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
@@ -109,6 +111,9 @@ private:
     
     //! The name of the physics simulation
     wxString _problemName = "Untitled";
+	
+	//! The settings for the mesh of the problem
+	meshSettings p_problemMeshSettings;
     
     //! Boolean used to determine if the status bar should be drawn
     bool _showStatusBar = true;
@@ -430,6 +435,16 @@ public:
 		_localNodalList.clear();
 		_phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
 		_problemName = wxString("Untitled");
+	}
+	
+	void setMeshSettings(meshSettings settings)
+	{
+		p_problemMeshSettings = settings;
+	}
+	
+	meshSettings getMeshSettings()
+	{
+		return p_problemMeshSettings;
 	}
 };
 

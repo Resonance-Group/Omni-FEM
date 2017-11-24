@@ -2,17 +2,7 @@
 
 
 
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref)
-{
-    _problem = physicProblems::PROB_MAGNETICS;
-    _magneticPreference = pref;
-    _preferences = gridPref;
-    createDialog(par);
-}
-
-
-/*
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref, meshSettings &settings)
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, magneticPreference pref, meshSettings settings)
 {
     _problem = physicProblems::PROB_MAGNETICS;
     _magneticPreference = pref;
@@ -20,29 +10,18 @@ globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences 
 	p_meshSetting = settings;
     createDialog(par);
 }
- */ 
 
 
 
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref)
+globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref, meshSettings settings)
 {
     _problem = physicProblems::PROB_ELECTROSTATIC;
     _electricalPreference = pref;
     _preferences = gridPref;
+	p_meshSetting = settings;
     createDialog(par);
 }
-
-/*
-globalPreferencesDialog::globalPreferencesDialog(wxWindow *par, gridPreferences *gridPref, electroStaticPreference pref, meshSettings &meshSettings)
-{
-    _problem = physicProblems::PROB_ELECTROSTATIC;
-    _electricalPreference = pref;
-    _preferences = gridPref;
-	p_meshSetting = meshSettings
-    createDialog(par);
-}
- */ 
-
+ 
 
 
 void globalPreferencesDialog::createDialog(wxWindow *par)
@@ -323,6 +302,9 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxBoxSizer *meshRecombinationSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *reMeshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *reMeshParamSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *smootherSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *elementOrderSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *buttonResetSizer = new wxBoxSizer(wxHORIZONTAL);
 	
 	wxStaticText *text1 = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Structure:");
 	text1->SetFont(*font);
@@ -468,12 +450,96 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	reMeshParamSizer->Add(remeshParamText, 0, wxCENTER | wxLEFT | wxBOTTOM | wxRIGHT, 6);
 	reMeshParamSizer->Add(p_remeshParamterizationComboBox, 0, wxRIGHT | wxBOTTOM, 6);
 	
+	wxStaticText *smootherText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Smoothing Steps:");
+	smootherText->SetFont(*font);
+	
+	wxIntegerValidator<unsigned char> smoothingValidator;
+	smoothingValidator.SetRange(0, 100);
+	
+	p_smoothingStepsTextCtrl->Create(meshSettingsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, smoothingValidator);
+
+	std::ostream smoothingStream(p_smoothingStepsTextCtrl);
+	smoothingStream << (unsigned int)p_meshSetting.getSmoothingSteps();
+	p_smoothingStepsTextCtrl->SetFont(*font);
+	OmniFEMMsg::instance()->MsgInfo("Set smoother steps to " + std::to_string(p_meshSetting.getSmoothingSteps()) + " steps");
+	
+	smootherSizer->Add(smootherText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	smootherSizer->Add(p_smoothingStepsTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticBoxSizer *elementSizeSizer = new wxStaticBoxSizer(wxHORIZONTAL, meshSettingsPanel, "Element Size Settings");
+	elementSizeSizer->GetStaticBox()->SetFont(*font);
+	
+	wxStaticText *minText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Min:");
+	minText->SetFont(*font);
+	wxStaticText *maxText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Max:");
+	maxText->SetFont(*font);
+	wxStaticText *factorText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Factor:");
+	factorText->SetFont(*font);
+	
+	wxSize aSize(60, 23);
+	
+	p_minElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
+	p_minElementSizeTextCtrl->SetFont(*font);
+	
+	std::ostream minStream(p_minElementSizeTextCtrl);
+	minStream << std::setprecision(4);
+	minStream << p_meshSetting.getMinElementSize();
+	OmniFEMMsg::instance()->MsgInfo("Loading min element size as: " + std::to_string(p_meshSetting.getMinElementSize()));
+	
+	p_maxElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
+	p_maxElementSizeTextCtrl->SetFont(*font);
+	
+	std::ostream maxStream(p_maxElementSizeTextCtrl);
+	maxStream << std::setprecision(4);
+	maxStream << p_meshSetting.getMaxElementSize();
+	OmniFEMMsg::instance()->MsgInfo("Loading max element size as: " + std::to_string(p_meshSetting.getMaxElementSize()));
+	
+	p_elementSizeFactorTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
+	p_elementSizeFactorTextCtrl->SetFont(*font);
+	
+	std::ostream factorStream(p_elementSizeFactorTextCtrl);
+	factorStream << std::setprecision(4);
+	factorStream << p_meshSetting.getElementSizeFactor();
+	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSetting.getElementSizeFactor()));
+	
+	elementSizeSizer->Add(minText, 0, wxCENTER | wxALL, 6);
+	elementSizeSizer->Add(p_minElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	elementSizeSizer->Add(maxText, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
+	elementSizeSizer->Add(p_maxElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	elementSizeSizer->Add(factorText, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	elementSizeSizer->Add(p_elementSizeFactorTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	
+	wxStaticText *elementOrder = new wxStaticText(meshSettingsPanel, wxID_ANY, "Element Order:");
+	elementOrder->SetFont(*font);
+	
+	wxIntegerValidator<unsigned int> elementValidator;
+	elementValidator.SetMin(0);
+	
+	p_ElementOrderTextCtrl->Create(meshSettingsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, elementValidator);
+	p_ElementOrderTextCtrl->SetFont(*font);
+	
+	std::ostream elementOrderStream(p_ElementOrderTextCtrl);
+	elementOrderStream << p_meshSetting.getElementOrder();
+	OmniFEMMsg::instance()->MsgInfo("Loading element order as " + std::to_string(p_meshSetting.getElementOrder()));
+	
+	elementOrderSizer->Add(elementOrder, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+	elementOrderSizer->Add(p_ElementOrderTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	p_meshResetDefaultsButton->Create(meshSettingsPanel, wxID_RESET, "Reset to Defaults");
+	p_meshResetDefaultsButton->SetFont(*font);
+	
+	buttonResetSizer->Add(p_meshResetDefaultsButton, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	
 	meshSettingsSizer->Add(stucturedMeshSizer);
 	meshSettingsSizer->Add(meshArrangmentSizer);
 	meshSettingsSizer->Add(meshAlgoSizer);
 	meshSettingsSizer->Add(meshRecombinationSizer);
 	meshSettingsSizer->Add(reMeshAlgoSizer);
 	meshSettingsSizer->Add(reMeshParamSizer);
+	meshSettingsSizer->Add(smootherSizer);
+	meshSettingsSizer->Add(elementSizeSizer, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	meshSettingsSizer->Add(elementOrderSizer);
+	meshSettingsSizer->Add(buttonResetSizer, 0, wxALIGN_RIGHT);
     
     gridSettingPanel->SetSizerAndFit(gridSettingsSizer);
     physicsProblemPreferencesPanel->SetSizerAndFit(documentSettingsSizer);
@@ -624,9 +690,56 @@ void globalPreferencesDialog::onRemeshParam(wxCommandEvent &event)
 	p_meshSetting.setRemeshParameter((MeshParametrization)p_remeshParamterizationComboBox->GetSelection());
 }
 
-void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPref)
+void globalPreferencesDialog::onMeshDefaultsReset(wxCommandEvent &event)
+{
+	OmniFEMMsg::instance()->MsgStatus("Mesh settings defaults loaded");
+	
+	meshSettings defaultSetting;
+	
+	p_meshSetting = defaultSetting;
+	
+	p_structuredComboBox->SetSelection(0);
+	
+	p_meshArrangementComboBox->SetSelection(0);
+	
+	p_meshArrangementComboBox->Enable(false);
+	
+	p_meshAlgothimComboBox->SetSelection(0);
+	
+	p_meshRecombinationComboBox->SetSelection(0);
+	
+	p_remeshAlgorithmComboBox->SetSelection(0);
+	
+	p_remeshParamterizationComboBox->SetSelection(0);
+	
+	p_smoothingStepsTextCtrl->SetValue(wxEmptyString);
+	std::ostream smoothingStream(p_smoothingStepsTextCtrl);
+	smoothingStream << (unsigned int)p_meshSetting.getSmoothingSteps();
+	
+	p_minElementSizeTextCtrl->SetValue(wxEmptyString);
+	std::ostream minStream(p_minElementSizeTextCtrl);
+	minStream << std::setprecision(4);
+	minStream << p_meshSetting.getMinElementSize();
+	
+	p_maxElementSizeTextCtrl->SetValue(wxEmptyString);
+	std::ostream maxStream(p_maxElementSizeTextCtrl);
+	maxStream << std::setprecision(4);
+	maxStream << p_meshSetting.getMaxElementSize();
+	
+	p_elementSizeFactorTextCtrl->SetValue(wxEmptyString);
+	std::ostream factorStream(p_elementSizeFactorTextCtrl);
+	factorStream << std::setprecision(4);
+	factorStream << p_meshSetting.getElementSizeFactor();
+	
+	p_ElementOrderTextCtrl->SetValue(wxEmptyString);
+	std::ostream elementOrderStream(p_ElementOrderTextCtrl);
+	elementOrderStream << p_meshSetting.getElementOrder();
+}
+
+void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPref, meshSettings &settings)
 {
     double value;
+	long otherValue;
     
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
@@ -649,13 +762,36 @@ void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPr
     _minAngleTextCtrl->GetValue().ToDouble(&value);
     electricPref.setMinAngle(value);
     electricPref.setComments(_commentsTextCtrl->GetValue());
+	
+	settings = p_meshSetting;
+	
+	p_smoothingStepsTextCtrl->GetValue().ToLong(&otherValue);
+	settings.setSmoothingSteps((unsigned char)otherValue);
+	OmniFEMMsg::instance()->MsgStatus("Set smoothing steps as " + std::to_string(otherValue));
+	
+	p_minElementSizeTextCtrl->GetValue().ToDouble(&value);
+	settings.setMinElementSize(value);
+	OmniFEMMsg::instance()->MsgStatus("Set min element size as " + std::to_string(value));
+	
+	p_maxElementSizeTextCtrl->GetValue().ToDouble(&value);
+	settings.setMaxElementSize(value);
+	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
+	
+	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+	settings.setElementSizeFactor(value);
+	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
+	
+	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
+	settings.setElementOrder((unsigned int)otherValue);
+	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(otherValue));
 }
 
 
 
-void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref)
+void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, meshSettings &settings)
 {
     double value;
+	long otherValue;
     
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
@@ -681,6 +817,28 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref)
     magneticPref.setACSolver((acSolverEnum)_acSolverComboBox->GetSelection());
     _frequencyTextCtrl->GetValue().ToDouble(&value);
     magneticPref.setFrequency(value);
+	
+	settings = p_meshSetting;
+	
+	p_smoothingStepsTextCtrl->GetValue().ToLong(&otherValue);
+	settings.setSmoothingSteps((unsigned char)otherValue);
+	OmniFEMMsg::instance()->MsgStatus("Set smoothing steps as " + std::to_string(otherValue));
+	
+	p_minElementSizeTextCtrl->GetValue().ToDouble(&value);
+	settings.setMinElementSize(value);
+	OmniFEMMsg::instance()->MsgStatus("Set min element size as " + std::to_string(value));
+	
+	p_maxElementSizeTextCtrl->GetValue().ToDouble(&value);
+	settings.setMaxElementSize(value);
+	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
+	
+	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+	settings.setElementSizeFactor(value);
+	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
+	
+	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
+	settings.setElementOrder((unsigned int)otherValue);
+	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(otherValue));
 }      
 
 
@@ -693,4 +851,5 @@ wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox5, globalPreferencesDialog::onMeshRecombinationComboBox)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox6, globalPreferencesDialog::onRemeshAlgo)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox7, globalPreferencesDialog::onRemeshParam)
+	EVT_BUTTON(wxID_RESET, globalPreferencesDialog::onMeshDefaultsReset)
 wxEND_EVENT_TABLE()
