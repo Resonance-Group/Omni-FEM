@@ -463,6 +463,7 @@
       <File Name="Include/Mesh/StringUtils.h"/>
       <File Name="Include/Mesh/nanoflann.hpp"/>
       <File Name="Include/Mesh/DefaultOptions.h"/>
+      <File Name="Include/Mesh/GmshMessage.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

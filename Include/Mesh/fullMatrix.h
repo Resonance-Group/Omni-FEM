@@ -7,7 +7,7 @@
 #define _FULL_MATRIX_H_
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include <cmath>
 #include <cstdio>
 #include <string>
@@ -168,7 +168,7 @@ class fullVector
     #ifdef _DEBUG
     if (r >= _r || r < 0)
 	{
-		// Msg::Fatal("invalid index to access fullVector : %i (size = %i)", r, _r);
+		Msg::Fatal("invalid index to access fullVector : %i (size = %i)", r, _r);
 	}
       
     #endif
@@ -458,7 +458,7 @@ class fullMatrix
     #ifdef _DEBUG
     if (r >= _r || r < 0 || c >= _c || c < 0)
 	{
-		// Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)", r, c, _r, _c);
+		Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)", r, c, _r, _c);
 	}
       
     #endif
@@ -473,7 +473,7 @@ class fullMatrix
     #ifdef _DEBUG
     if (r >= _r || r < 0 || c >= _c || c < 0)
 	{
-		// Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)", r, c, _r, _c);
+		Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)", r, c, _r, _c);
 	}
       
     #endif
@@ -512,7 +512,7 @@ class fullMatrix
       nbColumns = _r * _c / nbRows;
     if (nbRows*nbColumns != size1()*size2())
 	{
-		// Msg::Error("Invalid reshape, total number of entries must be equal (new %i x %i != old %i x %i)", nbRows, nbColumns, size1(), size2());
+		Msg::Error("Invalid reshape, total number of entries must be equal (new %i x %i != old %i x %i)", nbRows, nbColumns, size1(), size2());
 	}
     _r = nbRows;
     _c = nbColumns;
@@ -553,7 +553,7 @@ class fullMatrix
   {
     if(_r != other._r || _c!= other._c)
 	{
-		// Msg::Error("sum matrices of different sizes\n");
+		Msg::Error("sum matrices of different sizes\n");
 	}
       
     for(int i = 0; i < _r * _c; ++i) _data[i] += other._data[i];
@@ -563,7 +563,7 @@ class fullMatrix
     #ifdef _DEBUG
     if (i >= _r || i < 0 || j >= _c || j < 0)
 	{
-		// Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)", i, j, _r, _c);
+		Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)", i, j, _r, _c);
 	}
       
     #endif
@@ -574,7 +574,7 @@ class fullMatrix
     #ifdef _DEBUG
     if (i >= _r || i < 0 || j >= _c || j < 0)
 	{
-		// Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)",  i, j, _r, _c);
+		Msg::Fatal("invalid index to access fullMatrix : %i %i (size = %i %i)",  i, j, _r, _c);
 	}
       
     #endif
@@ -591,7 +591,7 @@ class fullMatrix
   {
     if (_data && !_own_data)
 	{
-		// Msg::Fatal("fullMatrix::copy operation is prohibited for proxies, use setAll instead");
+		Msg::Fatal("fullMatrix::copy operation is prohibited for proxies, use setAll instead");
 	}
       
     if (_r != a._r || _c != a._c) {
@@ -657,7 +657,7 @@ class fullMatrix
   {
     if (_r != m._r || _c != m._c )
 	{
-		// Msg::Fatal("fullMatrix size does not match");
+		Msg::Fatal("fullMatrix size does not match");
 	}
       
     for(int i = 0; i < _r * _c; i++) _data[i] = m._data[i];
@@ -719,10 +719,10 @@ class fullMatrix
   }
   inline void transposeInPlace()
   {
-		if(size1() != size2())
-		{
-     // Msg::Error("Not a square matrix (size1: %d, size2: %d)", size1(), size2());
-    }
+	if(size1() != size2())
+	{
+		Msg::Error("Not a square matrix (size1: %d, size2: %d)", size1(), size2());
+	}
     scalar t;
     for(int i = 0; i < size1(); i++)
       for(int j = 0; j < i; j++) {
@@ -734,7 +734,7 @@ class fullMatrix
   bool luSolve(const fullVector<scalar> &rhs, fullVector<scalar> &result)
 #if !defined(HAVE_LAPACK)
   {
-    //Msg::Error("LU factorization and substitution requires LAPACK");
+    Msg::Error("LU factorization and substitution requires LAPACK");
     return false;
   }
 #endif
@@ -742,7 +742,7 @@ class fullMatrix
  bool luFactor(fullVector<int> &ipiv)
 #if !defined(HAVE_LAPACK)
   {
-  //  Msg::Error("LU factorization requires LAPACK");
+    Msg::Error("LU factorization requires LAPACK");
     return false;
   }
 #endif
@@ -750,7 +750,7 @@ class fullMatrix
  bool luSubstitute(const fullVector<scalar> &rhs, fullVector<int> &ipiv, fullVector<scalar> &result)
 #if !defined(HAVE_LAPACK)
   {
-   // Msg::Error("LU substitution requires LAPACK");
+    Msg::Error("LU substitution requires LAPACK");
     return false;
   }
 #endif
@@ -758,7 +758,7 @@ class fullMatrix
   bool invertInPlace()
 #if !defined(HAVE_LAPACK)
   {
-   // Msg::Error("Matrix inversion requires LAPACK");
+    Msg::Error("Matrix inversion requires LAPACK");
     return false;
   }
 #endif
@@ -768,7 +768,7 @@ class fullMatrix
            bool sortRealPart=false)
 #if !defined(HAVE_LAPACK)
   {
-  //  Msg::Error("Eigenvalue computations requires LAPACK");
+    Msg::Error("Eigenvalue computations requires LAPACK");
     return false;
   }
 #endif
@@ -791,7 +791,7 @@ class fullMatrix
   bool svd(fullMatrix<scalar> &V, fullVector<scalar> &S)
 #if !defined(HAVE_LAPACK)
   {
-   // Msg::Error("Singular value decomposition requires LAPACK");
+    Msg::Error("Singular value decomposition requires LAPACK");
     return false;
   }
 #endif

@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h> // for abs()
 #include <vector>
-//#include "GmshMessage.h"
+#include "GmshMessage.h"
 #include "Mesh/fullMatrix.h"
 #include "Mesh/GModel.h"
 #include "Mesh/MVertex.h"
@@ -147,7 +147,7 @@ class gLevelsetPrimitive : public gLevelset
     std::vector<gLevelset *> p; return p;
   }
   double choose(double d1, double d2) const {
-    //Msg::Error("Cannot use function \"choose\" with a primitive!\n");
+    Msg::Error("Cannot use function \"choose\" with a primitive!\n");
     return d1;
   }
   virtual int type() const = 0;

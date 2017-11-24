@@ -9,7 +9,7 @@
 #ifndef _MSUBELEMENT_H_
 #define _MSUBELEMENT_H_
 
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/MElement.h"
 //#include "MTetrahedron.h"
 #include "Mesh/MTriangle.h"

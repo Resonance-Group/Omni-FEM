@@ -205,7 +205,7 @@ class GFaceCompound : public GFace {
                 int allowPartition=1)
     : GFace(m, tag)
   {
-  //  Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
+    Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
   }
   GFaceCompound(GModel *m, int tag, std::list<GFace*> &compound,
                 std::list<GEdge*> &U0, std::list<GEdge*> &V0,
@@ -214,7 +214,7 @@ class GFaceCompound : public GFace {
                 int allowPartition=1)
     : GFace(m, tag)
   {
-  //  Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
+    Msg::Error("Gmsh has to be compiled with Solver and ANN support to use GFaceCompounds");
   }
   virtual ~GFaceCompound() {}
   virtual void deleteMesh() {}

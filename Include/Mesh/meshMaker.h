@@ -10,6 +10,8 @@
 #include <common/Vector.h>
 #include <common/enums.h>
 
+#include <common/MeshSettings.h>
+
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
 #include <Mesh/GVertex.h>
@@ -159,7 +161,7 @@ public:
 	/**
 	 * @brief This function is called when the program is ready to create the mesh for the model.
 	 */
-	void mesh(GModel *meshModel);
+	void mesh(GModel *meshModel, meshSettings settings);
 	
 	~meshMaker()
 	{

@@ -7,7 +7,7 @@
 #define _MVERTEX_RTREE_
 
 #include <vector>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/MVertex.h"
 #include "Mesh/rtree.h"
 
@@ -45,9 +45,9 @@ class MVertexRTree{
     }
     else{
       if(warnIfExists)
-   //     Msg::Warning("Vertex %d (%.16g, %.16g, %.16g) already exists in the "
-   //                  "mesh with tolerance %g", v->getNum(),
-   //                  v->x(), v->y(), v->z(), _tol);
+        Msg::Warning("Vertex %d (%.16g, %.16g, %.16g) already exists in the "
+                    "mesh with tolerance %g", v->getNum(),
+                     v->x(), v->y(), v->z(), _tol);
       return out;
     }
   }

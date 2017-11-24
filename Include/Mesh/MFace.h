@@ -11,7 +11,7 @@
 #include "Mesh/MVertex.h"
 #include "Mesh/MEdge.h"
 #include "Mesh/SVector3.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 // A mesh face.
 class MFace {
@@ -98,7 +98,7 @@ class MFace {
     }
     else
 	{
-		// Msg::Error("Cannot interpolate inside a polygonal MFace with more than 4 edges");
+		Msg::Error("Cannot interpolate inside a polygonal MFace with more than 4 edges");
 	}
     return p;
   }

@@ -571,18 +571,6 @@ private:
         After execution, _doZoomWindow is false.
     */ 
     void doZoomWindow();
-	
-	/**
-	 * @brief 	Function that is called in order to completely delete everything in the GModel
-	 * 			This will reset the mesh in order for the mesh to be drawn again. This function is called whenever
-	 * 			there is a change to the mesh.
-	 */
-	void deleteMesh()
-	{
-		delete p_modelMesh;
-		p_modelMesh = new GModel();
-		p_drawMesh = false;
-	}
     
 public:
     //! This is the constructor for the class
@@ -1073,6 +1061,31 @@ public:
 		else
 			p_drawMesh = false;
 			
+		return p_drawMesh;
+	}
+	
+	/**
+	 * @brief 	Function that is called in order to completely delete everything in the GModel
+	 * 			This will reset the mesh in order for the mesh to be drawn again. This function is called whenever
+	 * 			there is a change to the mesh.
+	 */
+	void deleteMesh()
+	{
+		if(p_modelMesh)
+		{
+			delete p_modelMesh;
+			p_modelMesh = new GModel();
+		}
+		p_drawMesh = false;
+	}
+	
+	void toggleMesh()
+	{
+		p_drawMesh = !p_drawMesh;
+	}
+	
+	bool getShowMeshState()
+	{
 		return p_drawMesh;
 	}
 

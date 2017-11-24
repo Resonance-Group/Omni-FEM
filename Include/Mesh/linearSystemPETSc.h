@@ -35,7 +35,7 @@
 //   -pc_factor_mat_solver_package umfpack
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/linearSystem.h"
 #include "Mesh/sparsityPattern.h"
 #include "Mesh/fullMatrix.h"
@@ -139,7 +139,7 @@ class linearSystemPETSc : public linearSystem<scalar> {
  public :
   linearSystemPETSc()
   {
-   // Msg::Error("PETSc is not available in this version of Gmsh");
+    Msg::Error("PETSc is not available in this version of Gmsh");
   }
   bool isAllocated() const { return false; }
   void allocate(int nbRows) {}

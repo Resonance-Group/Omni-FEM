@@ -8,7 +8,7 @@
 
 #include <vector>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "GmshMessage.h"
 #include "Mesh/linearSystem.h"
 #include "Mesh/sparsityPattern.h"
 
@@ -121,7 +121,7 @@ class linearSystemCSR : public linearSystem<scalar> {
 
   virtual void getFromMatrix (int row, int col, scalar &val) const
   {
-  //  Msg::Error("getFromMatrix not implemented for CSR");
+    Msg::Error("getFromMatrix not implemented for CSR");
   }
   virtual void addToRightHandSide(int row, const scalar &val, int ith = 0)
   {
@@ -187,7 +187,7 @@ class linearSystemCSRGmm : public linearSystemCSR<scalar> {
   virtual int systemSolve()
 #if !defined(HAVE_GMM)
   {
-  //  Msg::Error("Gmm++ is not available in this version of Gmsh");
+    Msg::Error("Gmm++ is not available in this version of Gmsh");
     return 0;
   }
 #endif
@@ -213,7 +213,7 @@ class linearSystemCSRTaucs : public linearSystemCSR<scalar> {
   virtual int systemSolve()
 #if !defined(HAVE_TAUCS)
   {
-  //  Msg::Error("TAUCS is not available in this version of Gmsh");
+    Msg::Error("TAUCS is not available in this version of Gmsh");
     return 0;
   }
 #endif

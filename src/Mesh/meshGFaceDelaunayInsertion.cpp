@@ -6,7 +6,7 @@
 #include <set>
 #include <map>
 #include <algorithm>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "common/OS.h"
 #include "Mesh/robustPredicates.h"
 #include "Mesh/BackgroundMesh.h"
@@ -39,7 +39,7 @@ void _printTris(char *name, ITERATOR it,  ITERATOR end, bidimMeshData * data)
 {
   FILE *ff = Fopen (name,"w");
   if(!ff){
- //   Msg::Error("Could not open file '%s'", name);
+    Msg::Error("Could not open file '%s'", name);
     return;
   }
   fprintf(ff,"View\"test\"{\n");

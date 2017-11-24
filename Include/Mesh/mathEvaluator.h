@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #if defined(HAVE_MATHEX)
 
 #include "common/mathex.h"
@@ -37,8 +37,8 @@ class mathEvaluator{
   mathEvaluator(std::vector<std::string> &expressions,
                 const std::vector<std::string> &variables)
   {
-  //  Msg::Error("Gmsh must be compiled with MathEx support to evaluate math "
-  //             "expressions");
+    Msg::Error("Gmsh must be compiled with MathEx support to evaluate math "
+               "expressions");
     expressions.clear();
   }
   ~mathEvaluator(){}

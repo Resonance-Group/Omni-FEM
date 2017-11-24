@@ -117,7 +117,7 @@ public:
       else
 	return getColumn(v, N-1);
     }
-    //Msg::Error("Cannot handle embedded lines in boundary layers");
+    Msg::Error("Cannot handle embedded lines in boundary layers");
     static BoundaryLayerData error;
     return error;
   }

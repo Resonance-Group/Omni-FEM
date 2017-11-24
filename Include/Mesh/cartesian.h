@@ -168,8 +168,8 @@ class cartesianBox {
           if(it != _nodalValues.end())
             values.push_back(it->second.first);
           else{
-          //  Msg::Error("Could not find value i,j,k=%d,%d,%d for cell %d",
-          //             i + I, j + J, k + K, t);
+            Msg::Error("Could not find value i,j,k=%d,%d,%d for cell %d",
+                       i + I, j + J, k + K, t);
             values.push_back(0.);
           }
         }
@@ -345,12 +345,12 @@ class cartesianBox {
   {
     FILE *f = fopen(fileName.c_str(), "w");
     if(!f){
-    //  Msg::Error("Could not open file '%s'", fileName.c_str());
+      Msg::Error("Could not open file '%s'", fileName.c_str());
       return;
     }
     int numNodes = _getNumNodes(), numElements = _getNumElements(simplex);
-  //  Msg::Info("Writing '%s' (%d nodes, %d elements)", fileName.c_str(),
-   //           numNodes, numElements);
+    Msg::Info("Writing '%s' (%d nodes, %d elements)", fileName.c_str(),
+             numNodes, numElements);
     fprintf(f, "$MeshFormat\n2.1 0 8\n$EndMeshFormat\n");
     fprintf(f, "$Nodes\n%d\n", numNodes);
     _printNodes(f);

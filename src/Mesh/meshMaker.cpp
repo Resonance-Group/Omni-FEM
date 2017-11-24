@@ -692,7 +692,7 @@ int meshMaker::lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc)
 }
 
 
-void meshMaker::mesh(GModel *meshModel)
+void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 {
 	bool canMakeMesh = true;
 	bool meshCreated = false;
@@ -710,9 +710,15 @@ void meshMaker::mesh(GModel *meshModel)
 	CTX::instance()->mesh.multiplePasses = 0;
 	CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
 	CTX::instance()->mesh.algoSubdivide = 1;
-	//CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
+	
+	if(settings.getBlossomRecombinationState())
+		CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
+	else
+		CTX::instance()->mesh.algoRecombine = 0;
+		
 	OmniFEMMsg::instance()->MsgStatus("Creating GMSH Geometry from Omni-FEM geometry");
 	OmniFEMMsg::instance()->MsgStatus("Finding contours");
+	
 	while(p_numberVisited < p_numberofLines)
 	{
 		std::vector<std::vector<edgeLineShape>> temp = findContours();
@@ -811,6 +817,7 @@ void meshMaker::mesh(GModel *meshModel)
 				else
 				{
 					GEdge *temp = meshModel->addLine(firstNode, secondNode);
+					
 					contourLoop.push_back(temp);
 				}
 			}

@@ -8,7 +8,7 @@
 
 // Interface to a linear system with a FULL matrix
 
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/linearSystem.h"
 #include "Mesh/fullMatrix.h"
 #include <stdlib.h>

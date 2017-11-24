@@ -7,7 +7,7 @@
 #define FUNCSPACEDATA_H
 
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/ElementType.h"
 
 #include <cstddef>
@@ -68,8 +68,8 @@ public:
 
   // Print
   void print() const {
-    //Msg::Info("FuncSpaceData: tag%d, order%d, nij%d, nk%d, pyr%d, serendip%d",
-     //   _tag, _spaceOrder, _nij, _nk, _pyramidalSpace, _serendipity);
+    Msg::Info("FuncSpaceData: tag%d, order%d, nij%d, nk%d, pyr%d, serendip%d",
+        _tag, _spaceOrder, _nij, _nk, _pyramidalSpace, _serendipity);
   }
 
   // Get methods

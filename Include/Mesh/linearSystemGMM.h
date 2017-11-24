@@ -9,7 +9,7 @@
 // Interface to GMM++
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/linearSystem.h"
 
 #if defined(HAVE_GMM)
@@ -127,7 +127,7 @@ class linearSystemGmm : public linearSystem<scalar> {
  public :
   linearSystemGmm()
   {
-  //  Msg::Error("Gmm++ is not available in this version of Gmsh");
+    Msg::Error("Gmm++ is not available in this version of Gmsh");
   }
   virtual bool isAllocated() const { return false; }
   virtual void allocate(int nbRows) {}

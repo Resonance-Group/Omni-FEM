@@ -9,7 +9,7 @@
 #include "Mesh/SPoint3.h"
 #include <string>
 #include <stdio.h>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 // concrete class for vector of size 3
 class SVector3 {
@@ -73,7 +73,7 @@ class SVector3 {
   operator double *() { return P; }
   void print(std::string name="") const
   {
-   // Msg::Info("Vector \'%s\':  %f  %f  %f", name.c_str(), P[0], P[1], P[2]);
+    Msg::Info("Vector \'%s\':  %f  %f  %f", name.c_str(), P[0], P[1], P[2]);
   }
   // Needed to allow the initialization of a SPoint3 from a SPoint3, a distance
   // and a direction
@@ -170,7 +170,7 @@ inline void buildOrthoBasis_naive(SVector3 &dir, SVector3 &dir1, SVector3 &dir2)
      dir2 = SVector3(0.0, 0.0, 1.0);
    }
    else{
-     //Msg::Error("Problem with computing orthoBasis");
+     Msg::Error("Problem with computing orthoBasis");
    }
    // printf("XYZ =%g %g %g r=%g dir0 = %g %g %g dir1 = %g %g %g dir2 =%g %g %g\n",
    // 	  x,y,z,d, dir[0], dir[1], dir[2], dir1[0], dir1[1], dir1[2],  dir2[0], dir2[1], dir2[2] );

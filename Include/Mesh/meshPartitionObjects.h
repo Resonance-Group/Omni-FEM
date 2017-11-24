@@ -9,7 +9,7 @@
 #include <map>
 #include <vector>
 #include "Mesh/MElement.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Context.h"
 #include "Mesh/fullMatrix.h"
 
@@ -229,7 +229,7 @@ class Graph
   void close()
   {
     if(numGrVert != totalGrVert) {
-    //  Msg::Warning("Internal error - Graph vertices are missing");
+      Msg::Warning("Internal error - Graph vertices are missing");
     }
     xadj[numGrVert] = adjncy.size();
     vwgts[numGrVert-1]=(int)(1.0);

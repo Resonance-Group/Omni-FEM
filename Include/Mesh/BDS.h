@@ -17,7 +17,7 @@
 #include <functional>
 #include <list>
 #include <math.h>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 class BDS_Edge;
 class BDS_Face;
@@ -212,13 +212,13 @@ class BDS_Edge
   inline BDS_Face * otherFace(const BDS_Face *f) const
   {
     if(numfaces() != 2) {
-   //   Msg::Fatal("otherFace wrong, ony %d faces attached to edge %d %d",
-   //              numfaces(), p1->iD, p2->iD);
+      Msg::Fatal("otherFace wrong, ony %d faces attached to edge %d %d",
+                numfaces(), p1->iD, p2->iD);
       return 0;
     }
     if(f == _faces[0]) return _faces[1];
     if(f == _faces[1]) return _faces[0];
-  //  Msg::Fatal("otherFace wrong: the edge does not belong to the face");
+    Msg::Fatal("otherFace wrong: the edge does not belong to the face");
     return 0;
   }
   inline void del(BDS_Face *t)
@@ -260,27 +260,27 @@ class BDS_Face
   inline BDS_Edge *oppositeEdge (BDS_Point *p)
   {
     if (e4){
-   //   Msg::Fatal("oppositeEdge to point %d cannot be applied to a quad", p->iD);
+      Msg::Fatal("oppositeEdge to point %d cannot be applied to a quad", p->iD);
       return 0;
     }
     if (e1->p1 != p && e1->p2 != p) return e1;
     if (e2->p1 != p && e2->p2 != p) return e2;
     if (e3->p1 != p && e3->p2 != p) return e3;
- //   Msg::Fatal("point %d does not belong to this triangle", p->iD);
+    Msg::Fatal("point %d does not belong to this triangle", p->iD);
     return 0;
   }
   inline BDS_Point *oppositeVertex (BDS_Edge *e)
   {
     if (e4){
-   //   Msg::Fatal("oppositeVertex to edge %d %d cannot be applied to a quad",
-     //            e->p1->iD, e->p2->iD);
+      Msg::Fatal("oppositeVertex to edge %d %d cannot be applied to a quad",
+                 e->p1->iD, e->p2->iD);
       return 0;
     }
     if (e == e1) return e2->commonvertex(e3);
     if (e == e2) return e1->commonvertex(e3);
     if (e == e3) return e1->commonvertex(e2);
-  //  Msg::Fatal("edge  %d %d does not belong to this triangle",
-    //           e->p1->iD, e->p2->iD);
+    Msg::Fatal("edge  %d %d does not belong to this triangle",
+               e->p1->iD, e->p2->iD);
     return 0;
   }
   inline void getNodes(BDS_Point *n[4]) const

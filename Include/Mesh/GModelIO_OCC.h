@@ -9,7 +9,7 @@
 #include <vector>
 #include <map>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "GmshMessage.h"
 #include "Mesh/GModel.h"
 
 class ExtrudeParams;
@@ -393,7 +393,7 @@ class OCC_Internals {
 private:
   bool _error(std::string what)
   {
-    //Msg::Error("Gmsh requires OpenCASCADE to %s", what.c_str());
+    Msg::Error("Gmsh requires OpenCASCADE to %s", what.c_str());
     return false;
   }
 public:

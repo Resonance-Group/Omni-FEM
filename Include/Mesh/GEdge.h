@@ -148,15 +148,15 @@ class GEdge : public GEntity {
   {
     if (_tooSmall)
 	{
-		
+		Msg::Debug("degenerated mesh on edge %d: too small", tag());
 	}
-    //  Msg::Debug("degenerated mesh on edge %d: too small", tag());
+      
     if (v0 == v1 && mesh_vertices.size() < 2)
 	{
-		
+		Msg::Debug("degenerated mesh on edge %d: %d mesh vertices", tag(),
+                (int)mesh_vertices.size());
 	}
-  //    Msg::Debug("degenerated mesh on edge %d: %d mesh vertices", tag(),
-   //              (int)mesh_vertices.size());
+      
     return _tooSmall || (v0 == v1 && mesh_vertices.size() < 2);
   }
 

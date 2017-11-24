@@ -7,7 +7,7 @@
 #define _GMSH_H_
 
 #include <string>
-//#include "GmshMessage.h"
+#include "GmshMessage.h"
 
 int GmshInitialize(int argc=0, char **argv=0);
 

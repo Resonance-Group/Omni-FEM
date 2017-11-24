@@ -242,7 +242,8 @@ void modelDefinition::editSelection()
             
         if(dialog->ShowModal() == wxID_OK)
         {
-            dialog->getSegmentProperty(selectedProperty);
+            if(dialog->getSegmentProperty(selectedProperty))
+				deleteMesh();
             
             for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
@@ -274,7 +275,8 @@ void modelDefinition::editSelection()
             
         if(dialog->ShowModal() == wxID_OK)
         {
-            dialog->getSegmentProperty(selectedProperty);
+            if(dialog->getSegmentProperty(selectedProperty))
+				deleteMesh();
             
             for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
@@ -309,7 +311,10 @@ void modelDefinition::editSelection()
         if(dialog->ShowModal() == wxID_OK)
         {
             bool firstIsSet = false;
-            dialog->getBlockProperty(selectedBlockLabel);
+			
+            if(dialog->getBlockProperty(selectedBlockLabel))
+				deleteMesh();
+				
 			selectedBlock->setPorperty(selectedBlockLabel);
             
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
@@ -381,10 +386,6 @@ void modelDefinition::editSelection()
         }
     }
     
-    p_drawMesh = false;
-	//p_modelMesh.deleteMesh();
-	delete p_modelMesh;
-	p_modelMesh = new GModel();
     this->Refresh();
     return;
 }
