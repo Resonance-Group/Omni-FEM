@@ -34,6 +34,8 @@ class blockPropertyDialog : public wxDialog
 {
 private:
 
+	blockProperty p_property;
+
     //! Physics problem that the user selected
     /*!
         The physics problem that the user has selected.
@@ -214,7 +216,7 @@ public:
         \param property The block label that will save the 
                         properties set by the user
     */ 
-    void getBlockProperty(blockProperty &property);
+    bool getBlockProperty(blockProperty &property);
     
     //! Destructor for the class
     ~blockPropertyDialog();

@@ -4,7 +4,7 @@
 segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electricalBoundary> *electricalBoundaryList, std::vector<conductorProperty> *conductorList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     _isArc = isArc;
-    
+    p_property = property;
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -145,7 +145,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
 segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magneticBoundary> *magneticBoundayList, segmentProperty property, bool isArc) : wxDialog(par, wxID_ANY, "Segment Property")
 {
     _isArc = isArc;
-    
+    p_property = property;
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -250,32 +250,38 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
 
 
 /* This needs to be tested at a later date */
-void segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
+bool segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
 {
     double value;
     long value2;
+	bool resetMesh = false;
     
     property.setPhysicsProblem(_problem);
 
-    property.setBoundaryName(_boundaryListCombo->GetString(_boundaryListCombo->GetSelection()));
+    property.setBoundaryName(_boundaryListCombo->GetString(_boundaryListCombo->GetSelection()).ToStdString());
         
     property.setMeshAutoState(_meshSpacingAutoCheckbox->GetValue());
+	if(_meshSpacingAutoCheckbox->GetValue() != p_property.getMeshAutoState())
+		resetMesh = true;
     
     if(!_isArc)
     {
         _elementSizeTextCtrl->GetValue().ToDouble(&value);
         property.setElementSizeAlongLine(value);
+		if(p_property.getElementSizeAlongLine() != value)
+			resetMesh = true;
     }
         
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()));
+        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()).ToStdString());
     }
         
     property.setHiddenState(_hideSegmentCheckbox->GetValue());
         
     _groupTextCtrl->GetValue().ToLong(&value2);
     property.setGroupNumber((unsigned int)value2);
+	return resetMesh;
 }
 
 

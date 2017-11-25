@@ -8,6 +8,9 @@
 #include <common/enums.h>
 #include <common/ConductorProperty.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! This class contains all of the solver properties that the user can set for the segment.
 /*!
     The properties in the class does not include any properties that the user can set
@@ -18,6 +21,20 @@
 class segmentProperty
 {
 private:
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _problem;
+		ar & _boundaryName;
+		ar & _meshSpacingIsAuto;
+		ar & _elementSize;
+		ar & _conductorName;
+		ar & _segmentIsHidden;
+		ar & _groupNumber;
+	}
+
     //! This will store a local copy of the current physics problem that the user is working
     physicProblems _problem = physicProblems::NO_PHYSICS_DEFINED;
     

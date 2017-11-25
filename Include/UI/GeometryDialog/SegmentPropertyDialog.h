@@ -36,6 +36,8 @@ class segmentPropertyDialog : public wxDialog
 {
 private:
 
+	segmentProperty p_property;
+
     //! The physics problem that the user has selected.
     /*!
         This variable will effect what widgets are drawn on
@@ -160,7 +162,7 @@ public:
         \param property The variable that the program will store the 
                         saved settigns
     */ 
-    void getSegmentProperty(segmentProperty &property);
+    bool getSegmentProperty(segmentProperty &property);
     
     //! The desctructor of the class
     ~segmentPropertyDialog();

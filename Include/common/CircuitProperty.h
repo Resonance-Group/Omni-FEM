@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 // Circuits on FEMM manual start at page 32
 //! This class contains the properties of a circuit
 /*!
@@ -17,8 +20,11 @@
 class circuitProperty
 {
 private:
+
+	friend class boost::serialization::access;
+	
     //! The name of the circuit
-    std::string _circuitName = "None";
+    std::string p_circuitName = "None";
     
     //! Boolean that is used to determine if the circuit is series or parallel connected
     /*!
@@ -37,10 +43,18 @@ private:
         total current is specified by _current), the program will take 10 / 50 = 0.25 A 
         in one turn.
     */ 
-    bool _isSeries = false;
+    bool p_isSeries = false;
     
     //! Variable that stores how much current is flowing through the circuit
-    double _current = 0;
+    double p_current = 0;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & p_circuitName;
+		ar & p_isSeries;
+		ar & p_current;
+	}
 public:
 
     //! Sets the name of the circuit
@@ -49,7 +63,7 @@ public:
     */ 
     void setName(std::string name)
     {
-        _circuitName = name;
+        p_circuitName = name;
     }
     
     //! Retrieves the circuit name
@@ -58,7 +72,7 @@ public:
     */ 
     std::string getName()
     {
-        return _circuitName;
+        return p_circuitName;
     }
     
     //! Sets the state of the circuit
@@ -72,7 +86,7 @@ public:
     */ 
     void setCircuitSeriesState(bool state)
     {
-        _isSeries = state;
+        p_isSeries = state;
     }
     
     //! Retrieves whether a circuit is parallel or series
@@ -82,7 +96,7 @@ public:
     */ 
     bool getCircuitSeriesState()
     {
-        return _isSeries;
+        return p_isSeries;
     }
     
     //! Sets the value of the current flowing through the circuit
@@ -92,7 +106,7 @@ public:
     */ 
     void setCurrent(double currentValue)
     {
-        _current = currentValue;
+        p_current = currentValue;
     }
     
     //! Retrieves the amount of current flowing through a circuit
@@ -102,7 +116,7 @@ public:
     */ 
     double getCurrent()
     {
-        return _current;
+        return p_current;
     }
 };
 

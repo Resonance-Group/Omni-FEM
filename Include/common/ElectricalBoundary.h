@@ -3,6 +3,9 @@
 
 #include <common/BoundaryConditions.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 
 //! Boundary condition class that is specific for electrostatic simulations
 /*!
@@ -36,6 +39,15 @@
 */ 
 class electricalBoundary : public boundaryCondition
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<boundaryCondition>(*this);
+		ar & _fixedVoltageValue;
+		ar & _surfaceChargeDensity;
+		ar & _type;
+	}
 private:
     //! This variable stores the voltage value in a fixed voltage boundary condition
     double _fixedVoltageValue = 0;

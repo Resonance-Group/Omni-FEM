@@ -3,6 +3,9 @@
 
 #include <common/BoundaryConditions.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that is used to handle the specific values for the magnetic boundary conditions
 /*!
     The first mangetic boundary condition is the prescribed A boundary. With this boundary,
@@ -58,7 +61,9 @@
 class magneticBoundary : public boundaryCondition
 {
 private:
-    
+
+    friend class boost::serialization::access;
+	
     //! The A0 parameter in a Prescribed A boundary condition
     double _A0 = 0;
     
@@ -79,6 +84,19 @@ private:
     
     //! This is the type of boundary condition that belongs to the class
     bcEnumMagnetic _type;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<boundaryCondition>(*this);
+		ar & _A0;
+		ar & _A1;
+		ar & _A2;
+		ar & _phi;
+		ar & _sigma;
+		ar & _mur;
+		ar & _type;
+	}
 public:
     
     //! Sets the value for the A0 parameter

@@ -1,4 +1,5 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
+#include <Mesh/MVertex.h>
 
 wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
@@ -42,6 +43,12 @@ void modelDefinition::deleteSelection()
     {
         if(nodeIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             /* Need to cycle through the entire line list and arc list in order to determine which arc/line the node is associated with and delete that arc/line by selecting i.
              * The deletion of the arc/line occurs later in the code*/
             
@@ -88,9 +95,16 @@ void modelDefinition::deleteSelection()
     {
         if(arcIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             if(arcIterator == _editor.getArcList()->back())
             {
                 _editor.getArcList()->erase(arcIterator);
+				
                 break;
             }
             else
@@ -108,6 +122,12 @@ void modelDefinition::deleteSelection()
     {
         if(lineIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             /* Bug fix: At first the code did not check if the line iterator was on the back
              * This causes problems becuase if the last iterator was deleted, then we are incrementing an invalidated iterator
              * which creates another invalidated iterator that is not equal to the end iterator of the list.
@@ -121,7 +141,7 @@ void modelDefinition::deleteSelection()
             }
             else
                 _editor.getLineList()->erase(lineIterator++);
-            
+			
             if(_editor.getLineList()->size() == 0)
                 break;
         }
@@ -134,6 +154,12 @@ void modelDefinition::deleteSelection()
     {
         if(blockIterator->getIsSelectedState())
         {
+			// Check to make sure that the mesh exists before deleting it
+			if(p_modelMesh->getNumMeshVertices() > 0)
+			{
+				deleteMesh();
+			}
+			
             if(blockIterator == _editor.getBlockLabelList()->back())
             {
                 _editor.getBlockLabelList()->erase(blockIterator);
@@ -141,7 +167,7 @@ void modelDefinition::deleteSelection()
             }
             else
                 _editor.getBlockLabelList()->erase(blockIterator++);
-            
+			
             if(_editor.getBlockLabelList()->size() == 0)
                 break;
         }
@@ -216,7 +242,8 @@ void modelDefinition::editSelection()
             
         if(dialog->ShowModal() == wxID_OK)
         {
-            dialog->getSegmentProperty(selectedProperty);
+            if(dialog->getSegmentProperty(selectedProperty))
+				deleteMesh();
             
             for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
             {
@@ -248,7 +275,8 @@ void modelDefinition::editSelection()
             
         if(dialog->ShowModal() == wxID_OK)
         {
-            dialog->getSegmentProperty(selectedProperty);
+            if(dialog->getSegmentProperty(selectedProperty))
+				deleteMesh();
             
             for(plf::colony<arcShape>::iterator arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); ++arcIterator)
             {
@@ -263,12 +291,14 @@ void modelDefinition::editSelection()
     {
         blockPropertyDialog *dialog;
         blockProperty selectedBlockLabel;
+		plf::colony<blockLabel>::iterator selectedBlock;
         
         for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
         {
             if(blockIterator->getIsSelectedState())
             {
                 selectedBlockLabel = *blockIterator->getProperty();
+				selectedBlock = blockIterator;
                 break;
             }
         }
@@ -281,7 +311,11 @@ void modelDefinition::editSelection()
         if(dialog->ShowModal() == wxID_OK)
         {
             bool firstIsSet = false;
-            dialog->getBlockProperty(selectedBlockLabel);
+			
+            if(dialog->getBlockProperty(selectedBlockLabel))
+				deleteMesh();
+				
+			selectedBlock->setPorperty(selectedBlockLabel);
             
             for(plf::colony<blockLabel>::iterator blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); ++blockIterator)
             {
@@ -351,7 +385,6 @@ void modelDefinition::editSelection()
             }
         }
     }
-    
     
     this->Refresh();
     return;
@@ -716,6 +749,12 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 {
     // First, we are going to scan through all of the lines/arcs and check the nodes that are to be moved (and uncheck all of the lines/arcs)
     
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(!_geometryGroupIsSelected)
     {
         if(_arcsAreSelected)
@@ -839,6 +878,12 @@ void modelDefinition::moveTranslateSelection(double horizontalShift, double vert
 
 void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint aboutPoint)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(!_geometryGroupIsSelected)
     {
         // If we have a specific type of geometry selected, mark the corresponding nodes for moving and deselect the actual geometry
@@ -981,6 +1026,12 @@ void modelDefinition::moveRotateSelection(double angularShift, wxRealPoint about
 
 void modelDefinition::scaleSelection(double scalingFactor, wxRealPoint basePoint)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     // This function was based off of the FEMM function located in CbeladrawDoc::ScaleMove
     if(_nodesAreSelected)
     {
@@ -1110,6 +1161,11 @@ void modelDefinition::scaleSelection(double scalingFactor, wxRealPoint basePoint
 
 void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
     /*
      * Currently, there are three cases that we need to consider.
      * First, if the slope of the mirror line is 0 (this is a horizontal line).
@@ -1141,7 +1197,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
                     // If a block label is present, we will have to ignore the creation of line. BUt we will still place the other node
                     // The same logic applies for the second node of the line
-                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 4.0))
+                    if(_editor.addNode(lineIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1165,7 +1221,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = lineIterator->getSecondNode()->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 4.0))
+                    if(_editor.addNode(lineIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1187,7 +1243,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     lineIterator->getSecondNode()->setSelectState(false);
                     
-                    if(_editor.addLine(getTolerance()))
+                    if(_editor.addLine(getTolerance() / 8.0))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                     lineIterator->setSelectState(false);
                 }
@@ -1207,7 +1263,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     // or, if a block label is present. In the event of a node already present, then we need to find out which node it is and set the nodeIndex to be that node for line creation
                     // If a block label is present, we will have to ignore the creation of line.
                     // The same logic applies for the second node of the line
-                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 4.0))
+                    if(_editor.addNode(arcIterator->getFirstNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1231,7 +1287,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = arcIterator->getSecondNode()->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 4.0))
+                    if(_editor.addNode(arcIterator->getSecondNode()->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1273,7 +1329,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = blockIterator->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addBlockLabel(blockIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 4.0))
+                    if(_editor.addBlockLabel(blockIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 8.0))
                         _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
                     blockIterator->setSelectState(false);
                 }
@@ -1289,7 +1345,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = nodeIterator->getCenterYCoordinate() - pointOne.y;
                     
-                    if(_editor.addNode(nodeIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 4.0))
+                    if(_editor.addNode(nodeIterator->getCenterXCoordinate(), pointOne.y - distance, getTolerance() / 8.0))
                         _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
                     nodeIterator->setSelectState(false);
                 }
@@ -1310,7 +1366,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = pointOne.x - lineIterator->getFirstNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(pointOne.x + distance, lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1334,7 +1390,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = pointOne.x - lineIterator->getSecondNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(pointOne.x + distance, lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1356,7 +1412,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     lineIterator->getSecondNode()->setSelectState(false);
                     
-                    if(_editor.addLine(getTolerance()))
+                    if(_editor.addLine(getTolerance() / 8.0))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                     lineIterator->setSelectState(false);
                 }
@@ -1373,7 +1429,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                 {
                     double distance = pointOne.x - arcIterator->getFirstNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(pointOne.x + distance, arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1397,7 +1453,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     distance = pointOne.x - arcIterator->getSecondNode()->getCenterXCoordinate();
                     
-                    if(_editor.addNode(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(pointOne.x + distance, arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1486,7 +1542,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                     double intersectionPointy = slope * intersectionPointx + b1;
                     
-                    if(_editor.addNode(2 * intersectionPointx - lineIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(2 * intersectionPointx - lineIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1513,7 +1569,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     intersectionPointx = (b1 - b2) / (perpSlope - slope);
                     intersectionPointy = slope * intersectionPointx + b1;
                     
-                    if(_editor.addNode(2 * intersectionPointx - lineIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(2 * intersectionPointx - lineIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - lineIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*lineIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1535,7 +1591,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     
                     lineIterator->getSecondNode()->setSelectState(false);
                     
-                    if(_editor.addLine(getTolerance()))
+                    if(_editor.addLine(getTolerance() / 8.0))
                         _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
                     lineIterator->setSelectState(false);
                 }
@@ -1561,7 +1617,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                     double intersectionPointy = slope * intersectionPointx + b1;
                     
-                    if(_editor.addNode(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(2 * intersectionPointx - arcIterator->getFirstNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getFirstNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getFirstNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1588,7 +1644,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     intersectionPointx = (b1 - b2) / (perpSlope - slope);
                     intersectionPointy = slope * intersectionPointx + b1;
                     
-                    if(_editor.addNode(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(2 * intersectionPointx - arcIterator->getSecondNode()->getCenterXCoordinate(), 2 * intersectionPointy - arcIterator->getSecondNode()->getCenterYCoordinate(), getTolerance() / 8.0))
                     {
                         _editor.getLastNodeAdd()->setNodeSettings(*arcIterator->getSecondNode()->getNodeSetting());
                         _editor.setNodeIndex(*_editor.getLastNodeAdd());
@@ -1641,7 +1697,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                     double intersectionPointy = slope * intersectionPointx + b1;
                     
-                    if(_editor.addBlockLabel(2 * intersectionPointx - blockIterator->getCenterXCoordinate(), 2 * intersectionPointy - blockIterator->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addBlockLabel(2 * intersectionPointx - blockIterator->getCenterXCoordinate(), 2 * intersectionPointy - blockIterator->getCenterYCoordinate(), getTolerance() / 8.0))
                         _editor.getLastBlockLabelAdded()->setPorperty(*blockIterator->getProperty());
                     blockIterator->setSelectState(false);
                 }
@@ -1668,7 +1724,7 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
                     double intersectionPointx = (b1 - b2) / (perpSlope - slope);
                     double intersectionPointy = slope * intersectionPointx + b1;
                     
-                    if(_editor.addNode(2 * intersectionPointx - nodeIterator->getCenterXCoordinate(), 2 * intersectionPointy - nodeIterator->getCenterYCoordinate(), getTolerance() / 4.0))
+                    if(_editor.addNode(2 * intersectionPointx - nodeIterator->getCenterXCoordinate(), 2 * intersectionPointy - nodeIterator->getCenterYCoordinate(), getTolerance() / 8.0))
                         _editor.getLastNodeAdd()->setNodeSettings(*nodeIterator->getNodeSetting());
                     nodeIterator->setSelectState(false);
                 }
@@ -1688,6 +1744,12 @@ void modelDefinition::mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo
 
 void modelDefinition::copyTranslateSelection(double horizontalShift, double verticalShift, unsigned int numberOfCopies)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(_linesAreSelected || _geometryGroupIsSelected)
     {
         plf::colony<edgeLineShape> selectedLines;
@@ -1763,7 +1825,7 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
                 
                 lineIterator->getSecondNode()->setSelectState(false);
 
-                if(_editor.addLine(getTolerance()))
+                if(_editor.addLine(getTolerance() / 8.0))
                     _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
             }
         }
@@ -1889,6 +1951,12 @@ void modelDefinition::copyTranslateSelection(double horizontalShift, double vert
 
 void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     if(_linesAreSelected || _geometryGroupIsSelected)
     {
         double tempShift = -angularShift;// I am not sure why this is necessary but for some reason, the program does not like a -i in the loop.
@@ -1954,7 +2022,7 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
                 
                 lineIterator->getSecondNode()->setSelectState(false);
 
-                if(_editor.addLine(getTolerance()))
+                if(_editor.addLine(getTolerance() / 8.0))
                     _editor.getLastLineAdded()->setSegmentProperty(*lineIterator->getSegmentProperty());
             }
         }
@@ -2046,8 +2114,6 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
         {
             if(nodeIterator->getIsSelectedState())
             {
-                double radius = nodeIterator->getDistance(aboutPoint);
-                
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     double horizontalShift = (nodeIterator->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (nodeIterator->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
@@ -2069,8 +2135,6 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
         {
             if(blockIterator->getIsSelectedState())
             {
-                double radius = blockIterator->getDistance(aboutPoint);
-                
                 for(unsigned int i = 1; i < (numberOfCopies + 1); i++)
                 {
                     double horizontalShift = (blockIterator->getCenterXCoordinate() - aboutPoint.x) * cos(i * tempShift * PI / 180.0) + (blockIterator->getCenterYCoordinate() - aboutPoint.y) * sin(i * tempShift * PI / 180.0) + aboutPoint.x;
@@ -2130,6 +2194,12 @@ void modelDefinition::displayDanglingNodes()
 
 void modelDefinition::createOpenBoundary(unsigned int numberLayers, double radius, wxRealPoint centerPoint, OpenBoundaryEdge boundaryType)
 {
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     for(unsigned int i = 0; i < numberLayers + 1; i++)
     {
         // These guys are used to make sure that we can add another arc in the same process since the add arc function will reset the indexes.
@@ -2383,7 +2453,13 @@ void modelDefinition::createFillet(double filletRadius)
     // A check to ensure that the _editor.createFillet is never executed with a negative radius
     if(filletRadius < 0)
         return;
-        
+		
+	// Check to make sure that the mesh exists before deleting it
+	if(p_modelMesh->getNumMeshVertices() > 0)
+	{
+		deleteMesh();
+	}
+	
     _editor.createFillet(filletRadius);
     this->Refresh();
     return;
@@ -2617,6 +2693,50 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
     updateProjection();
     drawGrid();
     glMatrixMode(GL_MODELVIEW);
+	
+	if(p_drawMesh)
+	{
+		glColor3d(0.0, 1.0, 0.0); // Set the mesh color
+		
+		glPointSize(5.0); // Set the point size first
+		glLineWidth(1.0);
+		
+		glBegin(GL_POINTS);
+		
+			for(int i = 0; i < p_modelMesh->getNumMeshVertices(); i++)
+			{
+				MVertex *meshVertex = p_modelMesh->getMeshVertexByTag(i + 1);
+				if(meshVertex)
+					glVertex2d(meshVertex->x(), meshVertex->y());
+			}
+		
+		glEnd();
+		
+		std::vector<GEntity*> entityList;
+		entityList.reserve(p_modelMesh->getNumFaces()); 
+		p_modelMesh->getEntities(entityList, 2);
+		
+		glBegin(GL_LINES);
+            
+			for(auto entityIterator : entityList)
+			{
+				for(unsigned int i = 0; i < entityIterator->getNumMeshElements(); i++)
+				{
+					std::vector<MVertex*> vertexList;
+					vertexList.reserve(entityIterator->getMeshElement(i)->getNumVertices());
+					entityIterator->getMeshElement(i)->getVertices(vertexList);
+					for(unsigned int j = 0; j < vertexList.size() - 1; j++)
+					{
+						glVertex2d(vertexList[j]->x(), vertexList[j]->y());
+						glVertex2d(vertexList[j + 1]->x(), vertexList[j + 1]->y());
+					}
+					
+				}
+			}
+
+        glEnd();
+		
+	}
     
     for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
     {
@@ -2981,7 +3101,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
                             
         if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
         {
-            arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
+            newArcDialog = new arcSegmentDialog(this, _localDefinition->getElectricalBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;
@@ -2997,7 +3117,7 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
         }
         else if(_localDefinition->getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
         {
-           arcSegmentDialog *newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
+			newArcDialog = new arcSegmentDialog(this, _localDefinition->getMagneticBoundaryList());
             if(newArcDialog->ShowModal() == wxID_OK)
             {
                 arcShape tempShape;
@@ -3030,7 +3150,9 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
              * However, the last node doesn't exist.
              * The form would reload so quickly that sometimes the canvas would be able to detect the user on the releasing the left mouse.
              * The fix, check to make sure that the size of the array (vector) is greater then 0 to ensure the program does not check an empty 
-             * position
+             * position.
+			 * There are some instances where even this check is not adequate. For example, when the user might load a saved file.
+			 * It is important to make sure that the getLastNodaAdd is always pointing to something.
              */ 
             if(_editor.getNodeList()->size() > 0 && _editor.getLastNodeAdd()->getDraggingState())
             {
@@ -3041,7 +3163,9 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                     roundToNearestGrid(tempX, tempY);
                     
                 _editor.getNodeList()->erase(_editor.getLastNodeAdd());
-                _editor.addNode(tempX, tempY, getTolerance());
+                _editor.addNode(tempX, tempY, getTolerance() / 8.0);
+				
+				deleteMesh();
             }
         }
         else
@@ -3057,9 +3181,11 @@ void modelDefinition::onMouseLeftUp(wxMouseEvent &event)
                 if(_editor.getLastBlockLabelAdded()->getDraggingState())
                 {
                     _editor.getBlockLabelList()->erase(_editor.getLastBlockLabelAdded()); 
-                    _editor.addBlockLabel(tempX, tempY, getTolerance());
+                    _editor.addBlockLabel(tempX, tempY, getTolerance() / 10);
                 }
                 
+				deleteMesh();
+				
                 /* Now we want to scan through the entire block label list to finc if there is one that is
                  * set to defualt, if there is, then copy the settings to the newly created label
                  */

@@ -5,6 +5,9 @@
 #include <common/enums.h>
 #include <common/JilesAthertonParameters.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 
 //! Class that is used to handle all of the material properties for a magnetic simulation
 /*!
@@ -15,6 +18,8 @@
 class magneticMaterial : public materialProperty
 {
 private:
+	friend class boost::serialization::access;
+	
     //! Boolean used to indicate if a Linear or non-linear BH curve should be used for the material
     bool _isLinear = true;
     
@@ -98,6 +103,26 @@ private:
     
     //! The strand Diameter
     double _strandDia = 0;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<materialProperty>(*this);
+		ar & _isLinear;
+		ar & _attribute;
+		ar & _coercivity;
+		ar & _currentDensity;
+		ar & _electricalConductivity;
+		ar & _lamFF;
+		ar & _lamThickness;
+		ar & _nonLinearParameters;
+		ar & _numStrands;
+		ar & _phiHX;
+		ar & _phiHY;
+		ar & _relativePermeabilityX;
+		ar & _relativePermeabilityY;
+		ar & _strandDia;
+	}
 public:
 
     //! Sets if the material is linear or non-linear

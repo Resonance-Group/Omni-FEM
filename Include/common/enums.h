@@ -10,7 +10,7 @@
 */ 
 enum meshSize
 {
-    MESH_NONE,/*!< Value to indicate that there is no mesh size for the designated area */
+    MESH_NONE_,/*!< Value to indicate that there is no mesh size for the designated area */
     MESH_EXTREMELY_FINE,/*!< Values to indicate that the mesh needs to contain the smallest element size possible */
     MESH_EXTRA_FINE,/*!< Values to indicate that the mesh needs to contain very small element sizes */
     MESH_FINER,/*!< Value to indicate that the mesh needes to contain small element sizes */
@@ -335,6 +335,11 @@ enum generalFrameButton
 {
     ID_ComboBox1,
     ID_ComboBox2,
+	ID_ComboBox3,
+	ID_ComboBox4,
+	ID_ComboBox5,
+	ID_ComboBox6,
+	ID_ComboBox7,
     ID_RadioButton1,
     ID_RadioButton2, 
     ID_CHECKBOX1, 

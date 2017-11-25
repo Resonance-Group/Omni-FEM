@@ -17,7 +17,13 @@
 
 #include <common/NodalProperty.h>
 
+#include <common/ExteriorRegion.h>
 
+#include <common/MeshSettings.h>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 //! Class that handles all of main settings for runnning a simulation
 /*!
@@ -27,11 +33,13 @@
 */ 
 class problemDefinition
 {
+private:
+	friend class boost::serialization::access;
+
+	
 	/************
 	* Variables *
 	*************/
-private:
-
     //! The global list for the electrostatic boundary conditions
     /*!
         This list contains all of the boundary conditions that the user user
@@ -98,12 +106,42 @@ private:
         the frame with electrical or magnetic material properties
     */ 
     physicProblems _phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
+	
+	exteriorRegion p_exteriorRegion;
     
     //! The name of the physics simulation
     wxString _problemName = "Untitled";
+	
+	//! The settings for the mesh of the problem
+	meshSettings p_problemMeshSettings;
     
     //! Boolean used to determine if the status bar should be drawn
     bool _showStatusBar = true;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _phycisProblem;
+		ar & p_exteriorRegion;
+		ar & _localNodalList;
+		std::string name = _problemName.ToStdString();
+		ar & name;
+		_problemName = wxString(name);
+		if(_phycisProblem == physicProblems::PROB_ELECTROSTATIC)
+		{
+			ar & _localElectricalPreference;
+			ar & _localElectricalBoundaryConditionList;
+			ar & _localConductorList;
+			ar & _localElectrialMaterialList;
+		}
+		else if(_phycisProblem == physicProblems::PROB_MAGNETICS)
+		{
+			ar & _localMagneticPreference;
+			ar & _localMagneticBoundaryConditionList;
+			ar & _localCircuitList;
+			ar & _localMagneticMaterialList;
+		}
+	}
     
     /**********
     * Methods *
@@ -361,6 +399,53 @@ public:
     {
         _showStatusBar = state;
     }
+	
+	/**
+	 * @brief Function that will set the exterior region of the problem
+	 * @param value The exterior region properties that the simulation
+	 * 				need to take.
+	 */
+	void setExteriorRegion(exteriorRegion value)
+	{
+		p_exteriorRegion = value;
+	}
+	
+	/**
+	 * @brief Function that will return a pointer pointing to the exterior region of the problem
+	 * @return The pointer pointing to the exterier region class of the simulation
+	 */
+	exteriorRegion *getExteriorRegion()
+	{
+		return &p_exteriorRegion;
+	}
+	
+	/**
+	 * @brief Resets all of the data structures back to their default values
+	 */
+	void defintionClear()
+	{
+		_localCircuitList.clear();
+		_localConductorList.clear();
+		_localElectrialMaterialList.clear();
+		_localElectricalBoundaryConditionList.clear();
+		_localElectricalPreference.resetPreferences();
+		_localMagneticBoundaryConditionList.clear();
+		_localMagneticMaterialList.clear();
+		_localMagneticPreference.resetPreferences();
+		_localNodalList.clear();
+		_phycisProblem = physicProblems::NO_PHYSICS_DEFINED;
+		_problemName = wxString("Untitled");
+	}
+	
+	void setMeshSettings(meshSettings settings)
+	{
+		p_problemMeshSettings = settings;
+	}
+	
+	meshSettings getMeshSettings()
+	{
+		return p_problemMeshSettings;
+	}
 };
 
 #endif

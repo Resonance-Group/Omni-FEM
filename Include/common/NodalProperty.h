@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 using namespace std;
 
 
@@ -25,6 +28,14 @@ using namespace std;
 */ 
 class nodalProperty
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _nodalName;
+		ar & _isSpecificPotential;
+		ar & _value;
+	}
 private:
     //! The name of the property
     string _nodalName = "None";

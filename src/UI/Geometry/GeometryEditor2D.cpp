@@ -41,6 +41,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 	}
     
     newNode.setCenter(xPoint, yPoint);
+	newNode.setNodeID(++_nodeNumber);
 	_lastNodeAdded = _nodeList.insert(newNode);
     
     /* If the node is in between a line, then break the line into 2 lines */
@@ -134,6 +135,7 @@ bool geometryEditor2D::addBlockLabel(double xPoint, double yPoint, double tolera
     // Make sure that the block label is not placed ontop of a line
     for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); ++lineIterator)
 	{
+		double temp = calculateShortestDistance(newLabel, *lineIterator);
 		if(fabs(calculateShortestDistance(newLabel, *lineIterator)) < tolerance)
         {
             _lastBlockLabelAdded = _blockLabelList.begin();
@@ -167,8 +169,8 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
     /* This code was adapted from the FEMM project. See line 263 in FemmeDoc.cpp */
     edgeLineShape newLine;
     double tempTolerance;
-    node *tempNodeOne;
-    node *tempNodeTwo;
+    node *tempNodeOne;// temp node is either the index stored in the class or the nodes that were passed to the function.
+    node *tempNodeTwo;// These will serve as a temporary variable in order to not effect the values of hte one global to the class
 
     
     if(firstNode != nullptr && secondNode != nullptr)
@@ -289,12 +291,14 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
             shortDistance = calculateShortestDistance(*nodeIterator, newLine);
             if((Vabs(nodeiVec - node0Vec) < dmin) || (Vabs(nodeiVec - node1Vec) < dmin))
                 shortDistance = 2.0 * dmin;
-            if(shortDistance < dmin)
+            if(shortDistance < dmin)// This is the case for if the node is in fact ontop of a line
             {
                 _lineList.erase(_lastLineAdded);
+                _lastLineAdded = _lineList.begin();// Make sure that the last line added in always pointing to something
                 addLine(tempNodeOne, &(*nodeIterator), dmin);
                 addLine(&(*nodeIterator), tempNodeTwo, dmin);
-                nodeIterator = _nodeList.back();
+             //   nodeIterator = _nodeList.back();
+                break;
             }
         }
     }

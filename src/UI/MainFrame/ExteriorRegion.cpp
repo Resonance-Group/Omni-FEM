@@ -52,7 +52,7 @@ exteriorRegionDialog::exteriorRegionDialog(wxWindow *par) : wxDialog(par, wxID_A
 }
 
 
-void exteriorRegionDialog::setParameters(double &centerOfExterior, double &radiusExterior, double &radiusInterior)
+void exteriorRegionDialog::setParameters(double centerOfExterior, double radiusExterior, double radiusInterior)
 {
     std::ostream centerExteriorStream(_centerExteriorTextCtrl);
     std::ostream radiusExteriorStream(_radiusExteriorTextCtrl);
@@ -73,6 +73,13 @@ void exteriorRegionDialog::setParameters(double &centerOfExterior, double &radiu
 
 
 
+void exteriorRegionDialog::setParameters(exteriorRegion value)
+{
+	setParameters(value.getCenter(), value.getRadiusExterior(), value.getRadiusInterior());
+}
+
+
+
 void exteriorRegionDialog::getParameters(double &centerOfExterior, double &radiusExterior, double &radiusInterior)
 {
     double value;
@@ -85,6 +92,25 @@ void exteriorRegionDialog::getParameters(double &centerOfExterior, double &radiu
     
     _radiusInteriorTextCtrl->GetValue().ToDouble(&value);
     radiusInterior = value;
+}
+
+
+
+exteriorRegion exteriorRegionDialog::getParameters()
+{
+	exteriorRegion returnValue;
+	double value;
+	
+	_centerExteriorTextCtrl->GetValue().ToDouble(&value);
+	returnValue.setCenter(value);
+	
+    _radiusExteriorTextCtrl->GetValue().ToDouble(&value);
+    returnValue.setExteriorRadius(value);
+    
+    _radiusInteriorTextCtrl->GetValue().ToDouble(&value);
+    returnValue.setInteriorRadius(value);
+	
+	return returnValue;
 }
 
 

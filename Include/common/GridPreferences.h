@@ -3,6 +3,9 @@
 
 #include <common/enums.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that handles any of the grid preferences for the model
 /*!
     This class will store any of the preferences for the grid.
@@ -13,7 +16,15 @@
 class gridPreferences
 {
 private:
-    
+    friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _coordinateSystem;
+		ar & _isShowBlockName;
+		ar & _gridStep;
+	}
     //! Variable that determines what the grid line spacing is set to.
     /*!
         The units for this number are the same as that of the length unit

@@ -10,6 +10,8 @@ bool OmniFEMApp::OnInit()
 {
    OmniFEMMainFrame *frame = new OmniFEMMainFrame("Omni-FEM", wxPoint(50, 50));
    frame->Show(true);
+   OmniFEMMsg::instance()->displayWindow(Status_Windows::LOG_STATUS_WINDOW);
+   OmniFEMMsg::instance()->MsgStatus("This is a test\t Another test");
    return true; 
 }
 
@@ -279,15 +281,12 @@ void OmniFEMMainFrame::createModelDefiningClient()
     appendedTitle.append(_problemDefinition.getName());
     this->SetTitle(this->GetTitle().append(appendedTitle));
     
-    
-    
     this->SetMaxSize(wxSize(-1, -1));
     this->SetSize(wxSize(650, 650));
     this->SetMinSize(wxSize(1, 1));
     
     wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
- 
-    _model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition, this->GetStatusBar());
+	_model = new modelDefinition(this, wxPoint(6, 6), this->GetClientSize(), _problemDefinition, this->GetStatusBar());
     
     enableToolMenuBar(true);
     createTopToolBar();
@@ -419,6 +418,7 @@ void OmniFEMMainFrame::onResize(wxSizeEvent &event)
     if(_UIState == systemState::MODEL_DEFINING)
     {
         _model->SetSize(this->GetClientSize() - wxSize(12, 12));
+		_model->Refresh();
     }
 }
 

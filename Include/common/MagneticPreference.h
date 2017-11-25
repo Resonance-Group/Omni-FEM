@@ -6,6 +6,9 @@
 #include <common/enums.h>
 #include <math.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that is used to handle all of the prefences of simulation for magnetostatic simulations
 /*! 
     This class stores the solver/mesher preferences for magnetostatic simulations.
@@ -15,6 +18,7 @@
 class magneticPreference
 {
 private:
+	friend class boost::serialization::access;
 
     //! Variable that dictates the frequency of the magnetic simulation
     /*!
@@ -71,9 +75,27 @@ private:
     
     //! Variable that stores any user comments about the simulation problem
     wxString _comments = wxString("Add comments here");
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _frequency;
+		ar & _depth;
+		ar & _precision;
+		ar & _lengthUnit;
+		ar & _minAngle;
+		ar & _lengthUnit;
+		ar & _probType;
+		ar & _acSolver;
+		std::string comments = _comments.ToStdString();
+		ar & comments;
+		_comments = wxString(comments);
+	}
     
 public:
     
+	
+	
     //! Sets the frequency that the program will use for magnetic simulations
     /*!
         For a magnetostatic problem, this value shoudl be set to 0.
@@ -249,6 +271,21 @@ public:
         else
             return false;
     }
+	
+	/**
+	 * @brief Function that is called in order to reset the class back to default values
+	 */
+	void resetPreferences()
+	{
+		_frequency = 0;
+		_depth = 1;
+		_precision = powf(10, -8);
+		_minAngle = 30;
+		_lengthUnit = unitLengthEnum::INCHES;
+		_probType = PLANAR;
+		_acSolver = SUCCAPPROX;
+		_comments = wxString("Add comments here");
+	}
 };
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef JILESARTHERTONPARAMETER_H_
 #define JILESARTHERTONPARAMETER_H_
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
+
 //! Class that handles the parameters for Jiles-Artherton
 /*!
     This class was created in order to handle all of the parameters for the Jiles-Artherton model.
@@ -10,6 +14,7 @@
 class jilesAthertonParameters
 {
 private:
+	friend class boost::serialization::access;
     
     //! Boolean to state if the material is an anisotropy material
     bool _isAnisotropy = false;
@@ -42,7 +47,7 @@ private:
     double _tParamX = 0;
 /* 
     Below are repeats of the above parameters in the Y direction
-    These have the same meaninf except in the y-plane. 
+    These have the same meaning except in the y-plane. 
     For now, these will not be commented as I am still learning
     how to do the vectorizes Jiles-atherton model. It is unkonwn if 
     these parameters are needed 
@@ -60,6 +65,21 @@ private:
     double _psiParamY = 0;
     
     double _tParamY = 0;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _isAnisotropy;
+		ar & _alpha;
+		ar & _aParamX;
+		ar & _MsParamX;
+		ar & _MsParamX;
+		ar & _kParamX;
+		ar & _cParamX;
+		ar & _KanParamX;
+		ar & _psiParamX;
+		ar & _tParamX;
+	}
     
 public:
 
@@ -173,7 +193,8 @@ public:
     
     //! Retrieves the k parameter of the magnetic material
     /*!
-        \return Returns a value representing the average energy required to break the pinning site in the magnetic material
+        \return Returns a value representing the average energy required to break the pinning site in the magnetic material.
+		 		This is the k parameter.
     */ 
     double getKParam()
     {
@@ -193,7 +214,7 @@ public:
     //! Retrieves the magnetization reversibility of the material
     /*!
         \return Returns a value representing the magnetization reversibility
-                of the material
+                of the material. This is the c parameter.
     */ 
     double getMagnetizationReversibility()
     {

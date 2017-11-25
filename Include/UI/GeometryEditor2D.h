@@ -2,11 +2,16 @@
 #define GEOMETRYEDITOR2D_H_
 
 #include <math.h>
+#include <vector>
 
 #include <common/Vector.h>
 #include <common/plfcolony.h>
 
 #include <UI/geometryShapes.h>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 //! This class is responsible for any math related functions that operate on the geometry shapes. This includes adding the geomerty.
 /*!
@@ -19,7 +24,70 @@
 class geometryEditor2D
 {
 private:
-    
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void save(Archive &ar, const unsigned int version) const
+	{
+		/*
+		 * I really wish there was a better way of doing this
+		 */ 
+		std::vector<node> saveNodes;
+		std::vector<edgeLineShape> saveLines;
+		std::vector<arcShape> saveArcs;
+		std::vector<blockLabel> saveLabels;
+		
+		for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); nodeIterator++)
+			saveNodes.push_back(*nodeIterator);
+		
+		for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); lineIterator++)
+			saveLines.push_back(*lineIterator);
+			
+		for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); arcIterator++)
+			saveArcs.push_back(*arcIterator);
+			
+		for(plf::colony<blockLabel>::iterator labelIterator = _blockLabelList.begin(); labelIterator != _blockLabelList.end(); labelIterator++)
+			saveLabels.push_back(*labelIterator);
+
+		ar & saveNodes;
+		ar & saveLines;
+		ar & saveArcs;
+		ar & saveLabels;
+		
+	}
+	
+	template<class Archive>
+	void load(Archive &ar, const unsigned int version)
+	{
+		std::vector<node> loadNodes;
+		std::vector<edgeLineShape> loadLines;
+		std::vector<arcShape> loadArcs;
+		std::vector<blockLabel> loadLabels;
+		
+		ar & loadNodes;
+		ar & loadLines;
+		ar & loadArcs;
+		ar & loadLabels;
+		
+		for(std::vector<node>::iterator nodeIterator = loadNodes.begin(); nodeIterator != loadNodes.end(); nodeIterator++)
+		{
+			_nodeList.insert(*nodeIterator);
+			if(nodeIterator->getNodeID() > _nodeNumber)
+				_nodeNumber = nodeIterator->getNodeID();
+		}
+		
+		for(std::vector<edgeLineShape>::iterator lineIterator = loadLines.begin(); lineIterator != loadLines.end(); lineIterator++)
+			_lineList.insert(*lineIterator);
+			
+		for(std::vector<arcShape>::iterator arcIterator = loadArcs.begin(); arcIterator != loadArcs.end(); arcIterator++)
+			_arcList.insert(*arcIterator);
+			
+		for(std::vector<blockLabel>::iterator labelIterator = loadLabels.begin(); labelIterator != loadLabels.end(); labelIterator++)
+			_blockLabelList.insert(*labelIterator);
+			
+		
+	}
+	BOOST_SERIALIZATION_SPLIT_MEMBER()
     /*
      *  So you might be thinking, why use a colony instead of a vector or a list or a deque?
      *  It is simple, for a vector, when something is added or removed, the vector
@@ -127,6 +195,14 @@ private:
         \sa _lastNodeAdded
     */ 
     plf::colony<blockLabel>::iterator _lastBlockLabelAdded;
+	
+	//! This number is used to keep track of the number of nodes created
+	/*!
+		This number is primarly used for saving and restoring. This will help to
+		ensure that all of the lines/arcs are associated with the correct
+		node when a user loads a file
+	*/ 
+	unsigned long _nodeNumber = 0;
     
     //! Function that will get the intersection X, Y point of two lines crossing each other
     /*!
@@ -270,7 +346,7 @@ public:
     
     //! Function that will get the block list and return a pointer pointing to the block list
     /*!
-        Works similair to getNodeList() but is for the block labels
+        Works similair to getNodeList() b		 * ut is for the block labels
         \sa getNodeList()
         \return Returns a pointer pointing to the block labels list
     */ 
@@ -565,6 +641,42 @@ public:
         \return Returns true if even one fillet is succesfully created. Otherwise returns False.
     */ 
     bool createFillet(double radius);
+	
+	/**
+	 * @brief 	Function that is called after the data structure is loaded AND copied. If this function is called
+	 * 			after the data structure is loaded, then the addresses of all of nodes will change once the 
+	 * 			data structure is copied. Therefor, it is necessary to call this function which will rebuild
+	 * 			all of the node addresses contained within the arcs/lines once the data structure is copied.
+	 * 			The function will loop through the entire node list and compare the node with the node ID saved
+	 * 			in the arcs and lines. If there is a match for either the first or second node, the function 
+	 * 			will then set the address of the first/second node of the arc/line to the matched node.
+	 */
+	void rebuildDataStructure()
+	{
+		for(plf::colony<node>::iterator nodeIterator = _nodeList.begin(); nodeIterator != _nodeList.end(); nodeIterator++)
+		{
+			for(plf::colony<edgeLineShape>::iterator lineIterator = _lineList.begin(); lineIterator != _lineList.end(); lineIterator++)
+			{
+				if(nodeIterator->getNodeID() == lineIterator->getFirstNodeID())
+					lineIterator->setFirstNode(*nodeIterator);
+				else if(nodeIterator->getNodeID() == lineIterator->getSecondNodeID())
+					lineIterator->setSecondNode(*nodeIterator);
+			}
+			
+			for(plf::colony<arcShape>::iterator arcIterator = _arcList.begin(); arcIterator != _arcList.end(); arcIterator++)
+			{
+				if(nodeIterator->getNodeID() == arcIterator->getFirstNodeID())
+					arcIterator->setFirstNode(*nodeIterator);
+				else if(nodeIterator->getNodeID() == arcIterator->getSecondNodeID())
+					arcIterator->setSecondNode(*nodeIterator);
+			}
+		}
+		
+		_lastArcAdded = _arcList.begin();
+		_lastBlockLabelAdded = _blockLabelList.begin();
+		_lastLineAdded = _lineList.begin();
+		_lastNodeAdded = _nodeList.begin();
+	}
 };
 
 #endif

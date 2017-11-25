@@ -10,6 +10,8 @@
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 
+#include <common/ExteriorRegion.h>
+
 /**
  * @class exteriorRegionDialog
  * @author Phillip
@@ -64,7 +66,14 @@ public:
      * @param radiusExterior A value reprenting the radius of the exterior region
      * @param radiusInterior A value represnting the radius of the interior region
      */
-    void setParameters(double &centerOfExterior, double &radiusExterior, double &radiusInterior);
+    void setParameters(double centerOfExterior, double radiusExterior, double radiusInterior);
+	
+	/**
+	 * @brief 	This function will take an input of the exterior region property object
+	 * 			and will update the form to display these values to the user for editing
+	 * @param value The exterior region object that needs to be edited
+	 */
+	void setParameters(exteriorRegion value);
     
     /**
      * @brief   This function will retrieve the parameters that the user placed in. 
@@ -75,6 +84,13 @@ public:
      * @param radiusInterior Variable to store the radius of the interior region
      */
     void getParameters(double &centerOfExterior, double &radiusExterior, double &radiusInterior);
+	
+	/**
+	 * @brief Returns the edited exterior region parameters
+	 * @return 	Returns a exterior region object containing all of the values that were displayed
+	 * 			on the form.
+	 */
+	exteriorRegion getParameters();
 };
 
 #endif

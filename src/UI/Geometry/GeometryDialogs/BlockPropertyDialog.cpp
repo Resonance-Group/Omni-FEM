@@ -5,7 +5,7 @@
 blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMaterial> *material, std::vector<circuitProperty> *circuit, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
+    p_property = property;
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *line2Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *line3Sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -86,7 +86,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     line1Sizer->Add(materialText, 0, wxCENTER | wxALL, 6);
     line1Sizer->Add(_materialComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let DealII Choose Mesh Size");
+    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let GMSH Choose Mesh Size");
     _autoMeshCheckBox->SetValue(property.getAutoMeshState());
     _autoMeshCheckBox->SetFont(*font);
     
@@ -216,7 +216,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
 blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostaticMaterial> *material, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    
+    p_property = property;
     wxBoxSizer *line1Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *line2Sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *line3Sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -285,7 +285,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     line1Sizer->Add(materialText, 0, wxCENTER | wxALL, 6);
     line1Sizer->Add(_materialComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
     
-    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let DealII Choose Mesh Size");
+    _autoMeshCheckBox->Create(this, generalFrameButton::ID_CHECKBOX1, "Let GMSH Choose Mesh Size");
     _autoMeshCheckBox->SetValue(property.getAutoMeshState());
     _autoMeshCheckBox->SetFont(*font);
     
@@ -365,25 +365,30 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
 
 
 
-void blockPropertyDialog::getBlockProperty(blockProperty &property)
+bool blockPropertyDialog::getBlockProperty(blockProperty &property)
 {
     double value;
     long value2;
+	bool resetMesh = false;
     
-    property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()));
+    property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()).ToStdString());
     
     property.setAutoMeshState(_autoMeshCheckBox->GetValue());
+	if(_autoMeshCheckBox->GetValue() != p_property.getAutoMeshState())
+		resetMesh = true;
     
     if(!_autoMeshCheckBox->GetValue())
     {
         _meshSizeTextCtrl->GetValue().ToDouble(&value);
         property.setMeshSize(value);
         property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
+		if(p_property.getMeshSize() != value)
+			resetMesh = true;
     }
     
     if(_problem == physicProblems::PROB_MAGNETICS)
     {
-        property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()));
+        property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()).ToStdString());
         
         _numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
         property.setNumberOfTurns(value2);
@@ -396,6 +401,8 @@ void blockPropertyDialog::getBlockProperty(blockProperty &property)
     
     property.setIsExternalState(_externalRegionCheckbox->GetValue());
     property.setDefaultState(_defaultCheckBox->GetValue());
+	
+	return resetMesh;
 }
 
 
@@ -415,7 +422,7 @@ void blockPropertyDialog::onTextEdit(wxCommandEvent &event)
     _meshSizeTextCtrl->GetValue().ToDouble(&value);
     _meshSizeTextCtrl->SetValue(wxEmptyString);
     std::ostream meshSizeStream(_meshSizeTextCtrl);
-    meshSizeStream << fixed << std::setprecision(4) << value;
+    meshSizeStream << std::fixed << std::setprecision(4) << value;
     
     _meshSizeComboBox->SetSelection(9);
 }

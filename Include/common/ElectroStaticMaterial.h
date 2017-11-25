@@ -3,6 +3,9 @@
 
 #include <common/MaterialProperty.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that is used to handle the specific values for the electrostatic material
 /*!
     This class is used to handle the specific values for an electrostatic material.
@@ -12,6 +15,15 @@
 */ 
 class electrostaticMaterial : public materialProperty
 {
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<materialProperty>(*this);
+		ar & _relativePermittivityX;
+		ar & _relativePermittivityY;
+		ar & _volumetricChargeDensity;
+	}
 private:
     //! This variable contains the relative permittivity in the X plane 
     double _relativePermittivityX = 1;

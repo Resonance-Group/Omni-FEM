@@ -7,6 +7,9 @@
 
 #include <common/enums.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 //! Class that is used to handle all of the prefences of simulation for electrostatic simulations
 /*! 
     This class stores the solver/mesher preferences for electrostatic simulations.
@@ -16,6 +19,7 @@
 class electroStaticPreference
 {
 private:
+	friend class boost::serialization::access;
 
     //! Variable that specifies the length of the geometry into the page
     /*!
@@ -61,8 +65,22 @@ private:
     
     //! Variable that specifes what dimension is associated with the geometry model
     unitLengthEnum _unitLength = INCHES;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _depth;
+		ar & _precision;
+		ar & _minAngle;
+		std::string comments = _comments.ToStdString();
+		ar & comments;
+		_comments = wxString(comments);
+		ar & _probType;
+		ar & _unitLength;
+	}
     
 public:
+	
     //! Sets the depth of the problem
     /*!
         The depth value is only used in planar problems
@@ -198,6 +216,19 @@ public:
         else
             return false;
     }
+	
+	/**
+	 * @brief Function that is called to reset the class back to default values
+	 */
+	void resetPreferences()
+	{
+		_depth = 1;
+		_precision = powf(10, -8);
+		_minAngle = 30;
+		_comments = wxString("Add comments here");
+		_probType = PLANAR;
+		_unitLength = INCHES;
+	}
  
 };
 

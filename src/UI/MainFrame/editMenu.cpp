@@ -11,12 +11,14 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
 {
     if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_ELECTROSTATIC)
     {
-        globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getElectricalPreferences());
+        globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getElectricalPreferences(), _problemDefinition.getMeshSettings());
         if(globalPreference->ShowModal() == wxID_OK)
         {
             electroStaticPreference newElectriclPreferences;
-            globalPreference->getPreferences(newElectriclPreferences);
+			meshSettings tempSettings;
+            globalPreference->getPreferences(newElectriclPreferences, tempSettings);
             _problemDefinition.setPreferences(newElectriclPreferences);
+			_problemDefinition.setMeshSettings(tempSettings);
             _model->Refresh();
             _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
             _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());
@@ -25,12 +27,14 @@ void OmniFEMMainFrame::onPreferences(wxCommandEvent &event)
     }
     else if(_problemDefinition.getPhysicsProblem() == physicProblems::PROB_MAGNETICS)
     {
-        globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getMagneticPreference());
+        globalPreferencesDialog *globalPreference = new globalPreferencesDialog(this, _model->getGridPreferences(), _problemDefinition.getMagneticPreference(), _problemDefinition.getMeshSettings());
         if(globalPreference->ShowModal() == wxID_OK)
         {
             magneticPreference newMagneticPreferences;
-            globalPreference->getPreferences(newMagneticPreferences);
+			meshSettings tempSettings;
+            globalPreference->getPreferences(newMagneticPreferences, tempSettings);
             _problemDefinition.setPreferences(newMagneticPreferences);
+			_problemDefinition.setMeshSettings(tempSettings);
             _model->Refresh();
             _menuGrid->Check(GridMenuID::ID_SHOW_GRID, _model->getGridPreferences()->getShowGridState());
             _menuGrid->Check(GridMenuID::ID_SNAP_GRID, _model->getGridPreferences()->getSnapGridState());

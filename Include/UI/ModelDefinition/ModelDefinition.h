@@ -16,8 +16,8 @@
 #include <wx/glcanvas.h>
 
 #include <common/ProblemDefinition.h>
-#include <common/GridPreferences.h>
 #include <common/plfcolony.h>
+#include <common/GridPreferences.h>
 
 #include <common/GeometryProperties/NodeSettings.h>
 
@@ -32,6 +32,13 @@
 #include <UI/geometryShapes.h>
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
+
+#include <Mesh/GModel.h>
+#include <Mesh/GEntity.h>
+#include <Mesh/MVertex.h>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 
 //! The model class the handles the dispaying of objects
@@ -49,6 +56,18 @@
 class modelDefinition : public wxGLCanvas
 {
 private:
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & _preferences;
+		ar & _editor;
+		ar & _zoomX;
+		ar & _zoomY;
+		ar & _cameraX;
+		ar & _cameraY;
+	}
     
     //! A pointer to the status bar of the main window
     /*!
@@ -232,7 +251,7 @@ private:
         and function of this status variable is the same for the status variable _nodesAreSelected.
         However, this variable is set to true only if a mixture of geometry is selected. This would occur during the
         group selection process where the user creates a window where the endpoint is greater then the start point 
-        in the x-direction. When a mix of geometry is selected, this variable becomes true.
+        in the x-direction. When a_coordinateSystem mix of geometry is selected, this variable becomes true.
     */ 
     bool _geometryGroupIsSelected = false;
     
@@ -242,6 +261,16 @@ private:
         is set to true only when the user selects a node that is to be used for creating lines/arcs
     */ 
     bool _geometryIsSelected = false;
+	
+	//! Boolean used to indicate if the program should draw the mesh on the canvas
+	/*!
+		This boolean is used as a status variable in order to determine if the 
+		mesh should be drawn on the canvas. This variable is set in the
+		setAndDraw function. If the mesh is valid, the boolean will be true and the 
+		mesh will be drawn. If the user edits the geometry in any way, this variable will
+		be set to false.
+	*/ 
+	bool p_drawMesh = false;
     
     //! This variable specifies the starting point of the a mirror line/zoom window/selection box
     /*!
@@ -272,6 +301,14 @@ private:
         http://oglft.sourceforge.net/
     */ 
     OGLFT::Grayscale *_fontRender;
+	
+	//! This is the variable that will contain the mesh for the geometry
+	/*!
+		This variable contains the mesh for the model that the user draws. Note that this module
+		does not create the mesh. That would be found in the meshMaker.cpp/.h files located
+		in the Mesh folder. This variable will only store the mesh so that it can be drawn
+	*/ 
+	GModel *p_modelMesh = new GModel();
     
     //! A function that converts the x pixel coordinate into a cartesian/polar coordinate
     /*!
@@ -547,7 +584,27 @@ public:
         \param statusBar A reference to the parent status bar
     */ 
     modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar);
-
+	
+	~modelDefinition()
+	{
+		_editor.getArcList()->clear();
+		_editor.getBlockLabelList()->clear();
+		_editor.getLineList()->clear();
+		_editor.getNodeList()->clear();
+		_arcsAreSelected = false;
+		_cameraX = 0.0;
+		_cameraY = 0.0;
+		_createLines = true;
+		_createNodes = true;
+		_doMirrorLine = false;
+		_doSelectionWindow = false;
+		_doZoomWindow = false;
+		delete(_fontRender);
+		_endPoint = wxRealPoint(0.0, 0.0);
+		_startPoint = wxRealPoint(0.0, 0.0);
+		delete(_geometryContext);
+	}
+	
     //! This function will update the _preferences with a new user defined preferences
     /*!
         This function is primarly used when the user needs to change something in the grid preferences object.
@@ -730,7 +787,7 @@ public:
     */ 
     void updateProperties(EditProperty property);
     
-    //! Selects a group of geometry objects based on their group ID (speciffied by groupNumber).
+    //! Selects a group of geometry objects based on their gro		up ID (speciffied by groupNumber).
     /*!
         Depending on the value of geometry, this function will select all of the nodes or lines or labels or arcs
         that have the same goup ID as groupNumber. If a mixed geometry is needed to selected, then this function
@@ -816,7 +873,7 @@ public:
     void mirrorSelection(wxRealPoint pointOne, wxRealPoint pointTwo);
     
     //! Fucntion that will perform a linear copy specified by horizontalShift and verticalShift.
-    /*!
+    /*!		
         This function will create numberOfCOpies number of copies in a more linear fashion. The logic follows that 
         of the function moveTranslateSelection except there is a for loop whose limit is governed by numberOfCopies.
         This for loop will determine the position of each node. For lines and arcs, the creation of a new line/arc 
@@ -888,7 +945,150 @@ public:
         \param filletRadius A positive real number that specifies what the radius is of the fillet
     */ 
     void createFillet(double filletRadius);
-    
+	
+	/**
+	 * @brief Function that is used to retrieve the nodal list of the model
+	 * @return Returns a pointer pointing to the nodal list
+	 */
+	plf::colony<node> *getModelNodeList()
+	{
+		return _editor.getNodeList();
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the line list of the model
+	 * @return Returns a pointer pointing to the line list.
+	 */
+	plf::colony<edgeLineShape> *getModelLineList()
+	{
+		return _editor.getLineList();
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the block label list of the model
+	 * @return Returns a pointer pointing to the block label list
+	 */
+	plf::colony<blockLabel> *getModelBlockList()
+	{
+		return _editor.getBlockLabelList();
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the arc list of the model
+	 * @return Returns a pointer pointing to the arc list
+	 */
+	plf::colony<arcShape> *getModelArcList()
+	{
+		return _editor.getArcList();
+	}
+	
+	/**
+	 * @brief 	Function that rerieves the data structures that are crucial for the operation of the class.
+	 * 			These data structures are required in order to save the class apprioately. It was discovered
+	 * 			that the boost::serialization class does not work well with classes that do not have a default 
+	 * 			constructer. This class is unable to contain a default constructor because the wxGLCanvas 
+	 * 			class needs to have a pointer to the parent window. This parent window does not contain
+	 * 			the needed functions for serializing. It was decided to extract only the crucial
+	 * 			data structures from the class and save those. For more information refer
+	 * 			to the following link:
+	 * 			https://stackoverflow.com/questions/45512699/how-to-work-boost-serialization-with-pointers-with-non-default-constructors
+	 * @param gridParam Variable used to store the gridPreferences class into
+	 * @param editorParam Variable to store the geometryEditor2D class into
+	 * @param otherParam A vector containing the following doubles: the zoom factor (x and y) and camera displacement (x and y)
+	 */
+	void getParameters(gridPreferences &gridParam, geometryEditor2D &editorParam, std::vector<double> &otherParam)
+	{
+		gridParam = _preferences;
+		editorParam = _editor;
+		otherParam.push_back(_zoomX);
+		otherParam.push_back(_zoomY);
+		otherParam.push_back(_cameraX);
+		otherParam.push_back(_cameraY);
+	}
+	
+	/**
+	 * @brief 	Function that is used to set the gridPreferences, geometryEditor2D, window placement variables.
+	 * 			This is mainly used when a user needs to load the data back into the data structure. This function
+	 * 			will automatically rebuilt the ponters of the nodes within the geometryEditor2D class
+	 * @param gridParam 	Variable that contains what the grdiPreferences of the class should be
+	 * @param editorParam 	Variable that contains the nodes/lines/arcs/etc of the gemoetry class
+	 * @param otherParam 	A vector containing the following doubles: the zoom factor (x and y) and camera displacement (x and y)
+	 * 						that needs to be loaded back into this class
+	 */
+	void setParameters(gridPreferences &gridParam, geometryEditor2D &editorParam, std::vector<double> &otherParam)
+	{
+		_preferences = gridParam;
+		_editor = editorParam;
+		/*
+		 * This is required and must be done after the program copies the editor data structure.
+		 * If the data structure is rebuilt after it is loaded, then all of the addresses will
+		 * become invalided. This is so because the editor data structure is now occupying a 
+		 * different block of memory.
+		 */ 
+		_editor.rebuildDataStructure();
+		_zoomX = otherParam.at(0);
+		_zoomY = otherParam.at(1);
+		_cameraX = otherParam.at(2);
+		_cameraY = otherParam.at(3);
+	}
+	
+	/**
+	 * @brief 	This function is called when the program is ready to set the mesh for drawing and storing
+	 * 			The function will check if the mesh is valid and if so, set a boolean to true
+	 * 			in order to allow the program to draw the mesh. 
+	 * @param mesh The mesh that is to be set and drawn
+	 */
+	void setAndDrawMesh(GModel mesh)
+	{
+		if(mesh.getNumMeshVertices() > 0)
+		{
+			//p_modelMesh = mesh;
+			p_drawMesh = true;
+		}
+		else
+			p_drawMesh = false;
+	}
+	
+	GModel *getMeshModel()
+	{
+		return p_modelMesh;
+	}
+	
+	bool checkModelIsValid()
+	{
+		if(p_modelMesh->getNumMeshVertices() > 0)
+			p_drawMesh = true;
+		else
+			p_drawMesh = false;
+			
+		return p_drawMesh;
+	}
+	
+	/**
+	 * @brief 	Function that is called in order to completely delete everything in the GModel
+	 * 			This will reset the mesh in order for the mesh to be drawn again. This function is called whenever
+	 * 			there is a change to the mesh.
+	 */
+	void deleteMesh()
+	{
+		if(p_modelMesh)
+		{
+			delete p_modelMesh;
+			p_modelMesh = new GModel();
+		}
+		p_drawMesh = false;
+	}
+	
+	void toggleMesh()
+	{
+		p_drawMesh = !p_drawMesh;
+	}
+	
+	bool getShowMeshState()
+	{
+		return p_drawMesh;
+	}
+
 private:
     //! This is a macro in order to let wxWidgets understand that there are events within the class
     wxDECLARE_EVENT_TABLE(); 

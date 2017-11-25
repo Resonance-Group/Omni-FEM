@@ -16,6 +16,9 @@
 
 #include <UI/ModelDefinition/OGLFT.h>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 /**
  * @class geometry2D
  * @author Phillip
@@ -30,6 +33,14 @@
  */
 class geometry2D
 {
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & xCenterCoordinate;
+		ar & yCenterCoordinate;
+	}
 protected:
 	
 	//! This is a boolean that willl indicate if the user selects the geometric shape
@@ -135,6 +146,12 @@ public:
 class rectangleShape : public geometry2D
 {
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<geometry2D>(*this);
+	}
     
     //! Boolean used to determine if the node/block label is draggin
     /*!
@@ -279,6 +296,14 @@ public:
 class node : public rectangleShape
 {
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<rectangleShape>(*this);
+		ar & _nodalSettings;
+		ar & _nodeNumber;
+	}
     //! The nodal property for the node
     /*!
         This object contains all of the nodal settings that are relevant to the node.
@@ -286,6 +311,17 @@ private:
         variable is exposed to the user for editing
      */ 
     nodeSetting _nodalSettings;
+	
+	//! Number that represents the nodal ID
+	/*!
+		The nodal ID is used to correctly associate the lines/arcs
+		to the correct node. THis number is obtained
+		by determining how many nodes were created
+	*/ 
+	unsigned long _nodeNumber;
+	
+	//! Boolean used to describe if the node was visited. This is used in the mesh maker class.
+	bool p_isVisited = false;
 public:
 
     //! The constructor for the class
@@ -299,6 +335,16 @@ public:
     {
         
     }
+	
+	void setVisitedState(bool state)
+	{
+		p_isVisited = state;
+	}
+	
+	bool getVisitedState()
+	{
+		return p_isVisited;
+	}
     
 	/**
 	 * @brief This function is called when the program needs to draw the object on the 
@@ -309,12 +355,13 @@ public:
 	void draw()
     {
         glPointSize(6.0);
+		
         glBegin(GL_POINTS);
         
-        if(_isSelected)
-            glColor3d(1.0, 0.0, 0.0);
-        else
-            glColor3d(0.0, 0.0, 0.0);
+			if(_isSelected)
+				glColor3d(1.0, 0.0, 0.0);
+			else
+				glColor3d(0.0, 0.0, 0.0);
             
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
@@ -346,8 +393,25 @@ public:
     {
         return &_nodalSettings;
     }
-    
-    
+	
+	/**
+	 * @brief 	Function that is used to set the noda ID of the node.
+	 * 			This ID is used to associate the node to the arc/line.
+	 * @param id The ID number of the node.
+	 */
+	void setNodeID(unsigned long id)
+	{
+		_nodeNumber = id;
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the nodal ID of the node.
+	 * @return Returns a number representing the nodal ID of the node.
+	 */
+	unsigned long getNodeID()
+	{
+		return _nodeNumber;
+	}
 };
 
 
@@ -365,6 +429,13 @@ public:
 class blockLabel : public rectangleShape
 {
 private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<rectangleShape>(*this);
+		ar & _property;
+	}
     //! The block property that is associated with the block label
 	/*!
 		This property contains properties for the mesh size of a particular region
@@ -463,8 +534,41 @@ public:
  */
 class edgeLineShape : public geometry2D
 {
+private:
+	friend class boost::serialization::access;
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<geometry2D>(*this);
+		ar & _property;
+		ar & p_firstNodeNumber;
+		ar & p_secondNodeNumber;
+	}
 protected:
-
+	//! The node number for the first node
+	/*!
+		For saving, this is useful because we are node able to save the 
+		actual pointer. We would have to save the object that it points to
+		instead. But, if there are mulple lines emitting from one node
+		then the node will be save multple times. This is not 
+		very efficient. Instead, we will track the node number for each
+		node that connects the line. his way, when we load the data from 
+		file, we have a way to quickly rebuild the node pointers for each line
+	*/ 
+	unsigned long p_firstNodeNumber = 0;
+	
+	//! The node number for the second node
+	/*!
+		For saving, this is useful because we are node able to save the 
+		actual pointer. We would have to save the object that it points to
+		instead. But, if there are mulple lines emitting from one node
+		then the node will be save multple times. This is not 
+		very efficient. Instead, we will track the node number for each
+		node that connects the line. his way, when we load the data from 
+		file, we have a way to quickly rebuild the node pointers for each line
+	*/ 
+	unsigned long p_secondNodeNumber = 0;
+	
     //! The property of the line segment
     /*!
         This property contains details on the group number and any
@@ -472,21 +576,28 @@ protected:
     */ 
     segmentProperty _property;
     
-protected:
+	//! Pointer for the first node
+	/*!
+		This points to the first node of the 
+		edge line shape (basically a segment)
+	*/ 
+    node *_firstNode = nullptr;
     
 	//! Pointer for the first node
 	/*!
 		This points to the first node of the 
 		edge line shape (basically a segment)
 	*/ 
-    node *_firstNode;
-    
-	//! Pointer for the first node
-	/*!
-		This points to the first node of the 
-		edge line shape (basically a segment)
-	*/ 
-    node *_secondNode;
+    node *_secondNode = nullptr;
+	
+	//! Boolean used to determine if the lines segment is an arc
+	bool p_isArc = false;
+	
+	//! ID number of the arc. Will be zero for lines
+	unsigned long p_arcID = 0;
+	
+	//! Boolean used to describe if the line segment was visited for contour finding
+	bool p_isVisited = false;
     
 public:
 	//! Constructor for the generic class
@@ -494,6 +605,42 @@ public:
     {
         
     }
+	
+	/**
+	 * @brief Function that will return whether or not the segment is an arc 
+	 * @return Returns true if the line segment is an arc. Otherwise returns false
+	 */
+	bool isArc()
+	{
+		return p_isArc;
+	}
+	
+	/**
+	 * @brief Gets the arc ID associated with the line segment. This only applies to arcs
+	 * @return Returns a number that indicates the arc ID. If the edge is a line, then this will return 0
+	 */
+	unsigned long getArcID()
+	{
+		return p_arcID;
+	}
+	
+	/**
+	 * @brief Gets the state of the visited variable.
+	 * @return Returns true if the contour algorthim visisted the line segment. Otherwise, returns false
+	 */
+	bool getVisitedStatus()
+	{
+		return p_isVisited;
+	}
+	
+	/**
+	 * @brief Set the state of the visited variable.
+	 * @param state 
+	 */
+	void setVisitedStatus(bool state)
+	{
+		p_isVisited = state;
+	}
     
 	/**
 	 * @brief Sets the first node of the line segment
@@ -502,6 +649,7 @@ public:
     void setFirstNode(node &a_Node)
     {
         _firstNode = &a_Node;
+		p_firstNodeNumber = _firstNode->getNodeID();
     }
     
 	/**
@@ -520,6 +668,7 @@ public:
     void setSecondNode(node &a_node)
     {
         _secondNode = &a_node;
+		p_secondNodeNumber = _secondNode->getNodeID();
     }
     
 	/**
@@ -575,6 +724,39 @@ public:
     {
         _property = property;
     }
+	
+	/**
+	 * @brief Retrieves the node ID that belongs to the first node of the line segment
+	 * @return Returns a number representing the node ID of the first node
+	 */
+	unsigned long getFirstNodeID()
+	{
+		return p_firstNodeNumber;
+	}
+	
+	/**
+	 * @brief Retrieves the node ID that belongs to the second node of the line segment
+	 * @return Returns a number representing the node ID of the second node
+	 */
+	unsigned long getSecondNodeID()
+	{
+		return p_secondNodeNumber;
+	}
+	
+	bool operator==(edgeLineShape edge)
+	{
+		if(!this->p_isArc && !edge.isArc())
+		{
+			if(((*this->getFirstNode()) == (*edge.getFirstNode())) && ((*this->getSecondNode()) == (*edge.getSecondNode())))
+				return true;
+			else
+				return false;
+		}
+		else if((this->p_isArc && edge.isArc()) && (this->getArcID() == edge.getArcID()))
+			return true;
+		else
+			return false;
+	}
 };
 
 
@@ -582,6 +764,20 @@ public:
 class arcShape : public edgeLineShape
 {
 private:
+	friend class boost::serialization::access;
+	
+	template<class Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & boost::serialization::base_object<edgeLineShape>(*this);
+		ar & _numSegments;
+		ar & _arcAngle;
+		ar & _radius;
+		ar & _isCounterClockWise;
+		ar & p_isArc;
+		ar & p_arcID;
+	}
+	
 	unsigned int _numSegments = 3;
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees
@@ -594,7 +790,7 @@ private:
 public:
 	arcShape()
     {
-        
+        p_isArc = true;
     }
 	
 	void setArcAngle(double angleOfArc)
@@ -633,7 +829,7 @@ public:
         else
             glColor3d(0.0, 0.0, 0.0);
             
-        
+      /*  
         if(_numSegments == -1)// Hey this code needs to be looked at!
         {
             if(_arcAngle < 10)
@@ -642,7 +838,8 @@ public:
                 _numSegments = _arcAngle / 3.0;
         }
         else if(_numSegments < 2)
-            _numSegments = 2;
+            _numSegments = 2
+			 */ 
         
         if(_property.getHiddenState())
         {
@@ -823,8 +1020,21 @@ public:
         return _radius * _arcAngle * (PI / 180.0);
     }
     
-
+	bool operator==(arcShape arc)
+	{
+		if(((*this->getFirstNode()) == (*arc.getFirstNode())) && ((*this->getSecondNode()) == (*arc.getSecondNode())) && (this->getCenterXCoordinate() == arc.getCenterXCoordinate()) && (this->getCenterYCoordinate() == arc.getCenterYCoordinate()))
+			return true;
+		else
+			return false;
+	}
 	
+	bool operator==(edgeLineShape edgeLine)
+	{
+		if(this->getArcID() == edgeLine.getArcID())
+			return true;
+		else
+			return false;
+	}
 };
 
 
