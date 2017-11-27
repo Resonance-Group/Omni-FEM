@@ -53,8 +53,8 @@ void gmshGeneratePoints(FuncSpaceData data, fullMatrix<double> &points)
  //                                               data.spaceIsSerendipity());
       return;
     default :
-      //Msg::Error("Unknown element type %d (tag %d) for points generation",
-    //      data.elementType(), data.elementTag());
+      Msg::Error("Unknown element type %d (tag %d) for points generation",
+          data.elementType(), data.elementTag());
       return;
   }
 }
@@ -198,8 +198,8 @@ void gmshGenerateMonomials(FuncSpaceData data, fullMatrix<double> &monomials)
      //                                                 data.spaceIsSerendipity());
       return;
     default :
-      //Msg::Error("Unknown element type %d (tag %d) for monomials generation",
-      //    data.elementType(), data.elementTag());
+      Msg::Error("Unknown element type %d (tag %d) for monomials generation",
+          data.elementType(), data.elementTag());
       return;
   }
 }

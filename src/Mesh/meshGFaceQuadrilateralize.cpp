@@ -4,7 +4,7 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include "Mesh/meshGFaceQuadrilateralize.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/GFace.h"
 #include "Mesh/meshGFaceDelaunayInsertion.h"
@@ -84,7 +84,7 @@ void edgeFront::updateStatus(BDS_Edge *e)
       return;
     }
   }
-//  Msg::Error("Something wrong in updateStatus");
+  Msg::Error("Something wrong in updateStatus");
 }
 
 SVector3 norm_edge(BDS_Point *p1, BDS_Point *p2)
@@ -163,7 +163,7 @@ SVector3 edgeFront::normal(BDS_Edge*e) const
   else if(e == t->e3)
     p3 = t->e2->commonvertex(t->e1);
   else {
- //   Msg::Error("Could not compute fron normal");
+    Msg::Error("Could not compute fron normal");
     return SVector3();
   }
   
@@ -204,7 +204,7 @@ void edgeFront::getFrontEdges(BDS_Point *p, eiter & it1, eiter & it2) const
       if(it2 != edges.end()) return;
     }
   }  
- // Msg::Error("point %d is in the front but has only %d edges\n",p->iD,count);
+  Msg::Error("point %d is in the front but has only %d edges\n",p->iD,count);
 }
 
 void edgeFront::initiate()
@@ -505,7 +505,7 @@ bool edgeFront::emptyFront(int tag)
     //    printf("strange\n");
     break;
   default:
-  //  Msg::Error("Unknown case in emptyFront");
+    Msg::Error("Unknown case in emptyFront");
     return false;
   }
 
@@ -532,7 +532,7 @@ int gmshQMorph(GFace *gf)
   // assert first that there exist a triangulation of
   // the face  
   if(!gf->triangles.size()){
-   // Msg::Warning("Cannot Quadrilaterize a face that has not been triangulated");
+    Msg::Warning("Cannot Quadrilaterize a face that has not been triangulated");
     return -1;
   }
 

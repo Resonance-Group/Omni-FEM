@@ -12,7 +12,7 @@
 #include "Mesh/BackgroundMeshTools.h"
 #include "Mesh/boundaryLayersData.h"
 #include "Mesh/Numeric.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Context.h"
 #include "Mesh/STensor3.h"
 #include "Mesh/Field.h"

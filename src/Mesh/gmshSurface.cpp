@@ -4,7 +4,7 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/gmshSurface.h"
 //#include "Mesh/mathEvaluator.h"
 
@@ -12,25 +12,25 @@ std::map<int,gmshSurface*> gmshSurface::allGmshSurfaces;
 
 SPoint2 gmshSurface::parFromPoint(double x, double y, double z)
 {
-  //Msg::Error("Parametric coordinate computation not implemented for this type of surface");
+  Msg::Error("Parametric coordinate computation not implemented for this type of surface");
   return SPoint2();
 }
 
 SVector3 gmshSurface::normal(const SPoint2 &param) const
 {
-  //Msg::Error("Normal computation not implemented for this type of surface");
+  Msg::Error("Normal computation not implemented for this type of surface");
   return SVector3();
 }
 
 Pair<SVector3, SVector3> gmshSurface::firstDer(const SPoint2 &param)
 {
-  //Msg::Error("First derivative not implemented for this type of surface");
+  Msg::Error("First derivative not implemented for this type of surface");
   return Pair<SVector3, SVector3>();
 }
 
 double gmshSurface::getMetricEigenvalue(const SPoint2 &)
 {
-  //Msg::Error("Metric eigenvalue not implemented for this type of surface");
+  Msg::Error("Metric eigenvalue not implemented for this type of surface");
   return 0;
 }
 
@@ -39,7 +39,7 @@ gmshSurface *gmshSphere::NewSphere(int iSphere, double x, double y, double z, do
   gmshSphere *sph = new gmshSphere(x, y, z, r);
 
   if(allGmshSurfaces.find(iSphere) != allGmshSurfaces.end()){
-    //Msg::Error("gmshSurface %d already exists",iSphere);
+    Msg::Error("gmshSurface %d already exists",iSphere);
   }
 
   allGmshSurfaces[iSphere] = sph;
@@ -50,7 +50,7 @@ gmshSurface *gmshSurface::getSurface(int iSurface)
 {
   std::map<int, gmshSurface*>::iterator it = allGmshSurfaces.find(iSurface);
   if(it == allGmshSurfaces.end()){
-    //Msg::Error("gmshSurface %d does not exist",iSurface);
+    Msg::Error("gmshSurface %d does not exist",iSurface);
     return 0;
   }
   return it->second;
@@ -71,7 +71,7 @@ gmshSurface *gmshPolarSphere::NewPolarSphere(int iSphere, double x, double y, do
   gmshPolarSphere *sph = new gmshPolarSphere(x, y, z, r);
 
   if(allGmshSurfaces.find(iSphere) != allGmshSurfaces.end()){
-    //Msg::Error("gmshSurface %d already exists", iSphere);
+    Msg::Error("gmshSurface %d already exists", iSphere);
   }
 
   allGmshSurfaces[iSphere] = sph;
@@ -99,7 +99,7 @@ gmshSurface *gmshParametricSurface::NewParametricSurface(int iSurf, char *valX,
   gmshParametricSurface *sph = new gmshParametricSurface(valX, valY, valZ);
 
   if(allGmshSurfaces.find(iSurf) != allGmshSurfaces.end()){
-    //Msg::Error("gmshSurface %d already exists",iSurf);
+    Msg::Error("gmshSurface %d already exists",iSurf);
   }
   allGmshSurfaces[iSurf] = sph;
   return sph;
@@ -138,6 +138,6 @@ SPoint3 gmshParametricSurface::point(double par1, double par2) const
 
 Range<double> gmshParametricSurface::parBounds(int i) const
 {
-  //Msg::Error("Parameter bounds not available for parametric surface");
+  Msg::Error("Parameter bounds not available for parametric surface");
   return Range<double>(0., 0.);
 }

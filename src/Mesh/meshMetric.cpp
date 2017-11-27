@@ -78,7 +78,7 @@ void meshMetric::addMetric(int technique, simpleFunction<double> *fct,
 void meshMetric::updateMetrics()
 {
   if (!setOfMetrics.size()){
-  //  Msg::Error("Can't intersect metrics, no metric registered");
+    Msg::Error("Can't intersect metrics, no metric registered");
     return;
   }
 
@@ -715,7 +715,7 @@ double meshMetric::operator() (double x, double y, double z, GEntity *ge)
     delete [] val;
   }
   else {
- //   Msg::Warning("point %g %g %g not found, looking for nearest node",x,y,z);
+    Msg::Warning("point %g %g %g not found, looking for nearest node",x,y,z);
     double minDist = 1.e100;
     for (nodalField::iterator it = _nodalSizes.begin(); it != _nodalSizes.end(); it++) {
       const double dist = xyz.distance(it->first->point());
@@ -781,7 +781,7 @@ void meshMetric::operator() (double x, double y, double z, SMetric3 &metr, GEnti
 	  newSetOfMetrics[iMetric] = metric;
 	}
 	else{
-//	  Msg::Warning("point %g %g %g not found, looking for nearest node",x,y,z);
+	  Msg::Warning("point %g %g %g not found, looking for nearest node",x,y,z);
 	}
       }
     }
@@ -812,7 +812,7 @@ void meshMetric::operator() (double x, double y, double z, SMetric3 &metr, GEnti
 
     }
     else{
-     // Msg::Warning("point %g %g %g not found, looking for nearest node",x,y,z);
+      Msg::Warning("point %g %g %g not found, looking for nearest node",x,y,z);
       double minDist = 1.e100;
       for (nodalMetricTensor::iterator it = _nodalMetrics.begin(); it != _nodalMetrics.end(); it++) {
 	const double dist = xyz.distance(it->first->point());

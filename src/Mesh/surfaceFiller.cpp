@@ -119,13 +119,13 @@ bool compute4neighbors (GFace *gf,   // the surface
     double rhs1[2] = {dot(t1,s1),dot(t1,s2)}, covar1[2];
     bool singular = false;
     if (!sys2x2(metric,rhs1,covar1)){
-  //    Msg::Info("Argh surface %d %g %g %g -- %g %g %g -- %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z(),size_1,size_2);
+      Msg::Info("Argh surface %d %g %g %g -- %g %g %g -- %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z(),size_1,size_2);
       covar1[1] = 1.0; covar1[0] = 0.0;
       singular = true;
     }
     double rhs2[2] = {dot(t2,s1),dot(t2,s2)}, covar2[2];
     if (!sys2x2(metric,rhs2,covar2)){
-  //    Msg::Info("Argh surface %d %g %g %g -- %g %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z());
+      Msg::Info("Argh surface %d %g %g %g -- %g %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z());
       covar2[0] = 1.0; covar2[1] = 0.0;
       singular = true;
     }
@@ -209,8 +209,8 @@ bool compute4neighbors (GFace *gf,   // the surface
 	    //	    printf("OK\n");
 	  }
 	  else{
-	    //Msg::Debug("Cannot put a new point on Surface %d",gf->tag());
-	    //	    printf("NOT OK\n");
+	    Msg::Debug("Cannot put a new point on Surface %d",gf->tag());
+	    	    printf("NOT OK\n");
 	  }
 	}
       }                                                                   //
@@ -453,13 +453,13 @@ bool get_local_sizes_and_directions(const MVertex *v_center, const SPoint2 &midp
   double rhs1[2] = {dot(t1,s1),dot(t1,s2)};
   bool singular = false;
   if (!sys2x2(metric,rhs1,covar1)){
-  //  Msg::Info("Argh surface %d %g %g %g -- %g %g %g -- %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z(),size_1,size_2);
+    Msg::Info("Argh surface %d %g %g %g -- %g %g %g -- %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z(),size_1,size_2);
     covar1[1] = 1.0; covar1[0] = 0.0;
     singular = true;
   }
   double rhs2[2] = {dot(t2,s1),dot(t2,s2)};
   if (!sys2x2(metric,rhs2,covar2)){
-  //  Msg::Info("Argh surface %d %g %g %g -- %g %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z());
+    Msg::Info("Argh surface %d %g %g %g -- %g %g %g",gf->tag(),s1.x(),s1.y(),s1.z(),s2.x(),s2.y(),s2.z());
     covar2[0] = 1.0; covar2[1] = 0.0;
     singular = true;
   }

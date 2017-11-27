@@ -3,7 +3,7 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Geo.h"
 #include "Mesh/ExtrudeParams.h"
 
@@ -134,7 +134,7 @@ void ExtrudeParams::Extrude(double t, double &x, double &y, double &z)
     z += n[2] * t;
     break;
   default:
-  //  Msg::Error("Unknown extrusion type");
+    Msg::Error("Unknown extrusion type");
     break;
   }
 }

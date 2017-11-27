@@ -8,7 +8,7 @@
 #include <string.h>
 #include <complex>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/linearSystemCSR.h"
 #include "common/OS.h"
 
@@ -360,7 +360,7 @@ static void _sort2_xkws(unsigned long n, scalar arr[], INDEX_TYPE ai[], INDEX_TY
       aj[j - 1] = c;
       jstack += 2;
       if (jstack > NSTACK) {
-    //    Msg::Fatal("NSTACK too small while sorting the columns of the matrix");
+        Msg::Fatal("NSTACK too small while sorting the columns of the matrix");
         throw;
       }
       if (ir - i + 1 >= j - l) {
@@ -516,9 +516,9 @@ int linearSystemCSRTaucs<double>::systemSolve()
                               options,
                               NULL);
   double t2 = Cpu();
-//  Msg::Debug("TAUCS has solved %d unknowns in %8.3f seconds", _b->size(), t2 - t1);
+  Msg::Debug("TAUCS has solved %d unknowns in %8.3f seconds", _b->size(), t2 - t1);
   if (result != TAUCS_SUCCESS){
-  //  Msg::Error("Taucs Was Not Successfull %d", result);
+   Msg::Error("Taucs Was Not Successfull %d", result);
   }
   return 1;
 }
@@ -557,9 +557,9 @@ int linearSystemCSRTaucs<std::complex<double> >::systemSolve()
                               options,
                               NULL);
   double t2 = Cpu();
- // Msg::Debug("TAUCS has solved %d unknowns in %8.3f seconds", _b->size(), t2 - t1);
+  Msg::Debug("TAUCS has solved %d unknowns in %8.3f seconds", _b->size(), t2 - t1);
   if (result != TAUCS_SUCCESS){
-  //  Msg::Error("Taucs Was Not Successfull %d", result);
+    Msg::Error("Taucs Was Not Successfull %d", result);
   }
   return 1;
 }

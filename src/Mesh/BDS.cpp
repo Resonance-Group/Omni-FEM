@@ -6,7 +6,7 @@
 #include <stack>
 #include <math.h>
 #include <stdio.h>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "common/OS.h"
 #include "Mesh/robustPredicates.h"
 #include "Mesh/Numeric.h"
@@ -21,7 +21,7 @@ void outputScalarField(std::list<BDS_Face*> t, const char *iii, int param, GFace
   if (gf){
     FILE* view_c = std::fopen("param_c.pos","w");
     if(!view_c){
- //     Msg::Error("Could not open file 'param_c.pos");
+      Msg::Error("Could not open file 'param_c.pos");
       return;
     }
     fprintf(view_c,"View \"paramC\"{\n");
@@ -55,7 +55,7 @@ void outputScalarField(std::list<BDS_Face*> t, const char *iii, int param, GFace
 
   FILE *f = std::fopen(iii, "w");
   if(!f){
-  //  Msg::Error("Could not open file '%s'", iii);
+    Msg::Error("Could not open file '%s'", iii);
     return;
   }
   fprintf(f, "View \"scalar\" {\n");
@@ -320,11 +320,11 @@ BDS_Edge *BDS_Mesh::recover_edge(int num1, int num2, bool &_fatal,
   BDS_Point *p2 = find_point(num2);
 
   if(!p1 || !p2) {
-   // Msg::Fatal("Could not find points %d or %d in BDS mesh", num1, num2);
+    Msg::Fatal("Could not find points %d or %d in BDS mesh", num1, num2);
     return 0;
   }
 
- // Msg::Debug("edge %d %d has to be recovered", num1, num2);
+  Msg::Debug("edge %d %d has to be recovered", num1, num2);
 
   int ix = 0;
   double x[2];
@@ -347,9 +347,9 @@ BDS_Edge *BDS_Mesh::recover_edge(int num1, int num2, bool &_fatal,
               e2r->find(EdgeToRecover(e->p1->iD, e->p2->iD, 0));
             std::set<EdgeToRecover>::iterator itr2 =
               e2r->find(EdgeToRecover(num1, num2, 0));
-       //     Msg::Debug("edge %d %d on model edge %d cannot be recovered because"
-        //               " it intersects %d %d on model edge %d", num1, num2, itr2->ge->tag(),
-       //                e->p1->iD, e->p2->iD, itr1->ge->tag());
+            Msg::Debug("edge %d %d on model edge %d cannot be recovered because"
+                       " it intersects %d %d on model edge %d", num1, num2, itr2->ge->tag(),
+                      e->p1->iD, e->p2->iD, itr1->ge->tag());
             // now throw a class that contains the diagnostic
             not_recovered->insert(EdgeToRecover(num1, num2, itr2->ge));
             not_recovered->insert(EdgeToRecover(e->p1->iD, e->p2->iD, itr1->ge));
@@ -363,11 +363,11 @@ BDS_Edge *BDS_Mesh::recover_edge(int num1, int num2, bool &_fatal,
 
     if (selfIntersection) return 0;
 
-    // if(ix > 300){
-    //   Msg::Warning("edge %d %d cannot be recovered after %d iterations, trying again",
-    //      num1, num2, ix);
-    //   ix = 0;
-    // }
+     if(ix > 300){
+       Msg::Warning("edge %d %d cannot be recovered after %d iterations, trying again",
+         num1, num2, ix);
+       ix = 0;
+     }
     // printf("%d %d\n",intersected.size(),ix);
 
     if(!intersected.size() || ix > 1000){
@@ -375,8 +375,8 @@ BDS_Edge *BDS_Mesh::recover_edge(int num1, int num2, bool &_fatal,
       if(!eee){
         outputScalarField(triangles, "debugp.pos", 1);
         outputScalarField(triangles, "debugr.pos", 0);
-     //   Msg::Debug("edge %d %d cannot be recovered at all, look at debugp.pos "
-      //             "and debugr.pos", num1, num2);
+        Msg::Debug("edge %d %d cannot be recovered at all, look at debugp.pos "
+                   "and debugr.pos", num1, num2);
 	_fatal = true;
         return 0;
       }
@@ -460,7 +460,7 @@ BDS_Edge *BDS_Mesh::add_edge(int p1, int p2)
   BDS_Point *pp1 = find_point(p1);
   BDS_Point *pp2 = find_point(p2);
   if(!pp1 || !pp2){
-   // Msg::Fatal("Could not find points %d or %d in BDS mesh", p1, p2);
+    Msg::Fatal("Could not find points %d or %d in BDS mesh", p1, p2);
     return 0;
   }
   BDS_Edge *e = new BDS_Edge(pp1, pp2);
@@ -1054,7 +1054,7 @@ static bool test_move_point_parametric_quad(BDS_Point *p, double u, double v, BD
     pd[1] = v;
   }
   else{
-  //  Msg::Error("Something wrong in move_point_parametric_quad");
+    Msg::Error("Something wrong in move_point_parametric_quad");
     return false;
   }
 

@@ -13,7 +13,7 @@
 #include <limits>
 
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/polynomialBasis.h"
 #include "Mesh/GaussIntegration.h"
 #include "Mesh/pointsGenerators.h"
@@ -24,9 +24,9 @@ namespace {
     (const fullMatrix<double>& monomial, const fullMatrix<double>& point)
   {
     if(monomial.size1() != point.size1() || monomial.size2() != point.size2()){
-     // Msg::Fatal("Wrong sizes for Lagrange coefficients generation %d %d -- %d %d",
-      //     monomial.size1(), point.size1(),
-       //    monomial.size2(), point.size2() );
+      Msg::Fatal("Wrong sizes for Lagrange coefficients generation %d %d -- %d %d",
+           monomial.size1(), point.size1(),
+           monomial.size2(), point.size2() );
       return fullMatrix<double>(1, 1);
     }
 

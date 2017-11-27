@@ -4,7 +4,7 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/GModel.h"
 #include "Mesh/GModelIO_OCC.h"
 #include "Mesh/GEdgeLoop.h"

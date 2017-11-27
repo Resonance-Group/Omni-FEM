@@ -13,7 +13,7 @@
 #include "Mesh/GFace.h"
 #include "Mesh/GFaceCompound.h"
 #include "Mesh/discreteDiskFace.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/StringUtils.h"
 
 double angle3Vertices(const MVertex *p1, const MVertex *p2, const MVertex *p3)
@@ -410,7 +410,7 @@ static void getAllParameters(MVertex *v, GFace *gf, std::vector<SPoint2> &params
           params.push_back((*it)->reparamOnFace(gf, range.high(), 1));
         }
         if (gv != (*it)->getBeginVertex() && gv != (*it)->getEndVertex()){
-      //    Msg::Warning("Strange!");
+          Msg::Warning("Strange!");
         }
         seam = true;
       }
@@ -529,7 +529,7 @@ bool reparamMeshVertexOnFace(MVertex *v, const GFace *gf, SPoint2 &param,
     v->getParameter(0, t);
     param = ge->reparamOnFace(gf, t, 1);
     if(!v->getParameter(0,t)) {
-      //Msg::Error("Vertex %p not MEdgeVertex", v);
+      Msg::Error("Vertex %p not MEdgeVertex", v);
       return false;
       //param = gf->parFromPoint(SPoint3(v->x(), v->y(), v->z()), onSurface);
     }

@@ -850,7 +850,7 @@ int JacobianBasis::jacobianOrder(int parentType, int order)
     // note : for the pyramid, the jacobian space is
     // different from the space of the mapping
     default :
-      //Msg::Error("Unknown element type %d, return order 0", parentType);
+      Msg::Error("Unknown element type %d, return order 0", parentType);
       return 0;
   }
 }
@@ -858,7 +858,7 @@ int JacobianBasis::jacobianOrder(int parentType, int order)
 FuncSpaceData JacobianBasis::jacobianMatrixSpace(int type, int order)
 {
   if (type == TYPE_PYR) {
-  //  Msg::Fatal("jacobianMatrixSpace not yet implemented for pyramids");
+    Msg::Fatal("jacobianMatrixSpace not yet implemented for pyramids");
     return FuncSpaceData(false, type, false, 1, 0);
   }
   int jacOrder = -1;
@@ -880,7 +880,7 @@ FuncSpaceData JacobianBasis::jacobianMatrixSpace(int type, int order)
       break;
 
     default :
-    //  Msg::Error("Unknown element type %d, return order 0", type);
+      Msg::Error("Unknown element type %d, return order 0", type);
       return 0;
   }
 

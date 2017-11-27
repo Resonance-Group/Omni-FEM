@@ -7,12 +7,12 @@
 #include <functional>
 
 #include "Mesh/GEdgeLoop.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 void GEdgeSigned::print() const
 {
-//  Msg::Info("GEdgeSigned : Edge %d sign %d Ordered Vertices %d,%d",
- //           ge->tag(), _sign, getBeginVertex()->tag(), getEndVertex()->tag());
+  Msg::Info("GEdgeSigned : Edge %d sign %d Ordered Vertices %d,%d",
+            ge->tag(), _sign, getBeginVertex()->tag(), getEndVertex()->tag());
 }
 
 int countInList(std::list<GEdge*> &wire, GEdge *ge)
@@ -61,7 +61,7 @@ GEdgeSigned nextOne(GEdgeSigned *thisOne, std::list<GEdge*> &wire)
       GVertex *v2 = ge->getEndVertex();
       if(v1 == gv) return GEdgeSigned(1, ge);
       if(v2 == gv) return GEdgeSigned(-1, ge);
-  //    Msg::Error("Something wrong in edge loop 1");
+      Msg::Error("Something wrong in edge loop 1");
       thisOne->print();
     }
     ++it;
@@ -78,7 +78,7 @@ GEdgeSigned nextOne(GEdgeSigned *thisOne, std::list<GEdge*> &wire)
       GVertex *v2 = ge->getEndVertex();
       if(v1 == gv) return GEdgeSigned(1, ge);
       if(v2 == gv) return GEdgeSigned(-1, ge);
- //     Msg::Error("Something wrong in edge loop 2");
+      Msg::Error("Something wrong in edge loop 2");
       thisOne->print();
     }
     ++it;
@@ -117,10 +117,10 @@ static void loopTheLoop(std::list<GEdge*> &wire,
     else ges = nextOne(prevOne, wire);
     if(ges.getSign() == 0){ // oops
       if (0){
-//	Msg::Error("Something wrong in edge loop of size=%d, no sign !", wire.size());
+	Msg::Error("Something wrong in edge loop of size=%d, no sign !", wire.size());
 	for (std::list<GEdge* >::iterator it = wire.begin(); it != wire.end(); it++){
-	//  Msg::Error("GEdge=%d begin=%d end =%d", (*it)->tag(),
-		//     (*it)->getBeginVertex()->tag(), (*it)->getEndVertex()->tag());
+	  Msg::Error("GEdge=%d begin=%d end =%d", (*it)->tag(),
+			(*it)->getBeginVertex()->tag(), (*it)->getEndVertex()->tag());
 	}
       }
       break;
@@ -154,7 +154,7 @@ GEdgeLoop::GEdgeLoop(const std::list<GEdge*> &cwire)
     wire.push_front(degenerated[0]);
   }
   else if (degenerated.size() > 2){
- //   Msg::Warning("More than two degenerated edges in one model face of an OCC model");
+    Msg::Warning("More than two degenerated edges in one model face of an OCC model");
   }
 
   while(!wire.empty()){

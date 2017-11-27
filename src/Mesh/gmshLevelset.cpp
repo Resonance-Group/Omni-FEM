@@ -143,7 +143,7 @@ void computeLevelset(GModel *gm, cartesianBox<double> &box)
     nodes.push_back(box.getNodeCoordinates(it->first));
     indices.push_back(it->first);
   }
-  //Msg::Info("  %d nodes in the grid at level %d", (int)nodes.size(), box.getLevel());
+  Msg::Info("  %d nodes in the grid at level %d", (int)nodes.size(), box.getLevel());
   std::vector<double> dist, localdist;
   std::vector<SPoint3> dummy;
   for(GModel::fiter fit = gm->firstFace(); fit != gm->lastFace(); fit++){
@@ -554,7 +554,7 @@ gLevelsetPoints::gLevelsetPoints(const gLevelsetPoints &lv)
 double gLevelsetPoints::operator()(double x, double y, double z) const
 {
   if(mapP.empty())
-    {/*Msg::Info("Levelset Points : call computeLS() before calling operator()\n");*/}
+    {Msg::Info("Levelset Points : call computeLS() before calling operator()\n");}
 
   SPoint3 sp(x,y,z);
   std::map<SPoint3,double>::const_iterator it = mapP.find(sp);

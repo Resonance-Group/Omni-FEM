@@ -12,7 +12,7 @@
 typedef unsigned long intptr_t;
 #endif
 //#include "GmshVersion.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/GmshDefines.h"
 //#include "GmshRemote.h"
 #include "Mesh/GModel.h"

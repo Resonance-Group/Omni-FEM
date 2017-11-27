@@ -6,7 +6,7 @@
 #include <iostream>
 #include "Mesh/meshGFaceBamg.h"
 #include "Mesh/meshGFaceLloyd.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/GFace.h"
 #include "Mesh/GModel.h"
 #include "Mesh/MVertex.h"
@@ -297,8 +297,8 @@ void meshGFaceBamg(GFace *gf){
 
 void meshGFaceBamg(GFace *gf)
 {
-  //Msg::Error("This version of Gmsh is not compiled with Bidimensional "
-    //         "Anisotropic Mesh Generator (BAMG) support");
+  Msg::Error("This version of Gmsh is not compiled with Bidimensional "
+            "Anisotropic Mesh Generator (BAMG) support");
 }
 
 #endif

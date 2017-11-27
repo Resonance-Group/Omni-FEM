@@ -22,7 +22,7 @@
 #include "Mesh/Field.h"
 #include "Mesh/GModel.h"
 #include "Mesh/GModelIO_GEO.h"
-//#include "Common/GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/mathEvaluator.h"
 #include "Mesh/BackgroundMeshTools.h"
@@ -62,7 +62,7 @@ FieldOption *Field::getOption(const std::string optionName)
 {
   std::map<std::string, FieldOption*>::iterator it = options.find(optionName);
   if (it == options.end()) {
-    //Msg::Error("field option :%s does not exist", optionName.c_str());
+    Msg::Error("field option :%s does not exist", optionName.c_str());
     return NULL;
   }
   return it->second;
@@ -86,11 +86,11 @@ Field *FieldManager::get(int id)
 Field *FieldManager::newField(int id, std::string type_name)
 {
   if(find(id) != end()) {
-  //  Msg::Error("Field id %i is already defined", id);
+    Msg::Error("Field id %i is already defined", id);
     return 0;
   }
   if(map_type_name.find(type_name) == map_type_name.end()) {
-   // Msg::Error("Unknown field type \"%s\"", type_name.c_str());
+   Msg::Error("Unknown field type \"%s\"", type_name.c_str());
     return 0;
   }
   Field *f = (*map_type_name[type_name]) ();
@@ -127,7 +127,7 @@ void FieldManager::deleteField(int id)
 {
   iterator it = find(id);
   if(it == end()) {
-    //Msg::Error("Cannot delete field id %i, it does not exist", id);
+    Msg::Error("Cannot delete field id %i, it does not exist", id);
     return;
   }
   delete it->second;
@@ -222,7 +222,7 @@ class StructuredField : public Field
       }
       catch(...) {
         error_status = true;
-        //Msg::Error("Field %i : error reading file %s", this->id, file_name.c_str());
+        Msg::Error("Field %i : error reading file %s", this->id, file_name.c_str());
       }
       update_needed = false;
     }
@@ -757,8 +757,8 @@ class GradientField : public Field
          (*field) (x, y, z - delta / 2)) / delta;
       return sqrt(gx * gx + gy * gy + gz * gz);
     default:
-      //Msg::Error("Field %i : Unknown kind (%i) of gradient", this->id,
-        //         kind);
+      Msg::Error("Field %i : Unknown kind (%i) of gradient", this->id,
+                 kind);
       return MAX_LC;
     }
   }
@@ -1095,8 +1095,8 @@ class MathEvalField : public Field
     if(update_needed) {
       if(!expr.set_function(f))
 	  {
-      //  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
-      //             this->id, f.c_str());
+        Msg::Error("Field %i: Invalid matheval expression \"%s\"",
+                   this->id, f.c_str());
 				   
 	  }
       update_needed = false;
@@ -1148,8 +1148,8 @@ class MathEvalFieldAniso : public Field
       for (int i=0;i<6;i++){
 	if(!expr.set_function(i,f[i]))
 	{
-	//  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
-	//	     this->id, f[i].c_str());
+	  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
+		     this->id, f[i].c_str());
 			 
 	}
       }
@@ -1163,8 +1163,8 @@ class MathEvalFieldAniso : public Field
       for (int i = 0; i < 6; i++){
 	if(!expr.set_function(i, f[i]))
 	{
-	//  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
-	//	     this->id, f[i].c_str());
+	  Msg::Error("Field %i: Invalid matheval expression \"%s\"",
+		     this->id, f[i].c_str());
 			 
 	}
       }
@@ -1446,8 +1446,8 @@ class ParametricField : public Field
       for(int i = 0; i < 3; i++) {
         if(!expr[i].set_function(f[i]))
 		{
-      //    Msg::Error("Field %i : Invalid matheval expression \"%s\"",
-       //              this->id, f[i].c_str());
+          Msg::Error("Field %i : Invalid matheval expression \"%s\"",
+                     this->id, f[i].c_str());
 					 
 		}
       }
@@ -3033,8 +3033,8 @@ double GenericField::operator() (double x, double y, double z, GEntity *ge){
   for (std::vector<double>::iterator it = sizes.begin();it!=sizes.end();it++,itdata++,itcbs++){
     bool ok = (*itcbs)(x,y,z,(*itdata),(*it));
     if (!ok){
- //     Msg::Warning("GenericField::ERROR from callback ");
-      std::cout << "GenericField::ERROR from callback number " << std::distance(sizes.begin(),it) << std::endl;
+      Msg::Warning("GenericField::ERROR from callback ");
+    //  std::cout << "GenericField::ERROR from callback number " << std::distance(sizes.begin(),it) << std::endl;
     }
 //    std::cout << "callback " << std::distance(sizes.begin(),it) << ": size set to " << *it << std::endl;
   }

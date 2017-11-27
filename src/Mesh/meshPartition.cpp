@@ -136,8 +136,7 @@ int RenumberMesh(GModel *const model, meshPartitionOptions &options,
   for(int i = 0; i != n; ++i) {
     numbered[graph.partition[i]-1] = graph.element[i];
   }
-
-  Msg::StatusBar(true, "Done renumbering graph");
+	Msg::Info("Done renumbering graph")
   return 0;
 }
 
@@ -274,9 +273,9 @@ int PartitionMesh(GModel *const model, meshPartitionOptions &options)
   Graph graph;
   BoElemGrVec boElemGrVec;
   int ier;
-  Msg::StatusBar(true, "Building graph...");
+  Msg::Info("Building graph...")
   ier = MakeGraph(model, graph, options, &boElemGrVec);
-  Msg::StatusBar(true, "Partitioning graph...");
+  Msg::Info("Partitioning graph...");
   if(!ier) ier = PartitionGraph(graph, options);
   if(ier) return 1;
 
@@ -305,8 +304,7 @@ int PartitionMesh(GModel *const model, meshPartitionOptions &options)
 
   if (options.createPartitionBoundaries || options.createGhostCells)
     CreatePartitionBoundaries (model, options.createGhostCells, options.createAllDims);
-
-  Msg::StatusBar(true, "Done partitioning graph");
+	Msg::Info( "Done partitioning graph")
   return 0;
 }
 

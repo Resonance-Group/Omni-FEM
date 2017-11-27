@@ -1022,7 +1022,7 @@ void OptimizeMesh(GModel *m)
 
 void SmoothMesh(GModel *m)
 {
-//  Msg::StatusBar(true, "Smoothing 2D mesh...");
+	Msg::Info("Smoothing 2D mesh...");
   double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
@@ -1032,7 +1032,7 @@ void SmoothMesh(GModel *m)
 
   CTX::instance()->mesh.changed = ENT_ALL;
   double t2 = Cpu();
-//  Msg::StatusBar(true, "Done smoothing 2D mesh (%g s)", t2 - t1);
+	Msg::Info("Done smoothing 2D mesh (%g s)", t2 - t1);
 }
 
 /*
@@ -1074,7 +1074,7 @@ void GenerateMesh(GModel *m, int ask)
 		
   // ProfilerStart("gmsh.prof");
  // if(CTX::instance()->lock) {
-  //  Msg::Info("I'm busy! Ask me that later...");
+    Msg::Info("I'm busy! Ask me that later...");
  //   return;
  // }
  // CTX::instance()->lock = 1;

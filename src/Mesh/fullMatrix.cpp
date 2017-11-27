@@ -11,9 +11,7 @@
 //#include "GmshConfig.h"
 
 #include "Mesh/fullMatrix.h"
-
-
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 //#if defined(_MSC_VER)
 //#define F77NAME(x) (x)
@@ -76,7 +74,7 @@ void fullMatrix<int>::setAll(const fullMatrix<int> &m)
 {
   if (_r != m._r || _c != m._c )
   {
-	  // Msg::Fatal("fullMatrix size does not match");
+	   Msg::Fatal("fullMatrix size does not match");
   }
     
   int N = _r * _c;
@@ -89,7 +87,7 @@ void fullMatrix<double>::setAll(const fullMatrix<double> &m)
 {
   if (_r != m._r || _c != m._c )
   {
-	  // Msg::Fatal("fullMatrix size does not match");
+	   Msg::Fatal("fullMatrix size does not match");
   }
     
   int N = _r * _c;
@@ -102,7 +100,7 @@ void fullMatrix<std::complex<double> >::setAll(const fullMatrix<std::complex<dou
 {
   if (_r != m._r || _c != m._c )
   {
-	  // Msg::Fatal("fullMatrix size does not match");
+	   Msg::Fatal("fullMatrix size does not match");
   }
     
   int N = _r * _c;
@@ -315,11 +313,11 @@ bool fullMatrix<double>::eig(fullVector<double> &DR, fullVector<double> &DI,
 
   if(info > 0)
   {
-	  // Msg::Error("QR Algorithm failed to compute all the eigenvalues", info, info);
+	   Msg::Error("QR Algorithm failed to compute all the eigenvalues", info, info);
   }
   else if(info < 0)
   {
-	  // Msg::Error("Wrong %d-th argument in eig", -info);
+	   Msg::Error("Wrong %d-th argument in eig", -info);
   }
   else if(sortRealPart)
     eigSort(N, DR._data, DI._data, VL._data, VR._data);
@@ -370,7 +368,7 @@ bool fullMatrix<double>::invert(fullMatrix<double> &result) const
       result.resize(M,N,false);
     else
 	{
-		// Msg::Fatal("FullMatrix: Bad dimension, I cannot write in proxy");
+		 Msg::Fatal("FullMatrix: Bad dimension, I cannot write in proxy");
 	}
   }
   result.setAll(*this);
@@ -385,11 +383,11 @@ bool fullMatrix<double>::invert(fullMatrix<double> &result) const
   if(info == 0) return true;
   else if(info > 0)
   {
-	  // Msg::Error("U(%d,%d)=0 in matrix inversion", info, info);
+	   Msg::Error("U(%d,%d)=0 in matrix inversion", info, info);
   } 
   else
   {
-	  // Msg::Error("Wrong %d-th argument in matrix inversion", -info);
+	   Msg::Error("Wrong %d-th argument in matrix inversion", -info);
   }
   return false;
 }
@@ -413,11 +411,11 @@ bool fullMatrix<double>::invertInPlace()
   if(info == 0) return true;
   if(info > 0)
   {
-	  // Msg::Error("U(%d,%d)=0 in matrix in place inversion", info, info);
+	   Msg::Error("U(%d,%d)=0 in matrix in place inversion", info, info);
   }
   else
   {
-	  // Msg::Error("Wrong %d-th argument in matrix inversion", -info); 
+	   Msg::Error("Wrong %d-th argument in matrix inversion", -info); 
   }
   return false;
 }
@@ -440,7 +438,7 @@ double fullMatrix<double>::determinant() const
     det = 0.;
   else
   {
-	  // Msg::Error("Wrong %d-th argument in matrix factorization", -info);
+	   Msg::Error("Wrong %d-th argument in matrix factorization", -info);
   }
     
   delete [] ipiv;
@@ -460,11 +458,11 @@ bool fullMatrix<double>::svd(fullMatrix<double> &V, fullVector<double> &S)
   if(info == 0) return true;
   if(info > 0)
   {
-	  // Msg::Error("SVD did not converge");
+	   Msg::Error("SVD did not converge");
   }
   else
   {
-	  // Msg::Error("Wrong %d-th argument in SVD decomposition", -info);
+	   Msg::Error("Wrong %d-th argument in SVD decomposition", -info);
   }
   return false;
 }

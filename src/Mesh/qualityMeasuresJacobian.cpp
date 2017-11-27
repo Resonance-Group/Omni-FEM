@@ -34,7 +34,7 @@ static inline void computeCoeffLengthVectors_(const fullMatrix<double> &mat,
     case TYPE_TET: coeff.resize(sz1, 6); break;
     case TYPE_PYR: coeff.resize(sz1, 6); break;
     default:
-      //Msg::Error("Unkown type for IGE computation");
+      Msg::Error("Unkown type for IGE computation");
       coeff.resize(0, 0);
       return;
   }
@@ -177,7 +177,7 @@ void minMaxJacobianDeterminant(MElement *el, double &min, double &max,
 {
   const JacobianBasis *jfs = el->getJacobianFuncSpace();
   if (!jfs) {
-    //Msg::Error("Jacobian function space not implemented for type of element %d", el->getTypeForMSH());
+    Msg::Error("Jacobian function space not implemented for type of element %d", el->getTypeForMSH());
     min = 99;
     max = -99;
     return;
@@ -254,7 +254,7 @@ double minIGEMeasure(MElement *el, bool knownValid, bool reversedOk)
     jacDetSpace = FuncSpaceData(el, false, jacOrder, jacOrder-3, &serendipFalse);
     break;
   default:
-    //Msg::Error("IGE measure not implemented for type of element %d", el->getType());
+    Msg::Error("IGE measure not implemented for type of element %d", el->getType());
     return -1;
   }
   gradBasis = BasisFactory::getGradientBasis(jacMatSpace);
@@ -289,11 +289,11 @@ double minIGEMeasure(MElement *el, bool knownValid, bool reversedOk)
 
   _subdivideDomains(domains);
 
-//  Msg::Info("element %d, type %d, numSub %d", el->getNum(), el->getType(),
-//      domains.size()/7);
+  Msg::Info("element %d, type %d, numSub %d", el->getNum(), el->getType(),
+      domains.size()/7);
   if (domains.size()/7 > 500) {//fordebug
-    //Msg::Info("S too much subdivision: %d (el %d, type %d, tag %d)",
-     //   domains.size()/7, el->getNum(), el->getType(), el->getTypeForMSH());
+    Msg::Info("S too much subdivision: %d (el %d, type %d, tag %d)",
+        domains.size()/7, el->getNum(), el->getType(), el->getTypeForMSH());
   }
 
   double min = domains[0]->minB();
@@ -355,7 +355,7 @@ double minICNMeasure(MElement *el,
     jacDetSpace = FuncSpaceData(el, false, jacOrder, jacOrder-3, &serendipFalse);
     break;
   default:
-    //Msg::Error("ICN not implemented for type of element %d", el->getType());
+    Msg::Error("ICN not implemented for type of element %d", el->getType());
     return -1;
   }
   gradBasis = BasisFactory::getGradientBasis(jacMatSpace);
@@ -390,8 +390,8 @@ double minICNMeasure(MElement *el,
 
   _subdivideDomains(domains);
   if (domains.size()/7 > 500) {//fordebug
-    //Msg::Info("I too much subdivision: %d (el %d, type %d, tag %d)",
-     //          domains.size()/7, el->getNum(), el->getType(), el->getTypeForMSH());
+    Msg::Info("I too much subdivision: %d (el %d, type %d, tag %d)",
+               domains.size()/7, el->getNum(), el->getType(), el->getTypeForMSH());
   }
 
 
@@ -427,7 +427,7 @@ void sampleIGEMeasure(MElement *el, int deg, double &min, double &max)
     jacDetSpace = FuncSpaceData(el, true, deg-1, 1, &serendipFalse);
     break;
   default:
-    //Msg::Error("ICN not implemented for type of element %d", el->getType());
+    Msg::Error("ICN not implemented for type of element %d", el->getType());
     return;
   }
 
@@ -485,7 +485,7 @@ double minSampledICNMeasure(MElement *el, int deg)//fordebug
 //    jacDetSpace = FuncSpaceData(el, false, jacOrder, jacOrder-3, &serendipFalse);
     break;
   default:
-    //Msg::Error("ICN not implemented for type of element %d", el->getType());
+    Msg::Error("ICN not implemented for type of element %d", el->getType());
     return -1;
   }
   gradBasis = BasisFactory::getGradientBasis(jacMatSpace);
@@ -544,7 +544,7 @@ double minSampledIGEMeasure(MElement *el, int deg)//fordebug
 //    jacDetSpace = FuncSpaceData(el, false, jacOrder, jacOrder-3, &serendipFalse);
     break;
   default:
-    //Msg::Error("ICN not implemented for type of element %d", el->getType());
+    Msg::Error("ICN not implemented for type of element %d", el->getType());
     return -1;
   }
   gradBasis = BasisFactory::getGradientBasis(jacMatSpace);
@@ -597,8 +597,8 @@ _CoeffDataJac::_CoeffDataJac(fullVector<double> &v,
 : _CoeffData(depth), _coeffs(v.getDataPtr(), v.size()), _bfs(bfs)
 {
   if (!v.getOwnData()) {
-    //Msg::Fatal("Cannot create an instance of _CoeffDataJac from a "
-     //          "fullVector that does not own its data.");
+    Msg::Fatal("Cannot create an instance of _CoeffDataJac from a "
+               "fullVector that does not own its data.");
   }
   // _coeffs reuses the data of v, this avoid to allocate a new array and to
   // copy data that are not used outside of this object.
@@ -655,8 +655,8 @@ _CoeffDataIGE::_CoeffDataIGE(fullVector<double> &det,
   _bfsDet(bfsDet), _bfsMat(bfsMat), _type(type)
 {
   if (!det.getOwnData() || !mat.getOwnData()) {
-    //Msg::Fatal("Cannot create an instance of _CoeffDataIGE from a "
-      //         "fullVector or a fullMatrix that does not own its data.");
+    Msg::Fatal("Cannot create an instance of _CoeffDataIGE from a "
+               "fullVector or a fullMatrix that does not own its data.");
   }
   // _coeffsJacDet and _coeffsJacMat reuse data, this avoid to allocate new
   // arrays and to copy data that are not used outside of this object.
@@ -668,7 +668,7 @@ _CoeffDataIGE::_CoeffDataIGE(fullVector<double> &det,
 
   _computeAtCorner(_minL, _maxL);
   _minB = _computeLowerBound();
-//  Msg::Info("%g %g %g", _minB, _minL, _maxL);//fordebug
+  Msg::Info("%g %g %g", _minB, _minL, _maxL);//fordebug
 //  _coeffsJacDet.print("_coeffsJacDet");
 //  _coeffsJacMat.print("_coeffsJacMat");
   // computation of _maxB not implemented for now
@@ -837,7 +837,7 @@ double _CoeffDataIGE::_computeLowerBound() const
   }
 
   default:
-    //Msg::Info("Unknown type for IGE (%d)", _type);
+    Msg::Info("Unknown type for IGE (%d)", _type);
     return -1;
   }
 }
@@ -855,7 +855,7 @@ void _CoeffDataIGE::_getCoeffLengthVectors(fullMatrix<double> &coeff,
     case TYPE_TET: coeff.resize(sz1, 6); break;
     case TYPE_PYR: coeff.resize(sz1, 6); break;
     default:
-      //Msg::Error("Unkown type for IGE computation");
+      Msg::Error("Unkown type for IGE computation");
       coeff.resize(0, 0);
       return;
   }
@@ -940,8 +940,8 @@ _CoeffDataICN::_CoeffDataICN(fullVector<double> &det,
   _bfsDet(bfsDet), _bfsMat(bfsMat)
 {
   if (!det.getOwnData() || !mat.getOwnData()) {
-    //Msg::Fatal("Cannot create an instance of _CoeffDataIGE from a "
-     //          "fullVector or a fullMatrix that does not own its data.");
+    Msg::Fatal("Cannot create an instance of _CoeffDataIGE from a "
+               "fullVector or a fullMatrix that does not own its data.");
   }
   // _coeffsJacDet and _coeffsMetric reuse data, this avoid to allocate new
   // arrays and to copy data that are not used outside of this object.
@@ -956,7 +956,7 @@ _CoeffDataICN::_CoeffDataICN(fullVector<double> &det,
   _minB = 0;
   if (boundsOk(_minL, _maxL)) return;
   else _minB = _computeLowerBound();
-//  Msg::Info("%g %g %g ", _minB, _minL, _maxL);
+  Msg::Info("%g %g %g ", _minB, _minL, _maxL);
 //  _coeffsJacDet.print("_coeffsJacDet");
 //  _coeffsJacMat.print("_coeffsJacMat");
 
@@ -1107,14 +1107,14 @@ void _subdivideDomainsMinOrMax(std::vector<_CoeffData*> &domains,
     }
   }
   if (k > 1000) {
-    //Msg::Error("Max subdivision (1000) (size %d)", domains.size());
+    Msg::Error("Max subdivision (1000) (size %d)", domains.size());
   }
 }
 
 void _subdivideDomains(std::vector<_CoeffData*> &domains)
 {
   if (domains.empty()) {
-    //Msg::Warning("empty vector in Bezier subdivision, nothing to do");
+    Msg::Warning("empty vector in Bezier subdivision, nothing to do");
     return;
   }
   double minL = domains[0]->minL();
@@ -1133,9 +1133,9 @@ double _computeBoundRational(const fullVector<double> &numerator,
                              bool lower, bool positiveDenom)
 {
   if (numerator.size() != denominator.size()) {
-    //Msg::Fatal("In order to compute a bound on a rational function, I need "
-   //            "vectors of the same size! (%d vs %d)", numerator.size(),
-     //          denominator.size());
+    Msg::Fatal("In order to compute a bound on a rational function, I need "
+               "vectors of the same size! (%d vs %d)", numerator.size(),
+               denominator.size());
     return 0;
   }
 

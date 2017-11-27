@@ -11,6 +11,7 @@
 #include <string>
 #include <stdarg.h>
 #include <stdio.h>
+#include <string>
 
 #include <common/OmniFEMMessage.h>
 

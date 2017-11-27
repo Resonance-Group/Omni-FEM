@@ -20,7 +20,7 @@ int GModel::writeVTK(const std::string &name, bool binary, bool saveAll,
 {
   FILE *fp = fopen(name.c_str(), binary ? "wb" : "w");
   if(!fp){
-    //Msg::Error("Unable to open file '%s'", name.c_str());
+    Msg::Error("Unable to open file '%s'", name.c_str());
     return 0;
   }
 
@@ -101,7 +101,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
 {
   FILE *fp = fopen(name.c_str(), "rb");
   if(!fp){
-    //Msg::Error("Unable to open file '%s'", name.c_str());
+    Msg::Error("Unable to open file '%s'", name.c_str());
     return 0;
   }
 
@@ -113,7 +113,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
 
   if(fscanf(fp, "%s", buffer) != 1) // ASCII or BINARY
   {
-    //Msg::Error("Failed reading buffer");
+    Msg::Error("Failed reading buffer");
 	
   }
   bool binary = false;
@@ -127,7 +127,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
 
   if((strcmp(buffer, "DATASET") &&  strcmp(buffer2, "UNSTRUCTURED_GRID")) ||
      (strcmp(buffer, "DATASET") &&  strcmp(buffer2, "POLYDATA"))){
-   // Msg::Error("VTK reader can only read unstructured or polydata datasets");
+    Msg::Error("VTK reader can only read unstructured or polydata datasets");
     fclose(fp);
     return 0;
   }
@@ -136,7 +136,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
   int numVertices;
   if(fscanf(fp, "%s %d %s\n", buffer, &numVertices, buffer2) != 3) return 0;
   if(strcmp(buffer, "POINTS") || !numVertices){
- //   Msg::Warning("No points in dataset");
+   Msg::Warning("No points in dataset");
     fclose(fp);
     return 0;
   }
@@ -146,11 +146,11 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
   else if(!strcmp(buffer2, "float"))
     datasize = sizeof(float);
   else{
-  //  Msg::Warning("VTK reader only accepts float or double datasets");
+    Msg::Warning("VTK reader only accepts float or double datasets");
     fclose(fp);
     return 0;
   }
- // Msg::Info("Reading %d points", numVertices);
+  Msg::Info("Reading %d points", numVertices);
   std::vector<MVertex*> vertices(numVertices);
   for(int i = 0 ; i < numVertices; i++){
     double xyz[3];
@@ -185,16 +185,16 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
   bool haveCells = true;
   bool haveLines = false;
   if(!strcmp(buffer, "CELLS") && numElements > 0)
-    {/*Msg::Info("Reading %d cells", numElements);*/ }
+    {Msg::Info("Reading %d cells", numElements); }
   else if (!strcmp(buffer, "POLYGONS") && numElements > 0)
-   {/* Msg::Info("Reading %d polygons", numElements);*/}
+   {Msg::Info("Reading %d polygons", numElements);}
   else if (!strcmp(buffer, "LINES") && numElements > 0){
     haveCells = false;
     haveLines = true;
-   // Msg::Info("Reading %d lines", numElements);
+    Msg::Info("Reading %d lines", numElements);
   }
   else{
-   // Msg::Warning("No cells or polygons in dataset");
+    Msg::Warning("No cells or polygons in dataset");
     fclose(fp);
     return 0;
   }
@@ -221,14 +221,14 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
 	if(n[j] >= 0 && n[j] < (int)vertices.size())
 	  cells[i].push_back(vertices[n[j]]);
 	else
-	{/*  Msg::Error("Bad vertex index");*/}
+	{  Msg::Error("Bad vertex index");}
       }
     }
 
     if (unstructured){
       if(fscanf(fp, "%s %d\n", buffer, &numElements) != 2 ){ fclose(fp); return 0; }
       if(strcmp(buffer, "CELL_TYPES") || numElements != (int)cells.size()){
-	//Msg::Error("No or invalid number of cells types");
+	Msg::Error("No or invalid number of cells types");
         fclose(fp);
 	return 0;
       }
@@ -260,7 +260,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
 	//case 25: elements[5][1].push_back(new MHexahedron20(cells[i])); break;
     //    case 29: elements[5][1].push_back(new MHexahedron27(cells[i])); break;
 	default:
-	//  Msg::Error("Unknown type of cell %d", type);
+	  Msg::Error("Unknown type of cell %d", type);
 	  break;
 	}
       }
@@ -274,7 +274,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
 	case 3: elements[2][1].push_back(new MTriangle(cells[i])); break;
 	case 4: elements[3][1].push_back(new MQuadrangle(cells[i])); break;
 	default:
-	 // Msg::Error("Unknown type of mesh element with %d nodes", nbNodes);
+	  Msg::Error("Unknown type of mesh element with %d nodes", nbNodes);
 	  break;
 	}
       }
@@ -302,7 +302,7 @@ int GModel::readVTK(const std::string &name, bool bigEndian)
       }
     }
     else{
-    //  Msg::Error("Line import not done for binary VTK files");
+     Msg::Error("Line import not done for binary VTK files");
     }
   }
 

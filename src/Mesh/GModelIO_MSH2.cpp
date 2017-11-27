@@ -23,7 +23,7 @@
 //#include "MPyramid.h"
 #include "Mesh/MElementCut.h"
 #include "Mesh/StringUtils.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Context.h"
 
 
@@ -38,7 +38,7 @@ static bool getVertices(int num, int *indices, std::map<int, MVertex*> &map,
 {
   for(int i = 0; i < num; i++){
     if(!map.count(indices[i])){
-      //Msg::Error("Wrong vertex index %d", indices[i]);
+      Msg::Error("Wrong vertex index %d", indices[i]);
       return false;
     }
     else
@@ -52,7 +52,7 @@ static bool getVertices(int num, int *indices, std::vector<MVertex*> &vec,
 {
   for(int i = 0; i < num; i++){
     if(indices[i] < minVertex || indices[i] > (int)(vec.size() - 1 + minVertex)){
-      //Msg::Error("Wrong vertex index %d", indices[i]);
+      Msg::Error("Wrong vertex index %d", indices[i]);
       return false;
     }
     else
@@ -78,7 +78,7 @@ static MElement *createElementMSH2(GModel *m, int num, int typeMSH, int physical
   MElement *e = factory.create(typeMSH, v, num, part, owner, 0, parent, d1, d2);
 
   if(!e){
-    //Msg::Error("Unknown type of element %d", typeMSH);
+    Msg::Error("Unknown type of element %d", typeMSH);
     return NULL;
   }
 
@@ -185,7 +185,7 @@ int GModel::_readMSH2(const std::string &name)
 {
   FILE *fp = std::fopen(name.c_str(), "rb");
   if(!fp){
-    //Msg::Error("Unable to open file '%s'", name.c_str());
+    Msg::Error("Unable to open file '%s'", name.c_str());
     return 0;
   }
 
@@ -218,12 +218,12 @@ int GModel::_readMSH2(const std::string &name)
       }
       if(format){
         binary = true;
-        //Msg::Debug("Mesh is in binary format");
+        Msg::Debug("Mesh is in binary format");
         int one;
         if(fread(&one, sizeof(int), 1, fp) != 1){ fclose(fp); return 0; }
         if(one != 1){
           swap = true;
-          //Msg::Debug("Swapping bytes from binary file");
+          Msg::Debug("Swapping bytes from binary file");
         }
       }
 
@@ -252,7 +252,7 @@ int GModel::_readMSH2(const std::string &name)
       if(!fgets(str, sizeof(str), fp)){ fclose(fp); return 0; }
       int numVertices = -1;
       if(sscanf(str, "%d", &numVertices) != 1){ fclose(fp); return 0; }
-      //Msg::Info("%d vertices", numVertices);
+      Msg::Info("%d vertices", numVertices);
       //Msg::ResetProgressMeter();
       vertexVector.clear();
       vertexMap.clear();
@@ -331,7 +331,7 @@ int GModel::_readMSH2(const std::string &name)
         minVertex = std::min(minVertex, num);
         maxVertex = std::max(maxVertex, num);
         if(vertexMap.count(num))
-          {/*Msg::Warning("Skipping duplicate vertex %d", num);*/}
+          {Msg::Warning("Skipping duplicate vertex %d", num);}
         vertexMap[num] = newVertex;
         if(numVertices > 100000)
           {/*Msg::ProgressMeter(i + 1, numVertices, true, "Reading nodes");*/}
@@ -341,7 +341,7 @@ int GModel::_readMSH2(const std::string &name)
       if((int)vertexMap.size() == numVertices &&
          ((minVertex == 1 && maxVertex == numVertices) ||
           (minVertex == 0 && maxVertex == numVertices - 1))){
-        //Msg::Debug("Vertex numbering is dense");
+        Msg::Debug("Vertex numbering is dense");
         vertexVector.resize(vertexMap.size() + 1);
         if(minVertex == 1)
           vertexVector[0] = 0;
@@ -367,7 +367,7 @@ int GModel::_readMSH2(const std::string &name)
 
       std::set<MElement*> parentsOwned;
       sscanf(str, "%d", &numElements);
-      //Msg::Info("%d elements", numElements);
+      Msg::Info("%d elements", numElements);
       //Msg::ResetProgressMeter();
       if(!binary){
         for(int i = 0; i < numElements; i++) {
@@ -441,7 +441,7 @@ int GModel::_readMSH2(const std::string &name)
 #if (FAST_ELEMENTS == 1)
             std::map<int, MElement* >::iterator ite = elems.find(parent);
             if (ite == elems.end())
-              {/*Msg::Error("Parent element (ascii) %d not found for element %d of type %d", parent, num, type);*/}
+              {Msg::Error("Parent element (ascii) %d not found for element %d of type %d", parent, num, type);}
             else{
               p = ite->second;
               parents[parent] = p;
@@ -476,7 +476,7 @@ int GModel::_readMSH2(const std::string &name)
 #if (FAST_ELEMENTS==1)
             std::map<int, MElement* >::iterator ite = elems.find(dom1);
 	    if (ite == elems.end())
-              {/*Msg::Error("Domain element %d not found for element %d", dom1, num);*/}
+              {Msg::Error("Domain element %d not found for element %d", dom1, num);}
             else
               doms[0] = ite->second;
 
@@ -485,9 +485,9 @@ int GModel::_readMSH2(const std::string &name)
               doms[1] = ite->second;
 
             if(!doms[0])
-              {/*Msg::Error("Domain element %d not found for element %d", dom1, num);*/}
+              {Msg::Error("Domain element %d not found for element %d", dom1, num);}
             if(dom2 && !doms[1])
-              {/*Msg::Error("Domain element %d not found for element %d", dom2, num);*/}
+              {Msg::Error("Domain element %d not found for element %d", dom2, num);}
 #else
             getDomains(dom1, dom2, type, elements, doms);
             if(!doms[0])
@@ -566,7 +566,7 @@ int GModel::_readMSH2(const std::string &name)
 #if (FAST_ELEMENTS == 1)
 	      std::map<int, MElement* >::iterator ite = elems.find(parent);
 	      if (ite == elems.end())
-                {/*Msg::Error("Parent (binary) element %d not found for element %d", parent, num);*/}
+                {Msg::Error("Parent (binary) element %d not found for element %d", parent, num);}
 	      else{
                 p = ite->second;
                 parents[parent] = p;
@@ -605,8 +605,8 @@ int GModel::_readMSH2(const std::string &name)
               for(int j = 0; j < numPartitions - 1; j++)
                 _ghostCells.insert(std::pair<MElement*, short>(e, -data[5 + j]));
             if(numElements > 100000)
-              {//Msg::ProgressMeter(numElementsPartial + i + 1, numElements, true,
-			  /*"Reading elements");*/}
+              {/*Msg::ProgressMeter(numElementsPartial + i + 1, numElements, true,
+			  "Reading elements");*/}
           }
           delete [] data;
           numElementsPartial += numElms;
@@ -640,7 +640,7 @@ int GModel::_readMSH2(const std::string &name)
           case TYPE_POLYG : elements[8][reg].push_back(e); break;
           case TYPE_POLYH : elements[9][reg].push_back(e); break;
           default :
-            //Msg::Error("Wrong type of element");
+            Msg::Error("Wrong type of element");
             fclose(fp);
             return 0;
           }
@@ -884,7 +884,7 @@ int GModel::_writeMSH2(const std::string &name, double version, bool binary,
   else
     fp = std::fopen(name.c_str(), binary ? "wb" : "w");
   if(!fp){
-    //Msg::Error("Unable to open file '%s'", name.c_str());
+    Msg::Error("Unable to open file '%s'", name.c_str());
     return 0;
   }
 
@@ -1106,7 +1106,7 @@ int GModel::_writePartitionedMSH2(const std::string &baseName, bool binary,
     sstream << baseName << "_" << std::setw(6) << std::setfill('0') << partition;
 
     numElements = getNumElementsMSH(this, saveAll, partition);
-    //Msg::Info("Writing partition %d in file '%s'", partition, sstream.str().c_str());
+    Msg::Info("Writing partition %d in file '%s'", partition, sstream.str().c_str());
     _writeMSH2(sstream.str(), 2.2, binary, saveAll, saveParametric,
                scalingFactor, startNum, partition, false, false); // NO RENUMBERING!
     startNum += numElements; // update for next iteration in the loop

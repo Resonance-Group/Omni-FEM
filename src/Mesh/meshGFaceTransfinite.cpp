@@ -12,7 +12,7 @@
 #include "Mesh/MTriangle.h"
 #include "Mesh/MQuadrangle.h"
 #include "Mesh/Context.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/GEdgeLoop.h"
 
@@ -114,12 +114,12 @@ static void computeEdgeLoops(const GFace *gf, std::vector<MVertex*> &all_mvertic
     }
     else{
       if(it == edges.end ()){
-  //      Msg::Error("Something wrong in edge loop computation");
+        Msg::Error("Something wrong in edge loop computation");
         return;
       }
       v_start = ((*ito) == 1) ? (*it)->getBeginVertex() : (*it)->getEndVertex();
       if(v_start != v_end){
-    //    Msg::Error("Something wrong in edge loop computation");
+        Msg::Error("Something wrong in edge loop computation");
         return;
       }
       v_end = ((*ito) != 1) ? (*it)->getBeginVertex() : (*it)->getEndVertex();
@@ -144,13 +144,13 @@ int MeshTransfiniteSurface(GFace *gf)
 {
   if(gf->meshAttributes.method != MESH_TRANSFINITE) return 0;
 
-//  Msg::Info("Meshing surface %d (transfinite)", gf->tag());
+  Msg::Info("Meshing surface %d (transfinite)", gf->tag());
 
   std::vector<MVertex*> corners;
   findTransfiniteCorners(gf, corners);
   if(corners.size () != 3 && corners.size () != 4){
- //   Msg::Error("Surface %d is transfinite but has %d corners",
-  //             gf->tag(), corners.size());
+    Msg::Error("Surface %d is transfinite but has %d corners",
+               gf->tag(), corners.size());
     return 0;
   }
 
@@ -159,8 +159,8 @@ int MeshTransfiniteSurface(GFace *gf)
   computeEdgeLoops(gf, d_vertices, indices);
 
   if(indices.size () != 2){
-  //  Msg::Error("Surface %d is transfinite but has %d holes",
-  //             gf->tag(), indices.size() - 2);
+    Msg::Error("Surface %d is transfinite but has %d holes",
+               gf->tag(), indices.size() - 2);
     return 0;
   }
 
@@ -202,7 +202,7 @@ int MeshTransfiniteSurface(GFace *gf)
     if(v == corners[0] || v == corners[1] || v == corners[2] ||
        (corners.size() == 4 && v == corners[3])){
       if(iCorner > 3){
-   //     Msg::Error("Surface %d transfinite parameters are incoherent", gf->tag());
+        Msg::Error("Surface %d transfinite parameters are incoherent", gf->tag());
         return 0;
       }
       N[iCorner++] = i;
@@ -218,16 +218,16 @@ int MeshTransfiniteSurface(GFace *gf)
   if(corners.size () == 4){
     int Lb = N4 - N3, Hb = m_vertices.size() - N4;
     if(Lb != L || Hb != H){
-   //   Msg::Error("Surface %d cannot be meshed using the transfinite algo",
-   //              gf->tag());
+      Msg::Error("Surface %d cannot be meshed using the transfinite algo",
+                 gf->tag());
       return 0;
     }
   }
   else{
     int Lb = m_vertices.size() - N3;
     if(Lb != L){
-   //   Msg::Error("Surface %d cannot be meshed using the transfinite algo %d != %d",
-    //             gf->tag(), L, Lb);
+      Msg::Error("Surface %d cannot be meshed using the transfinite algo %d != %d",
+                 gf->tag(), L, Lb);
       return 0;
     }
   }

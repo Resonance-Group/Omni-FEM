@@ -26,11 +26,11 @@ mathEvaluator::mathEvaluator(std::vector<std::string> &expressions,
     catch(smlib::mathex::error e) {
       if(e.what() + expressions[i] != lastError){
         lastError = e.what() + expressions[i];
-    //    Msg::Error(e.what());
+        Msg::Error(e.what());
         std::string pos(_expressions[i]->stopposition(), ' ');
         pos.push_back('^');
-    //    Msg::Error(expressions[i].c_str());
-    //    Msg::Error(pos.c_str());
+        Msg::Error(expressions[i].c_str());
+        Msg::Error(pos.c_str());
       }
       error = true;
     }
@@ -52,12 +52,12 @@ mathEvaluator::~mathEvaluator()
 bool mathEvaluator::eval(const std::vector<double> &values, std::vector<double> &res)
 {
   if(values.size() != _variables.size()){
- //   Msg::Error("Given %d value(s) for %d variable(s)", values.size(), _variables.size());
+    Msg::Error("Given %d value(s) for %d variable(s)", values.size(), _variables.size());
     return false;
   }
 
   if(res.size() != _expressions.size()){
- //   Msg::Error("Given %d result(s) for %d expression(s)", res.size(), _expressions.size());
+    Msg::Error("Given %d result(s) for %d expression(s)", res.size(), _expressions.size());
     return false;
   }
 
@@ -69,7 +69,7 @@ bool mathEvaluator::eval(const std::vector<double> &values, std::vector<double> 
       res[i] = _expressions[i]->eval();
     }
     catch(smlib::mathex::error e) {
-   //   Msg::Error(e.what());
+      Msg::Error(e.what());
       double eps = 1.e-20;
       for(unsigned int j = 0; j < values.size(); j++)
 	_variables[j] = values[j] + eps;
@@ -77,7 +77,7 @@ bool mathEvaluator::eval(const std::vector<double> &values, std::vector<double> 
 	res[i] = _expressions[i]->eval();
       }
       catch(smlib::mathex::error e2) {
-	//  Msg::Error(e2.what());
+	  Msg::Error(e2.what());
 	  return false;
       }
     }

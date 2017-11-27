@@ -7,7 +7,7 @@
 #include <iomanip>
 #include "Mesh/GModel.h"
 #include "common/OS.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/MElement.h"
 #include "Mesh/MPoint.h"
 #include "Mesh/MLine.h"
@@ -60,7 +60,7 @@ static void readMSHEntities(FILE *fp, GModel *gm)
         int tagv;
         if(fscanf(fp, "%d", &tagv) != 1) return;
         GVertex *v = gm->getVertexByTag(tagv);
-       // if (!v) Msg::Error("Unknown GVertex %d", tagv);
+        if (!v) Msg::Error("Unknown GVertex %d", tagv);
         if(j == 0) v1 = v;
         if(j == 1) v2 = v;
       }
@@ -156,14 +156,15 @@ void readMSHPeriodicNodes(FILE *fp, GModel *gm)
       if(completePer) s->correspondingVertices[mv1] = mv2;
     }
     if (!completePer) {
-      /*if (!s){
+      if (!s){
         Msg::Info("Could not find periodic slave entity %d of dimension %d",
                      slave, dim);
       if (!m)
         Msg::Info("Could not find periodic master entity %d of dimension %d",
-                  master, dim);*/
+                  master, dim);
     }
   }
+}
 }
 
 int GModel::readMSH(const std::string &name)
@@ -642,7 +643,7 @@ int GModel::writeMSH(const std::string &name, double version, bool binary,
   else
     fp = std::fopen(name.c_str(), binary ? "wb" : "w");
   if(!fp){
-    //Msg::Error("Unable to open file '%s'", name.c_str());
+    Msg::Error("Unable to open file '%s'", name.c_str());
     return 0;
   }
 

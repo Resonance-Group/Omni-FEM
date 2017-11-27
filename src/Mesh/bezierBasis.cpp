@@ -8,7 +8,7 @@
 
 #include "Mesh/bezierBasis.h"
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/polynomialBasis.h"
 //#include "pyramidalBasis.h"
 #include "Mesh/pointsGenerators.h"
@@ -300,7 +300,7 @@ std::vector< fullMatrix<double> > generateSubPointsPyr(int nij, int nk)
 int nChoosek(int n, int k)
 {
   if (n < k || k < 0) {
-   // Msg::Error("Wrong argument for combination. (%d, %d)", n, k);
+    Msg::Error("Wrong argument for combination. (%d, %d)", n, k);
     return 1;
   }
 
@@ -320,9 +320,9 @@ fullMatrix<double> generateBez2LagMatrix
    int order, int dimSimplex)
 {
   if(exponent.size1() != point.size1() || exponent.size2() != point.size2()){
-  //  Msg::Fatal("Wrong sizes for bez2lag matrix generation %d %d -- %d %d",
-//      exponent.size1(),point.size1(),
-  //    exponent.size2(),point.size2());
+    Msg::Fatal("Wrong sizes for bez2lag matrix generation %d %d -- %d %d",
+      exponent.size1(),point.size1(),
+      exponent.size2(),point.size2());
     return fullMatrix<double>(1, 1);
   }
 
@@ -363,9 +363,9 @@ fullMatrix<double> generateBez2LagMatrixPyramid
 {
   if(exponent.size1() != point.size1() || exponent.size2() != point.size2() ||
       exponent.size2() != 3){
-  //  Msg::Fatal("Wrong sizes for pyramid's bez2lag matrix generation %d %d -- %d %d",
-  //    exponent.size1(), point.size1(),
-  //    exponent.size2(), point.size2());
+    Msg::Fatal("Wrong sizes for pyramid's bez2lag matrix generation %d %d -- %d %d",
+      exponent.size1(), point.size1(),
+      exponent.size2(), point.size2());
     return fullMatrix<double>(1, 1);
   }
 
@@ -396,9 +396,9 @@ fullMatrix<double> generateSubDivisor
    const fullMatrix<double> &lag2Bez, int order, int dimSimplex)
 {
   if (exponents.size1() != lag2Bez.size1() || exponents.size1() != lag2Bez.size2()){
-  //  Msg::Fatal("Wrong sizes for Bezier Divisor %d %d -- %d %d",
-  //    exponents.size1(), lag2Bez.size1(),
-  //    exponents.size1(), lag2Bez.size2());
+    Msg::Fatal("Wrong sizes for Bezier Divisor %d %d -- %d %d",
+      exponents.size1(), lag2Bez.size1(),
+      exponents.size1(), lag2Bez.size2());
     return fullMatrix<double>(1, 1);
   }
 
@@ -422,9 +422,9 @@ fullMatrix<double> generateSubDivisorPyramid
    const fullMatrix<double> &lag2Bez, bool pyr, int nij, int nk)
 {
   if (exponents.size1() != lag2Bez.size1() || exponents.size1() != lag2Bez.size2()){
-  //  Msg::Fatal("Wrong sizes for Bezier Divisor %d %d -- %d %d",
-  //    exponents.size1(), lag2Bez.size1(),
-  //    exponents.size1(), lag2Bez.size2());
+    Msg::Fatal("Wrong sizes for Bezier Divisor %d %d -- %d %d",
+      exponents.size1(), lag2Bez.size1(),
+      exponents.size1(), lag2Bez.size2());
     return fullMatrix<double>(1, 1);
   }
 
@@ -512,8 +512,8 @@ void bezierBasis::_FEpoints2BezPoints(fullMatrix<double> &points) const
     break;
 
   default:
-  //  Msg::Error("_FEpoints2BezPoints not implemented for "
-            //   "type of element %d", _data.elementType());
+    Msg::Error("_FEpoints2BezPoints not implemented for "
+               "type of element %d", _data.elementType());
     return;
   }
 }
@@ -563,8 +563,8 @@ void bezierBasis::lag2Bez(const fullMatrix<double> &lag,
                           fullMatrix<double> &bez) const
 {
   if (lag.size1() != matrixLag2Bez.size1()) {
- //   Msg::Error("matrix not the right size in lag2Bez function %d vs %d",
-   //     lag.size1(), matrixLag2Bez.size1());
+    Msg::Error("matrix not the right size in lag2Bez function %d vs %d",
+        lag.size1(), matrixLag2Bez.size1());
   }
   if (bez.size1() != lag.size1() || bez.size2() != lag.size2()) {
     bez.resize(lag.size1(), lag.size2());
@@ -594,7 +594,7 @@ void bezierBasis::subdivideBezCoeff(const fullVector<double> &coeff,
 void bezierBasis::_construct()
 {
   if (_data.elementType() == TYPE_PYR) {
- //   Msg::Fatal("This bezierBasis constructor is not for pyramids !");
+    Msg::Fatal("This bezierBasis constructor is not for pyramids !");
   }
 
   std::vector< fullMatrix<double> > subPoints;
@@ -650,7 +650,7 @@ void bezierBasis::_construct()
       break;
     }
     default : {
-  //    Msg::Fatal("Unknown function space for parentType %d", _data.elementType());
+      Msg::Fatal("Unknown function space for parentType %d", _data.elementType());
       return;
     }
   }
@@ -667,7 +667,7 @@ void bezierBasis::_construct()
 void bezierBasis::_constructPyr()
 {
   if (_data.elementType() != TYPE_PYR) {
- //   Msg::Fatal("This bezierBasis constructor is for pyramids !");
+    Msg::Fatal("This bezierBasis constructor is for pyramids !");
   }
 
   const bool pyr = _data.isPyramidalSpace();
@@ -860,7 +860,7 @@ void bezierBasisRaiser::_fillRaiserDataPyr()
     return;
   }
   if (fsdata.isPyramidalSpace()) {
- //   Msg::Error("Bezier raiser not implemented for pyramidal space");
+    Msg::Error("Bezier raiser not implemented for pyramidal space");
     return;
   }
 
@@ -963,8 +963,8 @@ void bezierBasisRaiser::_fillRaiserDataPyr()
 const bezierBasis* bezierBasisRaiser::getRaisedBezierBasis(int mult2or3)
 {
   if (mult2or3 != 2 && mult2or3 != 3) {
- //   Msg::Error("There is no reason that I give you the bezier basis of order "
-       //        "%d times greater. Ask to another class/object", mult2or3);
+    Msg::Error("There is no reason that I give you the bezier basis of order "
+               "%d times greater. Ask to another class/object", mult2or3);
     return NULL;
   }
   FuncSpaceData initFuncSpace = _bfs->getFuncSpaceData();
@@ -1028,8 +1028,8 @@ void bezierBasisRaiser::computeCoeff(const fullVector<double> &coeffA,
   }
   else
   {
-   // Msg::Error("bezierBasisRaiser::computeCoeff not implemented for A == B != C "
-       //        "or A != B == C");
+    Msg::Error("bezierBasisRaiser::computeCoeff not implemented for A == B != C "
+               "or A != B == C");
 	   
 	}
 }

@@ -10,7 +10,7 @@
 #include "Mesh/gmshEdge.h"
 #include "Mesh/Geo.h"
 #include "Mesh/GeoInterpolation.h"
-//#include "Mesh/GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Context.h"
 #include "Mesh/decasteljau.h"
 
@@ -33,7 +33,7 @@ bool gmshEdge::degenerate(int dim) const
   if (c->beg == c->end &&
       c->Typ ==  MSH_SEGM_LINE &&
       List_Nbr(c->Control_Points) == 0){
-    //Msg::Info("Model Edge %d is degenerate", tag());
+    Msg::Info("Model Edge %d is degenerate", tag());
     return true;
   }
   return false;
@@ -234,7 +234,7 @@ SPoint2 gmshEdge::reparamOnFace(const GFace *face, double epar,int dir) const
         return InterpolateCubicSpline(v, t, c->mat, t1, t2, c->geometry,0);
       }
     default:
-      //Msg::Error("Unknown edge type in reparamOnFace");
+      Msg::Error("Unknown edge type in reparamOnFace");
       return SPoint2();
     }
   }
@@ -279,7 +279,7 @@ SPoint2 gmshEdge::reparamOnFace(const GFace *face, double epar,int dir) const
       U = 0;
     }
     else{
-      //Msg::Info("Reparameterizing edge %d on face %d", c->Num, s->Num);
+      Msg::Info("Reparameterizing edge %d on face %d", c->Num, s->Num);
       return GEdge::reparamOnFace(face, epar, dir);
     }
     return SPoint2(U, V);
@@ -315,7 +315,7 @@ SPoint2 gmshEdge::reparamOnFace(const GFace *face, double epar,int dir) const
         V = 1;
       }
       else{
-        //Msg::Info("Reparameterizing edge %d on face %d", c->Num, s->Num);
+        Msg::Info("Reparameterizing edge %d on face %d", c->Num, s->Num);
         return GEdge::reparamOnFace(face, epar, dir);
       }
 
@@ -351,7 +351,7 @@ SPoint2 gmshEdge::reparamOnFace(const GFace *face, double epar,int dir) const
         V = hack ? 1 : U;
       }
       else{
-        //Msg::Info("Reparameterizing edge %d on face %d", c->Num, s->Num);
+        Msg::Info("Reparameterizing edge %d on face %d", c->Num, s->Num);
         return GEdge::reparamOnFace(face, epar, dir);
       }
     }
@@ -412,7 +412,7 @@ void gmshEdge::writeGEO(FILE *fp)
     fprintf(fp, "Bezier(%d) = ", c->Num);
     break;
   default:
-    //Msg::Error("Unknown curve type %d", c->Typ);
+    Msg::Error("Unknown curve type %d", c->Typ);
     return;
   }
   for(int i = 0; i < List_Nbr(c->Control_Points); i++) {

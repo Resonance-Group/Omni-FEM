@@ -8,7 +8,7 @@
 #include "Mesh/gmshVertex.h"
 #include "Mesh/Geo.h"
 #include "Mesh/GeoInterpolation.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/MVertex.h"
 #include "Mesh/MPoint.h"
 
@@ -123,7 +123,7 @@ SPoint2 gmshVertex::reparamOnFace(const GFace *face, int dir) const
       V = 1;
     }
     else{
-      //Msg::Info("Reparameterizing point %d on face %d", v->Num, s->Num);
+      Msg::Info("Reparameterizing point %d on face %d", v->Num, s->Num);
       return GVertex::reparamOnFace(face, dir);
     }
     return SPoint2(U, V);
@@ -155,7 +155,7 @@ SPoint2 gmshVertex::reparamOnFace(const GFace *face, int dir) const
       V = 1;
     }
     else{
-      //Msg::Info("Reparameterizing point %d on face %d", v->Num, s->Num);
+      Msg::Info("Reparameterizing point %d on face %d", v->Num, s->Num);
       return GVertex::reparamOnFace(face, dir);
     }
     return SPoint2(U, V);

@@ -80,7 +80,8 @@ void gaussIntegration::get(int elementType, int order, fullMatrix<double> &pts,
     weights(0) = 1.;
     pts.resize(1,3);
     break;
-  default: //Msg::Error("No integration rules defined for type %i", elementType);
+  default: 
+	Msg::Error("No integration rules defined for type %i", elementType);
 	break;
   }
 }

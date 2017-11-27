@@ -17,7 +17,7 @@ void BGMBase::export_scalar(const std::string &filename,
 {
   FILE *f = std::fopen(filename.c_str(), "w");
   if(!f){
-  //  Msg::Error("Could not open file '%s'", filename.c_str());
+    Msg::Error("Could not open file '%s'", filename.c_str());
     return;
   }
 
@@ -71,7 +71,7 @@ void BGMBase::export_vector(const std::string &filename,
 {
   FILE *f = std::fopen(filename.c_str(), "w");
   if(!f){
-  //  Msg::Error("Could not open file '%s'", filename.c_str());
+    Msg::Error("Could not open file '%s'", filename.c_str());
     return;
   }
 
@@ -129,7 +129,7 @@ void BGMBase::export_tensor_as_vectors(const std::string &filename,
 {
   FILE *f = std::fopen(filename.c_str(), "w");
   if(!f){
-  //  Msg::Error("Could not open file '%s'", filename.c_str());
+    Msg::Error("Could not open file '%s'", filename.c_str());
     return;
   }
 
@@ -218,7 +218,7 @@ std::vector<double> BGMBase::get_nodal_value(const MVertex *v,
 {
   VectorStorageType::const_iterator itfind = data.find(const_cast<MVertex*>(v));
   if (itfind==data.end()){
-  //  Msg::Error("Unknown vertex %d in BGMBase::get_nodal_value", v->getNum());
+    Msg::Error("Unknown vertex %d in BGMBase::get_nodal_value", v->getNum());
     return std::vector<double>(3,0.);
   }
   return itfind->second;
@@ -228,7 +228,7 @@ double BGMBase::get_nodal_value(const MVertex *v,const DoubleStorageType &data) 
 {
   DoubleStorageType::const_iterator itfind = data.find(const_cast<MVertex*>(v));
   if (itfind==data.end()){
-  //  Msg::Error("Unknown vertex %d in BGMBase::get_nodal_value", v->getNum());
+    Msg::Error("Unknown vertex %d in BGMBase::get_nodal_value", v->getNum());
     return 0.;
   }
   return itfind->second;

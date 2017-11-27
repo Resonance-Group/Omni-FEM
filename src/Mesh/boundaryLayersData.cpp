@@ -119,8 +119,8 @@ edgeColumn BoundaryLayerColumns::getColumns(MVertex *v1, MVertex *v2 , int side)
       else return edgeColumn(c11,c20);
     }
 
-    // Msg::Error ("Impossible Boundary Layer Configuration : "
-    //             "one side and no fans %d %d", N1, N2);
+     Msg::Error ("Impossible Boundary Layer Configuration : "
+                 "one side and no fans %d %d", N1, N2);
     // FIXME WRONG
     return N1 ? edgeColumn (getColumn (v1,0),getColumn(v1,0)) :
       edgeColumn (getColumn (v2,0),getColumn(v2,0));

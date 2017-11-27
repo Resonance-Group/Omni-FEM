@@ -4,7 +4,7 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include <stdlib.h>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/MallocUtils.h"
 #include "Mesh/GModel.h"
 #include "Mesh/TreeUtils.h"
@@ -42,7 +42,7 @@ static void recurFindLinkedEdges(int ed, List_T *edges, Tree_T *points,
 {
   GEdge *ge = GModel::current()->getEdgeByTag(ed);
   if(!ge){
- //   Msg::Error("Unknown curve %d", ed);
+    Msg::Error("Unknown curve %d", ed);
     return;
   }
 
@@ -79,7 +79,7 @@ static int createEdgeLinks(Tree_T *links)
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); it++) {
     GEdge *ge = *it;;
     if(!ge->getBeginVertex() || !ge->getEndVertex()){
-  //    Msg::Error("Cannot link curves with no begin or end points");
+      Msg::Error("Cannot link curves with no begin or end points");
       return 0;
     }
     if(ge->tag() > 0) {
@@ -117,7 +117,7 @@ static void orientAndSortEdges(List_T *edges, Tree_T *links)
 
   GEdge *ge0 = GModel::current()->getEdgeByTag(abs(num));
   if(!ge0){
-  //  Msg::Error("Unknown curve %d", abs(num));
+    Msg::Error("Unknown curve %d", abs(num));
     List_Delete(temp);
     return;
   }
@@ -136,7 +136,7 @@ static void orientAndSortEdges(List_T *edges, Tree_T *links)
       if(ge0->tag() != na.a && List_Search(temp, &na.a, fcmp_absint)){
         GEdge *ge1 = GModel::current()->getEdgeByTag(abs(na.a));
         if(!ge1){
-     //     Msg::Error("Unknown curve %d", abs(na.a));
+          Msg::Error("Unknown curve %d", abs(na.a));
           List_Delete(temp);
           return;
         }
@@ -175,7 +175,7 @@ int allEdgesLinked(int ed, List_T *edges)
     List_Read(edges, i, &num);
     GEdge *ge = GModel::current()->getEdgeByTag(abs(num));
     if(!ge){
-   //   Msg::Error("Unknown curve %d", abs(num));
+      Msg::Error("Unknown curve %d", abs(num));
       Tree_Delete(links, freeLink);
       Tree_Delete(points);
       return 0;
@@ -221,7 +221,7 @@ static void recurFindLinkedFaces(int fac, List_T *faces, Tree_T *edges,
 {
   GFace *gf = GModel::current()->getFaceByTag(abs(fac));
   if(!gf){
- //   Msg::Error("Unknown surface %d", abs(fac));
+    Msg::Error("Unknown surface %d", abs(fac));
     return;
   }
 
@@ -289,7 +289,7 @@ int allFacesLinked(int fac, List_T *faces)
     List_Read(faces, i, &num);
     GFace *gf = GModel::current()->getFaceByTag(abs(num));
     if(!gf){
-    //  Msg::Error("Unknown surface %d", abs(num));
+      Msg::Error("Unknown surface %d", abs(num));
       Tree_Delete(links, freeLink);
       Tree_Delete(edges);
       return 0;

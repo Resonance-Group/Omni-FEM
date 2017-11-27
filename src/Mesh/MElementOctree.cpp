@@ -207,7 +207,7 @@ std::vector<MElement *> MElementOctree::findAll(double x, double y, double z,
       }
     }
     MElement::setTolerance(initialTol);
-    //Msg::Warning("Point %g %g %g not found",x,y,z);
+    Msg::Warning("Point %g %g %g not found",x,y,z);
   }
   return e;
 }
@@ -249,7 +249,7 @@ MElement *MElementOctree::find(double x, double y, double z, int dim, bool stric
       }
     }
     MElement::setTolerance(initialTol);
-    //Msg::Warning("Point %g %g %g not found",x,y,z);
+    Msg::Warning("Point %g %g %g not found",x,y,z);
   }
   else if (!strict && !_gm){
     double initialTol = MElement::getTolerance();
@@ -268,7 +268,7 @@ MElement *MElementOctree::find(double x, double y, double z, int dim, bool stric
       }
     }
     MElement::setTolerance(initialTol);
-    //Msg::Warning("Point %g %g %g not found",x,y,z);
+    Msg::Warning("Point %g %g %g not found",x,y,z);
   }
   return NULL;
 }

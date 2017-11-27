@@ -8,7 +8,7 @@
 #include <complex>
 #include <stdlib.h>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/discreteFace.h"
 #include "Mesh/discreteDiskFace.h"
 #include "Mesh/GModelIO_GEO.h"
@@ -92,7 +92,7 @@ void discreteFace::setBoundEdges(const std::vector<int> &tagEdges)
       ge->addFace(this);
     }
     else{
-      //Msg::Error("Unknown model edge %d", tagEdges[i]);
+      Msg::Error("Unknown model edge %d", tagEdges[i]);
     }
   }
 }
@@ -101,7 +101,7 @@ void discreteFace::setBoundEdges(const std::vector<int> &tagEdges,
                                  const std::vector<int> &signEdges)
 {
   if(signEdges.size() != tagEdges.size()){
-   // Msg::Error("Wrong number of edge signs in setBoundEdges");
+   Msg::Error("Wrong number of edge signs in setBoundEdges");
     setBoundEdges(tagEdges);
   }
   for (unsigned int i = 0; i != tagEdges.size(); i++){
@@ -112,7 +112,7 @@ void discreteFace::setBoundEdges(const std::vector<int> &tagEdges,
       ge->addFace(this);
     }
     else{
-    //  Msg::Error("Unknown model edge %d", tagEdges[i]);
+      Msg::Error("Unknown model edge %d", tagEdges[i]);
     }
   }
 }
@@ -151,7 +151,7 @@ void discreteFace::findEdges(std::map<MEdge, std::vector<int>, Less_Edge> &map_e
 
 GPoint discreteFace::point(double par1, double par2) const
 {
- // Msg::Error("Cannot evaluate point on discrete face");
+  Msg::Error("Cannot evaluate point on discrete face");
   return GPoint();
 }
 
@@ -366,7 +366,7 @@ void discreteFace::mesh(bool verbose)
 
   if (!CTX::instance()->meshDiscrete) return;
 
-  //Msg::Info("Discrete Face %d is going to be meshed",tag());
+  Msg::Info("Discrete Face %d is going to be meshed",tag());
   for (unsigned int i=0;i<_atlas.size();i++){
     //    {
       //      void openProblemsON(void);
@@ -461,7 +461,7 @@ void discreteFace::checkAndFixOrientation()
 	    if (!(current->getVertex(k!=2 ?k+1 : 0 ) == neigs[i]->getVertex(j!=0 ? j-1 : 2) ||
 		  current->getVertex(k!=0 ?k-1 : 2 ) == neigs[i]->getVertex(j!=2 ? j+1 : 0))){
 	      neigs[i]->reverse();
-	      //Msg::Info("discreteFace: triangle %d has been reoriented.",neigs[i]->getNum());
+	      Msg::Info("discreteFace: triangle %d has been reoriented.",neigs[i]->getNum());
 	    }
 	    break;
 	  }
@@ -547,7 +547,7 @@ void discreteFace::splitDiscreteEdge(GEdge *de , GVertex *gv, discreteEdge* newE
 	df->setBoundEdges(tagEdges);
       }
       else{
-        //Msg::Error("splitDiscreteEdge only applies to discrete geometries");
+        Msg::Error("splitDiscreteEdge only applies to discrete geometries");
         return;
       }
     }
@@ -629,7 +629,7 @@ void discreteFace::split(triangulation* trian,std::vector<triangulation*> &parti
       }// end for j
     }// end while
     if(!celem.empty()){// if the set is empty, it means that the part was connected
-      //Msg::Info("discreteFace::split(), a partition (%d) is not connected: it is going to be fixed.",p);
+      Msg::Info("discreteFace::split(), a partition (%d) is not connected: it is going to be fixed.",p);
       std::vector<MElement*> relem(celem.begin(),celem.end());// new part
       for(unsigned int ie=0; ie<relem.size(); ie++)// updating the id part of the element belonging to the new part
 	el2part[relem[ie]] = nPartitions;

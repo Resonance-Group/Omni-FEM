@@ -17,7 +17,7 @@
 #include "Mesh/MLine.h"
 #include "Mesh/BackgroundMeshTools.h"
 #include "Mesh/Numeric.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Generator.h"
 #include "Mesh/Context.h"
 #include "common/OS.h"
@@ -227,7 +227,7 @@ bool computeEquivalentTriangles (GFace *gf,
   }
 
   if (WTF.size()){
-  //  Msg::Info("%d triangles are equivalent", WTF.size());
+    Msg::Info("%d triangles are equivalent", WTF.size());
     for (unsigned int i=0;i<WTF.size();i++){
     }
     return true;
@@ -459,7 +459,7 @@ int _removeThreeTrianglesNodes(GFace *gf)
     }
   }
   gf->triangles = triangles2;
- // Msg::Debug("%i three-triangles vertices removed",n);
+  Msg::Debug("%i three-triangles vertices removed",n);
   return n;
 }
 
@@ -504,7 +504,7 @@ static int _removeTwoQuadsNodes(GFace *gf)
           }
         }
         if (!v4){
-     //     Msg::Error("BUG DISCOVERED IN _removeTwoQuadsNodes ,%p,%p,%p",v1,v2,v3);
+          Msg::Error("BUG DISCOVERED IN _removeTwoQuadsNodes ,%p,%p,%p",v1,v2,v3);
           q1->writePOS(stdout,true,false,false,false,false,false);
           q2->writePOS(stdout,true,false,false,false,false,false);
           return 0;
@@ -560,7 +560,7 @@ int removeTwoQuadsNodes(GFace *gf)
     if (!x)break;
     nbRemove += x;
   }
- // Msg::Debug("%i two-quadrangles vertices removed",nbRemove);
+  Msg::Debug("%i two-quadrangles vertices removed",nbRemove);
   return nbRemove;
 }
 
@@ -829,7 +829,7 @@ int removeDiamonds(GFace *gf)
     if (!x)break;
     nbRemove += x;
   }
- // Msg::Debug("%i diamond quads removed",nbRemove);
+  Msg::Debug("%i diamond quads removed",nbRemove);
   return nbRemove;
 }
 
@@ -1019,7 +1019,7 @@ bool edgeSwap(std::set<swapquad> &configs, MTri3 *t1, GFace *gf, int iLocalEdge,
     }
     break;
   default :
-  //  Msg::Error("Unknown swapping criterion");
+    Msg::Error("Unknown swapping criterion");
     delete t1b;
     delete t2b;
     return false;
@@ -1254,15 +1254,15 @@ static int _recombineIntoQuads(GFace *gf, double minqual, bool cubicGraph = 1)
 #if defined(HAVE_BLOSSOM)
     int ncount = gf->triangles.size();
     if (ncount % 2 != 0 && CTX::instance()->mesh.algoRecombine == 1) {
- //     Msg::Warning("Cannot apply Blosson: odd number of triangles (%d) in surface %d",
-  //                 ncount, gf->tag());
+      Msg::Warning("Cannot apply Blosson: odd number of triangles (%d) in surface %d",
+                   ncount, gf->tag());
     }
     if (ncount % 2 == 0) {
       int ecount =  cubicGraph ? pairs.size() + makeGraphPeriodic.size() : pairs.size();
-//      Msg::Info("Blossom: %d internal %d closed",
+      Msg::Info("Blossom: %d internal %d closed",
                 (int)pairs.size(), (int)makeGraphPeriodic.size());
-      //Msg::Info("Cubic Graph should have ne (%d) = 3 x nv (%d) ",ecount,ncount);
-   //   Msg::Debug("Perfect Match Starts %d edges %d nodes",ecount,ncount);
+      Msg::Info("Cubic Graph should have ne (%d) = 3 x nv (%d) ",ecount,ncount);
+     Msg::Debug("Perfect Match Starts %d edges %d nodes",ecount,ncount);
       std::map<MElement*,int> t2n;
       std::map<int,MElement*> n2t;
       for (unsigned int i=0;i<gf->triangles.size();++i){
@@ -1302,7 +1302,7 @@ static int _recombineIntoQuads(GFace *gf, double minqual, bool cubicGraph = 1)
       sprintf(MATCHFILE,".face.match");
       if(perfect_match(ncount, NULL, ecount, &elist, &elen, NULL, MATCHFILE,
                        0, 0, 0, 0, &matzeit)){
-    //    Msg::Error("Perfect Match failed in Quadrangulation, try something else");
+        Msg::Error("Perfect Match failed in Quadrangulation, try something else");
         free(elist);
         pairs.clear();
       }
@@ -1313,8 +1313,8 @@ static int _recombineIntoQuads(GFace *gf, double minqual, bool cubicGraph = 1)
           // FIXME !
           if (an == 100000 /*|| an == 1000*/){
             // toProcess.push_back(std::make_pair(n2t[i1],n2t[i2]));
-            // Msg::Warning("Extra edge found in blossom algorithm, optimization "
-            //              "will be required");
+		 Msg::Warning("Extra edge found in blossom algorithm, optimization "
+                          "will be required");
           }
           else{
             MElement *t1 = n2t[i1];
@@ -1348,13 +1348,13 @@ static int _recombineIntoQuads(GFace *gf, double minqual, bool cubicGraph = 1)
         }
         free(elist);
         pairs.clear();
-     //   Msg::Debug("Perfect Match Succeeded in Quadrangulation (%g sec)", matzeit);
+       Msg::Debug("Perfect Match Succeeded in Quadrangulation (%g sec)", matzeit);
       }
     }
 
 #else
- //   Msg::Warning("Gmsh should be compiled with the Blossom IV code and CONCORDE "
- //                "in order to allow the Blossom optimization");
+    Msg::Warning("Gmsh should be compiled with the Blossom IV code and CONCORDE "
+                "in order to allow the Blossom optimization");
 #endif
   }
 
@@ -1426,9 +1426,9 @@ static double printStats(GFace *gf,const char *message)
     Qav += Q;
     Qmin = std::min(Q,Qmin);
   }
-//  Msg::Info("%s: %5d quads %5d triangles %1d invalid quads %2d quads with Q < 0.1 "
-//            "Avg Q = %5.3f Min Q %5.3f", message, gf->quadrangles.size(),
- //           gf->triangles.size(), nbInv, nbBad, Qav/gf->quadrangles.size(), Qmin);
+  Msg::Info("%s: %5d quads %5d triangles %1d invalid quads %2d quads with Q < 0.1 "
+            "Avg Q = %5.3f Min Q %5.3f", message, gf->quadrangles.size(),
+            gf->triangles.size(), nbInv, nbBad, Qav/gf->quadrangles.size(), Qmin);
   return Qmin;
 }
 
@@ -1492,7 +1492,7 @@ void recombineIntoQuads(GFace *gf,
   if (saveAll) gf->model()->writeMSH("after.msh");
 
   double t2 = Cpu();
-//  Msg::Info("Simple recombination algorithm completed (%g s)", t2 - t1);
+  Msg::Info("Simple recombination algorithm completed (%g s)", t2 - t1);
 }
 
 void quadsToTriangles(GFace *gf, double minqual)

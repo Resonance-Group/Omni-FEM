@@ -76,9 +76,9 @@ GFace *GEntity::cast2Face() { return dynamic_cast<GFace*>(this); }
 void GEntity::setMeshMaster(GEntity* gMaster)
 {
   if (gMaster->dim() != dim()){
- //   Msg::Error("Model entity %d of dimension %d cannot"
-  //             "be the mesh master of entity %d of dimension %d",
-  //             gMaster->tag(),gMaster->dim(),tag(),dim());
+    Msg::Error("Model entity %d of dimension %d cannot"
+               "be the mesh master of entity %d of dimension %d",
+               gMaster->tag(),gMaster->dim(),tag(),dim());
     return;
   }
   _meshMaster = gMaster;
@@ -87,16 +87,16 @@ void GEntity::setMeshMaster(GEntity* gMaster)
 void GEntity::setMeshMaster(GEntity* gMaster,const std::vector<double>& tfo)
 {
   if (gMaster->dim() != dim()){
- //   Msg::Error("Model entity %d of dimension %d cannot"
-  //             "be the mesh master of entity %d of dimension %d",
-  //             gMaster->tag(),gMaster->dim(),tag(),dim());
+    Msg::Error("Model entity %d of dimension %d cannot"
+               "be the mesh master of entity %d of dimension %d",
+               gMaster->tag(),gMaster->dim(),tag(),dim());
     return;
   }
 
   if (tfo.size() != 16) {
-  //  Msg::Error("Periodicity transformation from entity %d to %d (dim %d) has %d components"
-   //            ", while 16 are required",
-    //           gMaster->tag(),tag(),gMaster->dim(),tfo.size());
+    Msg::Error("Periodicity transformation from entity %d to %d (dim %d) has %d components"
+               ", while 16 are required",
+              gMaster->tag(),tag(),gMaster->dim(),tfo.size());
     return;
   }
 
