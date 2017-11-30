@@ -1,12 +1,14 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
 #include <Mesh/MVertex.h>
 
+
+
 wxDEFINE_EVENT(MOUSE_MOVE, wxCommandEvent);
 
 modelDefinition::modelDefinition(wxWindow *par, const wxPoint &point, const wxSize &size, problemDefinition &definition, wxStatusBarBase *statusBar) : wxGLCanvas(par, wxID_ANY, NULL, point, size, wxBORDER_DOUBLE | wxBORDER_RAISED)
 {
     _geometryContext = new wxGLContext(this);
-	wxGLCanvas::SetCurrent(*_geometryContext);
+	this->SetCurrent(*_geometryContext);
     wxPaintDC dc(this);
     
     _localDefinition = &definition;
@@ -2541,9 +2543,9 @@ void modelDefinition::updateProjection()
 
 void modelDefinition::drawGrid()
 {
-    double cornerMinX = convertToXCoordinate(0);
+    double cornerMinX = convertToXCoordinate(0); // X = 0.8835 Y = 3.962
     double cornerMinY = convertToYCoordinate(0);
-
+	// X = 5.500770498 Y = -0.4988
     double cornerMaxX = convertToXCoordinate(this->GetSize().GetWidth());
     double cornerMaxY = convertToYCoordinate(this->GetSize().GetHeight());
     
@@ -2684,7 +2686,8 @@ void modelDefinition::clearSelection()
 /* This function gets called everytime a draw routine is needed */
 void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 {
-    wxGLCanvas::SetCurrent(*_geometryContext);// This will make sure the the openGL commands are routed to the wxGLCanvas object
+	this->SetCurrent(*_geometryContext);
+   // wxGLCanvas::SetCurrent();// This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
     
     glMatrixMode(GL_MODELVIEW);
@@ -2698,7 +2701,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 	{
 		glColor3d(0.0, 1.0, 0.0); // Set the mesh color
 		
-		glPointSize(5.0); // Set the point size first
+		glPointSize(1.5); // Set the point size first
 		glLineWidth(1.0);
 		
 		glBegin(GL_POINTS);
@@ -2717,16 +2720,22 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 		p_modelMesh->getEntities(entityList, 2);
 		
 		glBegin(GL_LINES);
-            
+		// number of elements = 2996
+		// number of vertices = 2968
+		//	for(unsigned int i = 0; i < p_modelMesh->GetN)
+            unsigned int numElements = 0;
 			for(auto entityIterator : entityList)
 			{
+				int meshElementsNum =  entityIterator->getNumMeshElements();
 				for(unsigned int i = 0; i < entityIterator->getNumMeshElements(); i++)
 				{
+					numElements++;
 					std::vector<MVertex*> vertexList;
 					vertexList.reserve(entityIterator->getMeshElement(i)->getNumVertices());
 					entityIterator->getMeshElement(i)->getVertices(vertexList);
 					for(unsigned int j = 0; j < vertexList.size() - 1; j++)
 					{
+						
 						glVertex2d(vertexList[j]->x(), vertexList[j]->y());
 						glVertex2d(vertexList[j + 1]->x(), vertexList[j + 1]->y());
 					}
@@ -2812,15 +2821,15 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
      */ 
     glColor3f(0.0, 0.0, 0.0);
     glColor3d(0.0, 0.0, 0.0);
-  
-    SwapBuffers();
+	
+	bool temp = this->SwapBuffers();
 }
 
 
 
 void modelDefinition::onResize(wxSizeEvent &event)
 {
-    wxGLCanvas::SetCurrent(*_geometryContext);
+    this->SetCurrent(*_geometryContext);
     /* This section of the code will resize the viewport when a resize event occurs and then move the view back to the center of the grid
      * This is considered the initial starting position. The glLoadIdentity() function returns the matrix back to the the 
      * default condition
@@ -2831,10 +2840,10 @@ void modelDefinition::onResize(wxSizeEvent &event)
     glTranslated((float)this->GetSize().GetWidth() / 2.0f, (float)this->GetSize().GetHeight() / 2.0f, 0.0f);
    
  // The code below is not needed at this time. But the class needs to be created a little more in order to accurately determine that the code is in fact not needed
-/*  glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    */
+//  glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
+//    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    
     
     this->Refresh();
 }
@@ -2907,23 +2916,11 @@ void modelDefinition::onMouseWheel(wxMouseEvent &event)
 
 void modelDefinition::onMouseMove(wxMouseEvent &event)
 {
- //   wxCommandEvent updateStatusInformation;
- //   updateStatusInformation.
- //   wxEvent updateStatusBarEvent;
-    wxCommandEvent customEvent(MOUSE_MOVE);
-    
     int dx = event.GetX() - _mouseXPixel;
     int dy = event.GetY() - _mouseYPixel;
     
 	_mouseXPixel = event.GetX();
 	_mouseYPixel = event.GetY();
-    
-
-    
- //   customEvent.SetString(combinedString);
- //   wxPostEvent(this->GetParent(), customEvent);
-    
-    
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {

@@ -1486,10 +1486,11 @@ void recombineIntoQuads(GFace *gf,
   // simple recombination algo
   for (int IT=0;IT<2;IT++){
     _recombineIntoQuads(gf, 0);
+	//CTX::instance()->mesh.nbSmoothing = 8;
     if(haveParam)     RelocateVertices (gf,CTX::instance()->mesh.nbSmoothing);
   }
 
-  if (saveAll) gf->model()->writeMSH("after.msh");
+//  if (saveAll) gf->model()->writeMSH("after.msh");
 
   double t2 = Cpu();
   Msg::Info("Simple recombination algorithm completed (%g s)", t2 - t1);

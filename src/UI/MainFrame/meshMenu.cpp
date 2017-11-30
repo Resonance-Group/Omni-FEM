@@ -9,6 +9,7 @@ void OmniFEMMainFrame::onCreateMesh(wxCommandEvent &event)
 {
 	meshMaker meshTest(_model->getModelNodeList(), _model->getModelBlockList(), _model->getModelLineList(), _model->getModelArcList());
 	OmniFEMMsg::instance()->displayWindow(Status_Windows::MESH_STATUS_WINDOW);
+	_model->deleteMesh();
 	meshTest.mesh(_model->getMeshModel(), _problemDefinition.getMeshSettings());
 	_model->checkModelIsValid();
 	_model->Refresh();

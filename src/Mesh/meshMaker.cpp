@@ -696,26 +696,9 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 {
 	bool canMakeMesh = true;
 	bool meshCreated = false;
-	
-	//GModel meshModel;
+
 	GmshInitialize();
 	
-	CTX::instance()->mesh.recombineAll = 0;
-	CTX::instance()->mesh.recombinationTestNewStrat = 0;
-	CTX::instance()->mesh.nProc = 0;
-	CTX::instance()->mesh.nbProc = 0;
-	CTX::instance()->mesh.remeshParam = 0;
-	CTX::instance()->mesh.order = 1;
-	CTX::instance()->lc = 2.3323807574381199;
-	CTX::instance()->mesh.multiplePasses = 0;
-	CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
-	CTX::instance()->mesh.algoSubdivide = 1;
-	
-	if(settings.getBlossomRecombinationState())
-		CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
-	else
-		CTX::instance()->mesh.algoRecombine = 0;
-		
 	OmniFEMMsg::instance()->MsgStatus("Creating GMSH Geometry from Omni-FEM geometry");
 	OmniFEMMsg::instance()->MsgStatus("Finding contours");
 	
@@ -734,6 +717,7 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 				break;
 		}
 	}
+	
 	OmniFEMMsg::instance()->MsgStatus("Contours found");
 	
 	// Another check here to ensure that all of the contours saved are actually closed contours
@@ -753,6 +737,72 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	 */ 
 	if(canMakeMesh)
 	{
+		CTX::instance()->mesh.recombineAll = 0;
+		CTX::instance()->mesh.recombinationTestNewStrat = 0;
+		CTX::instance()->mesh.nProc = 0;
+		CTX::instance()->mesh.nbProc = 0;
+		CTX::instance()->lc = 2.3323807574381199;
+		
+		CTX::instance()->mesh.multiplePasses = 1;
+		
+		/* These are settings that will remain constant */
+		
+		CTX::instance()->mesh.algoSubdivide = 1; // The 1 here is to specify that we are only concerned with quads
+		CTX::instance()->mesh.secondOrderIncomplete = 0; // Always use complete meshes
+		CTX::instance()->mesh.lcExtendFromBoundary = 1; // By setting to 1 the mesh size will extend from the boundary. This needs more research
+		
+		
+		/* These are the settings that are set by the user */
+		
+		switch(settings.getRemeshParameter())
+		{
+			case MeshParametrization::MESH_PARAM_HARMONIC:
+				CTX::instance()->mesh.remeshParam = 0;
+				break;
+			case MeshParametrization::MESH_PARAM_CONFORMAL:
+				CTX::instance()->mesh.remeshParam = 1;
+				break;
+			case MeshParametrization::MESH_PARAM_RBFHARMONIC:
+				CTX::instance()->mesh.remeshParam = 2;
+				break;
+		}
+		
+		if(settings.getAutoRemeshingState())
+			CTX::instance()->mesh.remeshAlgo = 1;
+		else
+			CTX::instance()->mesh.remeshAlgo = 0;
+			
+		switch(settings.getMeshAlgorithm())
+		{
+			case MeshAlgorthim::MESH_ALGO_AUTOMATIC:
+				CTX::instance()->mesh.algo2d = ALGO_2D_AUTO;
+				break;
+			case MeshAlgorthim::MESH_ALGO_MESHADAPT:
+				CTX::instance()->mesh.algo2d = ALGO_2D_MESHADAPT;
+				break;
+			case MeshAlgorthim::MESH_ALGO_DELAUNAY:
+				CTX::instance()->mesh.algo2d = ALGO_2D_DELAUNAY;
+				break;
+			case MeshAlgorthim::MESH_ALGO_FRONTAL:
+				CTX::instance()->mesh.algo2d = ALGO_2D_FRONTAL;
+				break;
+		}
+		
+		if(settings.getBlossomRecombinationState())
+			CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
+		else
+			CTX::instance()->mesh.algoRecombine = 0;
+			
+		CTX::instance()->mesh.nbSmoothing = (int)settings.getSmoothingSteps();
+		
+		CTX::instance()->mesh.lcFactor = settings.getElementSizeFactor();
+		CTX::instance()->mesh.lcMin = settings.getMinElementSize();
+		CTX::instance()->mesh.lcMax = settings.getMaxElementSize();
+		
+		CTX::instance()->mesh.order = settings.getElementOrder();
+		
+		/* Now we go to conver Omni-FEM's geometry data structure into the data structure for GMSH */
+		
 		OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
 		std::vector<GVertex*> vertexModelList;
 		std::vector<std::vector<std::vector<GEdge*>>> compeleteLineLoop;
@@ -830,7 +880,36 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 			// And add it in the correct place of the complete line loop
 			// For now, we will just add it to the model directly
 			test.push_back(contourLoop);
+			
+			// Add the contour to the face selection
 			GFace *testFace = meshModel->addPlanarFace(test);
+			
+			if(settings.getStructuredState())
+			{
+				testFace->meshAttributes.method = 1;// Sets the face to be transfinite
+				
+				switch(settings.getMeshArrangment())
+				{
+					case StructuredArrangement::ARRANGMENT_LEFT:
+						testFace->meshAttributes.transfiniteArrangement = -1;
+						break;
+					case StructuredArrangement::ARRANGMENT_RIGHT:
+						testFace->meshAttributes.transfiniteArrangement = 1;
+						break;
+					case StructuredArrangement::ARRANGMENT_ALTERNATED:
+						testFace->meshAttributes.transfiniteArrangement = 2;
+						break;
+					default:
+						testFace->meshAttributes.transfiniteArrangement = -1;
+						break;
+				}
+			}
+			else
+			{
+				testFace->meshAttributes.method = 2;
+				testFace->meshAttributes.transfiniteArrangement = 0;
+			}
+				  
 			
 			/* TODO: Next, we need to create an algorthim that will determine which block labels lie
 			 * within the boundary of the face and from there, extra the mesh size (or no Mesh) 
@@ -896,7 +975,12 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 		}
 		
 		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
-		meshModel->mesh(2);
+		
+		for(int i = 0; i < CTX::instance()->mesh.multiplePasses; i++)
+		{
+			OmniFEMMsg::instance()->MsgStatus("Performing pass " + std::to_string(i + 1) + " of " + std::to_string(CTX::instance()->mesh.multiplePasses));
+			meshModel->mesh(2);
+		}
 		
 		// Next set any output mesh options
 		// such as different files to output the mesh. Be it VTK or some other format

@@ -7,6 +7,9 @@
 #include <math.h>
 #include <sstream>
 
+#include <thread>
+#include <chrono>
+
 #include <glew.h>
 #include <freeglut.h>
 
@@ -1030,6 +1033,9 @@ public:
 		_zoomY = otherParam.at(1);
 		_cameraX = otherParam.at(2);
 		_cameraY = otherParam.at(3);
+	//	std::this_thread::sleep_for(std::chrono::seconds(1));
+		this->Refresh();
+		this->Update();
 	}
 	
 	/**
@@ -1056,7 +1062,7 @@ public:
 	
 	bool checkModelIsValid()
 	{
-		if(p_modelMesh->getNumMeshVertices() > 0)
+		if(p_modelMesh && p_modelMesh->getNumMeshVertices() > 0)
 			p_drawMesh = true;
 		else
 			p_drawMesh = false;

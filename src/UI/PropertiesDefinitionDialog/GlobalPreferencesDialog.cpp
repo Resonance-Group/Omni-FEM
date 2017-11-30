@@ -633,7 +633,7 @@ void globalPreferencesDialog::onMeshAlgoComboBox(wxCommandEvent &event)
 			break;
 	}
 	
-	p_meshSetting.setMeshAlgorithm((MeshAlgorthim)p_meshArrangementComboBox->GetSelection());
+	p_meshSetting.setMeshAlgorithm((MeshAlgorthim)p_meshAlgothimComboBox->GetSelection());
 }
 
 

@@ -2152,9 +2152,6 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
           SPoint3 po (o->x(),o->y(),0);
           if (diffend(v1,v2,mv1,mv2)){
             if (intersection_segments (p1, p2, pv1, pv2,xcc)){
-              	    if (std::binary_search(edges.begin(),edges.end(),MEdge(v1,v2),Less_Edge())){
-              	      Msg::Error("1D mesh self intersects");
-              	    }
               if (!intersection_segments(po, p3, pv1, pv2,xcc) || (v3 == mv1 || o == mv1 || v3 == mv2 || o == mv2)){
                 if(swapedge (v1,v2,v3,o,t[i],j))return true;
               }

@@ -455,6 +455,7 @@ static void Mesh2D(GModel *m)
 #pragma omp parallel for schedule (dynamic)
 #endif
       for(size_t K = 0 ; K < temp.size() ; K++){
+		  GFace *debugFace = temp[K];
         if (temp[K]->meshStatistics.status == GFace::PENDING){
           backgroundMesh::current()->unset();
 	  // meshGFace mesher(true);
@@ -1044,6 +1045,9 @@ void GenerateMesh(GModel *m, int ask)
     return;
   }
   CTX::instance()->lock = 1;
+  
+  CTX debugInstance = *CTX::instance();
+  contextMeshOptions debugMesh = CTX::instance()->mesh;
 
   Msg::ResetErrorCounter();
 

@@ -51,16 +51,22 @@ int GModel::writeVTK(const std::string &name, bool binary, bool saveAll,
 
   // loop over all elements we need to save and count vertices
   int numElements = 0, totalNumInt = 0;
-  for(unsigned int i = 0; i < entities.size(); i++){
-    if(entities[i]->physicals.size() || saveAll){
-      for(unsigned int j = 0; j < entities[i]->getNumMeshElements(); j++){
-        if(entities[i]->getMeshElement(j)->getTypeForVTK()){
-          numElements++;
-          totalNumInt += entities[i]->getMeshElement(j)->getNumVertices() + 1;
-        }
-      }
-    }
-  }
+	for(unsigned int i = 0; i < entities.size(); i++)
+	{
+		
+		if(entities[i]->physicals.size() || saveAll)
+		{
+			for(unsigned int j = 0; j < entities[i]->getNumMeshElements(); j++)
+			{
+				if(entities[i]->getMeshElement(j)->getTypeForVTK())
+				{
+					numElements++;
+					totalNumInt += entities[i]->getMeshElement(j)->getNumVertices() + 1;
+				}
+			}
+		}
+		
+	}
 
   // print vertex indices in ascii or binary
   fprintf(fp, "CELLS %d %d\n", numElements, totalNumInt);

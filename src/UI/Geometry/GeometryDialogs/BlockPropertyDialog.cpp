@@ -2,6 +2,7 @@
 #include <UI/GeometryDialog/BlockPropertyDialog.h>
 
 
+
 blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMaterial> *material, std::vector<circuitProperty> *circuit, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);

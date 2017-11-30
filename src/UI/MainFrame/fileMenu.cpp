@@ -62,6 +62,8 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 		if(_UIState != systemState::MODEL_DEFINING)
 			createModelDefiningClient();
 			
+		_model->SetSize(this->GetClientSize() - wxSize(12, 12));
+		
 		wxString appendedTitle = "Omni-FEM - ";
 		wxString fileName;
 		std::string tempFileName = openFileDialog.GetFilename().ToStdString();
@@ -72,6 +74,10 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 		_saveFilePath = openFileDialog.GetPath();
 		_problemDefinition.defintionClear();
 		load(openFileDialog.GetPath().ToStdString());
+		
+		_model->Refresh(true);
+//		_model->Update();
+//		_model->UpdateWindowUI();
 	}
 }
 
