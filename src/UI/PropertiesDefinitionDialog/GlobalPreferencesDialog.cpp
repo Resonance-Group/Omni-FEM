@@ -295,7 +295,6 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	remeshParameterizationArray.Add("Conformal");
 	remeshParameterizationArray.Add("Rbf Harmonic");
 	
-	// _problemTypeComboBox->Create(physicsProblemPreferencesPanel, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), problemTypeNameArray)
 	wxBoxSizer *stucturedMeshSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshArrangmentSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -480,6 +479,12 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	
 	p_minElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
 	p_minElementSizeTextCtrl->SetFont(*font);
+	
+	wxTextValidator testValidator(wxFILTER_NUMERIC | wxFILTER_EXCLUDE_LIST);
+	wxArrayString excludeList;
+	excludeList.Add("-");
+	testValidator.SetExcludes(excludeList);
+	p_minElementSizeTextCtrl->SetValidator(testValidator);
 	
 	std::ostream minStream(p_minElementSizeTextCtrl);
 	minStream << std::setprecision(4);

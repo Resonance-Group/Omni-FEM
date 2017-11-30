@@ -224,6 +224,97 @@
       <File Name="src/Mesh/GModelIO_MSH.cpp"/>
       <File Name="src/Mesh/GModelIO_MSH2.cpp"/>
       <File Name="src/Mesh/GModelIO_VTK.cpp"/>
+      <VirtualDirectory Name="Blossom">
+        <VirtualDirectory Name="BigGuy">
+          <File Name="src/Mesh/Blossom/BigGuy/bigguy.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="Cut">
+          <File Name="src/Mesh/Blossom/Cut/connect.c"/>
+          <File Name="src/Mesh/Blossom/Cut/cut_st.c"/>
+          <File Name="src/Mesh/Blossom/Cut/mincut.c"/>
+          <File Name="src/Mesh/Blossom/Cut/segments.c"/>
+          <File Name="src/Mesh/Blossom/Cut/shrink.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="EdgeGen">
+          <File Name="src/Mesh/Blossom/EdgeGen/edgegen.c"/>
+          <File Name="src/Mesh/Blossom/EdgeGen/xnear.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="FMatch">
+          <File Name="src/Mesh/Blossom/FMatch/fmatch.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="KDTree">
+          <File Name="src/Mesh/Blossom/KDTree/kdbuild.c"/>
+          <File Name="src/Mesh/Blossom/KDTree/kdnear.c"/>
+          <File Name="src/Mesh/Blossom/KDTree/kdspan.c"/>
+          <File Name="src/Mesh/Blossom/KDTree/kdtwoopt.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="LinkERN">
+          <File Name="src/Mesh/Blossom/LinkERN/flip_ll8.c"/>
+          <File Name="src/Mesh/Blossom/LinkERN/linkern.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="LP">
+          <File Name="src/Mesh/Blossom/LP/lpsolve.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="TSP">
+          <File Name="src/Mesh/Blossom/TSP/bcontrol.c"/>
+          <File Name="src/Mesh/Blossom/TSP/branch.c"/>
+          <File Name="src/Mesh/Blossom/TSP/cliqhash.c"/>
+          <File Name="src/Mesh/Blossom/TSP/cliqwork.c"/>
+          <File Name="src/Mesh/Blossom/TSP/control.c"/>
+          <File Name="src/Mesh/Blossom/TSP/cutcall.c"/>
+          <File Name="src/Mesh/Blossom/TSP/cutpool.c"/>
+          <File Name="src/Mesh/Blossom/TSP/edgemap.c"/>
+          <File Name="src/Mesh/Blossom/TSP/ex_price.c"/>
+          <File Name="src/Mesh/Blossom/TSP/generate.c"/>
+          <File Name="src/Mesh/Blossom/TSP/prob_io.c"/>
+          <File Name="src/Mesh/Blossom/TSP/qsparse.c"/>
+          <File Name="src/Mesh/Blossom/TSP/teething.c"/>
+          <File Name="src/Mesh/Blossom/TSP/tighten.c"/>
+          <File Name="src/Mesh/Blossom/TSP/tsp_lp.c"/>
+          <File Name="src/Mesh/Blossom/TSP/xtour.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="UTIL">
+          <File Name="src/Mesh/Blossom/UTIL/allocrus.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/bgetopt.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/dheaps_i.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/edg2cyc.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/edgelen.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/fastread.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/genhash.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/getdata.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/priority.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/safe_io.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/sortrus.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/urandom.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/util.c"/>
+          <File Name="src/Mesh/Blossom/UTIL/zeit.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="XStuff">
+          <File Name="src/Mesh/Blossom/XStuff/Xallcuts.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xblobs.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xblock.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xblossom.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xcclean.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xclique.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xcuthash.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xcutload.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xcuts.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xcututil.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xflow.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xgomhu.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xgraph.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xnecklac.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xnewkids.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xourallo.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xpqnew.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xshrink.c"/>
+          <File Name="src/Mesh/Blossom/XStuff/Xstuff.c"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="Match">
+          <File Name="src/Mesh/Blossom/Match/match.c"/>
+          <File Name="src/Mesh/Blossom/Match/matprice.c"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -311,6 +402,7 @@
       <File Name="Include/common/mathex.h"/>
       <File Name="Include/common/OmniFEMMessage.h"/>
       <File Name="Include/common/MeshSettings.h"/>
+      <File Name="Include/common/OmniFEMDefines.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig=""/>
@@ -464,6 +556,29 @@
       <File Name="Include/Mesh/nanoflann.hpp"/>
       <File Name="Include/Mesh/DefaultOptions.h"/>
       <File Name="Include/Mesh/GmshMessage.h"/>
+      <VirtualDirectory Name="Blossom">
+        <File Name="Include/Mesh/Blossom/bigguy.h"/>
+        <File Name="Include/Mesh/Blossom/concorde.h"/>
+        <File Name="Include/Mesh/Blossom/cut.h"/>
+        <File Name="Include/Mesh/Blossom/edgegen.h"/>
+        <File Name="Include/Mesh/Blossom/fmatch.h"/>
+        <File Name="Include/Mesh/Blossom/kdtree.h"/>
+        <File Name="Include/Mesh/Blossom/linkern.h"/>
+        <File Name="Include/Mesh/Blossom/lp.h"/>
+        <File Name="Include/Mesh/Blossom/machdefs.h"/>
+        <File Name="Include/Mesh/Blossom/macrorus.h"/>
+        <File Name="Include/Mesh/Blossom/match.h"/>
+        <File Name="Include/Mesh/Blossom/matprice.h"/>
+        <File Name="Include/Mesh/Blossom/prefix.h"/>
+        <File Name="Include/Mesh/Blossom/tsp.h"/>
+        <File Name="Include/Mesh/Blossom/util.h"/>
+        <File Name="Include/Mesh/Blossom/Xcutpool.h"/>
+        <File Name="Include/Mesh/Blossom/Xnecklac.h"/>
+        <File Name="Include/Mesh/Blossom/Xpq.h"/>
+        <File Name="Include/Mesh/Blossom/Xpqsets.h"/>
+        <File Name="Include/Mesh/Blossom/Xstuff.h"/>
+        <File Name="Include/Mesh/Blossom/Xsubtour.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
