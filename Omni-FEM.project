@@ -315,6 +315,14 @@
           <File Name="src/Mesh/Blossom/Match/matprice.c"/>
         </VirtualDirectory>
       </VirtualDirectory>
+      <VirtualDirectory Name="BFGS">
+        <File Name="src/Mesh/BFGS/alglibinternal.cpp"/>
+        <File Name="src/Mesh/BFGS/alglibmisc.cpp"/>
+        <File Name="src/Mesh/BFGS/ap.cpp"/>
+        <File Name="src/Mesh/BFGS/linalg.cpp"/>
+        <File Name="src/Mesh/BFGS/optimization.cpp"/>
+        <File Name="src/Mesh/BFGS/solvers.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -372,6 +380,7 @@
       </VirtualDirectory>
       <File Name="Include/UI/GeometryEditor2D.h"/>
       <File Name="Include/UI/StatusWindow.h"/>
+      <File Name="Include/UI/MeshAdvancedSettings.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>
@@ -579,6 +588,14 @@
         <File Name="Include/Mesh/Blossom/Xstuff.h"/>
         <File Name="Include/Mesh/Blossom/Xsubtour.h"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="BFGS">
+        <File Name="Include/Mesh/BFGS/alglibinternal.h"/>
+        <File Name="Include/Mesh/BFGS/alglibmisc.h"/>
+        <File Name="Include/Mesh/BFGS/ap.h"/>
+        <File Name="Include/Mesh/BFGS/linalg.h"/>
+        <File Name="Include/Mesh/BFGS/optimization.h"/>
+        <File Name="Include/Mesh/BFGS/solvers.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
@@ -603,6 +620,10 @@
         <IncludePath Value="/usr/include/wx-3.0"/>
         <IncludePath Value="/usr/include/freetype2"/>
         <IncludePath Value="/usr/include/boost"/>
+        <Preprocessor Value="CC_PROTOTYPE_ANSI"/>
+        <Preprocessor Value="HAVE_MESH"/>
+        <Preprocessor Value="HAVE_BLOSSOM"/>
+        <Preprocessor Value="HAVE_BFGS"/>
       </Compiler>
       <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all);" Required="yes">
         <LibraryPath Value="/usr/lib/x86_64-linux-gnu"/>

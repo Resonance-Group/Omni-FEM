@@ -113,6 +113,7 @@ public:
         ++ite;
       }
       CTX::instance()->mesh.lcFactor *=2.0;
+	  _gf->meshAttributes.meshSize = _gf->meshAttributes.meshSize * 2.0;
     }
   }
   void subdivide ()
@@ -209,6 +210,7 @@ public:
        CTX::instance()->mesh.algoRecombine == 2){
       // recombine the elements on the half mesh
       CTX::instance()->mesh.lcFactor /=2.0;
+	  _gf->meshAttributes.meshSize = _gf->meshAttributes.meshSize / 2.0;
       recombineIntoQuads(_gf,true,true,.1,true);
 	  OmniFEMMsg::instance()->MsgInfo("Subdividing");
       subdivide();

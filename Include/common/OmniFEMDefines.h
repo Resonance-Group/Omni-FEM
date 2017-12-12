@@ -5,3 +5,5 @@
 
 #define CC_PROTOTYPE_ANSI
 #define HAVE_MESH
+#define HAVE_BLOSSOM
+#define HAVE_BFGS

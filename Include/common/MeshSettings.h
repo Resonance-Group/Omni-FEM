@@ -31,6 +31,49 @@ enum StructuredArrangement
 class meshSettings
 {
 private:
+	
+	wxString p_meshSaveLocation;
+	
+	bool p_saveAsVTK = false;
+	
+	bool p_saveAsBDF = false;
+	
+	bool p_saveAsCELUM = false;
+	
+	bool p_saveAsCGNS = false;
+	
+	bool p_saveAsDIFFPACK = false;
+	
+	bool p_saveAsFourier = false;
+	
+	bool p_saveAsGEO = false;
+	
+	bool p_SaveAsINP = false;
+	
+	bool p_saveAsIR3 = false;
+	
+	bool p_saveAsMAIL = false;
+	
+	bool p_saveAsMESH = false;
+	
+	bool p_saveAsMSH = false;
+	
+	bool p_saveAsP3D = false;
+	
+	bool p_saveAsPatitionedMesh = false;
+	
+	bool p_saveAsPLY2 = false;
+	
+	bool p_saveAsSTL = false;
+	
+	bool p_saveAsSU2 = false;
+	
+	bool p_saveAsTochnog = false;
+	
+	bool p_saveAsUNV = false;
+	
+	bool p_saveAsVRML = false;
+
 	bool p_isStructured = false;
 	
 	StructuredArrangement p_faceMeshStructuredArrangment = StructuredArrangement::ARRANGMENT_LEFT;

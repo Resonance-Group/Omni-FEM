@@ -382,9 +382,14 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
     {
         _meshSizeTextCtrl->GetValue().ToDouble(&value);
         property.setMeshSize(value);
-        property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
-		if(p_property.getMeshSize() != value)
-			resetMesh = true;
+		if(property.getMaterialName() == "No Mesh")
+			property.setMeshSizeType(meshSize::MESH_NONE_);
+		else
+		{
+			property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
+			if(p_property.getMeshSize() != value)
+				resetMesh = true;
+		}
     }
     
     if(_problem == physicProblems::PROB_MAGNETICS)

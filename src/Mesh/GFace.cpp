@@ -30,12 +30,12 @@
 #include "Mesh/BackgroundMeshTools.h"
 #endif
 
-/*
+
 #if defined(HAVE_BFGS)
-#include "stdafx.h"
-#include "optimization.h"
+//#include "stdafx.h"
+#include "Mesh/BFGS/optimization.h"
 #endif
- */ 
+
 
 #define SQU(a)      ((a)*(a))
 

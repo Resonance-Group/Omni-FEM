@@ -737,20 +737,25 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	 */ 
 	if(canMakeMesh)
 	{
-		CTX::instance()->mesh.recombineAll = 0;
+		
 		CTX::instance()->mesh.recombinationTestNewStrat = 0;
 		CTX::instance()->mesh.nProc = 0;
 		CTX::instance()->mesh.nbProc = 0;
-		CTX::instance()->lc = 2.3323807574381199;
-		
+	//	CTX::instance()->lc = 2.3323807574381199;
+		CTX::instance()->lc = 2.5;
+		CTX::instance()->mesh.optimizeLloyd = 5;
 		CTX::instance()->mesh.multiplePasses = 1;
 		
 		/* These are settings that will remain constant */
 		
 		CTX::instance()->mesh.algoSubdivide = 1; // The 1 here is to specify that we are only concerned with quads
 		CTX::instance()->mesh.secondOrderIncomplete = 0; // Always use complete meshes
-		CTX::instance()->mesh.lcExtendFromBoundary = 1; // By setting to 1 the mesh size will extend from the boundary. This needs more research
+		CTX::instance()->mesh.lcExtendFromBoundary = 1; // By setting to 1 the mesh size will extend from the boundary. This needs more research. This maybe an option that the user speficies
+		CTX::instance()->mesh.recombineAll = 1; // Make sure to recombine all triangles into quads
 		
+		CTX::instance()->mesh.algo3d = 1; // Not really necessary?
+		CTX::instance()->mesh.lcFromPoints = 0;// Obtain the characteristic length from the nodes (This doesn't work too well)
+		CTX::instance()->mesh.lcFromCurvature = 1;// Obtain the characteristic length (mesh size) from the edges of the face (This works better)
 		
 		/* These are the settings that are set by the user */
 		
@@ -801,8 +806,10 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 		
 		CTX::instance()->mesh.order = settings.getElementOrder();
 		
-		/* Now we go to conver Omni-FEM's geometry data structure into the data structure for GMSH */
+		contextMeshOptions testMesh = CTX::instance()->mesh;
 		
+		/* Now we go to conver Omni-FEM's geometry data structure into the data structure for GMSH */
+		// lcFactor->0.29999999999 lcExtendFromBoundary->1 algo3D-> 1
 		OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
 		std::vector<GVertex*> vertexModelList;
 		std::vector<std::vector<std::vector<GEdge*>>> compeleteLineLoop;
@@ -816,11 +823,14 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 		{
 			double test1 = nodeIterator.getCenterXCoordinate();
 			double test2 = nodeIterator.getCenterYCoordinate();
-			vertexModelList.push_back(meshModel->addVertex(test1, test2, 0.0, 1.0));
+			GVertex *temp = meshModel->addVertex(test1, test2, 0.0, 1.0);
+			vertexModelList.push_back(temp);
+		//	vertexModelList
 		}
 		
 		/* Now we create the faces */
 		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
+		
 		for(auto contourIterator : p_closedContours)
 		{
 			/* This section here will transfer the found closed contours into a vector 
@@ -867,7 +877,9 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 				else
 				{
 					GEdge *temp = meshModel->addLine(firstNode, secondNode);
-					
+				//	meshModel->
+			//		temp->meshAttributes.meshSize = 1.0;
+			//		temp->meshAttributes.meshSize = p_blockLabelList->begin()->getProperty()->getMeshSize();
 					contourLoop.push_back(temp);
 				}
 			}
@@ -959,12 +971,19 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 				/* Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
 				 */ 
 				 
-				 if(numberOfIntersections % 2 == 1)
+				if(numberOfIntersections % 2 == 1)
 				{
-					if(blockIterator.getProperty()->getMeshsizeType() != MESH_NONE_)
+					meshSize testEnum = blockIterator.getProperty()->getMeshsizeType();
+					if(blockIterator.getProperty()->getMeshsizeType() != meshSize::MESH_NONE_)
 					{
+						
 						double checkMesh = blockIterator.getProperty()->getMeshSize();
-						testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
+						for(int i = 0; i < contourLoop.size(); i++)
+						{
+							contourLoop[i]->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
+						}
+					//	testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
+						testFace->meshAttributes.meshSize = 1.0;	
 					}
 					else
 						testFace->meshAttributes.method = MESH_NONE;
@@ -973,6 +992,15 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 				}
 			}
 		}
+		
+		/* As a side note,this current method for constructing the GMSH geometry will not work.
+		 * The order needs to be this:
+		 * 1) Create the list of vertices. Convert all Omni-FEM nodes to GMSH vertices
+		 * 2) Convert all Omni-FEM lines/arcs into GMSH edges. Save in a list which groups them based on the face that they are in
+		 * At the end of step 2, we should have a vector will all of the closed contours containing the GMSH edges
+		 * 3) Construct the faces of the model by indentifying if the contour lies within the another contour and construct the face vector
+		 * 4) Add face to the GMSH geometry
+		 */ 
 		
 		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
 		
@@ -986,7 +1014,6 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 		// such as different files to output the mesh. Be it VTK or some other format
 		OmniFEMMsg::instance()->MsgStatus("Saving Mesh file");
 		meshModel->writeVTK("/home/phillip/Desktop/test.vtk");
-		
 		//meshModel.getMesh
 		
 		

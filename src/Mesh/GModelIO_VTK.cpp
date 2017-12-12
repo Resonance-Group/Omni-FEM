@@ -72,6 +72,7 @@ int GModel::writeVTK(const std::string &name, bool binary, bool saveAll,
   fprintf(fp, "CELLS %d %d\n", numElements, totalNumInt);
   for(unsigned int i = 0; i < entities.size(); i++){
     if(entities[i]->physicals.size() || saveAll){
+		int temp = entities[i]->getNumMeshElements();
       for(unsigned int j = 0; j < entities[i]->getNumMeshElements(); j++){
         if(entities[i]->getMeshElement(j)->getTypeForVTK())
           entities[i]->getMeshElement(j)->writeVTK(fp, binary, bigEndian);

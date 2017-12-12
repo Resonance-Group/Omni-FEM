@@ -459,6 +459,8 @@ static void Mesh2D(GModel *m)
         if (temp[K]->meshStatistics.status == GFace::PENDING){
           backgroundMesh::current()->unset();
 	  // meshGFace mesher(true);
+	  double lcValue = CTX::instance()->lc;
+		contextMeshOptions tempMesh = CTX::instance()->mesh;
           temp[K]->mesh(true);
 #if defined(HAVE_BFGS)
           if(CTX::instance()->mesh.optimizeLloyd){

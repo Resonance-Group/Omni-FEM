@@ -23,7 +23,7 @@
 
 
 #if defined(HAVE_MESH)
-#include "DivideAndConquer.h"
+#include "Mesh/DivideAndConquer.h"
 #endif
 
 void SOrientedBoundingBox::fillp()

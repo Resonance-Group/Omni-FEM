@@ -49,6 +49,9 @@
 #include "PView.h"
 #include "PViewData.h"
 #endif
+
+#define HAVE_BFGS
+
 /*
 class TEST_IF_MESH_IS_COMPATIBLE_WITH_EMBEDDED_ENTITIES {
 public:

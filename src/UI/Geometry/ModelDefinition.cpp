@@ -2716,14 +2716,29 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 		glEnd();
 		
 		std::vector<GEntity*> entityList;
-		entityList.reserve(p_modelMesh->getNumFaces()); 
-		p_modelMesh->getEntities(entityList, 2);
+	//	entityList.reserve(p_modelMesh->getNumFaces()); 
+		p_modelMesh->getEntities(entityList, 4);
 		
 		glBegin(GL_LINES);
 		// number of elements = 2996
 		// number of vertices = 2968
 		//	for(unsigned int i = 0; i < p_modelMesh->GetN)
-            unsigned int numElements = 0;
+			int numOfElements = 0;
+			for(unsigned int i = 0; i < entityList.size(); i++)
+			{
+				int temp = entityList[i]->getNumMeshElements();
+				for(unsigned int j = 0; j < entityList[i]->getNumMeshElements(); j++)
+				{
+					numOfElements++;
+					int test = entityList[i]->getMeshElement(j)->getNumVertices() - 1;
+					for(unsigned int k = 0; k < entityList[i]->getMeshElement(j)->getNumVertices() - 1; k++)
+					{
+						glVertex2d(entityList[i]->getMeshElement(j)->getVertex(k)->x(), entityList[i]->getMeshElement(j)->getVertex(k)->y());
+						glVertex2d(entityList[i]->getMeshElement(j)->getVertex(k + 1)->x(), entityList[i]->getMeshElement(j)->getVertex(k + 1)->y());
+					}
+				}
+			}
+       /*     unsigned int numElements = 0;
 			for(auto entityIterator : entityList)
 			{
 				int meshElementsNum =  entityIterator->getNumMeshElements();
@@ -2732,6 +2747,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 					numElements++;
 					std::vector<MVertex*> vertexList;
 					vertexList.reserve(entityIterator->getMeshElement(i)->getNumVertices());
+					
 					entityIterator->getMeshElement(i)->getVertices(vertexList);
 					for(unsigned int j = 0; j < vertexList.size() - 1; j++)
 					{
@@ -2741,7 +2757,7 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 					}
 					
 				}
-			}
+			}*/
 
         glEnd();
 		

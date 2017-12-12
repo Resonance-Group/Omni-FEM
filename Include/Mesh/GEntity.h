@@ -30,6 +30,7 @@ class GFace;
 class MVertex;
 class MElement;
 class VertexArray;
+class ExtrudeParams;
 
 // A geometric model entity.
 class GEntity {
@@ -57,6 +58,36 @@ class GEntity {
   SOrientedBoundingBox *_obb;
 
  public: // these will become protected at some point
+ struct {
+    // do we recombine the triangles of the mesh?
+    int recombine;
+    // what is the treshold angle for recombination
+    double recombineAngle;
+    // is this surface meshed using a transfinite interpolation
+    char method;
+    // corners of the transfinite interpolation
+    std::vector<GVertex*> corners;
+    // all diagonals of the triangulation are left (-1), right (1) or
+    // alternated starting at right (2) or left (-2)
+    int transfiniteArrangement;
+    // do we smooth (transfinite) mesh? (<0 to use default smoothing)
+    int transfiniteSmoothing;
+    // the extrusion parameters (if any)
+    ExtrudeParams *extrude;
+    // reverse mesh orientation
+    bool reverseMesh;
+    // global mesh size constraint for the surface
+    double meshSize = MAX_LC;
+	
+	double coeffTransfinite;
+	
+	int nbPointsTransfinite;
+    int typeTransfinite;
+    int minimumMeshSegments;
+	
+	
+  } meshAttributes;
+  
   // the mesh vertices uniquely owned by the entity
   std::vector<MVertex*> mesh_vertices;
 

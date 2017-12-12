@@ -268,7 +268,10 @@ private:
 	void onRemeshParam(wxCommandEvent &event);
 	
 	void onMeshDefaultsReset(wxCommandEvent &event);
+	
+	void onMeshAdvance(wxCommandEvent &event);
     
+	void onTextChange(wxCommandEvent &event);
 public:
 
     //! Constructor for the class.
