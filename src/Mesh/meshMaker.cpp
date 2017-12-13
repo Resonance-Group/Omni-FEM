@@ -15,7 +15,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 	bool lineIsFound = false; // Boolean used to indicate if a line or arc was found.
 	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 	{
-		if(!lineIterator->getVisitedStatus())
+		if(!lineIterator->getVisitedStatus() && !lineIterator->getSegmentProperty()->getHiddenState())
 		{
 			lineFound = *lineIterator;
 			lineIsFound = true;
@@ -29,7 +29,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 	{
 		for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 		{
-			if(!arcIterator->getVisitedStatus())
+			if(!arcIterator->getVisitedStatus() && !arcIterator->getSegmentProperty()->getHiddenState())
 			{
 				lineFound = *arcIterator;
 				lineIsFound = true;
@@ -405,7 +405,9 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 	//Find all of the lines that are connected to the segment
 	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 	{
-		if(*lineIterator == segment || (pathVector.size() > 1 && (*lineIterator == *previousAddedSegment)))
+		// Perform check to make sure that the segment and the previously added segment are not included
+		// Perform check to make sure that the segment is not hidden
+		if(*lineIterator == segment || (pathVector.size() > 1 && (*lineIterator == *previousAddedSegment)) && !lineIterator->getSegmentProperty()->getHiddenState())
 			continue;
 		
 		// Checks to see if the first node on the line has already been scanned through for branches.
@@ -421,7 +423,7 @@ std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShap
 	// Find all of the arcs connected to the segment
 	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 	{
-		if((arcIterator->getArcID() == segment.getArcID()) || (pathVector.size() > 1 && (arcIterator->getArcID() == previousAddedSegment->getArcID())))
+		if((arcIterator->getArcID() == segment.getArcID()) || (pathVector.size() > 1 && (arcIterator->getArcID() == previousAddedSegment->getArcID())) && !arcIterator->getSegmentProperty()->getHiddenState())
 			continue;
 			
 		if((*branchNode == *arcIterator->getFirstNode()) || (*branchNode == *arcIterator->getSecondNode()))
@@ -880,6 +882,11 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 				//	meshModel->
 			//		temp->meshAttributes.meshSize = 1.0;
 			//		temp->meshAttributes.meshSize = p_blockLabelList->begin()->getProperty()->getMeshSize();
+					if(!lineIterator.getSegmentProperty()->getMeshAutoState())
+					{
+						temp->meshAttributes.meshSize = lineIterator.getSegmentProperty()->getElementSizeAlongLine();
+					}
+					
 					contourLoop.push_back(temp);
 				}
 			}
@@ -980,7 +987,8 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 						double checkMesh = blockIterator.getProperty()->getMeshSize();
 						for(int i = 0; i < contourLoop.size(); i++)
 						{
-							contourLoop[i]->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
+							if(contourLoop[i]->meshAttributes.meshSize == MAX_LC)
+								contourLoop[i]->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
 						}
 					//	testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
 						testFace->meshAttributes.meshSize = 1.0;	

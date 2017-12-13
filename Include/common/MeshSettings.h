@@ -96,6 +96,10 @@ private:
 	
 	unsigned int p_elementOrder = 1;
 	
+	unsigned int p_multiplePasses = 1;
+	
+	unsigned int p_llyodSmoothingSteps = 5;
+	
 //---- Section is for structured meshes	
 
 public:
@@ -208,6 +212,28 @@ public:
 	unsigned int getElementOrder()
 	{
 		return p_elementOrder;
+	}
+	
+	void setMultiplePasses(unsigned int value)
+	{
+		if(value > 0)
+			p_multiplePasses = value;
+	}
+	
+	unsigned int getMultiplePasses()
+	{
+		return p_multiplePasses;
+	}
+	
+	void setLlyodSmoothingSteps(unsigned int value)
+	{
+		if(value > 0)
+			p_llyodSmoothingSteps = value;
+	}
+	
+	unsigned int getLlyodSmoothingSteps()
+	{
+		return p_llyodSmoothingSteps;
 	}
 	
 };

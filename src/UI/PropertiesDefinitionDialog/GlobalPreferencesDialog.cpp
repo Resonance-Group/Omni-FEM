@@ -472,8 +472,8 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	minText->SetFont(*font);
 	wxStaticText *maxText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Max:");
 	maxText->SetFont(*font);
-	wxStaticText *factorText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Factor:");
-	factorText->SetFont(*font);
+//	wxStaticText *factorText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Factor:");
+//	factorText->SetFont(*font);
 	
 	wxSize aSize(60, 23);
 	
@@ -500,21 +500,22 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	maxStream << p_meshSetting.getMaxElementSize();
 	OmniFEMMsg::instance()->MsgInfo("Loading max element size as: " + std::to_string(p_meshSetting.getMaxElementSize()));
 	
-	p_elementSizeFactorTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
-	p_elementSizeFactorTextCtrl->SetFont(*font);
-	p_elementSizeFactorTextCtrl->SetValidator(testValidator);
+//	p_elementSizeFactorTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
+//	p_elementSizeFactorTextCtrl->SetFont(*font);
+//	p_elementSizeFactorTextCtrl->SetValidator(testValidator);
 	
-	std::ostream factorStream(p_elementSizeFactorTextCtrl);
+/*	std::ostream factorStream(p_elementSizeFactorTextCtrl);0
 	factorStream << std::setprecision(4);
 	factorStream << p_meshSetting.getElementSizeFactor();
 	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSetting.getElementSizeFactor()));
+	 */ 
 	
 	elementSizeSizer->Add(minText, 0, wxCENTER | wxALL, 6);
 	elementSizeSizer->Add(p_minElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	elementSizeSizer->Add(maxText, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
 	elementSizeSizer->Add(p_maxElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-	elementSizeSizer->Add(factorText, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-	elementSizeSizer->Add(p_elementSizeFactorTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+//	elementSizeSizer->Add(factorText, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+//	elementSizeSizer->Add(p_elementSizeFactorTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *elementOrder = new wxStaticText(meshSettingsPanel, wxID_ANY, "Element Order:");
 	elementOrder->SetFont(*font);
@@ -739,10 +740,11 @@ void globalPreferencesDialog::onMeshDefaultsReset(wxCommandEvent &event)
 	maxStream << std::setprecision(4);
 	maxStream << p_meshSetting.getMaxElementSize();
 	
-	p_elementSizeFactorTextCtrl->SetValue(wxEmptyString);
+/*	p_elementSizeFactorTextCtrl->SetValue(wxEmptyString);
 	std::ostream factorStream(p_elementSizeFactorTextCtrl);
 	factorStream << std::setprecision(4);
 	factorStream << p_meshSetting.getElementSizeFactor();
+	 */ 
 	
 	p_ElementOrderTextCtrl->SetValue(wxEmptyString);
 	std::ostream elementOrderStream(p_ElementOrderTextCtrl);
@@ -792,9 +794,10 @@ void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPr
 	settings.setMaxElementSize(value);
 	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
 	
-	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
 	settings.setElementSizeFactor(value);
 	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
+	 */ 
 	
 	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
 	settings.setElementOrder((unsigned int)otherValue);
@@ -847,9 +850,10 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, m
 	settings.setMaxElementSize(value);
 	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
 	
-	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
 	settings.setElementSizeFactor(value);
 	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
+	 */ 
 	
 	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
 	settings.setElementOrder((unsigned int)otherValue);
@@ -878,10 +882,11 @@ void globalPreferencesDialog::onTextChange(wxCommandEvent &event)
 	if(value < 0)
 		p_maxElementSizeTextCtrl->SetValue("0");
 		
-	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
 	
 	if(value < 0)
 		p_elementSizeFactorTextCtrl->SetValue("0");
+		 */ 
 }
 
 

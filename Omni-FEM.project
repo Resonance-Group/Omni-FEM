@@ -86,6 +86,7 @@
       </VirtualDirectory>
       <File Name="src/UI/StatusWindow.cpp"/>
       <File Name="src/UI/OmniFEMMessage.cpp"/>
+      <File Name="src/UI/MeshAdvancedSettings.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="src/common/ComplexNumber.cpp"/>
