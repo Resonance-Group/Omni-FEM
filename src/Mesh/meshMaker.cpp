@@ -379,7 +379,7 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 
 
 
-void findContour()
+closedPath meshMaker::findContour()
 {
 	closedPath foundPath;
 	std::vector<closedPath> pathsVector;
@@ -414,14 +414,100 @@ void findContour()
 		// This area could be an area for bugs. 
 		// The main reason is that what happens when the program adds a new path to the path vector 
 		// and then increments the interator, does this invalid the interator?
-		for(std::vector<closedPath>::iterator pathIterator = pathsVector.begin(); pathIterator != pathsVector.end())
+		for(std::vector<closedPath>::iterator pathIterator = pathsVector.begin(); pathIterator != pathsVector.end();)
 		{
 			if(foundPath.getDistance() == 0 || pathIterator->getDistance() < foundPath.getDistance())
 			{
+				bool closedContourFound = false;
+				std::vector<edgeLineShape*> branches = getConnectedPaths(pathIterator->getClosedPath()->back(), pathIterator->getClosedPath());
 				
+				for(std::vector<edgeLineShape*>::iterator edgeIterator = branches.begin(); edgeIterator != branches.end(); edgeIterator++)
+				{
+					if(**edgeIterator == **(*pathIterator.getClosedPath()->begin()))
+						closedContourFound = true;
+				}
+				
+				
+			}
+			else
+			{
+				if(pathIterator == pathsVector.end()--)
+				{
+					pathsVector.erase(pathIterator);
+					break;
+				}
+				else
+				{
+					pathsVector.erase(pathIterator++);
+					continue;
+				}
 			}
 		}
 	}
+	
+	return foundPath;
+}
+
+
+std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineShape*>::reference currentSegment, std::vector<edgeLineShape*> *pathVector)
+{
+	std::vector<edgeLineShape*> returnList;
+	node *branchNode;
+	std::vector<edgeLineShape*>::iterator previousAddedSegment;
+	
+	edgeLineShape *previouseSegmentPointer;
+	edgeLineShape *currentSegmentPointer = currentSegment; // This part may not be necessary but it helps with the thinking
+	
+	if(pathVector->size() >= 2)
+		previousAddedSegment = pathVector->end() - 2;
+	else
+		previousAddedSegment = pathVector->begin();
+		
+	previouseSegmentPointer = *previousAddedSegment;
+	
+	// Determines what node we should be looking at
+	if(pathVector->size() >= 2)
+	{
+		// FInd out which node is connected to the back
+		if((*(currentSegmentPointer->getFirstNode()) == *(previouseSegmentPointer->getFirstNode())) || (*(currentSegmentPointer->getFirstNode()) == *(previouseSegmentPointer->getSecondNode())))
+			branchNode = currentSegmentPointer->getSecondNode();
+		else
+			branchNode = currentSegmentPointer->getFirstNode();
+	}
+	else
+		branchNode = currentSegmentPointer->getFirstNode();// This is the case for the very first segment added
+	
+	//Find all of the lines that are connected to the segment
+	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+	{
+		// Perform check to make sure that the segment and the previously added segment are not included
+		// Perform check to make sure that the segment is not hidden
+		if(*lineIterator == *currentSegmentPointer || (pathVector->size() > 1 && (*lineIterator == *previouseSegmentPointer)) && !lineIterator->getSegmentProperty()->getHiddenState())
+			continue;
+		
+		// Checks to see if the first node on the line has already been scanned through for branches.
+		// If so, then we need to move on to the second node.
+		// If both of the nodes for the segment have already been visited then we can go ahead and
+		// skip that segment
+		if((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode()))
+		{
+			returnList.push_back(&(*lineIterator));
+		}
+	}
+	
+	// Find all of the arcs connected to the segment
+	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
+	{
+		if((arcIterator->getArcID() == currentSegmentPointer->getArcID()) || (pathVector->size() > 1 && (arcIterator->getArcID() == previouseSegmentPointer->getArcID())) && !arcIterator->getSegmentProperty()->getHiddenState())
+			continue;
+			
+		if((*branchNode == *arcIterator->getFirstNode()) || (*branchNode == *arcIterator->getSecondNode()))
+		{
+			returnList.push_back(&(*arcIterator));
+		}
+	}
+	
+	return returnList;
 }
 
 

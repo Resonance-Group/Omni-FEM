@@ -68,7 +68,7 @@ private:
 	 */
 	std::vector<std::vector<edgeLineShape>> findContours();
 	
-	void findContours();
+	closedPath findContour();
 	
 	/**
 	 * @brief 
@@ -107,6 +107,8 @@ private:
 	 * @return Returns a vector containing all of the connected branches to the segment
 	 */
 	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::reference segment, std::vector<edgeLineShape> &pathVector);
+	
+	std::vector<edgeLineShape*> getConnectedPaths(std::vector<edgeLineShape*>::reference currentSegment, std::vector<edgeLineShape*> *pathVector);
 	
 	/**
 	 * @brief 	This function will test if two paths share a common edge. It does not determine which edge is common. But

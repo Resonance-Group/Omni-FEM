@@ -43,4 +43,6 @@ public:
 	{
 		p_closedPath.push_back(&addEdge);
 	}
-}
+};
+
+#endif
