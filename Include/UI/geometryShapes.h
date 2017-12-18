@@ -598,6 +598,8 @@ protected:
 	
 	//! Boolean used to describe if the line segment was visited for contour finding
 	bool p_isVisited = false;
+	
+	double p_distance = 0;
     
 public:
 	//! Constructor for the generic class
@@ -605,6 +607,19 @@ public:
     {
         
     }
+	
+	virtual void calculateDistance()
+	{
+		if(_firstNode && _secondNode)
+		{
+			p_distance = sqrt(pow(_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate(), 2) + pow(_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate(), 2));
+		}
+	}
+	
+	double getDistance()
+	{
+		return p_distance;
+	}
 	
 	/**
 	 * @brief Function that will return whether or not the segment is an arc 
@@ -793,6 +808,11 @@ public:
         p_isArc = true;
     }
 	
+	void calculateDistance()
+	{
+		p_distance = _radius * _arcAngle * (PI / 180.0);
+	}
+	
 	void setArcAngle(double angleOfArc)
     {
         _arcAngle = abs(angleOfArc);
@@ -804,6 +824,7 @@ public:
 	
 	double getArcAngle()
     {
+		//return 
         if(_isCounterClockWise)
             return _arcAngle;
         else
@@ -1017,7 +1038,7 @@ public:
     
     double getArcLength()
     {
-        return _radius * _arcAngle * (PI / 180.0);
+        return p_distance;
     }
     
 	bool operator==(arcShape arc)

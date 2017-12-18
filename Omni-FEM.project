@@ -413,6 +413,7 @@
       <File Name="Include/common/OmniFEMMessage.h"/>
       <File Name="Include/common/MeshSettings.h"/>
       <File Name="Include/common/OmniFEMDefines.h"/>
+      <File Name="Include/common/ClosedPath.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig=""/>

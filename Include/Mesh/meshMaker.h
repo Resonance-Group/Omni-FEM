@@ -11,6 +11,7 @@
 #include <common/enums.h>
 
 #include <common/MeshSettings.h>
+#include <common/ClosedPath.h>
 
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
@@ -66,6 +67,8 @@ private:
 	 * 			the closed contour. This function is modeled off of the depth-first search algorthim
 	 */
 	std::vector<std::vector<edgeLineShape>> findContours();
+	
+	void findContours();
 	
 	/**
 	 * @brief 

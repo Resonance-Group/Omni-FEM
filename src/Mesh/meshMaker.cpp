@@ -379,6 +379,53 @@ std::vector<std::vector<edgeLineShape>> meshMaker::findContours()
 
 
 
+void findContour()
+{
+	closedPath foundPath;
+	std::vector<closedPath> pathsVector;
+	
+	// Find the first line segment that is not visited
+	bool lineIsFound = false; // Boolean used to indicate if a line or arc was found.
+	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+	{
+		if(!lineIterator->getVisitedStatus() && !lineIterator->getSegmentProperty()->getHiddenState())
+		{
+			pathsVector.push_back(closedPath(*lineIterator));
+			lineIsFound = true;
+			break;
+		}
+	}
+	
+	if(!lineIsFound)
+	{
+		for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
+		{
+			if(!arcIterator->getVisitedStatus() && !arcIterator->getSegmentProperty()->getHiddenState())
+			{
+				pathsVector.push_back(closedPath(*arcIterator));
+				lineIsFound = true;
+				break;
+			}
+		}
+	}
+	
+	while(pathsVector.size() != 0)
+	{
+		// This area could be an area for bugs. 
+		// The main reason is that what happens when the program adds a new path to the path vector 
+		// and then increments the interator, does this invalid the interator?
+		for(std::vector<closedPath>::iterator pathIterator = pathsVector.begin(); pathIterator != pathsVector.end())
+		{
+			if(foundPath.getDistance() == 0 || pathIterator->getDistance() < foundPath.getDistance())
+			{
+				
+			}
+		}
+	}
+}
+
+
+
 std::vector<edgeLineShape> meshMaker::getConnectedPaths(std::vector<edgeLineShape>::reference segment, std::vector<edgeLineShape> &pathVector)
 {
 	std::vector<edgeLineShape> returnList;
