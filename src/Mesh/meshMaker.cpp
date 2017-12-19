@@ -419,18 +419,115 @@ closedPath meshMaker::findContour()
 			if(foundPath.getDistance() == 0 || pathIterator->getDistance() < foundPath.getDistance())
 			{
 				bool closedContourFound = false;
+				
 				std::vector<edgeLineShape*> branches = getConnectedPaths(pathIterator->getClosedPath()->back(), pathIterator->getClosedPath());
 				
+				// Test to see if a closed contour is found
+				// A closed contour occurs when one of the branches 
+				// is the beginning edge of the closed path
 				for(std::vector<edgeLineShape*>::iterator edgeIterator = branches.begin(); edgeIterator != branches.end(); edgeIterator++)
 				{
-					if(**edgeIterator == **(*pathIterator.getClosedPath()->begin()))
+					if(**edgeIterator == **(pathIterator->getClosedPath()->begin()))
+					{
 						closedContourFound = true;
+						break;
+					}
 				}
 				
-				
+				if(closedContourFound)
+				{
+					// If found, we are going to test if the 
+					// found contour's distance is less then the current found path
+					// distance
+					if(pathIterator->getDistance() < foundPath.getDistance())
+					{
+						// Replace the found path variable with the pathIterator as the new shortest path
+						
+						foundPath = *pathIterator;
+					}
+					
+					// Then delete the path from the list
+					if(pathIterator == pathsVector.end()--)
+					{
+						pathsVector.erase(pathIterator);
+						break;
+					}
+					else
+					{
+						pathsVector.erase(pathIterator++);
+						break;
+					}
+				}
+				else
+				{
+					// Here is where were we need to check to make sure that the branches do not include any other added item
+					bool branchInPaths = false;
+					for(std::vector<edgeLineShape*>::iterator pathEdgeIterator = pathIterator->getClosedPath()->begin()++; pathEdgeIterator != pathIterator->getClosedPath()->end(); pathEdgeIterator++)
+					{
+						for(std::vector<edgeLineShape*>::iterator branchIterator = branches.begin(); branchIterator != branches.end();branchIterator++)
+						{
+							if(**pathEdgeIterator == **branchIterator)
+							{
+								// This means that the path has looped back on itself
+								branchInPaths = true;
+								break;
+							}
+						}
+						
+						if(branchInPaths)
+							break;
+					}
+					
+					if(branchInPaths)
+					{
+						// Now delete that path from the list since the path is invalid and move on to the next path
+						if(pathIterator == pathsVector.end()--)
+						{
+							pathsVector.erase(pathIterator);
+							break;
+						}
+						else
+						{
+							pathsVector.erase(pathIterator++);
+							break;
+						}
+					}
+					
+					// If the size of the branches is greater then 1, then we found some additional possible paths
+					// Create another closed path object and add them to the paths vector as possible
+					// solutions to finding the shortest path.
+					if(branches.size() > 1)
+					{
+						closedPath testPath = *pathIterator;
+						
+						pathIterator->addEdgeToPath(*branches.begin());
+						branches.erase(branches.begin());
+						
+						while(branches.size() != 0)
+						{
+							std::vector<edgeLineShape*>::iterator test = branches.begin() + 1;
+							closedPath addedPath = *pathIterator;
+							
+							testPath.addEdgeToPath(*branches.begin());
+							pathsVector.push_back(testPath);
+							branches.erase(branches.begin());
+						}
+						break;
+					}
+					else if(branches.size() == 1)
+					{
+						// Otherwise, add the one branch to the current path
+						pathIterator->addEdgeToPath(*branches.begin());
+						branches.clear();
+					}
+					
+					pathIterator++;
+					continue;
+				}
 			}
 			else
 			{
+				// Now that we have found a closed contour
 				if(pathIterator == pathsVector.end()--)
 				{
 					pathsVector.erase(pathIterator);
@@ -439,7 +536,7 @@ closedPath meshMaker::findContour()
 				else
 				{
 					pathsVector.erase(pathIterator++);
-					continue;
+					break;
 				}
 			}
 		}
@@ -836,6 +933,8 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	
 	OmniFEMMsg::instance()->MsgStatus("Creating GMSH Geometry from Omni-FEM geometry");
 	OmniFEMMsg::instance()->MsgStatus("Finding contours");
+	
+	closedPath testPath = findContour();
 	
 	while(p_numberVisited < p_numberofLines)
 	{

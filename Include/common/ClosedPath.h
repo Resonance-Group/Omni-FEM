@@ -16,6 +16,7 @@ public:
 
 	closedPath(edgeLineShape &firstEdge)
 	{
+		p_distance += firstEdge.getDistance();
 		p_closedPath.push_back(&firstEdge);
 	}
 	
@@ -41,7 +42,14 @@ public:
 	
 	void addEdgeToPath(edgeLineShape &addEdge)
 	{
+		p_distance += addEdge.getDistance();
 		p_closedPath.push_back(&addEdge);
+	}
+	
+	void addEdgeToPath(edgeLineShape *addEdge)
+	{
+		p_distance += addEdge->getDistance();
+		p_closedPath.push_back(addEdge);
 	}
 };
 
