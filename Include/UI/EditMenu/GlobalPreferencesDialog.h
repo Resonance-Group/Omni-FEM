@@ -24,6 +24,8 @@
 #include <common/MeshSettings.h>
 #include <common/OmniFEMMessage.h>
 
+#include <UI/MeshAdvancedSettings.h>
+
 
 //! Class that handles the creation of the dialog to edit all preferences
 /*!

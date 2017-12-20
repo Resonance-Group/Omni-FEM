@@ -56,7 +56,7 @@ private:
 	
 	bool p_saveAsMESH = false;
 	
-	bool p_saveAsMSH = false;
+	bool p_saveAsMSH = true;
 	
 	bool p_saveAsP3D = false;
 	
@@ -236,6 +236,195 @@ public:
 		return p_llyodSmoothingSteps;
 	}
 	
+	void setSaveVTKState(bool state)
+	{
+		p_saveAsVTK = state;
+	}
+	
+	bool getSaveVTKState()
+	{
+		return p_saveAsVTK;
+	}
+	
+	void setSaveBDFState(bool state)
+	{
+		p_saveAsBDF = state;
+	}
+	
+	bool getSaveBDFState()
+	{
+		return p_saveAsBDF;
+	}
+	
+	void setSaveCELUMState(bool state)
+	{
+		p_saveAsCELUM = state;
+	}
+	
+	bool getSaveCELUMState()
+	{
+		return p_saveAsCELUM;
+	}
+	
+	void setSaveCGNSState(bool state)
+	{
+		p_saveAsCGNS = state;
+	}
+	
+	bool getSaveCGNSState()
+	{
+		return p_saveAsCGNS;
+	}
+	
+	void setSaveDIFFPACKSate(bool state)
+	{
+		p_saveAsDIFFPACK = state;
+	}
+	
+	bool getSaveDIFFPACKSate()
+	{
+		return p_saveAsDIFFPACK;
+	}
+	
+	void setSaveFourierState(bool state)
+	{
+		p_saveAsFourier = state;
+	}
+	
+	bool getSaveFourierState()
+	{
+		return p_saveAsFourier;
+	}
+	
+	void setSaveGEOState(bool state)
+	{
+		p_saveAsGEO = state;
+	}
+	
+	bool getSaveGEOState()
+	{
+		return p_saveAsGEO;
+	}
+	
+	void setSaveINPState(bool state)
+	{
+		p_SaveAsINP = state;
+	}
+	
+	bool getSaveINPState()
+	{
+		return p_SaveAsINP;
+	}
+	
+	void setSaveIR3State(bool state)
+	{
+		p_saveAsIR3 = state;
+	}
+	
+	bool getSaveIR3State()
+	{
+		return p_saveAsIR3;
+	}
+	
+	void setSaveMAILState(bool state)
+	{
+		p_saveAsMAIL = state;
+	}
+	
+	bool getSaveMAILState()
+	{
+		return p_saveAsMAIL;
+	}
+	
+	void setSaveMESHState(bool state)
+	{
+		p_saveAsMESH = state;
+	}
+	
+	bool getSaveMESHState()
+	{
+		return p_saveAsMESH;
+	}
+	
+	void setSaveP3DState(bool state)
+	{
+		p_saveAsP3D = state;
+	}
+	
+	bool getSaveP3DState()
+	{
+		return p_saveAsP3D;
+	}
+	
+	void setSavePartitionedMeshState(bool state)
+	{
+		p_saveAsPatitionedMesh = state;
+	}
+	
+	bool getSavePartitionedMeshState()
+	{
+		return p_saveAsPatitionedMesh;
+	}
+	
+	void setSavePLY2State(bool state)
+	{
+		p_saveAsPLY2 = state;
+	}
+	
+	bool getSavePLY2State()
+	{
+		return p_saveAsPLY2;
+	}
+	
+	void setSaveSTLState(bool state)
+	{
+		p_saveAsSTL = state;
+	}
+	
+	bool getSaveSTLState()
+	{
+		return p_saveAsSTL;
+	}
+	
+	void setSaveSU2State(bool state)
+	{
+		p_saveAsSU2 = state;
+	}
+	
+	bool getSaveSU2State()
+	{
+		return p_saveAsSU2;
+	}
+	
+	void setSaveTochnogState(bool state)
+	{
+		p_saveAsTochnog = state;
+	}
+	
+	bool getSaveTochnogState()
+	{
+		return p_saveAsTochnog;
+	}
+	
+	void setSaveUNVState(bool state)
+	{
+		p_saveAsUNV = state;
+	}
+	
+	bool getSaveUNVState()
+	{
+		return p_saveAsUNV;
+	}
+	
+	void setSaveVRMLState(bool state)
+	{
+		p_saveAsVRML = state;
+	}
+	
+	bool getSaveVRMLState()
+	{
+		return p_saveAsVRML;
+	}
 };
 
 #endif

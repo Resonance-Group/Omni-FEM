@@ -864,7 +864,13 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, m
 
 void globalPreferencesDialog::onMeshAdvance(wxCommandEvent &event)
 {
-	wxMessageBox("ADvanced Mesh Settings displayed");
+	meshAdvanced advancedDialog(this, p_meshSetting);
+	
+	if(advancedDialog.ShowModal() == wxID_OK)
+	{
+		advancedDialog.setSettings();
+	}
+//	wxMessageBox("ADvanced Mesh Settings displayed");
 }
 
 
