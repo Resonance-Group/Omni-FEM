@@ -36,12 +36,7 @@
 class meshMaker
 {
 private:
-
-	//! This is the GModel that will contain the mesh for the geometric model
-//	GModel *p_meshModel = new GModel("meshModel");
-
-	//! Vector containing a list of all closed contours within the geometry. Which each closed contour is a vector of edge line shapes.
-	std::vector<std::vector<edgeLineShape>> p_closedContours;
+	std::vector<closedPath> p_closedContourPaths;
 	
 	//! Pointer to the global nodal list
 	plf::colony<node> *p_nodeList;
@@ -65,34 +60,9 @@ private:
 	 * @brief 	This function is called in order to find all of the closed contours connected to 
 	 * 			a common edge. The function will then determine what the geometry pieces are within
 	 * 			the closed contour. This function is modeled off of the depth-first search algorthim
+	 * @return Returns a closed path if avaiable
 	 */
-	std::vector<std::vector<edgeLineShape>> findContours();
-	
 	closedPath findContour();
-	
-	/**
-	 * @brief 
-	 */
-	bool contourRecombination(std::vector<edgeLineShape> &contourPath1, std::vector<edgeLineShape> &contourPath2);
-	
-	/**
-	 * @brief Function that will determine if the inpuit contour is a closed contour
-	 * @param contour The vector of the contour that will be tested for closed contour
-	 * @return Returns true if the contour is closed contour. Return false if it is open contour
-	 */
-	bool isClosedContour(std::vector<edgeLineShape> contour);
-	
-	/**
-	 * @brief 	Function that is called in order to remove any dangling lines from the path
-	 * 			Dangling lines are defined as lines that are not connected to form a closed contour.
-	 * 			This occurs when the contour loops on itself and ends at a position other then the
-	 * 			starting position. This occurs if the end line semgent is connected between 2
-	 * 			line segments within the contour. When this occurs, the program
-	 * 			needs to erase the line segments from the beginning to 1 - the current iterator
-	 * 			position.
-	 * @param contour Reference to the contour list that will need to be modified
-	 */
-	void removeDanglingLines(std::vector<edgeLineShape> &contour);
 	
 	/**
 	 * @brief This function is called in order to create the mesh for hte geometry model.
@@ -103,11 +73,10 @@ private:
 	
 	/**
 	 * @brief This function will take a edge segment and find all of the banches that are connected to that edge and return as a vector
-	 * @param segment The line segment that the program will find the connected branches to
+	 * @param currentSegment The line segment that the program will find the connected branches to
+	 * @param pathVector
 	 * @return Returns a vector containing all of the connected branches to the segment
 	 */
-	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::reference segment, std::vector<edgeLineShape> &pathVector);
-	
 	std::vector<edgeLineShape*> getConnectedPaths(std::vector<edgeLineShape*>::reference currentSegment, std::vector<edgeLineShape*> *pathVector);
 	
 	/**

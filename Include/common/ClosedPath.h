@@ -8,7 +8,7 @@
 class closedPath
 {
 private:
-	unsigned long p_distance = 0;
+	double p_distance = 0;
 	
 	std::vector<edgeLineShape*> p_closedPath;
 	
@@ -16,8 +16,12 @@ public:
 
 	closedPath(edgeLineShape &firstEdge)
 	{
-		p_distance += firstEdge.getDistance();
 		p_closedPath.push_back(&firstEdge);
+	}
+	
+	closedPath(edgeLineShape *firstEdge)
+	{
+		p_closedPath.push_back(firstEdge);
 	}
 	
 	closedPath()

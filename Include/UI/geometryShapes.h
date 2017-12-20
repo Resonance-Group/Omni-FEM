@@ -543,6 +543,7 @@ private:
 		ar & _property;
 		ar & p_firstNodeNumber;
 		ar & p_secondNodeNumber;
+		ar & p_distance;
 	}
 protected:
 	//! The node number for the first node
@@ -702,6 +703,9 @@ public:
 	 */
     void draw()
     {
+		if(p_distance == 0)
+			calculateDistance();
+			
         if(_property.getHiddenState())
         {
             glEnable(GL_LINE_STIPPLE);
@@ -1027,6 +1031,8 @@ public:
                 yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
             }
         }
+		
+		calculateDistance();
         
         return;
     }
