@@ -315,7 +315,8 @@ int meshMaker::lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc)
 }
 
 
-void meshMaker::mesh(GModel *meshModel, meshSettings settings)
+
+void meshMaker::mesh()
 {
 	bool meshCreated = false;
 
@@ -346,16 +347,13 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	}
 	
 	OmniFEMMsg::instance()->MsgStatus("Contours found");
+
+	/* These are settings that will remain constant */
 	
 	CTX::instance()->mesh.recombinationTestNewStrat = 0;
 	CTX::instance()->mesh.nProc = 0;
 	CTX::instance()->mesh.nbProc = 0;
-//	CTX::instance()->lc = 2.3323807574381199;
 	CTX::instance()->lc = 2.5;
-	CTX::instance()->mesh.optimizeLloyd = 5;
-	CTX::instance()->mesh.multiplePasses = 1;
-	
-	/* These are settings that will remain constant */
 	
 	CTX::instance()->mesh.algoSubdivide = 1; // The 1 here is to specify that we are only concerned with quads
 	CTX::instance()->mesh.secondOrderIncomplete = 0; // Always use complete meshes
@@ -368,7 +366,10 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	
 	/* These are the settings that are set by the user */
 	
-	switch(settings.getRemeshParameter())
+	CTX::instance()->mesh.optimizeLloyd = p_settings->getLlyodSmoothingSteps();
+	CTX::instance()->mesh.multiplePasses = p_settings->getMultiplePasses();
+	
+	switch(p_settings->getRemeshParameter())
 	{
 		case MeshParametrization::MESH_PARAM_HARMONIC:
 			CTX::instance()->mesh.remeshParam = 0;
@@ -381,12 +382,12 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 			break;
 	}
 	
-	if(settings.getAutoRemeshingState())
+	if(p_settings->getAutoRemeshingState())
 		CTX::instance()->mesh.remeshAlgo = 1;
 	else
 		CTX::instance()->mesh.remeshAlgo = 0;
 		
-	switch(settings.getMeshAlgorithm())
+	switch(p_settings->getMeshAlgorithm())
 	{
 		case MeshAlgorthim::MESH_ALGO_AUTOMATIC:
 			CTX::instance()->mesh.algo2d = ALGO_2D_AUTO;
@@ -402,18 +403,18 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 			break;
 	}
 	
-	if(settings.getBlossomRecombinationState())
+	if(p_settings->getBlossomRecombinationState())
 		CTX::instance()->mesh.algoRecombine = 1; // Setting to one will cause the program to perform the blossom algorthim for recombination
 	else
 		CTX::instance()->mesh.algoRecombine = 0;
 		
-	CTX::instance()->mesh.nbSmoothing = (int)settings.getSmoothingSteps();
+	CTX::instance()->mesh.nbSmoothing = (int)p_settings->getSmoothingSteps();
 	
-	CTX::instance()->mesh.lcFactor = settings.getElementSizeFactor();
-	CTX::instance()->mesh.lcMin = settings.getMinElementSize();
-	CTX::instance()->mesh.lcMax = settings.getMaxElementSize();
+	CTX::instance()->mesh.lcFactor = p_settings->getElementSizeFactor();
+	CTX::instance()->mesh.lcMin = p_settings->getMinElementSize();
+	CTX::instance()->mesh.lcMax = p_settings->getMaxElementSize();
 	
-	CTX::instance()->mesh.order = settings.getElementOrder();
+	CTX::instance()->mesh.order = p_settings->getElementOrder();
 	
 	contextMeshOptions testMesh = CTX::instance()->mesh;
 	
@@ -425,14 +426,14 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	
 	vertexModelList.reserve(p_nodeList->size());
 
-	meshModel->setFactory("Gmsh");
+	p_meshModel->setFactory("Gmsh");
 	
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH Vertices");
 	for(auto nodeIterator : *p_nodeList)
 	{
 		double test1 = nodeIterator.getCenterXCoordinate();
 		double test2 = nodeIterator.getCenterYCoordinate();
-		GVertex *temp = meshModel->addVertex(test1, test2, 0.0, 1.0);
+		GVertex *temp = p_meshModel->addVertex(test1, test2, 0.0, 1.0);
 		vertexModelList.push_back(temp);
 	//	vertexModelList
 	}
@@ -485,7 +486,7 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 			}
 			else
 			{
-				GEdge *temp = meshModel->addLine(firstNode, secondNode);
+				GEdge *temp = p_meshModel->addLine(firstNode, secondNode);
 			//	meshModel->
 		//		temp->meshAttributes.meshSize = 1.0;
 		//		temp->meshAttributes.meshSize = p_blockLabelList->begin()->getProperty()->getMeshSize();
@@ -508,13 +509,13 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 		test.push_back(contourLoop);
 		
 		// Add the contour to the face selection
-		GFace *testFace = meshModel->addPlanarFace(test);
+		GFace *testFace = p_meshModel->addPlanarFace(test);
 		
-		if(settings.getStructuredState())
+		if(p_settings->getStructuredState())
 		{
 			testFace->meshAttributes.method = 1;// Sets the face to be transfinite
 			
-			switch(settings.getMeshArrangment())
+			switch(p_settings->getMeshArrangment())
 			{
 				case StructuredArrangement::ARRANGMENT_LEFT:
 					testFace->meshAttributes.transfiniteArrangement = -1;
@@ -622,7 +623,7 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	for(int i = 0; i < CTX::instance()->mesh.multiplePasses; i++)
 	{
 		OmniFEMMsg::instance()->MsgStatus("Performing pass " + std::to_string(i + 1) + " of " + std::to_string(CTX::instance()->mesh.multiplePasses));
-		meshModel->mesh(2);
+		p_meshModel->mesh(2);
 	}
 	
 	// Next set any output mesh options
@@ -631,57 +632,64 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	
 	wxDir validDir;
 	
-	if(settings.getDirString() != wxString("") && validDir.Open(settings.getDirString()) )
+	if(p_settings->getDirString() != wxString("") && validDir.Open(p_settings->getDirString()))
 	{
 		validDir.Close();
 		
-		wxString 
+		if(p_settings->getSaveVTKState())
+			p_meshModel->writeVTK(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".vtk");
 		
-		if(settings.getSaveVTKState())
-			meshModel->writeVTK(settings.getDirString().ToStdString() + "\model.vtk");
+		if(p_settings->getSaveBDFState())
+			p_meshModel->writeBDF(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".bdf"); // double check this one
 		
-		if(settings.getSaveBDFState())
-			meshModel.writeBDF(settings.getDirString().ToStdString() + "\model.bdf"); // double check this one
+		if(p_settings->getSaveCELUMState())
+			p_meshModel->writeCELUM(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".celum", false, 1.0);
+			
+		if(p_settings->getSaveDIFFPACKSate())
+			p_meshModel->writeDIFF(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".diff", false, false, 1.0);
+			
+		if(p_settings->getSaveGEOState())
+			p_meshModel->writeGEO(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".geo", true, false);
+			
+		if(p_settings->getSaveINPState())
+			p_meshModel->writeINP(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".inp", false, false, 1.0);
 		
-		if(settings.getSaveCELUMState())
-			meshModel->writeCELUM(settings.getDirString().ToStdString() + "\model.", false, 1.0);
-	
-		if(settings.getSaveCGNSState())
-			meshModel->writeCGNS(settings.getDirString().ToStdString() + "\model.cgns", 1, 0, 1.0);
+		if(p_settings->getSaveIR3State())
+			p_meshModel->writeIR3(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".ir3", 0, true, 1.0);
 			
-		if(settings.getSaveDIFFPACKSate())
-			meshModel->writeDIFF(settings.getDirString().ToStdString() + "\model.diff", false, false, 1.0);
+		if(p_settings->getSaveMAILState())
+			p_meshModel->writeMAIL(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".mail", true, 1.0);
 			
-		if(settings.getSaveFourierState())
-			meshModel->writeFourier(settings.getDirString().ToStdString() + "\model.fourier");
+		if(p_settings->getSaveMESHState())
+			p_meshModel->writeMESH(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".mesh", 1, false, 1.0);
+	
+		if(p_settings->getSaveP3DState())
+			p_meshModel->writeP3D(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".p3d", false, 1.0);
+
+		if(p_settings->getSavePartitionedMeshState())
+			p_meshModel->writePartitionedMSH(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".mesh", 2.2, false, false, false, 1.0);
 			
-		if(settings.getSaveGEOState())
-			meshModel->writeGEO(settings.getDirString().ToStdString() + "\model.geo", true, true);
+		if(p_settings->getSavePLY2State())
+			p_meshModel->writePLY2(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".ply2");
 			
-		if(settings.getSaveINPState())
-			meshModel->writeINP(settings.getDirString().ToStdString() + "\model.inp", false, false, 1.0);
-		
-		if(settings.getSaveIR3State())
-			meshModel->writeIR3(settings.getDirString().ToStdString() + "\model.ir3", 0, true, 1.0);
+		if(p_settings->getSaveSTLState())
+			p_meshModel->writeSTL(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".stl", false, false, 1.0);
 			
-		if(settings.getSaveMAILState())
-			meshModel->writeMAIL(settings.getDirString().ToStdString() + "\model.mail", true, 1.0);
+		if(p_settings->getSaveTochnogState())
+			p_meshModel->writeTOCHNOG(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".toc", false, false, 1.0);
 			
-		if(settings.getSaveMESHState())
-			meshModel->writeMESH(settings.getDirString().ToStdString() + "\model.mesh", 1, false, 1.0);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		if(p_settings->getSaveSU2State())
+			p_meshModel->writeSU2(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".su2", true, 1.0);
+			
+		if(p_settings->getSaveUNVState())
+			p_meshModel->writeUNV(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".unv", false, false, 1.0);
+			
+		if(p_settings->getSaveVRMLState())
+			p_meshModel->writeVRML(p_settings->getDirString().ToStdString() + "/" + p_simulationName.ToStdString() + ".vrml", true, 1.0);
 	}
-	meshModel->writeVTK("/home/phillip/Desktop/test.vtk");
-	//meshModel.getMesh
+	
+	// THis is the file that the solver uses for meshing
+	p_meshModel->writeMSH(p_folderPath.ToStdString() + "/" + p_simulationName.ToStdString() + ".msh", 2.2, false, false, false, 1.0, 0, 0, false);
 	
 	// TODO: Check for an errors?
 	// TODO: Add in the interface to the GMSH API
@@ -700,12 +708,11 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 		arcIterator->setVisitedStatus(false);
 	}
 
-	if(meshModel->getNumMeshVertices() > 0)
-		meshModel->indexMeshVertices(true, 0, true);
+	if(p_meshModel->getNumMeshVertices() > 0)
+		p_meshModel->indexMeshVertices(true, 0, true);
 	
 	OmniFEMMsg::instance()->MsgStatus("Meshing Finished");
 }
-
 
 
 bool meshMaker::shareCommonEdge(std::vector<edgeLineShape> path1, std::vector<edgeLineShape> path2)

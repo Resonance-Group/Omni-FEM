@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include <UI/geometryShapes.h>
+#include <UI/ModelDefinition/ModelDefinition.h>
 
 #include <common/plfcolony.h>
 #include <common/Vector.h>
@@ -12,6 +13,7 @@
 
 #include <common/MeshSettings.h>
 #include <common/ClosedPath.h>
+#include <common/ProblemDefinition.h>
 
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
@@ -49,6 +51,14 @@ private:
 	
 	//! Pointer to the global arc list
 	plf::colony<arcShape> *p_arcList;
+	
+	meshSettings *p_settings;
+	
+	wxString p_simulationName;
+	
+	wxString p_folderPath;
+	
+	GModel *p_meshModel;
 	
 	//! This is the total number of lines within the geometry. This is the number of lines and arcs
 	unsigned long p_numberofLines = 0;
@@ -111,13 +121,21 @@ private:
 	 */
 	bool lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4);
 public:
-	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
+	
+	meshMaker(problemDefinition &definition, modelDefinition *model)
 	{
-		p_nodeList = nodeList;
-		p_blockLabelList = blockLabelList;
-		p_lineList = lineList;
-		p_arcList = arcList;
+		p_meshModel = model->getMeshModel();
+		
+		p_nodeList = model->getModelNodeList();
+		p_blockLabelList = model->getModelBlockList();
+		p_lineList = model->getModelLineList();
+		p_arcList = model->getModelArcList();
+		
 		p_numberofLines = p_lineList->size() + p_arcList->size();
+		
+		p_settings = definition.getMeshSettingsPointer();
+		p_simulationName = definition.getName();
+		p_folderPath = definition.getSaveFilePath();
 	}
 	
 	/**
@@ -132,10 +150,7 @@ public:
 			return false;
 	}
 	
-	/**
-	 * @brief This function is called when the program is ready to create the mesh for the model.
-	 */
-	void mesh(GModel *meshModel, meshSettings settings);
+	void mesh();
 	
 	~meshMaker()
 	{

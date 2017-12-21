@@ -32,7 +32,7 @@ class meshSettings
 {
 private:
 	
-	wxString p_meshSaveLocation;
+	wxString p_meshSaveLocation = wxEmptyString;
 	
 	wxString p_meshSavePath = wxString("");
 	

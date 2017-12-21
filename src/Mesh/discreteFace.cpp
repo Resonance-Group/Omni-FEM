@@ -11,7 +11,7 @@
 #include "Mesh/GmshMessage.h"
 #include "Mesh/discreteFace.h"
 #include "Mesh/discreteDiskFace.h"
-#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
 #include "Mesh/Geo.h"
 #include "Mesh/GFaceCompound.h"
 #include "Mesh/Context.h"

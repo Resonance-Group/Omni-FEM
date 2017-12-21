@@ -196,8 +196,6 @@
       <File Name="src/Mesh/SElement.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/filterElements.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/gmshLevelset.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GModelIO_GEO.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GModelIO_OCC.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/OCCVertex.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/OCCEdge.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/OCCFace.cpp" ExcludeProjConfig=""/>
@@ -222,9 +220,6 @@
       <File Name="src/Mesh/StringUtils.cpp"/>
       <File Name="src/Mesh/meshRefine.cpp"/>
       <File Name="src/Mesh/STensor3.cpp"/>
-      <File Name="src/Mesh/GModelIO_MSH.cpp"/>
-      <File Name="src/Mesh/GModelIO_MSH2.cpp"/>
-      <File Name="src/Mesh/GModelIO_VTK.cpp"/>
       <VirtualDirectory Name="Blossom">
         <VirtualDirectory Name="BigGuy">
           <File Name="src/Mesh/Blossom/BigGuy/bigguy.c"/>
@@ -323,6 +318,29 @@
         <File Name="src/Mesh/BFGS/linalg.cpp"/>
         <File Name="src/Mesh/BFGS/optimization.cpp"/>
         <File Name="src/Mesh/BFGS/solvers.cpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="gmshIO">
+        <File Name="src/Mesh/gmshIO/GModelIO_GEO.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_MSH.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_MSH2.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_OCC.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_VTK.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_BDF.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_CELUM.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_DIFF.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_GEOM.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_INP.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_IR3.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_MAIL.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_MESH.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_P3D.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_PLY.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_POS.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_STL.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_SU2.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_TOCHNOG.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_UNV.cpp"/>
+        <File Name="src/Mesh/gmshIO/GModelIO_VRML.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
@@ -534,8 +552,6 @@
       <File Name="Include/Mesh/filterElements.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/gmshLevelset.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/cartesian.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GModelIO_GEO.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GModelIO_OCC.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/OCCVertex.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/OCCEdge.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/OCCFace.h"/>
@@ -597,6 +613,10 @@
         <File Name="Include/Mesh/BFGS/linalg.h"/>
         <File Name="Include/Mesh/BFGS/optimization.h"/>
         <File Name="Include/Mesh/BFGS/solvers.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="gmshIO">
+        <File Name="Include/Mesh/gmshIO/GModelIO_GEO.h"/>
+        <File Name="Include/Mesh/gmshIO/GModelIO_OCC.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>

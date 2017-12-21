@@ -17,7 +17,7 @@
 #include "Mesh/GModel.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/ExtrudeParams.h"
-#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
 #include "Mesh/Geo.h"
 #include "Mesh/Parser.h"
 #include "Mesh/GmshDefines.h"

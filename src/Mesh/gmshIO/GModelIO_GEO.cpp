@@ -8,7 +8,7 @@
 //#include "GmshConfig.h"
 #include "Mesh/GmshMessage.h"
 #include "Mesh/GModel.h"
-#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
 #include "Mesh/Geo.h"
 #include "common/OS.h"
 //#include "OpenFile.h"
@@ -1559,10 +1559,10 @@ static bool skipVertex(GVertex *gv)
 }
 
 int GModel::writeGEO(const std::string &name, bool printLabels, bool onlyPhysicals)
-{/*
-//  FILE *fp = Fopen(name.c_str(), "w");
+{
+  FILE *fp = fopen(name.c_str(), "w");
   if(!fp){
-  //  Msg::Error("Could not open file '%s'", name.c_str());
+    Msg::Error("Could not open file '%s'", name.c_str());
     return 0;
   }
 
@@ -1594,7 +1594,7 @@ int GModel::writeGEO(const std::string &name, bool printLabels, bool onlyPhysica
  /* for(riter it = firstRegion(); it != lastRegion(); it++){
     if(!onlyPhysicals || !skipRegion(*it))
       (*it)->writeGEO(fp);
-  }
+  }*/
 
   std::map<int, std::string> labels;
 #if defined(HAVE_PARSER)
@@ -1615,7 +1615,7 @@ int GModel::writeGEO(const std::string &name, bool printLabels, bool onlyPhysica
   if(getFields()->getBackgroundField() > 0)
     fprintf(fp, "Background Field = %i;\n", getFields()->getBackgroundField());
 
-  fclose(fp);*/
+  fclose(fp);
   return 1;
 }
 

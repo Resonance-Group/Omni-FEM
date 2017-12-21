@@ -12,8 +12,8 @@
 #include "Mesh/GmshMessage.h"
 
 #include "Mesh/GModel.h"
-#include "Mesh/GModelIO_GEO.h"
-#include "Mesh/GModelIO_OCC.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_OCC.h"
 #include "Mesh/GModelFactory.h"
 #include "Mesh/GFaceCompound.h"
 #include "Mesh/GEdgeCompound.h"

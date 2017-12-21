@@ -66,6 +66,8 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 		
 		wxString appendedTitle = "Omni-FEM - ";
 		wxString fileName;
+		_problemDefinition.setSaveFilePath(openFileDialog.GetDirectory());
+
 		std::string tempFileName = openFileDialog.GetFilename().ToStdString();
 		for(int i = 0; i < (tempFileName.length() - 8); i++)
 			fileName += wxString(tempFileName[i]);
@@ -107,6 +109,7 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 			appendedTitle.append(_problemDefinition.getName());
 			this->SetTitle(appendedTitle);
 			_saveFilePath = saveFileDialog.GetPath();
+			_problemDefinition.setSaveFilePath(saveFileDialog.GetDirectory());
 			save(_saveFilePath);
 		}
 	}
@@ -135,6 +138,7 @@ void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
         appendedTitle.append(_problemDefinition.getName());
         this->SetTitle(appendedTitle);
 		_saveFilePath = saveFileDialog.GetPath();
+		_problemDefinition.setSaveFilePath(saveFileDialog.GetDirectory());
 		save(_saveFilePath);
 	}
 }

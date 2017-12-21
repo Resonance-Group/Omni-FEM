@@ -905,12 +905,16 @@ public:
     
     //! The function that will select any dangling nodes.
     /*!
-        A node is considered dangling when the node does not form a closed boundary.
-        This occurs if there is just 1 line or arc connected to the node.
-        This function will go through the entire node list and highlight any nodes
-        that only have 1 arc or line connected to it
-    */ 
-    void displayDanglingNodes();
+        
+    */
+	/**
+	 * @brief 	A node is considered dangling when the node does not form a closed boundary.
+				This occurs if there is just 1 line or arc connected to the node.
+				This function will go through the entire node list and highlight any nodes
+				that only have 1 arc or line connected to it
+	 * @return Returns a number to indicate the number of nodes one an open boundary
+	 */
+    unsigned long displayDanglingNodes();
     
     //! The function that will create a circular boundary with layers
     /*!

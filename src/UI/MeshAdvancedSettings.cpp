@@ -82,25 +82,21 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_saveAsCELUM->SetFont(font);
 	p_saveAsCELUM->SetValue(p_meshSettings->getSaveCELUMState());
 	
-	p_saveAsCGNS->Create(meshFormatsSizer->GetStaticBox(), wxID_ANY, "CGNS");
-	p_saveAsCGNS->SetFont(font);
-	p_saveAsCGNS->SetValue(p_meshSettings->getSaveCGNSState());
-	
 	p_saveAsDIFFPACK->Create(meshFormatsSizer->GetStaticBox(), wxID_ANY, "DIFFPACK");
 	p_saveAsDIFFPACK->SetFont(font);
 	p_saveAsDIFFPACK->SetValue(p_meshSettings->getSaveDIFFPACKSate());
 	
+	p_saveAsSTL->Create(meshFormatsSizer->GetStaticBox(), wxID_ANY, "STL");
+	p_saveAsSTL->SetFont(font);
+	p_saveAsSTL->SetValue(p_meshSettings->getSaveSTLState());
+	
 	columnOneSize->Add(p_saveAsVTK, 0, wxALL, 6);
 	columnOneSize->Add(p_saveAsBDF, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	columnOneSize->Add(p_saveAsCELUM, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
-	columnOneSize->Add(p_saveAsCGNS, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	columnOneSize->Add(p_saveAsDIFFPACK, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	columnOneSize->Add(p_saveAsSTL, 0, wxBOTTOM | wxLEFT, 6);
 
 	// ---- For column 2
-	
-	p_saveAsFourier->Create(meshFormatsSizer->GetStaticBox(), wxID_ANY, "Fourier");
-	p_saveAsFourier->SetFont(font);
-	p_saveAsFourier->SetValue(p_meshSettings->getSaveFourierState());
 	
 	p_saveAsGEO->Create(meshFormatsSizer->GetStaticBox(), wxID_ANY, "GEO");
 	p_saveAsGEO->SetFont(font);
@@ -118,8 +114,7 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_saveAsMAIL->SetFont(font);
 	p_saveAsMAIL->SetValue(p_meshSettings->getSaveMAILState());
 	
-	columnTwoSize->Add(p_saveAsFourier, 0, wxTOP | wxBOTTOM | wxLEFT, 6);
-	columnTwoSize->Add(p_saveAsGEO, 0, wxBOTTOM | wxLEFT, 6);
+	columnTwoSize->Add(p_saveAsGEO, 0, wxTOP | wxBOTTOM | wxLEFT, 6);
 	columnTwoSize->Add(p_SaveAsINP, 0, wxBOTTOM | wxLEFT, 6);
 	columnTwoSize->Add(p_saveAsIR3, 0, wxBOTTOM | wxLEFT, 6);
 	columnTwoSize->Add(p_saveAsMAIL, 0, wxBOTTOM | wxLEFT, 6);
@@ -141,15 +136,10 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_saveAsPLY2->SetFont(font);
 	p_saveAsPLY2->SetValue(p_meshSettings->getSavePLY2State());
 	
-	p_saveAsSTL->Create(meshFormatsSizer->GetStaticBox(), wxID_ANY, "STL");
-	p_saveAsSTL->SetFont(font);
-	p_saveAsSTL->SetValue(p_meshSettings->getSaveSTLState());
-	
 	columnThreeSize->Add(p_saveAsMESH, 0, wxTOP | wxBOTTOM | wxLEFT, 6);
 	columnThreeSize->Add(p_saveAsP3D, 0, wxBOTTOM | wxLEFT, 6);
 	columnThreeSize->Add(p_saveAsPatitionedMesh, 0, wxBOTTOM | wxLEFT, 6);
 	columnThreeSize->Add(p_saveAsPLY2, 0, wxBOTTOM | wxLEFT, 6);
-	columnThreeSize->Add(p_saveAsSTL, 0, wxBOTTOM | wxLEFT, 6);
 	
 	// column 4
 	
@@ -219,9 +209,9 @@ void meshAdvanced::setSettings()
 	p_meshSettings->setSaveVTKState(p_saveAsVTK->GetValue());
 	p_meshSettings->setSaveBDFState(p_saveAsBDF->GetValue());
 	p_meshSettings->setSaveCELUMState(p_saveAsCELUM->GetValue());
-	p_meshSettings->setSaveCGNSState(p_saveAsCGNS->GetValue());
+//	p_meshSettings->setSaveCGNSState(p_saveAsCGNS->GetValue());
 	p_meshSettings->setSaveDIFFPACKSate(p_saveAsDIFFPACK->GetValue());
-	p_meshSettings->setSaveFourierState(p_saveAsFourier->GetValue());
+//	p_meshSettings->setSaveFourierState(p_saveAsFourier->GetValue());
 	p_meshSettings->setSaveGEOState(p_saveAsGEO->GetValue());
 	p_meshSettings->setSaveINPState(p_SaveAsINP->GetValue());
 	p_meshSettings->setSaveIR3State(p_saveAsIR3->GetValue());

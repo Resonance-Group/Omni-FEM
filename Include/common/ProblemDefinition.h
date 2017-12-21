@@ -112,6 +112,9 @@ private:
     //! The name of the physics simulation
     wxString _problemName = "Untitled";
 	
+	//* String contining the full file path of the location of the saved file
+	wxString p_saveFilePath = wxEmptyString;
+	
 	//! The settings for the mesh of the problem
 	meshSettings p_problemMeshSettings;
     
@@ -339,6 +342,24 @@ public:
     {
         return _problemName;
     }
+	
+	/**
+	 * @brief Sets the file path of the saved file. Note that this should be the directory path.
+	 * @param path The location of the saved file. NOte that this should be the directory path
+	 */
+	void setSaveFilePath(wxString path)
+	{
+		p_saveFilePath = path;
+	}
+	
+	/**
+	 * @brief Retrives the string of the location of the saved path.
+	 * @return Returns the directory of the location of the saved file
+	 */
+	wxString getSaveFilePath()
+	{
+		return p_saveFilePath;
+	}
     
     //! Sets the preferences for the electrostatic simulation
     /*!
@@ -445,6 +466,11 @@ public:
 	meshSettings getMeshSettings()
 	{
 		return p_problemMeshSettings;
+	}
+	
+	meshSettings *getMeshSettingsPointer()
+	{
+		return &p_problemMeshSettings;
 	}
 };
 

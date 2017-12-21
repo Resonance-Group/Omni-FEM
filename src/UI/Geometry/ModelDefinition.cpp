@@ -2158,9 +2158,11 @@ void modelDefinition::copyRotateSelection(double angularShift, wxRealPoint about
 
 
 
-void modelDefinition::displayDanglingNodes()
+unsigned long modelDefinition::displayDanglingNodes()
 {
     clearSelection();
+	
+	unsigned long numberOfOpenNodes = 0;
     
     _nodesAreSelected = true;
     
@@ -2185,11 +2187,14 @@ void modelDefinition::displayDanglingNodes()
         
         // If we only have a node connected to 1 arc or line, then we have a dangling node */
         if(numberOfConnectedLines <= 1)
+		{
             nodeIterator->setSelectState(true);
+			numberOfOpenNodes++;
+		}
     }
     
     this->Refresh();
-    return;
+    return numberOfOpenNodes;
 }
 
 

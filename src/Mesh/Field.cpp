@@ -21,7 +21,7 @@
 #include "Mesh/Context.h"
 #include "Mesh/Field.h"
 #include "Mesh/GModel.h"
-#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
 #include "Mesh/GmshMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/mathEvaluator.h"

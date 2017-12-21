@@ -10,6 +10,7 @@
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
+#include <wx/filefn.h> 
 
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
@@ -39,6 +40,7 @@
 
 #include <common/enums.h>
 #include "common/OmniFEMMessage.h"
+#include <common/ProblemDefinition.h>
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -573,7 +575,12 @@ private:
     */ 
     void onSolveProblem(wxCommandEvent &event)
     {
-        return;
+		if(wxFileExists(_problemDefinition.getSaveFilePath() + "/" + _problemDefinition.getName() + ".msh"))
+		{
+			wxMessageBox("Running simulation", "Info");
+		}
+		else
+			wxMessageBox("No mesh file created. Mesh the geometry first before simulation", "Warning", wxICON_EXCLAMATION | wxOK);
     }
 	
     /* This section is for the Grid Menu */
