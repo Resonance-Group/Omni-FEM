@@ -4,6 +4,8 @@
 
 #include <iterator>
 
+#include <wx/dir.h>
+
 
 closedPath meshMaker::findContour()
 {
@@ -626,6 +628,58 @@ void meshMaker::mesh(GModel *meshModel, meshSettings settings)
 	// Next set any output mesh options
 	// such as different files to output the mesh. Be it VTK or some other format
 	OmniFEMMsg::instance()->MsgStatus("Saving Mesh file");
+	
+	wxDir validDir;
+	
+	if(settings.getDirString() != wxString("") && validDir.Open(settings.getDirString()) )
+	{
+		validDir.Close();
+		
+		wxString 
+		
+		if(settings.getSaveVTKState())
+			meshModel->writeVTK(settings.getDirString().ToStdString() + "\model.vtk");
+		
+		if(settings.getSaveBDFState())
+			meshModel.writeBDF(settings.getDirString().ToStdString() + "\model.bdf"); // double check this one
+		
+		if(settings.getSaveCELUMState())
+			meshModel->writeCELUM(settings.getDirString().ToStdString() + "\model.", false, 1.0);
+	
+		if(settings.getSaveCGNSState())
+			meshModel->writeCGNS(settings.getDirString().ToStdString() + "\model.cgns", 1, 0, 1.0);
+			
+		if(settings.getSaveDIFFPACKSate())
+			meshModel->writeDIFF(settings.getDirString().ToStdString() + "\model.diff", false, false, 1.0);
+			
+		if(settings.getSaveFourierState())
+			meshModel->writeFourier(settings.getDirString().ToStdString() + "\model.fourier");
+			
+		if(settings.getSaveGEOState())
+			meshModel->writeGEO(settings.getDirString().ToStdString() + "\model.geo", true, true);
+			
+		if(settings.getSaveINPState())
+			meshModel->writeINP(settings.getDirString().ToStdString() + "\model.inp", false, false, 1.0);
+		
+		if(settings.getSaveIR3State())
+			meshModel->writeIR3(settings.getDirString().ToStdString() + "\model.ir3", 0, true, 1.0);
+			
+		if(settings.getSaveMAILState())
+			meshModel->writeMAIL(settings.getDirString().ToStdString() + "\model.mail", true, 1.0);
+			
+		if(settings.getSaveMESHState())
+			meshModel->writeMESH(settings.getDirString().ToStdString() + "\model.mesh", 1, false, 1.0);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	}
 	meshModel->writeVTK("/home/phillip/Desktop/test.vtk");
 	//meshModel.getMesh
 	

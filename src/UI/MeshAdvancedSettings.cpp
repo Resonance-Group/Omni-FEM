@@ -1,5 +1,6 @@
 #include "UI/MeshAdvancedSettings.h"
 
+#include <wx/dir.h>
 
 meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par, wxID_ANY, "Mesh Settings Advanced")
 {
@@ -10,7 +11,9 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	wxBoxSizer *multiplePassesSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *smoothingSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshFactorSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticBoxSizer *meshFormatsSizer = new wxStaticBoxSizer(wxHORIZONTAL, this, "Mesh File Save Formats");
+	wxStaticBoxSizer *meshFormatsSizer = new wxStaticBoxSizer(wxVERTICAL, this, "Mesh File Save Formats");
+	wxBoxSizer *meshDirSelectionSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *intermediateSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *footerSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 	
@@ -49,12 +52,21 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	wxStaticText *factorText = new wxStaticText(this, wxID_ANY, "Mesh Size Factor: ");
 	factorText->SetFont(font);
 	
-	p_factorTextCtrl->Create(this, wxID_EDIT, std::to_string(p_meshSettings->getElementSizeFactor()), wxDefaultPosition, wxDefaultSize, 0, doubleGreaterThenZeroVal);
+	p_factorTextCtrl->Create(this, wxID_ANY, std::to_string(p_meshSettings->getElementSizeFactor()), wxDefaultPosition, wxDefaultSize, 0, doubleGreaterThenZeroVal);
 	p_factorTextCtrl->SetValue(std::to_string(p_meshSettings->getElementSizeFactor()));
 	p_factorTextCtrl->SetFont(font);
 	
 	meshFactorSizer->Add(factorText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	meshFactorSizer->Add(p_factorTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	p_meshFileDirectory->Create(meshFormatsSizer->GetStaticBox(), wxID_APPLY, p_meshSettings->getDirString(), wxDefaultPosition, wxSize(275, 23), wxTE_PROCESS_ENTER);
+	p_meshFileDirectory->SetFont(font);
+	
+	wxButton *browseButton = new wxButton(meshFormatsSizer->GetStaticBox(), wxID_EDIT, "Browse", wxDefaultPosition, wxSize(75, 23));
+	browseButton->SetFont(font); 
+	
+	meshDirSelectionSizer->Add(p_meshFileDirectory, 0, wxALL | wxCENTER, 6);
+	meshDirSelectionSizer->Add(browseButton, 0, wxBOTTOM | wxRIGHT | wxCENTER | wxTOP, 6);
 	
 	// For colunn 1
 	
@@ -162,10 +174,13 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	columnFourSize->Add(p_saveAsUNV, 0, wxBOTTOM | wxLEFT, 6);
 	columnFourSize->Add(p_saveAsVRML, 0, wxBOTTOM | wxLEFT, 6);
 	
-	meshFormatsSizer->Add(columnOneSize);
-	meshFormatsSizer->Add(columnTwoSize);
-	meshFormatsSizer->Add(columnThreeSize);
-	meshFormatsSizer->Add(columnFourSize);
+	intermediateSizer->Add(columnOneSize);
+	intermediateSizer->Add(columnTwoSize);
+	intermediateSizer->Add(columnThreeSize);
+	intermediateSizer->Add(columnFourSize);
+	
+	meshFormatsSizer->Add(meshDirSelectionSizer);
+	meshFormatsSizer->Add(intermediateSizer);
 	
 	wxButton *okButton  = new wxButton(this, wxID_OK, "Ok", wxDefaultPosition, wxSize(75, 23));
     okButton->SetFont(font);
@@ -220,4 +235,46 @@ void meshAdvanced::setSettings()
 	p_meshSettings->setSaveTochnogState(p_saveAsTochnog->GetValue());
 	p_meshSettings->setSaveUNVState(p_saveAsUNV->GetValue());
 	p_meshSettings->setSaveVRMLState(p_saveAsVRML->GetValue());
+	
+	p_meshSettings->setDirString(p_meshFileDirectory->GetValue());
 }
+
+
+
+void meshAdvanced::onBrowse(wxCommandEvent &event)
+{
+	wxString defaultPath;
+	if(p_meshSettings->getDirString() != wxString(""))
+		defaultPath = p_meshSettings->getDirString();
+		
+	wxDirDialog *newDialog = new wxDirDialog(this, "Please select a directory to save the mesh files", defaultPath);
+	
+	if(newDialog->ShowModal() == wxID_OK)
+	{
+		p_meshFileDirectory->SetValue(newDialog->GetPath());
+	}
+}
+
+
+
+void meshAdvanced::onTextEdit(wxCommandEvent &event)
+{
+	wxDir testDirectory;
+	
+	if(p_meshFileDirectory->GetValue() != wxString(""))
+	{
+		if(testDirectory.Open(p_meshFileDirectory->GetValue()))
+			testDirectory.Close();
+		else
+		{
+			wxMessageBox("This is not a valid file path", "Warning", wxOK | wxICON_EXCLAMATION, this);
+			p_meshFileDirectory->SetValue(wxEmptyString);
+		}
+	}
+}
+
+
+wxBEGIN_EVENT_TABLE(meshAdvanced, wxDialog)
+	EVT_BUTTON(wxID_EDIT, meshAdvanced::onBrowse)
+	EVT_TEXT_ENTER(wxID_APPLY, meshAdvanced::onTextEdit)
+wxEND_EVENT_TABLE()

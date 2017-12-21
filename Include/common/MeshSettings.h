@@ -34,6 +34,8 @@ private:
 	
 	wxString p_meshSaveLocation;
 	
+	wxString p_meshSavePath = wxString("");
+	
 	bool p_saveAsVTK = false;
 	
 	bool p_saveAsBDF = false;
@@ -112,6 +114,16 @@ public:
 	bool getStructuredState()
 	{
 		return p_isStructured;
+	}
+	
+	void setDirString(wxString dirPath)
+	{
+		p_meshSavePath = dirPath;
+	}
+	
+	wxString getDirString()
+	{
+		return p_meshSavePath;
 	}
 	
 	void setMeshArrangment(StructuredArrangement arrangment)

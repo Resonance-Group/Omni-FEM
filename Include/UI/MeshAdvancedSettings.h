@@ -9,6 +9,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/valnum.h>
+#include <wx/dirdlg.h>
 
 #include <common/MeshSettings.h>
 
@@ -22,6 +23,8 @@ private:
 	wxTextCtrl *p_llyodTextCtrl = new wxTextCtrl();
 
 	wxTextCtrl *p_factorTextCtrl = new wxTextCtrl();
+	
+	wxTextCtrl *p_meshFileDirectory = new wxTextCtrl();
 	
 	wxCheckBox *p_saveAsVTK = new wxCheckBox();
 	
@@ -62,10 +65,17 @@ private:
 	wxCheckBox *p_saveAsVRML = new wxCheckBox();
 	
 	void onResetDefault(wxCommandEvent &event);
+	
+	void onBrowse(wxCommandEvent &event);
+	
+	void onTextEdit(wxCommandEvent &event);
 public:
 	meshAdvanced(wxWindow *par, meshSettings &settings);
 	
 	void setSettings();
+
+private:
+	wxDECLARE_EVENT_TABLE();
 };
 
 
