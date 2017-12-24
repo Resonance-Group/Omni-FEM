@@ -500,22 +500,10 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	maxStream << p_meshSetting.getMaxElementSize();
 	OmniFEMMsg::instance()->MsgInfo("Loading max element size as: " + std::to_string(p_meshSetting.getMaxElementSize()));
 	
-//	p_elementSizeFactorTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
-//	p_elementSizeFactorTextCtrl->SetFont(*font);
-//	p_elementSizeFactorTextCtrl->SetValidator(testValidator);
-	
-/*	std::ostream factorStream(p_elementSizeFactorTextCtrl);0
-	factorStream << std::setprecision(4);
-	factorStream << p_meshSetting.getElementSizeFactor();
-	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSetting.getElementSizeFactor()));
-	 */ 
-	
 	elementSizeSizer->Add(minText, 0, wxCENTER | wxALL, 6);
 	elementSizeSizer->Add(p_minElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	elementSizeSizer->Add(maxText, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
 	elementSizeSizer->Add(p_maxElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-//	elementSizeSizer->Add(factorText, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-//	elementSizeSizer->Add(p_elementSizeFactorTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *elementOrder = new wxStaticText(meshSettingsPanel, wxID_ANY, "Element Order:");
 	elementOrder->SetFont(*font);

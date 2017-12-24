@@ -7,41 +7,44 @@
 #include <wx/dir.h>
 
 
-closedPath meshMaker::findContour()
+closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *point)
 {
 	closedPath foundPath;
 	std::vector<closedPath> pathsVector;
 	
 	// Find the first line segment that is not visited
-	bool lineIsFound = false; // Boolean used to indicate if a line or arc was found.
-	for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+	if(startingEdge == nullptr)
 	{
-		if(!lineIterator->getVisitedStatus() && !lineIterator->getSegmentProperty()->getHiddenState())
+		bool lineIsFound = false; // Boolean used to indicate if a line or arc was found.
+		for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 		{
-			pathsVector.push_back(closedPath(*lineIterator));
-			lineIsFound = true;
-			break;
-		}
-	}
-	
-	if(!lineIsFound)
-	{
-		for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
-		{
-			if(!arcIterator->getVisitedStatus() && !arcIterator->getSegmentProperty()->getHiddenState())
+			if(!lineIterator->getVisitedStatus() && !lineIterator->getSegmentProperty()->getHiddenState())
 			{
-				pathsVector.push_back(closedPath(*arcIterator));
+				pathsVector.push_back(closedPath(*lineIterator));
 				lineIsFound = true;
 				break;
 			}
 		}
+		
+		if(!lineIsFound)
+		{
+			for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
+			{
+				if(!arcIterator->getVisitedStatus() && !arcIterator->getSegmentProperty()->getHiddenState())
+				{
+					pathsVector.push_back(closedPath(*arcIterator));
+					lineIsFound = true;
+					break;
+				}
+			}
+		}
 	}
+	else
+		pathsVector.push_back(closedPath(startingEdge));
 	
 	while(pathsVector.size() != 0)
 	{
-		// This area could be an area for bugs. 
-		// The main reason is that what happens when the program adds a new path to the path vector 
-		// and then increments the interator, does this invalid the interator?
+		
 		for(std::vector<closedPath>::iterator pathIterator = pathsVector.begin(); pathIterator != pathsVector.end();)
 		{
 			if(foundPath.getDistance() == 0 || pathIterator->getDistance() < foundPath.getDistance())
@@ -89,13 +92,15 @@ closedPath meshMaker::findContour()
 					// If found, we are going to test if the 
 					// found contour's distance is less then the current found path
 					// distance
-					if(pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0)
+					if(point == nullptr && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
 					{
-						// Replace the found path variable with the pathIterator as the new shortest path
-						
 						foundPath = *pathIterator;
 					}
-					
+					else if(checkPointInContour(*point, *pathIterator) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
+					{
+						foundPath = *pathIterator;
+					}
+
 					pathsVector.erase(pathIterator);
 					break;
 				}
@@ -316,9 +321,222 @@ int meshMaker::lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc)
 
 
 
+double meshMaker::calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment)
+{
+    double t, x[3], y[3];
+
+    x[0] = segment.getFirstNode()->getCenterXCoordinate();
+    y[0] = segment.getFirstNode()->getCenterYCoordinate();
+	
+    x[1] = segment.getSecondNode()->getCenterXCoordinate();
+    y[1] = segment.getSecondNode()->getCenterYCoordinate();
+	
+	t = ((selectedLabel.getCenterXCoordinate() - x[0]) * (x[1] - x[0]) + (selectedLabel.getCenterYCoordinate() - y[0]) * (y[1] - y[0])) / ((x[1] - x[0]) * (x[1] - x[0]) + (y[1] - y[0]) * (y[1] - y[0]));
+      
+	if(t > 1)
+		t = 1.0;
+	else if(t < 0.0)
+		t = 0.0;
+		
+	x[2] = x[0] + t * (x[1] - x[0]);
+	y[2] = y[0] + t * (y[1] - y[0]);
+    
+	return sqrt((selectedLabel.getCenterXCoordinate() - x[2]) * (selectedLabel.getCenterXCoordinate() - x[2]) + (selectedLabel.getCenterYCoordinate() - y[2]) * (selectedLabel.getCenterYCoordinate() - y[2]));   
+}
+
+
+
+void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
+{
+	std::vector<closedPath> *pathToOperate;
+	
+	if(pathContour == nullptr)
+		pathToOperate = &p_closedContourPaths;
+	else
+		pathToOperate = pathContour;
+		
+	for(auto contourIterator : *pathToOperate)
+	{
+		/* This section here will transfer the found closed contours into a vector 
+		 * of GEdges
+		 */ 
+		std::vector<GEdge*> contourLoop;
+		
+		closedPath contour = contourIterator;
+		
+		for(std::vector<edgeLineShape*>::iterator lineIterator = contour.getClosedPath()->begin(); lineIterator != contour.getClosedPath()->end(); lineIterator++)
+		{
+			GVertex *firstNode = nullptr;
+			GVertex *secondNode = nullptr;
+			//numberOfIntersections = 0;
+	
+			for(auto vertexIterator : p_vertexModelList)
+			{
+				double xValueVertex = vertexIterator->x();
+				double yValueVertex = vertexIterator->y();
+				double firstNodeCenterX = (*lineIterator)->getFirstNode()->getCenterXCoordinate();
+				double firstNodeCenterY = (*lineIterator)->getFirstNode()->getCenterYCoordinate();
+				double secondNodeCenterX = (*lineIterator)->getSecondNode()->getCenterXCoordinate();
+				double secondNodeCenterY = (*lineIterator)->getSecondNode()->getCenterYCoordinate();
+				if(((xValueVertex == firstNodeCenterX) && (yValueVertex == firstNodeCenterY)) ||
+					((xValueVertex == secondNodeCenterX) && (yValueVertex == secondNodeCenterY)))
+					{
+						if(xValueVertex == firstNodeCenterX && yValueVertex == firstNodeCenterY)
+							firstNode = vertexIterator;
+						else if (xValueVertex == secondNodeCenterX && yValueVertex == secondNodeCenterY)
+							secondNode = vertexIterator;
+						
+						if(firstNode && secondNode)
+							break;
+					}
+			}
+			
+			if((*lineIterator)->isArc())
+			{
+				// Throw in the code here in order to create a Bspline within the mesh model
+				// look at the code: bool GEO_Internals::addBezier(int &tag, const std::vector<int> &vertexTags)
+				// located in GMODELIO_GEO.cpp file on added in a Bezier curve to the model
+				//GEdge *test = meshModel->addBezier()
+			}
+			else
+			{
+				GEdge *temp = p_meshModel->addLine(firstNode, secondNode);
+			//	meshModel->
+		//		temp->meshAttributes.meshSize = 1.0;
+		//		temp->meshAttributes.meshSize = p_blockLabelList->begin()->getProperty()->getMeshSize();
+				if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
+				{
+					temp->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
+				}
+				
+				contourLoop.push_back(temp);
+			}
+		}
+		
+		std::vector<std::vector<GEdge*>> test;
+		
+		// Now, we need to test if the contour is a hole to another contour
+		// Or, if the contour lies outside of a set of contours
+		// Or if the contour is not related to any of the already added contours
+		// And add it in the correct place of the complete line loop
+		// For now, we will just add it to the model directly
+		test.push_back(contourLoop);
+		
+		// Add the contour to the face selection
+		GFace *testFace = p_meshModel->addPlanarFace(test);
+		
+		if(p_settings->getStructuredState())
+		{
+			testFace->meshAttributes.method = 1;// Sets the face to be transfinite
+			
+			switch(p_settings->getMeshArrangment())
+			{
+				case StructuredArrangement::ARRANGMENT_LEFT:
+					testFace->meshAttributes.transfiniteArrangement = -1;
+					break;
+				case StructuredArrangement::ARRANGMENT_RIGHT:
+					testFace->meshAttributes.transfiniteArrangement = 1;
+					break;
+				case StructuredArrangement::ARRANGMENT_ALTERNATED:
+					testFace->meshAttributes.transfiniteArrangement = 2;
+					break;
+				default:
+					testFace->meshAttributes.transfiniteArrangement = -1;
+					break;
+			}
+		}
+		else
+		{
+			testFace->meshAttributes.method = 2;
+			testFace->meshAttributes.transfiniteArrangement = 0;
+		}
+		
+		
+			  
+		
+		/* TODO: Next, we need to create an algorthim that will determine which block labels lie
+		 * within the boundary of the face and from there, extra the mesh size (or no Mesh) 
+		 */ 
+		SBoundingBox3d aBox = testFace->bounds();
+		
+		/* Now we enter into the ray casting algorthim.
+		 * The idea behind this is that a point from far awa is "drawn". A 
+		 * line connecting the blocklabel and this far point is "created". 
+		 * The algorithm will then determine the number of times that the 
+		 * line intersects with a line of the face. If it is an odd number
+		 * of times, then this means that the block label exists within the face
+		 * if it is an even number of times, then this means that the block label 
+		 * exists outside of the face
+		 */ 
+		for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
+		{
+			if(checkPointInContour(*blockIterator, contourIterator))
+			{
+				meshSize testEnum = blockIterator->getProperty()->getMeshsizeType();
+				if(blockIterator->getProperty()->getMeshsizeType() != meshSize::MESH_NONE_)
+				{
+					double checkMesh = blockIterator->getProperty()->getMeshSize();
+					for(int i = 0; i < contourLoop.size(); i++)
+					{
+						if(contourLoop[i]->meshAttributes.meshSize == MAX_LC)
+							contourLoop[i]->meshAttributes.meshSize = blockIterator->getProperty()->getMeshSize();
+					}
+				//	testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
+					testFace->meshAttributes.meshSize = 1.0;	
+				}
+				else
+					testFace->meshAttributes.method = MESH_NONE;
+					
+				blockIterator->setUsedState(true);
+				p_blockLabelsUsed++;
+				
+				break;
+			}
+		}
+	}
+}
+
+
+
+bool meshMaker::checkPointInContour(rectangleShape &label, closedPath &path)
+{
+	int numberOfIntersections = 0;
+	
+	Vector blockPoint = Vector(label.getCenterXCoordinate(), label.getCenterYCoordinate());
+	Vector maxBBPoint = Vector(path.getMaxSize().x + 10.0, blockPoint.getYComponent());// The factor here will ensure that the point is not on the same point as a vertex
+	
+	for(auto edgeIterator : *path.getClosedPath())
+	{
+		bool test = false;
+		Vector beginPoint = Vector(edgeIterator->getFirstNode()->getCenterXCoordinate(), edgeIterator->getFirstNode()->getCenterYCoordinate());
+		Vector endPoint = Vector(edgeIterator->getSecondNode()->getCenterXCoordinate(), edgeIterator->getSecondNode()->getCenterYCoordinate());
+		
+		if(	blockPoint.getYComponent() < std::max(edgeIterator->getFirstNode()->getCenterYCoordinate(), edgeIterator->getSecondNode()->getCenterYCoordinate()) &&
+			blockPoint.getYComponent() > std::min(edgeIterator->getFirstNode()->getCenterYCoordinate(), edgeIterator->getSecondNode()->getCenterYCoordinate()))
+		{
+			
+			test = lineIntersectsLine(blockPoint, maxBBPoint, beginPoint, endPoint);
+			if(!test)
+				test = lineIntersectsLine(beginPoint, endPoint, blockPoint, maxBBPoint);
+		}
+		
+		if(test)
+			numberOfIntersections++;
+	}
+
+	// Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
+	 
+	if(numberOfIntersections % 2 == 1 && numberOfIntersections != 0)
+		return true;
+	else
+		return false;
+}
+
+
 void meshMaker::mesh()
 {
 	bool meshCreated = false;
+	unsigned int blockLabelsUsed = 0;
 
 	GmshInitialize();
 	
@@ -422,9 +640,8 @@ void meshMaker::mesh()
 	// lcFactor->0.29999999999 lcExtendFromBoundary->1 algo3D-> 1
 	OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
 	std::vector<GVertex*> vertexModelList;
-	std::vector<std::vector<std::vector<GEdge*>>> compeleteLineLoop;
 	
-	vertexModelList.reserve(p_nodeList->size());
+	p_vertexModelList.reserve(p_nodeList->size());
 
 	p_meshModel->setFactory("Gmsh");
 	
@@ -434,179 +651,42 @@ void meshMaker::mesh()
 		double test1 = nodeIterator.getCenterXCoordinate();
 		double test2 = nodeIterator.getCenterYCoordinate();
 		GVertex *temp = p_meshModel->addVertex(test1, test2, 0.0, 1.0);
-		vertexModelList.push_back(temp);
-	//	vertexModelList
+		p_vertexModelList.push_back(temp);
 	}
 	
 	/* Now we create the faces */
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
 	
-	for(auto contourIterator : p_closedContourPaths)
-	{
-		/* This section here will transfer the found closed contours into a vector 
-		 * of GEdges
-		 */ 
-		std::vector<GEdge*> contourLoop;
-		
-		closedPath contour = contourIterator;
-		
-		for(std::vector<edgeLineShape*>::iterator lineIterator = contour.getClosedPath()->begin(); lineIterator != contour.getClosedPath()->end(); lineIterator++)
-		{
-			GVertex *firstNode = nullptr;
-			GVertex *secondNode = nullptr;
-			//numberOfIntersections = 0;
+	createGMSHGeometry();
 	
-			for(auto vertexIterator : vertexModelList)
-			{
-				double xValueVertex = vertexIterator->x();
-				double yValueVertex = vertexIterator->y();
-				double firstNodeCenterX = (*lineIterator)->getFirstNode()->getCenterXCoordinate();
-				double firstNodeCenterY = (*lineIterator)->getFirstNode()->getCenterYCoordinate();
-				double secondNodeCenterX = (*lineIterator)->getSecondNode()->getCenterXCoordinate();
-				double secondNodeCenterY = (*lineIterator)->getSecondNode()->getCenterYCoordinate();
-				if(((xValueVertex == firstNodeCenterX) && (yValueVertex == firstNodeCenterY)) ||
-					((xValueVertex == secondNodeCenterX) && (yValueVertex == secondNodeCenterY)))
-					{
-						if(xValueVertex == firstNodeCenterX && yValueVertex == firstNodeCenterY)
-							firstNode = vertexIterator;
-						else if (xValueVertex == secondNodeCenterX && yValueVertex == secondNodeCenterY)
-							secondNode = vertexIterator;
-						
-						if(firstNode && secondNode)
-							break;
-					}
-			}
-			
-			if((*lineIterator)->isArc())
-			{
-				// Throw in the code here in order to create a Bspline within the mesh model
-				// look at the code: bool GEO_Internals::addBezier(int &tag, const std::vector<int> &vertexTags)
-				// located in GMODELIO_GEO.cpp file on added in a Bezier curve to the model
-				//GEdge *test = meshModel->addBezier()
-			}
-			else
-			{
-				GEdge *temp = p_meshModel->addLine(firstNode, secondNode);
-			//	meshModel->
-		//		temp->meshAttributes.meshSize = 1.0;
-		//		temp->meshAttributes.meshSize = p_blockLabelList->begin()->getProperty()->getMeshSize();
-				if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
-				{
-					temp->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
-				}
-				
-				contourLoop.push_back(temp);
-			}
-		}
-		
-		std::vector<std::vector<GEdge*>> test;
-		
-		// Now, we need to test if the contour is a hole to another contour
-		// Or, if the contour lies outside of a set of contours
-		// Or if the contour is not related to any of the already added contours
-		// And add it in the correct place of the complete line loop
-		// For now, we will just add it to the model directly
-		test.push_back(contourLoop);
-		
-		// Add the contour to the face selection
-		GFace *testFace = p_meshModel->addPlanarFace(test);
-		
-		if(p_settings->getStructuredState())
-		{
-			testFace->meshAttributes.method = 1;// Sets the face to be transfinite
-			
-			switch(p_settings->getMeshArrangment())
-			{
-				case StructuredArrangement::ARRANGMENT_LEFT:
-					testFace->meshAttributes.transfiniteArrangement = -1;
-					break;
-				case StructuredArrangement::ARRANGMENT_RIGHT:
-					testFace->meshAttributes.transfiniteArrangement = 1;
-					break;
-				case StructuredArrangement::ARRANGMENT_ALTERNATED:
-					testFace->meshAttributes.transfiniteArrangement = 2;
-					break;
-				default:
-					testFace->meshAttributes.transfiniteArrangement = -1;
-					break;
-			}
-		}
-		else
-		{
-			testFace->meshAttributes.method = 2;
-			testFace->meshAttributes.transfiniteArrangement = 0;
-		}
-			  
-		
-		/* TODO: Next, we need to create an algorthim that will determine which block labels lie
-		 * within the boundary of the face and from there, extra the mesh size (or no Mesh) 
-		 */ 
-		SBoundingBox3d aBox = testFace->bounds();
-		
-		/* Now we enter into the ray casting algorthim.
-		 * The idea behind this is that a point from far awa is "drawn". A 
-		 * line connecting the blocklabel and this far point is "created". 
-		 * The algorithm will then determine the number of times that the 
-		 * line intersects with a line of the face. If it is an odd number
-		 * of times, then this means that the block label exists within the face
-		 * if it is an even number of times, then this means that the block label 
-		 * exists outside of the face
-		 */ 
+	if(p_blockLabelsUsed < p_blockLabelList->size())
+	{
+		std::vector<closedPath> additionalPaths;
 		for(auto blockIterator : *p_blockLabelList)
 		{
-			int numberOfIntersections = 0;
 			
-			for(auto rayContourIterator : test)
+			if(!blockIterator.getUsedState())
 			{
-				std::vector<GEdge*> temp = rayContourIterator;
-				bool isConnectedToCommonEdgeAndAccounted = false; 
-				for(auto lineSegmentIterator : temp)
+				double shortestDistance = 0;
+				edgeLineShape *shortestEdge;
+				for(plf::colony<edgeLineShape>::iterator lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 				{
-					bool test = false;
-					Vector blockPoint = Vector(blockIterator.getCenterXCoordinate(), blockIterator.getCenterYCoordinate());
-					Vector maxBBPoint = Vector(Vector(aBox.max().x(), aBox.max().y()));// The factor here will ensure that the point is not on the same point as a vertex
-					Vector beginPoint = Vector(lineSegmentIterator->getBeginVertex()->x(), lineSegmentIterator->getBeginVertex()->y());
-					Vector endPoint = Vector(lineSegmentIterator->getEndVertex()->x(), lineSegmentIterator->getEndVertex()->y());
-					
-					if(	blockPoint.getYComponent() < std::max(lineSegmentIterator->getBeginVertex()->y(), lineSegmentIterator->getEndVertex()->y()) &&
-						blockPoint.getYComponent() > std::min(lineSegmentIterator->getBeginVertex()->y(), lineSegmentIterator->getEndVertex()->y()))
+					double distance = calculateShortestDistance(blockIterator, *lineIterator);
+					if(distance < shortestDistance || shortestDistance == 0)
 					{
-						maxBBPoint.Set(maxBBPoint.getXComponent() + 0.1, blockPoint.getYComponent());
-						
-						test = lineIntersectsLine( blockPoint, maxBBPoint, beginPoint, endPoint);
-						if(!test)
-							test = lineIntersectsLine(beginPoint, endPoint, blockPoint, maxBBPoint);
+						shortestDistance = distance;
+						shortestEdge = &(*lineIterator);
 					}
-					
-					if(test)
-						numberOfIntersections++;
 				}
-			}
-			
-			/* Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
-			 */ 
-			 
-			if(numberOfIntersections % 2 == 1)
-			{
-				meshSize testEnum = blockIterator.getProperty()->getMeshsizeType();
-				if(blockIterator.getProperty()->getMeshsizeType() != meshSize::MESH_NONE_)
-				{
-					
-					double checkMesh = blockIterator.getProperty()->getMeshSize();
-					for(int i = 0; i < contourLoop.size(); i++)
-					{
-						if(contourLoop[i]->meshAttributes.meshSize == MAX_LC)
-							contourLoop[i]->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();
-					}
-				//	testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
-					testFace->meshAttributes.meshSize = 1.0;	
-				}
-				else
-					testFace->meshAttributes.method = MESH_NONE;
-				
-				break;
+				// This function would only be called if a block label has been forgotten
+				// An additional parameter should be added here that will inform the program of anoher condition
+				// for the closed path where the closed path must encompass the blocklabel
+				closedPath path = findContour(shortestEdge, &blockIterator);
+				additionalPaths.push_back(path);
 			}
 		}
+		
+		createGMSHGeometry(&additionalPaths);
 	}
 	
 	/* As a side note,this current method for constructing the GMSH geometry will not work.
@@ -706,6 +786,11 @@ void meshMaker::mesh()
 	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 	{
 		arcIterator->setVisitedStatus(false);
+	}
+	
+	for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
+	{
+		blockIterator->setUsedState(false);
 	}
 
 	if(p_meshModel->getNumMeshVertices() > 0)

@@ -55,12 +55,15 @@ void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 {	
-	wxFileDialog openFileDialog(this, "Open File", "", "", "", wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
+	wxFileDialog openFileDialog(this, "Open File", "", "", "*omniFEM", wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
 	
 	if(openFileDialog.ShowModal() != wxID_CANCEL)
 	{
 		if(_UIState != systemState::MODEL_DEFINING)
+		{
 			createModelDefiningClient();
+			_model->deleteMesh();
+		}
 			
 		_model->SetSize(this->GetClientSize() - wxSize(12, 12));
 		

@@ -159,7 +159,8 @@ int GModel::setCurrent(GModel *m)
 
 void GModel::setFactory(std::string name)
 {
-  if(_factory) delete _factory;
+  if(_factory) 
+	  delete _factory;
   if(name == "OpenCASCADE"){
 #if defined(HAVE_OCC)
     _factory = new OCCFactory();

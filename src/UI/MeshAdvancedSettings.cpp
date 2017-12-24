@@ -56,6 +56,12 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_factorTextCtrl->SetValue(std::to_string(p_meshSettings->getElementSizeFactor()));
 	p_factorTextCtrl->SetFont(font);
 	
+	/*	std::ostream factorStream(p_elementSizeFactorTextCtrl);0
+	factorStream << std::setprecision(4);
+	factorStream << p_meshSetting.getElementSizeFactor();
+	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSetting.getElementSizeFactor()));
+	 */ 
+	
 	meshFactorSizer->Add(factorText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	meshFactorSizer->Add(p_factorTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	

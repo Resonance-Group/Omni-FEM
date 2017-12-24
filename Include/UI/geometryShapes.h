@@ -442,6 +442,10 @@ private:
 		and what material should be associated with the particular region.
 	*/ 
     blockProperty _property;
+	
+	//! This property is used in the mesher to keep track all of the block labels are used
+	bool p_isUsed = false;
+	
 public:
 
 	/**
@@ -470,6 +474,25 @@ public:
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
     }
+	
+	/**
+	 * @brief Sets the state of the is used variable. Setting the variable will indicate if the
+	 * 		label has been used by the mesher
+	 * @param state Set to true to indicate the label has been assigned to a face. otherwise, set to false
+	 */
+	void setUsedState(bool state)
+	{
+		p_isUsed = state;
+	}
+	
+	/**
+	 * @brief Returns the used state
+	 * @return If the block label is assigned to a face, will return true. Otherwise, false
+	 */
+	bool getUsedState()
+	{
+		return p_isUsed;
+	}
     
 	/**
 	 * @brief 	Draws the text for the block label onto the screen. The text that is drawn is the material

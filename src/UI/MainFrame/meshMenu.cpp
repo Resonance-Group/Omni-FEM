@@ -15,9 +15,9 @@ void OmniFEMMainFrame::onCreateMesh(wxCommandEvent &event)
 			{
 				if(_model->displayDanglingNodes() == 0)
 				{
+					_model->deleteMesh();
 					meshMaker mesher(_problemDefinition, _model);
 					OmniFEMMsg::instance()->displayWindow(Status_Windows::MESH_STATUS_WINDOW);
-					_model->deleteMesh();
 					mesher.mesh();
 					if(_model->checkModelIsValid())
 						_model->Refresh();

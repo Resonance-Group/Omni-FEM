@@ -40,6 +40,8 @@ class meshMaker
 private:
 	std::vector<closedPath> p_closedContourPaths;
 	
+	std::vector<GVertex*> p_vertexModelList;
+	
 	//! Pointer to the global nodal list
 	plf::colony<node> *p_nodeList;
 	
@@ -66,13 +68,15 @@ private:
 	//! This data type is incremented when the program visists a new line
 	unsigned long p_numberVisited = 0;
 	
+	unsigned int p_blockLabelsUsed = 0;
+	
 	/**
 	 * @brief 	This function is called in order to find all of the closed contours connected to 
 	 * 			a common edge. The function will then determine what the geometry pieces are within
 	 * 			the closed contour. This function is modeled off of the depth-first search algorthim
 	 * @return Returns a closed path if avaiable
 	 */
-	closedPath findContour();
+	closedPath findContour(edgeLineShape *startingEdge = nullptr, rectangleShape *point = nullptr);
 	
 	/**
 	 * @brief This function is called in order to create the mesh for hte geometry model.
@@ -120,6 +124,12 @@ private:
 	 * @return Returns true if the pairs P1/P2 and P3/P4 intersect
 	 */
 	bool lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4);
+	
+	double calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment);
+	
+	void createGMSHGeometry(std::vector<closedPath> *pathContour = nullptr);
+	
+	bool checkPointInContour(rectangleShape &label, closedPath &path);
 public:
 	
 	meshMaker(problemDefinition &definition, modelDefinition *model)
