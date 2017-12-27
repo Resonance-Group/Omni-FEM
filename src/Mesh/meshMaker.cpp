@@ -401,9 +401,12 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 			else
 			{
 				GEdge *temp = p_meshModel->addLine(firstNode, secondNode);
-			//	meshModel->
-		//		temp->meshAttributes.meshSize = 1.0;
-		//		temp->meshAttributes.meshSize = p_blockLabelList->begin()->getProperty()->getMeshSize();
+				
+				// All lines start off with the mesh method as none. If there is a corresponding block label,
+				// or a specific mesh size on within the face, then the line will be set to me transfinite or
+				// unstructured depending on the meshSettings set by the user
+				temp->meshAttributes.method = MESH_NONE;
+				
 				if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
 				{
 					temp->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
@@ -425,6 +428,10 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 		// Add the contour to the face selection
 		GFace *testFace = p_meshModel->addPlanarFace(test);
 		
+		
+		
+		testFace->meshAttributes.method = MESH_NONE; // Assume that the user does not want to mesh the face
+		
 		if(p_settings->getStructuredState())
 		{
 			testFace->meshAttributes.method = 1;// Sets the face to be transfinite
@@ -444,30 +451,17 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 					testFace->meshAttributes.transfiniteArrangement = -1;
 					break;
 			}
+			
+			
+			testFace->meshAttributes.meshSize = 0.05;
 		}
 		else
 		{
 			testFace->meshAttributes.method = 2;
 			testFace->meshAttributes.transfiniteArrangement = 0;
 		}
+
 		
-		
-			  
-		
-		/* TODO: Next, we need to create an algorthim that will determine which block labels lie
-		 * within the boundary of the face and from there, extra the mesh size (or no Mesh) 
-		 */ 
-		SBoundingBox3d aBox = testFace->bounds();
-		
-		/* Now we enter into the ray casting algorthim.
-		 * The idea behind this is that a point from far awa is "drawn". A 
-		 * line connecting the blocklabel and this far point is "created". 
-		 * The algorithm will then determine the number of times that the 
-		 * line intersects with a line of the face. If it is an odd number
-		 * of times, then this means that the block label exists within the face
-		 * if it is an even number of times, then this means that the block label 
-		 * exists outside of the face
-		 */ 
 		for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
 		{
 			if(checkPointInContour(*blockIterator, contourIterator))
@@ -479,13 +473,19 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 					for(int i = 0; i < contourLoop.size(); i++)
 					{
 						if(contourLoop[i]->meshAttributes.meshSize == MAX_LC)
+						{
 							contourLoop[i]->meshAttributes.meshSize = blockIterator->getProperty()->getMeshSize();
+						}
+						
+						if(p_settings->getStructuredState())
+							contourLoop[i]->meshAttributes.method = MESH_TRANSFINITE;
+						else
+							contourLoop[i]->meshAttributes.method = MESH_UNSTRUCTURED;
+							
 					}
 				//	testFace->meshAttributes.meshSize = blockIterator.getProperty()->getMeshSize();	
 					testFace->meshAttributes.meshSize = 1.0;	
 				}
-				else
-					testFace->meshAttributes.method = MESH_NONE;
 					
 				blockIterator->setUsedState(true);
 				p_blockLabelsUsed++;
@@ -769,7 +769,7 @@ void meshMaker::mesh()
 	}
 	
 	// THis is the file that the solver uses for meshing
-	p_meshModel->writeMSH(p_folderPath.ToStdString() + "/" + p_simulationName.ToStdString() + ".msh", 2.2, false, false, false, 1.0, 0, 0, false);
+//	p_meshModel->writeMSH(p_folderPath.ToStdString() + "/" + p_simulationName.ToStdString() + ".msh", 2.2, false, false, false, 1.0, 0, 0, false);
 	
 	// TODO: Check for an errors?
 	// TODO: Add in the interface to the GMSH API

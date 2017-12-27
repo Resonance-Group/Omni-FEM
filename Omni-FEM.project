@@ -432,6 +432,7 @@
       <File Name="Include/common/MeshSettings.h"/>
       <File Name="Include/common/OmniFEMDefines.h"/>
       <File Name="Include/common/ClosedPath.h"/>
+      <File Name="Include/common/BoundingBox.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/GModel.h" ExcludeProjConfig=""/>

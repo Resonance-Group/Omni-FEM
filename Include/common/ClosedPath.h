@@ -6,11 +6,15 @@
 
 #include <wx/wx.h>
 
+#include <common/BoundingBox.h>
+
 #include <UI/geometryShapes.h>
 
 class closedPath
 {
 private:
+	boundingBox p_boundingBox;
+
 	double p_distance = 0;
 	
 	std::vector<edgeLineShape*> p_closedPath;
@@ -22,15 +26,15 @@ public:
 	closedPath(edgeLineShape &firstEdge)
 	{
 		p_closedPath.push_back(&firstEdge);
-		p_maxSize.x = std::max(firstEdge.getFirstNode()->getCenterXCoordinate(), firstEdge.getSecondNode()->getCenterXCoordinate());
-		p_maxSize.y = std::max(firstEdge.getFirstNode()->getCenterYCoordinate(), firstEdge.getSecondNode()->getCenterYCoordinate());
+		p_boundingBox = boundingBox(wxRealPoint(firstEdge.getFirstNode()->getCenterXCoordinate(), firstEdge.getFirstNode()->getCenterYCoordinate()));
+		p_boundingBox.addPoint(wxRealPoint(firstEdge.getSecondNode()->getCenterXCoordinate(), firstEdge.getSecondNode()->getCenterYCoordinate()));
 	}
 	
 	closedPath(edgeLineShape *firstEdge)
 	{
 		p_closedPath.push_back(firstEdge);
-		p_maxSize.x = std::max(firstEdge->getFirstNode()->getCenterXCoordinate(), firstEdge->getSecondNode()->getCenterXCoordinate());
-		p_maxSize.y = std::max(firstEdge->getFirstNode()->getCenterYCoordinate(), firstEdge->getSecondNode()->getCenterYCoordinate());
+		p_boundingBox = boundingBox(wxRealPoint(firstEdge->getFirstNode()->getCenterXCoordinate(), firstEdge->getFirstNode()->getCenterYCoordinate()));
+		p_boundingBox.addPoint(wxRealPoint(firstEdge->getSecondNode()->getCenterXCoordinate(), firstEdge->getSecondNode()->getCenterYCoordinate()));
 	}
 	
 	closedPath()
@@ -57,21 +61,21 @@ public:
 	{
 		p_distance += addEdge.getDistance();
 		p_closedPath.push_back(&addEdge);
-		p_maxSize.x = std::max(std::max(addEdge.getFirstNode()->getCenterXCoordinate(), addEdge.getSecondNode()->getCenterXCoordinate()), p_maxSize.x);
-		p_maxSize.y = std::max(std::max(addEdge.getFirstNode()->getCenterYCoordinate(), addEdge.getSecondNode()->getCenterYCoordinate()), p_maxSize.y);
+		p_boundingBox.addPoint(wxRealPoint(addEdge.getFirstNode()->getCenterXCoordinate(), addEdge.getFirstNode()->getCenterYCoordinate()));
+		p_boundingBox.addPoint(wxRealPoint(addEdge.getSecondNode()->getCenterXCoordinate(), addEdge.getSecondNode()->getCenterYCoordinate()));
 	}
 	
 	void addEdgeToPath(edgeLineShape *addEdge)
 	{
 		p_distance += addEdge->getDistance();
 		p_closedPath.push_back(addEdge);
-		p_maxSize.x = std::max(std::max(addEdge->getFirstNode()->getCenterXCoordinate(), addEdge->getSecondNode()->getCenterXCoordinate()), p_maxSize.x);
-		p_maxSize.y = std::max(std::max(addEdge->getFirstNode()->getCenterYCoordinate(), addEdge->getSecondNode()->getCenterYCoordinate()), p_maxSize.y);
+		p_boundingBox.addPoint(wxRealPoint(addEdge->getFirstNode()->getCenterXCoordinate(), addEdge->getFirstNode()->getCenterYCoordinate()));
+		p_boundingBox.addPoint(wxRealPoint(addEdge->getSecondNode()->getCenterXCoordinate(), addEdge->getSecondNode()->getCenterYCoordinate()));
 	}
 	
 	wxRealPoint getMaxSize()
 	{
-		return p_maxSize;
+		return p_boundingBox.getMaxBounds();
 	}
 };
 
