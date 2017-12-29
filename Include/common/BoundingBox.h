@@ -47,7 +47,7 @@ public:
 	
 	/**
 	 * @brief 	FUnction that will check if the current bounding box is inside of another
-	 * 			bounding box. This is comparing from the perseptive that the object bounding is
+	 * 			bounding box. This is comparing from the perseptive that the object bound is
 	 * 			contained within the bounding box of compare.
 	 * @param compare
 	 * @return 

@@ -19,7 +19,8 @@ private:
 	
 	std::vector<edgeLineShape*> p_closedPath;
 	
-	wxRealPoint p_maxSize;
+	wxRealPoint p_centerPoint = wxPoint(0, 0);
+	
 
 public:
 
@@ -28,6 +29,7 @@ public:
 		p_closedPath.push_back(&firstEdge);
 		p_boundingBox = boundingBox(wxRealPoint(firstEdge.getFirstNode()->getCenterXCoordinate(), firstEdge.getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(firstEdge.getSecondNode()->getCenterXCoordinate(), firstEdge.getSecondNode()->getCenterYCoordinate()));
+		p_centerPoint = firstEdge.getCenter();
 	}
 	
 	closedPath(edgeLineShape *firstEdge)
@@ -35,6 +37,7 @@ public:
 		p_closedPath.push_back(firstEdge);
 		p_boundingBox = boundingBox(wxRealPoint(firstEdge->getFirstNode()->getCenterXCoordinate(), firstEdge->getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(firstEdge->getSecondNode()->getCenterXCoordinate(), firstEdge->getSecondNode()->getCenterYCoordinate()));
+		p_centerPoint = firstEdge->getCenter();
 	}
 	
 	closedPath()
@@ -60,6 +63,8 @@ public:
 	void addEdgeToPath(edgeLineShape &addEdge)
 	{
 		p_distance += addEdge.getDistance();
+		p_centerPoint.x = (addEdge.getCenter().x + p_closedPath.size() * p_centerPoint.x) / (p_closedPath.size() + 1);
+		p_centerPoint.y = (addEdge.getCenter().y + p_closedPath.size() * p_centerPoint.y) / (p_closedPath.size() + 1);
 		p_closedPath.push_back(&addEdge);
 		p_boundingBox.addPoint(wxRealPoint(addEdge.getFirstNode()->getCenterXCoordinate(), addEdge.getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(addEdge.getSecondNode()->getCenterXCoordinate(), addEdge.getSecondNode()->getCenterYCoordinate()));
@@ -68,6 +73,8 @@ public:
 	void addEdgeToPath(edgeLineShape *addEdge)
 	{
 		p_distance += addEdge->getDistance();
+		p_centerPoint.x = (addEdge->getCenter().x + p_closedPath.size() * p_centerPoint.x) / (p_closedPath.size() + 1);
+		p_centerPoint.y = (addEdge->getCenter().y + p_closedPath.size() * p_centerPoint.y) / (p_closedPath.size() + 1);
 		p_closedPath.push_back(addEdge);
 		p_boundingBox.addPoint(wxRealPoint(addEdge->getFirstNode()->getCenterXCoordinate(), addEdge->getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(addEdge->getSecondNode()->getCenterXCoordinate(), addEdge->getSecondNode()->getCenterYCoordinate()));
@@ -76,6 +83,24 @@ public:
 	wxRealPoint getMaxSize()
 	{
 		return p_boundingBox.getMaxBounds();
+	}
+	
+	/**
+	 * @brief 	This function will re-orient all of the nodes connecting the lines such that the 
+	 * 			geometry will flow counter-clockwise
+	 */
+	void orient()
+	{
+		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
+		{
+			if((*lineIterator)->isLeft(p_centerPoint) < 0)
+				(*lineIterator)->swap();
+		}
+	}
+	
+	wxRealPoint getCenter()
+	{
+		return p_centerPoint;
 	}
 };
 

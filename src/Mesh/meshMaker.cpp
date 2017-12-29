@@ -148,6 +148,8 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 		}
 	}
 	
+	foundPath.orient();
+	
 	return foundPath;
 }
 

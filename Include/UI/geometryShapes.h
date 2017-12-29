@@ -52,7 +52,7 @@ protected:
 		For lines, this is the midpoint
 		For nodes and blocklabels, this would be the center of the square.
 	*/
-	double xCenterCoordinate;
+	double xCenterCoordinate = 0;
 	
 	//! This data type stores the center y position in Cartesians Coordiantes
     /*!
@@ -60,7 +60,7 @@ protected:
 		For lines, this is the midpoint
 		For nodes and blocklabels, this would be the center of the square.
     */ 
-	double yCenterCoordinate;
+	double yCenterCoordinate = 0;
     
 public:
 	
@@ -131,6 +131,11 @@ public:
     {
         return _isSelected;
     }
+	
+	wxRealPoint getCenter()
+	{
+		return wxRealPoint(xCenterCoordinate, yCenterCoordinate);
+	}
 };
 
 /**
@@ -729,6 +734,12 @@ public:
 		if(p_distance == 0)
 			calculateDistance();
 			
+		if(xCenterCoordinate <= 1e-9 && yCenterCoordinate <= 1e-9)
+		{
+			xCenterCoordinate = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
+			yCenterCoordinate = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
+		}
+			
         if(_property.getHiddenState())
         {
             glEnable(GL_LINE_STIPPLE);
@@ -798,6 +809,25 @@ public:
 			return true;
 		else
 			return false;
+	}
+	
+	void swap()
+	{
+		node *temp = _firstNode;
+		_firstNode = _secondNode;
+		_secondNode = temp;
+	}
+	
+	/**
+	 * @brief 	Tests if a point is to the Left/On/Right of the line. The orientation will be from the 
+	 * 			first node to the second node
+	 * @param point The point to test if it is Left/On/Right of the line
+	 * @return 	Will return > 0 if point is to the left of the line. Returns == 0 if point lies on the line and
+	 * 			returns < 0 if point is to the right of the line.
+	 */
+	double isLeft(wxRealPoint &point)
+	{
+		return ((_secondNode->getCenterXCoordinate() - _firstNode->getCenterXCoordinate()) * (point.y - _firstNode->getCenterYCoordinate()) - (point.x - _firstNode->getCenterXCoordinate()) * (_secondNode->getCenterYCoordinate() - point.y));
 	}
 };
 
