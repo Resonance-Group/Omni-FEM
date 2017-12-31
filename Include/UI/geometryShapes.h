@@ -825,9 +825,10 @@ public:
 	 * @return 	Will return > 0 if point is to the left of the line. Returns == 0 if point lies on the line and
 	 * 			returns < 0 if point is to the right of the line.
 	 */
-	double isLeft(wxRealPoint &point)
+	double isLeft(wxRealPoint point)
 	{
-		return ((_secondNode->getCenterXCoordinate() - _firstNode->getCenterXCoordinate()) * (point.y - _firstNode->getCenterYCoordinate()) - (point.x - _firstNode->getCenterXCoordinate()) * (_secondNode->getCenterYCoordinate() - point.y));
+		return ((_secondNode->getCenterXCoordinate() - _firstNode->getCenterXCoordinate()) * (point.y - _firstNode->getCenterYCoordinate()) 
+					- (point.x - _firstNode->getCenterXCoordinate()) * (_secondNode->getCenterYCoordinate() - _firstNode->getCenterYCoordinate()));
 	}
 };
 

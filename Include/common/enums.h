@@ -58,7 +58,8 @@ enum EditMenuID
     ID_PREFERENCES, /*!< Valus used to indicate that the event is a global preferences event */
     ID_SELECT_GROUP,/*!< Value used to indicate that the event is a select group event */
     ID_EDIT_PROPERTY,/*!< Value used to indicate that the event is a edit property event */
-    ID_LUA_RUN /*!< Value used to indicate that the event is a LUA run event */
+    ID_LUA_RUN, /*!< Value used to indicate that the event is a LUA run event */
+	ID_ADD_NODE /*!< Value used to indicate that the event is a Add node event */
 };
 
 

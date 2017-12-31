@@ -7,6 +7,7 @@
 #include <wx/wx.h>
 
 #include <common/BoundingBox.h>
+#include <common/GeometryProperties/BlockProperty.h>
 
 #include <UI/geometryShapes.h>
 
@@ -21,6 +22,11 @@ private:
 	
 	wxRealPoint p_centerPoint = wxPoint(0, 0);
 	
+	blockProperty *p_property;
+	
+	std::vector<closedPath*> p_holes;
+	
+	std::vector<blockLabel*> p_blockLabelList;
 
 public:
 
@@ -85,22 +91,50 @@ public:
 		return p_boundingBox.getMaxBounds();
 	}
 	
-	/**
-	 * @brief 	This function will re-orient all of the nodes connecting the lines such that the 
-	 * 			geometry will flow counter-clockwise
-	 */
-	void orient()
-	{
-		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
-		{
-			if((*lineIterator)->isLeft(p_centerPoint) < 0)
-				(*lineIterator)->swap();
-		}
-	}
-	
-	wxRealPoint getCenter()
+	wxRealPoint getCenter() const
 	{
 		return p_centerPoint;
+	}
+	
+	void setProperty(blockProperty *property)
+	{
+		p_property = property;
+	}
+	
+	void setProperty(blockProperty &property)
+	{
+		p_property = &property;
+	}
+	
+	blockProperty *getProperty()
+	{
+		return p_property;
+	}
+	
+	void addHole(closedPath *hole)
+	{
+		p_holes.push_back(hole);
+	}
+	
+	std::vector<closedPath*> getHoles()
+	{
+		return p_holes;
+	}
+	
+	void addBlockLabel(blockLabel &label)
+	{
+		p_blockLabelList.push_back(&label);
+	}
+	
+	bool pointInBoundingBox(wxRealPoint point)
+	{
+		if(	point.x < p_boundingBox.getMaxBounds().x &&
+			point.x > p_boundingBox.getMinBounds().x &&
+			point.y < p_boundingBox.getMaxBounds().y &&
+			point.y > p_boundingBox.getMinBounds().y)
+			return true;
+		else
+			return false;
 	}
 };
 

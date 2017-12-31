@@ -416,8 +416,12 @@ public:
         break the line or arc up into two lines or arcs.
         \param xPoint The x-point location in cartesian coordinates to add the node
         \param yPoint The y-point location in cartesian coordinates to add the node
-        \param distanceNode This is a tolerance parameter in which this value specifies the minimum distance when a node is ontop of another node/label or how close a node needs to be to an arc/line in order to break the arc/line into 2 seperate pieces
-        \return Function returns True if node was successfully added. Otherwise, return False. A false condition occurs if the node is placed ontop of another node/label.
+        \param distanceNode This is a tolerance parameter in which this value specifies
+							the minimum distance when a node is ontop of another node/label
+							or how close a node needs to be to an arc/line in order to break
+							the arc/line into 2 seperate pieces
+        \return Function returns True if node was successfully added. Otherwise, return False. 
+				A false condition occurs if the node is placed ontop of another node/label.
     */ 
     bool addNode(double xPoint, double yPoint, double distanceNode);
     

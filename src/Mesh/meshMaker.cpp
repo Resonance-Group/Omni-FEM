@@ -148,7 +148,7 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 		}
 	}
 	
-	foundPath.orient();
+//	foundPath.orient();
 	
 	return foundPath;
 }
@@ -357,14 +357,14 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 	else
 		pathToOperate = pathContour;
 		
-	for(auto contourIterator : *pathToOperate)
+	for(auto contourIterator = pathToOperate->begin(); contourIterator != pathToOperate->end(); contourIterator++)
 	{
 		/* This section here will transfer the found closed contours into a vector 
 		 * of GEdges
 		 */ 
 		std::vector<GEdge*> contourLoop;
 		
-		closedPath contour = contourIterator;
+		closedPath contour = *contourIterator;
 		
 		for(std::vector<edgeLineShape*>::iterator lineIterator = contour.getClosedPath()->begin(); lineIterator != contour.getClosedPath()->end(); lineIterator++)
 		{
@@ -466,9 +466,10 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 		
 		for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
 		{
-			if(checkPointInContour(*blockIterator, contourIterator))
+			if(checkPointInContour(*blockIterator, *contourIterator))
 			{
 				meshSize testEnum = blockIterator->getProperty()->getMeshsizeType();
+				contourIterator->setProperty(blockIterator->getProperty());
 				if(blockIterator->getProperty()->getMeshsizeType() != meshSize::MESH_NONE_)
 				{
 					double checkMesh = blockIterator->getProperty()->getMeshSize();
@@ -500,35 +501,41 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 
 
 
-bool meshMaker::checkPointInContour(rectangleShape &label, closedPath &path)
+bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
 {
-	int numberOfIntersections = 0;
-	
-	Vector blockPoint = Vector(label.getCenterXCoordinate(), label.getCenterYCoordinate());
-	Vector maxBBPoint = Vector(path.getMaxSize().x + 10.0, blockPoint.getYComponent());// The factor here will ensure that the point is not on the same point as a vertex
-	
-	for(auto edgeIterator : *path.getClosedPath())
+	int windingNumber = 0;
+	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
 	{
-		bool test = false;
-		Vector beginPoint = Vector(edgeIterator->getFirstNode()->getCenterXCoordinate(), edgeIterator->getFirstNode()->getCenterYCoordinate());
-		Vector endPoint = Vector(edgeIterator->getSecondNode()->getCenterXCoordinate(), edgeIterator->getSecondNode()->getCenterYCoordinate());
+		bool reverseDirection = false;
 		
-		if(	blockPoint.getYComponent() < std::max(edgeIterator->getFirstNode()->getCenterYCoordinate(), edgeIterator->getSecondNode()->getCenterYCoordinate()) &&
-			blockPoint.getYComponent() > std::min(edgeIterator->getFirstNode()->getCenterYCoordinate(), edgeIterator->getSecondNode()->getCenterYCoordinate()))
-		{
+		if((*lineIterator)->isLeft(path.getCenter()) < 0)
+			reverseDirection = true; // THis indicates that the direction of the path is clockwise
 			
-			test = lineIntersectsLine(blockPoint, maxBBPoint, beginPoint, endPoint);
-			if(!test)
-				test = lineIntersectsLine(beginPoint, endPoint, blockPoint, maxBBPoint);
-		}
+		double isLeftResult = (*lineIterator)->isLeft(point);
 		
-		if(test)
-			numberOfIntersections++;
+		if(reverseDirection)
+			isLeftResult *= -1;
+		
+		if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
+		{
+			if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
+			{
+				if((isLeftResult > 0))
+					windingNumber++;
+				else if(isLeftResult < 0)
+					windingNumber--;
+			}
+		}
+		else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
+		{
+			if((isLeftResult < 0))
+				windingNumber--;
+			else if(isLeftResult > 0)
+				windingNumber++;
+		}
 	}
-
-	// Or we can throw in a loop here to loop through all of the arcs to see if there is an intersection here
-	 
-	if(numberOfIntersections % 2 == 1 && numberOfIntersections != 0)
+	
+	if(windingNumber > 0)
 		return true;
 	else
 		return false;
@@ -542,32 +549,6 @@ void meshMaker::mesh()
 
 	GmshInitialize();
 	
-	OmniFEMMsg::instance()->MsgStatus("Creating GMSH Geometry from Omni-FEM geometry");
-	OmniFEMMsg::instance()->MsgStatus("Finding contours");
-	
-	while(p_numberVisited < p_numberofLines)
-	{
-		closedPath contourPath = findContour();
-		
-		if(contourPath.getDistance() == 0)
-		{
-			//TODO: Add in error handling
-		}
-		else
-			p_closedContourPaths.push_back(contourPath);
-		
-		for(std::vector<edgeLineShape*>::iterator edgeIterator = contourPath.getClosedPath()->begin(); edgeIterator != contourPath.getClosedPath()->end(); edgeIterator++)
-		{
-			if(!(*edgeIterator)->getVisitedStatus())
-			{
-				(*edgeIterator)->setVisitedStatus(true);
-				p_numberVisited++;
-			}
-		}
-	}
-	
-	OmniFEMMsg::instance()->MsgStatus("Contours found");
-
 	/* These are settings that will remain constant */
 	
 	CTX::instance()->mesh.recombinationTestNewStrat = 0;
@@ -636,6 +617,52 @@ void meshMaker::mesh()
 	
 	CTX::instance()->mesh.order = p_settings->getElementOrder();
 	
+	OmniFEMMsg::instance()->MsgStatus("Creating GMSH Geometry from Omni-FEM geometry");
+	OmniFEMMsg::instance()->MsgStatus("Finding contours");
+	
+	
+	
+	
+	while(p_numberVisited < p_numberofLines)
+	{
+		closedPath contourPath = findContour();
+		
+		for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
+		{
+			if(contourPath.pointInBoundingBox(blockIterator->getCenter()))
+			{
+				if(checkPointInContour(blockIterator->getCenter(), contourPath))
+				{
+					contourPath.addBlockLabel(*blockIterator);
+				}
+			}
+		}
+		
+		if(contourPath.getDistance() == 0)
+		{
+			//TODO: Add in error handling
+		}
+		else
+			p_closedContourPaths.push_back(contourPath);
+		
+		for(std::vector<edgeLineShape*>::iterator edgeIterator = contourPath.getClosedPath()->begin(); edgeIterator != contourPath.getClosedPath()->end(); edgeIterator++)
+		{
+			if(!(*edgeIterator)->getVisitedStatus())
+			{
+				(*edgeIterator)->setVisitedStatus(true);
+				p_numberVisited++;
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	OmniFEMMsg::instance()->MsgStatus("Contours found");
+
 	contextMeshOptions testMesh = CTX::instance()->mesh;
 	
 	/* Now we go to conver Omni-FEM's geometry data structure into the data structure for GMSH */
@@ -690,6 +717,7 @@ void meshMaker::mesh()
 		
 		createGMSHGeometry(&additionalPaths);
 	}
+	 
 	
 	/* As a side note,this current method for constructing the GMSH geometry will not work.
 	 * The order needs to be this:

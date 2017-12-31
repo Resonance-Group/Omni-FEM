@@ -400,6 +400,7 @@
       <File Name="Include/UI/GeometryEditor2D.h"/>
       <File Name="Include/UI/StatusWindow.h"/>
       <File Name="Include/UI/MeshAdvancedSettings.h"/>
+      <File Name="Include/UI/AddNodeDialog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="common">
       <File Name="Include/common/Vector.h"/>

@@ -45,12 +45,14 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo\tCtrl-Z");
     _menuEdit->Append(EditMenuID::ID_COPY, "&Copy\tCtrl-C");
     _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete\tDEL");
+	_menuEdit->Append(EditMenuID::ID_ADD_NODE, "&Add Node\tCtrl-A");
+	_menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
     _menuEdit->Append(EditMenuID::ID_SCALE, "&Scale");
     _menuEdit->Append(EditMenuID::ID_MIRROR, "&Mirror");
     _menuEdit->Append(EditMenuID::ID_CREATE_RADIUS, "&Create Fillet");
     _menuEdit->Append(EditMenuID::ID_CREATE_OPEN_BOUNDARY, "&Create Open Boundary");
-    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group\tCtrl-A");
+    _menuEdit->Append(EditMenuID::ID_SELECT_GROUP, "&Select Group\tCtrl-G");
     _menuEdit->Append(EditMenuID::ID_EDIT_PROPERTY, "&Edit Property\tCtrl-E");
     _menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_PREFERENCES, "&Preferences\tCtrl-P");
@@ -132,6 +134,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(EditMenuID::ID_CREATE_OPEN_BOUNDARY, enable);
     _menuBar->Enable(EditMenuID::ID_CREATE_RADIUS, enable);
     _menuBar->Enable(EditMenuID::ID_DELETE, enable);
+	_menuEdit->Enable(EditMenuID::ID_ADD_NODE, enable);
     _menuBar->Enable(EditMenuID::ID_MIRROR, enable);
     _menuBar->Enable(EditMenuID::ID_MOVE, enable);
     _menuBar->Enable(EditMenuID::ID_SCALE, enable);
@@ -475,6 +478,8 @@ void OmniFEMMainFrame::onProblemPreferences(wxCommandEvent &event)
         _menuBar->Enable(PropertiesMenuID::ID_EXTERIOR_REGION, false);
 }
 
+
+
 void OmniFEMMainFrame::onGLCanvasMouseMove(wxCommandEvent &event)
 {
     if(_displayStatusMenu)
@@ -482,6 +487,8 @@ void OmniFEMMainFrame::onGLCanvasMouseMove(wxCommandEvent &event)
         this->SetStatusText(wxString("Omni-FEM Simulator: ") + event.GetString());
     }
 }
+
+
 
 void OmniFEMMainFrame::onKeyDown(wxKeyEvent &event)
 {
@@ -492,6 +499,9 @@ void OmniFEMMainFrame::onKeyDown(wxKeyEvent &event)
     }
         
 }
+
+
+
 
 
 
@@ -525,6 +535,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_SELECT_GROUP, OmniFEMMainFrame::onSelectGroup)
     EVT_MENU(EditMenuID::ID_EDIT_PROPERTY, OmniFEMMainFrame::onEditProperty)
     EVT_MENU(EditMenuID::ID_LUA_RUN, OmniFEMMainFrame::onLuaRun)
+	EVT_MENU(EditMenuID::ID_ADD_NODE, OmniFEMMainFrame::onAddNode)
 	
 	/* This section is for the View menu */
     EVT_MENU(ViewMenuID::ID_ZOOM_IN, OmniFEMMainFrame::onZoomIn)

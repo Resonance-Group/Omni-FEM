@@ -129,7 +129,24 @@ private:
 	
 	void createGMSHGeometry(std::vector<closedPath> *pathContour = nullptr);
 	
-	bool checkPointInContour(rectangleShape &label, closedPath &path);
+	/**
+	 * @brief 	The purpose of this function to to check if a specfied rectangle shape lies within the path.
+	 * 			The function accomplishes this through the use of a modified version of the winding number method.
+	 * 			In this method, the algorithm calculates the number of times that the point wraps around the 
+	 * 			closed path. The current version of this algorithm does not use arc sin or cos. But instead checks to see
+	 * 			if the point is to the left or right of an edge within the closed path. If teh number of times that the point
+	 * 			is to the left of the edges is greater then the number of rights, then this means that the point lies withing the
+	 * 			closed path.
+	 * @param label The rectangle shape that the algorithm will be checking to see if it lies within the closed path
+	 * @param path The closed path which will be checked.
+	 * @return Returns true if the rectangle shape lies within the closed path. Otherwise, returns false.
+	 */
+	bool checkPointInContour(wxRealPoint point, closedPath &path);
+	
+	bool checkPointInContour(rectangleShape &point, closedPath &path)
+	{
+		return checkPointInContour(point.getCenter(), path);
+	}
 public:
 	
 	meshMaker(problemDefinition &definition, modelDefinition *model)

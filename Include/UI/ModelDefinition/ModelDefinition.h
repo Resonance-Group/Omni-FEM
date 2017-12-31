@@ -1098,6 +1098,11 @@ public:
 	{
 		return p_drawMesh;
 	}
+	
+	void addNodePoint(wxRealPoint &point)
+	{
+		_editor.addNode(point.x, point.y, getTolerance());
+	}
 
 private:
     //! This is a macro in order to let wxWidgets understand that there are events within the class
