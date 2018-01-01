@@ -83,7 +83,7 @@ private:
         A lower mesh size equates to a higher density since a lower area allows the mesher to
         fit in more elements in a subdomain
     */ 
-    double _meshSize = 0;
+    double _meshSize = 1.0;
     
     //! If the block label is to be associated with a coil, then this is the number of turns of wire around the coil
     /*!

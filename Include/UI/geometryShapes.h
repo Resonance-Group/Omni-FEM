@@ -827,8 +827,15 @@ public:
 	 */
 	double isLeft(wxRealPoint point)
 	{
-		return ((_secondNode->getCenterXCoordinate() - _firstNode->getCenterXCoordinate()) * (point.y - _firstNode->getCenterYCoordinate()) 
-					- (point.x - _firstNode->getCenterXCoordinate()) * (_secondNode->getCenterYCoordinate() - _firstNode->getCenterYCoordinate()));
+		if(!p_isArc)
+		{
+			return ((_secondNode->getCenterXCoordinate() - _firstNode->getCenterXCoordinate()) * (point.y - _firstNode->getCenterYCoordinate()) 
+						- (point.x - _firstNode->getCenterXCoordinate()) * (_secondNode->getCenterYCoordinate() - _firstNode->getCenterYCoordinate()));	
+		}
+		else
+		{
+			
+		}
 	}
 };
 
@@ -857,7 +864,7 @@ private:
 	double _arcAngle = 30;
     
     //! The radius of the arc from the center point
-    double _radius;
+    double _radius = 0.0;
     
     bool _isCounterClockWise = true;
 public:
@@ -907,6 +914,9 @@ public:
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 0.0);
+			
+		if(p_distance == 0)
+			calculateDistance();
             
       /*  
         if(_numSegments == -1)// Hey this code needs to be looked at!
@@ -1053,9 +1063,6 @@ public:
 
                 xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
                 yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-
-
-                
             }
             else
             {
@@ -1115,6 +1122,11 @@ public:
 			return true;
 		else
 			return false;
+	}
+	
+	void setArcID(unsigned long id)
+	{
+		p_arcID = id;
 	}
 };
 

@@ -87,7 +87,7 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 					pathsVector.erase(pathIterator);
 					break;
 				}
-				else if(closedContourFound)
+				else if(closedContourFound || branches.size() == 0)
 				{
 					// If found, we are going to test if the 
 					// found contour's distance is less then the current found path
@@ -393,29 +393,34 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 					}
 			}
 			
+			GEdge *temp = nullptr;
+			
 			if((*lineIterator)->isArc())
 			{
 				// Throw in the code here in order to create a Bspline within the mesh model
 				// look at the code: bool GEO_Internals::addBezier(int &tag, const std::vector<int> &vertexTags)
 				// located in GMODELIO_GEO.cpp file on added in a Bezier curve to the model
-				//GEdge *test = meshModel->addBezier()
+				p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
+				temp = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+				
 			}
 			else
 			{
-				GEdge *temp = p_meshModel->addLine(firstNode, secondNode);
-				
-				// All lines start off with the mesh method as none. If there is a corresponding block label,
-				// or a specific mesh size on within the face, then the line will be set to me transfinite or
-				// unstructured depending on the meshSettings set by the user
-				temp->meshAttributes.method = MESH_NONE;
-				
-				if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
-				{
-					temp->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
-				}
-				
-				contourLoop.push_back(temp);
+				temp = p_meshModel->addLine(firstNode, secondNode);
 			}
+			
+			// All lines start off with the mesh method as none. If there is a corresponding block label,
+			// or a specific mesh size on within the face, then the line will be set to me transfinite or
+			// unstructured depending on the meshSettings set by the user
+				
+			temp->meshAttributes.method = MESH_NONE;
+				
+			if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
+			{
+				temp->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
+			}
+			
+			contourLoop.push_back(temp);
 		}
 		
 		std::vector<std::vector<GEdge*>> test;
@@ -429,8 +434,6 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 		
 		// Add the contour to the face selection
 		GFace *testFace = p_meshModel->addPlanarFace(test);
-		
-		
 		
 		testFace->meshAttributes.method = MESH_NONE; // Assume that the user does not want to mesh the face
 		
@@ -515,23 +518,30 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
 		
 		if(reverseDirection)
 			isLeftResult *= -1;
-		
-		if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
+			
+		if(!(*lineIterator)->isArc())
 		{
-			if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
+			if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
 			{
-				if((isLeftResult > 0))
-					windingNumber++;
-				else if(isLeftResult < 0)
+				if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
+				{
+					if((isLeftResult > 0))
+						windingNumber++;
+					else if(isLeftResult < 0)
+						windingNumber--;
+				}
+			}
+			else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
+			{
+				if((isLeftResult < 0))
 					windingNumber--;
+				else if(isLeftResult > 0)
+					windingNumber++;
 			}
 		}
-		else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
+		else
 		{
-			if((isLeftResult < 0))
-				windingNumber--;
-			else if(isLeftResult > 0)
-				windingNumber++;
+			
 		}
 	}
 	
@@ -657,10 +667,6 @@ void meshMaker::mesh()
 	
 	
 	
-	
-	
-	
-	
 	OmniFEMMsg::instance()->MsgStatus("Contours found");
 
 	contextMeshOptions testMesh = CTX::instance()->mesh;
@@ -688,7 +694,7 @@ void meshMaker::mesh()
 	
 	createGMSHGeometry();
 	
-	if(p_blockLabelsUsed < p_blockLabelList->size())
+	/*if(p_blockLabelsUsed < p_blockLabelList->size())
 	{
 		std::vector<closedPath> additionalPaths;
 		for(auto blockIterator : *p_blockLabelList)
@@ -717,6 +723,7 @@ void meshMaker::mesh()
 		
 		createGMSHGeometry(&additionalPaths);
 	}
+	 */ 
 	 
 	
 	/* As a side note,this current method for constructing the GMSH geometry will not work.
@@ -733,7 +740,7 @@ void meshMaker::mesh()
 	for(int i = 0; i < CTX::instance()->mesh.multiplePasses; i++)
 	{
 		OmniFEMMsg::instance()->MsgStatus("Performing pass " + std::to_string(i + 1) + " of " + std::to_string(CTX::instance()->mesh.multiplePasses));
-		p_meshModel->mesh(2);
+//		p_meshModel->mesh(2);
 	}
 	
 	// Next set any output mesh options

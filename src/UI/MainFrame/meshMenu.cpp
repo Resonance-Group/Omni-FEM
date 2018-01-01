@@ -9,7 +9,7 @@ void OmniFEMMainFrame::onCreateMesh(wxCommandEvent &event)
 {
 	if(_model->getModelBlockList()->size() > 0)
 	{
-		if(_model->getModelNodeList()->size() >= 3 && (_model->getModelLineList()->size() >= 3 || _model->getModelArcList()->size() >= 3))
+		if(_model->getModelNodeList()->size() >= 2 && (_model->getModelLineList()->size() >= 3 || _model->getModelArcList()->size() >= 2))
 		{
 			if(_problemDefinition.getSaveFilePath() != wxEmptyString)
 			{

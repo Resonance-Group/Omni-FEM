@@ -3352,10 +3352,15 @@ GEdge *GModel::addCircleArcCenter(double x, double y, double z, GVertex *start,
 
 GEdge *GModel::addCircleArcCenter(GVertex *start, GVertex *center, GVertex *end)
 {
-  factoryWarning();
-  if(_factory)
-    return _factory->addCircleArc(this, start, center, end);
-  return 0;
+	int outTag = -1;
+	if(_factory)
+	{
+		current()->getGEOInternals()->addCircleArc(outTag, start->tag(), center->tag(), end->tag(), 0, 0, 0);
+		current()->getGEOInternals()->synchronize(current());
+		return current()->getEdgeByTag(outTag);
+	}
+  
+	return 0;
 }
 
 GEdge *GModel::addCircleArc3Points(double x, double y, double z, GVertex *start,

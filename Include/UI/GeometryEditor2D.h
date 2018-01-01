@@ -80,7 +80,11 @@ private:
 			_lineList.insert(*lineIterator);
 			
 		for(std::vector<arcShape>::iterator arcIterator = loadArcs.begin(); arcIterator != loadArcs.end(); arcIterator++)
+		{
 			_arcList.insert(*arcIterator);
+			if(arcIterator->getArcID() > p_arcNumber)
+				p_arcNumber = arcIterator->getArcID();
+		}
 			
 		for(std::vector<blockLabel>::iterator labelIterator = loadLabels.begin(); labelIterator != loadLabels.end(); labelIterator++)
 			_blockLabelList.insert(*labelIterator);
@@ -203,6 +207,8 @@ private:
 		node when a user loads a file
 	*/ 
 	unsigned long _nodeNumber = 0;
+	
+	unsigned long p_arcNumber = 0;
     
     //! Function that will get the intersection X, Y point of two lines crossing each other
     /*!

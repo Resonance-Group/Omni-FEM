@@ -414,6 +414,7 @@ bool geometryEditor2D::addArc(arcShape &arcSeg, double tolerance, bool nodesAreS
 		}
 	}
 	
+	arcSeg.setArcID(++p_arcNumber);
 	_lastArcAdded = _arcList.insert(arcSeg);
 	
     centerPoint.Set(arcSeg.getCenterXCoordinate(), arcSeg.getCenterYCoordinate());

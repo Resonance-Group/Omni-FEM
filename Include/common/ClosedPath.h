@@ -78,6 +78,7 @@ public:
 	
 	void addEdgeToPath(edgeLineShape *addEdge)
 	{
+		double temp = addEdge->getDistance();
 		p_distance += addEdge->getDistance();
 		p_centerPoint.x = (addEdge->getCenter().x + p_closedPath.size() * p_centerPoint.x) / (p_closedPath.size() + 1);
 		p_centerPoint.y = (addEdge->getCenter().y + p_closedPath.size() * p_centerPoint.y) / (p_closedPath.size() + 1);
