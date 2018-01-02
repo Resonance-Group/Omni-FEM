@@ -217,112 +217,6 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 
 
 
-bool meshMaker::lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4)
-{
-	    /* This code was adapted from FEMM from FEmmeDoc.cpp line 728 BOOL CFemmeDoc::GetIntersection*/
-    Vector pNode0, pNode1, iNode0, iNode1;
-    Vector tempNode0, tempNode1;
-
-    pNode0 = P1;
-    pNode1 = P2;
-    iNode0 = P3;
-    iNode1 = P4;
-    
-    tempNode0 = iNode0;
-    tempNode1 = iNode1;
-    
-    double ee = min(Vabs(pNode1 - pNode0), Vabs(iNode1 - iNode0)) * 1.0e-8;
-    
-    iNode0 = (iNode0 - pNode0) / (pNode1 - pNode0);
-    iNode1 = (iNode1 - pNode0) / (pNode1 - pNode0);
-    
-    if(iNode0.getXComponent() <= 0 && iNode1.getXComponent() <= 0)
-        return false;
-    else if(iNode0.getXComponent() >= 1.0 && iNode1.getXComponent() >= 1.0)
-        return false;
-    else if(iNode0.getYComponent() <= 0 && iNode1.getYComponent() <= 0)
-        return false;
-    else if(iNode0.getYComponent() >= 0 && iNode1.getYComponent() >= 0)
-        return false;
-        
-    double z = iNode0.getYComponent() / (iNode0 - iNode1).getYComponent();
-    
-    double x = ((1.0 - z) * iNode0 + z * iNode1).getXComponent();
-    if((x < ee) || (x > (1.0 - ee)))
-        return false;
-        
-  //  pNode0 = (1.0 - z) * tempNode0 + z * tempNode1;
-    
- //   intersectionXPoint = pNode0.getXComponent();
- //   intersectionYPoint = pNode0.getYComponent();
-    
-    return true;
-}
-
-int meshMaker::lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc)
-{
-	    /* Note: this function has not yet been verified to be working. Logical bugs could still exist */
-    // This function was ported from CbeladrawDoc::GetLineArcIntersection
-    
-	Vector arcSegVec1, arcSegVec2, unitVec1, tempVec2, arcCenterPoint;
-	Vector *pointVec;
-	double distance, length, radius, z;
-	int intersectionCounter = 0;
-	
-	arcSegVec1.Set(intersectingArc.getFirstNode()->getCenterXCoordinate(), intersectingArc.getFirstNode()->getCenterYCoordinate());
-	arcSegVec2.Set(intersectingArc.getSecondNode()->getCenterXCoordinate(), intersectingArc.getSecondNode()->getCenterYCoordinate());
-	
-	distance = Vabs(arcSegVec2 - arcSegVec1);
-	
-    radius = intersectingArc.getRadius();
-    
-    arcCenterPoint.Set(intersectingArc.getCenterXCoordinate(), intersectingArc.getCenterYCoordinate());
-    
-    // Determining the distance between the line and the circle's center
-	distance = Vabs(P2 - P1);
-	unitVec1 = (P2 - P1) / distance;
-	tempVec2 = (arcCenterPoint - P1) / unitVec1;
-	
-	if(fabs(tempVec2.getYComponent()) > radius)
-		return 0;
-		
-	length = sqrt(pow(radius, 2) - pow(tempVec2.getYComponent(), 2));
-	// If the line is a tangent, make it a tangent
-	if((length / radius) < 1.0e-05)
-	{
-		pointVec[intersectionCounter] = P1 + tempVec2.getXComponent() * unitVec1;
-		radius = ((pointVec[intersectionCounter] - P1) / unitVec1).getXComponent();
-		z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-		if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (intersectingArc.getArcAngle() * PI / 180.0)))
-			intersectionCounter++;
-		delete pointVec;
-		return intersectionCounter;
-	}
-	
-    // First intersection
-	pointVec[intersectionCounter] = P1 + (tempVec2.getXComponent() + length) * unitVec1;
-	radius = ((pointVec[intersectionCounter] - P1) / unitVec1).getXComponent();
-	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (intersectingArc.getArcAngle() * PI / 180.0)))
-    {
-		intersectionCounter++;
-    }
-    
-    // Second intersection
-	pointVec[intersectionCounter] = P1 + (tempVec2.getXComponent() - length) * unitVec1;
-	radius = ((pointVec[intersectionCounter] - P1) / unitVec1).getXComponent();
-	z = Varg((pointVec[intersectionCounter] - arcCenterPoint) / (arcSegVec1 - arcCenterPoint));
-	if((radius > 0) && (radius < distance) && (z > 0.0) && (z < (intersectingArc.getArcAngle() * PI / 180.0)))
-    {
-		intersectionCounter++;
-    }
-	
-	delete pointVec;	
-	return intersectionCounter;
-}
-
-
-
 double meshMaker::calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment)
 {
     double t, x[3], y[3];
@@ -740,7 +634,7 @@ void meshMaker::mesh()
 	for(int i = 0; i < CTX::instance()->mesh.multiplePasses; i++)
 	{
 		OmniFEMMsg::instance()->MsgStatus("Performing pass " + std::to_string(i + 1) + " of " + std::to_string(CTX::instance()->mesh.multiplePasses));
-//		p_meshModel->mesh(2);
+		p_meshModel->mesh(2);
 	}
 	
 	// Next set any output mesh options

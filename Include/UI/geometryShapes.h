@@ -642,6 +642,8 @@ public:
 		if(_firstNode && _secondNode)
 		{
 			p_distance = sqrt(pow(_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate(), 2) + pow(_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate(), 2));
+			xCenterCoordinate = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
+			yCenterCoordinate = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
 		}
 	}
 	
@@ -730,16 +732,7 @@ public:
 	 * 			will change colors to red
 	 */
     void draw()
-    {
-		if(p_distance == 0)
-			calculateDistance();
-			
-		if(xCenterCoordinate <= 1e-9 && yCenterCoordinate <= 1e-9)
-		{
-			xCenterCoordinate = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
-			yCenterCoordinate = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
-		}
-			
+    {			
         if(_property.getHiddenState())
         {
             glEnable(GL_LINE_STIPPLE);

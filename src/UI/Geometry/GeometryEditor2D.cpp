@@ -57,8 +57,10 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
              */ 
             edgeLineShape edgeLine = *lineIterator;
             lineIterator->setSecondNode(*_lastNodeAdded);// This will set the recently created node to be the second node of the shortend line
+			lineIterator->calculateDistance();
 			
             edgeLine.setFirstNode(*_lastNodeAdded);// This will set the recently created node to be the first node of the new line
+			edgeLine.calculateDistance();
 			_lastLineAdded = _lineList.insert(edgeLine);// Add the new line to the array
             continue;
 		}
@@ -267,7 +269,7 @@ bool geometryEditor2D::addLine(node *firstNode, node *secondNode, double toleran
      * Then calculate what the distance tolerance should be and call addNode function
      * with the tolerance value as the tolerance between points. That can be done here.
      */ 
-
+	newLine.calculateDistance(); // Calculates the distance of the line
     _lastLineAdded = _lineList.insert(newLine);// Add the line to the list
     
     double shortDistance, dmin;
