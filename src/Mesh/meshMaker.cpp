@@ -419,7 +419,7 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
 			{
 				if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
 				{
-					if((isLeftResult > 0))
+					if(isLeftResult > 0)
 						windingNumber++;
 					else if(isLeftResult < 0)
 						windingNumber--;
@@ -427,7 +427,7 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
 			}
 			else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
 			{
-				if((isLeftResult < 0))
+				if(isLeftResult < 0)
 					windingNumber--;
 				else if(isLeftResult > 0)
 					windingNumber++;
@@ -435,7 +435,11 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
 		}
 		else
 		{
-			
+				
+			if(isLeftResult > 0)
+				windingNumber++;
+			else
+				windingNumber--;
 		}
 	}
 	

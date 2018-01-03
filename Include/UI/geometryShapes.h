@@ -629,6 +629,26 @@ protected:
 	bool p_isVisited = false;
 	
 	double p_distance = 0;
+	
+	//! The radius of an arc from the center point
+    double _radius = 0.0;
+	
+	wxRealPoint midPoint;
+	
+	double dotProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
+	{
+		return (firstPoint.x * secondPoint.x) + (firstPoint.y * secondPoint.y);
+	}
+	
+	double crossProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
+	{
+		return (firstPoint.x * secondPoint.y) - (secondPoint.x * firstPoint.y);
+	}
+	
+	bool isSameSign(double firstValue, double secondValue)
+	{
+		return (signbit(firstValue) == signbit(secondValue));
+	}
     
 public:
 	//! Constructor for the generic class
@@ -789,6 +809,11 @@ public:
 		return p_secondNodeNumber;
 	}
 	
+	bool getCCWState()
+	{
+		return _isCounterClockWise;
+	}
+	
 	bool operator==(edgeLineShape edge)
 	{
 		if(!this->p_isArc && !edge.isArc())
@@ -827,7 +852,27 @@ public:
 		}
 		else
 		{
-			
+			double result = 0;
+			if(isSameSign(crossProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()), 
+							crossProduct(this->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter())))
+			{
+				result = dotProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()) / 
+							dotProduct(_secondNode->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter());
+				
+				if(result >= 0 && result <= 1)
+					return 1.0;
+				else
+					return -1.0;
+			}
+			else
+			{
+				result = dotProduct(point - this->getCenter(), point - this->getCenter());
+				
+				if(result <= pow(_radius, 2))
+					return 1.0;
+				else
+					return -1.0;
+			}
 		}
 	}
 };
@@ -855,9 +900,6 @@ private:
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees
 	double _arcAngle = 30;
-    
-    //! The radius of the arc from the center point
-    double _radius = 0.0;
     
     bool _isCounterClockWise = true;
 public:
@@ -987,7 +1029,6 @@ public:
         // We need two cases here. One for if the line between the first and second node has a slope of 0 and the other case being if the line is vertical
         if(slope >= 0 && slope <= 1e-9)
         {
-            // TOD: Come up with new logic here
             if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
             {
                 // This will calculate the center that is below the arc.
@@ -1087,7 +1128,10 @@ public:
         }
 		
 		calculateDistance();
-        
+		
+		double firstValue = 0;
+		double secondValue = 0;
+		
         return;
     }
     
