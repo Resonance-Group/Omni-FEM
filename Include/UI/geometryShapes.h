@@ -572,6 +572,8 @@ private:
 		ar & p_firstNodeNumber;
 		ar & p_secondNodeNumber;
 		ar & p_distance;
+		ar & p_xMid;
+		ar & p_yMid;
 	}
 protected:
 	//! The node number for the first node
@@ -633,7 +635,9 @@ protected:
 	//! The radius of an arc from the center point
     double _radius = 0.0;
 	
-	wxRealPoint midPoint;
+	double p_xMid = 0;
+	
+	double p_yMid = 0;
 	
 	double dotProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
 	{
@@ -664,6 +668,8 @@ public:
 			p_distance = sqrt(pow(_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate(), 2) + pow(_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate(), 2));
 			xCenterCoordinate = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
 			yCenterCoordinate = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
+			p_xMid = xCenterCoordinate;
+			p_yMid = yCenterCoordinate;
 		}
 	}
 	
@@ -809,11 +815,6 @@ public:
 		return p_secondNodeNumber;
 	}
 	
-	bool getCCWState()
-	{
-		return _isCounterClockWise;
-	}
-	
 	bool operator==(edgeLineShape edge)
 	{
 		if(!this->p_isArc && !edge.isArc())
@@ -874,6 +875,11 @@ public:
 					return -1.0;
 			}
 		}
+	}
+	
+	wxRealPoint getMidPoint()
+	{
+		return wxRealPoint(p_xMid, p_yMid);
 	}
 };
 
@@ -1043,8 +1049,6 @@ public:
                 xCenterCoordinate = xMid;
                 yCenterCoordinate = yMid - a;
             }
-            
-            return;
         }
         else if(slope == INFINITY)
         {
@@ -1062,8 +1066,6 @@ public:
                 xCenterCoordinate = xMid - a;
                 yCenterCoordinate = yMid;
             }
-            
-            return;
         }
         else if(slope == -INFINITY)
         {
@@ -1081,56 +1083,94 @@ public:
                 xCenterCoordinate = xMid + a;
                 yCenterCoordinate = yMid;
             }
-            
-            return;
         }
-        
-        midSlope = -1.0 / slope;
-        
-        if(slope > 0)
-        {
-            if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
-            {
-                // This will calculate the center that is above the arc.
-                // If the start node is lower then the end node, the logic is reversed. This portion will create
-                // the center above the arc.
+		else
+		{
+			midSlope = -1.0 / slope;
+			
+			if(slope > 0)
+			{
+				if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
+				{
+					// This will calculate the center that is above the arc.
+					// If the start node is lower then the end node, the logic is reversed. This portion will create
+					// the center above the arc.
 
-                xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-            }
-            else
-            {
-                // This will calculate the center below the arc
-                
-                xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+					xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+				}
+				else
+				{
+					// This will calculate the center below the arc
+					
+					xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
 
-            }
-        }
-        else if(slope < 0)
-        {
-            if(!(!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
-            {
-                // This will calculate the center that is above the arc.
-                // If the start node is lower then the end node, the logic is reversed. This portion will create
-                // the center above the arc.
-                
-                xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-            }
-            else
-            {
-                // This will calculate the center below the arc
-                
-                xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-            }
-        }
+				}
+			}
+			else if(slope < 0)
+			{
+				if(!(!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
+				{
+					// This will calculate the center that is above the arc.
+					// If the start node is lower then the end node, the logic is reversed. This portion will create
+					// the center above the arc.
+					
+					xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+				}
+				else
+				{
+					// This will calculate the center below the arc
+					
+					xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+				}
+			}
+			
+		}
 		
 		calculateDistance();
 		
-		double firstValue = 0;
-		double secondValue = 0;
+		double vx = xMid - xCenterCoordinate;
+		double vy = yMid - yCenterCoordinate;
+		
+		double lev = sqrt(pow(vx, 2) + pow(vy, 2));
+		
+		if(lev == 0)
+		{
+			if(slope >= 0 && slope <= 1e-9)
+			{
+				if(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate())
+				{
+					p_xMid = xCenterCoordinate;
+					p_yMid = yCenterCoordinate + _radius;
+				}
+				else
+				{
+					p_xMid = xCenterCoordinate;
+					p_yMid = yCenterCoordinate - _radius;
+				}
+			}
+			else if(slope == INFINITY || slope == -INFINITY)
+			{
+				if(_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate())
+				{
+					p_xMid = xCenterCoordinate - _radius;
+					p_yMid = yCenterCoordinate;
+				}
+				else
+				{
+					p_xMid = xCenterCoordinate + _radius;
+					p_yMid = yCenterCoordinate;
+				}
+			}
+		}
+		else
+		{
+			p_xMid = xCenterCoordinate + _radius * vx / lev;
+			p_yMid = yCenterCoordinate + _radius * vy / lev;
+		}
 		
         return;
     }

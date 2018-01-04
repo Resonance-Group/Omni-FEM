@@ -33,17 +33,27 @@ public:
 	closedPath(edgeLineShape &firstEdge)
 	{
 		p_closedPath.push_back(&firstEdge);
+		
 		p_boundingBox = boundingBox(wxRealPoint(firstEdge.getFirstNode()->getCenterXCoordinate(), firstEdge.getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(firstEdge.getSecondNode()->getCenterXCoordinate(), firstEdge.getSecondNode()->getCenterYCoordinate()));
-		p_centerPoint = firstEdge.getCenter();
+		
+		if(firstEdge.isArc())
+			p_boundingBox.addPoint(firstEdge.getMidPoint());
+			
+		p_centerPoint = firstEdge.getMidPoint();
 	}
 	
 	closedPath(edgeLineShape *firstEdge)
 	{
 		p_closedPath.push_back(firstEdge);
+		
 		p_boundingBox = boundingBox(wxRealPoint(firstEdge->getFirstNode()->getCenterXCoordinate(), firstEdge->getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(firstEdge->getSecondNode()->getCenterXCoordinate(), firstEdge->getSecondNode()->getCenterYCoordinate()));
-		p_centerPoint = firstEdge->getCenter();
+		
+		if(firstEdge->isArc())
+			p_boundingBox.addPoint(firstEdge->getMidPoint());
+		
+		p_centerPoint = firstEdge->getMidPoint();
 	}
 	
 	closedPath()
@@ -77,19 +87,18 @@ public:
 		}
 		else
 		{
-			
+			p_centerPoint.x = (addEdge.getMidPoint().x + p_closedPath.size() * p_centerPoint.x ) / (p_closedPath.size() + 1);
+			p_centerPoint.y = (addEdge.getMidPoint().y + p_closedPath.size() * p_centerPoint.y) / (p_closedPath.size() + 1);
 		}
 		
 		p_closedPath.push_back(&addEdge);
 		
-		if(!addEdge.isArc())
+		p_boundingBox.addPoint(wxRealPoint(addEdge.getFirstNode()->getCenterXCoordinate(), addEdge.getFirstNode()->getCenterYCoordinate()));
+		p_boundingBox.addPoint(wxRealPoint(addEdge.getSecondNode()->getCenterXCoordinate(), addEdge.getSecondNode()->getCenterYCoordinate()));
+		
+		if(addEdge.isArc())
 		{
-			p_boundingBox.addPoint(wxRealPoint(addEdge.getFirstNode()->getCenterXCoordinate(), addEdge.getFirstNode()->getCenterYCoordinate()));
-			p_boundingBox.addPoint(wxRealPoint(addEdge.getSecondNode()->getCenterXCoordinate(), addEdge.getSecondNode()->getCenterYCoordinate()));
-		}
-		else
-		{
-			
+			p_boundingBox.addPoint(addEdge.getMidPoint());
 		}
 	}
 	
@@ -105,19 +114,18 @@ public:
 		}
 		else
 		{
-			
+			p_centerPoint.x = (addEdge->getMidPoint().x + p_closedPath.size() * p_centerPoint.x) / (p_closedPath.size() + 1);
+			p_centerPoint.y = (addEdge->getMidPoint().y + p_closedPath.size() * p_centerPoint.y) / (p_closedPath.size() + 1);
 		}
 		
 		p_closedPath.push_back(addEdge);
 		
-		if(!addEdge->isArc())
-		{
-			p_boundingBox.addPoint(wxRealPoint(addEdge->getFirstNode()->getCenterXCoordinate(), addEdge->getFirstNode()->getCenterYCoordinate()));
-			p_boundingBox.addPoint(wxRealPoint(addEdge->getSecondNode()->getCenterXCoordinate(), addEdge->getSecondNode()->getCenterYCoordinate()));
-		}
-		else
-		{
+		p_boundingBox.addPoint(wxRealPoint(addEdge->getFirstNode()->getCenterXCoordinate(), addEdge->getFirstNode()->getCenterYCoordinate()));
+		p_boundingBox.addPoint(wxRealPoint(addEdge->getSecondNode()->getCenterXCoordinate(), addEdge->getSecondNode()->getCenterYCoordinate()));
 			
+		if(addEdge->isArc())
+		{
+			p_boundingBox.addPoint(addEdge->getMidPoint());
 		}
 		
 	}
