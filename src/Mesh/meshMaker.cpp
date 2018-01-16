@@ -242,7 +242,7 @@ double meshMaker::calculateShortestDistance(blockLabel selectedLabel, edgeLineSh
 
 
 
-void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
+void meshMaker::createGMSHGeometryOld(std::vector<closedPath> *pathContour)
 {
 	std::vector<closedPath> *pathToOperate;
 	
@@ -590,6 +590,7 @@ void meshMaker::mesh()
 	/* Now we create the faces */
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
 	
+	/* Place all of the lines in the GMSH geometry */
 	for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 	{
 		GVertex *firstNode = nullptr;
@@ -627,9 +628,8 @@ void meshMaker::mesh()
 			temp = p_meshModel->addLine(firstNode, secondNode);
 		}
 		
-		// All lines start off with the mesh method as none. If there is a corresponding block label,
-		// or a specific mesh size on within the face, then the line will be set to me transfinite or
-		// unstructured depending on the meshSettings set by the user
+		// Add in a check for a structured mesh (Transfinite setting is set to 1)
+		// If so, we need to set the edge as transfinite. Do that here
 			
 		temp->meshAttributes.method = MESH_NONE;
 			
@@ -643,7 +643,7 @@ void meshMaker::mesh()
 	
 	
 	
-	createGMSHGeometry();
+	createGMSHGeometryOld();
 	
 	/*if(p_blockLabelsUsed < p_blockLabelList->size())
 	{
@@ -785,6 +785,84 @@ void meshMaker::mesh()
 		p_meshModel->indexMeshVertices(true);
 	
 	OmniFEMMsg::instance()->MsgStatus("Meshing Finished");
+}
+
+
+
+void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
+{
+	std::vector<closedPath> *pathToOperate = nullptr;
+	
+	if(pathContour == nullptr)
+		pathToOperate = &p_closedContourPaths;
+	else
+		pathToOperate = pathContour;
+		
+	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathToOperate++)
+	{
+		std::vector<std::vector<GEdge*>> lineLoop;
+		std::vector<GEdge*> addLineVector;
+		
+		// We first must add in the actual path of the contour to the line loop
+		for(auto lineIterator = pathIterator->getClosedPath()->begin(); lineIterator != pathIterator->getClosedPath()->end(); lineIterator++)
+		{
+			GEdge *addedEdge = p_meshModel->getEdgeByTag((*lineIterator)->getGModelTagNumber());
+			
+			addLineVector.push_back(addedEdge);
+		}
+		
+		// Next we need to set the mesh size of the GEdges here
+		
+		lineLoop.push_back(addLineVector);
+		
+		// IF there are any holes, add them to the lineloop vector here
+		if(pathIterator->getHoles()->size() > 0)
+		{
+			for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+			{
+				addLineVector.clear();
+				for(auto lineIterator = (*holeIterator)->getClosedPath()->begin(); lineIterator != (*holeIterator)->getClosedPath()->end(); lineIterator++)
+				{
+					GEdge *addedEdge = p_meshModel->getEdgeByTag((*lineIterator)->getGModelTagNumber());
+					addLineVector.push_back(addedEdge);
+				}
+				lineLoop.push_back(addLineVector);
+			}
+		}
+		
+		GFace *addedFace = p_meshModel->addPlanarFace(lineLoop);
+		
+		addedFace->meshAttributes.method = MESH_NONE; // Assume that the user does not want to mesh the face
+		
+		if(p_settings->getStructuredState())
+		{
+			addedFace->meshAttributes.method = 1;// Sets the face to be transfinite
+			
+			switch(p_settings->getMeshArrangment())
+			{
+				case StructuredArrangement::ARRANGMENT_LEFT:
+					addedFace->meshAttributes.transfiniteArrangement = -1;
+					break;
+				case StructuredArrangement::ARRANGMENT_RIGHT:
+					addedFace->meshAttributes.transfiniteArrangement = 1;
+					break;
+				case StructuredArrangement::ARRANGMENT_ALTERNATED:
+					addedFace->meshAttributes.transfiniteArrangement = 2;
+					break;
+				default:
+					addedFace->meshAttributes.transfiniteArrangement = -1;
+					break;
+			}
+			
+			addedFace->meshAttributes.meshSize = 0.05;
+		}
+		else
+		{
+			addedFace->meshAttributes.method = 2;
+			addedFace->meshAttributes.transfiniteArrangement = 0;
+		}
+	}
+		
 }
 
 

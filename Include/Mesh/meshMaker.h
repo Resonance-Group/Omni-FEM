@@ -105,6 +105,8 @@ private:
 	
 	double calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment);
 	
+	void createGMSHGeometryOld(std::vector<closedPath> *pathContour = nullptr);
+	
 	void createGMSHGeometry(std::vector<closedPath> *pathContour = nullptr);
 	
 	/**

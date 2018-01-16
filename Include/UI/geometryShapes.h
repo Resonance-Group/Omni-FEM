@@ -576,7 +576,7 @@ private:
 		ar & p_yMid;
 	}
 	
-	unsigned long p_GModelTagNumber = 0;
+	int p_GModelTagNumber = 0;
 protected:
 	//! The node number for the first node
 	/*!
@@ -880,12 +880,12 @@ public:
 		return wxRealPoint(p_xMid, p_yMid);
 	}
 	
-	void setGModelTagNumber(unsigned long tagNumber)
+	void setGModelTagNumber(int tagNumber)
 	{
 		p_GModelTagNumber = tagNumber;
 	}
 	
-	unsigned long getGModelTagNumber()
+	int getGModelTagNumber()
 	{
 		return p_GModelTagNumber;
 	}
