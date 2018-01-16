@@ -47,12 +47,12 @@ public:
 	
 	/**
 	 * @brief 	FUnction that will check if the current bounding box is inside of another
-	 * 			bounding box. This is comparing from the perseptive that the object bound is
-	 * 			contained within the bounding box of compare.
+	 * 			bounding box. This is comparing from the persepective that the this bounding box
+	 * 			is contained inside of the compare bounding box.
 	 * @param compare
 	 * @return 
 	 */
-	bool isInside(boundingBox &compare)
+	bool isInside(boundingBox compare)
 	{
 		bool xMaxIsGreater = compare.getMaxBounds().x > p_maxBounds.x;
 		bool yMaxIsGreater = compare.getMaxBounds().y > p_maxBounds.y;
@@ -62,6 +62,25 @@ public:
 		
 		if(xMaxIsGreater && yMaxIsGreater && xMinIsLesser && yMinIsLesser)
 			return true;
+		else
+			return false;
+	}
+	
+	bool operator==(boundingBox compareBox)
+	{
+		if(p_maxBounds == compareBox.getMinBounds() && p_minBounds == compareBox.getMinBounds())
+			return true;
+		else
+			return false;
+	}
+	
+	bool operator>=(boundingBox compareBox)
+	{
+		if((p_maxBounds.x >= compareBox.getMaxBounds().x && p_maxBounds.y >= compareBox.getMaxBounds().y) && 
+			(p_minBounds.x <= compareBox.getMinBounds().x && p_minBounds.y <= compareBox.getMinBounds().y))
+		{
+			return true;
+		}
 		else
 			return false;
 	}

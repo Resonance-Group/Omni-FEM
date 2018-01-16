@@ -125,6 +125,8 @@ private:
 	{
 		return checkPointInContour(point.getCenter(), path);
 	}
+	
+	void holeDetection();
 public:
 	
 	meshMaker(problemDefinition &definition, modelDefinition *model)

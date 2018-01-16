@@ -160,9 +160,14 @@ public:
 		p_holes.push_back(hole);
 	}
 	
-	std::vector<closedPath*> getHoles()
+	void addHole(closedPath &hole)
 	{
-		return p_holes;
+		p_holes.push_back(&hole);
+	}
+	
+	std::vector<closedPath*> *getHoles()
+	{
+		return &p_holes;
 	}
 	
 	void addBlockLabel(blockLabel &label)
@@ -179,6 +184,11 @@ public:
 			return true;
 		else
 			return false;
+	}
+	
+	boundingBox getBoundingBox()
+	{
+		return p_boundingBox;
 	}
 };
 

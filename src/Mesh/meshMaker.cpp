@@ -329,6 +329,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 		// Add the contour to the face selection
 		GFace *testFace = p_meshModel->addPlanarFace(test);
 		
+		
 		testFace->meshAttributes.method = MESH_NONE; // Assume that the user does not want to mesh the face
 		
 		if(p_settings->getStructuredState())
@@ -579,16 +580,68 @@ void meshMaker::mesh()
 	p_meshModel->setFactory("Gmsh");
 	
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH Vertices");
+	
 	for(auto nodeIterator : *p_nodeList)
 	{
-		double test1 = nodeIterator.getCenterXCoordinate();
-		double test2 = nodeIterator.getCenterYCoordinate();
-		GVertex *temp = p_meshModel->addVertex(test1, test2, 0.0, 1.0);
+		GVertex *temp = p_meshModel->addVertex(nodeIterator.getCenterXCoordinate(), nodeIterator.getCenterYCoordinate(), 0.0, 1.0);
 		p_vertexModelList.push_back(temp);
 	}
 	
 	/* Now we create the faces */
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
+	
+	for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+	{
+		GVertex *firstNode = nullptr;
+		GVertex *secondNode = nullptr;
+		GEdge *temp = nullptr;
+
+		for(auto vertexIterator : p_vertexModelList)
+		{
+			double xValueVertex = vertexIterator->x();
+			double yValueVertex = vertexIterator->y();
+			double firstNodeCenterX = lineIterator->getFirstNode()->getCenterXCoordinate();
+			double firstNodeCenterY = lineIterator->getFirstNode()->getCenterYCoordinate();
+			double secondNodeCenterX = lineIterator->getSecondNode()->getCenterXCoordinate();
+			double secondNodeCenterY = lineIterator->getSecondNode()->getCenterYCoordinate();
+			if(((xValueVertex == firstNodeCenterX) && (yValueVertex == firstNodeCenterY)) ||
+				((xValueVertex == secondNodeCenterX) && (yValueVertex == secondNodeCenterY)))
+			{
+				if(xValueVertex == firstNodeCenterX && yValueVertex == firstNodeCenterY)
+					firstNode = vertexIterator;
+				else if (xValueVertex == secondNodeCenterX && yValueVertex == secondNodeCenterY)
+					secondNode = vertexIterator;
+				
+				if(firstNode && secondNode)
+					break;
+			}
+		}
+		
+		if(lineIterator->isArc())
+		{
+			p_vertexModelList.push_back(p_meshModel->addVertex(lineIterator->getCenterXCoordinate(), lineIterator->getCenterYCoordinate(), 0.0, 1.0));
+			temp = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+		}
+		else
+		{
+			temp = p_meshModel->addLine(firstNode, secondNode);
+		}
+		
+		// All lines start off with the mesh method as none. If there is a corresponding block label,
+		// or a specific mesh size on within the face, then the line will be set to me transfinite or
+		// unstructured depending on the meshSettings set by the user
+			
+		temp->meshAttributes.method = MESH_NONE;
+			
+		if(!lineIterator->getSegmentProperty()->getMeshAutoState())
+		{
+			temp->meshAttributes.meshSize = lineIterator->getSegmentProperty()->getElementSizeAlongLine();
+		}
+		
+		lineIterator->setGModelTagNumber(temp->tag());
+	}
+	
+	
 	
 	createGMSHGeometry();
 	
@@ -729,9 +782,70 @@ void meshMaker::mesh()
 	}
 
 	if(p_meshModel->getNumMeshVertices() > 0)
-		p_meshModel->indexMeshVertices(true, 0, true);
+		p_meshModel->indexMeshVertices(true);
 	
 	OmniFEMMsg::instance()->MsgStatus("Meshing Finished");
+}
+
+
+
+void meshMaker::holeDetection()
+{
+	// First, we need to loop through every single closed path and check the bounding box
+	// against all the other closed paths to see if it is a possible hole
+	for(auto pathIterator = p_closedContourPaths.begin(); pathIterator != p_closedContourPaths.end(); pathIterator++)
+	{
+		for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
+		{
+			if(holeIterator->getBoundingBox().isInside(pathIterator->getBoundingBox()))
+				pathIterator->addHole(*holeIterator);
+		}
+	}
+	
+	// Now, we need to find the top level holes
+	for(auto pathIterator = p_closedContourPaths.begin(); pathIterator != p_closedContourPaths.end(); pathIterator++)
+	{
+		if(pathIterator->getHoles()->size() > 1)
+		{
+			for(auto topLevelIterator = pathIterator->getHoles()->begin(); topLevelIterator != pathIterator->getHoles()->end();)
+			{
+				bool resetIterator = false;
+				
+				for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end();)
+				{
+					// If the current hole is the same as the top level, skip and continue
+					if((*topLevelIterator)->getBoundingBox() == (*holeIterator)->getBoundingBox()) 
+					{
+						holeIterator++;
+						continue;
+					}
+					
+					// If the hole is inside of the top level contour, delete the hole and restart the process
+					if((*holeIterator)->getBoundingBox().isInside((*topLevelIterator)->getBoundingBox()))
+					{
+						(*topLevelIterator)->getHoles()->erase(holeIterator);
+						resetIterator = true;
+						break;
+					}
+					else if((*topLevelIterator)->getBoundingBox().isInside((*holeIterator)->getBoundingBox()))
+					{
+						// If the top level is actually inside of the hole,
+						// then we need to delete the top level and restart the process
+						(*topLevelIterator)->getHoles()->erase(topLevelIterator);
+						resetIterator = true;
+						break;
+					}
+					else// If the hole is not even inside of the top level but inside of the closed contour, skip and continue on
+						holeIterator++;
+				}
+				
+				if(resetIterator)
+					topLevelIterator = pathIterator->getHoles()->begin();
+				else
+					topLevelIterator++;
+			}
+		}
+	}
 }
 
 

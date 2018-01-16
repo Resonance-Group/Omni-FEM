@@ -2725,13 +2725,10 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 		p_modelMesh->getEntities(entityList, 4);
 		
 		glBegin(GL_LINES);
-		// number of elements = 2996
-		// number of vertices = 2968
-		//	for(unsigned int i = 0; i < p_modelMesh->GetN)
 			int numOfElements = 0;
 			for(unsigned int i = 0; i < entityList.size(); i++)
 			{
-				int temp = entityList[i]->getNumMeshElements();
+				int temp = entityList[i]->getNumMeshElements();	
 				for(unsigned int j = 0; j < entityList[i]->getNumMeshElements(); j++)
 				{
 					numOfElements++;

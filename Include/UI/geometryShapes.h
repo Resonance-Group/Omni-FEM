@@ -575,6 +575,8 @@ private:
 		ar & p_xMid;
 		ar & p_yMid;
 	}
+	
+	unsigned long p_GModelTagNumber = 0;
 protected:
 	//! The node number for the first node
 	/*!
@@ -854,32 +856,38 @@ public:
 		else
 		{
 			double result = 0;
+			
 			if(isSameSign(crossProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()), 
 							crossProduct(this->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter())))
 			{
 				result = dotProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()) / 
 							dotProduct(_secondNode->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter());
-				
-				if(result >= 0 && result <= 1)
-					return 1.0;
-				else
-					return -1.0;
 			}
 			else
 			{
 				result = dotProduct(point - this->getCenter(), point - this->getCenter());
-				
-				if(result <= pow(_radius, 2))
-					return 1.0;
-				else
-					return -1.0;
 			}
+			
+			if(result >= 0 && result <= 1)
+				return 1.0;
+			else
+				return -1.0;
 		}
 	}
 	
 	wxRealPoint getMidPoint()
 	{
 		return wxRealPoint(p_xMid, p_yMid);
+	}
+	
+	void setGModelTagNumber(unsigned long tagNumber)
+	{
+		p_GModelTagNumber = tagNumber;
+	}
+	
+	unsigned long getGModelTagNumber()
+	{
+		return p_GModelTagNumber;
 	}
 };
 
