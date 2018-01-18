@@ -805,7 +805,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 		pathToOperate = &p_closedContourPaths;
 	else
 		pathToOperate = pathContour;
-		
+		// Comment for pushing. Delete me
 	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathToOperate++)
 	{
 		std::vector<std::vector<GEdge*>> lineLoop;
