@@ -327,6 +327,8 @@ private:
 	
 	//! Boolean used to describe if the node was visited. This is used in the mesh maker class.
 	bool p_isVisited = false;
+	
+	int p_GModelTagNumber = 0;
 public:
 
     //! The constructor for the class
@@ -340,6 +342,16 @@ public:
     {
         
     }
+	
+	void setGModalTagNumber(int number)
+	{
+		p_GModelTagNumber = number;
+	}
+	
+	int getGModalTagNumber()
+	{
+		return p_GModelTagNumber;
+	}
 	
 	void setVisitedState(bool state)
 	{

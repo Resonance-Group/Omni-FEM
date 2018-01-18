@@ -15,6 +15,8 @@
 #include <common/ClosedPath.h>
 #include <common/ProblemDefinition.h>
 
+#include <common/GeometryProperties/BlockProperty.h>
+
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
 #include <Mesh/GVertex.h>
@@ -128,7 +130,14 @@ private:
 		return checkPointInContour(point.getCenter(), path);
 	}
 	
+	bool checkPointInContour(rectangleShape *point, closedPath *path)
+	{
+		return checkPointInContour(point->getCenter(), *path);
+	}
+	
 	void holeDetection();
+	
+	void assignBlockLabel(std::vector<closedPath> *pathContour = nullptr);
 public:
 	
 	meshMaker(problemDefinition &definition, modelDefinition *model)

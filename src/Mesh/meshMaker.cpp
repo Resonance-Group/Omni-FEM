@@ -581,9 +581,10 @@ void meshMaker::mesh()
 	
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH Vertices");
 	
-	for(auto nodeIterator : *p_nodeList)
+	for(auto nodeIterator = p_nodeList->begin(); nodeIterator != p_nodeList->end(); nodeIterator++)
 	{
 		GVertex *temp = p_meshModel->addVertex(nodeIterator.getCenterXCoordinate(), nodeIterator.getCenterYCoordinate(), 0.0, 1.0);
+		nodeIterator->setGModalTagNumber(temp->tag());
 		p_vertexModelList.push_back(temp);
 	}
 	
@@ -591,7 +592,7 @@ void meshMaker::mesh()
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
 	
 	/* Place all of the lines in the GMSH geometry */
-	for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+/*	for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
 	{
 		GVertex *firstNode = nullptr;
 		GVertex *secondNode = nullptr;
@@ -640,8 +641,12 @@ void meshMaker::mesh()
 		
 		lineIterator->setGModelTagNumber(temp->tag());
 	}
+	*/
+	holeDetection();
 	
+	assignBlockLabel();
 	
+	createGMSHGeometry();
 	
 	createGMSHGeometryOld();
 	
@@ -791,6 +796,9 @@ void meshMaker::mesh()
 
 void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 {
+	// At this point, the pathContour is all set up ready to go
+	// PLease note that this function assumes that the lines for each closed contour in 
+	// pathContour has not already been created
 	std::vector<closedPath> *pathToOperate = nullptr;
 	
 	if(pathContour == nullptr)
@@ -806,7 +814,37 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 		// We first must add in the actual path of the contour to the line loop
 		for(auto lineIterator = pathIterator->getClosedPath()->begin(); lineIterator != pathIterator->getClosedPath()->end(); lineIterator++)
 		{
-			GEdge *addedEdge = p_meshModel->getEdgeByTag((*lineIterator)->getGModelTagNumber());
+			GEdge *addedEdge = nullptr;
+			
+			GVertex *firstNode = p_meshModel->getVertexByTag((*lineIterator)->getFirstNode()->getGModalTagNumber());
+			GVertex *secondNode = p_meshModel->getVertexByTag((*lineIterator)->getSecondNode()->getGModalTagNumber());
+			
+			if((*lineIterator)->isArc())
+			{
+				p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
+				addedEdge = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+			}
+			else
+			{
+				addedEdge = p_meshModel->addLine(firstNode, secondNode);
+			}
+			
+			if(pathIterator->getProperty() && (*lineIterator)->getSegmentProperty()->getMeshAutoState())
+			{
+				// If the mesh spacing is set to auto for the line, then the mesh size of the GEdge will inherit the
+				// mesh size specified by the user in the block label
+				addedEdge->meshAttributes.meshSize = pathIterator->getProperty()->getMeshSize();
+			}
+			else if(!pathIterator->getProperty())
+			{
+				// The case for if there is no block label assigned to the contour.
+				// In this case, treat the contour as a "hole"
+			}
+			else if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
+			{
+				// In this case, the user has specificially specified that they need the line's mesh size set to a specific value
+				addedEdge->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
+			}
 			
 			addLineVector.push_back(addedEdge);
 		}
@@ -861,6 +899,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 			addedFace->meshAttributes.method = 2;
 			addedFace->meshAttributes.transfiniteArrangement = 0;
 		}
+		
+		
 	}
 		
 }
@@ -923,6 +963,58 @@ void meshMaker::holeDetection()
 					topLevelIterator++;
 			}
 		}
+	}
+}
+
+
+
+void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
+{
+	std::vector<closedPath> *pathToOperate = nullptr;
+	
+	if(pathContour == nullptr)
+		pathToOperate = &p_closedContourPaths;
+	else
+		pathToOperate = pathContour;
+		
+	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathIterator++)
+	{
+		blockLabel *setLabel = nullptr;
+		
+		if(pathIterator->getBlockLabelList()->size() > 1)
+		{
+			for(auto propertyIterator = pathIterator->getBlockLabelList()->begin(); propertyIterator != pathIterator->getBlockLabelList()->end(); propertyIterator++)
+			{
+				bool isInHole = false;
+				
+				for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+				{
+					if(checkPointInContour(*propertyIterator, *holeIterator))
+					{
+						isInHole = true;
+						break;
+					}
+				}
+				
+				if(!isInHole)
+				{
+					setLabel = *propertyIterator;
+					break;
+				}
+			}
+		}
+		else if(pathIterator->getBlockLabelList()->size() == 1)
+		{
+			setLabel = pathIterator->getBlockLabelList()->at(0);
+		}
+		else
+		{
+			continue;
+		}
+		
+		setLabel->setUsedState(true);
+		pathIterator->setProperty(setLabel->getProperty());
+		pathIterator->clearBlockLabelList();
 	}
 }
 

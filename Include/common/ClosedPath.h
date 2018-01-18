@@ -22,7 +22,7 @@ private:
 	
 	wxRealPoint p_centerPoint = wxPoint(0, 0);
 	
-	blockProperty *p_property;
+	blockProperty *p_property = nullptr;
 	
 	std::vector<closedPath*> p_holes;
 	
@@ -140,14 +140,14 @@ public:
 		return p_centerPoint;
 	}
 	
-	void setProperty(blockProperty *property)
-	{
-		p_property = property;
-	}
-	
 	void setProperty(blockProperty &property)
 	{
 		p_property = &property;
+	}
+	
+	void setProperty(blockProperty *property)
+	{
+		p_property = property;
 	}
 	
 	blockProperty *getProperty()
@@ -173,6 +173,16 @@ public:
 	void addBlockLabel(blockLabel &label)
 	{
 		p_blockLabelList.push_back(&label);
+	}
+	
+	std::vector<blockLabel*> *getBlockLabelList()
+	{
+		return &p_blockLabelList;
+	}
+	
+	void clearBlockLabelList()
+	{
+		p_blockLabelList.clear();
 	}
 	
 	bool pointInBoundingBox(wxRealPoint point)
