@@ -874,16 +874,23 @@ public:
 			{
 				result = dotProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()) / 
 							dotProduct(_secondNode->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter());
+				
+				if(result >= 0 && result <= 1)
+					return 1.0;
+				else
+					return -1.0;
 			}
 			else
 			{
 				result = dotProduct(point - this->getCenter(), point - this->getCenter());
+				
+				if(result <= pow(_radius, 2))
+					return 1.0;
+				else
+					return -1.0;
 			}
 			
-			if(result >= 0 && result <= 1)
-				return 1.0;
-			else
-				return -1.0;
+			
 		}
 	}
 	

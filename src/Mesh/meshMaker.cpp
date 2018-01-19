@@ -583,7 +583,7 @@ void meshMaker::mesh()
 	
 	for(auto nodeIterator = p_nodeList->begin(); nodeIterator != p_nodeList->end(); nodeIterator++)
 	{
-		GVertex *temp = p_meshModel->addVertex(nodeIterator.getCenterXCoordinate(), nodeIterator.getCenterYCoordinate(), 0.0, 1.0);
+		GVertex *temp = p_meshModel->addVertex(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), 0.0, 1.0);
 		nodeIterator->setGModalTagNumber(temp->tag());
 		p_vertexModelList.push_back(temp);
 	}
@@ -648,7 +648,7 @@ void meshMaker::mesh()
 	
 	createGMSHGeometry();
 	
-	createGMSHGeometryOld();
+	//createGMSHGeometryOld();
 	
 	/*if(p_blockLabelsUsed < p_blockLabelList->size())
 	{
@@ -806,7 +806,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 	else
 		pathToOperate = pathContour;
 		// Comment for pushing. Delete me
-	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathToOperate++)
+	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathIterator++)
 	{
 		std::vector<std::vector<GEdge*>> lineLoop;
 		std::vector<GEdge*> addLineVector;
@@ -859,9 +859,40 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 			for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
 			{
 				addLineVector.clear();
-				for(auto lineIterator = (*holeIterator)->getClosedPath()->begin(); lineIterator != (*holeIterator)->getClosedPath()->end(); lineIterator++)
+				for(auto lineIterator = holeIterator->getClosedPath()->begin(); lineIterator != holeIterator->getClosedPath()->end(); lineIterator++)
 				{
-					GEdge *addedEdge = p_meshModel->getEdgeByTag((*lineIterator)->getGModelTagNumber());
+					GVertex *firstNode = p_meshModel->getVertexByTag((*lineIterator)->getFirstNode()->getGModalTagNumber());
+					GVertex *secondNode = p_meshModel->getVertexByTag((*lineIterator)->getSecondNode()->getGModalTagNumber());
+					
+					GEdge *addedEdge = nullptr;
+					
+					if((*lineIterator)->isArc())
+					{
+						p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
+						addedEdge = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+					}
+					else
+					{
+						addedEdge = p_meshModel->addLine(firstNode, secondNode);
+					}
+					
+					if(pathIterator->getProperty() && (*lineIterator)->getSegmentProperty()->getMeshAutoState())
+					{
+						// If the mesh spacing is set to auto for the line, then the mesh size of the GEdge will inherit the
+						// mesh size specified by the user in the block label
+						addedEdge->meshAttributes.meshSize = pathIterator->getProperty()->getMeshSize();
+					}
+					else if(!pathIterator->getProperty())
+					{
+						// The case for if there is no block label assigned to the contour.
+						// In this case, treat the contour as a "hole"
+					}
+					else if(!(*lineIterator)->getSegmentProperty()->getMeshAutoState())
+					{
+						// In this case, the user has specificially specified that they need the line's mesh size set to a specific value
+						addedEdge->meshAttributes.meshSize = (*lineIterator)->getSegmentProperty()->getElementSizeAlongLine();
+					}
+			
 					addLineVector.push_back(addedEdge);
 				}
 				lineLoop.push_back(addLineVector);
@@ -925,44 +956,47 @@ void meshMaker::holeDetection()
 	{
 		if(pathIterator->getHoles()->size() > 1)
 		{
-			for(auto topLevelIterator = pathIterator->getHoles()->begin(); topLevelIterator != pathIterator->getHoles()->end();)
+			bool isFinished = false;
+			
+			while(!isFinished)
 			{
-				bool resetIterator = false;
-				
-				for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end();)
+				for(auto topLevelIterator = pathIterator->getHoles()->begin(); topLevelIterator != pathIterator->getHoles()->end();)
 				{
-					// If the current hole is the same as the top level, skip and continue
-					if((*topLevelIterator)->getBoundingBox() == (*holeIterator)->getBoundingBox()) 
+					bool resetIterator = false;
+					
+					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end();)
 					{
-						holeIterator++;
-						continue;
+						// If the hole is inside of the top level contour, delete the hole and restart the process
+						if(holeIterator->getBoundingBox().isInside(topLevelIterator->getBoundingBox()))
+						{
+							pathIterator->getHoles()->erase(holeIterator);
+							resetIterator = true;
+							break;
+						}
+						else if(topLevelIterator->getBoundingBox().isInside(holeIterator->getBoundingBox()))
+						{
+							// If the top level is actually inside of the hole,
+							// then we need to delete the top level and restart the process
+							pathIterator->getHoles()->erase(topLevelIterator);
+							resetIterator = true;
+							break;
+						}
+						else// If the hole is not even inside of the top level but inside of the closed contour, skip and continue on
+							holeIterator++;
 					}
 					
-					// If the hole is inside of the top level contour, delete the hole and restart the process
-					if((*holeIterator)->getBoundingBox().isInside((*topLevelIterator)->getBoundingBox()))
-					{
-						(*topLevelIterator)->getHoles()->erase(holeIterator);
-						resetIterator = true;
+					if(resetIterator)
 						break;
-					}
-					else if((*topLevelIterator)->getBoundingBox().isInside((*holeIterator)->getBoundingBox()))
-					{
-						// If the top level is actually inside of the hole,
-						// then we need to delete the top level and restart the process
-						(*topLevelIterator)->getHoles()->erase(topLevelIterator);
-						resetIterator = true;
-						break;
-					}
-					else// If the hole is not even inside of the top level but inside of the closed contour, skip and continue on
-						holeIterator++;
+					else
+						topLevelIterator++;
+					
+					if(topLevelIterator == pathIterator->getHoles()->end())
+						isFinished = true;
 				}
-				
-				if(resetIterator)
-					topLevelIterator = pathIterator->getHoles()->begin();
-				else
-					topLevelIterator++;
 			}
 		}
+		
+		// Need to combine any closed paths with a common edge here
 	}
 }
 
@@ -987,16 +1021,19 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 			{
 				bool isInHole = false;
 				
-				for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+				if(!(*propertyIterator)->getUsedState())
 				{
-					if(checkPointInContour(*propertyIterator, *holeIterator))
+					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
 					{
-						isInHole = true;
-						break;
+						if(checkPointInContour(*propertyIterator, &(*holeIterator)))
+						{
+							isInHole = true;
+							break;
+						}
 					}
 				}
 				
-				if(!isInHole)
+				if(!isInHole && !(*propertyIterator)->getUsedState())
 				{
 					setLabel = *propertyIterator;
 					break;

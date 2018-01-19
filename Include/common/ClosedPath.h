@@ -24,7 +24,7 @@ private:
 	
 	blockProperty *p_property = nullptr;
 	
-	std::vector<closedPath*> p_holes;
+	std::vector<closedPath> p_holes;
 	
 	std::vector<blockLabel*> p_blockLabelList;
 
@@ -157,15 +157,15 @@ public:
 	
 	void addHole(closedPath *hole)
 	{
-		p_holes.push_back(hole);
+		p_holes.push_back(*hole);
 	}
 	
 	void addHole(closedPath &hole)
 	{
-		p_holes.push_back(&hole);
+		p_holes.push_back(hole);
 	}
 	
-	std::vector<closedPath*> *getHoles()
+	std::vector<closedPath> *getHoles()
 	{
 		return &p_holes;
 	}
