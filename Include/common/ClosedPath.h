@@ -27,6 +27,25 @@ private:
 	std::vector<closedPath> p_holes;
 	
 	std::vector<blockLabel*> p_blockLabelList;
+	
+	bool shareCommonEdge(closedPath firstPath, closedPath secondPath, std::vector<edgeLineShape*> &commonEdges)
+	{
+		commonEdges.clear();// Make sure this vector is empty before proceding
+		
+		for(auto firstPathIterator = firstPath.getClosedPath()->begin(); firstPathIterator != firstPath.getClosedPath()->end(); firstPathIterator++)
+		{
+			for(auto secondPathIterator = secondPath.getClosedPath()->begin(); secondPathIterator != secondPath.getClosedPath()->end(); secondPathIterator++)
+			{
+				if(*(*firstPathIterator) == *(*secondPathIterator))
+					commonEdges.push_back(*firstPathIterator)
+			}
+		}
+		
+		if(commonEdges.size() > 0)
+			return true;
+		else
+			return false;
+	}
 
 public:
 
@@ -199,6 +218,27 @@ public:
 	boundingBox getBoundingBox()
 	{
 		return p_boundingBox;
+	}
+	
+	void combineHoles()
+	{
+		bool isFinished = false;
+		
+		while(!isFinished)
+		{
+			for(auto firstHoleIterator = p_holes.begin(); firstHoleIterator != --(p_holes.end()); firstHoleIterator++)
+			{
+				std::vector<edgeLineShape*> commonEdgeList;
+				
+				for(auto secondHoleIterator = ++firstHoleIterator; secondHoleIterator != p_holes.end(); secondHoleIterator++)
+				{
+					if(shareCommonEdge(*firstHoleIterator, *secondHoleIterator, commonEdgeList))
+					{
+						
+					}
+				}
+			}
+		}
 	}
 };
 

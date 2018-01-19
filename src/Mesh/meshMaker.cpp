@@ -996,7 +996,7 @@ void meshMaker::holeDetection()
 			}
 		}
 		
-		// Need to combine any closed paths with a common edge here
+		// Need to combine any closed paths holes with a common edge here
 	}
 }
 
