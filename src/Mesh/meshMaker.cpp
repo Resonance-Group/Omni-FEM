@@ -591,57 +591,6 @@ void meshMaker::mesh()
 	/* Now we create the faces */
 	OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
 	
-	/* Place all of the lines in the GMSH geometry */
-/*	for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
-	{
-		GVertex *firstNode = nullptr;
-		GVertex *secondNode = nullptr;
-		GEdge *temp = nullptr;
-
-		for(auto vertexIterator : p_vertexModelList)
-		{
-			double xValueVertex = vertexIterator->x();
-			double yValueVertex = vertexIterator->y();
-			double firstNodeCenterX = lineIterator->getFirstNode()->getCenterXCoordinate();
-			double firstNodeCenterY = lineIterator->getFirstNode()->getCenterYCoordinate();
-			double secondNodeCenterX = lineIterator->getSecondNode()->getCenterXCoordinate();
-			double secondNodeCenterY = lineIterator->getSecondNode()->getCenterYCoordinate();
-			if(((xValueVertex == firstNodeCenterX) && (yValueVertex == firstNodeCenterY)) ||
-				((xValueVertex == secondNodeCenterX) && (yValueVertex == secondNodeCenterY)))
-			{
-				if(xValueVertex == firstNodeCenterX && yValueVertex == firstNodeCenterY)
-					firstNode = vertexIterator;
-				else if (xValueVertex == secondNodeCenterX && yValueVertex == secondNodeCenterY)
-					secondNode = vertexIterator;
-				
-				if(firstNode && secondNode)
-					break;
-			}
-		}
-		
-		if(lineIterator->isArc())
-		{
-			p_vertexModelList.push_back(p_meshModel->addVertex(lineIterator->getCenterXCoordinate(), lineIterator->getCenterYCoordinate(), 0.0, 1.0));
-			temp = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
-		}
-		else
-		{
-			temp = p_meshModel->addLine(firstNode, secondNode);
-		}
-		
-		// Add in a check for a structured mesh (Transfinite setting is set to 1)
-		// If so, we need to set the edge as transfinite. Do that here
-			
-		temp->meshAttributes.method = MESH_NONE;
-			
-		if(!lineIterator->getSegmentProperty()->getMeshAutoState())
-		{
-			temp->meshAttributes.meshSize = lineIterator->getSegmentProperty()->getElementSizeAlongLine();
-		}
-		
-		lineIterator->setGModelTagNumber(temp->tag());
-	}
-	*/
 	holeDetection();
 	
 	assignBlockLabel();
@@ -997,6 +946,8 @@ void meshMaker::holeDetection()
 		}
 		
 		// Need to combine any closed paths holes with a common edge here
+		if(pathIterator->getHoles()->size() > 0)
+			pathIterator->combineHoles();
 	}
 }
 
