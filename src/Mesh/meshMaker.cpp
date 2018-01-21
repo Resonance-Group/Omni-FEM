@@ -148,8 +148,6 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 		}
 	}
 	
-//	foundPath.orient();
-	
 	return foundPath;
 }
 
@@ -194,7 +192,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 		// If so, then we need to move on to the second node.
 		// If both of the nodes for the segment have already been visited then we can go ahead and
 		// skip that segment
-		if((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode()))
+		if(((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode())) && !lineIterator->getSegmentProperty()->getHiddenState())
 		{
 			returnList.push_back(&(*lineIterator));
 		}
@@ -596,6 +594,25 @@ void meshMaker::mesh()
 	assignBlockLabel();
 	
 	createGMSHGeometry();
+	
+	if(p_blockLabelsUsed < p_blockLabelList->size())
+	{
+		std::vector<closedPath> additionalPaths;
+		
+		for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
+		{
+			if(!blockIterator->getUsedState())
+			{
+				double shortestDistance = 0;
+				edgeLineShape *startEdge = nullptr;
+				
+				for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+				{
+					
+				}
+			}
+		}
+	}
 	
 	//createGMSHGeometryOld();
 	
@@ -1001,6 +1018,7 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 		}
 		
 		setLabel->setUsedState(true);
+		p_blockLabelsUsed++;
 		pathIterator->setProperty(setLabel->getProperty());
 		pathIterator->clearBlockLabelList();
 	}
