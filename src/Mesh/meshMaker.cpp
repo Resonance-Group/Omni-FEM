@@ -478,20 +478,28 @@ void meshMaker::mesh()
 					}
 					
 					// Since we found a path that encompasses the label, set the property of that path to the label
-					foundPath.setProperty(blockIterator->getProperty());
+					
 					p_blockLabelsUsed++;
 					blockIterator->setUsedState(true);
-					additionalPaths.push_back(foundPath);
+					
+					if(foundPath.getDistance() > 0)
+					{
+						foundPath.setProperty(blockIterator->getProperty());
+						additionalPaths.push_back(foundPath);
+					}
 				}
 			}
 			
-			holeDetection(&additionalPaths);
-			
-			createGMSHGeometry(&additionalPaths);
-			
-			p_closedContourPaths.reserve(additionalPaths.size());
-			
-			p_closedContourPaths.insert(p_closedContourPaths.end(), additionalPaths.begin(), additionalPaths.end());
+			if(additionalPaths.size() > 0)
+			{
+				holeDetection(&additionalPaths);
+				
+				createGMSHGeometry(&additionalPaths);
+				
+				p_closedContourPaths.reserve(additionalPaths.size());
+				
+				p_closedContourPaths.insert(p_closedContourPaths.end(), additionalPaths.begin(), additionalPaths.end());
+			}
 		}
 		
 		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
