@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <map>
+#include <utility>
 
 #include <UI/geometryShapes.h>
 #include <UI/ModelDefinition/ModelDefinition.h>
@@ -95,20 +97,6 @@ private:
 	 */
 	std::vector<edgeLineShape*> getConnectedPaths(std::vector<edgeLineShape*>::reference currentSegment, std::vector<edgeLineShape*> *pathVector);
 	
-	/**
-	 * @brief 	This function will test if two paths share a common edge. It does not determine which edge is common. But
-	 * 			it tests if there is a common edge. The function does not determine how many common edges. Just that if
-	 * 			a common edge exists.
-	 * @param path1 The first path
-	 * @param path2 The second path
-	 * @return Returns true if a common edge exists. Otherwise, returns false
-	 */
-	bool shareCommonEdge(std::vector<edgeLineShape> path1, std::vector<edgeLineShape> path2);
-	
-	double calculateShortestDistance(blockLabel selectedLabel, edgeLineShape segment);
-	
-	void createGMSHGeometryOld(std::vector<closedPath> *pathContour = nullptr);
-	
 	void createGMSHGeometry(std::vector<closedPath> *pathContour = nullptr);
 	
 	/**
@@ -135,9 +123,27 @@ private:
 		return checkPointInContour(point->getCenter(), *path);
 	}
 	
-	void holeDetection();
+	void holeDetection(std::vector<closedPath> *pathContour = nullptr);
 	
 	void assignBlockLabel(std::vector<closedPath> *pathContour = nullptr);
+	
+	bool isClosedPath(std::vector<edgeLineShape*> pathEdges)
+	{
+		edgeLineShape beginEdge = *(*pathEdges.begin());
+		edgeLineShape lastEdge = *(*pathEdges.rbegin());
+		
+		if(pathEdges.size() > 1)
+		{
+			if(beginEdge.getFirstNodeID() == lastEdge.getFirstNodeID() || beginEdge.getFirstNodeID() == lastEdge.getSecondNodeID() ||
+				beginEdge.getSecondNodeID() == lastEdge.getFirstNodeID() || beginEdge.getSecondNodeID() == lastEdge.getSecondNodeID())
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	
 public:
 	
 	meshMaker(problemDefinition &definition, modelDefinition *model)
