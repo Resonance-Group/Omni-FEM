@@ -17,7 +17,7 @@
 #include "Mesh/GModel.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/ExtrudeParams.h"
-#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
 #include "Mesh/Geo.h"
 #include "Mesh/Parser.h"
 #include "Mesh/GmshDefines.h"
@@ -258,7 +258,7 @@ std::vector<GEntity*> GeoFactory::extrudeBoundaryLayer(GModel *gm, GEntity *e,
     ((GFace*)e)->meshAttributes.extrude = ep;
     Surface *s = FindSurface(e->tag());
     if(!s) {
-      //Msg::Error("Surface %d not found", e->tag());
+      Msg::Error("Surface %d not found", e->tag());
       return extrudedEntities;
     }
     shape.Num = s->Num;
@@ -1177,9 +1177,9 @@ void OCCFactory::setPeriodicAllFaces(GModel *gm, std::vector<double> FaceTransla
          && IsEqualG(BarycenterFace1.Z()+FaceTranslationVector[2],BarycenterFace2.Z())){
         numFaceMaster = gm->getOCCInternals()->getFaceForOCCShape(gm,aFace1)->tag();
         numFaceSlave  = gm->getOCCInternals()->getFaceForOCCShape(gm,aFace2)->tag();
-        //Msg::Info("Face %d (slave) is most likely Face %d (master) translated by (%.2e,%.2e,%.2e)!",
-        //           numFaceSlave,numFaceMaster,FaceTranslationVector[0],FaceTranslationVector[1],
-        //           FaceTranslationVector[2]);
+        Msg::Info("Face %d (slave) is most likely Face %d (master) translated by (%.2e,%.2e,%.2e)!",
+                   numFaceSlave,numFaceMaster,FaceTranslationVector[0],FaceTranslationVector[1],
+                   FaceTranslationVector[2]);
 
         std::vector<int>  EdgeListMaster(NumberOfEdgesInFace1);
         std::vector<int>  EdgeListSlave(NumberOfEdgesInFace2);

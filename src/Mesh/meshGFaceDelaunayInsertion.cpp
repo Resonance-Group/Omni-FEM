@@ -961,7 +961,7 @@ static bool insertAPoint(GFace *gf,
   if (worst){
     it = AllTris.find(worst);
     if (worst != *it){
-   //   Msg::Error("Could not insert point");
+      Msg::Error("Could not insert point");
       return false;
     }
   }
@@ -997,7 +997,7 @@ static bool insertAPoint(GFace *gf,
   if (ptin) {
     // we use here local coordinates as real coordinates
     // x,y and z will be computed hereafter
-    // Msg::Info("Point is inside");
+     Msg::Info("Point is inside");
     GPoint p = gf->point(center[0], center[1]);
 
     // should not have an omp critical here
@@ -1021,10 +1021,10 @@ static bool insertAPoint(GFace *gf,
 
     if(!p.succeeded() || !insertVertexB
        (shell, cavity,false, gf, v, center, ptin, AllTris,ActiveTris, data , metric, oneNewTriangle) ) {
- //     Msg::Debug("Point %g %g cannot be inserted because %d",
-	//	 center[0], center[1], p.succeeded() );
-      //      printf("Point %g %g cannot be inserted because %d",
-      //	     center[0], center[1], p.succeeded() );
+      Msg::Debug("Point %g %g cannot be inserted because %d",
+		 center[0], center[1], p.succeeded() );
+            printf("Point %g %g cannot be inserted because %d",
+      	     center[0], center[1], p.succeeded() );
       AllTris.erase(it);
       worst->forceRadius(-1);
       AllTris.insert(worst);
@@ -1062,10 +1062,10 @@ void bowyerWatson(GFace *gf, int MAXPNT,
   //  if (equivalence)_printTris ("before.pos", AllTris.begin(), AllTris.end(), DATA);
   int nbSwaps = edgeSwapPass(gf, AllTris, SWCR_DEL, DATA);
   // _printTris ("after2.pos", AllTris, Us,Vs);
-//  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
+  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
 
   if(AllTris.empty()){
- //   Msg::Error("No triangles in initial mesh");
+    Msg::Error("No triangles in initial mesh");
     return;
   }
 
@@ -1090,8 +1090,8 @@ void bowyerWatson(GFace *gf, int MAXPNT,
     else{
       //      double t2 = Cpu();
       if(ITER++ % 5000 == 0){
- //       Msg::Debug("%7d points created -- Worst tri radius is %8.3f",
-   //                DATA.vSizes.size(), worst->getRadius());
+        Msg::Debug("%7d points created -- Worst tri radius is %8.3f",
+                   DATA.vSizes.size(), worst->getRadius());
 	//	printf("%d %d %d\n",vSizes.size(), AllTris.size(),NBDELETED);
       }
       //  VERIFY STOP !!!
@@ -1348,10 +1348,10 @@ bool optimalPointFrontalB (GFace *gf,
     newPoint[1] = uvt[1];
   }
   else {
- //   Msg::Debug("--- Non optimal point found -----------");
+    Msg::Debug("--- Non optimal point found -----------");
     return false;
     return true;
-    //    Msg::Info("--- Non optimal point found -----------");
+        Msg::Info("--- Non optimal point found -----------");
   }
   return true;
 }
@@ -1368,7 +1368,7 @@ void bowyerWatsonFrontal(GFace *gf,
 
   // delaunise the initial mesh
   int nbSwaps = edgeSwapPass(gf, AllTris, SWCR_DEL, DATA);
- // Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
+  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
 
   int ITER = 0, active_edge;
   // compute active triangle
@@ -1400,8 +1400,8 @@ void bowyerWatsonFrontal(GFace *gf,
         worst->getRadius() > LIMIT_){
       if(ITER++ % 5000 == 0)
 	  {
-   //     Msg::Debug("%7d points created -- Worst tri radius is %8.3f",
-   //                gf->mesh_vertices.size(), worst->getRadius());
+        Msg::Debug("%7d points created -- Worst tri radius is %8.3f",
+                   gf->mesh_vertices.size(), worst->getRadius());
    
 		}
       double newPoint[2], metric[3];
@@ -1600,7 +1600,7 @@ void bowyerWatsonFrontalLayers(GFace *gf, bool quad,
 
   // delaunise the initial mesh
   int nbSwaps = edgeSwapPass(gf, AllTris, SWCR_DEL, DATA);
- // Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
+  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
 
   int ITER = 0, active_edge;
   // compute active triangle
@@ -1652,12 +1652,12 @@ void bowyerWatsonFrontalLayers(GFace *gf, bool quad,
         // for (active_edge = 0 ; active_edge < 0 ; active_edge ++){
         //   if (active_edges[active_edge])break;
         // }
-        // Msg::Info("%7d points created -- Worst tri infinite radius is %8.3f -- "
-        //           "front size %6d", vSizes.size(), worst->getRadius(),_front.size());
+         Msg::Info("%7d points created -- Worst tri infinite radius is %8.3f -- "
+                   "front size %6d", DATA.vSizes.size(), worst->getRadius(),_front.size());
         if(ITER++ % 5000 == 0)
 		{
-       //   Msg::Debug("%7d points created -- Worst tri infinite radius is %8.3f -- "
-       //       "front size %6d", DATA.vSizes.size(), worst->getRadius(),_front.size());
+          Msg::Debug("%7d points created -- Worst tri infinite radius is %8.3f -- "
+              "front size %6d", DATA.vSizes.size(), worst->getRadius(),_front.size());
 
         // compute the middle point of the edge
 		
@@ -1696,8 +1696,8 @@ void bowyerWatsonFrontalLayers(GFace *gf, bool quad,
         updateActiveEdges(*it, LIMIT_, _front);
       }
     }
-    //	Msg::Info("%d active tris %d front edges %d not in front",
-    //            ActiveTris.size(),_front.size(),ActiveTrisNotInFront.size());
+    	Msg::Info("%d active tris %d front edges %d not in front",
+                ActiveTris.size(),_front.size(),ActiveTrisNotInFront.size());
     if (!ActiveTris.size()) break;
     }
 
@@ -1748,7 +1748,7 @@ void bowyerWatsonParallelograms(GFace *gf,
 
     // delaunise the initial mesh
     int nbSwaps = edgeSwapPass(gf, AllTris, SWCR_DEL, DATA);
-  //  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
+    Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
 
     //std::sort(packed.begin(), packed.end(), MVertexLessThanLexicographic());
     SortHilbert(packed);
@@ -1782,7 +1782,7 @@ void bowyerWatsonParallelograms(GFace *gf,
       }
 
       if(1.0* AllTris.size() > 2.5 * DATA.vSizes.size()){
-        //      int n1 = AllTris.size();
+              int n1 = AllTris.size();
         std::set<MTri3*,compareTri3Ptr>::iterator itd = AllTris.begin();
         while(itd != AllTris.end()){
           if((*itd)->isDeleted()){
@@ -1792,7 +1792,7 @@ void bowyerWatsonParallelograms(GFace *gf,
           else
             itd++;
         }
-        //      Msg::Info("cleaning up the memory %d -> %d", n1, AllTris.size());
+              Msg::Info("cleaning up the memory %d -> %d", n1, AllTris.size());
       }
 
 
@@ -1840,7 +1840,7 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
   std::cout<<"out of buildMeshGenerationDataStructures"<<std::endl;
   // delaunise the initial mesh
   int nbSwaps = edgeSwapPass(gf, AllTris, SWCR_DEL, DATA);
-//  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
+  Msg::Debug("Delaunization of the initial mesh done (%d swaps)", nbSwaps);
 
   std::sort(packed.begin(), packed.end(), MVertexLessThanLexicographic());
   std::cout<<"out of sort"<<std::endl;
@@ -1878,7 +1878,7 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
     std::cout<<"   out of first if"<<std::endl;
 
     if(1.0* AllTris.size() > 2.5 * DATA.vSizes.size()){
-      //      int n1 = AllTris.size();
+            int n1 = AllTris.size();
       std::set<MTri3*,compareTri3Ptr>::iterator itd = AllTris.begin();
       while(itd != AllTris.end()){
         if((*itd)->isDeleted()){
@@ -1888,7 +1888,7 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
         else
           itd++;
       }
-      //      Msg::Info("cleaning up the memory %d -> %d", n1, AllTris.size());
+            Msg::Info("cleaning up the memory %d -> %d", n1, AllTris.size());
     }
     std::cout<<"   out of second if"<<std::endl;
 
@@ -2152,9 +2152,6 @@ void bowyerWatsonParallelogramsConstrained(GFace *gf,
           SPoint3 po (o->x(),o->y(),0);
           if (diffend(v1,v2,mv1,mv2)){
             if (intersection_segments (p1, p2, pv1, pv2,xcc)){
-              //	    if (std::binary_search(edges.begin(),edges.end(),MEdge(v1,v2),Less_Edge)){
-              //	      Msg::Error("1D mesh self intersects");
-              //	    }
               if (!intersection_segments(po, p3, pv1, pv2,xcc) || (v3 == mv1 || o == mv1 || v3 == mv2 || o == mv2)){
                 if(swapedge (v1,v2,v3,o,t[i],j))return true;
               }

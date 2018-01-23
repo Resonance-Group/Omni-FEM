@@ -115,7 +115,7 @@ IntPt *getGQQPts(int order)
   int n = (order + 1) / (float)2 + 0.5;
   int index = n-2 + 7;
   if(index >= (int)(sizeof(GQQ) / sizeof(IntPt*))){
-    //Msg::Error("Increase size of GQQ in gauss quadrature quad");
+    Msg::Error("Increase size of GQQ in gauss quadrature quad");
     index = 0;
   }
   if(!GQQ[index]){

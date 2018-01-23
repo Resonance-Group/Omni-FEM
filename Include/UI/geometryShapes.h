@@ -52,7 +52,7 @@ protected:
 		For lines, this is the midpoint
 		For nodes and blocklabels, this would be the center of the square.
 	*/
-	double xCenterCoordinate;
+	double xCenterCoordinate = 0;
 	
 	//! This data type stores the center y position in Cartesians Coordiantes
     /*!
@@ -60,7 +60,7 @@ protected:
 		For lines, this is the midpoint
 		For nodes and blocklabels, this would be the center of the square.
     */ 
-	double yCenterCoordinate;
+	double yCenterCoordinate = 0;
     
 public:
 	
@@ -131,6 +131,11 @@ public:
     {
         return _isSelected;
     }
+	
+	wxRealPoint getCenter()
+	{
+		return wxRealPoint(xCenterCoordinate, yCenterCoordinate);
+	}
 };
 
 /**
@@ -322,6 +327,8 @@ private:
 	
 	//! Boolean used to describe if the node was visited. This is used in the mesh maker class.
 	bool p_isVisited = false;
+	
+	int p_GModelTagNumber = 0;
 public:
 
     //! The constructor for the class
@@ -335,6 +342,16 @@ public:
     {
         
     }
+	
+	void setGModalTagNumber(int number)
+	{
+		p_GModelTagNumber = number;
+	}
+	
+	int getGModalTagNumber()
+	{
+		return p_GModelTagNumber;
+	}
 	
 	void setVisitedState(bool state)
 	{
@@ -442,6 +459,10 @@ private:
 		and what material should be associated with the particular region.
 	*/ 
     blockProperty _property;
+	
+	//! This property is used in the mesher to keep track all of the block labels are used
+	bool p_isUsed = false;
+	
 public:
 
 	/**
@@ -470,6 +491,25 @@ public:
             glVertex2d(xCenterCoordinate, yCenterCoordinate);
         glEnd();
     }
+	
+	/**
+	 * @brief Sets the state of the is used variable. Setting the variable will indicate if the
+	 * 		label has been used by the mesher
+	 * @param state Set to true to indicate the label has been assigned to a face. otherwise, set to false
+	 */
+	void setUsedState(bool state)
+	{
+		p_isUsed = state;
+	}
+	
+	/**
+	 * @brief Returns the used state
+	 * @return If the block label is assigned to a face, will return true. Otherwise, false
+	 */
+	bool getUsedState()
+	{
+		return p_isUsed;
+	}
     
 	/**
 	 * @brief 	Draws the text for the block label onto the screen. The text that is drawn is the material
@@ -543,7 +583,12 @@ private:
 		ar & _property;
 		ar & p_firstNodeNumber;
 		ar & p_secondNodeNumber;
+		ar & p_distance;
+		ar & p_xMid;
+		ar & p_yMid;
 	}
+	
+	int p_GModelTagNumber = 0;
 protected:
 	//! The node number for the first node
 	/*!
@@ -598,6 +643,30 @@ protected:
 	
 	//! Boolean used to describe if the line segment was visited for contour finding
 	bool p_isVisited = false;
+	
+	double p_distance = 0;
+	
+	//! The radius of an arc from the center point
+    double _radius = 0.0;
+	
+	double p_xMid = 0;
+	
+	double p_yMid = 0;
+	
+	double dotProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
+	{
+		return (firstPoint.x * secondPoint.x) + (firstPoint.y * secondPoint.y);
+	}
+	
+	double crossProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
+	{
+		return (firstPoint.x * secondPoint.y) - (secondPoint.x * firstPoint.y);
+	}
+	
+	bool isSameSign(double firstValue, double secondValue)
+	{
+		return (signbit(firstValue) == signbit(secondValue));
+	}
     
 public:
 	//! Constructor for the generic class
@@ -605,6 +674,23 @@ public:
     {
         
     }
+	
+	virtual void calculateDistance()
+	{
+		if(_firstNode && _secondNode)
+		{
+			p_distance = sqrt(pow(_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate(), 2) + pow(_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate(), 2));
+			xCenterCoordinate = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
+			yCenterCoordinate = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
+			p_xMid = xCenterCoordinate;
+			p_yMid = yCenterCoordinate;
+		}
+	}
+	
+	double getDistance()
+	{
+		return p_distance;
+	}
 	
 	/**
 	 * @brief Function that will return whether or not the segment is an arc 
@@ -686,7 +772,7 @@ public:
 	 * 			will change colors to red
 	 */
     void draw()
-    {
+    {			
         if(_property.getHiddenState())
         {
             glEnable(GL_LINE_STIPPLE);
@@ -757,6 +843,71 @@ public:
 		else
 			return false;
 	}
+	
+	void swap()
+	{
+		node *temp = _firstNode;
+		_firstNode = _secondNode;
+		_secondNode = temp;
+	}
+	
+	/**
+	 * @brief 	Tests if a point is to the Left/On/Right of the line. The orientation will be from the 
+	 * 			first node to the second node
+	 * @param point The point to test if it is Left/On/Right of the line
+	 * @return 	Will return > 0 if point is to the left of the line. Returns == 0 if point lies on the line and
+	 * 			returns < 0 if point is to the right of the line.
+	 */
+	double isLeft(wxRealPoint point)
+	{
+		if(!p_isArc)
+		{
+			return ((_secondNode->getCenterXCoordinate() - _firstNode->getCenterXCoordinate()) * (point.y - _firstNode->getCenterYCoordinate()) 
+						- (point.x - _firstNode->getCenterXCoordinate()) * (_secondNode->getCenterYCoordinate() - _firstNode->getCenterYCoordinate()));	
+		}
+		else
+		{
+			double result = 0;
+			
+			if(isSameSign(crossProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()), 
+							crossProduct(this->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter())))
+			{
+				result = dotProduct(point - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter()) / 
+							dotProduct(_secondNode->getCenter() - _firstNode->getCenter(), _secondNode->getCenter() - _firstNode->getCenter());
+				
+				if(result >= 0 && result <= 1)
+					return 1.0;
+				else
+					return -1.0;
+			}
+			else
+			{
+				result = dotProduct(point - this->getCenter(), point - this->getCenter());
+				
+				if(result <= pow(_radius, 2))
+					return 1.0;
+				else
+					return -1.0;
+			}
+			
+			
+		}
+	}
+	
+	wxRealPoint getMidPoint()
+	{
+		return wxRealPoint(p_xMid, p_yMid);
+	}
+	
+	void setGModelTagNumber(int tagNumber)
+	{
+		p_GModelTagNumber = tagNumber;
+	}
+	
+	int getGModelTagNumber()
+	{
+		return p_GModelTagNumber;
+	}
 };
 
 
@@ -783,15 +934,17 @@ private:
     //! This data is the angle of the arc used in calculations. This should be in degrees
 	double _arcAngle = 30;
     
-    //! The radius of the arc from the center point
-    double _radius;
-    
     bool _isCounterClockWise = true;
 public:
 	arcShape()
     {
         p_isArc = true;
     }
+	
+	void calculateDistance()
+	{
+		p_distance = _radius * _arcAngle * (PI / 180.0);
+	}
 	
 	void setArcAngle(double angleOfArc)
     {
@@ -804,6 +957,7 @@ public:
 	
 	double getArcAngle()
     {
+		//return 
         if(_isCounterClockWise)
             return _arcAngle;
         else
@@ -828,6 +982,9 @@ public:
             glColor3d(1.0, 0.0, 0.0);
         else
             glColor3d(0.0, 0.0, 0.0);
+			
+		if(p_distance == 0)
+			calculateDistance();
             
       /*  
         if(_numSegments == -1)// Hey this code needs to be looked at!
@@ -905,7 +1062,6 @@ public:
         // We need two cases here. One for if the line between the first and second node has a slope of 0 and the other case being if the line is vertical
         if(slope >= 0 && slope <= 1e-9)
         {
-            // TOD: Come up with new logic here
             if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
             {
                 // This will calculate the center that is below the arc.
@@ -920,8 +1076,6 @@ public:
                 xCenterCoordinate = xMid;
                 yCenterCoordinate = yMid - a;
             }
-            
-            return;
         }
         else if(slope == INFINITY)
         {
@@ -939,8 +1093,6 @@ public:
                 xCenterCoordinate = xMid - a;
                 yCenterCoordinate = yMid;
             }
-            
-            return;
         }
         else if(slope == -INFINITY)
         {
@@ -958,55 +1110,95 @@ public:
                 xCenterCoordinate = xMid + a;
                 yCenterCoordinate = yMid;
             }
-            
-            return;
         }
-        
-        midSlope = -1.0 / slope;
-        
-        if(slope > 0)
-        {
-            if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
-            {
-                // This will calculate the center that is above the arc.
-                // If the start node is lower then the end node, the logic is reversed. This portion will create
-                // the center above the arc.
+		else
+		{
+			midSlope = -1.0 / slope;
+			
+			if(slope > 0)
+			{
+				if((!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
+				{
+					// This will calculate the center that is above the arc.
+					// If the start node is lower then the end node, the logic is reversed. This portion will create
+					// the center above the arc.
 
-                xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+					xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+				}
+				else
+				{
+					// This will calculate the center below the arc
+					
+					xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
 
-
-                
-            }
-            else
-            {
-                // This will calculate the center below the arc
-                
-                xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-
-            }
-        }
-        else if(slope < 0)
-        {
-            if(!(!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
-            {
-                // This will calculate the center that is above the arc.
-                // If the start node is lower then the end node, the logic is reversed. This portion will create
-                // the center above the arc.
-                
-                xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-            }
-            else
-            {
-                // This will calculate the center below the arc
-                
-                xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
-                yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
-            }
-        }
-        
+				}
+			}
+			else if(slope < 0)
+			{
+				if(!(!(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate()) != (!_isCounterClockWise)))
+				{
+					// This will calculate the center that is above the arc.
+					// If the start node is lower then the end node, the logic is reversed. This portion will create
+					// the center above the arc.
+					
+					xCenterCoordinate = xMid - a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid - (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+				}
+				else
+				{
+					// This will calculate the center below the arc
+					
+					xCenterCoordinate = xMid + a / sqrt(pow(midSlope, 2) + 1);
+					yCenterCoordinate = yMid + (midSlope * a) / sqrt(pow(midSlope, 2) + 1);
+				}
+			}
+			
+		}
+		
+		calculateDistance();
+		
+		double vx = xMid - xCenterCoordinate;
+		double vy = yMid - yCenterCoordinate;
+		
+		double lev = sqrt(pow(vx, 2) + pow(vy, 2));
+		
+		if(lev == 0)
+		{
+			if(slope >= 0 && slope <= 1e-9)
+			{
+				if(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate())
+				{
+					p_xMid = xCenterCoordinate;
+					p_yMid = yCenterCoordinate + _radius;
+				}
+				else
+				{
+					p_xMid = xCenterCoordinate;
+					p_yMid = yCenterCoordinate - _radius;
+				}
+			}
+			else if(slope == INFINITY || slope == -INFINITY)
+			{
+				if(_firstNode->getCenterYCoordinate() > _secondNode->getCenterYCoordinate())
+				{
+					p_xMid = xCenterCoordinate - _radius;
+					p_yMid = yCenterCoordinate;
+				}
+				else
+				{
+					p_xMid = xCenterCoordinate + _radius;
+					p_yMid = yCenterCoordinate;
+				}
+			}
+		}
+		else
+		{
+			p_xMid = xCenterCoordinate + _radius * vx / lev;
+			p_yMid = yCenterCoordinate + _radius * vy / lev;
+		}
+		
         return;
     }
     
@@ -1017,7 +1209,7 @@ public:
     
     double getArcLength()
     {
-        return _radius * _arcAngle * (PI / 180.0);
+        return p_distance;
     }
     
 	bool operator==(arcShape arc)
@@ -1034,6 +1226,11 @@ public:
 			return true;
 		else
 			return false;
+	}
+	
+	void setArcID(unsigned long id)
+	{
+		p_arcID = id;
 	}
 };
 

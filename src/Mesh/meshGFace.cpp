@@ -29,7 +29,7 @@
 #include "Mesh/MElementCut.h"
 #include "Mesh/Context.h"
 #include "Mesh/GPoint.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/BDS.h"
 #include "Mesh/qualityMeasures.h"
@@ -113,6 +113,7 @@ public:
         ++ite;
       }
       CTX::instance()->mesh.lcFactor *=2.0;
+	  _gf->meshAttributes.meshSize = _gf->meshAttributes.meshSize * 2.0;
     }
   }
   void subdivide ()
@@ -209,6 +210,7 @@ public:
        CTX::instance()->mesh.algoRecombine == 2){
       // recombine the elements on the half mesh
       CTX::instance()->mesh.lcFactor /=2.0;
+	  _gf->meshAttributes.meshSize = _gf->meshAttributes.meshSize / 2.0;
       recombineIntoQuads(_gf,true,true,.1,true);
 	  OmniFEMMsg::instance()->MsgInfo("Subdividing");
       subdivide();
@@ -304,25 +306,25 @@ static void copyMesh(GFace *source, GFace *target)
     std::map<GEdge*,std::pair<GEdge*,int> >::iterator gesIter =
       target->edgeCounterparts.find(get);
     if (gesIter == target->edgeCounterparts.end()) {
-    //  Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-    //            "edge %d has no periodic counterpart",
-      //          target->tag(),source->tag(),get->tag());
+      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+                "edge %d has no periodic counterpart",
+                target->tag(),source->tag(),get->tag());
     }
 
     GEdge* ges = gesIter->second.first;
     if (checkEdges.find(ges) == checkEdges.end()) {
-   //   Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-    //            "edge %d has periodic counterpart %d outside of get surface",
-     //           target->tag(),source->tag(),get->tag(),ges->tag());
+      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+                "edge %d has periodic counterpart %d outside of get surface",
+               target->tag(),source->tag(),get->tag(),ges->tag());
     }
 
     if (get->mesh_vertices.size() != ges->mesh_vertices.size()) {
 		
-     // Msg::Info("Error during periodic meshing of surface %d with surface %d:"
-     //           "edge %d has %d vertices, whereas correspondant %d has %d",
-      //          target->tag(),source->tag(),
-      //          get->tag(),get->mesh_vertices.size(),
-      //          ges->tag(),ges->mesh_vertices.size());
+      Msg::Info("Error during periodic meshing of surface %d with surface %d:"
+                "edge %d has %d vertices, whereas correspondant %d has %d",
+                target->tag(),source->tag(),
+                get->tag(),get->mesh_vertices.size(),
+                ges->tag(),ges->mesh_vertices.size());
     }
 
     int orientation = gesIter->second.second;
@@ -367,10 +369,10 @@ static void copyMesh(GFace *source, GFace *target)
       vt[j] = vs2vt[vs];
     }
     if (!vt[0] || !vt[1] ||!vt[2]){
-   //   Msg::Error("Problem in mesh copying procedure %p %p %p %d %d %d",
-    //             vt[0], vt[1], vt[2], source->triangles[i]->getVertex(0)->onWhat()->dim(),
-     //            source->triangles[i]->getVertex(1)->onWhat()->dim(),
-     //            source->triangles[i]->getVertex(2)->onWhat()->dim());
+      Msg::Error("Problem in mesh copying procedure %p %p %p %d %d %d",
+				vt[0], vt[1], vt[2], source->triangles[i]->getVertex(0)->onWhat()->dim(),
+                 source->triangles[i]->getVertex(1)->onWhat()->dim(),
+                 source->triangles[i]->getVertex(2)->onWhat()->dim());
       return;
     }
     target->triangles.push_back(new MTriangle(vt[0], vt[1], vt[2]));
@@ -382,12 +384,12 @@ static void copyMesh(GFace *source, GFace *target)
     MVertex *v3 = vs2vt[source->quadrangles[i]->getVertex(2)];
     MVertex *v4 = vs2vt[source->quadrangles[i]->getVertex(3)];
     if (!v1 || !v2 || !v3 || !v4){
-   //   Msg::Error("Problem in mesh copying procedure %p %p %p %p %d %d %d %d",
-     //            v1, v2, v3, v4,
-     //            source->quadrangles[i]->getVertex(0)->onWhat()->dim(),
-     //            source->quadrangles[i]->getVertex(1)->onWhat()->dim(),
-     //            source->quadrangles[i]->getVertex(2)->onWhat()->dim(),
-      //           source->quadrangles[i]->getVertex(3)->onWhat()->dim());
+      Msg::Error("Problem in mesh copying procedure %p %p %p %p %d %d %d %d",
+                 v1, v2, v3, v4,
+                source->quadrangles[i]->getVertex(0)->onWhat()->dim(),
+                 source->quadrangles[i]->getVertex(1)->onWhat()->dim(),
+                 source->quadrangles[i]->getVertex(2)->onWhat()->dim(),
+                 source->quadrangles[i]->getVertex(3)->onWhat()->dim());
     }
     target->quadrangles.push_back(new MQuadrangle(v1, v2, v3, v4));
   }
@@ -564,8 +566,8 @@ static bool recoverEdge(BDS_Mesh *m, GEdge *ge,
         if(e) e->g = g;
         else {
           if (_fatallyFailed){
-       //     Msg::Error("Unable to recover the edge %d (%d/%d) on GEdge %d (on GFace %d)",
-        //               ge->lines[i]->getNum(),i+1,ge->lines.size(),ge->tag(),ge->faces().back()->tag());
+            Msg::Error("Unable to recover the edge %d (%d/%d) on GEdge %d (on GFace %d)",
+                       ge->lines[i]->getNum(),i+1,ge->lines.size(),ge->tag(),ge->faces().back()->tag());
 	    outputScalarField(m->triangles, "wrongmesh.pos", 0);
 	    outputScalarField(m->triangles,"wrongparam.pos",1);
 	  }
@@ -1188,7 +1190,7 @@ bool meshGenerator(GFace *gf, int RECUR_ITER,
     catch(const char *err){
 		OmniFEMMsg::instance()->wxMsgError(wxString(err));
     }
-  //  Msg::Debug("Meshing of the convex hull (%d points) done", points.size());
+    Msg::Debug("Meshing of the convex hull (%d points) done", points.size());
 
 
     for(int i = 0; i < doc.numTriangles; i++) {
@@ -1754,7 +1756,7 @@ static bool buildConsecutiveListOfVertices(GFace *gf, GEdgeLoop &gel,
         if(seam && seam_the_first){
           coords = ((*it)._sign == 1) ? mesh1d_seam : mesh1d_seam_reversed;
           found = (*it);
-  //        Msg::Info("This test case would have failed in previous Gmsh versions ;-)");
+          Msg::Info("This test case would have failed in previous Gmsh versions ;-)");
         }
         else{
           coords = ((*it)._sign == 1) ? mesh1d : mesh1d_reversed;
@@ -1953,7 +1955,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
       }
       if(!ok){
         gf->meshStatistics.status = GFace::FAILED;
-   //     Msg::Error("The 1D mesh seems not to be forming a closed loop");
+        Msg::Error("The 1D mesh seems not to be forming a closed loop");
         delete m;
         return false;
       }
@@ -1963,9 +1965,9 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
   }
 
   if(nbPointsTotal < 3){
-  //  Msg::Warning("Mesh Generation of Model Face %d Skipped: "
-    //             "Only %d Mesh Vertices on The Contours",
-    //             gf->tag(), nbPointsTotal);
+    Msg::Warning("Mesh Generation of Model Face %d Skipped: "
+                 "Only %d Mesh Vertices on The Contours",
+                 gf->tag(), nbPointsTotal);
     gf->meshStatistics.status = GFace::DONE;
     delete m;
     return true;
@@ -2037,13 +2039,13 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
     //   -) It does not necessary recover the boundaries
     //   -) It contains triangles outside the domain (the first edge
     //      loop is the outer one)
- //   Msg::Debug("Meshing of the convex hull (%d points)", nbPointsTotal);
+    Msg::Debug("Meshing of the convex hull (%d points)", nbPointsTotal);
 
     try{
       doc.MakeMeshWithPoints();
     }
     catch(const char *err){
-   //   Msg::Error("%s", err);
+      Msg::Error("%s", err);
     }
 
     for(int i = 0; i < doc.numTriangles; i++){
@@ -2052,7 +2054,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
       int c = doc.triangles[i].c;
       int n = doc.numPoints;
       if(a < 0 || a >= n || b < 0 || b >= n || c < 0 || c >= n){
-  //      Msg::Warning("Skipping bad triangle %d", i);
+        Msg::Warning("Skipping bad triangle %d", i);
         continue;
       }
       BDS_Point *p1 = (BDS_Point*)doc.points[doc.triangles[i].a].data;
@@ -2138,8 +2140,8 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
       BDS_Edge * e = m->recover_edge
         (edgeLoop_BDS[j]->iD, edgeLoop_BDS[(j + 1) % edgeLoop_BDS.size()]->iD, _fatallyFailed);
       if(!e){
-     //   Msg::Error("Impossible to recover the edge %d %d", edgeLoop_BDS[j]->iD,
-     //              edgeLoop_BDS[(j + 1) % edgeLoop_BDS.size()]->iD);
+        Msg::Error("Impossible to recover the edge %d %d", edgeLoop_BDS[j]->iD,
+                   edgeLoop_BDS[(j + 1) % edgeLoop_BDS.size()]->iD);
         gf->meshStatistics.status = GFace::FAILED;
         delete m;
         return false;
@@ -2294,7 +2296,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
         }
         else
 		{
-  //        Msg::Error("Could not reconstruct seam");
+          Msg::Error("Could not reconstruct seam");
 		  
 		}
         if(mv2){
@@ -2312,7 +2314,7 @@ static bool meshGeneratorPeriodic(GFace *gf, bool debug = true)
     }
     // recoverMap.insert(new_relations.begin(), new_relations.end());
   }
- // Msg::Info("%d points that are duplicated for Delaunay meshing", equivalence.size());
+  Msg::Info("%d points that are duplicated for Delaunay meshing", equivalence.size());
 
   // fill the small gmsh structures
   {
@@ -2467,8 +2469,8 @@ void meshGFace::operator() (GFace *gf, bool print)
         gf->meshStatistics.status = GFace::PENDING;
         return;
       }
-    //  Msg::Info("Meshing face %d (%s) as a copy of %d", gf->tag(),
-    //            gf->getTypeString().c_str(), gf->meshMaster()->tag());
+      Msg::Info("Meshing face %d (%s) as a copy of %d", gf->tag(),
+                gf->getTypeString().c_str(), gf->meshMaster()->tag());
       copyMesh(gff, gf);
       gf->meshStatistics.status = GFace::DONE;
       return;
@@ -2479,7 +2481,7 @@ void meshGFace::operator() (GFace *gf, bool print)
 	}
   }
 
-  std::string algo = "Unknown";
+  const char *algo = "Unknown";
 
   switch(gf->getMeshingAlgo()){
   case ALGO_2D_MESHADAPT : algo = "MeshAdapt"; break;
@@ -2498,10 +2500,10 @@ void meshGFace::operator() (GFace *gf, bool print)
     algo = "MeshAdapt";
   }
 
-  if (print)
+ // if (print)
   {
-	  OmniFEMMsg::instance()->MsgInfo("Meshing surface " + std::to_string(gf->tag()) + " (" + gf->getTypeString() + ", " + algo + ")");
-	
+	//  OmniFEMMsg::instance()->MsgInfo("Meshing surface " + std::to_string(gf->tag()) + " (" + gf->getTypeString() + ", " + algo + ")");
+	Msg::Info("Meshing surface %d (%s, %s)", gf->tag(), gf->getTypeString().c_str(), algo);
   }
 
   // compute loops on the fly (indices indicate start and end points
@@ -2626,8 +2628,8 @@ void partitionAndRemesh(GFaceCompound *gf)
     GFace *pf =  gf->model()->getFaceByTag(numf+i);//partition face
     int num_gfc = numf + NF + i ;
     f_compound.push_back(pf);
-   // Msg::Info("Parametrize Compound Surface (%d) = %d discrete face",
-   //           num_gfc, pf->tag());
+    Msg::Info("Parametrize Compound Surface (%d) = %d discrete face",
+              num_gfc, pf->tag());
 
     GFaceCompound *gfc = new GFaceCompound(gf->model(), num_gfc, f_compound, U0,
                                            gf->getTypeOfCompound());
@@ -2639,17 +2641,17 @@ void partitionAndRemesh(GFaceCompound *gf)
   }
 
   double t1 = Cpu();
-//  Msg::Info("*** Parametrize compounds done (%g s)", t1-t0);
- // Msg::Info("*** Starting meshing 1D edges ...:");
+  Msg::Info("*** Parametrize compounds done (%g s)", t1-t0);
+  Msg::Info("*** Starting meshing 1D edges ...:");
   for (int i = 0; i < NE; i++){
     GEdge *gec = gf->model()->getEdgeByTag(nume + NE + i);
     meshGEdge mge;
     mge(gec);
   }
   double t2 = Cpu();
- // Msg::Info("*** Meshing 1D edges done (%gs)", t2-t1);
+  Msg::Info("*** Meshing 1D edges done (%gs)", t2-t1);
 
- // Msg::Info("*** Starting Mesh of surface %d ...", gf->tag());
+  Msg::Info("*** Starting Mesh of surface %d ...", gf->tag());
 
   for (int i=0; i < NF; i++){
     GFace *gfc =  gf->model()->getFaceByTag(numf + NF + i );
@@ -2762,9 +2764,9 @@ void partitionAndRemesh(GFaceCompound *gf)
   }
 
   double t3 = Cpu();
-//  Msg::Info("*** Mesh of surface %d done by assembly %d remeshed faces (%g s)",
- //           gf->tag(), NF, t3-t2);
- // Msg::Info("-----------------------------------------------------------");
+  Msg::Info("*** Mesh of surface %d done by assembly %d remeshed faces (%g s)",
+            gf->tag(), NF, t3-t2);
+  Msg::Info("-----------------------------------------------------------");
 
   gf->coherenceNormals();
   gf->meshStatistics.status = GFace::DONE;
@@ -2871,7 +2873,7 @@ void orientMeshGFace::operator()(GFace *gf)
 
     // Exit if could not determine orientation of both non-BL el. and BL el.
     if ((orientNonBL == 0) && (orientBL == 0)) {
-   //   Msg::Warning("Could not orient mesh in face %d", gf->tag());
+      Msg::Warning("Could not orient mesh in face %d", gf->tag());
       return;
     }
 

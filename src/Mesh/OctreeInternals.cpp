@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/OctreeInternals.h"
 
 int initializeOctantBuckets(double *_orig, double *_size, int _maxElem,
@@ -44,13 +44,13 @@ int initializeOctantBuckets(double *_orig, double *_size, int _maxElem,
   (*globalPara)->numBuckets = initial_buckets_num;
   *buckets_head = new octantBucket;
   if (!(*buckets_head)) {
-  //  Msg::Error("initializeOctantBuckets could not allocate enough space");
+    Msg::Error("initializeOctantBuckets could not allocate enough space");
     return (0);
   } // if could not allocate buckets
 
   buckets = new octantBucket[8];
   if (!buckets) {
- //   Msg::Error("initializeOctantBuckets could not allocate enough space");
+    Msg::Error("initializeOctantBuckets could not allocate enough space");
     return (0);
   }
 
@@ -166,7 +166,7 @@ int addElement2Bucket(octantBucket *_bucket, void * _element,
         ptr2 = ptr1;
         ptr1 = ptr1->next;
         if (ptrBucket == NULL){
-    //      Msg::Error("Wrong , ptrBucket = NULL. A bug here!");
+          Msg::Error("Wrong , ptrBucket = NULL. A bug here!");
           return 0;
         }
         ptr2->next = ptrBucket->lhead;
@@ -224,7 +224,7 @@ octantBucket *findElementBucket(octantBucket *_buckets_head, double *_pt)
       }
     } // for loop i
     if (i == num) {
-      // Msg::Error("No bucket contains the given point!");
+       Msg::Error("No bucket contains the given point!");
       return NULL;
     }
   } // for while loop
@@ -244,7 +244,7 @@ int subdivideOctantBucket(octantBucket *_bucket, globalInfo *_globalPara)
   // _bucket->next  = (octantBucket *) calloc(numBuck,sizeof(octantBucket));
 
   if (!_bucket->next) {
-   // Msg::Error("subdivideOctantBucket could not allocate enough space");
+    Msg::Error("subdivideOctantBucket could not allocate enough space");
     return 0;
   }
 
@@ -299,7 +299,7 @@ void *searchElement(octantBucket *_buckets_head, double *_pt, globalInfo *_globa
   ptrBucket = findElementBucket(_buckets_head, _pt);
   if (ptrBucket == NULL) {
     // this is not an error
- //   Msg::Debug("The point is not in the domain");
+    Msg::Debug("The point is not in the domain");
     return NULL;
   }
 
@@ -392,7 +392,7 @@ void *searchAllElements(octantBucket *_buckets_head, double *_pt, globalInfo *_g
 
   ptrBucket = findElementBucket(_buckets_head, _pt);
   if (ptrBucket == NULL) {
- //   Msg::Debug("The point is not in the domain");
+    Msg::Debug("The point is not in the domain");
     return NULL;
   }
 
@@ -433,6 +433,6 @@ void *searchAllElements(octantBucket *_buckets_head, double *_pt, globalInfo *_g
   if (flag1)
     return (void *)(_elements);
 
-  // Msg::Warning("This point is not found in any element! It is not in the domain");
+   Msg::Warning("This point is not found in any element! It is not in the domain");
   return NULL;
 }

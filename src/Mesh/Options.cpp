@@ -16,7 +16,7 @@
 #include <stdio.h>
 //#include "GmshConfig.h"
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 //#include "StringUtils.h"
 #include "Mesh/GModel.h"
 #include "Mesh/Context.h"
@@ -125,7 +125,7 @@ static void PrintStringOptions(int num, int level, int diff, int help,
           if(vec)
             vec->push_back(std::string(tmp) + '\0' + "string");
           else{
-          //  Msg::Direct("%s", tmp);
+			  Msg::Info("%s", tmp);
 			
 		  }
         }

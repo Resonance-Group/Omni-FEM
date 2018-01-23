@@ -295,7 +295,6 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	remeshParameterizationArray.Add("Conformal");
 	remeshParameterizationArray.Add("Rbf Harmonic");
 	
-	// _problemTypeComboBox->Create(physicsProblemPreferencesPanel, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), problemTypeNameArray)
 	wxBoxSizer *stucturedMeshSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshArrangmentSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -425,7 +424,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	reMeshAlgoSizer->Add(remeshAlgoText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
 	reMeshAlgoSizer->Add(p_remeshAlgorithmComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
-	wxStaticText *remeshParamText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remesh Parameterization:");
+	wxStaticText *remeshParamText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remeshing Parameterization:");
 	remeshParamText->SetFont(*font);
 	
 	p_remeshParamterizationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox7, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshParameterizationArray);
@@ -473,41 +472,38 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	minText->SetFont(*font);
 	wxStaticText *maxText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Max:");
 	maxText->SetFont(*font);
-	wxStaticText *factorText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Factor:");
-	factorText->SetFont(*font);
+//	wxStaticText *factorText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Factor:");
+//	factorText->SetFont(*font);
 	
 	wxSize aSize(60, 23);
 	
-	p_minElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
+	p_minElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
 	p_minElementSizeTextCtrl->SetFont(*font);
+	
+	wxTextValidator testValidator(wxFILTER_NUMERIC | wxFILTER_EXCLUDE_LIST);
+	wxArrayString excludeList;
+	excludeList.Add("-");
+	testValidator.SetExcludes(excludeList);
+	p_minElementSizeTextCtrl->SetValidator(testValidator);
 	
 	std::ostream minStream(p_minElementSizeTextCtrl);
 	minStream << std::setprecision(4);
 	minStream << p_meshSetting.getMinElementSize();
 	OmniFEMMsg::instance()->MsgInfo("Loading min element size as: " + std::to_string(p_meshSetting.getMinElementSize()));
 	
-	p_maxElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
+	p_maxElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
 	p_maxElementSizeTextCtrl->SetFont(*font);
+	p_maxElementSizeTextCtrl->SetValidator(testValidator);
 	
 	std::ostream maxStream(p_maxElementSizeTextCtrl);
 	maxStream << std::setprecision(4);
 	maxStream << p_meshSetting.getMaxElementSize();
 	OmniFEMMsg::instance()->MsgInfo("Loading max element size as: " + std::to_string(p_meshSetting.getMaxElementSize()));
 	
-	p_elementSizeFactorTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, aSize, 0, greaterThenZero);
-	p_elementSizeFactorTextCtrl->SetFont(*font);
-	
-	std::ostream factorStream(p_elementSizeFactorTextCtrl);
-	factorStream << std::setprecision(4);
-	factorStream << p_meshSetting.getElementSizeFactor();
-	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSetting.getElementSizeFactor()));
-	
 	elementSizeSizer->Add(minText, 0, wxCENTER | wxALL, 6);
 	elementSizeSizer->Add(p_minElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	elementSizeSizer->Add(maxText, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
 	elementSizeSizer->Add(p_maxElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-	elementSizeSizer->Add(factorText, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-	elementSizeSizer->Add(p_elementSizeFactorTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *elementOrder = new wxStaticText(meshSettingsPanel, wxID_ANY, "Element Order:");
 	elementOrder->SetFont(*font);
@@ -528,7 +524,11 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	p_meshResetDefaultsButton->Create(meshSettingsPanel, wxID_RESET, "Reset to Defaults");
 	p_meshResetDefaultsButton->SetFont(*font);
 	
-	buttonResetSizer->Add(p_meshResetDefaultsButton, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	wxButton *advancedMeshSettings = new wxButton(meshSettingsPanel, wxID_MORE, "Advanced");
+	advancedMeshSettings->SetFont(*font); 
+	
+	buttonResetSizer->Add(advancedMeshSettings, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	buttonResetSizer->Add(p_meshResetDefaultsButton, 0, wxCENTER | wxRIGHT | wxBOTTOM, 6);
 	
 	meshSettingsSizer->Add(stucturedMeshSizer);
 	meshSettingsSizer->Add(meshArrangmentSizer);
@@ -633,7 +633,7 @@ void globalPreferencesDialog::onMeshAlgoComboBox(wxCommandEvent &event)
 			break;
 	}
 	
-	p_meshSetting.setMeshAlgorithm((MeshAlgorthim)p_meshArrangementComboBox->GetSelection());
+	p_meshSetting.setMeshAlgorithm((MeshAlgorthim)p_meshAlgothimComboBox->GetSelection());
 }
 
 
@@ -690,6 +690,8 @@ void globalPreferencesDialog::onRemeshParam(wxCommandEvent &event)
 	p_meshSetting.setRemeshParameter((MeshParametrization)p_remeshParamterizationComboBox->GetSelection());
 }
 
+
+
 void globalPreferencesDialog::onMeshDefaultsReset(wxCommandEvent &event)
 {
 	OmniFEMMsg::instance()->MsgStatus("Mesh settings defaults loaded");
@@ -726,15 +728,18 @@ void globalPreferencesDialog::onMeshDefaultsReset(wxCommandEvent &event)
 	maxStream << std::setprecision(4);
 	maxStream << p_meshSetting.getMaxElementSize();
 	
-	p_elementSizeFactorTextCtrl->SetValue(wxEmptyString);
+/*	p_elementSizeFactorTextCtrl->SetValue(wxEmptyString);
 	std::ostream factorStream(p_elementSizeFactorTextCtrl);
 	factorStream << std::setprecision(4);
 	factorStream << p_meshSetting.getElementSizeFactor();
+	 */ 
 	
 	p_ElementOrderTextCtrl->SetValue(wxEmptyString);
 	std::ostream elementOrderStream(p_ElementOrderTextCtrl);
 	elementOrderStream << p_meshSetting.getElementOrder();
 }
+
+
 
 void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPref, meshSettings &settings)
 {
@@ -777,9 +782,10 @@ void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPr
 	settings.setMaxElementSize(value);
 	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
 	
-	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
 	settings.setElementSizeFactor(value);
 	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
+	 */ 
 	
 	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
 	settings.setElementOrder((unsigned int)otherValue);
@@ -832,15 +838,50 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, m
 	settings.setMaxElementSize(value);
 	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
 	
-	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
 	settings.setElementSizeFactor(value);
 	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
+	 */ 
 	
 	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
 	settings.setElementOrder((unsigned int)otherValue);
 	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(otherValue));
 }      
 
+
+
+void globalPreferencesDialog::onMeshAdvance(wxCommandEvent &event)
+{
+	meshAdvanced advancedDialog(this, p_meshSetting);
+	
+	if(advancedDialog.ShowModal() == wxID_OK)
+	{
+		advancedDialog.setSettings();
+	}
+//	wxMessageBox("ADvanced Mesh Settings displayed");
+}
+
+
+void globalPreferencesDialog::onTextChange(wxCommandEvent &event)
+{
+	double value = 0;
+	
+	p_minElementSizeTextCtrl->GetValue().ToDouble(&value);
+	
+	if(value < 0)
+		p_minElementSizeTextCtrl->SetValue("0");
+		
+	p_maxElementSizeTextCtrl->GetValue().ToDouble(&value);
+	
+	if(value < 0)
+		p_maxElementSizeTextCtrl->SetValue("0");
+		
+/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
+	
+	if(value < 0)
+		p_elementSizeFactorTextCtrl->SetValue("0");
+		 */ 
+}
 
 
 wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
@@ -852,4 +893,6 @@ wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox6, globalPreferencesDialog::onRemeshAlgo)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox7, globalPreferencesDialog::onRemeshParam)
 	EVT_BUTTON(wxID_RESET, globalPreferencesDialog::onMeshDefaultsReset)
+	EVT_BUTTON(wxID_MORE, globalPreferencesDialog::onMeshAdvance)
+	EVT_TEXT_ENTER(wxID_EDIT, globalPreferencesDialog::onTextChange)
 wxEND_EVENT_TABLE()

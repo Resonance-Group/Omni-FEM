@@ -6,7 +6,7 @@
 #include <string.h>
 #include <algorithm>
 
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 #include "Mesh/VertexArray.h"
 #include "Mesh/Context.h"
@@ -272,12 +272,12 @@ int VertexArray::decodeHeader(int length, const char *bytes, int swap,
   int is = sizeof(int), ds = sizeof(double);
 
   if(length < 4 * is + 9 * ds){
- //   Msg::Error("Too few bytes to create vertex array: %d", length);
+    Msg::Error("Too few bytes to create vertex array: %d", length);
     return 0;
   }
 
   if(swap){
- //   Msg::Error("Should swap bytes in vertex array--not implemented yet");
+    Msg::Error("Should swap bytes in vertex array--not implemented yet");
     return 0;
   }
 

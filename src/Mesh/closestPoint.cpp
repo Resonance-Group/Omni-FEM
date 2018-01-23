@@ -53,7 +53,7 @@ closestPointFinder :: closestPointFinder (GEntity *ge, double e) : _tolerance (e
   }
   kdtree = new ANNkd_tree(zeronodes, pts.size(), 3);
 #else
-  //Msg::Fatal("Gmsh should be compiled using ANN");
+  Msg::Fatal("Gmsh should be compiled using ANN");
 #endif
 }
 

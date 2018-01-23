@@ -3,14 +3,21 @@
 
 #include <vector>
 #include <algorithm>
+#include <map>
+#include <utility>
 
 #include <UI/geometryShapes.h>
+#include <UI/ModelDefinition/ModelDefinition.h>
 
 #include <common/plfcolony.h>
 #include <common/Vector.h>
 #include <common/enums.h>
 
 #include <common/MeshSettings.h>
+#include <common/ClosedPath.h>
+#include <common/ProblemDefinition.h>
+
+#include <common/GeometryProperties/BlockProperty.h>
 
 #include <Mesh/Gmsh.h>
 #include <Mesh/Context.h>
@@ -35,12 +42,9 @@
 class meshMaker
 {
 private:
-
-	//! This is the GModel that will contain the mesh for the geometric model
-//	GModel *p_meshModel = new GModel("meshModel");
-
-	//! Vector containing a list of all closed contours within the geometry. Which each closed contour is a vector of edge line shapes.
-	std::vector<std::vector<edgeLineShape>> p_closedContours;
+	std::vector<closedPath> p_closedContourPaths;
+	
+	std::vector<GVertex*> p_vertexModelList;
 	
 	//! Pointer to the global nodal list
 	plf::colony<node> *p_nodeList;
@@ -54,42 +58,29 @@ private:
 	//! Pointer to the global arc list
 	plf::colony<arcShape> *p_arcList;
 	
+	meshSettings *p_settings;
+	
+	wxString p_simulationName;
+	
+	wxString p_folderPath;
+	
+	GModel *p_meshModel;
+	
 	//! This is the total number of lines within the geometry. This is the number of lines and arcs
 	unsigned long p_numberofLines = 0;
 	
 	//! This data type is incremented when the program visists a new line
 	unsigned long p_numberVisited = 0;
 	
+	unsigned int p_blockLabelsUsed = 0;
+	
 	/**
 	 * @brief 	This function is called in order to find all of the closed contours connected to 
 	 * 			a common edge. The function will then determine what the geometry pieces are within
 	 * 			the closed contour. This function is modeled off of the depth-first search algorthim
+	 * @return Returns a closed path if avaiable
 	 */
-	std::vector<std::vector<edgeLineShape>> findContours();
-	
-	/**
-	 * @brief 
-	 */
-	bool contourRecombination(std::vector<edgeLineShape> &contourPath1, std::vector<edgeLineShape> &contourPath2);
-	
-	/**
-	 * @brief Function that will determine if the inpuit contour is a closed contour
-	 * @param contour The vector of the contour that will be tested for closed contour
-	 * @return Returns true if the contour is closed contour. Return false if it is open contour
-	 */
-	bool isClosedContour(std::vector<edgeLineShape> contour);
-	
-	/**
-	 * @brief 	Function that is called in order to remove any dangling lines from the path
-	 * 			Dangling lines are defined as lines that are not connected to form a closed contour.
-	 * 			This occurs when the contour loops on itself and ends at a position other then the
-	 * 			starting position. This occurs if the end line semgent is connected between 2
-	 * 			line segments within the contour. When this occurs, the program
-	 * 			needs to erase the line segments from the beginning to 1 - the current iterator
-	 * 			position.
-	 * @param contour Reference to the contour list that will need to be modified
-	 */
-	void removeDanglingLines(std::vector<edgeLineShape> &contour);
+	closedPath findContour(edgeLineShape *startingEdge = nullptr, rectangleShape *point = nullptr);
 	
 	/**
 	 * @brief This function is called in order to create the mesh for hte geometry model.
@@ -100,50 +91,75 @@ private:
 	
 	/**
 	 * @brief This function will take a edge segment and find all of the banches that are connected to that edge and return as a vector
-	 * @param segment The line segment that the program will find the connected branches to
+	 * @param currentSegment The line segment that the program will find the connected branches to
+	 * @param pathVector
 	 * @return Returns a vector containing all of the connected branches to the segment
 	 */
-	std::vector<edgeLineShape> getConnectedPaths(std::vector<edgeLineShape>::reference segment, std::vector<edgeLineShape> &pathVector);
+	std::vector<edgeLineShape*> getConnectedPaths(std::vector<edgeLineShape*>::reference currentSegment, std::vector<edgeLineShape*> *pathVector);
+	
+	void createGMSHGeometry(std::vector<closedPath> *pathContour = nullptr);
 	
 	/**
-	 * @brief 	This function will test if two paths share a common edge. It does not determine which edge is common. But
-	 * 			it tests if there is a common edge. The function does not determine how many common edges. Just that if
-	 * 			a common edge exists.
-	 * @param path1 The first path
-	 * @param path2 The second path
-	 * @return Returns true if a common edge exists. Otherwise, returns false
+	 * @brief 	The purpose of this function to to check if a specfied rectangle shape lies within the path.
+	 * 			The function accomplishes this through the use of a modified version of the winding number method.
+	 * 			In this method, the algorithm calculates the number of times that the point wraps around the 
+	 * 			closed path. The current version of this algorithm does not use arc sin or cos. But instead checks to see
+	 * 			if the point is to the left or right of an edge within the closed path. If teh number of times that the point
+	 * 			is to the left of the edges is greater then the number of rights, then this means that the point lies withing the
+	 * 			closed path.
+	 * @param label The rectangle shape that the algorithm will be checking to see if it lies within the closed path
+	 * @param path The closed path which will be checked.
+	 * @return Returns true if the rectangle shape lies within the closed path. Otherwise, returns false.
 	 */
-	bool shareCommonEdge(std::vector<edgeLineShape> path1, std::vector<edgeLineShape> path2);
+	bool checkPointInContour(wxRealPoint point, closedPath &path);
 	
-	/**
-	 * @brief This function will chech if a vector consisting of two points intersects an arc.
-	 * @param P1 The first point of a vector. In this instance, the vector data type is acting more as a point datatype.
-	 * @param P2 The second point of a vector. In this instance, the vector data type is acting more as a point datatype.
-	 * @param intersectingArc The arc that is in question if the vector intersects
-	 * @return Returns the number of intersections
-	 */
-	int lineIntersectsArc(Vector P1, Vector P2, arcShape intersectingArc);
-	
-	/**
-	 * @brief Function that will be used to determine if a set of points intersect each other
-	 * 			This function was adapted from a line to line intersection. Instead of utilizing lines, the
-	 * 			Vectors are beign utilize as points. The "lines" are being created within the function. 
-	 * 			P1 and P2 is a line with points P1 and P2. P3 and P4 are another line with points P3, P4.
-	 * @param P1 The point that is the first point for the line. This will be the block point
-	 * @param P2 The second endpoint of the line, this will be the max point of the bounding box.
-	 * @param P3 The first endpoint of the line on the geometry.
-	 * @param P4 The second endpoint of the line on the geometry.
-	 * @return Returns true if the pairs P1/P2 and P3/P4 intersect
-	 */
-	bool lineIntersectsLine(Vector P1, Vector P2, Vector P3, Vector P4);
-public:
-	meshMaker(plf::colony<node> *nodeList, plf::colony<blockLabel> *blockLabelList, plf::colony<edgeLineShape> *lineList, plf::colony<arcShape> *arcList)
+	bool checkPointInContour(rectangleShape &point, closedPath &path)
 	{
-		p_nodeList = nodeList;
-		p_blockLabelList = blockLabelList;
-		p_lineList = lineList;
-		p_arcList = arcList;
+		return checkPointInContour(point.getCenter(), path);
+	}
+	
+	bool checkPointInContour(rectangleShape *point, closedPath *path)
+	{
+		return checkPointInContour(point->getCenter(), *path);
+	}
+	
+	void holeDetection(std::vector<closedPath> *pathContour = nullptr);
+	
+	void assignBlockLabel(std::vector<closedPath> *pathContour = nullptr);
+	
+	bool isClosedPath(std::vector<edgeLineShape*> pathEdges)
+	{
+		edgeLineShape beginEdge = *(*pathEdges.begin());
+		edgeLineShape lastEdge = *(*pathEdges.rbegin());
+		
+		if(pathEdges.size() > 1)
+		{
+			if(beginEdge.getFirstNodeID() == lastEdge.getFirstNodeID() || beginEdge.getFirstNodeID() == lastEdge.getSecondNodeID() ||
+				beginEdge.getSecondNodeID() == lastEdge.getFirstNodeID() || beginEdge.getSecondNodeID() == lastEdge.getSecondNodeID())
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	
+public:
+	
+	meshMaker(problemDefinition &definition, modelDefinition *model)
+	{
+		p_meshModel = model->getMeshModel();
+		
+		p_nodeList = model->getModelNodeList();
+		p_blockLabelList = model->getModelBlockList();
+		p_lineList = model->getModelLineList();
+		p_arcList = model->getModelArcList();
+		
 		p_numberofLines = p_lineList->size() + p_arcList->size();
+		
+		p_settings = definition.getMeshSettingsPointer();
+		p_simulationName = definition.getName();
+		p_folderPath = definition.getSaveFilePath();
 	}
 	
 	/**
@@ -158,10 +174,7 @@ public:
 			return false;
 	}
 	
-	/**
-	 * @brief This function is called when the program is ready to create the mesh for the model.
-	 */
-	void mesh(GModel *meshModel, meshSettings settings);
+	void mesh();
 	
 	~meshMaker()
 	{

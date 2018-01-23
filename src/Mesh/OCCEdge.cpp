@@ -5,9 +5,9 @@
 
 #include <limits>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/GModel.h"
-#include "Mesh/GModelIO_OCC.h"
+#include "Mesh/gmshIO/GModelIO_OCC.h"
 #include "Mesh/OCCEdge.h"
 #include "Mesh/OCCFace.h"
 #include "Mesh/Context.h"

@@ -173,7 +173,7 @@ SMetric3 LC_MVertex_CURV_ANISO(GEntity *ge, double U, double V)
   case 1: return metric_based_on_surface_curvature((const GEdge *)ge, U, iso_surf);
   case 2: return metric_based_on_surface_curvature((const GFace *)ge, U, V, iso_surf);
   }
-  //Msg::Error("Curvature control impossible to compute for a volume!");
+  Msg::Error("Curvature control impossible to compute for a volume!");
   return SMetric3();
 }
 
@@ -289,12 +289,15 @@ double BGM_MeshSize(GEntity *ge, double U, double V,
   lc = std::min(lc, CTX::instance()->mesh.lcMax);
 
   if(lc <= 0.){
-    //Msg::Error("Wrong mesh element size lc = %g (lcmin = %g, lcmax = %g)",
-     //          lc, CTX::instance()->mesh.lcMin, CTX::instance()->mesh.lcMax);
+    Msg::Error("Wrong mesh element size lc = %g (lcmin = %g, lcmax = %g)",
+              lc, CTX::instance()->mesh.lcMin, CTX::instance()->mesh.lcMax);
     lc = l1;
   }
+  
+  double meshSize = ge->meshAttributes.meshSize;
 
-  return lc * CTX::instance()->mesh.lcFactor;
+  return lc * CTX::instance()->mesh.lcFactor * ge->meshAttributes.meshSize;
+//	return lc * ge->meshAttributes.meshSize;
 }
 
 // anisotropic version of the background field
@@ -314,8 +317,8 @@ SMetric3 BGM_MeshMetric(GEntity *ge,
   lc = std::max(lc, CTX::instance()->mesh.lcMin);
   lc = std::min(lc, CTX::instance()->mesh.lcMax);
   if(lc <= 0.){
-    //Msg::Error("Wrong mesh element size lc = %g (lcmin = %g, lcmax = %g)",
-    //           lc, CTX::instance()->mesh.lcMin, CTX::instance()->mesh.lcMax);
+    Msg::Error("Wrong mesh element size lc = %g (lcmin = %g, lcmax = %g)",
+               lc, CTX::instance()->mesh.lcMin, CTX::instance()->mesh.lcMax);
     lc = CTX::instance()->lc;
   }
   SMetric3 m0(1./(lc*lc));

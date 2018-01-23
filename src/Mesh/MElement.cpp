@@ -8,7 +8,7 @@
 #include <limits>
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 #include "Mesh/GModel.h"
 #include "Mesh/MElement.h"
@@ -360,7 +360,7 @@ void MElement::getShapeFunctions(double u, double v, double w, double s[], int o
   if(fs) fs->f(u, v, w, s);
   else 
   {
-	//  Msg::Error("Function space not implemented for this type of element");
+	  Msg::Error("Function space not implemented for this type of element");
 	  
   }
 }
@@ -371,7 +371,7 @@ void MElement::getGradShapeFunctions(double u, double v, double w, double s[][3]
   if(fs) fs->df(u, v, w, s);
   else
   { 
-	//  Msg::Error("Function space not implemented for this type of element");
+	 Msg::Error("Function space not implemented for this type of element");
 	  
   }
 }
@@ -382,7 +382,7 @@ void MElement::getHessShapeFunctions(double u, double v, double w, double s[][3]
   const nodalBasis* fs = getFunctionSpace(o);
   if(fs) fs->ddf(u, v, w, s);
   else{
-// Msg::Error("Function space not implemented for this type of element");
+ Msg::Error("Function space not implemented for this type of element");
   }
 }
 
@@ -392,7 +392,7 @@ void MElement::getThirdDerivativeShapeFunctions(double u, double v, double w,
   const nodalBasis* fs = getFunctionSpace(o);
   if(fs) fs->dddf(u, v, w, s);
   else{
-// Msg::Error("Function space not implemented for this type of element");
+ Msg::Error("Function space not implemented for this type of element");
   }
 }
 
@@ -728,7 +728,7 @@ double MElement::getEigenvaluesMetric(double u, double v, double w, double value
   }
 
   default:
-  //  Msg::Error("wrong dimension for getEigenvaluesMetric function");
+    Msg::Error("wrong dimension for getEigenvaluesMetric function");
     return -1;
   }
 }
@@ -940,7 +940,7 @@ double MElement::integrate(double val[], int pOrder, int stride, int order)
 double MElement::integrateCirc(double val[], int edge, int pOrder, int order)
 {
   if(edge > getNumEdges() - 1){
-    //Msg::Error("No edge %d for this element", edge);
+    Msg::Error("No edge %d for this element", edge);
     return 0;
   }
 
@@ -966,7 +966,7 @@ double MElement::integrateCirc(double val[], int edge, int pOrder, int order)
 double MElement::integrateFlux(double val[], int face, int pOrder, int order)
 {
   if(face > getNumFaces() - 1){
- //   Msg::Error("No face %d for this element", face);
+    Msg::Error("No face %d for this element", face);
     return 0;
   }
   std::vector<MVertex*> v;
@@ -1133,7 +1133,7 @@ void MElement::writeMSH2(FILE *fp, double version, bool binary, int num,
       for(int i = 0; i < numGhosts; i++) blob[8 + i] = -(*ghosts)[i];
     if(par) blob[8 + numGhosts] = parentNum;
     if(poly){
-// Msg::Error("Unable to write polygons/polyhedra in binary files.");
+ Msg::Error("Unable to write polygons/polyhedra in binary files.");
 	}
     fwrite(blob, sizeof(int), 4 + numTags, fp);
   }
@@ -1604,7 +1604,7 @@ int MElement::getInfoMSH(const int typeMSH, const char **const name)
   case MSH_TRI_SUB : if(name) *name = "Triangle Xfem";    return 3;
   case MSH_TET_SUB : if(name) *name = "Tetrahedron Xfem"; return 4;
   default:
-    //Msg::Error("Unknown type of element %d", typeMSH);
+    Msg::Error("Unknown type of element %d", typeMSH);
     if(name) *name = "Unknown";
     return 0;
   }
@@ -1842,13 +1842,13 @@ MElement *MElementFactory::create(int num, int type, const std::vector<int> &dat
         vertices[i] = v;
       }
       else{
-     //   Msg::Error("Unknown vertex %d in element %d", numVertex, num);
+        Msg::Error("Unknown vertex %d in element %d", numVertex, num);
         return 0;
       }
     }
   }
   else{
-  //  Msg::Error("Missing data in element %d", num);
+    Msg::Error("Missing data in element %d", num);
     return 0;
   }
 

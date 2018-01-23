@@ -5,7 +5,7 @@
 
 #include "Mesh/ElementType.h"
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 int ElementType::ParentTypeFromTag(int tag)
 {
@@ -97,7 +97,7 @@ int ElementType::ParentTypeFromTag(int tag)
       return TYPE_TRIH;
 
     default:
-      //Msg::Error("Unknown element tag %i for parent type, returning -1.", tag);
+      Msg::Error("Unknown element tag %i for parent type, returning -1.", tag);
       return -1;
   }
 }
@@ -236,7 +236,7 @@ int ElementType::OrderFromTag(int tag)
   case MSH_TRIH_4 : return 1;
   case MSH_POLYH_ : return 1;
   default :
-  //  Msg::Warning("Unknown element tag %d, assuming order 1.",tag);
+    Msg::Warning("Unknown element tag %d, assuming order 1.",tag);
     return 1;
   }
 }
@@ -330,7 +330,7 @@ int ElementType::DimensionFromTag(int tag)
       return 3;
 
     default:
-   //   Msg::Error("Unknown element tag %i for dimension, returning -1.", tag);
+      Msg::Error("Unknown element tag %i for dimension, returning -1.", tag);
       return -1;
   }
 }
@@ -438,7 +438,7 @@ int ElementType::SerendipityFromTag(int tag)
     return 2; // Only Serendipity
 
   default :
-   // Msg::Warning("Unknown element tag %d, assuming not serendipity.",tag);
+    Msg::Warning("Unknown element tag %d, assuming not serendipity.",tag);
     return 0;
   }
 }
@@ -463,7 +463,7 @@ int ElementType::getTag(int parentTag, int order, bool serendip)
     case 10: return MSH_LIN_11;
     default :
 		break;
-		//Msg::Error("line order %i unknown", order); return 0;
+		Msg::Error("line order %i unknown", order); return 0;
     }
     break;
   case TYPE_TRI :
@@ -481,7 +481,7 @@ int ElementType::getTag(int parentTag, int order, bool serendip)
     case 10: return serendip ? MSH_TRI_30 : MSH_TRI_66;
     default : 
 		break;
-	//Msg::Error("triangle order %i unknown", order); return 0;
+	Msg::Error("triangle order %i unknown", order); return 0;
     }
     break;
   case TYPE_QUA :
@@ -499,83 +499,13 @@ int ElementType::getTag(int parentTag, int order, bool serendip)
     case 10: return serendip ? MSH_QUA_40 : MSH_QUA_121;
     default : 
 		break;
-	//Msg::Error("quad order %i unknown", order); return 0;
+	Msg::Error("quad order %i unknown", order); return 0;
     }
-    break;
-  case TYPE_TET :
-    switch(order) {
-    case 0 : return MSH_TET_1;
-    case 1 : return MSH_TET_4;
-    case 2 : return MSH_TET_10;
-    case 3 : return serendip ? MSH_TET_16 : MSH_TET_20;
-    case 4 : return serendip ? MSH_TET_22 : MSH_TET_35;
-    case 5 : return serendip ? MSH_TET_28 : MSH_TET_56;
-    case 6 : return serendip ? MSH_TET_34 : MSH_TET_84;
-    case 7 : return serendip ? MSH_TET_40: MSH_TET_120;
-    case 8 : return serendip ? MSH_TET_46: MSH_TET_165;
-    case 9 : return serendip ? MSH_TET_52: MSH_TET_220;
-    case 10: return serendip ? MSH_TET_58: MSH_TET_286;
-    default : 
-		break;
-	//Msg::Error("terahedron order %i unknown", order); return 0;
-    }
-    break;
-  case TYPE_HEX :
-    switch(order) {
-    case 0 : return MSH_HEX_1;
-    case 1 : return MSH_HEX_8;
-    case 2 : return serendip ? MSH_HEX_20 : MSH_HEX_27;
-    case 3 : return serendip ? MSH_HEX_32 : MSH_HEX_64;
-    case 4 : return serendip ? MSH_HEX_44 : MSH_HEX_125;
-    case 5 : return serendip ? MSH_HEX_56: MSH_HEX_216;
-    case 6 : return serendip ? MSH_HEX_68: MSH_HEX_343;
-    case 7 : return serendip ? MSH_HEX_80: MSH_HEX_512;
-    case 8 : return serendip ? MSH_HEX_92: MSH_HEX_729;
-    case 9 : return serendip ? MSH_HEX_104: MSH_HEX_1000;
-    default : 
-		break;
-	//Msg::Error("hexahedron order %i unknown", order); return 0;
-    }
-    break;
-  case TYPE_PRI :
-    switch(order) {
-    case 0 : return MSH_PRI_1;
-    case 1 : return MSH_PRI_6;
-    case 2 : return serendip ? MSH_PRI_15 : MSH_PRI_18;
-    case 3 : return serendip ? MSH_PRI_24 : MSH_PRI_40;
-    case 4 : return serendip ? MSH_PRI_33 : MSH_PRI_75;
-    case 5 : return serendip ? MSH_PRI_42 : MSH_PRI_126;
-    case 6 : return serendip ? MSH_PRI_51 : MSH_PRI_196;
-    case 7 : return serendip ? MSH_PRI_60 : MSH_PRI_288;
-    case 8 : return serendip ? MSH_PRI_69 : MSH_PRI_405;
-    case 9 : return serendip ? MSH_PRI_78 : MSH_PRI_550;
-    default : 
-		break;
-	//Msg::Error("prism order %i unknown", order); return 0;
-    }
-    break;
-  case TYPE_PYR :
-    switch(order) {
-    case 0 : return MSH_PYR_1;
-    case 1 : return MSH_PYR_5;
-    case 2 : return serendip ? MSH_PYR_13 : MSH_PYR_14;
-    case 3: return serendip ? MSH_PYR_21 : MSH_PYR_30;
-    case 4: return serendip ? MSH_PYR_29 : MSH_PYR_55;
-    case 5: return serendip ? MSH_PYR_37 : MSH_PYR_91;
-    case 6: return serendip ? MSH_PYR_45 : MSH_PYR_140;
-    case 7: return serendip ? MSH_PYR_53 : MSH_PYR_204;
-    case 8: return serendip ? MSH_PYR_61 : MSH_PYR_285;
-    case 9: return serendip ? MSH_PYR_69 : MSH_PYR_385;
-    default : 
-		break;
-		//Msg::Error("pyramid order %i unknown", order); return 0;
-    }
-    break;
   case TYPE_TRIH :
     return MSH_TRIH_4;
   default :
 	break;
-// Msg::Warning("unknown element type %i, returning 0", parentTag); return 0;
+ Msg::Warning("unknown element type %i, returning 0", parentTag); return 0;
   }
 }
 

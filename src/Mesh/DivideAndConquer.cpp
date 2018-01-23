@@ -15,7 +15,7 @@
 // Warning: point positions must be PERTURBED by a small random
 // value to avoid 3 aligned points or 4 cocyclical points!
 
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/DivideAndConquer.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/robustPredicates.h"
@@ -534,7 +534,7 @@ void DocRecord::ConvertDListToVoronoiData()
 void DocRecord::voronoiCell(PointNumero pt, std::vector<SPoint2> &pts) const
 {
   if (!_adjacencies){
-//    Msg::Error("No adjacencies were created");
+    Msg::Error("No adjacencies were created");
     return;
   }
   const int n = _adjacencies[pt].t_length;
@@ -572,7 +572,7 @@ void DocRecord::makePosView(std::string fileName, GFace *gf)
 {
   FILE *f = std::fopen(fileName.c_str(),"w");
   if(!f){
- //   Msg::Error("Could not open file '%s'", fileName.c_str());
+    Msg::Error("Could not open file '%s'", fileName.c_str());
     return;
   }
   if (_adjacencies){
@@ -612,7 +612,7 @@ void DocRecord::printMedialAxis(Octree *_octree, std::string fileName, GFace *gf
 {
   FILE *f = std::fopen(fileName.c_str(),"w");
   if(!f){
-  //  Msg::Error("Could not open file '%s'", fileName.c_str());
+    Msg::Error("Could not open file '%s'", fileName.c_str());
     return;
   }
   if (_adjacencies){
@@ -970,7 +970,7 @@ void DocRecord::concave(double x,double y,GFace* gf)
     MakeMeshWithPoints();
   }
   catch(const char *err){
- //   Msg::Error("%s", err);
+    Msg::Error("%s", err);
   }
 
   set = tagInterior(x,y);

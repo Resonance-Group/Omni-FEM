@@ -15,7 +15,7 @@ IntPt *getGQLPts(int order)
   int n = (order + 1) / (double)2 + 0.5;
   int index = n;
   if(index >= (int)(sizeof(GQL) / sizeof(IntPt*))){
-   // Msg::Error("Increase size of GQL in gauss quadrature line");
+    Msg::Error("Increase size of GQL in gauss quadrature line");
     index = 0;
   }
   if(!GQL[index]) {

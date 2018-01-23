@@ -10,6 +10,7 @@
 #include <wx/listbox.h>
 #include <wx/sizer.h>
 #include <wx/treectrl.h>
+#include <wx/filefn.h> 
 
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
@@ -22,6 +23,7 @@
 
 #include <UI/PreferencesDialog.h>
 #include <UI/ExteriorRegion.h>
+#include <UI/AddNodeDialog.h>
 
 #include <UI/EditMenu/MoveCopyDialog.h>
 #include <UI/EditMenu/ScalingDialog.h>
@@ -39,6 +41,7 @@
 
 #include <common/enums.h>
 #include "common/OmniFEMMessage.h"
+#include <common/ProblemDefinition.h>
 
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
@@ -386,6 +389,28 @@ private:
         \param event A required parameter for the event procedure to work properly
     */ 
     void onDelete(wxCommandEvent &event);
+	
+	//! 
+	/**
+	 * @brief 	Event that is fired when the user needs to add a node manually. A dialog will appear
+	 * 			prompting the user to set the x and y values of the node. If the user clicks ok,
+	 * 			then the node will be added. If Cancel is clicked, the node will not be added
+	 * @param event Required parameter for proper event procedure to work
+	 */
+	void onAddNode(wxCommandEvent &event)
+	{
+		addNodeDialog *nodeDialog = new addNodeDialog(this);
+		
+		if(nodeDialog->ShowModal() == wxID_OK)
+		{
+			wxRealPoint nodePoint = nodeDialog->getPoint();
+			
+			_model->addNodePoint(nodePoint);
+			_model->Refresh();
+		}
+		
+		delete nodeDialog;
+	}
     
     //! Event procedure that is fired when the user needs to move the geometry
     /*!
@@ -573,7 +598,12 @@ private:
     */ 
     void onSolveProblem(wxCommandEvent &event)
     {
-        return;
+		if(wxFileExists(_problemDefinition.getSaveFilePath() + "/" + _problemDefinition.getName() + ".msh"))
+		{
+			wxMessageBox("Running simulation", "Info");
+		}
+		else
+			wxMessageBox("No mesh file created. Mesh the geometry first before simulation", "Warning", wxICON_EXCLAMATION | wxOK);
     }
 	
     /* This section is for the Grid Menu */

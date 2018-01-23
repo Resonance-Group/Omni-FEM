@@ -18,7 +18,7 @@
 //#include "MHexahedron.h"
 //#include "MPrism.h"
 //#include "MPyramid.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "common/OS.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/Context.h"
@@ -158,10 +158,10 @@ static bool getEdgeVerticesonGeo(GEdge *ge, MVertex *v0, MVertex *v1,
       relax *= 0.5;
     }
     if (failed) {
-   //   Msg::Warning
-    //    ("Failed to compute equidistant parameters (relax = %g, value = %g) "
-     //    "for edge %d-%d parametrized with %g %g on GEdge %d",
-    //     relax, US[1], v0->getNum(), v1->getNum(),u0,u1,ge->tag());
+      Msg::Warning
+        ("Failed to compute equidistant parameters (relax = %g, value = %g) "
+         "for edge %d-%d parametrized with %g %g on GEdge %d",
+         relax, US[1], v0->getNum(), v1->getNum(),u0,u1,ge->tag());
       US[0] = uMin;
       const double du = (uMax - uMin) / (nPts+1);
       for (int i = 1; i <= nPts; i++) US[i] = US[i - 1] + du;
@@ -169,7 +169,7 @@ static bool getEdgeVerticesonGeo(GEdge *ge, MVertex *v0, MVertex *v1,
   }
   else
   {
- //   Msg::Error("Cannot reparam a mesh Vertex in high order meshing");
+    Msg::Error("Cannot reparam a mesh Vertex in high order meshing");
 	
   }
   if (!reparamOK) return false;
@@ -207,7 +207,7 @@ static bool getEdgeVerticesonGeo(GFace *gf, MVertex *v0, MVertex *v1,
     }
   }
   else {
- //   Msg::Error("Cannot reparam a mesh Vertex in high order meshing");
+    Msg::Error("Cannot reparam a mesh Vertex in high order meshing");
     return false;
   }
 
@@ -275,7 +275,7 @@ static void getEdgeVertices(GEdge *ge, MElement *ele, std::vector<MVertex*> &ve,
       edgeVertices[p].insert(edgeVertices[p].end(), veEdge.rbegin(), veEdge.rend());
   }
   else {  // Vertices already exist
-   // Msg::Error("Edges from different entities share vertices: create a finer mesh");
+    Msg::Error("Edges from different entities share vertices: create a finer mesh");
   }
   ve.insert(ve.end(), veEdge.begin(), veEdge.end());
 }
@@ -451,7 +451,7 @@ static void reorientQuadPoints(std::vector<MVertex*> &vtcs, int orientation,
         }
         else
 		{
-			// Msg::Error("Something wrong in reorientQuadPoints");
+			 Msg::Error("Something wrong in reorientQuadPoints");
 		}
 
       }
@@ -484,7 +484,7 @@ static int getNewFacePointsInVolume(MElement *incomplete, int nPts,
     case 8: points = BasisFactory::getNodalBasis(MSH_TET_220)->points; break;
     case 9: points = BasisFactory::getNodalBasis(MSH_TET_286)->points; break;
     default:
-    //  Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startFace = 4 + nPts*6;
@@ -501,7 +501,7 @@ static int getNewFacePointsInVolume(MElement *incomplete, int nPts,
     case 7: points = BasisFactory::getNodalBasis(MSH_HEX_729)->points; break;
     case 8: points = BasisFactory::getNodalBasis(MSH_HEX_1000)->points; break;
     default :
-  //    Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startFace = 8 + nPts*12 ;
@@ -518,7 +518,7 @@ static int getNewFacePointsInVolume(MElement *incomplete, int nPts,
     case 7: points = BasisFactory::getNodalBasis(MSH_PRI_405)->points; break;
     case 8: points = BasisFactory::getNodalBasis(MSH_PRI_550)->points; break;
     default:
-  //    Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startFace = 6 + nPts*9;
@@ -535,7 +535,7 @@ static int getNewFacePointsInVolume(MElement *incomplete, int nPts,
     case 7: points = BasisFactory::getNodalBasis(MSH_PYR_285)->points; break;
     case 8: points = BasisFactory::getNodalBasis(MSH_PYR_385)->points; break;
     default :
-   //   Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startFace = 5 + nPts*8;
@@ -773,7 +773,7 @@ static int getNewVolumePoints(MElement *incomplete, int nPts, fullMatrix<double>
     case 8: points = BasisFactory::getNodalBasis(MSH_TET_220)->points; break;
     case 9: points = BasisFactory::getNodalBasis(MSH_TET_286)->points; break;
     default:
-  //    Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startInter = ((nPts+2)*(nPts+3)*(nPts+4)-(nPts-2)*(nPts-1)*(nPts))/6;
@@ -791,7 +791,7 @@ static int getNewVolumePoints(MElement *incomplete, int nPts, fullMatrix<double>
     case 7: points = BasisFactory::getNodalBasis(MSH_HEX_729)->points; break;
     case 8: points = BasisFactory::getNodalBasis(MSH_HEX_1000)->points; break;
     default :
-   //   Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+    Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startInter = (nPts+2)*(nPts+2)*(nPts+2) - (nPts)*(nPts)*(nPts) ;
@@ -809,7 +809,7 @@ static int getNewVolumePoints(MElement *incomplete, int nPts, fullMatrix<double>
     case 7: points = BasisFactory::getNodalBasis(MSH_PRI_405)->points; break;
     case 8: points = BasisFactory::getNodalBasis(MSH_PRI_550)->points; break;
     default:
-     // Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startInter = 4*(nPts+1)*(nPts+1)+2;
@@ -828,7 +828,7 @@ static int getNewVolumePoints(MElement *incomplete, int nPts, fullMatrix<double>
     case 7: points = BasisFactory::getNodalBasis(MSH_PYR_285)->points; break;
     case 8: points = BasisFactory::getNodalBasis(MSH_PYR_385)->points; break;
     default :
-   //   Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
+      Msg::Error("getFaceAndInteriorVertices not implemented for order %i", nPts+1);
       break;
     }
     startInter = ( nPts+2) * ( (nPts+2) + 1) * (2*(nPts+2) + 1) / 6  -
@@ -1354,16 +1354,16 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
       std::map<MVertex*,MVertex*> &p2p = tgt->correspondingHOPoints;
       p2p.clear();
 
-    //  Msg::Info("Constructing high order periodicity for edge connection %d - %d",
-    //            tgt->tag(),src->tag());
+      Msg::Info("Constructing high order periodicity for edge connection %d - %d",
+                tgt->tag(),src->tag());
 
       std::map<MEdge,MLine*,Less_Edge> srcEdges;
       for (unsigned int i=0;i<src->getNumMeshElements();i++)  {
         MLine* srcLine = dynamic_cast<MLine*>(src->getMeshElement(i));
         if (!srcLine)
 		{
-		//	Msg::Error("Master element %d is not an edge ",
-         //                        src->getMeshElement(i)->getNum());
+			Msg::Error("Master element %d is not an edge ",
+                                 src->getMeshElement(i)->getNum());
 		}
  
         srcEdges[MEdge(srcLine->getVertex(0),
@@ -1377,7 +1377,7 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
 
         if (!tgtLine)
 		{
-		//	Msg::Error("Slave element %d is not an edge ", tgt->getMeshElement(i)->getNum());
+			Msg::Error("Slave element %d is not an edge ", tgt->getMeshElement(i)->getNum());
 		}
                            
 
@@ -1385,23 +1385,23 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
           MVertex* vtx = tgtLine->getVertex(iVtx);
           std::map<MVertex*,MVertex*>::iterator tIter = v2v.find(vtx);
           if (tIter == v2v.end()) {
-         ///   Msg::Error("Cannot find periodic counterpart of vertex %d"
-          //             " of edge %d on edge %d",
-          //             vtx->getNum(),tgt->tag(),src->tag());
+            Msg::Error("Cannot find periodic counterpart of vertex %d"
+					" of edge %d on edge %d",
+                       vtx->getNum(),tgt->tag(),src->tag());
           }
           else vtcs[iVtx] = tIter->second;
         }
 
         std::map<MEdge,MLine*,Less_Edge>::iterator srcIter = srcEdges.find(MEdge(vtcs[0],vtcs[1]));
         if (srcIter==srcEdges.end()) {
-       //   Msg::Error("Can't find periodic counterpart of edge %d-%d on edge %d"
-        //             ", connected to edge %d-%d on %d",
-        //             tgtLine->getVertex(0)->getNum(),
-        //             tgtLine->getVertex(1)->getNum(),
-         //            tgt->tag(),
-        //             vtcs[0]->getNum(),
-         //            vtcs[1]->getNum(),
-         //            src->tag());
+          Msg::Error("Can't find periodic counterpart of edge %d-%d on edge %d"
+                     ", connected to edge %d-%d on %d",
+                     tgtLine->getVertex(0)->getNum(),
+                     tgtLine->getVertex(1)->getNum(),
+					tgt->tag(),
+                     vtcs[0]->getNum(),
+                     vtcs[1]->getNum(),
+                     src->tag());
         }
         else {
           MLine* srcLine = srcIter->second;
@@ -1417,8 +1417,8 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
     GFace *src = dynamic_cast<GFace*>(tgt->meshMaster());
     if (src != NULL && src != tgt) {
 
-  //    Msg::Info("Constructing high order periodicity for face connection %d - %d",
-   //             tgt->tag(),src->tag());
+     Msg::Info("Constructing high order periodicity for face connection %d - %d",
+                tgt->tag(),src->tag());
 
       std::map<MVertex*,MVertex*> &v2v = tgt->correspondingVertices;
       std::map<MVertex*,MVertex*> &p2p = tgt->correspondingHOPoints;
@@ -1441,7 +1441,7 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
       for (unsigned int i=0;i<tgt->getNumMeshElements();++i) {
 
         MElement* tgtElmt = tgt->getMeshElement(i);
-      //  Msg::Info("Checking element %d in face %d",i,tgt->tag());
+        Msg::Info("Checking element %d in face %d",i,tgt->tag());
 
         int nbVtcs = 0;
         if (dynamic_cast<MTriangle*>   (tgtElmt)) nbVtcs = 3;
@@ -1452,9 +1452,9 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
 
           std::map<MVertex*,MVertex*>::iterator tIter = v2v.find(vtx);
           if (tIter == v2v.end()) {
-        //    Msg::Error("Cannot find periodic counterpart of vertex %d"
-        //               " of surface %d on surface %d",
-        //               vtx->getNum(),tgt->tag(),src->tag());
+            Msg::Error("Cannot find periodic counterpart of vertex %d"
+                       " of surface %d on surface %d",
+                       vtx->getNum(),tgt->tag(),src->tag());
           }
           else vtcs.push_back(tIter->second);
           // GEntity* ge = vtx->onWhat();
@@ -1467,9 +1467,9 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
         if (srcIter == srcFaces.end()) {
           std::ostringstream faceDef;
           for (int iVtx=0;iVtx<nbVtcs;iVtx++) faceDef << vtcs[iVtx]->getNum() << " ";
-      //    Msg::Error("Cannot find periodic counterpart of face %s in face %d "
-      ////               "connected to %d",faceDef.str().c_str(),
-       //              tgt->tag(),src->tag());
+          Msg::Error("Cannot find periodic counterpart of face %s in face %d "
+                     "connected to %d",faceDef.str().c_str(),
+                     tgt->tag(),src->tag());
         }
         else {
           MElement* srcElmt = srcIter->second;
@@ -1480,7 +1480,7 @@ static void updatePeriodicEdgesAndFaces(GModel *m)
       }
     }
   }
-//  Msg::Info("Finalized high order topology of periodic connections");
+  Msg::Info("Finalized high order topology of periodic connections");
 }
 
 void SetOrder1(GModel *m, bool onlyVisible)
@@ -1551,15 +1551,15 @@ void checkHighOrderTriangles(const char* cc, GModel *m,
   if(!count) return;
   if (minJGlob > 0)
   {
- //   Msg::Info("%s: worst distortion = %g (%d elements in ]0, 0.2]); worst gamma = %g",
-  //            cc, minJGlob, nbfair, minGGlob);
+    Msg::Info("%s: worst distortion = %g (%d elements in ]0, 0.2]); worst gamma = %g",
+              cc, minJGlob, nbfair, minGGlob);
   
 	}
   else
   {
- //   Msg::Warning("%s: worst distortion = %g (avg = %g, %d elements with jac. < 0); "
-    //             "worst gamma = %g", cc, minJGlob, avg / (count ? count : 1),
-    //             bad.size(), minGGlob);
+    Msg::Warning("%s: worst distortion = %g (avg = %g, %d elements with jac. < 0); "
+                 "worst gamma = %g", cc, minJGlob, avg / (count ? count : 1),
+                 bad.size(), minGGlob);
 				 
   }
 }
@@ -1585,13 +1585,13 @@ void checkHighOrderTetrahedron(const char* cc, GModel *m,
 
   if (minJGlob > 0)
   {
-  //  Msg::Info("%s: worst distortion = %g (%d elements in ]0, 0.2])",
-  //            cc, minJGlob, nbfair);
+    Msg::Info("%s: worst distortion = %g (%d elements in ]0, 0.2])",
+              cc, minJGlob, nbfair);
   } 
   else
   {
-  //  Msg::Warning("%s: worst distortion = %g (avg = %g, %d elements with jac. < 0)",
-   //              cc, minJGlob, avg / (count ? count : 1), bad.size());
+    Msg::Warning("%s: worst distortion = %g (avg = %g, %d elements with jac. < 0)",
+                cc, minJGlob, avg / (count ? count : 1), bad.size());
 				 
   }
 }
@@ -1644,8 +1644,7 @@ void SetOrderN(GModel *m, int order, bool linear, bool incomplete, bool onlyVisi
 
   char msg[256];
   sprintf(msg, "Meshing order %d (curvilinear %s)...", order, linear ? "off" : "on");
-
-//  Msg::StatusBar(true, msg);
+	Msg::Info(msg);
 
   double t1 = Cpu();
 
@@ -1661,35 +1660,25 @@ void SetOrderN(GModel *m, int order, bool linear, bool incomplete, bool onlyVisi
   int counter = 0, nTot = m->getNumEdges() + m->getNumFaces() /*+ m->getNumRegions()*/;
 
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); ++it) {
- //   Msg::Info("Meshing curve %d order %d", (*it)->tag(), order);
+    Msg::Info("Meshing curve %d order %d", (*it)->tag(), order);
   //  Msg::ProgressMeter(++counter, nTot, false, msg);
     if (onlyVisible && !(*it)->getVisibility()) continue;
     setHighOrder(*it, newHOVert[*it], edgeVertices, linear, nPts);
   }
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it) {
-  //  Msg::Info("Meshing surface %d order %d", (*it)->tag(), order);
+    Msg::Info("Meshing surface %d order %d", (*it)->tag(), order);
   //  Msg::ProgressMeter(++counter, nTot, false, msg);
     if (onlyVisible && !(*it)->getVisibility()) continue;
     setHighOrder(*it, newHOVert[*it], edgeVertices, faceVertices, linear, incomplete, nPts);
     if ((*it)->getColumns() != 0) (*it)->getColumns()->clearElementData();
   }
 
- /* for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it) {
- //   Msg::Info("Meshing volume %d order %d", (*it)->tag(), order);
- //   Msg::ProgressMeter(++counter, nTot, false, msg);
-    if (onlyVisible && !(*it)->getVisibility())continue;
-    setHighOrder(*it, newHOVert[*it], edgeVertices, faceVertices, linear, incomplete, nPts);
-    if ((*it)->getColumns() != 0) (*it)->getColumns()->clearElementData();
-  }*/
-
   // Update all high order vertices
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); ++it)
     updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it)
     updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);
-  /*for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
-    updateHighOrderVertices(*it, newHOVert[*it], onlyVisible);*/
 
 #if defined(HAVE_OPTHOM)
   // Determine mesh dimension and curve BL elements
@@ -1713,8 +1702,7 @@ void SetOrderN(GModel *m, int order, bool linear, bool incomplete, bool onlyVisi
   checkHighOrderTriangles("Surface mesh", m, bad, worst);
   checkHighOrderTetrahedron("Volume Mesh", m, bad, worst);
   // FIXME : add other element check
-
-//  Msg::StatusBar(true, "Done meshing order %d (%g s)", order, t2 - t1);
+	Msg::Info("Done meshing order %d (%g s)", order, t2 - t1);
 }
 
 void SetHighOrderComplete(GModel *m, bool onlyVisible)

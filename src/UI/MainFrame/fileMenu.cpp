@@ -55,15 +55,22 @@ void OmniFEMMainFrame::onNewFile(wxCommandEvent &event)
 
 void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 {	
-	wxFileDialog openFileDialog(this, "Open File", "", "", "", wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
+	wxFileDialog openFileDialog(this, "Open File", "", "", "*omniFEM", wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
 	
 	if(openFileDialog.ShowModal() != wxID_CANCEL)
 	{
 		if(_UIState != systemState::MODEL_DEFINING)
+		{
 			createModelDefiningClient();
+			_model->deleteMesh();
+		}
 			
+		_model->SetSize(this->GetClientSize() - wxSize(12, 12));
+		
 		wxString appendedTitle = "Omni-FEM - ";
 		wxString fileName;
+		_problemDefinition.setSaveFilePath(openFileDialog.GetDirectory());
+
 		std::string tempFileName = openFileDialog.GetFilename().ToStdString();
 		for(int i = 0; i < (tempFileName.length() - 8); i++)
 			fileName += wxString(tempFileName[i]);
@@ -72,6 +79,10 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 		_saveFilePath = openFileDialog.GetPath();
 		_problemDefinition.defintionClear();
 		load(openFileDialog.GetPath().ToStdString());
+		
+		_model->Refresh(true);
+//		_model->Update();
+//		_model->UpdateWindowUI();
 	}
 }
 
@@ -101,6 +112,7 @@ void OmniFEMMainFrame::OnSave(wxCommandEvent &event)
 			appendedTitle.append(_problemDefinition.getName());
 			this->SetTitle(appendedTitle);
 			_saveFilePath = saveFileDialog.GetPath();
+			_problemDefinition.setSaveFilePath(saveFileDialog.GetDirectory());
 			save(_saveFilePath);
 		}
 	}
@@ -129,6 +141,7 @@ void OmniFEMMainFrame::onSaveAs(wxCommandEvent &event)
         appendedTitle.append(_problemDefinition.getName());
         this->SetTitle(appendedTitle);
 		_saveFilePath = saveFileDialog.GetPath();
+		_problemDefinition.setSaveFilePath(saveFileDialog.GetDirectory());
 		save(_saveFilePath);
 	}
 }

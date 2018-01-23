@@ -11,7 +11,7 @@
 
 #if defined(HAVE_SOLVER) && defined(HAVE_ANN)
 
-#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Octree.h"
 #include "discreteDiskFace.h"
 #include "discreteEdge.h"

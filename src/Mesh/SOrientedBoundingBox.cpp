@@ -21,13 +21,10 @@
 
 #include "Mesh/SBoundingBox3d.h"
 
-/*
+
 #if defined(HAVE_MESH)
-#include "DivideAndConquer.h"
+#include "Mesh/DivideAndConquer.h"
 #endif
- */ 
-
-
 
 void SOrientedBoundingBox::fillp()
 {
@@ -213,12 +210,11 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
   fullMatrix<double> covariance(3,3);
   B.mult(B.transpose(), covariance);
   covariance.scale(1./(num_vertices-1));
-  /*
+
   Msg::Debug("Covariance matrix");
   Msg::Debug("%f %f %f", covariance(0,0),covariance(0,1),covariance(0,2) );
   Msg::Debug("%f %f %f", covariance(1,0),covariance(1,1),covariance(1,2) );
   Msg::Debug("%f %f %f", covariance(2,0),covariance(2,1),covariance(2,2) );
-  //*/
 
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
@@ -324,7 +320,7 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
     record.MakeMeshWithPoints();
   }
   catch(const char *err){
-  //  Msg::Error("%s", err);
+    Msg::Error("%s", err);
   }
 
   std::vector<Segment> convex_hull;
@@ -471,8 +467,8 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
     raw_data[2][2+i] = least_rectangle.axisY->at(0)*left_eigv(i,smallest_comp==0?1:0) +
                        least_rectangle.axisY->at(1)*left_eigv(i,smallest_comp==2?1:2);
   }
-  // Msg::Info("Test 1 : %f %f",least_rectangle.center->at(0),least_rectangle.center->at(1));
-  // Msg::Info("Test 2 : %f %f",least_rectangle.axisY->at(0),least_rectangle.axisY->at(1));
+   Msg::Info("Test 1 : %f %f",least_rectangle.center->at(0),least_rectangle.center->at(1));
+   Msg::Info("Test 2 : %f %f",least_rectangle.axisY->at(0),least_rectangle.axisY->at(1));
 
   int tri[3];
 
@@ -534,7 +530,7 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
     aux3*least_rectangle.center->at(1);
   //center[1] = -center[1];
 
-  /*
+
   Msg::Info("Box center : %f %f %f",center[0],center[1],center[2]);
   Msg::Info("Box size : %f %f %f",size[0],size[1],size[2]);
   Msg::Info("Box axis 1 : %f %f %f",Axis1[0],Axis1[1],Axis1[2]);
@@ -542,11 +538,11 @@ SOrientedBoundingBox* SOrientedBoundingBox::buildOBB(std::vector<SPoint3> vertic
   Msg::Info("Box axis 3 : %f %f %f",Axis3[0],Axis3[1],Axis3[2]);
 
   Msg::Info("Volume : %f", size[0]*size[1]*size[2]);
-  //*/
+
   return (new SOrientedBoundingBox(center,
           size[0], size[1], size[2], Axis1, Axis2, Axis3));
 #else
- // Msg::Error("SOrientedBoundingBox requires mesh module");
+  Msg::Error("SOrientedBoundingBox requires mesh module");
   return 0;
 #endif
 }

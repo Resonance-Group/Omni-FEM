@@ -8,7 +8,7 @@
 #include <sys/cygwin.h>
 #endif
 #include "Mesh/StringUtils.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "common/OS.h"
 
 void SwapBytes(char *array, int size, int n)

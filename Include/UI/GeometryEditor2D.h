@@ -80,7 +80,11 @@ private:
 			_lineList.insert(*lineIterator);
 			
 		for(std::vector<arcShape>::iterator arcIterator = loadArcs.begin(); arcIterator != loadArcs.end(); arcIterator++)
+		{
 			_arcList.insert(*arcIterator);
+			if(arcIterator->getArcID() > p_arcNumber)
+				p_arcNumber = arcIterator->getArcID();
+		}
 			
 		for(std::vector<blockLabel>::iterator labelIterator = loadLabels.begin(); labelIterator != loadLabels.end(); labelIterator++)
 			_blockLabelList.insert(*labelIterator);
@@ -203,6 +207,8 @@ private:
 		node when a user loads a file
 	*/ 
 	unsigned long _nodeNumber = 0;
+	
+	unsigned long p_arcNumber = 0;
     
     //! Function that will get the intersection X, Y point of two lines crossing each other
     /*!
@@ -416,8 +422,12 @@ public:
         break the line or arc up into two lines or arcs.
         \param xPoint The x-point location in cartesian coordinates to add the node
         \param yPoint The y-point location in cartesian coordinates to add the node
-        \param distanceNode This is a tolerance parameter in which this value specifies the minimum distance when a node is ontop of another node/label or how close a node needs to be to an arc/line in order to break the arc/line into 2 seperate pieces
-        \return Function returns True if node was successfully added. Otherwise, return False. A false condition occurs if the node is placed ontop of another node/label.
+        \param distanceNode This is a tolerance parameter in which this value specifies
+							the minimum distance when a node is ontop of another node/label
+							or how close a node needs to be to an arc/line in order to break
+							the arc/line into 2 seperate pieces
+        \return Function returns True if node was successfully added. Otherwise, return False. 
+				A false condition occurs if the node is placed ontop of another node/label.
     */ 
     bool addNode(double xPoint, double yPoint, double distanceNode);
     

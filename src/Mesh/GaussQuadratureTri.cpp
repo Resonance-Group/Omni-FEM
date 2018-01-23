@@ -942,7 +942,7 @@ IntPt *getGQTPts(int order)
   int n = (order+3)/2;
   int index = n-4;
   if(index >= (int)(sizeof(GQTdegen) / sizeof(IntPt*))){
-  //  Msg::Error("Increase size of GQTdegen in gauss quadrature tri");
+    Msg::Error("Increase size of GQTdegen in gauss quadrature tri");
     index = 0;
   }
   if(!GQTdegen[index]){

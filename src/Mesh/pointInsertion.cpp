@@ -177,7 +177,7 @@ bool computeFourNeighbors (frameFieldBackgroundMesh2D *bgm,
           //	    printf("OK\n");
         }
         else{
-          //Msg::Debug("Cannot put a new point on Surface %d",gf->tag());
+          Msg::Debug("Cannot put a new point on Surface %d",gf->tag());
           // printf("NOT OK\n");
         }
       }
@@ -300,7 +300,7 @@ void Filler2D::pointInsertion2D(GFace* gf,  vector<MVertex*> &packed,
   time_bgm_and_smoothing += (Cpu() - a);
 
   if (!bgm){
-  //  Msg::Error("BGM dynamic cast failed in filler2D::pointInsertion2D");
+    Msg::Error("BGM dynamic cast failed in filler2D::pointInsertion2D");
     return;
   }
 

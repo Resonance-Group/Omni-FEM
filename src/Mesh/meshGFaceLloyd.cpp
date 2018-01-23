@@ -22,15 +22,15 @@
 
 #if defined(HAVE_BFGS)
 
-#include "ap.h"
-#include "alglibinternal.h"
-#include "alglibmisc.h"
-#include "linalg.h"
-#include "optimization.h"
-#include "polynomialBasis.h"
-#include "MElementOctree.h"
-#include "GModel.h"
-#include "meshGFaceOptimize.h"
+#include "Mesh/BFGS/ap.h"
+#include "Mesh/BFGS/alglibinternal.h"
+#include "Mesh/BFGS/alglibmisc.h"
+#include "Mesh/BFGS/linalg.h"
+#include "Mesh/BFGS/optimization.h"
+#include "Mesh/polynomialBasis.h"
+#include "Mesh/MElementOctree.h"
+#include "Mesh/GModel.h"
+#include "Mesh/meshGFaceOptimize.h"
 #include <algorithm>
 
 /****************definitions****************/

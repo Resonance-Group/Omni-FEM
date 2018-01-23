@@ -6,10 +6,10 @@
 #include <string.h>
 #include <sstream>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/GModel.h"
-#include "Mesh/GModelIO_GEO.h"
-#include "Mesh/GModelIO_OCC.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_OCC.h"
 #include "Mesh/Numeric.h"
 //#include "StringUtils.h"
 #include "Mesh/Geo.h"
@@ -32,7 +32,7 @@ void add_infile(const std::string &text, const std::string &fileNameOrEmpty)
     GModel::current()->setName("");
   }
 
- // Msg::Debug("Adding `%s' to file `%s'", text.c_str(), fileName.c_str());
+  Msg::Debug("Adding `%s' to file `%s'", text.c_str(), fileName.c_str());
  // std::vector<std::string> split = SplitFileName(fileName);
  // std::string noExt = split[0] + split[1], ext = split[2];
 #if defined(HAVE_COMPRESSED_IO) && defined(HAVE_LIBZ)

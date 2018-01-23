@@ -5,11 +5,11 @@
 
 #include <stdlib.h>
 #include <string.h>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Numeric.h"
 #include "Mesh/GModel.h"
-#include "Mesh/GModelIO_GEO.h"
-#include "Mesh/GModelIO_OCC.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_OCC.h"
 #include "Mesh/Geo.h"
 #include "Mesh/GeoInterpolation.h"
 #include "Mesh/Context.h"
@@ -341,13 +341,13 @@ void EndCurve(Curve *c)
     double R2 = sqrt(v2.Pos.X * v2.Pos.X + v2.Pos.Y * v2.Pos.Y);
     if(!R || !R2){
       // check radius
-  //    Msg::Error("Zero radius in circle or ellipse with tag %d", c->Num);
+      Msg::Error("Zero radius in circle or ellipse with tag %d", c->Num);
     }
     else if(!v[3] && fabs((R - R2) / (R + R2)) > 0.1){
       // check cocircular pts (allow 10% error)
-   //   Msg::Error("Control points of circle with tag %d are not cocircular: "
-   //              "R1=%g, R2=%g, n=[%g,%g,%g]",
-   //              c->Num, R, R2, n[0], n[1], n[2]);
+      Msg::Error("Control points of circle with tag %d are not cocircular: "
+                 "R1=%g, R2=%g, n=[%g,%g,%g]",
+                 c->Num, R, R2, n[0], n[1], n[2]);
     }
     // A1 = angle first pt
     // A3 = angle last pt
@@ -370,7 +370,7 @@ void EndCurve(Curve *c)
       rhs[1] = 1;
       sys2x2(sys, rhs, sol);
       if(sol[0] <= 0 || sol[1] <= 0) {
-      //  Msg::Error("Ellipse with tag %d is wrong", c->Num);
+        Msg::Error("Ellipse with tag %d is wrong", c->Num);
         A1 = A3 = 0.;
         f1 = f2 = R;
       }
@@ -419,8 +419,8 @@ void EndCurve(Curve *c)
          cIter!=c->compound.end();++cIter) {
       Curve* comp;
       if (!(comp = FindCurve(*cIter))){
-   //     Msg::Debug("Could not find GEO edge %d as part of compound edge %d. "
-   //                "Aborting sort.", *cIter, c->Num);
+       Msg::Debug("Could not find GEO edge %d as part of compound edge %d. "
+                   "Aborting sort.", *cIter, c->Num);
         return;
       }
       tmp.push_back(comp);
@@ -461,8 +461,8 @@ void EndCurve(Curve *c)
       }
       if (tmp.size() == nbCurrent)
 	  {
-   //     Msg::Error("Could not order compound edge %d to find begin and end vertex",
-   //                c->Num);
+        Msg::Error("Could not order compound edge %d to find begin and end vertex",
+                   c->Num);
    
 		}
     }
@@ -573,7 +573,7 @@ Curve *CreateCurve(int Num, int Typ, int Order, List_T *Liste,
       if((v = FindPoint(iPnt)))
         List_Add(pC->Control_Points, &v);
       else{
-     //   Msg::Error("Unknown control point %d in GEO edge %d", iPnt, pC->Num);
+        Msg::Error("Unknown control point %d in GEO edge %d", iPnt, pC->Num);
       }
     }
     if(p1 < 0) {
@@ -585,18 +585,18 @@ Curve *CreateCurve(int Num, int Typ, int Order, List_T *Liste,
     else {
       Vertex *v;
       if((v = FindPoint(p1))) {
-   //     Msg::Info("Curve %d first control point %d ", pC->Num, v->Num);
+        Msg::Info("Curve %d first control point %d ", pC->Num, v->Num);
         pC->beg = v;
       }
       else {
-    //    Msg::Error("Unknown control point %d in GEO edge %d", p1, pC->Num);
+        Msg::Error("Unknown control point %d in GEO edge %d", p1, pC->Num);
       }
       if((v = FindPoint(p2))) {
-   //     Msg::Info("Curve %d first control point %d ", pC->Num, v->Num);
+        Msg::Info("Curve %d first control point %d ", pC->Num, v->Num);
         pC->end = v;
       }
       else {
-    //    Msg::Error("Unknown control point %d in GEO edge %d", p2, pC->Num);
+        Msg::Error("Unknown control point %d in GEO edge %d", p2, pC->Num);
       }
     }
     EndCurve(pC);
@@ -891,7 +891,7 @@ static void CopySurface(Surface *s, Surface *ss)
     ss->ReverseMesh = s->ReverseMesh;
     if(List_Nbr(s->TrsfPoints))
 	{
- //     Msg::Warning("Only automatic transfinite surface specifications can be copied");
+      Msg::Warning("Only automatic transfinite surface specifications can be copied");
 	  
 	}
   }
@@ -926,7 +926,7 @@ static void CopyVolume(Volume *v, Volume *vv)
     vv->Recombine3D = v->Recombine3D;
     if(List_Nbr(v->TrsfPoints))
 	{
- //     Msg::Warning("Only automatic transfinite volume specifications can be copied");
+      Msg::Warning("Only automatic transfinite volume specifications can be copied");
 	  
 	}
   }
@@ -1440,7 +1440,7 @@ static void ApplyTransformationToPoint(double matrix[4][4], Vertex *v,
 static void ApplyTransformationToCurve(double matrix[4][4], Curve *c)
 {
   if(!c->beg || !c->end){
- //   Msg::Error("Cannot transform curve with no begin/end points");
+    Msg::Error("Cannot transform curve with no begin/end points");
     return;
   }
 
@@ -1494,7 +1494,7 @@ static void ApplicationOnShapes(double matrix[4][4], List_T *shapes)
         ApplyTransformationToPoint(matrix, v, true);
       else
 	  {
-     //   Msg::Error("Unknown GEO vertex with tag %d", O.Num);
+        Msg::Error("Unknown GEO vertex with tag %d", O.Num);
 		
 	  }
       break;
@@ -1512,7 +1512,7 @@ static void ApplicationOnShapes(double matrix[4][4], List_T *shapes)
         ApplyTransformationToCurve(matrix, c);
       else
 	  {
-     //   Msg::Error("Unknown GEO edge with tag %d", O.Num);
+        Msg::Error("Unknown GEO edge with tag %d", O.Num);
 		
 	  }
       break;
@@ -1524,7 +1524,7 @@ static void ApplicationOnShapes(double matrix[4][4], List_T *shapes)
         ApplyTransformationToSurface(matrix, s);
       else
 	  {
- //       Msg::Error("Unknown GEO face with tag %d", O.Num);
+        Msg::Error("Unknown GEO face with tag %d", O.Num);
 		
 	  }
       break;
@@ -1534,13 +1534,13 @@ static void ApplicationOnShapes(double matrix[4][4], List_T *shapes)
         ApplyTransformationToVolume(matrix, vol);
       else
 	  {
-   //     Msg::Error("Unknown GEO region with tag %d", O.Num);
+        Msg::Error("Unknown GEO region with tag %d", O.Num);
 		
 	  }
       break;
     default:
- //     Msg::Error("Impossible to transform entity %d (of type %d)", O.Num,
-  //               O.Type);
+      Msg::Error("Impossible to transform entity %d (of type %d)", O.Num,
+                 O.Type);
       break;
     }
   }
@@ -1635,7 +1635,7 @@ static List_T *GetCompoundUniqueEdges(Surface *ps)
 
   std::vector<int> comp_surfs = ps->compound;
   if(comp_surfs.size() == 0 || ps->Typ != MSH_SURF_COMPOUND){
- //   Msg::Error("GEO face with tag %d is not a compound", ps->Num);
+    Msg::Error("GEO face with tag %d is not a compound", ps->Num);
     return 0;
   }
 
@@ -1648,7 +1648,7 @@ static List_T *GetCompoundUniqueEdges(Surface *ps)
     Surface *s = FindSurface(std::abs(comp_surfs[i]));
     if(!s){
       // don't complain: some compound surfaces are not in old GEO database
-      //Msg::Warning("Unknown GEO face with tag %d", std::abs(comp_surfs[i]));
+      Msg::Warning("Unknown GEO face with tag %d", std::abs(comp_surfs[i]));
       List_Delete(bnd_c);
       return 0;
     }
@@ -1657,12 +1657,12 @@ static List_T *GetCompoundUniqueEdges(Surface *ps)
       Curve *c = 0;
       List_Read(s->Generatrices, m, &c);
       if(!c){
-   //     Msg::Warning("Unknown GEO edge");
+        Msg::Warning("Unknown GEO edge");
         List_Delete(bnd_c);
         return 0;
       }
       if(!FindCurve(-c->Num)) {
-   //     Msg::Warning("Unknown GEO edge with tag %d", -c->Num);
+       Msg::Warning("Unknown GEO edge with tag %d", -c->Num);
         List_Delete(bnd_c);
         return 0;
       }
@@ -1707,8 +1707,8 @@ static List_T *GetCompoundUniqueEdges(Surface *ps)
         }
       }
       else{ // if not found the curve in the count_map
-  //      Msg::Error("A problem in finding unique curves in extrusion of compound surface %d",
-    //               std::abs(ps->Num));
+        Msg::Error("A problem in finding unique curves in extrusion of compound surface %d",
+                   std::abs(ps->Num));
         List_Delete(bnd_c);
         return 0;
       }
@@ -1748,7 +1748,7 @@ static List_T* GetOrderedUniqueEdges(Surface *s)
     Curve *ctemp = 0;
     List_Read(unique, i, &ctemp);
     if(!ctemp){
-  //    Msg::Error("No such curve");
+      Msg::Error("No such curve");
       List_Delete(gen_nums);
       List_Delete(unique);
       return 0;
@@ -1765,7 +1765,7 @@ static List_T* GetOrderedUniqueEdges(Surface *s)
     int j;
     List_Read(gen_nums, i, &j);
     if(!(ctemp = FindCurve(j))){
-    //  Msg::Error("No such curve %d", j);
+      Msg::Error("No such curve %d", j);
       List_Delete(gen_nums);
       List_Delete(unique);
       return 0;
@@ -1880,7 +1880,7 @@ static void MaxNumSurface(void *a, void *b)
 
 static void ReplaceDuplicatePointsNew(double tol = -1.)
 {
- // Msg::Info("New Coherence...");
+  Msg::Info("New Coherence...");
   if (tol < 0)
     tol = CTX::instance()->geom.tolerance * CTX::instance()->lc;
 
@@ -1982,7 +1982,7 @@ static void ReplaceDuplicatePointsNew(double tol = -1.)
     delete used[i];
   }
   int end = Tree_Nbr(GModel::current()->getGEOInternals()->Points);
-//  Msg::Info("Done new Coherence (removed %d additional points)", start - end);
+  Msg::Info("Done new Coherence (removed %d additional points)", start - end);
 }
 
 static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
@@ -2034,7 +2034,7 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
     return;
   }
 
-//  Msg::Debug("Removed %d duplicate points", start - end);
+  Msg::Debug("Removed %d duplicate points", start - end);
 
   if(CTX::instance()->geom.oldNewreg) {
     GModel::current()->getGEOInternals()->setMaxTag(0, 0);
@@ -2049,13 +2049,13 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
     List_Read(All, i, &c);
     // replace begin/end points
     if(c->beg && !Tree_Query(allNonDuplicatedPoints, &c->beg)){
-  //    Msg::Debug("Could not replace point %d in old Coherence", c->beg->Num);
+      Msg::Debug("Could not replace point %d in old Coherence", c->beg->Num);
       Tree_Insert(GModel::current()->getGEOInternals()->Points, &c->beg);
       Tree_Suppress(points2delete, &c->beg);
       success = false;
     }
     if(c->end && !Tree_Query(allNonDuplicatedPoints, &c->end)){
-   //   Msg::Debug("Could not replace point %d in old Coherence", c->end->Num);
+      Msg::Debug("Could not replace point %d in old Coherence", c->end->Num);
       Tree_Insert(GModel::current()->getGEOInternals()->Points, &c->end);
       Tree_Suppress(points2delete, &c->end);
       success = false;
@@ -2064,7 +2064,7 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
     for(int j = 0; j < List_Nbr(c->Control_Points); j++) {
       pv = (Vertex **)List_Pointer(c->Control_Points, j);
       if(!(pv2 = (Vertex **)Tree_PQuery(allNonDuplicatedPoints, pv))){
-   //     Msg::Debug("Could not replace point %d in old Coherence", (*pv)->Num);
+        Msg::Debug("Could not replace point %d in old Coherence", (*pv)->Num);
         Tree_Insert(GModel::current()->getGEOInternals()->Points, pv);
         Tree_Suppress(points2delete, pv);
         success = false;
@@ -2077,7 +2077,7 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
       v2 = FindPoint(std::abs(c->Extrude->geo.Source), points2delete);
       if(v2){
         if(!(pv2 = (Vertex **)Tree_PQuery(allNonDuplicatedPoints, &v2))){
-      //    Msg::Debug("Could not replace point %d in old Coherence", v2->Num);
+          Msg::Debug("Could not replace point %d in old Coherence", v2->Num);
           Tree_Insert(GModel::current()->getGEOInternals()->Points, &v2);
           Tree_Suppress(points2delete, &v2);
           success = false;
@@ -2097,7 +2097,7 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
     for(int j = 0; j < List_Nbr(s->TrsfPoints); j++){
       pv = (Vertex **)List_Pointer(s->TrsfPoints, j);
       if(!(pv2 = (Vertex **)Tree_PQuery(allNonDuplicatedPoints, pv))){
-     //   Msg::Debug("Could not replace point %d in old Coherence", (*pv)->Num);
+        Msg::Debug("Could not replace point %d in old Coherence", (*pv)->Num);
         Tree_Insert(GModel::current()->getGEOInternals()->Points, pv);
         Tree_Suppress(points2delete, pv);
         success = false;
@@ -2116,7 +2116,7 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
     for(int j = 0; j < List_Nbr(vol->TrsfPoints); j++){
       pv = (Vertex **)List_Pointer(vol->TrsfPoints, j);
       if(!(pv2 = (Vertex **)Tree_PQuery(allNonDuplicatedPoints, pv))){
-   //     Msg::Debug("Could not replace point %d in old Coherence", (*pv)->Num);
+        Msg::Debug("Could not replace point %d in old Coherence", (*pv)->Num);
         Tree_Insert(GModel::current()->getGEOInternals()->Points, pv);
         Tree_Suppress(points2delete, pv);
         success = false;
@@ -2138,7 +2138,7 @@ static void ReplaceDuplicatePoints(std::map<int, int> * v_report = 0)
         v2 = FindPoint(std::abs(num), points2delete);
         if(v2){
           if(!(pv2 = (Vertex **)Tree_PQuery(allNonDuplicatedPoints, &v2))){
-      //      Msg::Debug("Could not replace point %d in old Coherence", v2->Num);
+            Msg::Debug("Could not replace point %d in old Coherence", v2->Num);
             Tree_Insert(GModel::current()->getGEOInternals()->Points, &v2);
             Tree_Suppress(points2delete, &v2);
             success = false;
@@ -2177,7 +2177,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
       if(!Tree_Search(allNonDuplicatedCurves, &c)) {
         Tree_Insert(allNonDuplicatedCurves, &c);
         if(!(c2 = FindCurve(-c->Num))) {
-       //   Msg::Error("Unknown GEO edge with tag %d", -c->Num);
+          Msg::Error("Unknown GEO edge with tag %d", -c->Num);
           List_Delete(All);
           List_T *tmp = Tree2List(curves2delete);
           for(int i = 0; i < List_Nbr(tmp); i++)
@@ -2193,7 +2193,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
       else {
         Tree_Suppress(GModel::current()->getGEOInternals()->Curves, &c);
         if(!(c2 = FindCurve(-c->Num))) {
-     //     Msg::Error("Unknown GEO edge with tag %d", -c->Num);
+          Msg::Error("Unknown GEO edge with tag %d", -c->Num);
           break;
         }
         Tree_Suppress(GModel::current()->getGEOInternals()->Curves, &c2);
@@ -2232,7 +2232,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
     return;
   }
 
- // Msg::Debug("Removed %d duplicate curves", start - end);
+  Msg::Debug("Removed %d duplicate curves", start - end);
 
   if(CTX::instance()->geom.oldNewreg) {
     GModel::current()->getGEOInternals()->setMaxTag(1, 0);
@@ -2249,7 +2249,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
       if(c2){
         if(!(pc2 = (Curve **)Tree_PQuery(allNonDuplicatedCurves, &c2)))
 		{
-    //      Msg::Error("Could not replace GEO edge with tag %d in Coherence", c2->Num);
+         Msg::Error("Could not replace GEO edge with tag %d in Coherence", c2->Num);
 	
 		}
         else
@@ -2268,7 +2268,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
       pc = (Curve **)List_Pointer(s->Generatrices, j);
       if(!(pc2 = (Curve **)Tree_PQuery(allNonDuplicatedCurves, pc)))
 	  {
-   //     Msg::Error("Could not replace GEO edge with tag %d in Coherence", (*pc)->Num);
+        Msg::Error("Could not replace GEO edge with tag %d in Coherence", (*pc)->Num);
 		
 	  }
       else {
@@ -2283,7 +2283,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
       if(c2){
         if(!(pc2 = (Curve **)Tree_PQuery(allNonDuplicatedCurves, &c2)))
 		{
-        //  Msg::Error("Could not replace GEO edge with tag %d in Coherence", c2->Num);
+          Msg::Error("Could not replace GEO edge with tag %d in Coherence", c2->Num);
 		  
 		}
         else
@@ -2305,7 +2305,7 @@ static void ReplaceDuplicateCurves(std::map<int, int> * c_report = 0)
         if(c2){
           if(!(pc2 = (Curve **)Tree_PQuery(allNonDuplicatedCurves, &c2)))
 		  {
-      //      Msg::Error("Could not replace GEO edge with tag %d in Coherence", c2->Num);
+            Msg::Error("Could not replace GEO edge with tag %d in Coherence", c2->Num);
 			
 		  }
           else
@@ -2356,8 +2356,8 @@ static void RemoveDegenerateCurves()
       }
       if (List_Nbr(ll) != List_Nbr(s->Generatrices))
 	  {
-     //   Msg::Info("Coherence: face %d goes from %d to %d boundary edges",
-      //            s->Num, List_Nbr(ll), List_Nbr(s->Generatrices));
+        Msg::Info("Coherence: face %d goes from %d to %d boundary edges",
+                  s->Num, List_Nbr(ll), List_Nbr(s->Generatrices));
 				  
 	  }
       List_Delete(ll);
@@ -2394,7 +2394,7 @@ static void RemoveDegenerateVolumes()
     }
     if(N - unique.size())
 	{
-   //   Msg::Info("Coherence: removing %d seams on region %d", N-unique.size(), v->Num);
+      Msg::Info("Coherence: removing %d seams on region %d", N-unique.size(), v->Num);
 	  
 	}
 
@@ -2413,7 +2413,7 @@ static void RemoveDegenerateVolumes()
     List_Delete(ll);
     List_Delete(ll2);
     if (List_Nbr(v->Surfaces) == 0){
-   //   Msg::Info("Coherence: region %d is removed (degenerated)",v->Num);
+      Msg::Info("Coherence: region %d is removed (degenerated)",v->Num);
       DeleteVolume(v->Num);
     }
   }
@@ -2438,7 +2438,7 @@ static void RemoveDegenerateSurfaces()
 
     if (N-unique.size())
 	{
-   //   Msg::Info("Coherence: removing %d seams on face %d", N-unique.size(),s->Num);
+      Msg::Info("Coherence: removing %d seams on face %d", N-unique.size(),s->Num);
 	  
 	}
 
@@ -2457,7 +2457,7 @@ static void RemoveDegenerateSurfaces()
     List_Delete(ll);
 
     if(s->degenerate()) {
-   //   Msg::Info("Coherence: face %d is removed (degenerated)", s->Num);
+      Msg::Info("Coherence: face %d is removed (degenerated)", s->Num);
       List_T *Vols = Tree2List(GModel::current()->getGEOInternals()->Volumes);
       for(int k = 0; k < List_Nbr(Vols); k++) {
 	Volume *v;
@@ -2539,7 +2539,7 @@ static void ReplaceDuplicateSurfaces(std::map<int, int> *s_report = 0)
     return;
   }
 
- // Msg::Debug("Removed %d duplicate faces", start - end);
+  Msg::Debug("Removed %d duplicate faces", start - end);
 
   if(CTX::instance()->geom.oldNewreg) {
     GModel::current()->getGEOInternals()->setMaxTag(2, 0);
@@ -2556,7 +2556,7 @@ static void ReplaceDuplicateSurfaces(std::map<int, int> *s_report = 0)
       if(s2){
         if(!(ps2 = (Surface **)Tree_PQuery(allNonDuplicatedSurfaces, &s2)))
 		{
-   //       Msg::Error("Could not replace face %d in Coherence", s2->Num);
+          Msg::Error("Could not replace face %d in Coherence", s2->Num);
 		  
 		}
         else
@@ -2575,7 +2575,7 @@ static void ReplaceDuplicateSurfaces(std::map<int, int> *s_report = 0)
       ps = (Surface **)List_Pointer(vol->Surfaces, j);
       if(!(ps2 = (Surface **)Tree_PQuery(allNonDuplicatedSurfaces, ps)))
 	  {
-     //   Msg::Error("Could not replace face %d in Coherence", (*ps)->Num);
+        Msg::Error("Could not replace face %d in Coherence", (*ps)->Num);
 		
 	  }
       else
@@ -2587,7 +2587,7 @@ static void ReplaceDuplicateSurfaces(std::map<int, int> *s_report = 0)
       if(s2){
         if(!(ps2 = (Surface **)Tree_PQuery(allNonDuplicatedSurfaces, &s2)))
 		{
-     //     Msg::Error("Could not replace face %d in Coherence", s2->Num);
+         Msg::Error("Could not replace face %d in Coherence", s2->Num);
 		  
 		}
         else
@@ -2609,7 +2609,7 @@ static void ReplaceDuplicateSurfaces(std::map<int, int> *s_report = 0)
         if(s2){
           if(!(ps2 = (Surface **)Tree_PQuery(allNonDuplicatedSurfaces, &s2)))
 		  {
-         //   Msg::Error("Could not replace face %d in Coherence", s2->Num);
+            Msg::Error("Could not replace face %d in Coherence", s2->Num);
 			
 		  }
           else
@@ -2716,7 +2716,7 @@ int ExtrudePoint(int type, int ip,
   if(!Tree_Query(GModel::current()->getGEOInternals()->Points, &pv))
     return 0;
 
- // Msg::Debug("Extrude Point %d", ip);
+  Msg::Debug("Extrude Point %d", ip);
 
   chapeau = DuplicateVertex(pv);
 
@@ -2844,7 +2844,7 @@ int ExtrudePoint(int type, int ip,
     c->end = chapeau;
     break;
   default:
-  //  Msg::Error("Unknown extrusion type");
+    Msg::Error("Unknown extrusion type");
     return pv->Num;
   }
 
@@ -2897,11 +2897,11 @@ int ExtrudeCurve(int type, int ic,
   }
 
   if(!pc->beg || !pc->end){
- //   Msg::Error("Cannot extrude edge with no begin/end points");
+    Msg::Error("Cannot extrude edge with no begin/end points");
     return 0;
   }
 
- // Msg::Debug("Extrude Curve %d", ic);
+  Msg::Debug("Extrude Curve %d", ic);
 
   chapeau = DuplicateCurve(pc);
 
@@ -2985,7 +2985,7 @@ int ExtrudeCurve(int type, int ic,
     ApplyTransformationToCurve(matrix, chapeau);
     break;
   default:
-   // Msg::Error("Unknown extrusion type");
+    Msg::Error("Unknown extrusion type");
     return pc->Num;
   }
 
@@ -3084,7 +3084,7 @@ int ExtrudeSurface(int type, int is,
   if(!(ps = FindSurface(std::abs(is))))
     return 0;
 
- // Msg::Debug("Extrude Surface %d", is);
+  Msg::Debug("Extrude Surface %d", is);
 
   chapeau = DuplicateSurface(ps);
   chapeau->Extrude = new ExtrudeParams(COPIED_ENTITY);
@@ -3099,7 +3099,7 @@ int ExtrudeSurface(int type, int is,
     if(c->Num < 0){
       int nn = -c->Num;
       if(!(c = FindCurve(nn))) {
-   //     Msg::Error("Unknown GEO edge with tag %d", nn);
+        Msg::Error("Unknown GEO edge with tag %d", nn);
         return ps->Num;
       }
     }
@@ -3229,7 +3229,7 @@ int ExtrudeSurface(int type, int is,
     ApplyTransformationToSurface(matrix, chapeau);
     break;
   default:
-  //  Msg::Error("Unknown extrusion type");
+    Msg::Error("Unknown extrusion type");
     break;
   }
 
@@ -3339,8 +3339,8 @@ void ExtrudeShapes(int type, List_T *list_in,
       {
         if(shape.Type == MSH_SURF_COMPOUND){
           if(!(e && e->mesh.ExtrudeMesh)){
-        //    Msg::Error("Impossible to extrude compound entity %d without also extruding mesh!",
-        //               abs(shape.Num) );
+            Msg::Error("Impossible to extrude compound entity %d without also extruding mesh!",
+                       abs(shape.Num) );
             break;
           }
         }
@@ -3375,8 +3375,8 @@ void ExtrudeShapes(int type, List_T *list_in,
       }
       break;
     default:
-    //  Msg::Error("Impossible to extrude entity %d (of type %d)",
-    //             shape.Num, shape.Type);
+      Msg::Error("Impossible to extrude entity %d (of type %d)",
+                 shape.Num, shape.Type);
       break;
     }
   }
@@ -3434,8 +3434,8 @@ bool ProjectPointOnSurface(Surface *s, Vertex &p, double uv[2])
       uv[1] = x(1);
       if (ITER >= 0)
 	  {
-   //     Msg::Info("ProjectPoint (%g,%g,%g) On Surface %d converged after %d iterations",
-   //               p.Pos.X, p.Pos.Y, p.Pos.Z, s->Num, ITER);
+        Msg::Info("ProjectPoint (%g,%g,%g) On Surface %d converged after %d iterations",
+                  p.Pos.X, p.Pos.Y, p.Pos.Z, s->Num, ITER);
    
 		}
       return true;
@@ -3469,8 +3469,8 @@ bool ProjectPointOnSurface(Surface *s, Vertex &p, double uv[2])
     uv[1] = vok;
     if (ITER > 0)
 	{
-  //    Msg::Info("Brute force method used for projection of point (%g %g %g) on surface %d",
-   //             p.Pos.X, p.Pos.Y, p.Pos.Z, s->Num);
+      Msg::Info("Brute force method used for projection of point (%g %g %g) on surface %d",
+               p.Pos.X, p.Pos.Y, p.Pos.Z, s->Num);
    
 	}
     return true;
@@ -3496,7 +3496,7 @@ static Curve *_create_splitted_curve(Curve *c, List_T *nodes)
     cnew = CreateCurve(id, c->Typ, 2, nodes, NULL, -1, -1, 0., 1.);
     break;
   default : //should never reach this point...
-//    Msg::Error("Cannot split a curve with type %i", c->Typ);
+    Msg::Error("Cannot split a curve with type %i", c->Typ);
     return NULL;
   }
   Tree_Add(GModel::current()->getGEOInternals()->Curves, &cnew);
@@ -3508,7 +3508,7 @@ bool SplitCurve(int line_id, List_T *vertices_id, List_T *curves)
 {
   Curve *c = FindCurve(line_id);
   if(!c){
-  //  Msg::Error("Curve %i does not exists", line_id);
+    Msg::Error("Curve %i does not exists", line_id);
     return false;
   }
   switch (c->Typ){
@@ -3517,7 +3517,7 @@ bool SplitCurve(int line_id, List_T *vertices_id, List_T *curves)
   case MSH_SEGM_BSPLN:
     break;
   default:
-  //  Msg::Error("Cannot split curve %i with type %i", line_id, c->Typ);
+    Msg::Error("Cannot split curve %i with type %i", line_id, c->Typ);
     return false;
   }
   std::set<int> v_break;
@@ -3633,7 +3633,7 @@ bool IntersectCurvesWithSurface(List_T *curve_ids, int surface_id, List_T *shape
 {
   Surface *s = FindSurface(surface_id);
   if(!s){
- //   Msg::Error("Unknown surface %d", surface_id);
+    Msg::Error("Unknown surface %d", surface_id);
     return false;
   }
   for(int i = 0; i < List_Nbr(curve_ids); i++){
@@ -3657,7 +3657,7 @@ bool IntersectCurvesWithSurface(List_T *curve_ids, int surface_id, List_T *shape
       }
     }
     else{
-  //    Msg::Error("Uknown curve %d", (int)curve_id);
+      Msg::Error("Uknown curve %d", (int)curve_id);
       return false;
     }
   }
@@ -3680,15 +3680,15 @@ void SortEdgesInLoop(int num, List_T *edges, bool orient)
     if((c = FindCurve(j))){
       List_Add(temp, &c);
       if(c->Typ == MSH_SEGM_DISCRETE || c->Typ == MSH_SEGM_COMPOUND){
-    //    Msg::Debug("Aborting line loop sort for discrete or compound edge: "
-     //              "let's hope you know what you're doing ;-)");
+        Msg::Debug("Aborting line loop sort for discrete or compound edge: "
+                   "let's hope you know what you're doing ;-)");
         List_Delete(temp);
         return;
       }
     }
     else{
-  //    Msg::Debug("Unknown curve %d, aborting line loop sort: "
-   //              "let's hope you know what you're doing ;-)", j);
+      Msg::Debug("Unknown curve %d, aborting line loop sort: "
+                 "let's hope you know what you're doing ;-)", j);
       List_Delete(temp);
       return;
     }
@@ -3715,8 +3715,8 @@ void SortEdgesInLoop(int num, List_T *edges, bool orient)
         c1 = c2;
         if(c2->end == c0->beg) {
           if(List_Nbr(temp)) {
-      //      Msg::Info("Starting subloop %d in Line Loop %d (are you sure about this?)",
-       //               ++k, num);
+           Msg::Info("Starting subloop %d in Line Loop %d (are you sure about this?)",
+                      ++k, num);
             c0 = c1 = *(Curve **)List_Pointer(temp, 0);
             List_Add(edges, &c1->Num);
             List_PSuppress(temp, 0);
@@ -3726,7 +3726,7 @@ void SortEdgesInLoop(int num, List_T *edges, bool orient)
       }
     }
     if(j++ > nbEdges) {
-  //    Msg::Error("Line Loop %d is wrong", num);
+      Msg::Error("Line Loop %d is wrong", num);
       break;
     }
   }
@@ -3745,7 +3745,7 @@ void SetSurfaceGeneratrices(Surface *s, List_T *loops)
     s->Generatrices = GetOrderedUniqueEdges(s);
     if(!List_Nbr(s->Generatrices)){
       // don't complain: compounds can be not in old GEO database
-      //Msg::Warning("Could not make generatrices list for compound surface %d", s->Num);
+      Msg::Warning("Could not make generatrices list for compound surface %d", s->Num);
       return;
     }
   }
@@ -3756,7 +3756,7 @@ void SetSurfaceGeneratrices(Surface *s, List_T *loops)
     EdgeLoop *el;
     std::vector<int> fromModel;
     if(!(el = FindEdgeLoop(abs(iLoop)))) {
-  //    Msg::Error("Unknown line loop %d in GEO face %d", iLoop, s->Num);
+      Msg::Error("Unknown line loop %d in GEO face %d", iLoop, s->Num);
       List_Delete(s->Generatrices);
       s->Generatrices = NULL;
       return;
@@ -3794,7 +3794,7 @@ void SetSurfaceGeneratrices(Surface *s, List_T *loops)
           List_Add(s->GeneratricesByTag, &ic);
         }
         else{
-     //     Msg::Error("Unknown curve %d", ic);
+          Msg::Error("Unknown curve %d", ic);
           return;
         }
       }
@@ -3812,7 +3812,7 @@ void SetVolumeSurfaces(Volume *v, List_T *loops)
     List_Read(loops, i, &il);
     SurfaceLoop *sl;
     if(!(sl = FindSurfaceLoop(abs(il)))) {
-  //    Msg::Error("Unknown surface loop %d", il);
+      Msg::Error("Unknown surface loop %d", il);
       return;
     }
     else {
@@ -3834,7 +3834,7 @@ void SetVolumeSurfaces(Volume *v, List_T *loops)
             List_Add(v->SurfacesByTag, &is);
           }
           else{
-    //        Msg::Error("Unknown surface %d", is);
+           Msg::Error("Unknown surface %d", is);
             return;
           }
         }

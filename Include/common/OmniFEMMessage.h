@@ -18,13 +18,12 @@ enum Status_Windows
 class OmniFEMMsg
 {
 private:
+
 	static OmniFEMMsg *p_instance;
 	
 	bool p_logMessage = false;
 	
 	std::vector<statusWindow*> p_statusWindows;
-	
-	
 	
 public:
 	
@@ -34,6 +33,7 @@ public:
 		// Create the three different windows
 		p_statusWindows.push_back(new statusWindow("Log Status Window", false, false));
 		p_statusWindows.push_back(new statusWindow("Mesh Status Window", true, false));
+		p_statusWindows[1]->setProgressBarOneTitle("Mesh Progress");
 		p_statusWindows.push_back(new statusWindow("Solver Status Window", true, true));
 	}
 	

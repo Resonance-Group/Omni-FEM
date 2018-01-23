@@ -11,7 +11,7 @@
 #include "Mesh/ExtrudeParams.h"
 #include "Mesh/MVertexRTree.h"
 #include "Mesh/Context.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/QuadTriExtruded2D.h"
 
 static void addTriangle(MVertex* v1, MVertex* v2, MVertex* v3,
@@ -37,7 +37,7 @@ static void createQuaTri(std::vector<MVertex*> &v, GFace *to,
     addTriangle(v[0], v[1], v[3], to);
   else if(v[0] == v[3] || v[1] == v[2])
   {
-   // Msg::Error("Uncoherent extruded quadrangle in surface %d", to->tag());
+    Msg::Error("Uncoherent extruded quadrangle in surface %d", to->tag());
 	
   }
   else{
@@ -118,8 +118,8 @@ static void extrudeMesh(GEdge *from, GFace *to, MVertexRTree &pos,
   bool quadToTri_valid = IsValidQuadToTriLateral(to, &tri_quad_flag, &detectQuadToTriLateral);
   if(detectQuadToTriLateral && !quadToTri_valid)
   {
-   // Msg::Error("In MeshGFaceExtrudedSurface::extrudeMesh(), Mesh of QuadToTri Lateral "
-    //           "surface %d likely has errors.", to->tag());
+    Msg::Error("In MeshGFaceExtrudedSurface::extrudeMesh(), Mesh of QuadToTri Lateral "
+               "surface %d likely has errors.", to->tag());
 			   
   }
 
@@ -142,8 +142,8 @@ static void extrudeMesh(GEdge *from, GFace *to, MVertexRTree &pos,
         for(int p = 0; p < 4; p++){
           MVertex *tmp = pos.find(x[p], y[p], z[p]);
           if(!tmp){
-           // Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-           //            x[p], y[p], z[p], to->tag());
+            Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+                       x[p], y[p], z[p], to->tag());
             return;
           }
           verts.push_back(tmp);
@@ -186,8 +186,8 @@ static void copyMesh(GFace *from, GFace *to, MVertexRTree &pos)
   bool is_toroidal = quadToTri_valid >= 2 ? true : false;
   bool is_noaddverts = quadToTri_valid == 3 ? true : false;
   if(detectQuadToTriTop && !quadToTri_valid && !is_toroidal){
-  //  Msg::Error("In MeshGFaceExtrudedSurface::copyMesh(), Mesh of QuadToTri top "
-   //            "surface %d likely has errors.", to->tag());
+    Msg::Error("In MeshGFaceExtrudedSurface::copyMesh(), Mesh of QuadToTri top "
+               "surface %d likely has errors.", to->tag());
   }
 
   // if this is toroidal No New Vertices QuadToTri, then replace the root
@@ -196,10 +196,10 @@ static void copyMesh(GFace *from, GFace *to, MVertexRTree &pos)
     GFace *root = findRootSourceFaceForFace(from);
     if(root == from){
       ReplaceBndQuadsInFace(root);
-    //  Msg::Warning("To facilitate QuadToTri interface on surface %d, source "
-    //               "surface %d was re-meshed with all triangles on boundary. "
-    ////               "To avoid this, use QuadTriAddVerts instead of QuadTriNoNewVerts",
-     //              to->tag(), root->tag());
+      Msg::Warning("To facilitate QuadToTri interface on surface %d, source "
+                  "surface %d was re-meshed with all triangles on boundary. "
+                  "To avoid this, use QuadTriAddVerts instead of QuadTriNoNewVerts",
+                   to->tag(), root->tag());
     }
   }
 
@@ -213,8 +213,8 @@ static void copyMesh(GFace *from, GFace *to, MVertexRTree &pos)
                   x, y, z);
       MVertex *tmp = pos.find(x, y, z);
       if(!tmp) {
-      //  Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-       //            x, y, z, to->tag());
+        Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+                   x, y, z, to->tag());
         return;
       }
       verts.push_back(tmp);
@@ -226,8 +226,8 @@ static void copyMesh(GFace *from, GFace *to, MVertexRTree &pos)
   // if quadtotri and not part of a toroidal extrusion, mesh the top surface accordingly
   if(detectQuadToTriTop && !is_toroidal){
     if(!MeshQuadToTriTopSurface(from, to, pos))
-    //  Msg::Error("In MeshExtrudedSurface()::copyMesh(), mesh of QuadToTri top "
-    //             "surface %d failed.", to->tag() );
+      Msg::Error("In MeshExtrudedSurface()::copyMesh(), mesh of QuadToTri top "
+                 "surface %d failed.", to->tag() );
     return;
   }
 
@@ -241,8 +241,8 @@ static void copyMesh(GFace *from, GFace *to, MVertexRTree &pos)
                   x, y, z);
       MVertex *tmp = pos.find(x, y, z);
       if(!tmp) {
-    //    Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-     //       x, y, z, to->tag());
+	Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+            x, y, z, to->tag());
         return;
       }
       verts.push_back(tmp);
@@ -259,7 +259,7 @@ int MeshExtrudedSurface(GFace *gf,
   if(!ep || !ep->mesh.ExtrudeMesh)
     return 0;
 
- // Msg::Info("Meshing surface %d (extruded)", gf->tag());
+  Msg::Info("Meshing surface %d (extruded)", gf->tag());
 
   // build an rtree with all the vertices on the boundary of the face gf
   MVertexRTree pos(CTX::instance()->geom.tolerance * CTX::instance()->lc);
@@ -282,7 +282,7 @@ int MeshExtrudedSurface(GFace *gf,
     // surface is extruded from a curve
     GEdge *from = gf->model()->getEdgeByTag(std::abs(ep->geo.Source));
     if(!from){
-   //   Msg::Error("Unknown source curve %d for extrusion", ep->geo.Source);
+      Msg::Error("Unknown source curve %d for extrusion", ep->geo.Source);
       return 0;
     }
     extrudeMesh(from, gf, pos, constrainedEdges);
@@ -291,7 +291,7 @@ int MeshExtrudedSurface(GFace *gf,
     // surface is a copy of another surface (the "top" of the extrusion)
     GFace *from = gf->model()->getFaceByTag(std::abs(ep->geo.Source));
     if(!from){
-   //   Msg::Error("Unknown source surface %d for extrusion", ep->geo.Source);
+      Msg::Error("Unknown source surface %d for extrusion", ep->geo.Source);
       return 0;
     }
     else if(from->geomType() != GEntity::DiscreteSurface &&

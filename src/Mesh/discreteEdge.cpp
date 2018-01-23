@@ -6,7 +6,7 @@
 #include <vector>
 #include <list>
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/discreteEdge.h"
 #include "Mesh/MLine.h"
 #include "Mesh/Numeric.h"
@@ -17,7 +17,7 @@
 //#include "MTetrahedron.h"
 //#include "MHexahedron.h"
 //#include "MPyramid.h"
-#include "Mesh/GModelIO_GEO.h"
+#include "Mesh/gmshIO/GModelIO_GEO.h"
 #include "Mesh/Geo.h"
 #include "common/OS.h"
 #include "Mesh/Curvature.h"
@@ -97,8 +97,8 @@ void discreteEdge::orderMLines()
     segments.erase(segments.begin());
   }
   else{
-    //Msg::Error("EdgeCompound %d is wrong (it has %d end points)",
-        //       tag(), boundv.size());
+    Msg::Error("EdgeCompound %d is wrong (it has %d end points)",
+               tag(), boundv.size());
   }
   // loop over all segments to order segments and store it in the list _m
   _m.push_back(firstLine);
@@ -136,7 +136,7 @@ void discreteEdge::orderMLines()
         _orientation[0] = 0;
       }
       else {
-        //Msg::Error("Discrete Edge %d is wrong",tag());
+        Msg::Error("Discrete Edge %d is wrong",tag());
         return;
       }
     }
@@ -497,7 +497,7 @@ double discreteEdge::curvature(double par) const
   double c0, c1;
   Curvature& curvature  = Curvature::getInstance();
   if( !Curvature::valueAlreadyComputed() ) {
-    //Msg::Warning("Need to compute discrete curvature (in discreteEdge)");
+    Msg::Warning("Need to compute discrete curvature (in discreteEdge)");
     Curvature::typeOfCurvature type = Curvature::RUSIN; //RUSIN; //RBF
     curvature.computeCurvature(model(), type);
   }
@@ -515,7 +515,7 @@ double discreteEdge::curvatures(const double par, SVector3 *dirMax, SVector3 *di
     return getCompound()->curvatures(par, dirMax, dirMin, curvMax, curvMin);
   }
   else{
-    //Msg::Error("Cannot evaluate curvatures and curvature directions on discrete edge");
+    Msg::Error("Cannot evaluate curvatures and curvature directions on discrete edge");
     return false;
   }
 }
@@ -569,8 +569,8 @@ MVertex * discreteEdge::getGeometricalVertex (MVertex *v)
 {
   std::map<MVertex*,MVertex*>::const_iterator it = v2v.find(v);
   if (it == v2v.end()){
-    //Msg::Error("fatality %ld %ld %ld", v2v.size(), mesh_vertices.size(),
-      //         discrete_vertices.size());
+    Msg::Error("fatality %ld %ld %ld", v2v.size(), mesh_vertices.size(),
+               discrete_vertices.size());
   }
   return it->second;
 }
@@ -579,7 +579,7 @@ void discreteEdge::interpolateInGeometry(MVertex *v, MVertex **v1,
                                          MVertex **v2, double &xi) const
 {
   double t;
-  if (v->onWhat() != this){/*Msg::Fatal("%s %d",__FILE__,__LINE__);*/}
+  if (v->onWhat() != this){Msg::Fatal("%s %d",__FILE__,__LINE__);}
   v->getParameter (0,t);
   int i = (int) t;
   MLine *l = discrete_lines [i];

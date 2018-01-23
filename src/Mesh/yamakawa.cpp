@@ -1012,10 +1012,10 @@ void Recombinator::merge() {
  //   delete_marked_tets_in_region();
   }
 
- // Msg::Info("Number of hexaedra: %d", nb_final_hex);
+  Msg::Info("Number of hexaedra: %d", nb_final_hex);
 
   double average_quality = nb_final_hex == 0 ? 0 : total_quality / nb_final_hex;
- // Msg::Info("hexahedra average quality (0->1) : %f\n", average_quality);
+  Msg::Info("hexahedra average quality (0->1) : %f\n", average_quality);
 }
 
 /*
@@ -3196,7 +3196,7 @@ MFace PostOp::find_quadFace(MVertex* v1, MVertex* v2, MVertex* v3)
     intersection(buf, it3->second, final);
   }
 
-  if (final.size() > 1){/* Msg::Error("This shouldn't happen ...");*/}
+  if (final.size() > 1){ Msg::Error("This shouldn't happen ...");}
 
   element_set_itr it;
   for (it = final.begin(); it != final.end(); ++it) {

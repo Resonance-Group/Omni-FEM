@@ -15,7 +15,7 @@
 //#include "MHexahedron.h"
 //#include "MPrism.h"
 //#include "MPyramid.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "common/OS.h"
 #include "Mesh/Context.h"
 #include "Mesh/meshGFaceOptimize.h"
@@ -451,8 +451,7 @@ void RefineMesh(GModel *m, bool linear, bool splitIntoQuads, bool splitIntoHexas
 {
     splitIntoQuads = true;
     splitIntoHexas = false;
-
- // Msg::StatusBar(true, "Refining mesh...");
+	Msg::Info("Refining mesh...");
   double t1 = Cpu();
 
   // Create 2nd order mesh (using "2nd order complete" elements) to
@@ -468,7 +467,7 @@ void RefineMesh(GModel *m, bool linear, bool splitIntoQuads, bool splitIntoHexas
     Subdivide(*it);
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
     Subdivide(*it, splitIntoQuads, splitIntoHexas, faceVertices);
-    if(splitIntoQuads) recombineIntoQuads(*it, true, true);
+   // if(splitIntoQuads) recombineIntoQuads(*it, true, true);
   }
  // for(GModel::riter it = m->firstRegion(); it != m->lastRegion(); ++it)
   //  Subdivide(*it, splitIntoHexas, faceVertices);
@@ -478,7 +477,7 @@ void RefineMesh(GModel *m, bool linear, bool splitIntoQuads, bool splitIntoHexas
 
   CTX::instance()->mesh.changed = ENT_ALL;
   double t2 = Cpu();
-  //Msg::StatusBar(true, "Done refining mesh (%g s)", t2 - t1);
+  Msg::Info("Done refining mesh (%g s)", t2 - t1);
 }
 
 

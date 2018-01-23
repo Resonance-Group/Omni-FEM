@@ -12,7 +12,7 @@
 #include "Mesh/BackgroundMeshTools.h"
 #include "Mesh/boundaryLayersData.h"
 #include "Mesh/Numeric.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Context.h"
 #include "Mesh/STensor3.h"
 #include "Mesh/Field.h"
@@ -187,7 +187,8 @@ static double F_Transfinite(GEdge *ge, double t_)
   int nbpt = ge->meshAttributes.nbPointsTransfinite;
 
   if(CTX::instance()->mesh.flexibleTransfinite && CTX::instance()->mesh.lcFactor)
-    nbpt /= CTX::instance()->mesh.lcFactor;
+    nbpt /= (CTX::instance()->mesh.lcFactor * ge->meshAttributes.meshSize);
+	//nbpt /= ge->meshAttributes.meshSize;
 
   Range<double> bounds = ge->parBounds(0);
   double t_begin = bounds.low();
@@ -605,7 +606,8 @@ void meshGEdge::operator() (GEdge *ge)
                     CTX::instance()->mesh.lcIntegrationPrecision);
     N = ge->meshAttributes.nbPointsTransfinite;
     if(CTX::instance()->mesh.flexibleTransfinite && CTX::instance()->mesh.lcFactor)
-      N /= CTX::instance()->mesh.lcFactor;
+      N /= CTX::instance()->mesh.lcFactor * ge->meshAttributes.meshSize;
+//	  N /= ge->meshAttributes.meshSize;
   }
   else{
     if (CTX::instance()->mesh.algo2d == ALGO_2D_BAMG/* || blf*/){

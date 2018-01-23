@@ -11,7 +11,7 @@
 #include "Mesh/Geo.h"
 #include "Mesh/GeoInterpolation.h"
 #include "Mesh/Numeric.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Context.h"
 #include "Mesh/MTriangle.h"
 #include "Mesh/VertexArray.h"
@@ -65,7 +65,7 @@ void gmshFace::resetNativePtr(Surface *face)
       nums.push_back(c->Num);
     }
     else
-  {/*Msg::Error("Unknown curve %d", c->Num);*/}
+  {Msg::Error("Unknown curve %d", c->Num);}
   }
   for(int i = 0; i < List_Nbr(s->GeneratricesByTag); i++){
     int j;
@@ -141,7 +141,7 @@ void gmshFace::resetMeshAttributes()
       if(gv)
         meshAttributes.corners.push_back(gv);
       else
-        {/*Msg::Error("Unknown vertex %d in transfinite attributes", corn->Num);*/}
+        {Msg::Error("Unknown vertex %d in transfinite attributes", corn->Num);}
     }
   }
   meshAttributes.reverseMesh = s->ReverseMesh;
@@ -193,10 +193,10 @@ SVector3 gmshFace::normal(const SPoint2 &param) const
       }
       if(fabs(angle) < 0.5){ // we're outside
         NP *= 2;
-        //Msg::Debug("Could not compute normal of surface %d - retrying with %d points",
-             //      tag(), NP);
+        Msg::Debug("Could not compute normal of surface %d - retrying with %d points",
+                   tag(), NP);
         if(tries > 10){
-         // Msg::Warning("Could not orient normal of surface %d", tag());
+          Msg::Warning("Could not orient normal of surface %d", tag());
           return SVector3(n[0], n[1], n[2]);
         }
       }

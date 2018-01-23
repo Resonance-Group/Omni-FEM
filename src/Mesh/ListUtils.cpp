@@ -22,7 +22,7 @@ typedef unsigned long intptr_t;
 #include "Mesh/MallocUtils.h"
 #include "Mesh/ListUtils.h"
 #include "Mesh/TreeUtils.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 int fcmp_int(const void *a, const void *b)
 {
@@ -117,7 +117,7 @@ int List_Nbr(List_T * liste)
 void List_Read(List_T * liste, int index, void *data)
 {
   if((index < 0) || (index >= liste->n)){
- //   Msg::Error("Wrong list index (read)");
+    Msg::Error("Wrong list index (read)");
     index = 0;
   }
   memcpy(data, &liste->array[index * liste->size], liste->size);
@@ -127,7 +127,7 @@ void List_Write(List_T * liste, int index, void *data)
 {
   if((index < 0) || (index >= liste->n))
   {
- //   Msg::Error("Wrong list index (write)");
+    Msg::Error("Wrong list index (write)");
 	
   }
   else {
@@ -140,7 +140,7 @@ void List_Put(List_T * liste, int index, void *data)
 {
   if(index < 0)
   {
- //   Msg::Error("Wrong list index (put)");
+    Msg::Error("Wrong list index (put)");
 	
   }
   else {
@@ -164,7 +164,7 @@ void List_Pop(List_T * liste)
 void *List_Pointer(List_T * liste, int index)
 {
   if((index < 0) || (index >= liste->n)){
-  //  Msg::Error("Wrong list index (pointer)");
+    Msg::Error("Wrong list index (pointer)");
     index = 0;
   }
   liste->isorder = 0;
@@ -174,7 +174,7 @@ void *List_Pointer(List_T * liste, int index)
 void *List_Pointer_NoChange(List_T * liste, int index)
 {
   if((index < 0) || (index >= liste->n)){
-  //  Msg::Error("Wrong list index (pointer)");
+    Msg::Error("Wrong list index (pointer)");
     index = 0;
   }
   return (&liste->array[index * liste->size]);

@@ -17,7 +17,7 @@
 #include "MLine.h"
 #include "BackgroundMeshTools.h"
 #include "Numeric.h"
-#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Generator.h"
 #include "Context.h"
 #include "OS.h"

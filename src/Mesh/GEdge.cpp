@@ -7,7 +7,7 @@
 #include <algorithm>
 //#include "GmshConfig.h"
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/GModel.h"
 #include "Mesh/GEdge.h"
 #include "Mesh/GFace.h"
@@ -120,7 +120,7 @@ void GEdge::setMeshMaster(GEdge* ge,const std::vector<double>& tfo)
     return;
   }
 
- /* Msg::Info("Error in transformation from edge %d (%d-%d) to %d (%d-%d)"
+  Msg::Info("Error in transformation from edge %d (%d-%d) to %d (%d-%d)"
             "(minimal transformed node distances %g %g, tolerance %g)",
             ge->tag(),ge->getBeginVertex()->tag(),ge->getEndVertex()->tag(),
             this->tag(),
@@ -128,7 +128,7 @@ void GEdge::setMeshMaster(GEdge* ge,const std::vector<double>& tfo)
             this->getEndVertex()->tag(),
             fwd ? d00.norm() : d01.norm(),
             fwd ? d11.norm() : d10.norm(),tol);
-			 */ 
+			  
 }
 
 void GEdge::reverse()
@@ -532,13 +532,13 @@ bool GEdge::XYZToU(const double X, const double Y, const double Z,
   }
 
   if(relax > 1.e-2) {
-    //    Msg::Info("point %g %g %g on edge %d : Relaxation factor = %g",
-    //              X, Y, Z, 0.75 * relax);
+        Msg::Info("point %g %g %g on edge %d : Relaxation factor = %g",
+                  X, Y, Z, 0.75 * relax);
     return XYZToU(X, Y, Z, u, 0.75 * relax);
   }
 
-  //  Msg::Error("Could not converge reparametrisation of point (%e,%e,%e) on edge %d",
-  //             X, Y, Z, tag());
+    Msg::Error("Could not converge reparametrisation of point (%e,%e,%e) on edge %d",
+               X, Y, Z, tag());
   return false;
 }
 

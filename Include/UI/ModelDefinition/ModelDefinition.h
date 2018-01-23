@@ -7,6 +7,9 @@
 #include <math.h>
 #include <sstream>
 
+#include <thread>
+#include <chrono>
+
 #include <glew.h>
 #include <freeglut.h>
 
@@ -902,12 +905,16 @@ public:
     
     //! The function that will select any dangling nodes.
     /*!
-        A node is considered dangling when the node does not form a closed boundary.
-        This occurs if there is just 1 line or arc connected to the node.
-        This function will go through the entire node list and highlight any nodes
-        that only have 1 arc or line connected to it
-    */ 
-    void displayDanglingNodes();
+        
+    */
+	/**
+	 * @brief 	A node is considered dangling when the node does not form a closed boundary.
+				This occurs if there is just 1 line or arc connected to the node.
+				This function will go through the entire node list and highlight any nodes
+				that only have 1 arc or line connected to it
+	 * @return Returns a number to indicate the number of nodes one an open boundary
+	 */
+    unsigned long displayDanglingNodes();
     
     //! The function that will create a circular boundary with layers
     /*!
@@ -1030,6 +1037,9 @@ public:
 		_zoomY = otherParam.at(1);
 		_cameraX = otherParam.at(2);
 		_cameraY = otherParam.at(3);
+	//	std::this_thread::sleep_for(std::chrono::seconds(1));
+		this->Refresh();
+		this->Update();
 	}
 	
 	/**
@@ -1056,7 +1066,7 @@ public:
 	
 	bool checkModelIsValid()
 	{
-		if(p_modelMesh->getNumMeshVertices() > 0)
+		if(p_modelMesh && p_modelMesh->getNumMeshVertices() > 0)
 			p_drawMesh = true;
 		else
 			p_drawMesh = false;
@@ -1087,6 +1097,11 @@ public:
 	bool getShowMeshState()
 	{
 		return p_drawMesh;
+	}
+	
+	void addNodePoint(wxRealPoint &point)
+	{
+		_editor.addNode(point.x, point.y, getTolerance());
 	}
 
 private:

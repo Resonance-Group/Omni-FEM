@@ -302,7 +302,7 @@ class GFace : public GEntity {
   // new interface for meshing
   virtual void mesh(bool verbose);
 
-  struct {
+/*  struct {
     // do we recombine the triangles of the mesh?
     int recombine;
     // what is the treshold angle for recombination
@@ -322,7 +322,7 @@ class GFace : public GEntity {
     bool reverseMesh;
     // global mesh size constraint for the surface
     double meshSize;
-  } meshAttributes ;
+  } meshAttributes ;*/
 
   int getMeshingAlgo() const;
   void setMeshingAlgo(int);

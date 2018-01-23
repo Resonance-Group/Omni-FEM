@@ -273,6 +273,17 @@ const char *GetEnvironmentVar(const char *var)
 }
 */
 
+FILE *Fopen(const char *f, const char *mode)
+{
+#if defined (WIN32) && !defined(__CYGWIN__)
+  setwbuf(0, f);
+  setwbuf(1, mode);
+  return _wfopen(wbuf[0], wbuf[1]);
+#else
+  return fopen(f, mode);
+#endif
+}
+
 void SetEnvironmentVar(const char *var, const char *val)
 {
 	/*

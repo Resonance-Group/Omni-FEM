@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "Mesh/MallocUtils.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 void *Malloc(size_t size)
 {
@@ -18,7 +18,7 @@ void *Malloc(size_t size)
   ptr = malloc(size);
   if(ptr == NULL)
   {
-    //Msg::Fatal("Out of memory (buy some more RAM!)");
+    Msg::Fatal("Out of memory (buy some more RAM!)");
 	
   }
   return (ptr);
@@ -33,7 +33,7 @@ void *Calloc(size_t num, size_t size)
   ptr = calloc(num, size);
   if(ptr == NULL)
   {
-  //  Msg::Fatal("Out of memory (buy some more RAM!)");
+   Msg::Fatal("Out of memory (buy some more RAM!)");
 	
   }
   return (ptr);
@@ -46,7 +46,7 @@ void *Realloc(void *ptr, size_t size)
   ptr = realloc(ptr, size);
   if(ptr == NULL)
   {
-   // Msg::Fatal("Out of memory (buy some more RAM!)");
+    Msg::Fatal("Out of memory (buy some more RAM!)");
 	
   }
   return (ptr);

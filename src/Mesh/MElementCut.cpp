@@ -541,7 +541,7 @@ static void assignLsPhysical(GModel *GM, int reg, int dim,
     std::string sdim = (dim == 2) ? "S" : "L";
     physicals[dim][reg][physTag] = "levelset_" + sdim + strs.str();
     if(physTag != lsTag)
-  //    Msg::Info("Levelset %d -> physical %d", lsTag, physTag);
+      Msg::Info("Levelset %d -> physical %d", lsTag, physTag);
   }
 }
 
@@ -701,7 +701,7 @@ static void elementSplitMesh(MElement *e, std::vector<gLevelset *> &RPN,
     }
     break;
   default :
-  //  Msg::Error("This type of element cannot be split.");
+    Msg::Error("This type of element cannot be split.");
     return;
   }
 
@@ -1412,7 +1412,7 @@ static void elementCutMesh(MElement *e, std::vector<gLevelset *> &RPN,
     }
     break;
   default :
- //   Msg::Error("This type of element cannot be cut %d.",eType);
+    Msg::Error("This type of element cannot be cut %d.",eType);
     break;
   }
 
@@ -1644,7 +1644,7 @@ GModel *buildCutMesh(GModel *gm, gLevelset *ls,
 
   return cutGM;
 #else
- // Msg::Error("Gmsh need to be compiled with levelset support to cut mesh");
+  Msg::Error("Gmsh need to be compiled with levelset support to cut mesh");
   return 0;
 #endif
 }

@@ -389,8 +389,8 @@ static int MeshQuadToTriTopUnstructured(GFace *from, GFace *to, MVertexRTree &po
                   x, y, z);
       MVertex *tmp = pos.find(x, y, z);
       if(!tmp) {
-        //Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-        //           x, y, z, to->tag());
+        Msg::Error("Could not find extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+                   x, y, z, to->tag());
         to->triangles.reserve(to->triangles.size() + 1);
         return 0;
       }
@@ -398,9 +398,9 @@ static int MeshQuadToTriTopUnstructured(GFace *from, GFace *to, MVertexRTree &po
     }
 
     if(verts.size() != 4){
-      //Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
-          //       "in quad of source surface %d.", to->tag(), verts.size(),
-         //        from->tag() );
+      Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
+                 "in quad of source surface %d.", to->tag(), verts.size(),
+                 from->tag() );
       return 0;
     }
 
@@ -451,8 +451,8 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
 
   ExtrudeParams *ep = to->meshAttributes.extrude;
   if(!ep || !ep->mesh.ExtrudeMesh || !(ep->geo.Mode == COPIED_ENTITY)){
-    //Msg::Error("In MeshQuadToTriTopSurface(), incomplete or no "
-     //          "extrude information for top face %d.", to->tag() );
+    Msg::Error("In MeshQuadToTriTopSurface(), incomplete or no "
+               "extrude information for top face %d.", to->tag() );
     return 0;
   }
 
@@ -484,9 +484,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
                     x, y, z);
         MVertex *tmp = pos.find(x, y, z);
         if(!tmp) {
-          //Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
-          //           "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-         //            x, y, z, to->tag());
+          Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
+                     "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+                     x, y, z, to->tag());
           to->triangles.reserve(to->triangles.size() + 1);
           return 0;
         }
@@ -494,9 +494,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
       }
 
       if(verts.size() != 4){
-       // Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
-       //            "in quad of source surface %d.", to->tag(), verts.size(),
-        //           from->tag());
+        Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
+                   "in quad of source surface %d.", to->tag(), verts.size(),
+                   from->tag());
         return 0;
       }
 
@@ -577,9 +577,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
                     x, y, z);
         MVertex *tmp = pos.find(x, y, z);
         if(!tmp) {
-          //Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
-         //            "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
-         //            x, y, z, to->tag());
+          Msg::Error("In MeshQuadToTriTopSurface(), Could not find "
+                     "extruded vertex (%.16g, %.16g, %.16g) in surface %d",
+                     x, y, z, to->tag());
           to->triangles.reserve(to->triangles.size() + 1);
           return 0;
         }
@@ -587,9 +587,9 @@ int MeshQuadToTriTopSurface(GFace *from, GFace *to, MVertexRTree &pos)
       }
 
       if(verts.size() != 4){
-        //Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
-         //          "in quad of source surface %d.", to->tag(), verts.size(),
-         //          from->tag() );
+        Msg::Error("During mesh of QuadToTri surface %d, %d vertices found "
+                   "in quad of source surface %d.", to->tag(), verts.size(),
+                   from->tag() );
         return 0;
       }
 

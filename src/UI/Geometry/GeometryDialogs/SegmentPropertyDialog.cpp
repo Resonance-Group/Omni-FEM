@@ -66,21 +66,19 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     
     line2Sizer->Add(_meshSpacingAutoCheckbox, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     
-    if(!_isArc)
-    {
-        wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
-        elementSizeText->SetFont(*font);
-        _elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
-        _elementSizeTextCtrl->SetFont(*font);
-        _elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
-        std::ostream elementSizeStream(_elementSizeTextCtrl);
-        elementSizeStream << std::setprecision(4);
-        elementSizeStream << property.getElementSizeAlongLine();
-        
-        line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-        line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    }
-    else
+	wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
+	elementSizeText->SetFont(*font);
+	_elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
+	_elementSizeTextCtrl->SetFont(*font);
+	_elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
+	std::ostream elementSizeStream(_elementSizeTextCtrl);
+	elementSizeStream << std::setprecision(4);
+	elementSizeStream << property.getElementSizeAlongLine();
+	
+	line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+		
+	if(_isArc)
         this->SetTitle("Arc Segment Properties");
     
     wxStaticText *conductorText = new wxStaticText(this, wxID_ANY, "In Conductor:");
@@ -130,8 +128,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<electric
     
     topSizer->Add(line1Sizer);
     topSizer->Add(line2Sizer);
-    if(!_isArc)
-        topSizer->Add(line3Sizer);
+	topSizer->Add(line3Sizer);
     topSizer->Add(line4Sizer);
     topSizer->Add(line5Sizer);
     topSizer->Add(line6Sizer);
@@ -197,21 +194,19 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
     
     line2Sizer->Add(_meshSpacingAutoCheckbox, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
     
-    if(!_isArc)
-    {
-        wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
-        elementSizeText->SetFont(*font);
-        _elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
-        _elementSizeTextCtrl->SetFont(*font);
-        _elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
-        std::ostream elementSizeStream(_elementSizeTextCtrl);
-        elementSizeStream << std::setprecision(4);
-        elementSizeStream << property.getElementSizeAlongLine();
-        
-        line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
-        line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    }
-    else
+	wxStaticText *elementSizeText = new wxStaticText(this, wxID_ANY, "Local Element Size Along Line:");
+	elementSizeText->SetFont(*font);
+	_elementSizeTextCtrl->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(70, 20));
+	_elementSizeTextCtrl->SetFont(*font);
+	_elementSizeTextCtrl->Enable(!_meshSpacingAutoCheckbox->GetValue());
+	std::ostream elementSizeStream(_elementSizeTextCtrl);
+	elementSizeStream << std::setprecision(4);
+	elementSizeStream << property.getElementSizeAlongLine();
+	
+	line3Sizer->Add(elementSizeText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	line3Sizer->Add(_elementSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+		
+	if(_isArc)
         this->SetTitle("Arc Segment Properties");
     
     _hideSegmentCheckbox->Create(this, wxID_ANY, "Hide Segment in Postprocessor", wxDefaultPosition, wxSize(200, 17));
@@ -239,8 +234,7 @@ segmentPropertyDialog::segmentPropertyDialog(wxWindow *par, std::vector<magnetic
     
     topSizer->Add(line1Sizer);
     topSizer->Add(line2Sizer);
-    if(!_isArc)
-        topSizer->Add(line3Sizer);
+	topSizer->Add(line3Sizer);
     topSizer->Add(line4Sizer);
     topSizer->Add(line5Sizer);
     topSizer->Add(footerSizer, 0, wxALIGN_RIGHT);
@@ -264,13 +258,10 @@ bool segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
 	if(_meshSpacingAutoCheckbox->GetValue() != p_property.getMeshAutoState())
 		resetMesh = true;
     
-    if(!_isArc)
-    {
-        _elementSizeTextCtrl->GetValue().ToDouble(&value);
-        property.setElementSizeAlongLine(value);
-		if(p_property.getElementSizeAlongLine() != value)
-			resetMesh = true;
-    }
+	_elementSizeTextCtrl->GetValue().ToDouble(&value);
+	property.setElementSizeAlongLine(value);
+	if(p_property.getElementSizeAlongLine() != value)
+		resetMesh = true;
         
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {

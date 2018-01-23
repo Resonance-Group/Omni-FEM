@@ -6,7 +6,7 @@
 #include "Mesh/CondNumBasis.h"
 
 #include "Mesh/GmshDefines.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 #include <vector>
 #include "Mesh/polynomialBasis.h"
@@ -391,7 +391,7 @@ int CondNumBasis::condNumOrder(int parentType, int order)
     case TYPE_PYR : return order;
     case TYPE_TRIH : return 0;
     default :
-  //    Msg::Error("Unknown element type %d, return order 0", parentType);
+      Msg::Error("Unknown element type %d, return order 0", parentType);
       return 0;
   }
 }
@@ -416,7 +416,7 @@ inline void CondNumBasis::getInvCondNumGeneral(int nCondNumNodes,
     }
 
     case 1 : {
-    //  Msg::Warning("Inverse condition number not implemented in 1D");
+      Msg::Warning("Inverse condition number not implemented in 1D");
       condNum.setAll(0.);
       break;
     }
@@ -512,7 +512,7 @@ inline void CondNumBasis::getInvCondNumAndGradientsGeneral(int nCondNumNodes,
     }
 
     case 1 : {
-    //  Msg::Warning("Inverse condition number not implemented in 1D");
+      Msg::Warning("Inverse condition number not implemented in 1D");
       IDI.setAll(0.);
       break;
     }

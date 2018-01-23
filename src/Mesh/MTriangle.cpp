@@ -346,7 +346,7 @@ void MTriangleN::reorient(int rot, bool swap)
     }
     if (order >=5)
 	{
-    //  Msg::Error("Reorientation of a triangle not supported above order 4");
+      Msg::Error("Reorientation of a triangle not supported above order 4");
 	  
 	}
   }

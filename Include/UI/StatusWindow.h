@@ -11,6 +11,9 @@
 class statusWindow : public wxDialog
 {
 private:
+
+	unsigned char p_loopNumber = 0;
+	
 	bool p_isDisplayed = false;
 	
 	bool p_progressBarOneDisplayed = false;
@@ -50,6 +53,14 @@ public:
 	void outputMessage(std::string message)
 	{
 		p_messageOutput->AppendText(wxString(message) + wxString("\r\n"));
+		if(p_loopNumber == 10)
+		{
+			this->Refresh();
+			this->Update();
+			p_loopNumber = 0;
+		}
+		else
+			p_loopNumber++;
 	}
 	
 	/**
@@ -60,6 +71,14 @@ public:
 	void outputMessage(wxString message)
 	{
 		p_messageOutput->AppendText(message + wxString("\r\n"));
+		if(p_loopNumber == 10)
+		{
+			this->Refresh();
+			this->Update();
+			p_loopNumber = 0;
+		}
+		else
+			p_loopNumber++;
 	}
 	
 	void updateProgressBarOne(unsigned int value)
@@ -68,6 +87,8 @@ public:
 		{
 			p_gaugeOne->SetValue(value);
 		}
+		this->Refresh();
+		this->Update();
 	}
 	
 	void incrementProgressBarOne(unsigned int incrementValue)
@@ -79,6 +100,8 @@ public:
 			else
 				p_gaugeOne->SetValue(p_gaugeOne->GetRange());
 		}
+		this->Refresh();
+		this->Update();
 	}
 	
 	void resetProgressBars()
@@ -91,12 +114,16 @@ public:
 	{
 		if(p_gaugeOne)
 			p_gaugeOne->SetValue(0);
+		this->Refresh();
+		this->Update();
 	}
 	
 	void resetProgressBarTwo()
 	{
 		if(p_gaugeTwo)
 			p_gaugeTwo->SetValue(0);
+		this->Refresh();
+		this->Update();
 	}
 	
 	void updateProgressBarTwo(unsigned int value)
@@ -105,6 +132,8 @@ public:
 		{
 			p_gaugeTwo->SetValue(value);
 		}
+		this->Refresh();
+		this->Update();
 	}
 	
 	void incrementProgressBarTwo(unsigned int incrementValue)
@@ -116,6 +145,8 @@ public:
 			else
 				p_gaugeTwo->SetValue(p_gaugeTwo->GetRange());
 		}
+		this->Refresh();
+		this->Update();
 	}
 	
 	void displayWindow()
@@ -128,6 +159,16 @@ public:
 	bool getDisplayState()
 	{
 		return p_isDisplayed;
+	}
+	
+	void setProgressBarOneTitle(std::string title)
+	{
+		p_progressBarOneSizer->GetStaticBox()->SetLabel(wxString(title));
+	}
+	
+	void setProgressBarTwoTitle(std::string title)
+	{
+		p_progressBarTwoSizer->GetStaticBox()->SetLabel(wxString(title));
 	}
 	
 private:

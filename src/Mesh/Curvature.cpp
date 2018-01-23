@@ -1533,7 +1533,7 @@ void Curvature::vertexNodalValuesAndDirections(MVertex *A, SVector3* dMax, SVect
 double Curvature::getAtVertex(const MVertex *v) const {
   std::map<int,int>::const_iterator it = _VertexToInt.find(v->getNum());
   if (it == _VertexToInt.end()) {
-    //Msg::Error("curvature has not been computed for vertex %i (%i)", v->getNum(), _VertexToInt.size());
+    Msg::Error("curvature has not been computed for vertex %i (%i)", v->getNum(), _VertexToInt.size());
     return 1;
   }
   return _VertexCurve[it->second];

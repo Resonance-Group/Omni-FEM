@@ -6,7 +6,7 @@
 #include <algorithm>
 
 //#include "GmshConfig.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 #include "Mesh/Numeric.h"
 
@@ -113,7 +113,7 @@ int sys2x2(double mat[2][2], double b[2], double res[2])
     if(norm)
 	{
 		// Print put debug info
-		// Msg::Debug("Assuming 2x2 matrix is singular (det/norm == %.16g)", fabs(det) / norm);
+		 Msg::Debug("Assuming 2x2 matrix is singular (det/norm == %.16g)", fabs(det) / norm);
 	}
       
     res[0] = res[1] = 0.0;
@@ -198,7 +198,7 @@ int sys3x3_with_tol(double mat[3][3], double b[3], double res[3], double *det)
     if(norm)
 	{
 		// Print Debug info
-		// Msg::Debug("Assuming 3x3 matrix is singular (det/norm == %.16g)", fabs(*det) / norm);
+		 Msg::Debug("Assuming 3x3 matrix is singular (det/norm == %.16g)", fabs(*det) / norm);
 	}
       
     res[0] = res[1] = res[2] = 0.0;
@@ -236,7 +236,7 @@ double inv2x2(double mat[2][2], double inv[2][2])
 	}
 	else
 	{
-		// Msg::Error("Singular matrix 2x2");
+		 Msg::Error("Singular matrix 2x2");
 		for(int i = 0; i < 2; i++)
 		{
 			for(int j = 0; j < 2; j++)
@@ -265,7 +265,7 @@ double inv3x3(double mat[3][3], double inv[3][3])
 	}
 	else
 	{
-   // Msg::Error("Singular matrix 3x3");
+    Msg::Error("Singular matrix 3x3");
 		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 3; j++)
@@ -353,7 +353,7 @@ void circumCenterXY(double *p1, double *p2, double *p3, double *res)
 	d = 2. * (double)(y1 * (x2 - x3) + y2 * (x3 - x1) + y3 * (x1 - x2));
 	if(d == 0.0) 
 	{
-    //    Msg::Warning("Colinear points in circum circle computation");
+        Msg::Warning("Colinear points in circum circle computation");
 		res[0] = res[1] = -99999.;
 		return ;
 	}
@@ -571,7 +571,7 @@ void FindCubicRoots(const double coef[4], double real[3], double imag[3])
   double d = coef[0];
 
   if(!a || !d){
-    // Msg::Error("Degenerate cubic: use a second degree solver!");
+    Msg::Error("Degenerate cubic: use a second degree solver!");
     return;
   }
 

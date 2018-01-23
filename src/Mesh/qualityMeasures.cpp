@@ -15,7 +15,7 @@
 #include "Mesh/Numeric.h"
 #include "Mesh/polynomialBasis.h"
 #include "Mesh/JacobianBasis.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include <limits>
 #include <string.h>
 
@@ -626,7 +626,7 @@ double qmTetrahedron::qm(const double &x1, const double &y1, const double &z1,
   case QMTET_COND:
     return cond(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, volume);
   default:
-  //  Msg::Error("Unknown quality measure");
+    Msg::Error("Unknown quality measure");
     return 0.;
   }
 }

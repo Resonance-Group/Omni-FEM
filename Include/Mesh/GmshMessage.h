@@ -11,6 +11,7 @@
 #include <string>
 #include <stdarg.h>
 #include <stdio.h>
+#include <string>
 
 #include <common/OmniFEMMessage.h>
 
@@ -70,6 +71,16 @@ class Msg {
 		va_end(args);
 		
 		OmniFEMMsg::instance()->wxMsgStatus(wxString(str));
+	}
+	
+	static void ResetProgressMeter()
+	{
+		// mainly becuase I don't really feel like commenting all of these out
+	}
+	
+	static void ProgressMeter(int test, int number, bool someValue, std::string aString)
+	{
+		
 	}
 };
 

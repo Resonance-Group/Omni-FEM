@@ -4,7 +4,7 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include <stdlib.h>
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/robustPredicates.h"
 #include "Mesh/meshGFace.h"
 #include "Mesh/meshGFaceOptimize.h"
@@ -801,16 +801,16 @@ void refineMeshBDS(GFace *gf, BDS_Mesh &m, const int NIT,
     m.cleanup();
 
     IT++;
- //   Msg::Debug(" iter %3d minL %8.3f/%8.3f maxL %8.3f/%8.3f : "
-  //             "%6d splits, %6d swaps, %6d collapses, %6d moves",
-  //             IT, minL, minE, maxL, maxE, nb_split, nb_swap, nb_collaps, nb_smooth);
+    Msg::Debug(" iter %3d minL %8.3f/%8.3f maxL %8.3f/%8.3f : "
+               "%6d splits, %6d swaps, %6d collapses, %6d moves",
+               IT, minL, minE, maxL, maxE, nb_split, nb_swap, nb_collaps, nb_smooth);
     if (nb_split == 0 && nb_collaps == 0) break;
 
   }
 
   double t_total = t_spl + t_sw + t_col + t_sm;
   if(!t_total) t_total = 1.e-6;
-  /*
+  
   Msg::Debug(" ---------------------------------------");
   Msg::Debug(" CPU Report ");
   Msg::Debug(" ---------------------------------------");
@@ -821,7 +821,7 @@ void refineMeshBDS(GFace *gf, BDS_Mesh &m, const int NIT,
   Msg::Debug(" ---------------------------------------");
   Msg::Debug(" CPU TOTAL   %12.5E sec ",t_total);
   Msg::Debug(" ---------------------------------------");
-   */ 
+   
 }
 
 void allowAppearanceofEdge (BDS_Point *p1, BDS_Point *p2)

@@ -222,7 +222,7 @@ namespace ClosureGen {
         int oEdge = nodes2edges[n0][n1];
         if (oEdge == -1)
 		{
-         // Msg::Error("invalid p1 closure or invalid edges list");
+          Msg::Error("invalid p1 closure or invalid edges list");
 		  
 		}
         for (int i = 0 ; i < order - 1; i++)

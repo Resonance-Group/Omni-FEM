@@ -49,6 +49,9 @@
 #include "PView.h"
 #include "PViewData.h"
 #endif
+
+#define HAVE_BFGS
+
 /*
 class TEST_IF_MESH_IS_COMPATIBLE_WITH_EMBEDDED_ENTITIES {
 public:
@@ -1022,7 +1025,7 @@ void OptimizeMesh(GModel *m)
 
 void SmoothMesh(GModel *m)
 {
-//  Msg::StatusBar(true, "Smoothing 2D mesh...");
+	Msg::Info("Smoothing 2D mesh...");
   double t1 = Cpu();
 
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); ++it){
@@ -1032,7 +1035,7 @@ void SmoothMesh(GModel *m)
 
   CTX::instance()->mesh.changed = ENT_ALL;
   double t2 = Cpu();
-//  Msg::StatusBar(true, "Done smoothing 2D mesh (%g s)", t2 - t1);
+	Msg::Info("Done smoothing 2D mesh (%g s)", t2 - t1);
 }
 
 /*
@@ -1071,15 +1074,6 @@ void GenerateMesh(GModel *m, int ask)
 {
 	if(ask >= 3)
 		return;
-		
-  // ProfilerStart("gmsh.prof");
- // if(CTX::instance()->lock) {
-  //  Msg::Info("I'm busy! Ask me that later...");
- //   return;
- // }
- // CTX::instance()->lock = 1;
-
- // Msg::ResetErrorCounter();
 
   int old = m->getMeshStatus(false);
 
@@ -1156,12 +1150,12 @@ void GenerateMesh(GModel *m, int ask)
       HighOrderMeshOptimizer(GModel::current(), p);
     }
 #else
-  //  Msg::Error("High-order mesh optimization requires the OPTHOM module");
+    Msg::Error("High-order mesh optimization requires the OPTHOM module");
 #endif
   }
 
- // Msg::Info("%d vertices %d elements",
-  //          m->getNumMeshVertices(), m->getNumMeshElements());
+  Msg::Info("%d vertices %d elements",
+            m->getNumMeshVertices(), m->getNumMeshElements());
 
  // Msg::PrintErrorCounter("Mesh generation error summary");
 

@@ -24,6 +24,8 @@
 #include <common/MeshSettings.h>
 #include <common/OmniFEMMessage.h>
 
+#include <UI/MeshAdvancedSettings.h>
+
 
 //! Class that handles the creation of the dialog to edit all preferences
 /*!
@@ -268,7 +270,10 @@ private:
 	void onRemeshParam(wxCommandEvent &event);
 	
 	void onMeshDefaultsReset(wxCommandEvent &event);
+	
+	void onMeshAdvance(wxCommandEvent &event);
     
+	void onTextChange(wxCommandEvent &event);
 public:
 
     //! Constructor for the class.

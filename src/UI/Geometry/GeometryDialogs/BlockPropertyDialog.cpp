@@ -2,6 +2,7 @@
 #include <UI/GeometryDialog/BlockPropertyDialog.h>
 
 
+
 blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMaterial> *material, std::vector<circuitProperty> *circuit, blockProperty property, bool isAxisymmetric) : wxDialog(par, wxID_ANY, "Block Property")
 {
     wxFont *font = new wxFont(8.5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -98,6 +99,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     _meshSizeTextCtrl->SetFont(*font);
     _meshSizeTextCtrl->Enable(!property.getAutoMeshState());
     std::ostream meshSizeStream(_meshSizeTextCtrl);
+	
     meshSizeStream << std::fixed << std::setprecision(6) << property.getMeshSize();
     
     line3Sizer->Add(meshText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
@@ -296,8 +298,9 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     _meshSizeTextCtrl->Create(this, wxID_EDIT, wxEmptyString, wxDefaultPosition, wxSize(121, 20), wxTE_PROCESS_ENTER, numberValidator);
     _meshSizeTextCtrl->SetFont(*font);
     _meshSizeTextCtrl->Enable(!property.getAutoMeshState());
+	double meshTest = property.getMeshSize();
     std::ostream meshSizeStream(_meshSizeTextCtrl);
-    meshSizeStream << std::fixed << std::setprecision(4) << property.getMeshSize();
+    meshSizeStream << std::fixed << std::setprecision(4) << meshTest;
     
     line3Sizer->Add(meshText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
     line3Sizer->Add(75, 0, 0);
@@ -381,9 +384,14 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
     {
         _meshSizeTextCtrl->GetValue().ToDouble(&value);
         property.setMeshSize(value);
-        property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
-		if(p_property.getMeshSize() != value)
-			resetMesh = true;
+		if(property.getMaterialName() == "No Mesh")
+			property.setMeshSizeType(meshSize::MESH_NONE_);
+		else
+		{
+			property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
+			if(p_property.getMeshSize() != value)
+				resetMesh = true;
+		}
     }
     
     if(_problem == physicProblems::PROB_MAGNETICS)

@@ -4,9 +4,7 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include "Mesh/GVertex.h"
-
-
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 
 GVertex::GVertex(GModel *m, int tag, double ms) : GEntity(m, tag), meshSize(ms)
 {
@@ -34,7 +32,7 @@ void GVertex::resetMeshAttributes()
 
 void GVertex::setPosition(GPoint &p)
 {
-  //Msg::Error("Cannot set position of this kind of vertex");
+  Msg::Error("Cannot set position of this kind of vertex");
 }
 
 void GVertex::addEdge(GEdge *e)

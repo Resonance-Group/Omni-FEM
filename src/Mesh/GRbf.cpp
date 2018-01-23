@@ -77,7 +77,7 @@ static void exportParametrizedMesh(fullMatrix<double> &UV, int nbNodes)
   FILE *f = std::fopen("UV.pos", "w");
   if(f){
     fprintf(f,"View  \" uv \" {\n");
-    //Msg::Info("*** RBF exporting 'UV.pos' ");
+    Msg::Info("*** RBF exporting 'UV.pos' ");
     for(int id = 0; id < nbNodes; id++){
       fprintf(f,"SP(%g,%g,%g){%d};\n", UV(id,0), UV(id,1), 0.0, id);
     }
@@ -155,10 +155,10 @@ GRbf::GRbf(double sizeBox, int variableEps, int rbfFun,
   //radius = 1.0/15.0 //curvature setting
   radius= 1.0/6.0; //size 1 is non dim size
 
-  //Msg::Info("*****************************************");
- // Msg::Info("*** RBF nbNodes=%d (all=%d) ", myNodes.size(), allNodes.size());
- // Msg::Info("*** RBF rad=%g dist_min =%g", radius, dist_min);
- // Msg::Info("*****************************************");
+  Msg::Info("*****************************************");
+  Msg::Info("*** RBF nbNodes=%d (all=%d) ", myNodes.size(), allNodes.size());
+  Msg::Info("*** RBF rad=%g dist_min =%g", radius, dist_min);
+  Msg::Info("*****************************************");
 
   printNodes(myNodes);
 
@@ -829,7 +829,7 @@ void GRbf::RbfLapSurface_global_CPM_high_2(const fullMatrix<double> &cntrs,
 					   const fullMatrix<double> &normals,
 					   fullMatrix<double> &Oper)
 {
-  //Msg::Info("***Building Laplacian operator");
+  Msg::Info("***Building Laplacian operator");
   int numNodes = cntrs.size1();
   int nnTot = 3*numNodes;
   Oper.resize(nnTot,nnTot);
@@ -877,7 +877,7 @@ void GRbf::RbfLapSurface_global_CPM_high_2(const fullMatrix<double> &cntrs,
   A.invertInPlace();
   Oper.gemm(AOper, A, 1.0, 0.0);
 
-  //Msg::Info("*** RBF built Laplacian operator");
+  Msg::Info("*** RBF built Laplacian operator");
 }
 
 //NEW METHOD #2 CPM GLOBAL HIGH
@@ -887,7 +887,7 @@ void GRbf::RbfLapSurface_global_CPM_high(const fullMatrix<double> &cntrs,
 					const fullMatrix<double> &normals,
 					fullMatrix<double> &Oper)
 {
-  //Msg::Debug("*** RBF ... building Laplacian operator");
+  Msg::Debug("*** RBF ... building Laplacian operator");
   int numNodes = cntrs.size1();
   int nnTot = 3*numNodes;
   Oper.resize(numNodes,numNodes);
@@ -938,7 +938,7 @@ void GRbf::RbfLapSurface_global_CPM_high(const fullMatrix<double> &cntrs,
       Oper(i,j) = Temp(i,j);
     }
   }
-  //Msg::Info("*** RBF built Laplacian operator");
+  Msg::Info("*** RBF built Laplacian operator");
 }
 
 void GRbf::RbfLapSurface_global_CPM_low(const fullMatrix<double> &cntrs,
@@ -1101,7 +1101,7 @@ void GRbf::solveHarmonicMap(fullMatrix<double> Oper,
 			    std::vector<double> coords,
 			    std::map<MVertex*, SPoint3> &rbf_param)
 {
-  //Msg::Info("*** RBF ... solving map");
+  Msg::Info("*** RBF ... solving map");
   int nb = Oper.size2();
   UV.resize(nb,2);
 
@@ -1192,7 +1192,7 @@ void GRbf::solveHarmonicMap(fullMatrix<double> Oper,
     rbf_param.insert(std::make_pair(itm->first,coords));
   }
 
-  //Msg::Info("*** RBF solved map");
+  Msg::Info("*** RBF solved map");
   exportParametrizedMesh(UV, nbNodes);
 }
 

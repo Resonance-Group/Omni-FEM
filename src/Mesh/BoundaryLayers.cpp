@@ -11,7 +11,7 @@
 #include "Mesh/ExtrudeParams.h"
 #include "Mesh/meshGEdge.h"
 #include "Mesh/meshGFace.h"
-//#include "GmshMessage.h"
+#include "Mesh/GmshMessage.h"
 #include "Mesh/Field.h"
 #include "Mesh/GFaceCompound.h"
 
@@ -42,7 +42,7 @@ static void addExtrudeNormals(std::vector<T*> &elements, int invert,
                               bool skipScaleCalc)
 {
   if(index < 0 || index > 1){
-  //  Msg::Error("Boundary layer index should be 0 or 1");
+    Msg::Error("Boundary layer index should be 0 or 1");
     return;
   }
 
@@ -160,7 +160,7 @@ static void addExtrudeNormals(std::set<T*> &entities,
           extrudeField = true;
         }
         else
-    //      Msg::Error("Unknown View[%d]: using normals instead", view);
+          Msg::Error("Unknown View[%d]: using normals instead", view);
       }
 #endif
       bool skipScaleCalc = true;
@@ -244,7 +244,7 @@ static void checkDepends(GModel *m, GFace *f, std::set<GFace*> &dep)
   if(ep && ep->mesh.ExtrudeMesh && ep->geo.Mode == COPIED_ENTITY){
     GFace *from = m->getFaceByTag(std::abs(ep->geo.Source));
     if(!from){
-  //    Msg::Error("Unknown origin face %d", ep->geo.Source);
+      Msg::Error("Unknown origin face %d", ep->geo.Source);
       return;
     }
     dep.insert(from);
@@ -256,8 +256,8 @@ static void checkDepends(GModel *m, GFace *f, std::set<GFace*> &dep)
     std::list<GFace*>::iterator itgf = compounds.begin();
     for( ; itgf != compounds.end(); itgf++ ){
       if(!(*itgf)){
-  //      Msg::Error("Unknown compound face in boundary layer source face %d",
-   //                f->tag());
+        Msg::Error("Unknown compound face in boundary layer source face %d",
+                   f->tag());
         return;
       }
       dep.insert(*itgf);
@@ -368,7 +368,7 @@ int Mesh2DWithBoundaryLayers(GModel *m)
       if(ep && ep->mesh.ExtrudeMesh && ep->geo.Mode == COPIED_ENTITY){
         GFace *from = m->getFaceByTag(std::abs(ep->geo.Source));
         if(!from){
-    //      Msg::Error("Unknown source face %d for boundary layer", ep->geo.Source);
+          Msg::Error("Unknown source face %d for boundary layer", ep->geo.Source);
           return 0;
         }
         std::pair<bool, std::pair<int, int> > tags
@@ -413,8 +413,8 @@ int Mesh2DWithBoundaryLayers(GModel *m)
                                                        edgeSkipScaleCalc);
     if(num_changed)
 	{
-		//  Msg::Warning("%d entities were changed from ScaleLast = false to ScaleLast = true",
-    //               num_changed);
+		  Msg::Warning("%d entities were changed from ScaleLast = false to ScaleLast = true",
+                   num_changed);
 	}
     
   }
@@ -423,7 +423,7 @@ int Mesh2DWithBoundaryLayers(GModel *m)
   std::set<GFace*> sourceFacesDependencies;
   for(std::set<GFace*>::iterator it = sourceFaces.begin(); it != sourceFaces.end(); it++)
     checkDepends(m, *it, sourceFacesDependencies);
- // Msg::Info("%d dependencies in mesh of source faces", sourceFacesDependencies.size());
+  Msg::Info("%d dependencies in mesh of source faces", sourceFacesDependencies.size());
   for(std::set<GFace*>::iterator it = sourceFacesDependencies.begin();
       it != sourceFacesDependencies.end(); it++){
     std::list<GEdge*> e = (*it)->edges();
@@ -503,7 +503,7 @@ int Mesh2DWithBoundaryLayers(GModel *m)
   for(GModel::eiter it = m->firstEdge(); it != m->lastEdge(); it++){
     GEdge *ge = *it;
     if(ge->geomType() == GEntity::BoundaryLayerCurve){
-   //   Msg::Info("Meshing curve %d", ge->tag());
+      Msg::Info("Meshing curve %d", ge->tag());
       deMeshGEdge dem;
       dem(ge);
 //      MeshExtrudedCurve(ge);
@@ -526,7 +526,7 @@ int Mesh2DWithBoundaryLayers(GModel *m)
   for(GModel::fiter it = m->firstFace(); it != m->lastFace(); it++){
     GFace *gf = *it;
     if(gf->geomType() == GEntity::BoundaryLayerSurface){
-   //   Msg::Info("Meshing surface %d (%s)", gf->tag(), gf->getTypeString().c_str());
+      Msg::Info("Meshing surface %d (%s)", gf->tag(), gf->getTypeString().c_str());
       deMeshGFace dem;
       dem(gf);
       MeshExtrudedSurface(gf);
