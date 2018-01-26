@@ -2939,6 +2939,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
 	_mouseXPixel = event.GetX();
 	_mouseYPixel = event.GetY();
+	
+	this->SetFocus();
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
@@ -3023,6 +3025,8 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 {
     wxGLCanvas::SetCurrent(*_geometryContext);
     bool createArc = false;
+	
+//	this->SetFocus();
     
     if(!_doZoomWindow && !_doMirrorLine)
     {    
@@ -3864,4 +3868,5 @@ wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_LEFT_UP(modelDefinition::onMouseLeftUp)
     EVT_RIGHT_DOWN(modelDefinition::onMouseRightDown)
     EVT_RIGHT_UP(modelDefinition::onMouseRightUp)
+	EVT_KEY_DOWN(modelDefinition::onKeyDown)
 wxEND_EVENT_TABLE()

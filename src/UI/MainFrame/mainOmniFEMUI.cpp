@@ -19,6 +19,8 @@ bool OmniFEMApp::OnInit()
  
 OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : wxFrame(NULL, wxID_ANY, title, pos)
 {
+	this->SetFocus();
+	this->SetFocusFromKbd();
     /* This creates the main menu Bar at the top */
     _menuBar->Append(_menuFile, "&File");
     _menuBar->Append(_menuEdit, "&Edit");
@@ -45,6 +47,10 @@ OmniFEMMainFrame::OmniFEMMainFrame(const wxString &title, const wxPoint &pos) : 
     _menuEdit->Append(EditMenuID::ID_UNDO, "&Undo\tCtrl-Z");
     _menuEdit->Append(EditMenuID::ID_COPY, "&Copy\tCtrl-C");
     _menuEdit->Append(EditMenuID::ID_DELETE, "&Delete\tDEL");
+//	wxMenuItemBase test(NULL, EditMenuID::ID_CLEAR, "Clear\tESC");
+//	wxAcceleratorEntry *other = new wxAcceleratorEntry()
+//	test.SetAccel()
+	_menuEdit->Append(EditMenuID::ID_CLEAR, "&Clear\tesc");
 	_menuEdit->Append(EditMenuID::ID_ADD_NODE, "&Add Node\tCtrl-A");
 	_menuEdit->AppendSeparator();
     _menuEdit->Append(EditMenuID::ID_MOVE, "&Move");
@@ -134,6 +140,7 @@ void OmniFEMMainFrame::enableToolMenuBar(bool enable)
     _menuBar->Enable(EditMenuID::ID_CREATE_OPEN_BOUNDARY, enable);
     _menuBar->Enable(EditMenuID::ID_CREATE_RADIUS, enable);
     _menuBar->Enable(EditMenuID::ID_DELETE, enable);
+	_menuBar->Enable(EditMenuID::ID_CLEAR, enable);
 	_menuEdit->Enable(EditMenuID::ID_ADD_NODE, enable);
     _menuBar->Enable(EditMenuID::ID_MIRROR, enable);
     _menuBar->Enable(EditMenuID::ID_MOVE, enable);
@@ -275,6 +282,7 @@ void OmniFEMMainFrame::createProblemChoosingClient()
 
 void OmniFEMMainFrame::createModelDefiningClient()
 {
+	this->SetFocus();
     wxString appendedTitle = " - ";
     this->DestroyChildren();
     this->CreateStatusBar();
@@ -497,6 +505,12 @@ void OmniFEMMainFrame::onKeyDown(wxKeyEvent &event)
     {
         
     }
+	
+	if(event.GetKeyCode() == 0x1B)
+	{
+		if(_UIState == systemState::MODEL_DEFINING)
+			_model->clearGeometrySelection();
+	}
         
 }
 
@@ -529,6 +543,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(EditMenuID::ID_MIRROR, OmniFEMMainFrame::onMirror)
     EVT_MENU(EditMenuID::ID_UNDO, OmniFEMMainFrame::onUndo)
     EVT_MENU(EditMenuID::ID_DELETE, OmniFEMMainFrame::onDelete)
+    EVT_MENU(EditMenuID::ID_CLEAR, OmniFEMMainFrame::onClearSelection)
     EVT_MENU(EditMenuID::ID_MOVE, OmniFEMMainFrame::onMove)
     EVT_MENU(EditMenuID::ID_CREATE_RADIUS, OmniFEMMainFrame::onCreateRadius)
     EVT_MENU(EditMenuID::ID_CREATE_OPEN_BOUNDARY, OmniFEMMainFrame::onCreateOpenBoundary)
@@ -567,6 +582,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     EVT_MENU(MeshMenuID::ID_CREATE_MESH, OmniFEMMainFrame::onCreateMesh)
 	EVT_MENU(MeshMenuID::ID_SHOW_MESH, OmniFEMMainFrame::onShowMesh)
 	EVT_MENU(MeshMenuID::ID_DELETE_MESH, OmniFEMMainFrame::onDeleteMesh)
+	
     
     /* This section is for the Analysis menu */
     EVT_MENU(AnalysisMenuID::ID_ANALYZE, OmniFEMMainFrame::onViewResults)
@@ -580,7 +596,7 @@ wxBEGIN_EVENT_TABLE(OmniFEMMainFrame, wxFrame)
     /* Everything Else */
     EVT_MENU(wxID_EXIT,  OmniFEMMainFrame::OnExit)
 	EVT_SIZE(OmniFEMMainFrame::onResize)
-    EVT_KEY_DOWN(OmniFEMMainFrame::onKeyDown)
+  //  EVT_KEY_DOWN(OmniFEMMainFrame::onKeyDown)
 	
 	/************************
 	* Button Event Handling *

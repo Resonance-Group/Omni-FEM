@@ -565,6 +565,36 @@ private:
         \param event This variable is required in order for the event table to properly route the event to the function. This variable also contains the current pixel coordinate of the mouse.
     */ 
     void onMouseRightUp(wxMouseEvent &event);
+	
+	/**
+	 * @brief 	Event that is called when the user presses a button on the key board for the canvas. Currently, this
+	 * 			fuction will only be called when the focus is on the canvas which occurs when the user passes
+	 * 			their mouse over the canvas. This function will not intefere with the shortcut keyboards becuase
+	 * 			this function calls the skip function. When this is called and true is passed in as a parameter,
+	 * 			then wxWidgets will continue to look for additional function calls for the key down event. Otherwise,
+	 * 			wxWidgets will stop looking when this function ends
+	 * @param event Reqired arguement for the event procedure to work
+	 */
+	void onKeyDown(wxKeyEvent &event)
+	{
+		/* This little function is called in order to allow wxWidgets to continue looks 
+		 * for additional event handlers for the key event.
+		 * In this program, there are additional key event handlers in the top form. It is
+		 * the shortcut keys that the user can press (CTRL+A as an example).
+		 * If skip(false) is used, then wxWdigets will stop looking for 
+		 * additional event handlers and will end when this function ends
+		 */ 
+		event.Skip();
+		
+		int temp = event.GetKeyCode();
+		
+		if(event.GetKeyCode() == 0x1B)
+		{
+			clearSelection();
+			event.Skip(false);
+			this->Refresh();
+		}
+	}
     
     //! The function that is called in order to implement the zoom window functionality.
     /*!
@@ -1102,6 +1132,11 @@ public:
 	void addNodePoint(wxRealPoint &point)
 	{
 		_editor.addNode(point.x, point.y, getTolerance());
+	}
+	
+	void clearGeometrySelection()
+	{
+		clearSelection();
 	}
 
 private:
