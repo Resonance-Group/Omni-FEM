@@ -590,8 +590,10 @@ private:
 		
 		if(event.GetKeyCode() == 0x1B)
 		{
+			// The event for when the user presses on the ESC key
 			clearSelection();
 			event.Skip(false);
+			_editor.resetIndexs();
 			this->Refresh();
 		}
 	}

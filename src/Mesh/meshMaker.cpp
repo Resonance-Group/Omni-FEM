@@ -79,10 +79,17 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 						closedContourFound = true;
 						break;
 					}
+					else if(**branchIterator == *(pathIterator->getClosedPath()->back()))
+					{
+						branches.erase(branchIterator);
+						branchIterator = branches.begin();
+					}
 				}
 				
 				/* This will test if any branch loops back to the path where the loop is connected to a segment after the 
-				 * begining segment of the path
+				 * begining segment of the path.
+				 * On the start, this for loop will skip the first edge in the closed path becuase that is the 
+				 * trivial solution
 				 */ 
 				for(auto pathEdgeIterator = ++(pathIterator->getClosedPath()->begin()); pathEdgeIterator != pathIterator->getClosedPath()->end(); pathEdgeIterator++)
 				{
@@ -179,6 +186,8 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 	edgeLineShape *previouseSegmentPointer;
 	edgeLineShape *currentSegmentPointer = currentSegment; // This part may not be necessary but it helps with the thinking
 	
+	int pathSize = pathVector->size();
+	
 	if(pathVector->size() >= 2)
 		previousAddedSegment = pathVector->end() - 2;
 	else
@@ -210,7 +219,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 		// If so, then we need to move on to the second node.
 		// If both of the nodes for the segment have already been visited then we can go ahead and
 		// skip that segment
-		if(((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode())) && !lineIterator->getSegmentProperty()->getHiddenState())
+		if(((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode())) && lineIterator->getSegmentProperty()->getHiddenState())
 		{
 			returnList.push_back(&(*lineIterator));
 		}
@@ -219,7 +228,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 	// Find all of the arcs connected to the segment
 	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 	{
-		if((arcIterator->getArcID() == currentSegmentPointer->getArcID()) || (pathVector->size() > 1 && (arcIterator->getArcID() == previouseSegmentPointer->getArcID())) && !arcIterator->getSegmentProperty()->getHiddenState())
+		if((arcIterator->getArcID() == currentSegmentPointer->getArcID()) || (pathVector->size() > 1 && arcIterator->getSegmentProperty()->getHiddenState()))
 			continue;
 			
 		if((*branchNode == *arcIterator->getFirstNode()) || (*branchNode == *arcIterator->getSecondNode()))
@@ -233,7 +242,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 
 
 
-bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
+bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 {
 	int windingNumber = 0;
 	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
@@ -410,9 +419,6 @@ void meshMaker::mesh()
 		/* Now we go to conver Omni-FEM's geometry data structure into the data structure for GMSH */
 		// lcFactor->0.29999999999 lcExtendFromBoundary->1 algo3D-> 1
 		OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
-		std::vector<GVertex*> vertexModelList;
-		
-		p_vertexModelList.reserve(p_nodeList->size());
 
 		p_meshModel->setFactory("Gmsh");
 		
@@ -422,7 +428,6 @@ void meshMaker::mesh()
 		{
 			GVertex *temp = p_meshModel->addVertex(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), 0.0, 1.0);
 			nodeIterator->setGModalTagNumber(temp->tag());
-			p_vertexModelList.push_back(temp);
 		}
 		
 		/* Now we create the faces */
@@ -445,48 +450,64 @@ void meshMaker::mesh()
 					// Speed here could be improved upon?
 					closedPath foundPath;
 					edgeLineShape *startEdge = nullptr;
-					
+					bool existsInGeometry = false;
 					std::multimap<double, edgeLineShape*> sortedEdges;
 					
-					/* This next section will organize all of the edges of the geometry in asending order based on the 
-					 * distance of the block label to the midpoint of the edge
-					 */ 
-					for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+					for(auto closedPathIterator = p_closedContourPaths.begin(); closedPathIterator != p_closedContourPaths.end(); closedPathIterator++)
 					{
-						double distance = blockIterator->getDistance(lineIterator->getMidPoint());
-						
-						sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*lineIterator)));
-					}
-					
-					for(auto arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
-					{
-						double distance = blockIterator->getDistance(arcIterator->getMidPoint());
-						
-						sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*arcIterator)));
-					}
-					
-					for(auto mapIterator = sortedEdges.begin(); mapIterator != sortedEdges.end(); mapIterator++)
-					{
-						closedPath possiblePath = findContour((*mapIterator).second, &(*blockIterator));
-						
-						if(possiblePath.getDistance() > 0)
+						closedPath temp = *closedPathIterator;
+						if(checkPointInContour(blockIterator->getCenter(), temp))
 						{
-							// THe first valid path found will be the path that encompasses the label
-							foundPath = possiblePath;
+							existsInGeometry = true;
 							break;
 						}
 					}
 					
-					// Since we found a path that encompasses the label, set the property of that path to the label
+					if(existsInGeometry)
+					{
+						/* This next section will organize all of the edges of the geometry in asending order based on the 
+						 * distance of the block label to the midpoint of the edge
+						 */ 
+						for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+						{
+							double distance = blockIterator->getDistance(lineIterator->getMidPoint());
+							
+							sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*lineIterator)));
+						}
+						
+						for(auto arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
+						{
+							double distance = blockIterator->getDistance(arcIterator->getMidPoint());
+							
+							sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*arcIterator)));
+						}
+					
+						for(auto mapIterator = sortedEdges.begin(); mapIterator != sortedEdges.end(); mapIterator++)
+						{
+							closedPath possiblePath = findContour((*mapIterator).second, &(*blockIterator));
+							
+							if(possiblePath.getDistance() > 0)
+							{
+								// THe first valid path found will be the path that encompasses the label
+								foundPath = possiblePath;
+								break;
+							}
+						}
+						
+						// Since we found a path that encompasses the label, set the property of that path to the label
+						if(foundPath.getDistance() > 0)
+						{
+							foundPath.setProperty(blockIterator->getProperty());
+							additionalPaths.push_back(foundPath);
+						}
+					}
+					else
+					{
+						OmniFEMMsg::instance()->MsgWarning("Block Label outside of geoemtry found");
+					}
 					
 					p_blockLabelsUsed++;
 					blockIterator->setUsedState(true);
-					
-					if(foundPath.getDistance() > 0)
-					{
-						foundPath.setProperty(blockIterator->getProperty());
-						additionalPaths.push_back(foundPath);
-					}
 				}
 			}
 			
@@ -496,7 +517,7 @@ void meshMaker::mesh()
 				
 				createGMSHGeometry(&additionalPaths);
 				
-				p_closedContourPaths.reserve(additionalPaths.size());
+				p_closedContourPaths.reserve(p_closedContourPaths.size() + additionalPaths.size());
 				
 				p_closedContourPaths.insert(p_closedContourPaths.end(), additionalPaths.begin(), additionalPaths.end());
 			}
@@ -638,8 +659,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 				
 				if((*lineIterator)->isArc())
 				{
-					p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
-					addedEdge = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+					GVertex *temp = p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0);
+					addedEdge = p_meshModel->addCircleArcCenter(firstNode, temp, secondNode);
 				}
 				else
 				{
@@ -696,8 +717,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 						
 						if((*lineIterator)->isArc())
 						{
-							p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
-							addedEdge = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+							GVertex *temp = p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0);
+							addedEdge = p_meshModel->addCircleArcCenter(firstNode, temp, secondNode);
 						}
 						else
 						{

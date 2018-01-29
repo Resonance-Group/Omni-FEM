@@ -1166,7 +1166,7 @@ public:
 		
 		if(lev == 0)
 		{
-			if(slope >= 0 && slope <= 1e-9)
+			if(abs(slope) >= 0 && abs(slope) <= 1e-2)
 			{
 				if(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate())
 				{
