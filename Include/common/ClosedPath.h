@@ -28,6 +28,8 @@ private:
 	
 	std::vector<blockLabel*> p_blockLabelList;
 	
+	bool p_holesFound = false;
+	
 	bool shareCommonEdge(closedPath firstPath, closedPath secondPath, std::vector<edgeLineShape*> &commonEdges)
 	{
 		commonEdges.clear();// Make sure this vector is empty before proceding
@@ -319,6 +321,7 @@ public:
 						std::vector<edgeLineShape*> newHoleEdgeList;
 						closedPath newHole;
 						
+						// First, store all edges that are not the common edge from the first hole
 						for(auto edgeIterator = firstHoleIterator->getClosedPath()->begin(); edgeIterator != firstHoleIterator->getClosedPath()->end(); edgeIterator++)
 						{
 							bool isCommonEdge = false;
@@ -336,6 +339,7 @@ public:
 								newHoleEdgeList.push_back(*edgeIterator);
 						}
 						
+						// Then store all edges that are not the common edge from the second hole
 						for(auto edgeIterator = secondHoleIterator->getClosedPath()->begin(); edgeIterator != secondHoleIterator->getClosedPath()->end(); edgeIterator++)
 						{
 							bool isCommonEdge = false;
@@ -376,7 +380,7 @@ public:
 							{
 								closedPath tempHole = getClosedContour(newHoleEdgeList);
 								
-								for(auto edgeIterator = newHole.getClosedPath()->begin(); edgeIterator !=  newHole.getClosedPath()->begin(); edgeIterator++)
+								for(auto edgeIterator = tempHole.getClosedPath()->begin(); edgeIterator != tempHole.getClosedPath()->end(); edgeIterator++)
 								{
 									if(!(*edgeIterator)->getVisitedStatus())
 									{
@@ -393,7 +397,7 @@ public:
 						{
 							newHole = getClosedContour(newHoleEdgeList);
 							
-							for(auto edgeIterator = newHole.getClosedPath()->begin(); edgeIterator !=  newHole.getClosedPath()->begin(); edgeIterator++)
+							for(auto edgeIterator = newHole.getClosedPath()->begin(); edgeIterator !=  newHole.getClosedPath()->end(); edgeIterator++)
 							{
 								(*edgeIterator)->setVisitedStatus(true);
 							}
@@ -415,6 +419,26 @@ public:
 			if(!newHoleCreated)
 				isFinished = true;
 		}
+	}
+	
+	bool getHolesFoundState()
+	{
+		return p_holesFound;
+	}
+	
+	void setHolesFound()
+	{
+		p_holesFound = true;
+	}
+	
+	void setHoles(std::vector<closedPath> holes)
+	{
+		p_holes = holes;
+	}
+	
+	void transferHoles(closedPath &transfer)
+	{
+		transfer.setHoles(p_holes);
 	}
 };
 

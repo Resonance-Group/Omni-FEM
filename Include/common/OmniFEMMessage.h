@@ -15,6 +15,17 @@ enum Status_Windows
 	SOLVER_STATUS_WINDOW
 };
 
+
+/**
+ * @class OmniFEMMsg
+ * @author Phillip
+ * @date 02/02/18
+ * @file OmniFEMMessage.h
+ * @brief This class is the main messaging class for Omni-FEM. It handles the creation of log windows,
+ * dispalying messages to the log windows, and logging any outputs to a file. Omni-FEM handles this
+ * through a deteched method where the main program access this class through a static pointer within 
+ * the messaging class.
+ */
 class OmniFEMMsg
 {
 private:

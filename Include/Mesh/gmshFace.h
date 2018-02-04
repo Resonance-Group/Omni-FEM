@@ -11,7 +11,7 @@
 class Surface;
 
 class gmshFace : public GFace {
- protected:
+ public:
   Surface *s;
   bool isSphere;
   SPoint3 center;

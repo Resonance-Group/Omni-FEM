@@ -132,6 +132,10 @@ public:
         return _isSelected;
     }
 	
+	/**
+	 * @brief Returns the center point of the geometry piece
+	 * @return Returns the wxRealPoint representing the center of the geometry
+	 */
 	wxRealPoint getCenter()
 	{
 		return wxRealPoint(xCenterCoordinate, yCenterCoordinate);
@@ -263,7 +267,7 @@ public:
     }
 	
 	/**
-	 * @brief 	This is the draw function for hte rectangle object. Note that for a generic retangle objecyt
+	 * @brief 	This is the draw function for hte rectangle object. Note that for a generic retangle objecy
 	 * 			nothing is drawn.
 	 */
 	virtual void draw()
@@ -343,24 +347,24 @@ public:
         
     }
 	
+	/**
+	 * @brief Sets the GModel tag number for the vertex. This function is primarly used in the 
+	 * mesh module and uses the GModel tag number to quickly look up the GVertex that the 
+	 * node belongs to.
+	 * @param number The GModel tag number
+	 */
 	void setGModalTagNumber(int number)
 	{
 		p_GModelTagNumber = number;
 	}
 	
+	/**
+	 * @brief Retrieves the GModel for the vertex
+	 * @return Returns the GModel. If the vertex has not been created in GMSH, this function will return 0
+	 */
 	int getGModalTagNumber()
 	{
 		return p_GModelTagNumber;
-	}
-	
-	void setVisitedState(bool state)
-	{
-		p_isVisited = state;
-	}
-	
-	bool getVisitedState()
-	{
-		return p_isVisited;
 	}
     
 	/**
@@ -587,8 +591,6 @@ private:
 		ar & p_xMid;
 		ar & p_yMid;
 	}
-	
-	int p_GModelTagNumber = 0;
 protected:
 	//! The node number for the first node
 	/*!
@@ -597,7 +599,7 @@ protected:
 		instead. But, if there are mulple lines emitting from one node
 		then the node will be save multple times. This is not 
 		very efficient. Instead, we will track the node number for each
-		node that connects the line. his way, when we load the data from 
+		node that connects the line. This way, when we load the data from 
 		file, we have a way to quickly rebuild the node pointers for each line
 	*/ 
 	unsigned long p_firstNodeNumber = 0;
@@ -644,25 +646,52 @@ protected:
 	//! Boolean used to describe if the line segment was visited for contour finding
 	bool p_isVisited = false;
 	
+	//! The distance that the edge tranverses
 	double p_distance = 0;
 	
 	//! The radius of an arc from the center point
     double _radius = 0.0;
 	
+	//! The x coordinate point for the mid point of the edge
 	double p_xMid = 0;
 	
+	//! The y coordinate position of the mid point of the edge
 	double p_yMid = 0;
 	
+	/**
+	 * @brief Performs the dot product on two points. This function is mainly used 
+	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
+	 * used in the case that the edge is an arc.
+	 * @param firstPoint The first point
+	 * @param secondPoint The second point
+	 * @return Returns a number representing the dot product of the two points
+	 */
 	double dotProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
 	{
 		return (firstPoint.x * secondPoint.x) + (firstPoint.y * secondPoint.y);
 	}
 	
+	/**
+	 * @brief Performs the cross product on two points. This function is mainly used 
+	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
+	 * used in the case that the edge is an arc.
+	 * @param firstPoint The first point
+	 * @param secondPoint The second point
+	 * @return Returns a number representing the cross product of the two points
+	 */
 	double crossProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
 	{
 		return (firstPoint.x * secondPoint.y) - (secondPoint.x * firstPoint.y);
 	}
 	
+	/**
+	 * @brief This fucntion will check if the two parameters are the same sign. This function is mainly used 
+	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
+	 * used in the case that the edge is an arc.
+	 * @param firstValue The firs value
+	 * @param secondValue The second value
+	 * @return Returns true if the first and second values are the same sign. Otherwise, returns false.
+	 */
 	bool isSameSign(double firstValue, double secondValue)
 	{
 		return (signbit(firstValue) == signbit(secondValue));
@@ -675,6 +704,10 @@ public:
         
     }
 	
+	/**
+	 * @brief Calculates the distance that the two points of the edge span. THis must be called after the line is created.
+	 * The distance is primarly used in the mesh module.
+	 */
 	virtual void calculateDistance()
 	{
 		if(_firstNode && _secondNode)
@@ -687,6 +720,11 @@ public:
 		}
 	}
 	
+	/**
+	 * @brief Returns the distance that spans across the two points of the edge. For arcs, this would be 
+	 * the arc length. This is mainly used in the mesh module.
+	 * @return Returns a number representing the distance between the two points. For arcs, this would be the arc length.
+	 */
 	double getDistance()
 	{
 		return p_distance;
@@ -712,7 +750,8 @@ public:
 	
 	/**
 	 * @brief Gets the state of the visited variable.
-	 * @return Returns true if the contour algorthim visisted the line segment. Otherwise, returns false
+	 * @return Returns true if the contour algorthim visisted the line segment or if the line
+	 * segment was used in a closed contour. Otherwise, returns false
 	 */
 	bool getVisitedStatus()
 	{
@@ -721,7 +760,7 @@ public:
 	
 	/**
 	 * @brief Set the state of the visited variable.
-	 * @param state 
+	 * @param state Set to true to indicate that the edge has been visited.
 	 */
 	void setVisitedStatus(bool state)
 	{
@@ -844,13 +883,6 @@ public:
 			return false;
 	}
 	
-	void swap()
-	{
-		node *temp = _firstNode;
-		_firstNode = _secondNode;
-		_secondNode = temp;
-	}
-	
 	/**
 	 * @brief 	Tests if a point is to the Left/On/Right of the line. The orientation will be from the 
 	 * 			first node to the second node
@@ -894,19 +926,14 @@ public:
 		}
 	}
 	
+	/**
+	 * @brief Gets the midpoint of the edge. For lines, this is the exact midpoint.
+	 * For asrcs, this returns the midpoint of the arc line
+	 * @return Returns a wxRealPoint representing the midpoint of the edge
+	 */
 	wxRealPoint getMidPoint()
 	{
 		return wxRealPoint(p_xMid, p_yMid);
-	}
-	
-	void setGModelTagNumber(int tagNumber)
-	{
-		p_GModelTagNumber = tagNumber;
-	}
-	
-	int getGModelTagNumber()
-	{
-		return p_GModelTagNumber;
 	}
 };
 
@@ -929,23 +956,36 @@ private:
 		ar & p_arcID;
 	}
 	
+	//! The number of segments that comprises the arc
 	unsigned int _numSegments = 3;
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees
 	double _arcAngle = 30;
-    
+	
+    //! Boolean used to determine if the arc is clockwise or counterclock-wise
     bool _isCounterClockWise = true;
 public:
+	/**
+	 * @brief The constructor for the clase
+	 */
 	arcShape()
     {
         p_isArc = true;
     }
 	
+	/**
+	 * @brief Calculates the arc length of the arc.
+	 */
 	void calculateDistance()
 	{
 		p_distance = _radius * _arcAngle * (PI / 180.0);
 	}
 	
+	/**
+	 * @brief Sets the angle fo the arc. The angle stored is always positive. A boolean specifies if
+	 * the angle is + or -.
+	 * @param angleOfArc Sets the angle of the arc in degrees
+	 */
 	void setArcAngle(double angleOfArc)
     {
         _arcAngle = abs(angleOfArc);
@@ -955,27 +995,41 @@ public:
             _isCounterClockWise = false;
     }
 	
+	/**
+	 * @brief Retrieves the arc angle
+	 * @return Returns a number representing the arc angle. + is CCW - is CW
+	 */
 	double getArcAngle()
     {
-		//return 
         if(_isCounterClockWise)
             return _arcAngle;
         else
             return -_arcAngle;
     }
 
-	
+	/**
+	 * @brief Specifies the number of segments that will be used to draw the arc
+	 * @param segments The number of segments to use to draw the arc
+	 */
 	void setNumSegments(unsigned int segments)
     {
         _numSegments = segments;
     }
 	
+	/**
+	 * @brief Retrieves the number of segments to draw the arc
+	 * @return Returns a number to represent the number of segments used to draw the arc on the screen
+	 */
 	unsigned int getnumSegments()
     {
         return _numSegments;
     }
     
-    
+    /**
+     * @brief The function that is called in order to draw the arc on the screen
+	 * This function will call the necessary OpenGL functions in order to draw the 
+	 * arc on the OpenGL canvas
+     */
     void draw()
     {
         if(_isSelected)
@@ -985,18 +1039,6 @@ public:
 			
 		if(p_distance == 0)
 			calculateDistance();
-            
-      /*  
-        if(_numSegments == -1)// Hey this code needs to be looked at!
-        {
-            if(_arcAngle < 10)
-                _numSegments = 10;
-            else
-                _numSegments = _arcAngle / 3.0;
-        }
-        else if(_numSegments < 2)
-            _numSegments = 2
-			 */ 
         
         if(_property.getHiddenState())
         {
@@ -1021,14 +1063,16 @@ public:
     }	
 
     /*! \brief  
-     * See this forum post: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
-     * 
-     * This function will be calculating the radius and center point of the arc
-	 *			The idea is as follows:
-     *          By knowing the 2 endpoints and the arc angle, we are able to caluclate the radius and the center point
-     *          For the radius, this is the law of cosines: c^2 = 2 * R^2 * (1 - cos(theta) )
+		See this forum post: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
+      
+		This function will be calculating the radius and center point of the arc
+	 			The idea is as follows:
+				By knowing the 2 endpoints and the arc angle, we are able to caluclate the radius and the center point
+				For the radius, this is the law of cosines: c^2 = 2 * R^2 * (1 - cos(theta) )
                 where c is the length of the sector through the beginning and starting endpoints and theta is the arc angle
-                Then, we can calculate the 
+                Then, we can calculate the radius by solving for R. Using the midpoint of line AB and the slope perpendicular to 
+				line AB, we can use the slope-ponit form to find the equation of the line and then use Pythagorean Thereom's
+				in order to find the arc's exact center
 	 */
     void calculate()
     {
@@ -1202,11 +1246,19 @@ public:
         return;
     }
     
+	/**
+	 * @brief Retrieves the radius of the arc
+	 * @return Returns a number reprenseting the radius of the arc
+	 */
     double getRadius()
     {
         return _radius;
     }	
     
+	/**
+	 * @brief Retrieves the arc length
+	 * @return Returns the arc length of the arc
+	 */
     double getArcLength()
     {
         return p_distance;
@@ -1228,6 +1280,11 @@ public:
 			return false;
 	}
 	
+	/**
+	 * @brief Sets the arc ID that belongs to the arc. This is useful
+	 * when comparing two edges to see if they are equal
+	 * @param id The ID that will be assigned to the arc
+	 */
 	void setArcID(unsigned long id)
 	{
 		p_arcID = id;

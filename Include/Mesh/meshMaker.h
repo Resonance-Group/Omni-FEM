@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <map>
 #include <utility>
+#include <iterator>
 
 #include <UI/geometryShapes.h>
 #include <UI/ModelDefinition/ModelDefinition.h>
@@ -12,6 +13,7 @@
 #include <common/plfcolony.h>
 #include <common/Vector.h>
 #include <common/enums.h>
+#include <common/BoundingBox.h>
 
 #include <common/MeshSettings.h>
 #include <common/ClosedPath.h>
@@ -25,6 +27,9 @@
 #include <Mesh/GEdge.h>
 #include <Mesh/GFace.h>
 #include <Mesh/GModel.h>
+
+#include <Mesh/gmshFace.h>
+#include <Mesh/Geo.h>
 
 #include <Mesh/SBoundingBox3d.h>
 
@@ -186,8 +191,45 @@ private:
 			return false;
 	}
 	
+	/**
+	 * @brief This function will take two paths and determine if there are any common edges between the two paths. If so,
+	 * the parameter, commonEdges, will contain the common edges. There is no order to first path and the second path.
+	 * @param firstPath The first path to check
+	 * @param secondPath The second path to check
+	 * @param commonEdges If there are any common edges found, then this parameter will contain the list of common edges. If
+	 * no common edges are found, then this parameter will have no size.
+	 * @return Returns true if there are any common edges. Otherwise, returns false
+	 */
+	bool shareCommonEdge(std::vector<closedPath>::iterator firstPath, std::vector<closedPath>::iterator secondPath, std::vector<edgeLineShape*> &commonEdges)
+	{
+		std::vector<edgeLineShape*> returnList;
+		
+		for(auto firstPathIterator = firstPath->getClosedPath()->begin(); firstPathIterator != firstPath->getClosedPath()->end(); firstPathIterator++)
+		{
+			for(auto secondPathIterator = secondPath->getClosedPath()->begin(); secondPathIterator != secondPath->getClosedPath()->end(); secondPathIterator++)
+			{
+				if(*(*firstPathIterator) == *(*secondPathIterator))
+					returnList.push_back(*firstPathIterator);
+			}
+		}
+		
+		commonEdges = returnList;
+		
+		if(returnList.size() > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	closedPath recreatePath(closedPath &path, closedPath holeIterator, std::vector<edgeLineShape*> commonEdges);
+	
 public:
 	
+	/**
+	 * @brief The constructor for the class
+	 * @param definition Reference to the problem defintion class needed for the settings, name, and save file path
+	 * @param model Pointer to the model definition needed for the mesh model, node list, line list, arc list, and block label list
+	 */
 	meshMaker(problemDefinition &definition, modelDefinition *model)
 	{
 		p_meshModel = model->getMeshModel();
@@ -205,17 +247,13 @@ public:
 	}
 	
 	/**
-	 * @brief Function that is used to check if the system has found all geometry pieces 
-	 * @return Returns true when the class has finished the procedure. Otherwise returns false
+	 * @brief This is the main function that gets called after the constructor.
+	 * This function will run all of the algorithms needed in order to mesh the geometry using GMSH.
+	 * The function will set up GMSH with the user settings specified in the meshSettings class, detect
+	 * all of the closed contours (or faces) that the user created, detect which block label belongs to which 
+	 * closed contour, detect all of the holes and perform hole recombination if needed, detect any "hidden"
+	 * block labels, and then recreate the user geometry in GMSH.
 	 */
-	bool geometryIsFound()
-	{
-		if(p_numberVisited == p_numberofLines)
-			return true;
-		else
-			return false;
-	}
-	
 	void mesh();
 	
 	~meshMaker()

@@ -2,7 +2,7 @@
 
 #include <common/OmniFEMMessage.h>
 
-#include <iterator>
+
 
 #include <wx/dir.h>
 
@@ -219,7 +219,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 		// If so, then we need to move on to the second node.
 		// If both of the nodes for the segment have already been visited then we can go ahead and
 		// skip that segment
-		if(((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode())) && lineIterator->getSegmentProperty()->getHiddenState())
+		if(((*branchNode == *lineIterator->getFirstNode()) || (*branchNode == *lineIterator->getSecondNode())) && !lineIterator->getSegmentProperty()->getHiddenState())
 		{
 			returnList.push_back(&(*lineIterator));
 		}
@@ -306,7 +306,76 @@ void meshMaker::mesh()
 	CTX::instance()->mesh.recombinationTestNewStrat = 0;
 	CTX::instance()->mesh.nProc = 0;
 	CTX::instance()->mesh.nbProc = 0;
-	CTX::instance()->lc = 2.5;
+	
+	p_meshModel->setFactory("Gmsh");
+	
+	//! This section will compute the value for LC
+	for(auto nodeIterator = p_nodeList->begin(); nodeIterator != p_nodeList->end(); nodeIterator++)
+	{
+		GVertex *temp = p_meshModel->addVertex(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), 0.0, 1.0);
+		nodeIterator->setGModalTagNumber(temp->tag());
+	}
+	
+	SBoundingBox3d modelBox = p_meshModel->bounds();
+	double boundingRange[3];
+	
+	CTX::instance()->max[0] = modelBox.max().x();
+	CTX::instance()->max[1] = modelBox.max().y();
+	CTX::instance()->max[2] = 0;
+	
+	CTX::instance()->min[0] = modelBox.min().x();
+	CTX::instance()->min[1] = modelBox.min().y();
+	CTX::instance()->min[2] = 0;
+	
+	for(int i = 0; i < 3; i++)
+		boundingRange[i] = CTX::instance()->max[i] - CTX::instance()->min[i];
+	
+	if(	boundingRange[0] < CTX::instance()->geom.tolerance &&
+		boundingRange[1] < CTX::instance()->geom.tolerance &&
+		boundingRange[2] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[0] -= 1.; 
+		CTX::instance()->min[1] -= 1.;
+		
+		CTX::instance()->max[0] += 1.; 
+		CTX::instance()->max[1] += 1.;
+	}
+	else if(boundingRange[0] < CTX::instance()->geom.tolerance &&
+			boundingRange[1] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[0] -= boundingRange[2]; 
+		CTX::instance()->min[1] -= boundingRange[2];
+		
+		CTX::instance()->max[0] += boundingRange[2]; 
+		CTX::instance()->max[1] += boundingRange[2];
+	}
+	else if(boundingRange[0] < CTX::instance()->geom.tolerance &&
+			boundingRange[2] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[0] -= boundingRange[1]; 
+		CTX::instance()->max[0] += boundingRange[1];
+	}
+	else if(boundingRange[1] < CTX::instance()->geom.tolerance &&
+			boundingRange[2] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[1] -= boundingRange[0]; 
+		CTX::instance()->max[1] += boundingRange[0];
+	}
+	else if(boundingRange[0] < CTX::instance()->geom.tolerance) 
+	{
+		double l = sqrt(pow(boundingRange[1], 2) + pow(boundingRange[2], 2));
+		CTX::instance()->min[0] -= l; 
+		CTX::instance()->max[0] += l;
+	}
+	else if(boundingRange[1] < CTX::instance()->geom.tolerance) 
+	{
+		double l = sqrt(pow(boundingRange[0], 2) + pow(boundingRange[2], 2));
+		CTX::instance()->min[1] -= l; 
+		CTX::instance()->max[1] += l;
+	}
+
+	CTX::instance()->lc = sqrt(	pow(CTX::instance()->max[0] - CTX::instance()->min[0], 2) +
+								pow(CTX::instance()->max[1] - CTX::instance()->min[1], 2));
 	
 	CTX::instance()->mesh.algoSubdivide = 1; // The 1 here is to specify that we are only concerned with quads
 	CTX::instance()->mesh.secondOrderIncomplete = 0; // Always use complete meshes
@@ -420,15 +489,11 @@ void meshMaker::mesh()
 		// lcFactor->0.29999999999 lcExtendFromBoundary->1 algo3D-> 1
 		OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
 
-		p_meshModel->setFactory("Gmsh");
+		
 		
 		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH Vertices");
 		
-		for(auto nodeIterator = p_nodeList->begin(); nodeIterator != p_nodeList->end(); nodeIterator++)
-		{
-			GVertex *temp = p_meshModel->addVertex(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), 0.0, 1.0);
-			nodeIterator->setGModalTagNumber(temp->tag());
-		}
+		
 		
 		/* Now we create the faces */
 		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
@@ -523,6 +588,9 @@ void meshMaker::mesh()
 			}
 		}
 		
+		
+		
+		double val = CTX::instance()->lc; 
 		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
 		
 		for(int i = 0; i < CTX::instance()->mesh.multiplePasses; i++)
@@ -632,6 +700,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 	// PLease note that this function assumes that the lines for each closed contour in 
 	// pathContour has not already been created
 	std::vector<closedPath> *pathToOperate = nullptr;
+	std::vector<GFace*> addedFaces;
 	
 	if(pathContour == nullptr)
 		pathToOperate = &p_closedContourPaths;
@@ -666,7 +735,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 				{
 					addedEdge = p_meshModel->addLine(firstNode, secondNode);
 				}
-					
+				
+				// Add in the mesh settings of the line
 				if(pathIterator->getProperty()->getMeshsizeType() != meshSize::MESH_NONE_)
 				{
 					if((*lineIterator)->getSegmentProperty()->getMeshAutoState())
@@ -697,6 +767,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 				
 				addLineVector.push_back(addedEdge);
 			}
+			
+			
 			
 			// Next we need to set the mesh size of the GEdges here
 			
@@ -760,36 +832,167 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 			}
 			
 			GFace *addedFace = p_meshModel->addPlanarFace(lineLoop);
-			
-			if(p_settings->getStructuredState())
-			{
-				addedFace->meshAttributes.method = 1;// Sets the face to be transfinite
-				
-				switch(p_settings->getMeshArrangment())
-				{
-					case StructuredArrangement::ARRANGMENT_LEFT:
-						addedFace->meshAttributes.transfiniteArrangement = -1;
-						break;
-					case StructuredArrangement::ARRANGMENT_RIGHT:
-						addedFace->meshAttributes.transfiniteArrangement = 1;
-						break;
-					case StructuredArrangement::ARRANGMENT_ALTERNATED:
-						addedFace->meshAttributes.transfiniteArrangement = 2;
-						break;
-					default:
-						addedFace->meshAttributes.transfiniteArrangement = -1;
-						break;
-				}
-			}
-			else
-			{
-				addedFace->meshAttributes.method = 2;
-				addedFace->meshAttributes.transfiniteArrangement = 0;
-			}
-			
-			addedFace->meshAttributes.meshSize = 1.0;
+			addedFace->meshAttributes.method = 2;
+			addedFace->meshAttributes.transfiniteArrangement = 0;
+			addedFaces.push_back(addedFace);
 		}
 	}
+	
+/*	for(auto faceIterator = addedFaces.begin(); faceIterator != addedFaces.end(); faceIterator++)
+	{
+		GFace *aFace = *faceIterator;
+		Surface *faceSurface = FindSurface((*faceIterator)->tag());
+		
+		if(p_settings->getStructuredState())
+		{
+			(*faceIterator)->meshAttributes.method = 1;// Sets the face to be transfinite
+			faceSurface->Method = 1;
+			
+			switch(p_settings->getMeshArrangment())
+			{
+				case StructuredArrangement::ARRANGMENT_LEFT:
+					(*faceIterator)->meshAttributes.transfiniteArrangement = -1;
+					faceSurface->Recombine_Dir = -1;
+					break;
+				case StructuredArrangement::ARRANGMENT_RIGHT:
+					(*faceIterator)->meshAttributes.transfiniteArrangement = 1;
+					faceSurface->Recombine_Dir = 1;
+					break;
+				case StructuredArrangement::ARRANGMENT_ALTERNATED:
+					(*faceIterator)->meshAttributes.transfiniteArrangement = 2;
+					faceSurface->Recombine_Dir = 2;
+					break;
+			}
+			
+			(*faceIterator)->meshAttributes.transfiniteSmoothing = -1;
+			(*faceIterator)->meshAttributes.meshSize = 0.08;
+			faceSurface->TransfiniteSmoothing = -1;
+		}
+		else
+		{
+			(*faceIterator)->meshAttributes.method = 2;
+			faceSurface->Method = 2;
+			(*faceIterator)->meshAttributes.transfiniteArrangement = 0;
+		}
+		
+	//	(*faceIterator)->meshAttributes.meshSize = 1.0;
+	}
+	 */ 
+	
+}
+
+
+
+closedPath meshMaker::recreatePath(closedPath &path, closedPath holeIterator, std::vector<edgeLineShape*> commonEdges)
+{
+	std::vector<edgeLineShape*> newEdgesForPath;
+	closedPath newPath;
+	bool isFinished = false;
+	
+	for(auto pathIterator = path.getClosedPath()->begin(); pathIterator != path.getClosedPath()->end(); pathIterator++)
+	{
+		bool isCommonEdge = false;
+		for(auto commonIterator = commonEdges.begin(); commonIterator != commonEdges.end(); commonIterator++)
+		{
+			if(**pathIterator == **commonIterator)
+			{
+				isCommonEdge = true;
+				break;
+			}
+				
+		}
+		
+		if(!isCommonEdge)
+			newEdgesForPath.push_back(*pathIterator);
+	}
+	
+	for(auto pathIterator = holeIterator.getClosedPath()->begin(); pathIterator != holeIterator.getClosedPath()->end(); pathIterator++)
+	{
+		bool isCommonEdge = false;
+		for(auto commonIterator = commonEdges.begin(); commonIterator != commonEdges.end(); commonIterator++)
+		{
+			if(**pathIterator == **commonIterator)
+			{
+				isCommonEdge = true;
+				break;
+			}
+		}
+		
+		if(!isCommonEdge)
+			newEdgesForPath.push_back(*pathIterator);
+	}
+	
+	newPath = closedPath(newEdgesForPath.at(0));
+	
+	while(!isFinished)
+	{
+		if(newPath.getClosedPath()->size() > 1)
+		{
+			/* For adding in the rest of the edges, this portion of the code will be executed
+			 */
+			edgeLineShape *previouseAddedSegment = *(++newPath.getClosedPath()->rbegin());
+			node *nodeToTest = nullptr;
+			
+			// If the first node of the recently added line is connected to the previousely added segment, then we need to test
+			// on the second node.
+			// Otherwise, go ahead and test on the first node
+			if(*newPath.getClosedPath()->back()->getFirstNode() == *previouseAddedSegment->getFirstNode() || *newPath.getClosedPath()->back()->getFirstNode() == *previouseAddedSegment->getSecondNode())
+				nodeToTest = newPath.getClosedPath()->back()->getSecondNode();
+			else
+				nodeToTest = newPath.getClosedPath()->back()->getFirstNode();
+				
+			if(*nodeToTest == *(*newPath.getClosedPath()->begin())->getFirstNode() || *nodeToTest == *(*newPath.getClosedPath()->begin())->getSecondNode())
+			{
+				isFinished = true;
+				break;
+			}
+			
+			for(auto edgeIterator = newEdgesForPath.begin(); edgeIterator != newEdgesForPath.end(); edgeIterator++)
+			{
+				
+				if(*(*edgeIterator) == *newPath.getClosedPath()->back() || *(*edgeIterator) == *previouseAddedSegment)
+				{
+			/*		auto backValue = *newEdgesForPath.back();
+					bool result = *(*edgeIterator) == *newEdgesForPath.back();
+					if(result)
+						isFinished = true;*/
+						
+					continue;
+				}
+				
+				if(*nodeToTest == *(*edgeIterator)->getFirstNode() || *nodeToTest == *(*edgeIterator)->getSecondNode())
+				{
+					newPath.addEdgeToPath(*edgeIterator);
+					break;
+				}
+			}
+		}
+		else if(newPath.getClosedPath()->size() == 1)
+		{
+			/* For the very first edge to add in to the new path, we must find the first node of the
+			 * first edge and look the list to find the edge that is connected to the first node of 
+			 * the first added edge
+			 */ 
+			for(auto edgeIterator = newEdgesForPath.begin(); edgeIterator != newEdgesForPath.end(); edgeIterator++)
+			{
+				if(*(*edgeIterator) == *newPath.getClosedPath()->at(0))
+					continue;
+				
+				if(*newPath.getClosedPath()->at(0)->getFirstNode() == *(*edgeIterator)->getFirstNode() || *newPath.getClosedPath()->at(0)->getFirstNode() == *(*edgeIterator)->getSecondNode())
+				{
+					newPath.addEdgeToPath(*edgeIterator);
+					break;
+				}
+			}
+		}
+		else
+		{
+			isFinished = true;
+			break;
+		}
+	}
+	
+	return newPath;
 }
 
 
@@ -797,6 +1000,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 {
 	std::vector<closedPath> *pathToOperate = nullptr;
+	bool isFinished = false;
 	
 	if(pathContour == nullptr)
 		pathToOperate = &p_closedContourPaths;
@@ -806,13 +1010,46 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 	
 	// First, we need to loop through every single closed path and check the bounding box
 	// against all the other closed paths to see if it is a possible hole
-	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathIterator++)
+	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end();)
 	{
-		for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
+		bool resetPath = false;
+		
+		if(!pathIterator->getHolesFoundState())
 		{
-			if(holeIterator->getBoundingBox().isInside(pathIterator->getBoundingBox()))
-				pathIterator->addHole(*holeIterator);
+			for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
+			{
+				if(	holeIterator->getBoundingBox().isInside(pathIterator->getBoundingBox()) && 
+					checkPointInContour(holeIterator->getCenter(), *pathIterator) && 
+					(holeIterator->getBoundingBox() != pathIterator->getBoundingBox()))
+				{
+					std::vector<edgeLineShape*> commonEdgeList;
+					
+					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
+					{
+						unsigned int iteratorDistance = std::distance(pathToOperate->begin(), pathIterator) - 1;
+						closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
+						
+						pathIterator->transferHoles(aPath);
+						pathToOperate->erase(pathIterator);
+						pathToOperate->push_back(aPath);
+						
+						
+						resetPath = true;
+						break;
+					}
+					else
+						pathIterator->addHole(*holeIterator);
+				}
+			}
+			
+			if(!resetPath)
+				pathIterator->setHolesFound();
 		}
+		
+		if(resetPath)
+			pathIterator = pathToOperate->begin();
+		else
+			pathIterator++;
 	}
 	
 	// Now, we need to find the top level holes

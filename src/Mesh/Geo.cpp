@@ -749,7 +749,7 @@ Curve *FindCurve(int inum)
   return FindCurve(inum, GModel::current()->getGEOInternals()->Curves);
 }
 
-static Surface *FindSurface(int inum, Tree_T *t)
+Surface *FindSurface(int inum, Tree_T *t)
 {
   Surface S, *ps;
   ps = &S;

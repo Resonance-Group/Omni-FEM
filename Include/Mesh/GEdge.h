@@ -208,10 +208,10 @@ class GEdge : public GEntity {
   // relocate mesh vertices using parametric coordinates
   void relocateMeshVertices();
 
- /* struct {
+/*  struct {
     char method;
     double coeffTransfinite;
-    double meshSize;
+    double meshSize = MAX_LC;
     int nbPointsTransfinite;
     int typeTransfinite;
     int minimumMeshSegments;
@@ -219,8 +219,8 @@ class GEdge : public GEntity {
     ExtrudeParams *extrude;
     // reverse mesh orientation
     bool reverseMesh;
-  } meshAttributes ;*/
-
+  } meshAttributes ;
+*/
   struct {
     mutable GEntity::MeshGenerationStatus status;
   } meshStatistics;

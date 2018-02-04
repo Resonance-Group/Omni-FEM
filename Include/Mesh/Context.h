@@ -172,7 +172,7 @@ class CTX {
   // rotate around the center of mass instead of rotationCenter[]
 //  int rotationCenterCg;
   // "overall" x, y and z min used for drawing and lc computation
-//  double min[3], max[3];
+  double min[3], max[3];
   // "center of mass" of the current geometry, used for graphics only
  // double cg[3];
  // characteristic length for the whole problem (never used in mesh
@@ -251,7 +251,7 @@ class CTX {
   // is ready)
 //  double tmpRotation[3], tmpTranslation[3], tmpScale[3], tmpQuaternion[4];
   // geometry options
-  contextGeometryOptions geom; // Maybe?
+  contextGeometryOptions geom; 
   
   // mesh options
   contextMeshOptions mesh;
