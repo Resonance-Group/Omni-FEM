@@ -245,16 +245,72 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 {
 	int windingNumber = 0;
+	bool isFirstRun = true;
+	bool reverseWindingResult = false;
+	
+	double additionTerms = 0;
+	double subtractionTerms = 0;
+	
+	// First, the algorithm will need to ensure that all of the lines are oriented in either CCW or CW.
+	// Each contour, the order of the lines is CCW or CW but the order of the nodes is different.
+	// For example, the start node of the 1st line could be "connected" to the end node of the next line.
+	// In which case, we need to swap the nodes of the 1st line.
+	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != (path.getClosedPath()->end()) - 1; lineIterator++)
+	{
+		auto nextLineIterator = lineIterator + 1;
+		
+		if(isFirstRun)
+		{
+			if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getFirstNode())
+				(*lineIterator)->swap();
+			else if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getSecondNode())
+			{
+				(*lineIterator)->swap();
+				(*nextLineIterator)->swap();
+			}
+			else if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
+				(*nextLineIterator)->swap();
+			
+			isFirstRun = false;
+		}
+		else
+		{
+			if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
+				(*nextLineIterator)->swap();
+		}
+		
+		additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
+		subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
+	}
+	
+	/* This part is interesting. Right now, we are using the shoelace algorithm to determine if the set of points are oriented CW or CCW
+	 * In the loop above, the last line is not counted in the area calculation because the loop skips that last line by design.
+	 * SO, we would need to add in the last line calculation here. However, the last term for the shoelace algorithm happens to be 
+	 * on the last line. So, the addition term will be multiplied by 2 and the subtraction term will not be changed. The code will remain
+	 * commented out for reference
+	 */ 
+	additionTerms += 2 * path.getClosedPath()->back()->getFirstNode()->getCenter().x * path.getClosedPath()->back()->getSecondNode()->getCenter().y;
+//	subtractionTerms -= path.getClosedPath()->back()->getSecondNode()->getCenter().x * path.getClosedPath()->back()->getFirstNode()->getCenter().y;
+	
+	// Next, we need to run the shoe-lace algorithm to determine if the ordering is CCW or CW. If CW, then we will need to swap
+	// the start node and end node of all of the edges in order to ensure the polygon edge is in CCW
+	double shoelaceResult = additionTerms - subtractionTerms;
+	
+	if(shoelaceResult < 0)
+		reverseWindingResult = true;
+	
+	// Now we can perform the winding number algorithm
 	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
 	{
-		bool reverseDirection = false;
+	/*	bool reverseDirection = false;
 		
 		if((*lineIterator)->isLeft(path.getCenter()) < 0)
 			reverseDirection = true; // THis indicates that the direction of the path is clockwise
+	*/ 
 			
 		double isLeftResult = (*lineIterator)->isLeft(point);
 		
-		if(reverseDirection)
+		if(reverseWindingResult)
 			isLeftResult *= -1;
 			
 		if(!(*lineIterator)->isArc())
@@ -279,7 +335,6 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 		}
 		else
 		{
-				
 			if(isLeftResult > 0)
 				windingNumber++;
 			else
@@ -376,6 +431,8 @@ void meshMaker::mesh()
 
 	CTX::instance()->lc = sqrt(	pow(CTX::instance()->max[0] - CTX::instance()->min[0], 2) +
 								pow(CTX::instance()->max[1] - CTX::instance()->min[1], 2));
+								
+	// End computing the value of LC							
 	
 	CTX::instance()->mesh.algoSubdivide = 1; // The 1 here is to specify that we are only concerned with quads
 	CTX::instance()->mesh.secondOrderIncomplete = 0; // Always use complete meshes
@@ -460,10 +517,14 @@ void meshMaker::mesh()
 		 */ 
 		if(isClosedPath(*contourPath.getClosedPath()))
 		{
+			// If we have a closed path then we need to locate all of the block labels within that path
+			// Later, we will determine the top level block label belonging to that contour
 			for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
 			{
+				// First, check to see if the point is in the bounding box
 				if(contourPath.pointInBoundingBox(blockIterator->getCenter()))
 				{
+					// Then check if the point is within the contour
 					if(checkPointInContour(blockIterator->getCenter(), contourPath))
 					{
 						contourPath.addBlockLabel(*blockIterator);

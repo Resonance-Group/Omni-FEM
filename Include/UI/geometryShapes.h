@@ -935,6 +935,23 @@ public:
 	{
 		return wxRealPoint(p_xMid, p_yMid);
 	}
+	
+	/**
+	 * @brief 	This function is called in order to swap the ending and starting node.
+	 * 			This is mainly used in the algorithm for PIP in order to ensure that all of 
+	 * 			the edges are oriented the same way
+	 */
+	void swap()
+	{
+		node *temp = _firstNode;
+		unsigned long tempNumber = p_firstNodeNumber;
+		
+		_firstNode = _secondNode;
+		_secondNode = temp;
+		
+		p_firstNodeNumber = p_secondNodeNumber;
+		p_secondNodeNumber = tempNumber;
+	}
 };
 
 
