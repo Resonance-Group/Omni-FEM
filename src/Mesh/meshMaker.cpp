@@ -261,15 +261,18 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 		
 		if(isFirstRun)
 		{
-			if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getFirstNode())
-				(*lineIterator)->swap();
-			else if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getSecondNode())
+			if(*(*lineIterator)->getSecondNode() != *(*nextLineIterator)->getFirstNode())
 			{
-				(*lineIterator)->swap();
-				(*nextLineIterator)->swap();
+				if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getFirstNode())
+					(*lineIterator)->swap();
+				else if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getSecondNode())
+				{
+					(*lineIterator)->swap();
+					(*nextLineIterator)->swap();
+				}
+				else if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
+					(*nextLineIterator)->swap();
 			}
-			else if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
-				(*nextLineIterator)->swap();
 			
 			isFirstRun = false;
 		}
@@ -279,8 +282,25 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 				(*nextLineIterator)->swap();
 		}
 		
-		additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
-		subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
+		if((*lineIterator)->isArc())
+		{
+			wxRealPoint firstNode = (*lineIterator)->getFirstNode()->getCenter();
+			
+			wxRealPoint secondNode = (*lineIterator)->getSecondNode()->getCenter();
+			
+			wxRealPoint midPOint = (*lineIterator)->getMidPoint();
+			
+			additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
+			subtractionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
+			
+			additionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
+			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y); 
+		}
+		else
+		{
+			additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
+			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
+		}
 	}
 	
 	/* This part is interesting. Right now, we are using the shoelace algorithm to determine if the set of points are oriented CW or CCW
@@ -288,8 +308,16 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 	 * SO, we would need to add in the last line calculation here. However, the last term for the shoelace algorithm happens to be 
 	 * on the last line. So, the addition term will be multiplied by 2 and the subtraction term will not be changed. The code will remain
 	 * commented out for reference
-	 */ 
-	additionTerms += 2 * path.getClosedPath()->back()->getFirstNode()->getCenter().x * path.getClosedPath()->back()->getSecondNode()->getCenter().y;
+	 */
+	if(path.getClosedPath()->back()->isArc())
+	{
+		additionTerms += path.getClosedPath()->back()->getFirstNode()->getCenter().x * path.getClosedPath()->back()->getMidPoint().y;
+		subtractionTerms += path.getClosedPath()->back()->getMidPoint().x * path.getClosedPath()->back()->getFirstNode()->getCenter().y;
+		
+		additionTerms += 2 * path.getClosedPath()->back()->getMidPoint().x * path.getClosedPath()->back()->getSecondNode()->getCenter().y;
+	}
+	else
+		additionTerms += 2 * path.getClosedPath()->back()->getFirstNode()->getCenter().x * path.getClosedPath()->back()->getSecondNode()->getCenter().y;
 //	subtractionTerms -= path.getClosedPath()->back()->getSecondNode()->getCenter().x * path.getClosedPath()->back()->getFirstNode()->getCenter().y;
 	
 	// Next, we need to run the shoe-lace algorithm to determine if the ordering is CCW or CW. If CW, then we will need to swap
@@ -339,6 +367,11 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 				windingNumber++;
 			else
 				windingNumber--;
+			
+			// For arcs, we need to preserve the orientation of the first and second
+			// node for drawing purposes. Lines do not matter as much for drawing but arcs,
+			// it matters
+			(*lineIterator)->swap();
 		}
 	}
 	
