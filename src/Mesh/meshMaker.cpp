@@ -255,9 +255,12 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 	// Each contour, the order of the lines is CCW or CW but the order of the nodes is different.
 	// For example, the start node of the 1st line could be "connected" to the end node of the next line.
 	// In which case, we need to swap the nodes of the 1st line.
-	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != (path.getClosedPath()->end()) - 1; lineIterator++)
+	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
 	{
 		auto nextLineIterator = lineIterator + 1;
+		
+		if(nextLineIterator == path.getClosedPath()->end())
+			nextLineIterator = path.getClosedPath()->begin();
 		
 		if(isFirstRun)
 		{
@@ -282,19 +285,26 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 				(*nextLineIterator)->swap();
 		}
 		
+		/* 
+		 * This is the actual shoelace algorithm that is implemented. In short, we have two terms, addition terms
+		 * and subtraction terms. THe addition terms are the summation of the Xpoint of the first node multiplied by
+		 * the Ypoint of the second node for all edges (arcs are a special case)
+		 * 
+		 * The subtraction term is the summation of the Xpoint of the second node multiplied by the
+		 * Ypoint of the first node (arcs are a special case)
+		 */ 
 		if((*lineIterator)->isArc())
 		{
-			wxRealPoint firstNode = (*lineIterator)->getFirstNode()->getCenter();
-			
-			wxRealPoint secondNode = (*lineIterator)->getSecondNode()->getCenter();
-			
-			wxRealPoint midPOint = (*lineIterator)->getMidPoint();
-			
+			/* This algorithm is not being used to accurately determine the arc within a closed contour
+			 * with that said, we only need to approximately determine the area. For arcs, we shall draw
+			 * a line from the first node to the mid point and then from the mid point to the second node.
+			 * We will use these two lines as the calculation for the shoelace algorithm.
+			 */ 
 			additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
 			subtractionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
 			
 			additionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
-			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y); 
+			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
 		}
 		else
 		{
@@ -302,23 +312,6 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
 		}
 	}
-	
-	/* This part is interesting. Right now, we are using the shoelace algorithm to determine if the set of points are oriented CW or CCW
-	 * In the loop above, the last line is not counted in the area calculation because the loop skips that last line by design.
-	 * SO, we would need to add in the last line calculation here. However, the last term for the shoelace algorithm happens to be 
-	 * on the last line. So, the addition term will be multiplied by 2 and the subtraction term will not be changed. The code will remain
-	 * commented out for reference
-	 */
-	if(path.getClosedPath()->back()->isArc())
-	{
-		additionTerms += path.getClosedPath()->back()->getFirstNode()->getCenter().x * path.getClosedPath()->back()->getMidPoint().y;
-		subtractionTerms += path.getClosedPath()->back()->getMidPoint().x * path.getClosedPath()->back()->getFirstNode()->getCenter().y;
-		
-		additionTerms += 2 * path.getClosedPath()->back()->getMidPoint().x * path.getClosedPath()->back()->getSecondNode()->getCenter().y;
-	}
-	else
-		additionTerms += 2 * path.getClosedPath()->back()->getFirstNode()->getCenter().x * path.getClosedPath()->back()->getSecondNode()->getCenter().y;
-//	subtractionTerms -= path.getClosedPath()->back()->getSecondNode()->getCenter().x * path.getClosedPath()->back()->getFirstNode()->getCenter().y;
 	
 	// Next, we need to run the shoe-lace algorithm to determine if the ordering is CCW or CW. If CW, then we will need to swap
 	// the start node and end node of all of the edges in order to ensure the polygon edge is in CCW
@@ -330,19 +323,17 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 	// Now we can perform the winding number algorithm
 	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
 	{
-	/*	bool reverseDirection = false;
-		
-		if((*lineIterator)->isLeft(path.getCenter()) < 0)
-			reverseDirection = true; // THis indicates that the direction of the path is clockwise
-	*/ 
+	
+		if((*lineIterator)->isArc() && (*lineIterator)->getSwappedState())
+			(*lineIterator)->swap();
 			
 		double isLeftResult = (*lineIterator)->isLeft(point);
-		
-		if(reverseWindingResult)
-			isLeftResult *= -1;
 			
 		if(!(*lineIterator)->isArc())
 		{
+			if(reverseWindingResult)
+				isLeftResult *= -1;
+			
 			if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
 			{
 				if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
@@ -360,18 +351,23 @@ bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
 				else if(isLeftResult > 0)
 					windingNumber++;
 			}
+			
 		}
 		else
 		{
+			if((*lineIterator)->getSwappedState())
+			{
+				isLeftResult *= -1;
+				// For arcs, we need to preserve the orientation of the first and second
+				// node for drawing purposes. Lines do not matter as much for drawing but arcs,
+				// it matters
+				(*lineIterator)->swap();
+			}
+			
 			if(isLeftResult > 0)
 				windingNumber++;
 			else
 				windingNumber--;
-			
-			// For arcs, we need to preserve the orientation of the first and second
-			// node for drawing purposes. Lines do not matter as much for drawing but arcs,
-			// it matters
-			(*lineIterator)->swap();
 		}
 	}
 	

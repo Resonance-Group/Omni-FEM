@@ -658,6 +658,9 @@ protected:
 	//! The y coordinate position of the mid point of the edge
 	double p_yMid = 0;
 	
+	//! Boolean used to indicate if the first and second nodes are swapped
+	bool p_isSwapped = false;
+	
 	/**
 	 * @brief Performs the dot product on two points. This function is mainly used 
 	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
@@ -951,6 +954,13 @@ public:
 		
 		p_firstNodeNumber = p_secondNodeNumber;
 		p_secondNodeNumber = tempNumber;
+		
+		p_isSwapped = !p_isSwapped;
+	}
+	
+	bool getSwappedState()
+	{
+		return p_isSwapped;
 	}
 };
 
