@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <map>
 
 #include <wx/wx.h>
 
@@ -27,6 +28,8 @@ private:
 	std::vector<closedPath> p_holes;
 	
 	std::vector<blockLabel*> p_blockLabelList;
+	
+	std::map<node*, char> p_vertexList;
 	
 	bool p_holesFound = false;
 	
@@ -142,6 +145,9 @@ public:
 			p_boundingBox.addPoint(firstEdge.getMidPoint());
 			
 		p_centerPoint = firstEdge.getMidPoint();
+
+		p_vertexList.insert(std::pair<node*, int>(firstEdge.getFirstNode(), 1));
+		p_vertexList.insert(std::pair<node*, int>(firstEdge.getSecondNode(), 1));
 	}
 	
 	closedPath(edgeLineShape *firstEdge)
@@ -155,6 +161,9 @@ public:
 			p_boundingBox.addPoint(firstEdge->getMidPoint());
 		
 		p_centerPoint = firstEdge->getMidPoint();
+		
+		p_vertexList.insert(std::pair<node*, int>(firstEdge->getFirstNode(), 1));
+		p_vertexList.insert(std::pair<node*, int>(firstEdge->getSecondNode(), 1));
 	}
 	
 	closedPath()
@@ -201,6 +210,16 @@ public:
 		{
 			p_boundingBox.addPoint(addEdge.getMidPoint());
 		}
+		
+		auto mapIterator = p_vertexList.find(addEdge.getFirstNode());
+		
+		if(mapIterator == p_vertexList.end())
+			p_vertexList.insert(std::pair<node*, int>(addEdge.getFirstNode(), 1));
+			
+		mapIterator = p_vertexList.find(addEdge.getSecondNode());
+		
+		if(mapIterator == p_vertexList.end())
+			p_vertexList.insert(std::pair<node*, int>(addEdge.getSecondNode(), 1));
 	}
 	
 	void addEdgeToPath(edgeLineShape *addEdge)
@@ -228,6 +247,16 @@ public:
 		{
 			p_boundingBox.addPoint(addEdge->getMidPoint());
 		}
+		
+		auto mapIterator = p_vertexList.find(addEdge->getFirstNode());
+		
+		if(mapIterator == p_vertexList.end())
+			p_vertexList.insert(std::pair<node*, int>(addEdge->getFirstNode(), 1));
+			
+		mapIterator = p_vertexList.find(addEdge->getSecondNode());
+		
+		if(mapIterator == p_vertexList.end())
+			p_vertexList.insert(std::pair<node*, int>(addEdge->getSecondNode(), 1));
 		
 	}
 	
@@ -295,6 +324,11 @@ public:
 			return true;
 		else
 			return false;
+	}
+	
+	std::map<node*, char> *getVertexList()
+	{
+		return &p_vertexList;
 	}
 	
 	boundingBox getBoundingBox()
@@ -403,8 +437,9 @@ public:
 							}
 						}
 						
-						p_holes.push_back(newHole);
 						p_holes.erase(firstHoleIterator, secondHoleIterator + 1);
+						p_holes.push_back(newHole);
+						
 						newHoleCreated = true;
 					}
 					
@@ -439,6 +474,175 @@ public:
 	void transferHoles(closedPath &transfer)
 	{
 		transfer.setHoles(p_holes);
+	}
+	
+	bool pointInContour(wxRealPoint point)
+	{
+		int windingNumber = 0;
+		bool isFirstRun = true;
+		bool reverseWindingResult = false;
+		
+		double additionTerms = 0;
+		double subtractionTerms = 0;
+		
+		// First, the algorithm will need to ensure that all of the lines are oriented in either CCW or CW.
+		// Each contour, the order of the lines is CCW or CW but the order of the nodes is different.
+		// For example, the start node of the 1st line could be "connected" to the end node of the next line.
+		// In which case, we need to swap the nodes of the 1st line.
+		
+		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
+		{
+			auto nextLineIterator = lineIterator + 1;
+			
+			if(nextLineIterator == p_closedPath.end())
+				nextLineIterator = p_closedPath.begin();
+			
+			if(isFirstRun)
+			{
+				if(*(*lineIterator)->getSecondNode() != *(*nextLineIterator)->getFirstNode())
+				{
+					if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getFirstNode())
+						(*lineIterator)->swap();
+					else if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getSecondNode())
+					{
+						(*lineIterator)->swap();
+						(*nextLineIterator)->swap();
+					}
+					else if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
+						(*nextLineIterator)->swap();
+				}
+				
+				isFirstRun = false;
+			}
+			else
+			{
+				if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
+					(*nextLineIterator)->swap();
+			}
+			
+			/* 
+			 * This is the actual shoelace algorithm that is implemented. In short, we have two terms, addition terms
+			 * and subtraction terms. THe addition terms are the summation of the Xpoint of the first node multiplied by
+			 * the Ypoint of the second node for all edges (arcs are a special case)
+			 * 
+			 * The subtraction term is the summation of the Xpoint of the second node multiplied by the
+			 * Ypoint of the first node (arcs are a special case)
+			 */ 
+			if((*lineIterator)->isArc())
+			{
+				/* This algorithm is not being used to accurately determine the arc within a closed contour
+				 * with that said, we only need to approximately determine the area. For arcs, we shall draw
+				 * a line from the first node to the mid point and then from the mid point to the second node.
+				 * We will use these two lines as the calculation for the shoelace algorithm.
+				 */ 
+				additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
+				subtractionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
+				
+				additionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
+				subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
+			}
+			else
+			{
+				additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
+				subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
+			}
+		}
+		
+		// Next, we need to run the shoe-lace algorithm to determine if the ordering is CCW or CW. If CW, then we will need to swap
+		// the start node and end node of all of the edges in order to ensure the polygon edge is in CCW
+		double shoelaceResult = additionTerms - subtractionTerms;
+		
+		if(shoelaceResult < 0)
+			reverseWindingResult = true;
+		
+		// Now we can perform the winding number algorithm
+		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
+		{
+		
+			if((*lineIterator)->isArc() && (*lineIterator)->getSwappedState())
+				(*lineIterator)->swap();
+				
+			double isLeftResult = (*lineIterator)->isLeft(point);
+				
+			if(!(*lineIterator)->isArc())
+			{
+				if(reverseWindingResult)
+					isLeftResult *= -1;
+				
+				if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
+				{
+					if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
+					{
+						if(isLeftResult > 0)
+							windingNumber++;
+						else if(isLeftResult < 0)
+							windingNumber--;
+					}
+				}
+				else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
+				{
+					if(isLeftResult < 0)
+						windingNumber--;
+					else if(isLeftResult > 0)
+						windingNumber++;
+				}
+				
+			}
+			else
+			{
+				if((*lineIterator)->getSwappedState())
+				{
+					isLeftResult *= -1;
+					// For arcs, we need to preserve the orientation of the first and second
+					// node for drawing purposes. Lines do not matter as much for drawing but arcs,
+					// it matters
+					(*lineIterator)->swap();
+				}
+				
+				if(isLeftResult > 0)
+					windingNumber++;
+				else
+					windingNumber--;
+			}
+		}
+		
+		if(windingNumber > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	bool isInside(closedPath &compare)
+	{
+		bool pointFound = false;
+		wxRealPoint comparePoint;
+		std::map<node*, char> *compareVertexList = compare.getVertexList();
+		
+		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
+		{
+			auto nodeExists = compareVertexList->find((*lineIterator)->getFirstNode());
+			
+			if(nodeExists == compareVertexList->end())
+			{
+				comparePoint = (*lineIterator)->getFirstNode()->getCenter();
+				pointFound = true;
+				break;
+			}
+			
+			nodeExists = compareVertexList->find((*lineIterator)->getSecondNode());
+			
+			if(nodeExists == compareVertexList->end())
+			{
+				comparePoint = (*lineIterator)->getSecondNode()->getCenter();
+				pointFound = true;
+				break;
+			}
+		}
+		
+		if(pointFound)
+			return compare.pointInContour(comparePoint);
+		else
+			return false;
 	}
 };
 

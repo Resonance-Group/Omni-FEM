@@ -121,7 +121,8 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 					{
 						foundPath = *pathIterator;
 					}
-					else if(checkPointInContour(*point, *pathIterator) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
+				//	else if(checkPointInContour(*point, *pathIterator) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
+					else if(pathIterator->pointInContour(point->getCenter()) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
 					{
 						foundPath = *pathIterator;
 					}
@@ -554,7 +555,7 @@ void meshMaker::mesh()
 				if(contourPath.pointInBoundingBox(blockIterator->getCenter()))
 				{
 					// Then check if the point is within the contour
-					if(checkPointInContour(blockIterator->getCenter(), contourPath))
+					if(contourPath.pointInContour(blockIterator->getCenter()))
 					{
 						contourPath.addBlockLabel(*blockIterator);
 					}
@@ -610,8 +611,9 @@ void meshMaker::mesh()
 					
 					for(auto closedPathIterator = p_closedContourPaths.begin(); closedPathIterator != p_closedContourPaths.end(); closedPathIterator++)
 					{
-						closedPath temp = *closedPathIterator;
-						if(checkPointInContour(blockIterator->getCenter(), temp))
+						closedPath tempPath = *closedPathIterator;
+						if(tempPath.pointInContour(blockIterator->getCenter()))
+					//	if(checkPointInContour(blockIterator->getCenter(), temp))
 						{
 							existsInGeometry = true;
 							break;
@@ -1108,14 +1110,15 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 		{
 			for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
 			{
-				if(	holeIterator->getBoundingBox().isInside(pathIterator->getBoundingBox()) && 
-					checkPointInContour(holeIterator->getCenter(), *pathIterator) && 
-					(holeIterator->getBoundingBox() != pathIterator->getBoundingBox()))
+				// Check to see if the "hole" is a hole to the path
+				if(holeIterator->isInside(*pathIterator) && holeIterator->getBoundingBox() != pathIterator->getBoundingBox())
 				{
 					std::vector<edgeLineShape*> commonEdgeList;
 					
 					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
 					{
+						// IF the hole shares a common edge with the path, then we will need to perform an algorithm
+						// that will recombine the hole and the path
 						unsigned int iteratorDistance = std::distance(pathToOperate->begin(), pathIterator) - 1;
 						closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
 						
@@ -1157,14 +1160,22 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 					
 					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end();)
 					{
+						if(holeIterator->getBoundingBox() == topLevelIterator->getBoundingBox())
+						{
+							holeIterator++;
+							continue;
+						}
+						
 						// If the hole is inside of the top level contour, delete the hole and restart the process
-						if(holeIterator->getBoundingBox().isInside(topLevelIterator->getBoundingBox()))
+						if(holeIterator->isInside(*topLevelIterator))
+					//	if(holeIterator->getBoundingBox().isInside(topLevelIterator->getBoundingBox()))
 						{
 							pathIterator->getHoles()->erase(holeIterator);
 							resetIterator = true;
 							break;
 						}
-						else if(topLevelIterator->getBoundingBox().isInside(holeIterator->getBoundingBox()))
+					//	else if(topLevelIterator->getBoundingBox().isInside(holeIterator->getBoundingBox()))
+						else if(topLevelIterator->isInside(*holeIterator))
 						{
 							// If the top level is actually inside of the hole,
 							// then we need to delete the top level and restart the process
@@ -1218,7 +1229,8 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 				{
 					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
 					{
-						if(checkPointInContour(*propertyIterator, &(*holeIterator)))
+						if(holeIterator->pointInContour((*propertyIterator)->getCenter()))
+					//	if(checkPointInContour(*propertyIterator, &(*holeIterator)))
 						{
 							isInHole = true;
 							break;

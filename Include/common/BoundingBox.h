@@ -83,7 +83,7 @@ public:
 	}
 	
 	/**
-	 * @brief 	FUnction that will check if the current bounding box is inside of another
+	 * @brief 	Function that will check if the current bounding box is inside of another
 	 * 			bounding box. This is comparing from the persepective that the this bounding box
 	 * 			is contained inside of the compare bounding box.
 	 * @param compare
@@ -97,10 +97,30 @@ public:
 		bool xMinIsLesser = compare.getMinBounds().x <= p_minBounds.x;
 		bool yMinIsLesser = compare.getMinBounds().y <= p_minBounds.y;
 		
-		if(xMaxIsGreater && yMaxIsGreater && xMinIsLesser && yMinIsLesser)
-			return true;
+		bool minShared = compare.getMinBounds() == p_minBounds;
+		bool maxShared = compare.getMaxBounds() == p_maxBounds;
+		
+		if(minShared)
+		{
+			if(xMaxIsGreater && yMaxIsGreater)
+				return true;
+			else
+				return false;
+		}
+		else if(maxShared)
+		{
+			if(xMinIsLesser && yMinIsLesser)
+				return true;
+			else
+				return false;
+		}
 		else
-			return false;
+		{
+			if(xMaxIsGreater && yMaxIsGreater && xMinIsLesser && yMinIsLesser)
+				return true;
+			else
+				return false;
+		}
 	}
 	
 	bool operator==(boundingBox compareBox)
