@@ -121,7 +121,6 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 					{
 						foundPath = *pathIterator;
 					}
-				//	else if(checkPointInContour(*point, *pathIterator) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
 					else if(pathIterator->pointInContour(point->getCenter()) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
 					{
 						foundPath = *pathIterator;
@@ -241,142 +240,6 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 	return returnList;
 }
 
-
-
-bool meshMaker::checkPointInContour(wxRealPoint point, closedPath path)
-{
-	int windingNumber = 0;
-	bool isFirstRun = true;
-	bool reverseWindingResult = false;
-	
-	double additionTerms = 0;
-	double subtractionTerms = 0;
-	
-	// First, the algorithm will need to ensure that all of the lines are oriented in either CCW or CW.
-	// Each contour, the order of the lines is CCW or CW but the order of the nodes is different.
-	// For example, the start node of the 1st line could be "connected" to the end node of the next line.
-	// In which case, we need to swap the nodes of the 1st line.
-	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
-	{
-		auto nextLineIterator = lineIterator + 1;
-		
-		if(nextLineIterator == path.getClosedPath()->end())
-			nextLineIterator = path.getClosedPath()->begin();
-		
-		if(isFirstRun)
-		{
-			if(*(*lineIterator)->getSecondNode() != *(*nextLineIterator)->getFirstNode())
-			{
-				if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getFirstNode())
-					(*lineIterator)->swap();
-				else if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getSecondNode())
-				{
-					(*lineIterator)->swap();
-					(*nextLineIterator)->swap();
-				}
-				else if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
-					(*nextLineIterator)->swap();
-			}
-			
-			isFirstRun = false;
-		}
-		else
-		{
-			if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
-				(*nextLineIterator)->swap();
-		}
-		
-		/* 
-		 * This is the actual shoelace algorithm that is implemented. In short, we have two terms, addition terms
-		 * and subtraction terms. THe addition terms are the summation of the Xpoint of the first node multiplied by
-		 * the Ypoint of the second node for all edges (arcs are a special case)
-		 * 
-		 * The subtraction term is the summation of the Xpoint of the second node multiplied by the
-		 * Ypoint of the first node (arcs are a special case)
-		 */ 
-		if((*lineIterator)->isArc())
-		{
-			/* This algorithm is not being used to accurately determine the arc within a closed contour
-			 * with that said, we only need to approximately determine the area. For arcs, we shall draw
-			 * a line from the first node to the mid point and then from the mid point to the second node.
-			 * We will use these two lines as the calculation for the shoelace algorithm.
-			 */ 
-			additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
-			subtractionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
-			
-			additionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
-			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
-		}
-		else
-		{
-			additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
-			subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
-		}
-	}
-	
-	// Next, we need to run the shoe-lace algorithm to determine if the ordering is CCW or CW. If CW, then we will need to swap
-	// the start node and end node of all of the edges in order to ensure the polygon edge is in CCW
-	double shoelaceResult = additionTerms - subtractionTerms;
-	
-	if(shoelaceResult < 0)
-		reverseWindingResult = true;
-	
-	// Now we can perform the winding number algorithm
-	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
-	{
-	
-		if((*lineIterator)->isArc() && (*lineIterator)->getSwappedState())
-			(*lineIterator)->swap();
-			
-		double isLeftResult = (*lineIterator)->isLeft(point);
-			
-		if(!(*lineIterator)->isArc())
-		{
-			if(reverseWindingResult)
-				isLeftResult *= -1;
-			
-			if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
-			{
-				if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
-				{
-					if(isLeftResult > 0)
-						windingNumber++;
-					else if(isLeftResult < 0)
-						windingNumber--;
-				}
-			}
-			else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
-			{
-				if(isLeftResult < 0)
-					windingNumber--;
-				else if(isLeftResult > 0)
-					windingNumber++;
-			}
-			
-		}
-		else
-		{
-			if((*lineIterator)->getSwappedState())
-			{
-				isLeftResult *= -1;
-				// For arcs, we need to preserve the orientation of the first and second
-				// node for drawing purposes. Lines do not matter as much for drawing but arcs,
-				// it matters
-				(*lineIterator)->swap();
-			}
-			
-			if(isLeftResult > 0)
-				windingNumber++;
-			else
-				windingNumber--;
-		}
-	}
-	
-	if(windingNumber > 0)
-		return true;
-	else
-		return false;
-}
 
 
 void meshMaker::mesh()
@@ -593,7 +456,7 @@ void meshMaker::mesh()
 		
 		assignBlockLabel();
 		
-		createGMSHGeometry();
+	//	createGMSHGeometry();
 		
 		if(p_blockLabelsUsed < p_blockLabelList->size())
 		{
@@ -613,7 +476,6 @@ void meshMaker::mesh()
 					{
 						closedPath tempPath = *closedPathIterator;
 						if(tempPath.pointInContour(blockIterator->getCenter()))
-					//	if(checkPointInContour(blockIterator->getCenter(), temp))
 						{
 							existsInGeometry = true;
 							break;
@@ -672,7 +534,7 @@ void meshMaker::mesh()
 			{
 				holeDetection(&additionalPaths);
 				
-				createGMSHGeometry(&additionalPaths);
+		//		createGMSHGeometry(&additionalPaths);
 				
 				p_closedContourPaths.reserve(p_closedContourPaths.size() + additionalPaths.size());
 				
@@ -681,8 +543,54 @@ void meshMaker::mesh()
 		}
 		
 		
+		for(auto pathIterator = p_closedContourPaths.begin(); pathIterator != p_closedContourPaths.end(); pathIterator++)
+		{
+			unsigned int iteratorDistance = 0;
+			bool resetPath = false;
+			
+			for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+			{
+				std::vector<edgeLineShape*> commonEdgeList;
+				
+				if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
+				{
+					// IF the hole shares a common edge with the path, then we will need to perform an algorithm
+					// that will recombine the hole and the path
+					// The path will need to be remade to cut out the hole
+					iteratorDistance = std::distance(p_closedContourPaths.begin(), pathIterator);
+					
+					closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
+					
+					
+					pathIterator->getHoles()->erase(holeIterator);
+					pathIterator->transferHoles(aPath);
+				//	aPath.setBlockLabelList(*(pathIterator->getBlockLabelList()));
+					aPath.setProperty(pathIterator->getProperty());
+					
+					p_closedContourPaths.erase(pathIterator);
+					p_closedContourPaths.push_back(aPath);
+					
+					
+					resetPath = true;
+					break;
+				}
+			}
+			
+			if(resetPath)
+			{
+				auto newIterator = p_closedContourPaths.begin();
+				
+				for(unsigned int i = 0; i < iteratorDistance; i++)
+				{
+					newIterator++;
+				}
+				
+				pathIterator = newIterator;
+			}
+		}
 		
-		double val = CTX::instance()->lc; 
+		createGMSHGeometry();
+		
 		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
 		
 		for(int i = 0; i < CTX::instance()->mesh.multiplePasses; i++)
@@ -1113,16 +1021,21 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 				// Check to see if the "hole" is a hole to the path
 				if(holeIterator->isInside(*pathIterator) && holeIterator->getBoundingBox() != pathIterator->getBoundingBox())
 				{
+					pathIterator->addHole(*holeIterator);
+					/*
 					std::vector<edgeLineShape*> commonEdgeList;
 					
 					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
 					{
 						// IF the hole shares a common edge with the path, then we will need to perform an algorithm
 						// that will recombine the hole and the path
+						// The path will need to be remade to cut out the hole
 						unsigned int iteratorDistance = std::distance(pathToOperate->begin(), pathIterator) - 1;
 						closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
 						
 						pathIterator->transferHoles(aPath);
+						aPath.setBlockLabelList(*(pathIterator->getBlockLabelList()));
+						
 						pathToOperate->erase(pathIterator);
 						pathToOperate->push_back(aPath);
 						
@@ -1132,6 +1045,7 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 					}
 					else
 						pathIterator->addHole(*holeIterator);
+						 */ 
 				}
 			}
 			
@@ -1168,13 +1082,11 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 						
 						// If the hole is inside of the top level contour, delete the hole and restart the process
 						if(holeIterator->isInside(*topLevelIterator))
-					//	if(holeIterator->getBoundingBox().isInside(topLevelIterator->getBoundingBox()))
 						{
 							pathIterator->getHoles()->erase(holeIterator);
 							resetIterator = true;
 							break;
 						}
-					//	else if(topLevelIterator->getBoundingBox().isInside(holeIterator->getBoundingBox()))
 						else if(topLevelIterator->isInside(*holeIterator))
 						{
 							// If the top level is actually inside of the hole,
@@ -1230,7 +1142,6 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
 					{
 						if(holeIterator->pointInContour((*propertyIterator)->getCenter()))
-					//	if(checkPointInContour(*propertyIterator, &(*holeIterator)))
 						{
 							isInHole = true;
 							break;

@@ -115,42 +115,6 @@ private:
 	void createGMSHGeometry(std::vector<closedPath> *pathContour = nullptr);
 	
 	/**
-	 * @brief 	The purpose of this function to to check if a specfied point lies within the path/closed contour.
-	 * 			The function accomplishes this through the use of a modified version of the winding number method.
-	 * 			In this method, the algorithm calculates the number of times that the point wraps around the 
-	 * 			closed path. The current version of this algorithm does not use arc sin or cos. But instead checks to see
-	 * 			if the point is to the left or right of an edge within the closed path. If teh number of times that the point
-	 * 			is to the left of the edges is greater then the number of rights, then this means that the point lies withing the
-	 * 			closed path.
-	 * @param label The rectangle shape that the algorithm will be checking to see if it lies within the closed path
-	 * @param path The closed path to check if point exists inside of
-	 * @return Returns true if the point lies within the closed path. Otherwise, returns false.
-	 */
-	bool checkPointInContour(wxRealPoint point, closedPath path);
-	
-	/**
-	 * @brief This function performs exactly the same as checkPointInContour excpet that the parameters are different
-	 * @param point Rectanglur point to check if it exists within the closed path
-	 * @param path The closed path to check if point exists inside of
-	 * @return Returns true if the rectangle shape lies within the closed path. Otherwise, returns false.
-	 */
-	bool checkPointInContour(rectangleShape point, closedPath path)
-	{
-		return checkPointInContour(point.getCenter(), path);
-	}
-	
-	/**
-	 * @brief This function performs exactly the same as checkPointInContour excpet that the parameters are different
-	 * @param point Pointer to the point to check if it exists within the closed path
-	 * @param path Pointer to the closed path to check if point exists inside of
-	 * @return Returns true if the rectangle shape lies within the closed path. Otherwise, returns false.
-	 */
-	bool checkPointInContour(rectangleShape *point, closedPath *path)
-	{
-		return checkPointInContour(point->getCenter(), *path);
-	}
-	
-	/**
 	 * @brief Algorithm that is ran in order to locate the holes of a closed contour. This alogorithm will first 
 	 * locate all of the holes and then find the top level holes belonging to the closed contour. This is a requirement
 	 * imposed by GMSH. Additionally, there holes are unable to share a common edge. If a common edge exists, then the
