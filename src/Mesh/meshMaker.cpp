@@ -543,7 +543,7 @@ void meshMaker::mesh()
 		}
 		
 		
-		for(auto pathIterator = p_closedContourPaths.begin(); pathIterator != p_closedContourPaths.end(); pathIterator++)
+		for(auto pathIterator = p_closedContourPaths.begin(); pathIterator != p_closedContourPaths.end();)
 		{
 			unsigned int iteratorDistance = 0;
 			bool resetPath = false;
@@ -587,6 +587,8 @@ void meshMaker::mesh()
 				
 				pathIterator = newIterator;
 			}
+			else
+				pathIterator++;
 		}
 		
 		createGMSHGeometry();

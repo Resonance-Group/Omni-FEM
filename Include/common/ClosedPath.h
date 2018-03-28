@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <iterator>
 
 #include <wx/wx.h>
 
@@ -442,7 +443,26 @@ public:
 							}
 						}
 						
-						p_holes.erase(firstHoleIterator, secondHoleIterator + 1);
+						unsigned int firstHoleDistance = std::distance(p_holes.begin(), firstHoleIterator);
+						unsigned int secondHoleDistance = std::distance(p_holes.begin(), secondHoleIterator);
+						auto lastIterator = --(p_holes.end());
+						
+						if(secondHoleIterator == lastIterator)
+						{
+							p_holes.erase(lastIterator);
+							
+							p_holes.at(firstHoleDistance) = p_holes.back();
+							p_holes.pop_back();
+						}
+						else
+						{
+							p_holes.at(firstHoleDistance) = p_holes.back();
+							p_holes.pop_back();
+						
+							p_holes.at(secondHoleDistance) = p_holes.back();
+							p_holes.pop_back();
+						}
+						
 						p_holes.push_back(newHole);
 						
 						newHoleCreated = true;
