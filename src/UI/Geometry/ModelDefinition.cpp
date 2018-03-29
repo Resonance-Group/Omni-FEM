@@ -2715,19 +2715,25 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 			int numOfElements = 0;
 			for(unsigned int i = 0; i < entityList.size(); i++)
 			{
-				int temp = entityList[i]->getNumMeshElements();	
 				for(unsigned int j = 0; j < entityList[i]->getNumMeshElements(); j++)
 				{
 					numOfElements++;
-					int lastTag = entityList[i]->getMeshElement(j)->getNumVertices() - 1;
-					for(unsigned int k = 0; k < entityList[i]->getMeshElement(j)->getNumVertices() - 1; k++)
+					unsigned int loopCount = 0;
+					int verticeCount = entityList[i]->getMeshElement(j)->getNumVertices();
+					
+					if(verticeCount == 2 || verticeCount == 3)
+						loopCount = 1;
+					else if(verticeCount == 4 || verticeCount == 9)
+						loopCount = 3;
+						
+					for(unsigned int k = 0; k < loopCount; k++)
 					{
 						glVertex2d(entityList[i]->getMeshElement(j)->getVertex(k)->x(), entityList[i]->getMeshElement(j)->getVertex(k)->y());
 						glVertex2d(entityList[i]->getMeshElement(j)->getVertex(k + 1)->x(), entityList[i]->getMeshElement(j)->getVertex(k + 1)->y());
 					}
 					
 					glVertex2d(entityList[i]->getMeshElement(j)->getVertex(0)->x(), entityList[i]->getMeshElement(j)->getVertex(0)->y());
-					glVertex2d(entityList[i]->getMeshElement(j)->getVertex(lastTag)->x(), entityList[i]->getMeshElement(j)->getVertex(lastTag)->y());
+					glVertex2d(entityList[i]->getMeshElement(j)->getVertex(loopCount)->x(), entityList[i]->getMeshElement(j)->getVertex(loopCount)->y());
 				}
 			}
 

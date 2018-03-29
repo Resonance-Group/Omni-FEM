@@ -107,7 +107,12 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     line3Sizer->Add(_meshSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _meshSizeComboBox->Create(this, wxID_APPLY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), meshSettingArray);
-    _meshSizeComboBox->SetSelection((int)property.getMeshsizeType() - 1);
+	
+    if(property.getMeshsizeType() == meshSize::MESH_NONE_)
+		_meshSizeComboBox->SetSelection(4);
+	else
+		_meshSizeComboBox->SetSelection((int)property.getMeshsizeType() - 1);
+		
     _meshSizeComboBox->SetFont(*font);
     _meshSizeComboBox->Enable(!property.getAutoMeshState());
     
@@ -307,7 +312,12 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     line3Sizer->Add(_meshSizeTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _meshSizeComboBox->Create(this, wxID_APPLY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), meshSettingArray);
-    _meshSizeComboBox->SetSelection((int)property.getMeshsizeType() - 1);
+	
+	if(property.getMeshsizeType() == meshSize::MESH_NONE_)
+		_meshSizeComboBox->SetSelection(4);
+	else
+		_meshSizeComboBox->SetSelection((int)property.getMeshsizeType() - 1);
+		
     _meshSizeComboBox->SetFont(*font);
     _meshSizeComboBox->Enable(!property.getAutoMeshState());
     
@@ -384,15 +394,14 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
     {
         _meshSizeTextCtrl->GetValue().ToDouble(&value);
         property.setMeshSize(value);
-		if(property.getMaterialName() == "No Mesh")
-			property.setMeshSizeType(meshSize::MESH_NONE_);
-		else
-		{
-			property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
-			if(p_property.getMeshSize() != value)
-				resetMesh = true;
-		}
+		
+		property.setMeshSizeType((meshSize)(_meshSizeComboBox->GetSelection() + 1));
+		if(p_property.getMeshSize() != value)
+			resetMesh = true;
     }
+	
+	if(property.getMaterialName() == "No Mesh")
+		property.setMeshSizeType(meshSize::MESH_NONE_);
     
     if(_problem == physicProblems::PROB_MAGNETICS)
     {
