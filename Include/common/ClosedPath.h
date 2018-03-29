@@ -676,8 +676,13 @@ public:
 			}
 		}
 		
-		if(pointFound)
-			return compare.pointInContour(comparePoint);
+		if(compare.pointInBoundingBox(comparePoint))
+		{
+			if(pointFound)
+				return compare.pointInContour(comparePoint);
+			else
+				return false;
+		}
 		else
 			return false;
 	}
