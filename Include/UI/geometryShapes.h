@@ -567,6 +567,90 @@ public:
 
 
 /**
+ * @class simplifiedEdge
+ * @author Phillip
+ * @date 04/04/18
+ * @file geometryShapes.h
+ * @brief This class is a more simple edge object. This is prirmaryly used in the mesher class. This edge
+ * 			class is used to provide a simple implementation for an edge t make computing less costly.
+			The class only contains the start and end nodes and the midpoint of the edge. THere are no 
+			nodes to link the edge.
+ */
+class simplifiedEdge
+{
+private:
+	wxRealPoint p_firstPoint = wxRealPoint(0, 0);
+	
+	wxRealPoint p_secondPoint = wxRealPoint(0, 0);
+	
+	wxRealPoint p_midPoint = wxRealPoint(0, 0);
+	
+public:
+
+	simplifiedEdge(wxRealPoint firstPoint, wxRealPoint secondPoint, wxRealPoint midPoint)
+	{
+		p_firstPoint = firstPoint;
+		p_secondPoint = secondPoint;
+		p_midPoint = midPoint;
+	}
+	
+	simplifiedEdge()
+	{
+		
+	}
+	
+	void swap()
+	{
+		wxRealPoint temp = p_firstPoint;
+		p_firstPoint = p_secondPoint;
+		p_secondPoint = temp;
+	}
+	
+	void setStartPoint(wxRealPoint firstPoint)
+	{
+		p_firstPoint = firstPoint;
+	}
+	
+	wxRealPoint getStartPoint()
+	{
+		return p_firstPoint;
+	}
+	
+	void setEndPoint(wxRealPoint secondPoint)
+	{
+		p_secondPoint = secondPoint;
+	}
+	
+	wxRealPoint getEndPoint()
+	{
+		return p_secondPoint;
+	}
+	
+	void setMidPoint(wxRealPoint midPoint)
+	{
+		p_midPoint = midPoint;
+	}
+	
+	wxRealPoint getMidPoint()
+	{
+		return p_midPoint;
+	}
+	
+	/**
+	 * @brief 	Tests if a point is to the Left/On/Right of the line. The orientation will be from the 
+	 * 			first node to the second node
+	 * @param point The point to test if it is Left/On/Right of the line
+	 * @return 	Will return > 0 if point is to the left of the line. Returns == 0 if point lies on the line and
+	 * 			returns < 0 if point is to the right of the line.
+	 */
+	double isLeft(wxRealPoint point)
+	{
+		return ((p_secondPoint.x - p_firstPoint.x) * (point.y - p_firstPoint.y)
+					-(point.x - p_firstPoint.x) * (p_secondPoint.y - p_firstPoint.y));
+	}
+};
+
+/**
  * @class edgeLineShape
  * @author Phillip
  * @date 18/06/17
@@ -962,7 +1046,17 @@ public:
 	{
 		return p_isSwapped;
 	}
+	
+	std::vector<simplifiedEdge> getBoundingEdges()
+	{
+		std::vector<simplifiedEdge> returnVector;
+		
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), this->getCenter()));
+		
+		return returnVector;
+	}
 };
+
 
 
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
@@ -1315,6 +1409,31 @@ public:
 	void setArcID(unsigned long id)
 	{
 		p_arcID = id;
+	}
+	
+	std::vector<simplifiedEdge> getBoundingEdges()
+	{
+		std::vector<simplifiedEdge> returnVector;
+		
+		wxRealPoint midPoint;
+		
+		midPoint.x = (_firstNode->getCenter().x + _secondNode->getCenter().x) / 2.0;
+		midPoint.y = (_firstNode->getCenter().y + _secondNode->getCenter().y) / 2.0;
+		
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), midPoint));
+		
+		if(_arcAngle > 90)
+		{
+			
+		}
+		else
+		{
+			
+		}
+		
+		
+		
+		return returnVector;
 	}
 };
 

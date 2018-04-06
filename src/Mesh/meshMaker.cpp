@@ -1137,6 +1137,9 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 		{
 			for(auto propertyIterator = pathIterator->getBlockLabelList()->begin(); propertyIterator != pathIterator->getBlockLabelList()->end(); propertyIterator++)
 			{
+				/* First, if there is more then 1 block label in the polygon, then it is quite possible we have some holes.
+				 * In which case, we will need to check if the label is in the one of the holes
+				 */ 
 				bool isInHole = false;
 				
 				if(!(*propertyIterator)->getUsedState())
@@ -1145,6 +1148,7 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 					{
 						if(holeIterator->pointInContour((*propertyIterator)->getCenter()))
 						{
+							// If a label is found in a hole, then we need to move onto the next label
 							isInHole = true;
 							break;
 						}
@@ -1153,6 +1157,8 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 				
 				if(!isInHole && !(*propertyIterator)->getUsedState())
 				{
+					// If the label is not in any of the holes, then we found the top level label
+					// With the top level label found, we can stop looping through all of the labels
 					setLabel = *propertyIterator;
 					break;
 				}

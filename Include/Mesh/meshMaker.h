@@ -185,6 +185,14 @@ private:
 			return false;
 	}
 	
+	/**
+	 * @brief This function will combine a path and a hole. This usually happens when the hole shares a common edge with the polygon.
+	 * 			In which case, the polygon will need to remove the common edge(s) and take on the profile of the hole. 
+	 * @param path The polygon where the hole belongs to
+	 * @param holeIterator The hole that will be removed from the polygon
+	 * @param commonEdges The list of common edge(s) shared between the path and the hole
+	 * @return Returns a closed path of a polygon with the hole subtracted out of it
+	 */
 	closedPath recreatePath(closedPath &path, closedPath holeIterator, std::vector<edgeLineShape*> commonEdges);
 	
 public:

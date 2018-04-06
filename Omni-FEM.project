@@ -93,6 +93,7 @@
       <File Name="src/common/Vector.cpp"/>
       <File Name="src/common/OS.cpp" ExcludeProjConfig=""/>
       <File Name="src/common/mathex.cpp"/>
+      <File Name="src/common/ClosedPath.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig=""/>
@@ -648,14 +649,17 @@
         <Preprocessor Value="HAVE_MESH"/>
         <Preprocessor Value="HAVE_BLOSSOM"/>
         <Preprocessor Value="HAVE_BFGS"/>
+        <Preprocessor Value="HAVE_LAPACK"/>
       </Compiler>
-      <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all);" Required="yes">
+      <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes">
         <LibraryPath Value="/usr/lib/x86_64-linux-gnu"/>
         <LibraryPath Value="/usr/lib/"/>
+        <LibraryPath Value="/usr/lib/lapack"/>
         <Library Value="libfreetype"/>
         <Library Value="libGLEW"/>
         <Library Value="boost_serialization"/>
         <Library Value="boost_wserialization"/>
+        <Library Value="liblapack"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="yes" IsEnabled="yes"/>

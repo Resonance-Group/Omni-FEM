@@ -8,6 +8,7 @@
 
 /* Omni-FEM Defines */
 #define HAVE_MATHEX
+#define HAVE_LAPACK
 
 // IO file formats (numbers should not be changed)
 #define FORMAT_MSH   1
