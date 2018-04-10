@@ -585,13 +585,20 @@ private:
 	
 	wxRealPoint p_midPoint = wxRealPoint(0, 0);
 	
+	unsigned long p_arcID = 0;
+	
+	bool p_isSwapped = false;
+	
+	bool p_willDelete = false;
+	
 public:
 
-	simplifiedEdge(wxRealPoint firstPoint, wxRealPoint secondPoint, wxRealPoint midPoint)
+	simplifiedEdge(wxRealPoint firstPoint, wxRealPoint secondPoint, wxRealPoint midPoint, unsigned long arcID = 0)
 	{
 		p_firstPoint = firstPoint;
 		p_secondPoint = secondPoint;
 		p_midPoint = midPoint;
+		p_arcID = arcID;
 	}
 	
 	simplifiedEdge()
@@ -604,6 +611,7 @@ public:
 		wxRealPoint temp = p_firstPoint;
 		p_firstPoint = p_secondPoint;
 		p_secondPoint = temp;
+		p_isSwapped = true;
 	}
 	
 	void setStartPoint(wxRealPoint firstPoint)
@@ -647,6 +655,26 @@ public:
 	{
 		return ((p_secondPoint.x - p_firstPoint.x) * (point.y - p_firstPoint.y)
 					-(point.x - p_firstPoint.x) * (p_secondPoint.y - p_firstPoint.y));
+	}
+	
+	unsigned long getArcID()
+	{
+		return p_arcID;
+	}
+	
+	bool getSwappedState()
+	{
+		return p_isSwapped;
+	}
+	
+	void setDeleteStatus()
+	{
+		p_willDelete = true;
+	}
+	
+	bool getDeleteState() const
+	{
+		return p_willDelete;
 	}
 };
 
@@ -1058,6 +1086,42 @@ public:
 };
 
 
+class arcPolygon
+{
+private:
+	std::vector<simplifiedEdge> p_polygonEdges;
+	
+	bool p_isSorted = false;
+	
+	bool p_isCCW = false;
+	
+	unsigned long p_arcID = 0;
+	
+public:
+
+	arcPolygon(std::vector<simplifiedEdge> edgeList, unsigned long arcID)
+	{
+		p_polygonEdges = edgeList;
+		p_arcID = arcID;
+	}
+	
+	bool isInside(wxRealPoint point)
+	{
+		return true;
+	}
+	
+	unsigned long getArcID()
+	{
+		return p_arcID;
+	}
+	
+	std::vector<simplifiedEdge> getEdges()
+	{
+		return p_polygonEdges;
+	}
+};
+
+
 
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
 class arcShape : public edgeLineShape
@@ -1416,22 +1480,30 @@ public:
 		std::vector<simplifiedEdge> returnVector;
 		
 		wxRealPoint midPoint;
+		wxRealPoint upperMid = this->getMidPoint();
+		wxRealPoint otherPoint;
+		
+		upperMid.y += 0.1;
 		
 		midPoint.x = (_firstNode->getCenter().x + _secondNode->getCenter().x) / 2.0;
 		midPoint.y = (_firstNode->getCenter().y + _secondNode->getCenter().y) / 2.0;
 		
-		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), midPoint));
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), midPoint, p_arcID));
 		
-		if(_arcAngle > 90)
-		{
-			
-		}
-		else
-		{
-			
-		}
+		otherPoint = wxRealPoint(_firstNode->getCenter().x, upperMid.y);
+		midPoint.x = (_firstNode->getCenter().x + otherPoint.x) / 2.0;
+		midPoint.y = (_firstNode->getCenter().y + otherPoint.y) / 2.0;
 		
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), otherPoint, midPoint));
 		
+		returnVector.push_back(simplifiedEdge(otherPoint, wxRealPoint(_secondNode->getCenter().x, upperMid.y), upperMid));
+		
+		otherPoint = wxRealPoint(_secondNode->getCenter().x, upperMid.y);
+		
+		midPoint.x = (otherPoint.x + _secondNode->getCenter().x) / 2.0;
+		midPoint.y = (otherPoint.y + _secondNode->getCenter().y) / 2.0;
+		
+		returnVector.push_back(simplifiedEdge(otherPoint, _secondNode->getCenter(), midPoint));
 		
 		return returnVector;
 	}

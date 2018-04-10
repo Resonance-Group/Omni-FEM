@@ -37,6 +37,10 @@ private:
 	//! The list of edges that make up the polygon
 	std::vector<edgeLineShape*> p_closedPath;
 	
+	std::vector<simplifiedEdge> p_simplifiedPath;
+	
+	std::vector<arcPolygon> p_arcPolygons;
+	
 	//! This is the center of the polygon computing by taking the average of all of the centers of the edges
 	wxRealPoint p_centerPoint = wxPoint(0, 0);
 	
@@ -54,9 +58,11 @@ private:
 	
 	bool p_holesFound = false;
 	
+	bool p_reverseWindingResult = false;
+	
 	/**
 	 * @brief This function is used to determine if any holes share a common edge. In GMSH, holes are not allowed to share a common edge
-	 * 			when meshing. Therefor, an algorithm will need to be developed that will combine the two holes removing the commone edge.
+	 * 			when meshing. Therefor, an algorithm was created that will combine the two holes removing the commone edge.
 	 * 			The order of firstPath and secondPath does not matter in this algorithm
 	 * @param firstPath The first hole for comparing
 	 * @param secondPath The second hole for comparing
@@ -167,8 +173,15 @@ private:
 		
 		return newPath;
 	}
+	
+	
 
 public:
+
+	bool operator () (const simplifiedEdge &sedge)
+	{
+		return sedge.getDeleteState();
+	}
 
 	closedPath(edgeLineShape &firstEdge)
 	{
@@ -657,7 +670,9 @@ public:
 	 */
 	bool pointInContour(wxRealPoint point)
 	{
-		int windingNumber = 0;
+		return pointInContourNew(point);
+
+		/*int windingNumber = 0;
 		bool isFirstRun = true;
 		bool reverseWindingResult = false;
 		
@@ -706,14 +721,14 @@ public:
 			 * 
 			 * The subtraction term is the summation of the Xpoint of the second node multiplied by the
 			 * Ypoint of the first node (arcs are a special case)
-			 */ 
+			  
 			if((*lineIterator)->isArc())
 			{
 				/* This algorithm is not being used to accurately determine the arc within a closed contour
 				 * with that said, we only need to approximately determine the area. For arcs, we shall draw
 				 * a line from the first node to the mid point and then from the mid point to the second node.
 				 * We will use these two lines as the calculation for the shoelace algorithm.
-				 */ 
+				  
 				additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
 				subtractionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
 				
@@ -788,7 +803,7 @@ public:
 		if(windingNumber > 0)
 			return true;
 		else
-			return false;
+			return false;*/
 	}
 	
 	bool pointInContourNew(wxRealPoint point);
