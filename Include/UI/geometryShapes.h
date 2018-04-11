@@ -1086,42 +1086,6 @@ public:
 };
 
 
-class arcPolygon
-{
-private:
-	std::vector<simplifiedEdge> p_polygonEdges;
-	
-	bool p_isSorted = false;
-	
-	bool p_isCCW = false;
-	
-	unsigned long p_arcID = 0;
-	
-public:
-
-	arcPolygon(std::vector<simplifiedEdge> edgeList, unsigned long arcID)
-	{
-		p_polygonEdges = edgeList;
-		p_arcID = arcID;
-	}
-	
-	bool isInside(wxRealPoint point)
-	{
-		return true;
-	}
-	
-	unsigned long getArcID()
-	{
-		return p_arcID;
-	}
-	
-	std::vector<simplifiedEdge> getEdges()
-	{
-		return p_polygonEdges;
-	}
-};
-
-
 
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
 class arcShape : public edgeLineShape
@@ -1483,7 +1447,7 @@ public:
 		wxRealPoint upperMid = this->getMidPoint();
 		wxRealPoint otherPoint;
 		
-		upperMid.y += 0.1;
+		upperMid.y += 0.1;// bug is here
 		
 		midPoint.x = (_firstNode->getCenter().x + _secondNode->getCenter().x) / 2.0;
 		midPoint.y = (_firstNode->getCenter().y + _secondNode->getCenter().y) / 2.0;
@@ -1509,6 +1473,127 @@ public:
 	}
 };
 
+
+
+class arcPolygon
+{
+private:
+	std::vector<simplifiedEdge> p_polygonEdges;
+	
+	bool p_isSorted = false;
+	
+	bool p_isCCW = false;
+	
+	arcShape p_arc;
+	
+	bool p_isSwapped = false;
+	
+public:
+
+	arcPolygon(std::vector<simplifiedEdge> edgeList, arcShape arc)
+	{
+		p_polygonEdges = edgeList;
+		p_arc = arc;
+	}
+	
+	void setSwapped()
+	{
+		p_isSwapped = true;
+	}
+	
+	bool getSwappedState()
+	{
+		return p_isSwapped;
+	}
+	
+	bool isInside(wxRealPoint point)
+	{
+		double subtractionTerms = 0;
+		double additionTerms = 0;
+		bool reverseWindingResult = false;
+		int windingNumber = 0;
+		bool isFirstRun = true;
+		
+		for(auto lineIterator = p_polygonEdges.begin(); lineIterator != p_polygonEdges.end(); lineIterator++)
+		{
+			auto nextLineIterator = lineIterator + 1;
+			
+			if(nextLineIterator == p_polygonEdges.end())
+				nextLineIterator = p_polygonEdges.begin();
+			
+			if(isFirstRun)
+			{
+				if(lineIterator->getEndPoint() != nextLineIterator->getStartPoint())
+				{
+					if(lineIterator->getStartPoint() == nextLineIterator->getStartPoint())
+						lineIterator->swap();
+					else if(lineIterator->getStartPoint() == nextLineIterator->getEndPoint())
+					{
+						lineIterator->swap();
+						nextLineIterator->swap();
+					}
+					else if(lineIterator->getEndPoint() == nextLineIterator->getEndPoint())
+						nextLineIterator->swap();
+				}
+				
+				isFirstRun = false;
+			}
+			else
+			{
+				if(lineIterator->getEndPoint() == nextLineIterator->getEndPoint())
+					nextLineIterator->swap();
+			}
+			 
+			additionTerms += (lineIterator->getStartPoint().x) * (lineIterator->getEndPoint().y);
+			subtractionTerms += (lineIterator->getEndPoint().x) * (lineIterator->getStartPoint().y);
+		}
+		
+		if(subtractionTerms > additionTerms)
+			reverseWindingResult = true;
+			
+			
+		for(auto lineIterator = p_polygonEdges.begin(); lineIterator != p_polygonEdges.end(); lineIterator++)
+		{
+			double isLeftResult = lineIterator->isLeft(point);
+			
+			if(reverseWindingResult)
+				isLeftResult *= -1;
+			
+			if(lineIterator->getStartPoint().y <= point.y)
+			{
+				if(lineIterator->getEndPoint().y > point.y)
+				{
+					if(isLeftResult > 0)
+						windingNumber++;
+					else if(isLeftResult < 0)
+						windingNumber--;
+				}
+			}
+			else if(lineIterator->getEndPoint().y <= point.y)
+			{
+				if(isLeftResult < 0)
+					windingNumber--;
+				else if(isLeftResult > 0)
+					windingNumber++;
+			}
+		}
+		
+		if(windingNumber > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	std::vector<simplifiedEdge> getEdges()
+	{
+		return p_polygonEdges;
+	}
+	
+	arcShape getArc()
+	{
+		return p_arc;
+	}
+};
 
 
 #endif

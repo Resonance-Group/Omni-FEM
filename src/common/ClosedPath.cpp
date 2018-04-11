@@ -39,7 +39,7 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 					{
 						arcShape *tempArc = static_cast<arcShape*>(*edgeIterator);
 						std::vector<simplifiedEdge> returnEdges = tempArc->getBoundingEdges();
-						arcShapes.push_back(arcPolygon(returnEdges, tempArc->getArcID()));
+						arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
 						firstEdge = returnEdges.at(0);
 					}
 					else
@@ -51,7 +51,7 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 					{
 						arcShape *tempArc = static_cast<arcShape*>(*nextIterator);
 						std::vector<simplifiedEdge> returnEdges = tempArc->getBoundingEdges();
-						arcShapes.push_back(arcPolygon(returnEdges, tempArc->getArcID()));
+						arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
 						secondEdge = returnEdges.at(0);
 					}
 					else
@@ -62,14 +62,50 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 					if(firstEdge.getEndPoint() != secondEdge.getStartPoint())
 					{
 						if(firstEdge.getStartPoint() == secondEdge.getStartPoint())
+						{
 							firstEdge.swap();
+							
+							for(auto arcIterator = arcShapes.begin(); arcIterator != arcShapes.end(); arcIterator++)
+							{
+								if(arcIterator->getArc().getArcID() == firstEdge.getArcID())
+								{
+									arcIterator->setSwapped();
+									break;
+								}
+							}
+						}
 						else if(firstEdge.getStartPoint() == secondEdge.getEndPoint())
 						{
 							firstEdge.swap();
 							secondEdge.swap();
+							
+							for(auto arcIterator = arcShapes.begin(); arcIterator != arcShapes.end(); arcIterator++)
+							{
+								if(arcIterator->getArc().getArcID() == firstEdge.getArcID())
+								{
+									arcIterator->setSwapped();
+								}
+								
+								if(arcIterator->getArc().getArcID() == secondEdge.getArcID())
+								{
+									arcIterator->setSwapped();
+								}
+							}
+							
 						}
 						else if(firstEdge.getEndPoint() == secondEdge.getEndPoint())
+						{
 							secondEdge.swap();
+							
+							for(auto arcIterator = arcShapes.begin(); arcIterator != arcShapes.end(); arcIterator++)
+							{
+								if(arcIterator->getArc().getArcID() == secondEdge.getArcID())
+								{
+									arcIterator->setSwapped();
+									break;
+								}
+							}
+						}
 					}
 					
 					isFirstRun = false;
@@ -93,7 +129,7 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 						{
 							arcShape *tempArc = static_cast<arcShape*>(*nextIterator);
 							std::vector<simplifiedEdge> returnEdges = tempArc->getBoundingEdges();
-							arcShapes.push_back(arcPolygon(returnEdges, tempArc->getArcID()));
+							arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
 							aEdge = returnEdges.at(0);
 						}
 						else
@@ -103,7 +139,12 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 						aEdge = convertedPath.at(0);
 						
 					if(convertedPath.back().getEndPoint() == aEdge.getEndPoint() && nextIterator != p_closedPath.begin())
+					{
 						aEdge.swap();
+						
+						if(aEdge.getArcID() != 0)
+							arcShapes.back().setSwapped();
+					}
 					
 					if(nextIterator != p_closedPath.begin())
 					{
@@ -124,7 +165,7 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 			 
 			 arcShape *tempArc = static_cast<arcShape*>(p_closedPath.at(0));
 			 returnEdges = tempArc->getBoundingEdges();
-			 arcShapes.push_back(arcPolygon(returnEdges, tempArc->getArcID()));
+			 arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
 			 
 			 returnEdges.erase(returnEdges.begin());
 			 
@@ -132,7 +173,7 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 			 
 			 tempArc = static_cast<arcShape*>(p_closedPath.at(1));
 			 returnEdges = tempArc->getBoundingEdges();
-			 arcShapes.push_back(arcPolygon(returnEdges, tempArc->getArcID()));
+			 arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
 			 
 			 returnEdges.erase(returnEdges.begin());
 			 
@@ -147,7 +188,7 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 			{
 				for(auto edgeIterator = convertedPath.begin(); edgeIterator != convertedPath.end(); edgeIterator++)
 				{
-					if(edgeIterator->getArcID() == arcShapeIterator->getArcID())
+					if(edgeIterator->getArcID() == arcShapeIterator->getArc().getArcID())
 					{
 						// If we have a match, we need to check if the algorithm should replace the simplified edge with
 						// the approiate "arc box"
@@ -190,6 +231,8 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 								convertedPath.insert(edgeIterator, returnEdges.begin(), returnEdges.end());
 							}
 						}
+						
+						break;
 					}
 				}
 			}
@@ -297,21 +340,54 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 	{
 		bool pointIsInside = true;
 		
-		for(auto arcSegmentIterator = arcShapes.begin(); arcSegmentIterator != arcShapes.end(); arcSegmentIterator++)
+		for(auto arcSegmentIterator = p_arcPolygons.begin(); arcSegmentIterator != p_arcPolygons.end(); arcSegmentIterator++)
 		{
 			// Check if the point lies within the arc segment on the correct side
 			// If the point is on the incorrect side of the arc (where the point is actually outside of the
 			// geometry, then we need to set the pointIsInside to false and break out of the loop.
 			// if the point is actually in one of the boxes and is inside the geometry, then simply break out
 			// of this loop
+			if(arcSegmentIterator->isInside(point))
+			{
+				double distance = sqrt(pow((point.x - arcSegmentIterator->getArc().getCenter().x), 2) + pow((point.y - arcSegmentIterator->getArc().getCenter().y), 2));
+				
+				if(p_reverseWindingResult)
+				{
+					// The case for CW direction
+					if(arcSegmentIterator->getSwappedState())
+					{
+						if(distance > arcSegmentIterator->getArc().getRadius())
+							pointIsInside = false;
+					}
+					else
+					{
+						if(distance < arcSegmentIterator->getArc().getRadius())
+							pointIsInside = false;
+					}
+				}
+				else
+				{
+					// The case for CCW direction
+					if(arcSegmentIterator->getSwappedState())
+					{
+						if(distance < arcSegmentIterator->getArc().getRadius())
+							pointIsInside = false;
+					}
+					else
+					{
+						if(distance > arcSegmentIterator->getArc().getRadius())
+							pointIsInside = false;
+					}
+				}
+				
+				break;
+			}
 		}
 		
 		returnValue = pointIsInside;
 	}
 	else
 		returnValue = false;
-	
-	
 	
 	return returnValue;
 }
