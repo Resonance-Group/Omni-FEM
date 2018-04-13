@@ -1123,6 +1123,7 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 {
 	std::vector<closedPath> *pathToOperate = nullptr;
+	bool labelInHole = false;
 	
 	if(pathContour == nullptr)
 		pathToOperate = &p_closedContourPaths;
@@ -1166,16 +1167,31 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 		}
 		else if(pathIterator->getBlockLabelList()->size() == 1)
 		{
-			setLabel = pathIterator->getBlockLabelList()->at(0);
+			
+			for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+			{
+				if(holeIterator->pointInContour(pathIterator->getBlockLabelList()->at(0)->getCenter()))
+				{
+					labelInHole = true;
+					pathIterator->clearBlockLabelList();
+					break;
+				}
+			}
+			
+			if(!labelInHole)
+				setLabel = pathIterator->getBlockLabelList()->at(0);
 		}
 		else
 		{
 			continue;
 		}
 		
-		setLabel->setUsedState(true);
-		p_blockLabelsUsed++;
-		pathIterator->setProperty(setLabel->getProperty());
-		pathIterator->clearBlockLabelList();
+		if(!labelInHole)
+		{
+			setLabel->setUsedState(true);
+			p_blockLabelsUsed++;
+			pathIterator->setProperty(setLabel->getProperty());
+			pathIterator->clearBlockLabelList();
+		}
 	}
 }

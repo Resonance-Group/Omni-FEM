@@ -1445,29 +1445,44 @@ public:
 		
 		wxRealPoint midPoint;
 		wxRealPoint upperMid = this->getMidPoint();
-		wxRealPoint otherPoint;
+		wxRealPoint point1;
+		wxRealPoint point2;
 		
-		upperMid.y += 0.1;// bug is here
+		double circleRadius = 0;
+		
+		double theta = acos(1 - ((pow(this->getCenter().x + _radius - this->getMidPoint().x, 2) + pow(this->getCenter().y - this->getMidPoint().y, 2)) / (2 * pow(_radius, 2))));
+		
+		if(this->getMidPoint().y < this->getCenter().y)
+			theta = theta * -1;
+			
+		upperMid.x = this->getCenter().x + (_radius + 0.1) * cos(theta);
+		
+		upperMid.y = this->getCenter().y + (_radius + 0.1) * sin(theta);
 		
 		midPoint.x = (_firstNode->getCenter().x + _secondNode->getCenter().x) / 2.0;
 		midPoint.y = (_firstNode->getCenter().y + _secondNode->getCenter().y) / 2.0;
 		
 		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), midPoint, p_arcID));
 		
-		otherPoint = wxRealPoint(_firstNode->getCenter().x, upperMid.y);
-		midPoint.x = (_firstNode->getCenter().x + otherPoint.x) / 2.0;
-		midPoint.y = (_firstNode->getCenter().y + otherPoint.y) / 2.0;
+		circleRadius = sqrt(pow(upperMid.x - midPoint.x, 2) + pow(upperMid.y - midPoint.y, 2));
 		
-		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), otherPoint, midPoint));
+		point1.x = _firstNode->getCenter().x + circleRadius * cos(theta);
+		point1.y = _firstNode->getCenter().y + circleRadius * sin(theta);
 		
-		returnVector.push_back(simplifiedEdge(otherPoint, wxRealPoint(_secondNode->getCenter().x, upperMid.y), upperMid));
+		point2.x = _secondNode->getCenter().x + circleRadius * cos(theta);
+		point2.y = _secondNode->getCenter().y + circleRadius * sin(theta);
 		
-		otherPoint = wxRealPoint(_secondNode->getCenter().x, upperMid.y);
+		midPoint.x = (_firstNode->getCenter().x + point1.x) / 2.0;
+		midPoint.y = (_firstNode->getCenter().y + point1.y) / 2.0;
 		
-		midPoint.x = (otherPoint.x + _secondNode->getCenter().x) / 2.0;
-		midPoint.y = (otherPoint.y + _secondNode->getCenter().y) / 2.0;
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), point1, midPoint));
 		
-		returnVector.push_back(simplifiedEdge(otherPoint, _secondNode->getCenter(), midPoint));
+		returnVector.push_back(simplifiedEdge(point1, point2, upperMid));
+		
+		midPoint.x = (_secondNode->getCenter().x + point2.x) / 2.0;
+		midPoint.y = (_secondNode->getCenter().y + point2.y) / 2.0;
+		
+		returnVector.push_back(simplifiedEdge(point2, _secondNode->getCenter(), midPoint));
 		
 		return returnVector;
 	}

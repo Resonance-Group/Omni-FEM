@@ -248,67 +248,6 @@ bool closedPath::pointInContourNew(wxRealPoint point)
 		
 	}
 		
-/*		if((*edgeIterator)->isArc())
-		{
-			arcShape *tempArc = static_cast<arcShape*>(*edgeIterator);
-			returnEdges = tempArc->getBoundingEdges();
-			arcShapes.push_back(arcPolygon(returnEdges, tempArc->getArcID()));
-			
-			for(auto arcEdgeIterator = returnEdges.begin(); arcEdgeIterator != returnEdges.end();)
-			{
-				
-			}
-			
-			
-		}
-		else
-		{
-			returnEdges = (*edgeIterator)->getBoundingEdges();
-		}
-		
-		convertedPath.insert(convertedPath.end(), returnEdges.begin(), returnEdges.end());
-	}
-	
-	
-	// Next we need to run the shoelace algorithm in order to to determine the orientation of the lines
-	// And to ensure that all of the lines are oriented the same way for their orientation
-	for(auto lineIterator = convertedPath.begin(); lineIterator != convertedPath.end(); lineIterator++)
-	{
-		auto nextLineIterator = lineIterator + 1;
-		
-		if(nextLineIterator == convertedPath.end())
-			nextLineIterator = convertedPath.begin();
-		
-		if(isFirstRun)
-		{
-			if(lineIterator->getEndPoint() != nextLineIterator->getStartPoint())
-			{
-				if(lineIterator->getStartPoint() == nextLineIterator->getStartPoint())
-					lineIterator->swap();
-				else if(lineIterator->getStartPoint() == nextLineIterator->getEndPoint())
-				{
-					lineIterator->swap();
-					nextLineIterator->swap();
-				}
-				else if(lineIterator->getEndPoint() == nextLineIterator->getEndPoint())
-					nextLineIterator->swap();
-			}
-			
-			isFirstRun = false;
-		}
-		else
-		{
-			if(lineIterator->getEndPoint() == nextLineIterator->getEndPoint())
-				nextLineIterator->swap();
-		}
-		 
-		additionTerms += (lineIterator->getStartPoint().x) * (lineIterator->getEndPoint().y);
-		subtractionTerms += (lineIterator->getEndPoint().x) * (lineIterator->getStartPoint().y);
-	}
-	
-	if(subtractionTerms > additionTerms)
-		reverseWindingResult = true;*/
-		
 	// Now we run the actual winding number algorithm
 	for(auto lineIterator = p_simplifiedPath.begin(); lineIterator != p_simplifiedPath.end(); lineIterator++)
 	{
