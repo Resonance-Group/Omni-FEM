@@ -82,7 +82,7 @@ private:
 	
 	MeshAlgorthim p_meshingAlgorthim = MeshAlgorthim::MESH_ALGO_AUTOMATIC;
 	
-	bool p_recombinationBlossom = false;
+	bool p_recombinationBlossom = true;
 	
 	bool p_remeshAuto = false;
 	

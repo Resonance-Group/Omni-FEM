@@ -191,6 +191,7 @@ Curve *FindCurve(int inum);
 EdgeLoop *FindEdgeLoop(int inum);
 Surface *FindSurface(int inum);
 SurfaceLoop *FindSurfaceLoop(int inum);
+Surface *FindSurface(int inum, Tree_T *t);
 Volume *FindVolume(int inum);
 PhysicalGroup *FindPhysicalGroup(int inum, int type);
 

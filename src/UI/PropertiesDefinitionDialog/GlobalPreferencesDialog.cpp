@@ -295,8 +295,8 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	remeshParameterizationArray.Add("Conformal");
 	remeshParameterizationArray.Add("Rbf Harmonic");
 	
-	wxBoxSizer *stucturedMeshSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxBoxSizer *meshArrangmentSizer = new wxBoxSizer(wxHORIZONTAL);
+	//wxBoxSizer *stucturedMeshSizer = new wxBoxSizer(wxHORIZONTAL);
+//	wxBoxSizer *meshArrangmentSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshRecombinationSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *reMeshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -305,7 +305,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxBoxSizer *elementOrderSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *buttonResetSizer = new wxBoxSizer(wxHORIZONTAL);
 	
-	wxStaticText *text1 = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Structure:");
+/*	wxStaticText *text1 = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Structure:");
 	text1->SetFont(*font);
 	
 	p_structuredComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox2, wxEmptyString, wxDefaultPosition, wxDefaultSize, structuredMeshArray);
@@ -354,7 +354,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 		
 	meshArrangmentSizer->Add(meshArrangmentText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	meshArrangmentSizer->Add(p_meshArrangementComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-	
+	*/
 	wxStaticText *meshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Algorithm:");
 	meshAlgoText->SetFont(*font);
 	
@@ -472,8 +472,6 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	minText->SetFont(*font);
 	wxStaticText *maxText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Max:");
 	maxText->SetFont(*font);
-//	wxStaticText *factorText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Factor:");
-//	factorText->SetFont(*font);
 	
 	wxSize aSize(60, 23);
 	
@@ -530,8 +528,8 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	buttonResetSizer->Add(advancedMeshSettings, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	buttonResetSizer->Add(p_meshResetDefaultsButton, 0, wxCENTER | wxRIGHT | wxBOTTOM, 6);
 	
-	meshSettingsSizer->Add(stucturedMeshSizer);
-	meshSettingsSizer->Add(meshArrangmentSizer);
+//	meshSettingsSizer->Add(stucturedMeshSizer);
+//	meshSettingsSizer->Add(meshArrangmentSizer);
 	meshSettingsSizer->Add(meshAlgoSizer);
 	meshSettingsSizer->Add(meshRecombinationSizer);
 	meshSettingsSizer->Add(reMeshAlgoSizer);

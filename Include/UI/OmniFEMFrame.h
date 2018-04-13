@@ -390,6 +390,15 @@ private:
     */ 
     void onDelete(wxCommandEvent &event);
 	
+	void onClearSelection(wxCommandEvent &event)
+	{
+		if(_UIState == systemState::MODEL_DEFINING)
+		{
+			_model->clearGeometrySelection();
+			_model->Refresh();
+		}
+	}
+	
 	//! 
 	/**
 	 * @brief 	Event that is fired when the user needs to add a node manually. A dialog will appear
@@ -769,7 +778,7 @@ private:
         \param event A required parameter for the event procedure to work properly
     */ 
 	void onDeleteMesh(wxCommandEvent &event);
-    
+	
     /* This section is for the Analysis menu */
     
     //! Event procedure that is executed each time the user needs to view something

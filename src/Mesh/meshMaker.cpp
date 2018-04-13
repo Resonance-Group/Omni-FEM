@@ -2,7 +2,7 @@
 
 #include <common/OmniFEMMessage.h>
 
-#include <iterator>
+
 
 #include <wx/dir.h>
 
@@ -79,10 +79,17 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 						closedContourFound = true;
 						break;
 					}
+					else if(**branchIterator == *(pathIterator->getClosedPath()->back()))
+					{
+						branches.erase(branchIterator);
+						branchIterator = branches.begin();
+					}
 				}
 				
 				/* This will test if any branch loops back to the path where the loop is connected to a segment after the 
-				 * begining segment of the path
+				 * begining segment of the path.
+				 * On the start, this for loop will skip the first edge in the closed path becuase that is the 
+				 * trivial solution
 				 */ 
 				for(auto pathEdgeIterator = ++(pathIterator->getClosedPath()->begin()); pathEdgeIterator != pathIterator->getClosedPath()->end(); pathEdgeIterator++)
 				{
@@ -114,7 +121,7 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 					{
 						foundPath = *pathIterator;
 					}
-					else if(checkPointInContour(*point, *pathIterator) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
+					else if(pathIterator->pointInContour(point->getCenter()) && (pathIterator->getDistance() < foundPath.getDistance() || foundPath.getDistance() == 0))
 					{
 						foundPath = *pathIterator;
 					}
@@ -179,6 +186,8 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 	edgeLineShape *previouseSegmentPointer;
 	edgeLineShape *currentSegmentPointer = currentSegment; // This part may not be necessary but it helps with the thinking
 	
+	int pathSize = pathVector->size();
+	
 	if(pathVector->size() >= 2)
 		previousAddedSegment = pathVector->end() - 2;
 	else
@@ -219,7 +228,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 	// Find all of the arcs connected to the segment
 	for(plf::colony<arcShape>::iterator arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
 	{
-		if((arcIterator->getArcID() == currentSegmentPointer->getArcID()) || (pathVector->size() > 1 && (arcIterator->getArcID() == previouseSegmentPointer->getArcID())) && !arcIterator->getSegmentProperty()->getHiddenState())
+		if((arcIterator->getArcID() == currentSegmentPointer->getArcID()) || (pathVector->size() > 1 && arcIterator->getSegmentProperty()->getHiddenState()))
 			continue;
 			
 		if((*branchNode == *arcIterator->getFirstNode()) || (*branchNode == *arcIterator->getSecondNode()))
@@ -231,58 +240,6 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 	return returnList;
 }
 
-
-
-bool meshMaker::checkPointInContour(wxRealPoint point, closedPath &path)
-{
-	int windingNumber = 0;
-	for(auto lineIterator = path.getClosedPath()->begin(); lineIterator != path.getClosedPath()->end(); lineIterator++)
-	{
-		bool reverseDirection = false;
-		
-		if((*lineIterator)->isLeft(path.getCenter()) < 0)
-			reverseDirection = true; // THis indicates that the direction of the path is clockwise
-			
-		double isLeftResult = (*lineIterator)->isLeft(point);
-		
-		if(reverseDirection)
-			isLeftResult *= -1;
-			
-		if(!(*lineIterator)->isArc())
-		{
-			if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
-			{
-				if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
-				{
-					if(isLeftResult > 0)
-						windingNumber++;
-					else if(isLeftResult < 0)
-						windingNumber--;
-				}
-			}
-			else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
-			{
-				if(isLeftResult < 0)
-					windingNumber--;
-				else if(isLeftResult > 0)
-					windingNumber++;
-			}
-		}
-		else
-		{
-				
-			if(isLeftResult > 0)
-				windingNumber++;
-			else
-				windingNumber--;
-		}
-	}
-	
-	if(windingNumber > 0)
-		return true;
-	else
-		return false;
-}
 
 
 void meshMaker::mesh()
@@ -297,7 +254,78 @@ void meshMaker::mesh()
 	CTX::instance()->mesh.recombinationTestNewStrat = 0;
 	CTX::instance()->mesh.nProc = 0;
 	CTX::instance()->mesh.nbProc = 0;
-	CTX::instance()->lc = 2.5;
+	
+	p_meshModel->setFactory("Gmsh");
+	
+	//! This section will compute the value for LC
+	for(auto nodeIterator = p_nodeList->begin(); nodeIterator != p_nodeList->end(); nodeIterator++)
+	{
+		GVertex *temp = p_meshModel->addVertex(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), 0.0, 1.0);
+		nodeIterator->setGModalTagNumber(temp->tag());
+	}
+	
+	SBoundingBox3d modelBox = p_meshModel->bounds();
+	double boundingRange[3];
+	
+	CTX::instance()->max[0] = modelBox.max().x();
+	CTX::instance()->max[1] = modelBox.max().y();
+	CTX::instance()->max[2] = 0;
+	
+	CTX::instance()->min[0] = modelBox.min().x();
+	CTX::instance()->min[1] = modelBox.min().y();
+	CTX::instance()->min[2] = 0;
+	
+	for(int i = 0; i < 3; i++)
+		boundingRange[i] = CTX::instance()->max[i] - CTX::instance()->min[i];
+	
+	if(	boundingRange[0] < CTX::instance()->geom.tolerance &&
+		boundingRange[1] < CTX::instance()->geom.tolerance &&
+		boundingRange[2] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[0] -= 1.; 
+		CTX::instance()->min[1] -= 1.;
+		
+		CTX::instance()->max[0] += 1.; 
+		CTX::instance()->max[1] += 1.;
+	}
+	else if(boundingRange[0] < CTX::instance()->geom.tolerance &&
+			boundingRange[1] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[0] -= boundingRange[2]; 
+		CTX::instance()->min[1] -= boundingRange[2];
+		
+		CTX::instance()->max[0] += boundingRange[2]; 
+		CTX::instance()->max[1] += boundingRange[2];
+	}
+	else if(boundingRange[0] < CTX::instance()->geom.tolerance &&
+			boundingRange[2] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[0] -= boundingRange[1]; 
+		CTX::instance()->max[0] += boundingRange[1];
+	}
+	else if(boundingRange[1] < CTX::instance()->geom.tolerance &&
+			boundingRange[2] < CTX::instance()->geom.tolerance) 
+	{
+		CTX::instance()->min[1] -= boundingRange[0]; 
+		CTX::instance()->max[1] += boundingRange[0];
+	}
+	else if(boundingRange[0] < CTX::instance()->geom.tolerance) 
+	{
+		double l = sqrt(pow(boundingRange[1], 2) + pow(boundingRange[2], 2));
+		CTX::instance()->min[0] -= l; 
+		CTX::instance()->max[0] += l;
+	}
+	else if(boundingRange[1] < CTX::instance()->geom.tolerance) 
+	{
+		double l = sqrt(pow(boundingRange[0], 2) + pow(boundingRange[2], 2));
+		CTX::instance()->min[1] -= l; 
+		CTX::instance()->max[1] += l;
+	}
+
+	CTX::instance()->lc = sqrt(	pow(CTX::instance()->max[0] - CTX::instance()->min[0], 2) +
+								pow(CTX::instance()->max[1] - CTX::instance()->min[1], 2));
+								
+	// End computing the value of LC							
 	
 	CTX::instance()->mesh.algoSubdivide = 1; // The 1 here is to specify that we are only concerned with quads
 	CTX::instance()->mesh.secondOrderIncomplete = 0; // Always use complete meshes
@@ -382,11 +410,15 @@ void meshMaker::mesh()
 		 */ 
 		if(isClosedPath(*contourPath.getClosedPath()))
 		{
+			// If we have a closed path then we need to locate all of the block labels within that path
+			// Later, we will determine the top level block label belonging to that contour
 			for(auto blockIterator = p_blockLabelList->begin(); blockIterator != p_blockLabelList->end(); blockIterator++)
 			{
+				// First, check to see if the point is in the bounding box
 				if(contourPath.pointInBoundingBox(blockIterator->getCenter()))
 				{
-					if(checkPointInContour(blockIterator->getCenter(), contourPath))
+					// Then check if the point is within the contour
+					if(contourPath.pointInContour(blockIterator->getCenter()))
 					{
 						contourPath.addBlockLabel(*blockIterator);
 					}
@@ -410,20 +442,12 @@ void meshMaker::mesh()
 		/* Now we go to conver Omni-FEM's geometry data structure into the data structure for GMSH */
 		// lcFactor->0.29999999999 lcExtendFromBoundary->1 algo3D-> 1
 		OmniFEMMsg::instance()->MsgStatus("Verfied Mesh");
-		std::vector<GVertex*> vertexModelList;
-		
-		p_vertexModelList.reserve(p_nodeList->size());
 
-		p_meshModel->setFactory("Gmsh");
+		
 		
 		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH Vertices");
 		
-		for(auto nodeIterator = p_nodeList->begin(); nodeIterator != p_nodeList->end(); nodeIterator++)
-		{
-			GVertex *temp = p_meshModel->addVertex(nodeIterator->getCenterXCoordinate(), nodeIterator->getCenterYCoordinate(), 0.0, 1.0);
-			nodeIterator->setGModalTagNumber(temp->tag());
-			p_vertexModelList.push_back(temp);
-		}
+		
 		
 		/* Now we create the faces */
 		OmniFEMMsg::instance()->MsgStatus("Adding in GMSH faces");
@@ -432,7 +456,7 @@ void meshMaker::mesh()
 		
 		assignBlockLabel();
 		
-		createGMSHGeometry();
+	//	createGMSHGeometry();
 		
 		if(p_blockLabelsUsed < p_blockLabelList->size())
 		{
@@ -445,48 +469,64 @@ void meshMaker::mesh()
 					// Speed here could be improved upon?
 					closedPath foundPath;
 					edgeLineShape *startEdge = nullptr;
-					
+					bool existsInGeometry = false;
 					std::multimap<double, edgeLineShape*> sortedEdges;
 					
-					/* This next section will organize all of the edges of the geometry in asending order based on the 
-					 * distance of the block label to the midpoint of the edge
-					 */ 
-					for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+					for(auto closedPathIterator = p_closedContourPaths.begin(); closedPathIterator != p_closedContourPaths.end(); closedPathIterator++)
 					{
-						double distance = blockIterator->getDistance(lineIterator->getMidPoint());
-						
-						sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*lineIterator)));
-					}
-					
-					for(auto arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
-					{
-						double distance = blockIterator->getDistance(arcIterator->getMidPoint());
-						
-						sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*arcIterator)));
-					}
-					
-					for(auto mapIterator = sortedEdges.begin(); mapIterator != sortedEdges.end(); mapIterator++)
-					{
-						closedPath possiblePath = findContour((*mapIterator).second, &(*blockIterator));
-						
-						if(possiblePath.getDistance() > 0)
+						closedPath tempPath = *closedPathIterator;
+						if(tempPath.pointInContour(blockIterator->getCenter()))
 						{
-							// THe first valid path found will be the path that encompasses the label
-							foundPath = possiblePath;
+							existsInGeometry = true;
 							break;
 						}
 					}
 					
-					// Since we found a path that encompasses the label, set the property of that path to the label
+					if(existsInGeometry)
+					{
+						/* This next section will organize all of the edges of the geometry in asending order based on the 
+						 * distance of the block label to the midpoint of the edge
+						 */ 
+						for(auto lineIterator = p_lineList->begin(); lineIterator != p_lineList->end(); lineIterator++)
+						{
+							double distance = blockIterator->getDistance(lineIterator->getMidPoint());
+							
+							sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*lineIterator)));
+						}
+						
+						for(auto arcIterator = p_arcList->begin(); arcIterator != p_arcList->end(); arcIterator++)
+						{
+							double distance = blockIterator->getDistance(arcIterator->getMidPoint());
+							
+							sortedEdges.insert(std::pair<double, edgeLineShape*>(distance, &(*arcIterator)));
+						}
+					
+						for(auto mapIterator = sortedEdges.begin(); mapIterator != sortedEdges.end(); mapIterator++)
+						{
+							closedPath possiblePath = findContour((*mapIterator).second, &(*blockIterator));
+							
+							if(possiblePath.getDistance() > 0)
+							{
+								// THe first valid path found will be the path that encompasses the label
+								foundPath = possiblePath;
+								break;
+							}
+						}
+						
+						// Since we found a path that encompasses the label, set the property of that path to the label
+						if(foundPath.getDistance() > 0)
+						{
+							foundPath.setProperty(blockIterator->getProperty());
+							additionalPaths.push_back(foundPath);
+						}
+					}
+					else
+					{
+						OmniFEMMsg::instance()->MsgWarning("Block Label outside of geoemtry found");
+					}
 					
 					p_blockLabelsUsed++;
 					blockIterator->setUsedState(true);
-					
-					if(foundPath.getDistance() > 0)
-					{
-						foundPath.setProperty(blockIterator->getProperty());
-						additionalPaths.push_back(foundPath);
-					}
 				}
 			}
 			
@@ -494,13 +534,64 @@ void meshMaker::mesh()
 			{
 				holeDetection(&additionalPaths);
 				
-				createGMSHGeometry(&additionalPaths);
+		//		createGMSHGeometry(&additionalPaths);
 				
-				p_closedContourPaths.reserve(additionalPaths.size());
+				p_closedContourPaths.reserve(p_closedContourPaths.size() + additionalPaths.size());
 				
 				p_closedContourPaths.insert(p_closedContourPaths.end(), additionalPaths.begin(), additionalPaths.end());
 			}
 		}
+		
+		
+		for(auto pathIterator = p_closedContourPaths.begin(); pathIterator != p_closedContourPaths.end();)
+		{
+			unsigned int iteratorDistance = 0;
+			bool resetPath = false;
+			
+			for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+			{
+				std::vector<edgeLineShape*> commonEdgeList;
+				
+				if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
+				{
+					// IF the hole shares a common edge with the path, then we will need to perform an algorithm
+					// that will recombine the hole and the path
+					// The path will need to be remade to cut out the hole
+					iteratorDistance = std::distance(p_closedContourPaths.begin(), pathIterator);
+					
+					closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
+					
+					
+					pathIterator->getHoles()->erase(holeIterator);
+					pathIterator->transferHoles(aPath);
+				//	aPath.setBlockLabelList(*(pathIterator->getBlockLabelList()));
+					aPath.setProperty(pathIterator->getProperty());
+					
+					p_closedContourPaths.erase(pathIterator);
+					p_closedContourPaths.push_back(aPath);
+					
+					
+					resetPath = true;
+					break;
+				}
+			}
+			
+			if(resetPath)
+			{
+				auto newIterator = p_closedContourPaths.begin();
+				
+				for(unsigned int i = 0; i < iteratorDistance; i++)
+				{
+					newIterator++;
+				}
+				
+				pathIterator = newIterator;
+			}
+			else
+				pathIterator++;
+		}
+		
+		createGMSHGeometry();
 		
 		OmniFEMMsg::instance()->MsgStatus("Meshing GMSH geometry");
 		
@@ -611,6 +702,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 	// PLease note that this function assumes that the lines for each closed contour in 
 	// pathContour has not already been created
 	std::vector<closedPath> *pathToOperate = nullptr;
+	std::vector<GFace*> addedFaces;
 	
 	if(pathContour == nullptr)
 		pathToOperate = &p_closedContourPaths;
@@ -638,14 +730,15 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 				
 				if((*lineIterator)->isArc())
 				{
-					p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
-					addedEdge = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+					GVertex *temp = p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0);
+					addedEdge = p_meshModel->addCircleArcCenter(firstNode, temp, secondNode);
 				}
 				else
 				{
 					addedEdge = p_meshModel->addLine(firstNode, secondNode);
 				}
-					
+				
+				// Add in the mesh settings of the line
 				if(pathIterator->getProperty()->getMeshsizeType() != meshSize::MESH_NONE_)
 				{
 					if((*lineIterator)->getSegmentProperty()->getMeshAutoState())
@@ -677,6 +770,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 				addLineVector.push_back(addedEdge);
 			}
 			
+			
+			
 			// Next we need to set the mesh size of the GEdges here
 			
 			lineLoop.push_back(addLineVector);
@@ -696,8 +791,8 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 						
 						if((*lineIterator)->isArc())
 						{
-							p_vertexModelList.push_back(p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0));
-							addedEdge = p_meshModel->addCircleArcCenter(firstNode, p_vertexModelList.back(), secondNode);
+							GVertex *temp = p_meshModel->addVertex((*lineIterator)->getCenterXCoordinate(), (*lineIterator)->getCenterYCoordinate(), 0.0, 1.0);
+							addedEdge = p_meshModel->addCircleArcCenter(firstNode, temp, secondNode);
 						}
 						else
 						{
@@ -739,36 +834,167 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 			}
 			
 			GFace *addedFace = p_meshModel->addPlanarFace(lineLoop);
-			
-			if(p_settings->getStructuredState())
-			{
-				addedFace->meshAttributes.method = 1;// Sets the face to be transfinite
-				
-				switch(p_settings->getMeshArrangment())
-				{
-					case StructuredArrangement::ARRANGMENT_LEFT:
-						addedFace->meshAttributes.transfiniteArrangement = -1;
-						break;
-					case StructuredArrangement::ARRANGMENT_RIGHT:
-						addedFace->meshAttributes.transfiniteArrangement = 1;
-						break;
-					case StructuredArrangement::ARRANGMENT_ALTERNATED:
-						addedFace->meshAttributes.transfiniteArrangement = 2;
-						break;
-					default:
-						addedFace->meshAttributes.transfiniteArrangement = -1;
-						break;
-				}
-			}
-			else
-			{
-				addedFace->meshAttributes.method = 2;
-				addedFace->meshAttributes.transfiniteArrangement = 0;
-			}
-			
-			addedFace->meshAttributes.meshSize = 1.0;
+			addedFace->meshAttributes.method = 2;
+			addedFace->meshAttributes.transfiniteArrangement = 0;
+			addedFaces.push_back(addedFace);
 		}
 	}
+	
+/*	for(auto faceIterator = addedFaces.begin(); faceIterator != addedFaces.end(); faceIterator++)
+	{
+		GFace *aFace = *faceIterator;
+		Surface *faceSurface = FindSurface((*faceIterator)->tag());
+		
+		if(p_settings->getStructuredState())
+		{
+			(*faceIterator)->meshAttributes.method = 1;// Sets the face to be transfinite
+			faceSurface->Method = 1;
+			
+			switch(p_settings->getMeshArrangment())
+			{
+				case StructuredArrangement::ARRANGMENT_LEFT:
+					(*faceIterator)->meshAttributes.transfiniteArrangement = -1;
+					faceSurface->Recombine_Dir = -1;
+					break;
+				case StructuredArrangement::ARRANGMENT_RIGHT:
+					(*faceIterator)->meshAttributes.transfiniteArrangement = 1;
+					faceSurface->Recombine_Dir = 1;
+					break;
+				case StructuredArrangement::ARRANGMENT_ALTERNATED:
+					(*faceIterator)->meshAttributes.transfiniteArrangement = 2;
+					faceSurface->Recombine_Dir = 2;
+					break;
+			}
+			
+			(*faceIterator)->meshAttributes.transfiniteSmoothing = -1;
+			(*faceIterator)->meshAttributes.meshSize = 0.08;
+			faceSurface->TransfiniteSmoothing = -1;
+		}
+		else
+		{
+			(*faceIterator)->meshAttributes.method = 2;
+			faceSurface->Method = 2;
+			(*faceIterator)->meshAttributes.transfiniteArrangement = 0;
+		}
+		
+	//	(*faceIterator)->meshAttributes.meshSize = 1.0;
+	}
+	 */ 
+	
+}
+
+
+
+closedPath meshMaker::recreatePath(closedPath &path, closedPath holeIterator, std::vector<edgeLineShape*> commonEdges)
+{
+	std::vector<edgeLineShape*> newEdgesForPath;
+	closedPath newPath;
+	bool isFinished = false;
+	
+	for(auto pathIterator = path.getClosedPath()->begin(); pathIterator != path.getClosedPath()->end(); pathIterator++)
+	{
+		bool isCommonEdge = false;
+		for(auto commonIterator = commonEdges.begin(); commonIterator != commonEdges.end(); commonIterator++)
+		{
+			if(**pathIterator == **commonIterator)
+			{
+				isCommonEdge = true;
+				break;
+			}
+				
+		}
+		
+		if(!isCommonEdge)
+			newEdgesForPath.push_back(*pathIterator);
+	}
+	
+	for(auto pathIterator = holeIterator.getClosedPath()->begin(); pathIterator != holeIterator.getClosedPath()->end(); pathIterator++)
+	{
+		bool isCommonEdge = false;
+		for(auto commonIterator = commonEdges.begin(); commonIterator != commonEdges.end(); commonIterator++)
+		{
+			if(**pathIterator == **commonIterator)
+			{
+				isCommonEdge = true;
+				break;
+			}
+		}
+		
+		if(!isCommonEdge)
+			newEdgesForPath.push_back(*pathIterator);
+	}
+	
+	newPath = closedPath(newEdgesForPath.at(0));
+	
+	while(!isFinished)
+	{
+		if(newPath.getClosedPath()->size() > 1)
+		{
+			/* For adding in the rest of the edges, this portion of the code will be executed
+			 */
+			edgeLineShape *previouseAddedSegment = *(++newPath.getClosedPath()->rbegin());
+			node *nodeToTest = nullptr;
+			
+			// If the first node of the recently added line is connected to the previousely added segment, then we need to test
+			// on the second node.
+			// Otherwise, go ahead and test on the first node
+			if(*newPath.getClosedPath()->back()->getFirstNode() == *previouseAddedSegment->getFirstNode() || *newPath.getClosedPath()->back()->getFirstNode() == *previouseAddedSegment->getSecondNode())
+				nodeToTest = newPath.getClosedPath()->back()->getSecondNode();
+			else
+				nodeToTest = newPath.getClosedPath()->back()->getFirstNode();
+				
+			if(*nodeToTest == *(*newPath.getClosedPath()->begin())->getFirstNode() || *nodeToTest == *(*newPath.getClosedPath()->begin())->getSecondNode())
+			{
+				isFinished = true;
+				break;
+			}
+			
+			for(auto edgeIterator = newEdgesForPath.begin(); edgeIterator != newEdgesForPath.end(); edgeIterator++)
+			{
+				
+				if(*(*edgeIterator) == *newPath.getClosedPath()->back() || *(*edgeIterator) == *previouseAddedSegment)
+				{
+			/*		auto backValue = *newEdgesForPath.back();
+					bool result = *(*edgeIterator) == *newEdgesForPath.back();
+					if(result)
+						isFinished = true;*/
+						
+					continue;
+				}
+				
+				if(*nodeToTest == *(*edgeIterator)->getFirstNode() || *nodeToTest == *(*edgeIterator)->getSecondNode())
+				{
+					newPath.addEdgeToPath(*edgeIterator);
+					break;
+				}
+			}
+		}
+		else if(newPath.getClosedPath()->size() == 1)
+		{
+			/* For the very first edge to add in to the new path, we must find the first node of the
+			 * first edge and look the list to find the edge that is connected to the first node of 
+			 * the first added edge
+			 */ 
+			for(auto edgeIterator = newEdgesForPath.begin(); edgeIterator != newEdgesForPath.end(); edgeIterator++)
+			{
+				if(*(*edgeIterator) == *newPath.getClosedPath()->at(0))
+					continue;
+				
+				if(*newPath.getClosedPath()->at(0)->getFirstNode() == *(*edgeIterator)->getFirstNode() || *newPath.getClosedPath()->at(0)->getFirstNode() == *(*edgeIterator)->getSecondNode())
+				{
+					newPath.addEdgeToPath(*edgeIterator);
+					break;
+				}
+			}
+		}
+		else
+		{
+			isFinished = true;
+			break;
+		}
+	}
+	
+	return newPath;
 }
 
 
@@ -776,6 +1002,7 @@ void meshMaker::createGMSHGeometry(std::vector<closedPath> *pathContour)
 void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 {
 	std::vector<closedPath> *pathToOperate = nullptr;
+	bool isFinished = false;
 	
 	if(pathContour == nullptr)
 		pathToOperate = &p_closedContourPaths;
@@ -785,13 +1012,53 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 	
 	// First, we need to loop through every single closed path and check the bounding box
 	// against all the other closed paths to see if it is a possible hole
-	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end(); pathIterator++)
+	for(auto pathIterator = pathToOperate->begin(); pathIterator != pathToOperate->end();)
 	{
-		for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
+		bool resetPath = false;
+		
+		if(!pathIterator->getHolesFoundState())
 		{
-			if(holeIterator->getBoundingBox().isInside(pathIterator->getBoundingBox()))
-				pathIterator->addHole(*holeIterator);
+			for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
+			{
+				// Check to see if the "hole" is a hole to the path
+				if(holeIterator->isInside(*pathIterator) && holeIterator->getBoundingBox() != pathIterator->getBoundingBox())
+				{
+					pathIterator->addHole(*holeIterator);
+					/*
+					std::vector<edgeLineShape*> commonEdgeList;
+					
+					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
+					{
+						// IF the hole shares a common edge with the path, then we will need to perform an algorithm
+						// that will recombine the hole and the path
+						// The path will need to be remade to cut out the hole
+						unsigned int iteratorDistance = std::distance(pathToOperate->begin(), pathIterator) - 1;
+						closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
+						
+						pathIterator->transferHoles(aPath);
+						aPath.setBlockLabelList(*(pathIterator->getBlockLabelList()));
+						
+						pathToOperate->erase(pathIterator);
+						pathToOperate->push_back(aPath);
+						
+						
+						resetPath = true;
+						break;
+					}
+					else
+						pathIterator->addHole(*holeIterator);
+						 */ 
+				}
+			}
+			
+			if(!resetPath)
+				pathIterator->setHolesFound();
 		}
+		
+		if(resetPath)
+			pathIterator = pathToOperate->begin();
+		else
+			pathIterator++;
 	}
 	
 	// Now, we need to find the top level holes
@@ -809,14 +1076,20 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 					
 					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end();)
 					{
+						if(holeIterator->getBoundingBox() == topLevelIterator->getBoundingBox())
+						{
+							holeIterator++;
+							continue;
+						}
+						
 						// If the hole is inside of the top level contour, delete the hole and restart the process
-						if(holeIterator->getBoundingBox().isInside(topLevelIterator->getBoundingBox()))
+						if(holeIterator->isInside(*topLevelIterator))
 						{
 							pathIterator->getHoles()->erase(holeIterator);
 							resetIterator = true;
 							break;
 						}
-						else if(topLevelIterator->getBoundingBox().isInside(holeIterator->getBoundingBox()))
+						else if(topLevelIterator->isInside(*holeIterator))
 						{
 							// If the top level is actually inside of the hole,
 							// then we need to delete the top level and restart the process
@@ -850,6 +1123,7 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 {
 	std::vector<closedPath> *pathToOperate = nullptr;
+	bool labelInHole = false;
 	
 	if(pathContour == nullptr)
 		pathToOperate = &p_closedContourPaths;
@@ -864,14 +1138,18 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 		{
 			for(auto propertyIterator = pathIterator->getBlockLabelList()->begin(); propertyIterator != pathIterator->getBlockLabelList()->end(); propertyIterator++)
 			{
+				/* First, if there is more then 1 block label in the polygon, then it is quite possible we have some holes.
+				 * In which case, we will need to check if the label is in the one of the holes
+				 */ 
 				bool isInHole = false;
 				
 				if(!(*propertyIterator)->getUsedState())
 				{
 					for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
 					{
-						if(checkPointInContour(*propertyIterator, &(*holeIterator)))
+						if(holeIterator->pointInContour((*propertyIterator)->getCenter()))
 						{
+							// If a label is found in a hole, then we need to move onto the next label
 							isInHole = true;
 							break;
 						}
@@ -880,6 +1158,8 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 				
 				if(!isInHole && !(*propertyIterator)->getUsedState())
 				{
+					// If the label is not in any of the holes, then we found the top level label
+					// With the top level label found, we can stop looping through all of the labels
 					setLabel = *propertyIterator;
 					break;
 				}
@@ -887,16 +1167,31 @@ void meshMaker::assignBlockLabel(std::vector<closedPath> *pathContour)
 		}
 		else if(pathIterator->getBlockLabelList()->size() == 1)
 		{
-			setLabel = pathIterator->getBlockLabelList()->at(0);
+			
+			for(auto holeIterator = pathIterator->getHoles()->begin(); holeIterator != pathIterator->getHoles()->end(); holeIterator++)
+			{
+				if(holeIterator->pointInContour(pathIterator->getBlockLabelList()->at(0)->getCenter()))
+				{
+					labelInHole = true;
+					pathIterator->clearBlockLabelList();
+					break;
+				}
+			}
+			
+			if(!labelInHole)
+				setLabel = pathIterator->getBlockLabelList()->at(0);
 		}
 		else
 		{
 			continue;
 		}
 		
-		setLabel->setUsedState(true);
-		p_blockLabelsUsed++;
-		pathIterator->setProperty(setLabel->getProperty());
-		pathIterator->clearBlockLabelList();
+		if(!labelInHole)
+		{
+			setLabel->setUsedState(true);
+			p_blockLabelsUsed++;
+			pathIterator->setProperty(setLabel->getProperty());
+			pathIterator->clearBlockLabelList();
+		}
 	}
 }

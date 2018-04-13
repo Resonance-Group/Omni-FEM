@@ -294,10 +294,12 @@ double BGM_MeshSize(GEntity *ge, double U, double V,
     lc = l1;
   }
   
-  double meshSize = ge->meshAttributes.meshSize;
+ // double meshSize = ge->meshAttributes.meshSize;
 
-  return lc * CTX::instance()->mesh.lcFactor * ge->meshAttributes.meshSize;
+  return (lc * CTX::instance()->mesh.lcFactor * ge->meshAttributes.meshSize);
 //	return lc * ge->meshAttributes.meshSize;
+	
+//	return lc * CTX::instance()->mesh.lcFactor;
 }
 
 // anisotropic version of the background field

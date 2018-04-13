@@ -88,6 +88,7 @@ class GEntity {
 	
   } meshAttributes;
   
+  
   // the mesh vertices uniquely owned by the entity
   std::vector<MVertex*> mesh_vertices;
 

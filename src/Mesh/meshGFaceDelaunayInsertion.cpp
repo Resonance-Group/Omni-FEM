@@ -997,7 +997,7 @@ static bool insertAPoint(GFace *gf,
   if (ptin) {
     // we use here local coordinates as real coordinates
     // x,y and z will be computed hereafter
-     Msg::Info("Point is inside");
+   //  Msg::Info("Point is inside");
     GPoint p = gf->point(center[0], center[1]);
 
     // should not have an omp critical here

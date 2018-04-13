@@ -132,6 +132,10 @@ public:
         return _isSelected;
     }
 	
+	/**
+	 * @brief Returns the center point of the geometry piece
+	 * @return Returns the wxRealPoint representing the center of the geometry
+	 */
 	wxRealPoint getCenter()
 	{
 		return wxRealPoint(xCenterCoordinate, yCenterCoordinate);
@@ -263,7 +267,7 @@ public:
     }
 	
 	/**
-	 * @brief 	This is the draw function for hte rectangle object. Note that for a generic retangle objecyt
+	 * @brief 	This is the draw function for hte rectangle object. Note that for a generic retangle objecy
 	 * 			nothing is drawn.
 	 */
 	virtual void draw()
@@ -343,24 +347,24 @@ public:
         
     }
 	
+	/**
+	 * @brief Sets the GModel tag number for the vertex. This function is primarly used in the 
+	 * mesh module and uses the GModel tag number to quickly look up the GVertex that the 
+	 * node belongs to.
+	 * @param number The GModel tag number
+	 */
 	void setGModalTagNumber(int number)
 	{
 		p_GModelTagNumber = number;
 	}
 	
+	/**
+	 * @brief Retrieves the GModel for the vertex
+	 * @return Returns the GModel. If the vertex has not been created in GMSH, this function will return 0
+	 */
 	int getGModalTagNumber()
 	{
 		return p_GModelTagNumber;
-	}
-	
-	void setVisitedState(bool state)
-	{
-		p_isVisited = state;
-	}
-	
-	bool getVisitedState()
-	{
-		return p_isVisited;
 	}
     
 	/**
@@ -563,6 +567,118 @@ public:
 
 
 /**
+ * @class simplifiedEdge
+ * @author Phillip
+ * @date 04/04/18
+ * @file geometryShapes.h
+ * @brief This class is a more simple edge object. This is prirmaryly used in the mesher class. This edge
+ * 			class is used to provide a simple implementation for an edge t make computing less costly.
+			The class only contains the start and end nodes and the midpoint of the edge. THere are no 
+			nodes to link the edge.
+ */
+class simplifiedEdge
+{
+private:
+	wxRealPoint p_firstPoint = wxRealPoint(0, 0);
+	
+	wxRealPoint p_secondPoint = wxRealPoint(0, 0);
+	
+	wxRealPoint p_midPoint = wxRealPoint(0, 0);
+	
+	unsigned long p_arcID = 0;
+	
+	bool p_isSwapped = false;
+	
+	bool p_willDelete = false;
+	
+public:
+
+	simplifiedEdge(wxRealPoint firstPoint, wxRealPoint secondPoint, wxRealPoint midPoint, unsigned long arcID = 0)
+	{
+		p_firstPoint = firstPoint;
+		p_secondPoint = secondPoint;
+		p_midPoint = midPoint;
+		p_arcID = arcID;
+	}
+	
+	simplifiedEdge()
+	{
+		
+	}
+	
+	void swap()
+	{
+		wxRealPoint temp = p_firstPoint;
+		p_firstPoint = p_secondPoint;
+		p_secondPoint = temp;
+		p_isSwapped = true;
+	}
+	
+	void setStartPoint(wxRealPoint firstPoint)
+	{
+		p_firstPoint = firstPoint;
+	}
+	
+	wxRealPoint getStartPoint()
+	{
+		return p_firstPoint;
+	}
+	
+	void setEndPoint(wxRealPoint secondPoint)
+	{
+		p_secondPoint = secondPoint;
+	}
+	
+	wxRealPoint getEndPoint()
+	{
+		return p_secondPoint;
+	}
+	
+	void setMidPoint(wxRealPoint midPoint)
+	{
+		p_midPoint = midPoint;
+	}
+	
+	wxRealPoint getMidPoint()
+	{
+		return p_midPoint;
+	}
+	
+	/**
+	 * @brief 	Tests if a point is to the Left/On/Right of the line. The orientation will be from the 
+	 * 			first node to the second node
+	 * @param point The point to test if it is Left/On/Right of the line
+	 * @return 	Will return > 0 if point is to the left of the line. Returns == 0 if point lies on the line and
+	 * 			returns < 0 if point is to the right of the line.
+	 */
+	double isLeft(wxRealPoint point)
+	{
+		return ((p_secondPoint.x - p_firstPoint.x) * (point.y - p_firstPoint.y)
+					-(point.x - p_firstPoint.x) * (p_secondPoint.y - p_firstPoint.y));
+	}
+	
+	unsigned long getArcID()
+	{
+		return p_arcID;
+	}
+	
+	bool getSwappedState()
+	{
+		return p_isSwapped;
+	}
+	
+	void setDeleteStatus()
+	{
+		p_willDelete = true;
+	}
+	
+	bool getDeleteState() const
+	{
+		return p_willDelete;
+	}
+};
+
+/**
  * @class edgeLineShape
  * @author Phillip
  * @date 18/06/17
@@ -587,8 +703,6 @@ private:
 		ar & p_xMid;
 		ar & p_yMid;
 	}
-	
-	int p_GModelTagNumber = 0;
 protected:
 	//! The node number for the first node
 	/*!
@@ -597,7 +711,7 @@ protected:
 		instead. But, if there are mulple lines emitting from one node
 		then the node will be save multple times. This is not 
 		very efficient. Instead, we will track the node number for each
-		node that connects the line. his way, when we load the data from 
+		node that connects the line. This way, when we load the data from 
 		file, we have a way to quickly rebuild the node pointers for each line
 	*/ 
 	unsigned long p_firstNodeNumber = 0;
@@ -644,25 +758,55 @@ protected:
 	//! Boolean used to describe if the line segment was visited for contour finding
 	bool p_isVisited = false;
 	
+	//! The distance that the edge tranverses
 	double p_distance = 0;
 	
 	//! The radius of an arc from the center point
     double _radius = 0.0;
 	
+	//! The x coordinate point for the mid point of the edge
 	double p_xMid = 0;
 	
+	//! The y coordinate position of the mid point of the edge
 	double p_yMid = 0;
 	
+	//! Boolean used to indicate if the first and second nodes are swapped
+	bool p_isSwapped = false;
+	
+	/**
+	 * @brief Performs the dot product on two points. This function is mainly used 
+	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
+	 * used in the case that the edge is an arc.
+	 * @param firstPoint The first point
+	 * @param secondPoint The second point
+	 * @return Returns a number representing the dot product of the two points
+	 */
 	double dotProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
 	{
 		return (firstPoint.x * secondPoint.x) + (firstPoint.y * secondPoint.y);
 	}
 	
+	/**
+	 * @brief Performs the cross product on two points. This function is mainly used 
+	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
+	 * used in the case that the edge is an arc.
+	 * @param firstPoint The first point
+	 * @param secondPoint The second point
+	 * @return Returns a number representing the cross product of the two points
+	 */
 	double crossProduct(wxRealPoint firstPoint, wxRealPoint secondPoint)
 	{
 		return (firstPoint.x * secondPoint.y) - (secondPoint.x * firstPoint.y);
 	}
 	
+	/**
+	 * @brief This fucntion will check if the two parameters are the same sign. This function is mainly used 
+	 * in the winding number algorithm to detect if a point lies within a specific geometry. This function is 
+	 * used in the case that the edge is an arc.
+	 * @param firstValue The firs value
+	 * @param secondValue The second value
+	 * @return Returns true if the first and second values are the same sign. Otherwise, returns false.
+	 */
 	bool isSameSign(double firstValue, double secondValue)
 	{
 		return (signbit(firstValue) == signbit(secondValue));
@@ -675,6 +819,10 @@ public:
         
     }
 	
+	/**
+	 * @brief Calculates the distance that the two points of the edge span. THis must be called after the line is created.
+	 * The distance is primarly used in the mesh module.
+	 */
 	virtual void calculateDistance()
 	{
 		if(_firstNode && _secondNode)
@@ -687,6 +835,11 @@ public:
 		}
 	}
 	
+	/**
+	 * @brief Returns the distance that spans across the two points of the edge. For arcs, this would be 
+	 * the arc length. This is mainly used in the mesh module.
+	 * @return Returns a number representing the distance between the two points. For arcs, this would be the arc length.
+	 */
 	double getDistance()
 	{
 		return p_distance;
@@ -712,7 +865,8 @@ public:
 	
 	/**
 	 * @brief Gets the state of the visited variable.
-	 * @return Returns true if the contour algorthim visisted the line segment. Otherwise, returns false
+	 * @return Returns true if the contour algorthim visisted the line segment or if the line
+	 * segment was used in a closed contour. Otherwise, returns false
 	 */
 	bool getVisitedStatus()
 	{
@@ -721,7 +875,7 @@ public:
 	
 	/**
 	 * @brief Set the state of the visited variable.
-	 * @param state 
+	 * @param state Set to true to indicate that the edge has been visited.
 	 */
 	void setVisitedStatus(bool state)
 	{
@@ -844,13 +998,6 @@ public:
 			return false;
 	}
 	
-	void swap()
-	{
-		node *temp = _firstNode;
-		_firstNode = _secondNode;
-		_secondNode = temp;
-	}
-	
 	/**
 	 * @brief 	Tests if a point is to the Left/On/Right of the line. The orientation will be from the 
 	 * 			first node to the second node
@@ -894,21 +1041,50 @@ public:
 		}
 	}
 	
+	/**
+	 * @brief Gets the midpoint of the edge. For lines, this is the exact midpoint.
+	 * For asrcs, this returns the midpoint of the arc line
+	 * @return Returns a wxRealPoint representing the midpoint of the edge
+	 */
 	wxRealPoint getMidPoint()
 	{
 		return wxRealPoint(p_xMid, p_yMid);
 	}
 	
-	void setGModelTagNumber(int tagNumber)
+	/**
+	 * @brief 	This function is called in order to swap the ending and starting node.
+	 * 			This is mainly used in the algorithm for PIP in order to ensure that all of 
+	 * 			the edges are oriented the same way
+	 */
+	void swap()
 	{
-		p_GModelTagNumber = tagNumber;
+		node *temp = _firstNode;
+		unsigned long tempNumber = p_firstNodeNumber;
+		
+		_firstNode = _secondNode;
+		_secondNode = temp;
+		
+		p_firstNodeNumber = p_secondNodeNumber;
+		p_secondNodeNumber = tempNumber;
+		
+		p_isSwapped = !p_isSwapped;
 	}
 	
-	int getGModelTagNumber()
+	bool getSwappedState()
 	{
-		return p_GModelTagNumber;
+		return p_isSwapped;
+	}
+	
+	std::vector<simplifiedEdge> getBoundingEdges()
+	{
+		std::vector<simplifiedEdge> returnVector;
+		
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), this->getCenter()));
+		
+		return returnVector;
 	}
 };
+
 
 
 /*! This class inherits from the edgeLineShape class bescause an arc is like a line but with an angle */
@@ -929,23 +1105,36 @@ private:
 		ar & p_arcID;
 	}
 	
+	//! The number of segments that comprises the arc
 	unsigned int _numSegments = 3;
 	
     //! This data is the angle of the arc used in calculations. This should be in degrees
 	double _arcAngle = 30;
-    
+	
+    //! Boolean used to determine if the arc is clockwise or counterclock-wise
     bool _isCounterClockWise = true;
 public:
+	/**
+	 * @brief The constructor for the clase
+	 */
 	arcShape()
     {
         p_isArc = true;
     }
 	
+	/**
+	 * @brief Calculates the arc length of the arc.
+	 */
 	void calculateDistance()
 	{
 		p_distance = _radius * _arcAngle * (PI / 180.0);
 	}
 	
+	/**
+	 * @brief Sets the angle fo the arc. The angle stored is always positive. A boolean specifies if
+	 * the angle is + or -.
+	 * @param angleOfArc Sets the angle of the arc in degrees
+	 */
 	void setArcAngle(double angleOfArc)
     {
         _arcAngle = abs(angleOfArc);
@@ -955,27 +1144,41 @@ public:
             _isCounterClockWise = false;
     }
 	
+	/**
+	 * @brief Retrieves the arc angle
+	 * @return Returns a number representing the arc angle. + is CCW - is CW
+	 */
 	double getArcAngle()
     {
-		//return 
         if(_isCounterClockWise)
             return _arcAngle;
         else
             return -_arcAngle;
     }
 
-	
+	/**
+	 * @brief Specifies the number of segments that will be used to draw the arc
+	 * @param segments The number of segments to use to draw the arc
+	 */
 	void setNumSegments(unsigned int segments)
     {
         _numSegments = segments;
     }
 	
+	/**
+	 * @brief Retrieves the number of segments to draw the arc
+	 * @return Returns a number to represent the number of segments used to draw the arc on the screen
+	 */
 	unsigned int getnumSegments()
     {
         return _numSegments;
     }
     
-    
+    /**
+     * @brief The function that is called in order to draw the arc on the screen
+	 * This function will call the necessary OpenGL functions in order to draw the 
+	 * arc on the OpenGL canvas
+     */
     void draw()
     {
         if(_isSelected)
@@ -985,18 +1188,6 @@ public:
 			
 		if(p_distance == 0)
 			calculateDistance();
-            
-      /*  
-        if(_numSegments == -1)// Hey this code needs to be looked at!
-        {
-            if(_arcAngle < 10)
-                _numSegments = 10;
-            else
-                _numSegments = _arcAngle / 3.0;
-        }
-        else if(_numSegments < 2)
-            _numSegments = 2
-			 */ 
         
         if(_property.getHiddenState())
         {
@@ -1021,14 +1212,16 @@ public:
     }	
 
     /*! \brief  
-     * See this forum post: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
-     * 
-     * This function will be calculating the radius and center point of the arc
-	 *			The idea is as follows:
-     *          By knowing the 2 endpoints and the arc angle, we are able to caluclate the radius and the center point
-     *          For the radius, this is the law of cosines: c^2 = 2 * R^2 * (1 - cos(theta) )
+		See this forum post: http://mymathforum.com/algebra/21368-find-equation-circle-given-two-points-arc-angle.html
+      
+		This function will be calculating the radius and center point of the arc
+	 			The idea is as follows:
+				By knowing the 2 endpoints and the arc angle, we are able to caluclate the radius and the center point
+				For the radius, this is the law of cosines: c^2 = 2 * R^2 * (1 - cos(theta) )
                 where c is the length of the sector through the beginning and starting endpoints and theta is the arc angle
-                Then, we can calculate the 
+                Then, we can calculate the radius by solving for R. Using the midpoint of line AB and the slope perpendicular to 
+				line AB, we can use the slope-ponit form to find the equation of the line and then use Pythagorean Thereom's
+				in order to find the arc's exact center
 	 */
     void calculate()
     {
@@ -1166,7 +1359,7 @@ public:
 		
 		if(lev == 0)
 		{
-			if(slope >= 0 && slope <= 1e-9)
+			if(abs(slope) >= 0 && abs(slope) <= 1e-2)
 			{
 				if(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate())
 				{
@@ -1202,11 +1395,19 @@ public:
         return;
     }
     
+	/**
+	 * @brief Retrieves the radius of the arc
+	 * @return Returns a number reprenseting the radius of the arc
+	 */
     double getRadius()
     {
         return _radius;
     }	
     
+	/**
+	 * @brief Retrieves the arc length
+	 * @return Returns the arc length of the arc
+	 */
     double getArcLength()
     {
         return p_distance;
@@ -1228,12 +1429,186 @@ public:
 			return false;
 	}
 	
+	/**
+	 * @brief Sets the arc ID that belongs to the arc. This is useful
+	 * when comparing two edges to see if they are equal
+	 * @param id The ID that will be assigned to the arc
+	 */
 	void setArcID(unsigned long id)
 	{
 		p_arcID = id;
 	}
+	
+	std::vector<simplifiedEdge> getBoundingEdges()
+	{
+		std::vector<simplifiedEdge> returnVector;
+		
+		wxRealPoint midPoint;
+		wxRealPoint upperMid = this->getMidPoint();
+		wxRealPoint point1;
+		wxRealPoint point2;
+		
+		double circleRadius = 0;
+		
+		double theta = acos(1 - ((pow(this->getCenter().x + _radius - this->getMidPoint().x, 2) + pow(this->getCenter().y - this->getMidPoint().y, 2)) / (2 * pow(_radius, 2))));
+		
+		if(this->getMidPoint().y < this->getCenter().y)
+			theta = theta * -1;
+			
+		upperMid.x = this->getCenter().x + (_radius + 0.1) * cos(theta);
+		
+		upperMid.y = this->getCenter().y + (_radius + 0.1) * sin(theta);
+		
+		midPoint.x = (_firstNode->getCenter().x + _secondNode->getCenter().x) / 2.0;
+		midPoint.y = (_firstNode->getCenter().y + _secondNode->getCenter().y) / 2.0;
+		
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), _secondNode->getCenter(), midPoint, p_arcID));
+		
+		circleRadius = sqrt(pow(upperMid.x - midPoint.x, 2) + pow(upperMid.y - midPoint.y, 2));
+		
+		point1.x = _firstNode->getCenter().x + circleRadius * cos(theta);
+		point1.y = _firstNode->getCenter().y + circleRadius * sin(theta);
+		
+		point2.x = _secondNode->getCenter().x + circleRadius * cos(theta);
+		point2.y = _secondNode->getCenter().y + circleRadius * sin(theta);
+		
+		midPoint.x = (_firstNode->getCenter().x + point1.x) / 2.0;
+		midPoint.y = (_firstNode->getCenter().y + point1.y) / 2.0;
+		
+		returnVector.push_back(simplifiedEdge(_firstNode->getCenter(), point1, midPoint));
+		
+		returnVector.push_back(simplifiedEdge(point1, point2, upperMid));
+		
+		midPoint.x = (_secondNode->getCenter().x + point2.x) / 2.0;
+		midPoint.y = (_secondNode->getCenter().y + point2.y) / 2.0;
+		
+		returnVector.push_back(simplifiedEdge(point2, _secondNode->getCenter(), midPoint));
+		
+		return returnVector;
+	}
 };
 
+
+
+class arcPolygon
+{
+private:
+	std::vector<simplifiedEdge> p_polygonEdges;
+	
+	bool p_isSorted = false;
+	
+	bool p_isCCW = false;
+	
+	arcShape p_arc;
+	
+	bool p_isSwapped = false;
+	
+public:
+
+	arcPolygon(std::vector<simplifiedEdge> edgeList, arcShape arc)
+	{
+		p_polygonEdges = edgeList;
+		p_arc = arc;
+	}
+	
+	void setSwapped()
+	{
+		p_isSwapped = true;
+	}
+	
+	bool getSwappedState()
+	{
+		return p_isSwapped;
+	}
+	
+	bool isInside(wxRealPoint point)
+	{
+		double subtractionTerms = 0;
+		double additionTerms = 0;
+		bool reverseWindingResult = false;
+		int windingNumber = 0;
+		bool isFirstRun = true;
+		
+		for(auto lineIterator = p_polygonEdges.begin(); lineIterator != p_polygonEdges.end(); lineIterator++)
+		{
+			auto nextLineIterator = lineIterator + 1;
+			
+			if(nextLineIterator == p_polygonEdges.end())
+				nextLineIterator = p_polygonEdges.begin();
+			
+			if(isFirstRun)
+			{
+				if(lineIterator->getEndPoint() != nextLineIterator->getStartPoint())
+				{
+					if(lineIterator->getStartPoint() == nextLineIterator->getStartPoint())
+						lineIterator->swap();
+					else if(lineIterator->getStartPoint() == nextLineIterator->getEndPoint())
+					{
+						lineIterator->swap();
+						nextLineIterator->swap();
+					}
+					else if(lineIterator->getEndPoint() == nextLineIterator->getEndPoint())
+						nextLineIterator->swap();
+				}
+				
+				isFirstRun = false;
+			}
+			else
+			{
+				if(lineIterator->getEndPoint() == nextLineIterator->getEndPoint())
+					nextLineIterator->swap();
+			}
+			 
+			additionTerms += (lineIterator->getStartPoint().x) * (lineIterator->getEndPoint().y);
+			subtractionTerms += (lineIterator->getEndPoint().x) * (lineIterator->getStartPoint().y);
+		}
+		
+		if(subtractionTerms > additionTerms)
+			reverseWindingResult = true;
+			
+			
+		for(auto lineIterator = p_polygonEdges.begin(); lineIterator != p_polygonEdges.end(); lineIterator++)
+		{
+			double isLeftResult = lineIterator->isLeft(point);
+			
+			if(reverseWindingResult)
+				isLeftResult *= -1;
+			
+			if(lineIterator->getStartPoint().y <= point.y)
+			{
+				if(lineIterator->getEndPoint().y > point.y)
+				{
+					if(isLeftResult > 0)
+						windingNumber++;
+					else if(isLeftResult < 0)
+						windingNumber--;
+				}
+			}
+			else if(lineIterator->getEndPoint().y <= point.y)
+			{
+				if(isLeftResult < 0)
+					windingNumber--;
+				else if(isLeftResult > 0)
+					windingNumber++;
+			}
+		}
+		
+		if(windingNumber > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	std::vector<simplifiedEdge> getEdges()
+	{
+		return p_polygonEdges;
+	}
+	
+	arcShape getArc()
+	{
+		return p_arc;
+	}
+};
 
 
 #endif

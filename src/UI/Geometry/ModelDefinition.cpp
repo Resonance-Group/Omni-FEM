@@ -2691,8 +2691,7 @@ void modelDefinition::clearSelection()
 /* This function gets called everytime a draw routine is needed */
 void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 {
-	this->SetCurrent(*_geometryContext);
-   // wxGLCanvas::SetCurrent();// This will make sure the the openGL commands are routed to the wxGLCanvas object
+	this->SetCurrent(*_geometryContext); // This will make sure the the openGL commands are routed to the wxGLCanvas object
 	wxPaintDC dc(this);// This is required for drawing
     
     glMatrixMode(GL_MODELVIEW);
@@ -2708,61 +2707,37 @@ void modelDefinition::onPaintCanvas(wxPaintEvent &event)
 		
 		glPointSize(1.5); // Set the point size first
 		glLineWidth(1.0);
-		
-		glBegin(GL_POINTS);
-		
-			for(int i = 0; i < p_modelMesh->getNumMeshVertices(); i++)
-			{
-				MVertex *meshVertex = p_modelMesh->getMeshVertexByTag(i + 1);
-				if(meshVertex)
-					glVertex2d(meshVertex->x(), meshVertex->y());
-			}
-		
-		glEnd();
-		
+
 		std::vector<GEntity*> entityList;
-	//	entityList.reserve(p_modelMesh->getNumFaces()); 
 		p_modelMesh->getEntities(entityList, 4);
 		
 		glBegin(GL_LINES);
 			int numOfElements = 0;
 			for(unsigned int i = 0; i < entityList.size(); i++)
 			{
-				int temp = entityList[i]->getNumMeshElements();	
 				for(unsigned int j = 0; j < entityList[i]->getNumMeshElements(); j++)
 				{
 					numOfElements++;
-					int test = entityList[i]->getMeshElement(j)->getNumVertices() - 1;
-					for(unsigned int k = 0; k < entityList[i]->getMeshElement(j)->getNumVertices() - 1; k++)
+					unsigned int loopCount = 0;
+					int verticeCount = entityList[i]->getMeshElement(j)->getNumVertices();
+					
+					if(verticeCount == 2 || verticeCount == 3)
+						loopCount = 1;
+					else if(verticeCount == 4 || verticeCount == 9)
+						loopCount = 3;
+						
+					for(unsigned int k = 0; k < loopCount; k++)
 					{
 						glVertex2d(entityList[i]->getMeshElement(j)->getVertex(k)->x(), entityList[i]->getMeshElement(j)->getVertex(k)->y());
 						glVertex2d(entityList[i]->getMeshElement(j)->getVertex(k + 1)->x(), entityList[i]->getMeshElement(j)->getVertex(k + 1)->y());
 					}
+					
+					glVertex2d(entityList[i]->getMeshElement(j)->getVertex(0)->x(), entityList[i]->getMeshElement(j)->getVertex(0)->y());
+					glVertex2d(entityList[i]->getMeshElement(j)->getVertex(loopCount)->x(), entityList[i]->getMeshElement(j)->getVertex(loopCount)->y());
 				}
 			}
-       /*     unsigned int numElements = 0;
-			for(auto entityIterator : entityList)
-			{
-				int meshElementsNum =  entityIterator->getNumMeshElements();
-				for(unsigned int i = 0; i < entityIterator->getNumMeshElements(); i++)
-				{
-					numElements++;
-					std::vector<MVertex*> vertexList;
-					vertexList.reserve(entityIterator->getMeshElement(i)->getNumVertices());
-					
-					entityIterator->getMeshElement(i)->getVertices(vertexList);
-					for(unsigned int j = 0; j < vertexList.size() - 1; j++)
-					{
-						
-						glVertex2d(vertexList[j]->x(), vertexList[j]->y());
-						glVertex2d(vertexList[j + 1]->x(), vertexList[j + 1]->y());
-					}
-					
-				}
-			}*/
 
         glEnd();
-		
 	}
     
     for(plf::colony<edgeLineShape>::iterator lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); ++lineIterator)
@@ -2939,6 +2914,8 @@ void modelDefinition::onMouseMove(wxMouseEvent &event)
     
 	_mouseXPixel = event.GetX();
 	_mouseYPixel = event.GetY();
+	
+	this->SetFocus();
     
     if(event.ButtonIsDown(wxMOUSE_BTN_MIDDLE))
     {
@@ -3023,6 +3000,8 @@ void modelDefinition::onMouseLeftDown(wxMouseEvent &event)
 {
     wxGLCanvas::SetCurrent(*_geometryContext);
     bool createArc = false;
+	
+//	this->SetFocus();
     
     if(!_doZoomWindow && !_doMirrorLine)
     {    
@@ -3864,4 +3843,5 @@ wxBEGIN_EVENT_TABLE(modelDefinition, wxGLCanvas)
     EVT_LEFT_UP(modelDefinition::onMouseLeftUp)
     EVT_RIGHT_DOWN(modelDefinition::onMouseRightDown)
     EVT_RIGHT_UP(modelDefinition::onMouseRightUp)
+	EVT_KEY_DOWN(modelDefinition::onKeyDown)
 wxEND_EVENT_TABLE()
