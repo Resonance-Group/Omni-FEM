@@ -37,8 +37,10 @@ private:
 	//! The list of edges that make up the polygon
 	std::vector<edgeLineShape*> p_closedPath;
 	
+	//! Vector of simplified edges representing the polygon. This is used in the winding number algorithm 
 	std::vector<simplifiedEdge> p_simplifiedPath;
 	
+	//! If the polygon has any arcs, then this vector will contain all of the boxes that encase each arc. This is used in the PIP algorithm
 	std::vector<arcPolygon> p_arcPolygons;
 	
 	//! This is the center of the polygon computing by taking the average of all of the centers of the edges
@@ -58,6 +60,7 @@ private:
 	
 	bool p_holesFound = false;
 	
+	//! Boolean that is used to indicate if the orientation of the polygon is CCW (false) or CW (true). Used in the PIP algorithm
 	bool p_reverseWindingResult = false;
 	
 	/**
@@ -94,87 +97,7 @@ private:
 	 * @param edgeList The list of edges to create a new polygon from
 	 * @return Returns a new polygon from the edgeList that is either in the CCW or CW orientation
 	 */
-	closedPath getClosedContour(std::vector<edgeLineShape*> edgeList)
-	{
-		closedPath newPath;
-		bool isFinished = false;
-		
-		// Find the first edge that is not yet used
-		for(auto edgeIterator = edgeList.begin(); edgeIterator != edgeList.end(); edgeIterator++)
-		{
-			if(!(*edgeIterator)->getVisitedStatus())
-			{
-				newPath = closedPath(*edgeIterator);
-				break;
-			}
-		}
-		
-		
-		while(!isFinished)
-		{
-			if(newPath.getClosedPath()->size() > 1)
-			{
-				for(auto edgeIterator = edgeList.begin(); edgeIterator != edgeList.end(); edgeIterator++)
-				{
-					edgeLineShape *previouseAddedSegment = *(++newPath.getClosedPath()->rbegin());
-					node *nodeToTest = nullptr;
-					
-					if(*(*edgeIterator) == *newPath.getClosedPath()->back() || *(*edgeIterator) == *previouseAddedSegment)
-					{
-						auto backValue = *edgeList.back();
-						bool result = *(*edgeIterator) == *edgeList.back();
-						if(result)
-							isFinished = true;
-							
-						continue;
-					}
-					
-					// If the first node of the recently added line is connected to the previousely added segment, then we need to test
-					// on the second node.
-					// Otherwise, go ahead and test on the first node
-					if(*newPath.getClosedPath()->back()->getFirstNode() == *previouseAddedSegment->getFirstNode() || *newPath.getClosedPath()->back()->getFirstNode() == *previouseAddedSegment->getSecondNode())
-						nodeToTest = newPath.getClosedPath()->back()->getSecondNode();
-					else
-						nodeToTest = newPath.getClosedPath()->back()->getFirstNode();
-					
-					if(*nodeToTest == *(*newPath.getClosedPath()->begin())->getFirstNode() || *nodeToTest == *(*newPath.getClosedPath()->begin())->getSecondNode())
-					{
-						isFinished = true;
-						break;
-					}
-					else if(*nodeToTest == *(*edgeIterator)->getFirstNode() || *nodeToTest == *(*edgeIterator)->getSecondNode())
-					{
-						newPath.addEdgeToPath(*edgeIterator);
-						break;
-					}
-				}
-			}
-			else if(newPath.getClosedPath()->size() == 1)
-			{
-				for(auto edgeIterator = edgeList.begin(); edgeIterator != edgeList.end(); edgeIterator++)
-				{
-					if(*(*edgeIterator) == *newPath.getClosedPath()->at(0) || (*edgeIterator)->getVisitedStatus())
-						continue;
-					
-					if(*newPath.getClosedPath()->at(0)->getFirstNode() == *(*edgeIterator)->getFirstNode() || *newPath.getClosedPath()->at(0)->getFirstNode() == *(*edgeIterator)->getSecondNode())
-					{
-						newPath.addEdgeToPath(*edgeIterator);
-						break;
-					}
-				}
-			}
-			else
-			{
-				// THis means there was an error and we need to avoid an infinite loop
-				isFinished = true;
-				break;
-			}
-		}
-		
-		return newPath;
-	}
-	
-	
+	closedPath getClosedContour(std::vector<edgeLineShape*> edgeList);
 
 public:
 
@@ -183,6 +106,10 @@ public:
 		return sedge.getDeleteState();
 	}
 
+	/**
+	 * @brief Constructor that is called in order to add the first edge to the closedPath
+	 * @param firstEdge Reference to the first edge to add in
+	 */
 	closedPath(edgeLineShape &firstEdge)
 	{
 		p_closedPath.push_back(&firstEdge);
@@ -199,6 +126,10 @@ public:
 		p_vertexList.insert(std::pair<node*, int>(firstEdge.getSecondNode(), 1));
 	}
 	
+	/**
+	 * @brief Constructor that is called in order to add the first edge to the closedPath
+	 * @param firstEdge Pointer to the first edge to add in
+	 */
 	closedPath(edgeLineShape *firstEdge)
 	{
 		p_closedPath.push_back(firstEdge);
@@ -215,6 +146,9 @@ public:
 		p_vertexList.insert(std::pair<node*, int>(firstEdge->getSecondNode(), 1));
 	}
 	
+	/**
+	 * @brief An empty construtor for convience
+	 */
 	closedPath()
 	{
 		
@@ -248,7 +182,7 @@ public:
 	}
 	
 	/**
-	 * @brief Adds a edge to the list of edges. This function will also increase the perimeter, change the bounding box,
+	 * @brief Adds an edge to the closedPath. This function will also increase the perimeter, change the bounding box,
 	 * 			change the center of the polygon, and add to the list of vertices
 	 * @param addEdge The edge to be added. This is by reference only
 	 */
@@ -289,7 +223,7 @@ public:
 	}
 	
 	/**
-	 * @brief Adds a edge to the list of edges. This function will also increase the perimeter, change the bounding box,
+	 * @brief Adds an edge to the closedPath. This function will also increase the perimeter, change the bounding box,
 	 * 			change the center of the polygon, and add to the list of vertices
 	 * @param addEdge The edge to be added. This is by pointer only
 	 */
@@ -481,144 +415,7 @@ public:
 	 * 			If two holes share a common edge, then a new hole will be created that removes the common edge and
 	 * 			combines the two holes. This algorithm will loop through until no two holes share a common edge.
 	 */
-	void combineHoles()
-	{
-		bool isFinished = false;
-		
-		while(!isFinished)
-		{
-			bool newHoleCreated = false;
-			for(auto firstHoleIterator = p_holes.begin(); firstHoleIterator != --(p_holes.end()); firstHoleIterator++)
-			{
-				std::vector<edgeLineShape*> commonEdgeList;// This list here is used to indicate which edges are common to the two holes
-				
-				for(auto secondHoleIterator = firstHoleIterator + 1; secondHoleIterator != p_holes.end(); secondHoleIterator++)
-				{
-					if(shareCommonEdge(*firstHoleIterator, *secondHoleIterator, commonEdgeList))
-					{
-						// First we must generate a list of all of the edges that are not the common edge
-						std::vector<edgeLineShape*> newHoleEdgeList;
-						closedPath newHole;
-						
-						// First, store all edges that are not the common edge from the first hole
-						for(auto edgeIterator = firstHoleIterator->getClosedPath()->begin(); edgeIterator != firstHoleIterator->getClosedPath()->end(); edgeIterator++)
-						{
-							bool isCommonEdge = false;
-							
-							for(auto holeEdgeIterator = commonEdgeList.begin(); holeEdgeIterator != commonEdgeList.end(); holeEdgeIterator++)
-							{
-								if(*(*edgeIterator) == *(*holeEdgeIterator))
-								{
-									isCommonEdge = true;
-									break;
-								}
-							}
-							
-							if(!isCommonEdge)
-								newHoleEdgeList.push_back(*edgeIterator);
-						}
-						
-						// Then store all edges that are not the common edge from the second hole
-						for(auto edgeIterator = secondHoleIterator->getClosedPath()->begin(); edgeIterator != secondHoleIterator->getClosedPath()->end(); edgeIterator++)
-						{
-							bool isCommonEdge = false;
-							
-							for(auto holeEdgeIterator = commonEdgeList.begin(); holeEdgeIterator != commonEdgeList.end(); holeEdgeIterator++)
-							{
-								if(*(*edgeIterator) == *(*holeEdgeIterator))
-								{
-									isCommonEdge = true;
-									break;
-								}
-							}
-							
-							if(!isCommonEdge)
-								newHoleEdgeList.push_back(*edgeIterator);
-						}
-						
-						for(auto newHoleEdgeIterator = newHoleEdgeList.begin(); newHoleEdgeIterator != newHoleEdgeList.end(); newHoleEdgeIterator++)
-						{
-							/* We must set the visited state to false for this portion of the code 
-							 * Later, it will be set back to true once the algorithm is done
-							 */ 
-							(*newHoleEdgeIterator)->setVisitedStatus(false);
-						}
-						
-						if(commonEdgeList.size() > 1)
-						{
-							/* This is the case that would pertain to if two holes form a circular pattern
-							 * then we are left with 2 paths. One of the two paths will have a greater distance then the other.
-							 * THe path with the greatest distance would be the outside path and thus the outer hole.
-							 * In this case, the algorithm would need to choose the outer path as the hole.
-							 * In the case where two holes contain 2 or more common edges, this path will still work
-							 * since at the end of the loop, numberOfCompletedEdges == size of the new hole edge list
-							 */ 
-							unsigned int numberOfCompletedEdges = 0;
-							
-							while(numberOfCompletedEdges < newHoleEdgeList.size())
-							{
-								closedPath tempHole = getClosedContour(newHoleEdgeList);
-								
-								for(auto edgeIterator = tempHole.getClosedPath()->begin(); edgeIterator != tempHole.getClosedPath()->end(); edgeIterator++)
-								{
-									if(!(*edgeIterator)->getVisitedStatus())
-									{
-										(*edgeIterator)->setVisitedStatus(true);
-										numberOfCompletedEdges++;
-									}
-								}
-								
-								if(newHole.getClosedPath()->size() == 0 || tempHole.getDistance() > newHole.getDistance())
-									newHole = tempHole;
-							}
-						}
-						else if(commonEdgeList.size() == 1)
-						{
-							newHole = getClosedContour(newHoleEdgeList);
-							
-							for(auto edgeIterator = newHole.getClosedPath()->begin(); edgeIterator !=  newHole.getClosedPath()->end(); edgeIterator++)
-							{
-								(*edgeIterator)->setVisitedStatus(true);
-							}
-						}
-						
-						unsigned int firstHoleDistance = std::distance(p_holes.begin(), firstHoleIterator);
-						unsigned int secondHoleDistance = std::distance(p_holes.begin(), secondHoleIterator);
-						auto lastIterator = --(p_holes.end());
-						
-						if(secondHoleIterator == lastIterator)
-						{
-							p_holes.erase(lastIterator);
-							
-							p_holes.at(firstHoleDistance) = p_holes.back();
-							p_holes.pop_back();
-						}
-						else
-						{
-							p_holes.at(firstHoleDistance) = p_holes.back();
-							p_holes.pop_back();
-						
-							p_holes.at(secondHoleDistance) = p_holes.back();
-							p_holes.pop_back();
-						}
-						
-						p_holes.push_back(newHole);
-						
-						newHoleCreated = true;
-					}
-					
-					if(newHoleCreated)
-						break;
-				}
-				
-				if(newHoleCreated)
-					break;
-			}
-			
-			if(!newHoleCreated)
-				isFinished = true;
-		}
-	}
+	void combineHoles();
 	
 	/**
 	 * @brief Retrieves teh found holes state
@@ -663,150 +460,14 @@ public:
 	 * 			closed path. The current version of this algorithm does not use arc sin or cos. But instead checks to see
 	 * 			if the point is to the left or right of an edge within the closed path. If teh number of times that the point
 	 * 			is to the left of the edges is greater then the number of rights, then this means that the point lies withing the
-	 * 			closed path.
-	 * @param label The rectangle shape that the algorithm will be checking to see if it lies within the closed path
-	 * @param path The closed path to check if point exists inside of
-	 * @return Returns true if the point lies within the closed path. Otherwise, returns false.
+	 * 			closed path. Note that in this algorithm arcs are represented by a box that encases the arc. If the point is found
+	 * 			to exist in this box, then a test will be performed to see which side the point lies on the arc which will determine
+	 * 			if the the arc is inside or outside of the polygon.
+	 * @param point The point that will be tested to see if it exists inside of the polygon
+	 * @return Returns true if the point lies within the closed path. Otherwise, returns false. If the point lies on an edge
+	 * 			of the polygon, then this function will return true.
 	 */
-	bool pointInContour(wxRealPoint point)
-	{
-		return pointInContourNew(point);
-
-		/*int windingNumber = 0;
-		bool isFirstRun = true;
-		bool reverseWindingResult = false;
-		
-		double additionTerms = 0;
-		double subtractionTerms = 0;
-		
-		// First, the algorithm will need to ensure that all of the lines are oriented in either CCW or CW.
-		// Each contour, the order of the lines is CCW or CW but the order of the nodes is different.
-		// For example, the start node of the 1st line could be "connected" to the end node of the next line.
-		// In which case, we need to swap the nodes of the 1st line.
-		
-		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
-		{
-			auto nextLineIterator = lineIterator + 1;
-			
-			if(nextLineIterator == p_closedPath.end())
-				nextLineIterator = p_closedPath.begin();
-			
-			if(isFirstRun)
-			{
-				if(*(*lineIterator)->getSecondNode() != *(*nextLineIterator)->getFirstNode())
-				{
-					if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getFirstNode())
-						(*lineIterator)->swap();
-					else if(*(*lineIterator)->getFirstNode() == *(*nextLineIterator)->getSecondNode())
-					{
-						(*lineIterator)->swap();
-						(*nextLineIterator)->swap();
-					}
-					else if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
-						(*nextLineIterator)->swap();
-				}
-				
-				isFirstRun = false;
-			}
-			else
-			{
-				if(*(*lineIterator)->getSecondNode() == *(*nextLineIterator)->getSecondNode())
-					(*nextLineIterator)->swap();
-			}
-			
-			/* 
-			 * This is the actual shoelace algorithm that is implemented. In short, we have two terms, addition terms
-			 * and subtraction terms. THe addition terms are the summation of the Xpoint of the first node multiplied by
-			 * the Ypoint of the second node for all edges (arcs are a special case)
-			 * 
-			 * The subtraction term is the summation of the Xpoint of the second node multiplied by the
-			 * Ypoint of the first node (arcs are a special case)
-			  
-			if((*lineIterator)->isArc())
-			{
-				/* This algorithm is not being used to accurately determine the arc within a closed contour
-				 * with that said, we only need to approximately determine the area. For arcs, we shall draw
-				 * a line from the first node to the mid point and then from the mid point to the second node.
-				 * We will use these two lines as the calculation for the shoelace algorithm.
-				  
-				additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
-				subtractionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
-				
-				additionTerms += ((*lineIterator)->getMidPoint().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
-				subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getMidPoint().y);
-			}
-			else
-			{
-				additionTerms += ((*lineIterator)->getFirstNode()->getCenter().x) * ((*lineIterator)->getSecondNode()->getCenter().y);
-				subtractionTerms += ((*lineIterator)->getSecondNode()->getCenter().x) * ((*lineIterator)->getFirstNode()->getCenter().y);
-			}
-		}
-		
-		// Next, we need to run the shoe-lace algorithm to determine if the ordering is CCW or CW. If CW, then we will need to swap
-		// the start node and end node of all of the edges in order to ensure the polygon edge is in CCW
-		double shoelaceResult = additionTerms - subtractionTerms;
-		
-		if(shoelaceResult < 0)
-			reverseWindingResult = true;
-		
-		// Now we can perform the winding number algorithm
-		for(auto lineIterator = p_closedPath.begin(); lineIterator != p_closedPath.end(); lineIterator++)
-		{
-		
-			if((*lineIterator)->isArc() && (*lineIterator)->getSwappedState())
-				(*lineIterator)->swap();
-				
-			double isLeftResult = (*lineIterator)->isLeft(point);
-				
-			if(!(*lineIterator)->isArc())
-			{
-				if(reverseWindingResult)
-					isLeftResult *= -1;
-				
-				if((*lineIterator)->getFirstNode()->getCenterYCoordinate() <= point.y)
-				{
-					if((*lineIterator)->getSecondNode()->getCenterYCoordinate() > point.y)
-					{
-						if(isLeftResult > 0)
-							windingNumber++;
-						else if(isLeftResult < 0)
-							windingNumber--;
-					}
-				}
-				else if((*lineIterator)->getSecondNode()->getCenterYCoordinate() <= point.y)
-				{
-					if(isLeftResult < 0)
-						windingNumber--;
-					else if(isLeftResult > 0)
-						windingNumber++;
-				}
-				
-			}
-			else
-			{
-				if((*lineIterator)->getSwappedState())
-				{
-					isLeftResult *= -1;
-					// For arcs, we need to preserve the orientation of the first and second
-					// node for drawing purposes. Lines do not matter as much for drawing but arcs,
-					// it matters
-					(*lineIterator)->swap();
-				}
-				
-				if(isLeftResult > 0)
-					windingNumber++;
-				else
-					windingNumber--;
-			}
-		}
-		
-		if(windingNumber > 0)
-			return true;
-		else
-			return false;*/
-	}
-	
-	bool pointInContourNew(wxRealPoint point);
+	bool pointInContour(wxRealPoint point);
 	
 	/**
 	 * @brief Function that is called that will determine if this polygon is inside of another polygon
