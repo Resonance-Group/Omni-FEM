@@ -2,7 +2,7 @@
 
 
 
-closedPath closedPath::getClosedPath(std::vector<edgeLineShape*> edgeList)
+closedPath closedPath::getClosedContour(std::vector<edgeLineShape*> edgeList)
 {
 	closedPath newPath;
 	bool isFinished = false;

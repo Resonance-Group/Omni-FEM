@@ -305,6 +305,10 @@ void OmniFEMMainFrame::createModelDefiningClient()
     this->SetSizerAndFit(topSizer);
 
     _UIState = systemState::MODEL_DEFINING;
+	
+	if(_model->getGridPreferences()->getCoordinateSystem() == planarCoordinateEnum::NO_COORDINATE_DEFINED)
+		_model->getGridPreferences()->setCoordinateSystem(planarCoordinateEnum::CARTESIAN);
+	
 	_model->Refresh();
 	_model->Update();
 	this->Update();

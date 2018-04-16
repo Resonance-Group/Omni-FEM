@@ -98,16 +98,29 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     gridSizeStream << _preferences->getGridStep();
     
     gridSettingLine1->Add(gridText, 0, wxCENTER | wxALL, 6);
-    gridSettingLine1->Add(12, 0, 0);
+    gridSettingLine1->Add(18, 0, 0);
     gridSettingLine1->Add(_gridStepTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxTOP, 6);
     
     wxStaticText *coordianteText = new wxStaticText(gridSettingPanel, wxID_ANY, "Coordinate:");
     coordianteText->SetFont(*font);
     _coordinateComboBox->Create(gridSettingPanel, wxID_ANY, wxEmptyString, wxPoint(79, 64), wxSize(121, 21), coordianteNameArray);
     _coordinateComboBox->SetFont(*font);
-    _coordinateComboBox->SetSelection((int)_preferences->getCoordinateSystem());
-    
+	
+	switch(_preferences->getCoordinateSystem())
+	{
+		case planarCoordinateEnum::CARTESIAN:
+			 _coordinateComboBox->SetSelection(0);
+			 break;
+		case planarCoordinateEnum::POLAR:
+			_coordinateComboBox->SetSelection(1);
+			 break;
+		default:
+			_coordinateComboBox->SetSelection(0);
+			 break;
+	}
+	
     gridSettingLine2->Add(coordianteText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	gridSettingLine2->Add(9, 0, 0);
     gridSettingLine2->Add(_coordinateComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showGridCheckBox->Create(gridSettingPanel, wxID_ANY, "Show Grid");
@@ -118,6 +131,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _showOriginCheckBox->SetValue(_preferences->getShowOriginState());
     
     gridSettingLine3->Add(_showGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+	gridSettingLine3->Add(20, 0, 0);
     gridSettingLine3->Add(_showOriginCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _snapGridCheckBox->Create(gridSettingPanel, wxID_ANY, "Snap Grid");
@@ -128,6 +142,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _showGridAxisCheckBox->SetValue(_preferences->getShowAxisState());
     
     gridSettingLine4->Add(_snapGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+	gridSettingLine4->Add(20, 0, 0);
     gridSettingLine4->Add(_showGridAxisCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showBlockNameCheckBox->Create(gridSettingPanel, wxID_ANY, "Show Block Names");
@@ -142,13 +157,25 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     
     gridSettingLine6->Add(_reverseMouseZoomCheckBox, 0, wxCENTER | wxRIGHT | wxLEFT | wxBOTTOM, 6);
     
-    gridSettingsSizer->Add(gridSettingLine1);
-    gridSettingsSizer->Add(gridSettingLine2);
-    gridSettingsSizer->Add(0, 10, 0);
-    gridSettingsSizer->Add(gridSettingLine3);
-    gridSettingsSizer->Add(gridSettingLine4);
-    gridSettingsSizer->Add(gridSettingLine5);
-    gridSettingsSizer->Add(gridSettingLine6);
+	wxBoxSizer *temp = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *settingSizer = new wxBoxSizer(wxVERTICAL);
+	
+	gridSettingsSizer->Add(0, 30, 0);
+    gridSettingsSizer->Add(gridSettingLine1, 0, wxLEFT, 35);
+	gridSettingsSizer->Add(0, 10, 0);
+    gridSettingsSizer->Add(gridSettingLine2, 0, wxLEFT, 33);
+    gridSettingsSizer->Add(0, 30, 0);
+	
+	settingSizer->Add(gridSettingLine3);
+    settingSizer->Add(gridSettingLine4);
+    settingSizer->Add(gridSettingLine5);
+    settingSizer->Add(gridSettingLine6);
+	
+	temp->Add(30, 0, 0);
+	temp->Add(settingSizer);
+	
+	gridSettingsSizer->Add(temp);
+
     
     /* This next section is for the preferences related to the settings */
     wxStaticText *probTypeText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Problem Type:");
@@ -167,28 +194,31 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     documentSettingLine2->Add(23, 0, 0);
     documentSettingLine2->Add(_lengthComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
-    if(_problem == physicProblems::PROB_MAGNETICS)
-    {
-        wxStaticText *acSolverText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "AC Solver:");
-        acSolverText->SetFont(*font);
-        _acSolverComboBox->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), acSovlerNameArray);
-        _acSolverComboBox->SetFont(*font);
-        _acSolverComboBox->SetSelection((int)_magneticPreference.getACSolver());
-        documentSettingLine3->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-        documentSettingLine3->Add(41, 0, 0);
-        documentSettingLine3->Add(_acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	wxStaticText *acSolverText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "AC Solver:");
+	acSolverText->SetFont(*font);
+	_acSolverComboBox->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), acSovlerNameArray);
+	_acSolverComboBox->SetFont(*font);
+	_acSolverComboBox->SetSelection((int)_magneticPreference.getACSolver());
+	documentSettingLine3->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
+	documentSettingLine3->Add(41, 0, 0);
+	documentSettingLine3->Add(_acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 
-        wxStaticText *freqText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Frequency (Hz):");
-        freqText->SetFont(*font);
-        _frequencyTextCtrl->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
-        std::ostream freqStream(_frequencyTextCtrl);
-        freqStream << std::setprecision(3);
-        freqStream << _magneticPreference.getFrequency();
-        _frequencyTextCtrl->SetFont(*font);
-        documentSettingLine4->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-        documentSettingLine4->Add(11, 0, 0);
-        documentSettingLine4->Add(_frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    }
+	wxStaticText *freqText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Frequency (Hz):");
+	freqText->SetFont(*font);
+	_frequencyTextCtrl->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
+	std::ostream freqStream(_frequencyTextCtrl);
+	freqStream << std::setprecision(3);
+	freqStream << _magneticPreference.getFrequency();
+	_frequencyTextCtrl->SetFont(*font);
+	documentSettingLine4->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
+	documentSettingLine4->Add(11, 0, 0);
+	documentSettingLine4->Add(_frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	if(_problem != physicProblems::PROB_MAGNETICS)
+    {
+		_acSolverComboBox->Enable(false);
+		_frequencyTextCtrl->Enable(false);
+	}
    
     wxStaticText *depthText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Depth:");
     depthText->SetFont(*font);
@@ -222,19 +252,16 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     
     wxStaticBoxSizer *commentSizer = new wxStaticBoxSizer(wxVERTICAL, physicsProblemPreferencesPanel, "Comments");
     commentSizer->GetStaticBox()->SetFont(*font);
-    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(192, 87), wxTE_MULTILINE);
+    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(250, 87), wxTE_MULTILINE);
     _commentsTextCtrl->SetFont(*font);
     commentSizer->Add(_commentsTextCtrl, 0, wxALL, 6);
 
     documentSettingsSizer->Add(documentSettingLine1);
     documentSettingsSizer->Add(documentSettingLine2);
     
-    if(_problem == physicProblems::PROB_MAGNETICS)
-    {
-        documentSettingsSizer->Add(documentSettingLine3);
-        documentSettingsSizer->Add(documentSettingLine4);
-    }
-    
+	documentSettingsSizer->Add(documentSettingLine3);
+	documentSettingsSizer->Add(documentSettingLine4);
+
     documentSettingsSizer->Add(documentSettingLine5);
     documentSettingsSizer->Add(documentSettingLine6);
     documentSettingsSizer->Add(documentSettingLine7);
@@ -358,7 +385,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxStaticText *meshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Algorithm:");
 	meshAlgoText->SetFont(*font);
 	
-	p_meshAlgothimComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox4, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshAlgorthimArray);
+	p_meshAlgothimComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox4, wxEmptyString, wxDefaultPosition, wxSize(112, 27), meshAlgorthimArray);
 	p_meshAlgothimComboBox->SetFont(*font);
 	
 	switch(p_meshSetting.getMeshAlgorithm())
@@ -382,12 +409,13 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	meshAlgoSizer->Add(meshAlgoText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	meshAlgoSizer->Add(89, 0, 0);
 	meshAlgoSizer->Add(p_meshAlgothimComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *meshRecombinationText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Recombination Algorithm:");
 	meshRecombinationText->SetFont(*font);
 	
-	p_meshRecombinationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox5, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshRecombinationArray);
+	p_meshRecombinationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox5, wxEmptyString, wxDefaultPosition, wxSize(112, 27), meshRecombinationArray);
 	p_meshRecombinationComboBox->SetFont(*font);
 	
 	if(!p_meshSetting.getBlossomRecombinationState())
@@ -402,12 +430,13 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	meshRecombinationSizer->Add(meshRecombinationText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	meshRecombinationSizer->Add(3, 0, 0);
 	meshRecombinationSizer->Add(p_meshRecombinationComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *remeshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remeshing Algorithm:");
 	remeshAlgoText->SetFont(*font);
 	
-	p_remeshAlgorithmComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox6, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshingAlgorithmArray);
+	p_remeshAlgorithmComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox6, wxEmptyString, wxDefaultPosition, wxSize(112, 27), remeshingAlgorithmArray);
 	p_remeshAlgorithmComboBox->SetFont(*font);
 	
 	if(!p_meshSetting.getAutoRemeshingState())
@@ -422,12 +451,13 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	reMeshAlgoSizer->Add(remeshAlgoText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	reMeshAlgoSizer->Add(56, 0, 0);
 	reMeshAlgoSizer->Add(p_remeshAlgorithmComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *remeshParamText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remeshing Parameterization:");
 	remeshParamText->SetFont(*font);
 	
-	p_remeshParamterizationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox7, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshParameterizationArray);
+	p_remeshParamterizationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox7, wxEmptyString, wxDefaultPosition, wxSize(112, 27), remeshParameterizationArray);
 	p_remeshParamterizationComboBox->SetFont(*font);
 	
 	switch(p_meshSetting.getRemeshParameter())
@@ -447,6 +477,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	reMeshParamSizer->Add(remeshParamText, 0, wxCENTER | wxLEFT | wxBOTTOM | wxRIGHT, 6);
+	reMeshParamSizer->Add(15, 0, 0);
 	reMeshParamSizer->Add(p_remeshParamterizationComboBox, 0, wxRIGHT | wxBOTTOM, 6);
 	
 	wxStaticText *smootherText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Smoothing Steps:");
@@ -463,6 +494,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	OmniFEMMsg::instance()->MsgInfo("Set smoother steps to " + std::to_string(p_meshSetting.getSmoothingSteps()) + " steps");
 	
 	smootherSizer->Add(smootherText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	smootherSizer->Add(78, 0, 0);
 	smootherSizer->Add(p_smoothingStepsTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticBoxSizer *elementSizeSizer = new wxStaticBoxSizer(wxHORIZONTAL, meshSettingsPanel, "Element Size Settings");
@@ -473,7 +505,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxStaticText *maxText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Max:");
 	maxText->SetFont(*font);
 	
-	wxSize aSize(60, 23);
+	wxSize aSize(80, 23);
 	
 	p_minElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
 	p_minElementSizeTextCtrl->SetFont(*font);
@@ -500,6 +532,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	
 	elementSizeSizer->Add(minText, 0, wxCENTER | wxALL, 6);
 	elementSizeSizer->Add(p_minElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	elementSizeSizer->Add(50, 0, 0);
 	elementSizeSizer->Add(maxText, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
 	elementSizeSizer->Add(p_maxElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	
@@ -530,7 +563,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	
 //	meshSettingsSizer->Add(stucturedMeshSizer);
 //	meshSettingsSizer->Add(meshArrangmentSizer);
-	meshSettingsSizer->Add(meshAlgoSizer);
+	meshSettingsSizer->Add(meshAlgoSizer, 0, wxTOP, 6);
 	meshSettingsSizer->Add(meshRecombinationSizer);
 	meshSettingsSizer->Add(reMeshAlgoSizer);
 	meshSettingsSizer->Add(reMeshParamSizer);
@@ -747,7 +780,7 @@ void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPr
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
     _preferences->setGridStep(value);
-    _preferences->setCoordinateSystem((planarCoordinateEnum)_coordinateComboBox->GetSelection());
+    _preferences->setCoordinateSystem((planarCoordinateEnum)(_coordinateComboBox->GetSelection() + 1));
     _preferences->setShowGridState(_showGridCheckBox->GetValue());
     _preferences->setShowOriginState(_showOriginCheckBox->GetValue());
     _preferences->setSnapGridState(_snapGridCheckBox->GetValue());
@@ -800,7 +833,7 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, m
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
     _preferences->setGridStep(value);
-    _preferences->setCoordinateSystem((planarCoordinateEnum)_coordinateComboBox->GetSelection());
+    _preferences->setCoordinateSystem((planarCoordinateEnum)(_coordinateComboBox->GetSelection() + 1));
     _preferences->setShowGridState(_showGridCheckBox->GetValue());
     _preferences->setShowOriginState(_showOriginCheckBox->GetValue());
     _preferences->setSnapGridState(_snapGridCheckBox->GetValue());

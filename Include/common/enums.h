@@ -8,6 +8,7 @@
     The enum ranges from extremely fine to extremely coarse.
     There is also an option for a custom mesh size
 */ 
+//class planarCoordinateEnum;
 enum meshSize
 {
     MESH_NONE_,/*!< Value to indicate that there is no mesh size for the designated area */
@@ -251,9 +252,9 @@ enum unitLengthEnum
     the point (1,1) in cartesian is in the same location as the polar form.
     The difference will arise when the user simulates the problem
 */ 
-enum planarCoordinateEnum
+enum class planarCoordinateEnum
 {
-    NO_COORDINATE_DEFINED,/*!< Default value for the enum */
+    NO_COORDINATE_DEFINED = 0,/*!< Default value for the enum */
     CARTESIAN,/*!< Value used to indicate that the user is working in the cartesian plane */
     POLAR/*!< value used to indicate that the user is working with polar coordinates */
 };
