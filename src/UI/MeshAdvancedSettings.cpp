@@ -38,6 +38,7 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_passesTextCtrl->SetFont(font);
 	
 	multiplePassesSizer->Add(passesText, 0, wxCENTER | wxALL, 6);
+	multiplePassesSizer->Add(47, 0, 0);
 	multiplePassesSizer->Add(p_passesTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT , 6);
 	
 	wxStaticText *llyodSmoothingStepsText = new wxStaticText(this, wxID_ANY, "Llyod Smoothing Steps: ");
@@ -47,6 +48,7 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_llyodTextCtrl->SetFont(font);
 	
 	smoothingSizer->Add(llyodSmoothingStepsText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	smoothingSizer->Add(20, 0, 0);
 	smoothingSizer->Add(p_llyodTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *factorText = new wxStaticText(this, wxID_ANY, "Mesh Size Factor: ");
@@ -56,13 +58,10 @@ meshAdvanced::meshAdvanced(wxWindow *par, meshSettings &settings) : wxDialog(par
 	p_factorTextCtrl->SetValue(std::to_string(p_meshSettings->getElementSizeFactor()));
 	p_factorTextCtrl->SetFont(font);
 	
-	/*	std::ostream factorStream(p_elementSizeFactorTextCtrl);0
-	factorStream << std::setprecision(4);
-	factorStream << p_meshSetting.getElementSizeFactor();
-	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSetting.getElementSizeFactor()));
-	 */ 
+	OmniFEMMsg::instance()->MsgInfo("Loading mesh size factor as " + std::to_string(p_meshSettings->getElementSizeFactor()));
 	
 	meshFactorSizer->Add(factorText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	meshFactorSizer->Add(54, 0, 0);
 	meshFactorSizer->Add(p_factorTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	p_meshFileDirectory->Create(meshFormatsSizer->GetStaticBox(), wxID_APPLY, p_meshSettings->getDirString(), wxDefaultPosition, wxSize(275, 23), wxTE_PROCESS_ENTER);

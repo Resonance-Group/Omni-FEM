@@ -139,15 +139,15 @@ private:
     */
     wxTextCtrl *_frequencyTextCtrl = new wxTextCtrl();
 	
+	//! The text control box that handles the smoothing steps for the mesh
 	wxTextCtrl *p_smoothingStepsTextCtrl = new wxTextCtrl();
 	
-	wxTextCtrl *p_elementSizeFactorTextCtrl = new wxTextCtrl();
-	
+	//! Text control that handles settings the smallest allowable mesh size
 	wxTextCtrl *p_minElementSizeTextCtrl = new wxTextCtrl();
 	
+	//! Text control that handles settings the largest allowable mesh size
 	wxTextCtrl *p_maxElementSizeTextCtrl = new wxTextCtrl();
-	
-	wxTextCtrl *p_ElementOrderTextCtrl = new wxTextCtrl();
+
 	
     //! Combo box used to select the AC solver of the problem
     /*!
@@ -177,17 +177,20 @@ private:
     */ 
     wxComboBox *_coordinateComboBox = new wxComboBox();
 	
-	wxComboBox *p_structuredComboBox = new wxComboBox();
-	
-	wxComboBox *p_meshArrangementComboBox = new wxComboBox();
-	
+	//! Combox that is used to select the mesh algorithm used to calculate the mesh
 	wxComboBox *p_meshAlgothimComboBox = new wxComboBox();
 	
+	//! Combobox used to select the recombination algorithm GMSH uses
 	wxComboBox *p_meshRecombinationComboBox = new wxComboBox();
 	
+	//! Combobox used to select the remesh-algorithm GMSH uses
 	wxComboBox *p_remeshAlgorithmComboBox = new wxComboBox();
 	
+	//! Combobox used to select the remesh parameterization GMSH uses
 	wxComboBox *p_remeshParamterizationComboBox = new wxComboBox();
+	
+	//! Combobox used to select the mesh order GMSH will use to create the mesh
+	wxComboBox *p_elementOrderComboBox = new wxComboBox();
     
     //! Check box used to toggle the show grid state
     /*!
@@ -257,20 +260,51 @@ private:
     */
     void onProblemTypeComboBox(wxCommandEvent &event);
 	
-	void onMeshStructureComboBox(wxCommandEvent &event);
-	
-	void onMeshArrangemesntComboBox(wxCommandEvent &event);
-	
+	/**
+	 * @brief Event procedure that is called when the user changes the selection
+	 * 			in the mesh algorithm combo box. This is mainly used to print debug information
+	 * 			for logging.
+	 * @param event Required arguement for event procedure functionality
+	 */
 	void onMeshAlgoComboBox(wxCommandEvent &event);
 	
+	/**
+	 * @brief Event procedure that is called when the user changes the selection in the
+	 * 			mesh recombination combo box. This is mainly used to print debug information
+	 * 			for logging.
+	 * @param event Required arguement for event procedure functionality
+	 */
 	void onMeshRecombinationComboBox(wxCommandEvent &event);
 	
+	/**
+	 * @brief Event procedure that is called when the user changes the selection in the
+	 * 			remeshing algorithm combo box. This is mainly used to print debug information
+	 * 			for logging.
+	 * @param event Required arguement for event procedure functionality
+	 */
 	void onRemeshAlgo(wxCommandEvent &event);
 	
+	/**
+	 * @brief Event procedure that is called when the user changes the selection in the
+	 * 			remesing parameterization combo box. This is mainly used to print debug information
+	 * 			for logging.
+	 * @param event Required arguement for event procedure functionality
+	 */
 	void onRemeshParam(wxCommandEvent &event);
 	
+	/**
+	 * @brief Event procedure that is called when the user presses the reset button. This
+	 * 			is used in the event that the user would like to load back the default settings
+	 * @param event Required arguement for event procedure functionality
+	 */
 	void onMeshDefaultsReset(wxCommandEvent &event);
 	
+	/**
+	 * @brief Event procedure that is fired when the user presses the advanced button in the mesh
+	 * 			settings panel. THis will bring up another dialog with additional settings for 
+	 * 			the user to select or edit
+	 * @param event Required arguement for event procedure functionality
+	 */
 	void onMeshAdvance(wxCommandEvent &event);
     
 	void onTextChange(wxCommandEvent &event);

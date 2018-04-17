@@ -12,7 +12,20 @@
 #include <wx/dirdlg.h>
 
 #include <common/MeshSettings.h>
+#include <common/OmniFEMMessage.h>
 
+
+/**
+ * @class meshAdvanced
+ * @author Phillip
+ * @date 16/04/18
+ * @file MeshAdvancedSettings.h
+ * @brief This class handles all of the additional settings that the user can select or edit that should be
+ * 			more hidden from the the main view. These settings apply directly to the mesh settings. This
+ * 			class handles the selection of the different file formats to save the mesh in, the directory
+ * 			location of the mesh saved files, the number of mesh passes, the llyod smoothing steps, and
+ * 			the global mesh size factor setting.
+ */
 class meshAdvanced : public wxDialog
 {
 private:
