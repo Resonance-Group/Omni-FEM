@@ -3,6 +3,7 @@
 
 #include <math.h>
 
+//! Enum that is used to specify the mesh algorithm
 enum MeshAlgorthim
 {
 	MESH_ALGO_AUTOMATIC,
@@ -12,6 +13,7 @@ enum MeshAlgorthim
 };
 
 
+//! Enum that is used to specify the mesh parameterization method
 enum MeshParametrization
 {
 	MESH_PARAM_HARMONIC,
@@ -28,78 +30,121 @@ enum StructuredArrangement
 };
 
 
+/**
+ * @class meshSettings
+ * @author Phillip
+ * @date 17/04/18
+ * @file MeshSettings.h
+ * @brief This is the mesh setting class which contains all of the properties and methods
+ * 			for the mesh settings. This includes which file to save the mesh as, which
+ * 			2D mesh algorithm to use, which mesh parametrization algorithm to use, the smoothing steps
+ * 			the element order, the mesh element size, and more
+ * 			
+ */
 class meshSettings
 {
 private:
 	
+	//! THe directory to save the mesh file to 
 	wxString p_meshSaveLocation = wxEmptyString;
 	
+	//! The path to save the various mesh files to
 	wxString p_meshSavePath = wxString("");
 	
+	//! Boolean to indicate if the mesh should be saved as VTK (true)
 	bool p_saveAsVTK = false;
 	
+	//! Boolean to indicate if the mesh should be saved as BDF (true)
 	bool p_saveAsBDF = false;
 	
+	//! Boolean to indicate if the mesh should be saved as CELUM (true)
 	bool p_saveAsCELUM = false;
 	
+	//! Boolean to indicate if the mesh should be saved as CGNS (true)
 	bool p_saveAsCGNS = false;
 	
+	//! Boolean to indicate if the mesh should be saved as DIFFPACK (true)
 	bool p_saveAsDIFFPACK = false;
 	
+	//! Boolean to indicate if the mesh should be saved as Fourier (true)
 	bool p_saveAsFourier = false;
 	
+	//! Boolean to indicate if the mesh should be saved as Geo (true)
 	bool p_saveAsGEO = false;
 	
+	//! Boolean to indicate if the mesh should be saved as INP (true)
 	bool p_SaveAsINP = false;
 	
+	//! Boolean to indicate if the mesh should be saved as IR3 (true)
 	bool p_saveAsIR3 = false;
 	
+	//! Boolean to indicate if the mesh should be saved as MAIL (true)
 	bool p_saveAsMAIL = false;
 	
+	//! Boolean to indicate if the mesh should be saved as MESH (true)
 	bool p_saveAsMESH = false;
 	
+	//! Boolean to indicate if the mesh should be saved as MSH (true)
 	bool p_saveAsMSH = true;
 	
+	//! Boolean to indicate if the mesh should be saved as P3D (true)
 	bool p_saveAsP3D = false;
 	
+	//! Boolean to indicate if the mesh should be saved as Patitioned Mesh (true)
 	bool p_saveAsPatitionedMesh = false;
 	
+	//! Boolean to indicate if the mesh should be saved as PLY2 (true)
 	bool p_saveAsPLY2 = false;
 	
+	//! Boolean to indicate if the mesh should be saved as STL (true)
 	bool p_saveAsSTL = false;
 	
+	//! Boolean to indicate if the mesh should be saved as SU2 (true)
 	bool p_saveAsSU2 = false;
 	
+	//! Boolean to indicate if the mesh should be saved as Tochnog (true)
 	bool p_saveAsTochnog = false;
 	
+	//! Boolean to indicate if the mesh should be saved as UNV (true)
 	bool p_saveAsUNV = false;
 	
+	//! Boolean to indicate if the mesh should be saved as VRML (true)
 	bool p_saveAsVRML = false;
 
 	bool p_isStructured = false;
 	
 	StructuredArrangement p_faceMeshStructuredArrangment = StructuredArrangement::ARRANGMENT_LEFT;
 	
+	//! Data type to indicate which 2D mesh algorithm to use
 	MeshAlgorthim p_meshingAlgorthim = MeshAlgorthim::MESH_ALGO_AUTOMATIC;
 	
+	//! Boolean used to indicate if GMSH should use the Blossom algorithm when recombining
 	bool p_recombinationBlossom = true;
 	
 	bool p_remeshAuto = false;
 	
+	//! Property used to indicate which remesh parameterization algorithm GMSH should use
 	MeshParametrization p_remeshParam = MeshParametrization::MESH_PARAM_HARMONIC;
 	
+	//! Value used to indicate the number of smoothing steps
 	unsigned char p_smoothingSteps = 1;
 	
+	//! Value used to specify the global mesh size scaling factor
 	double p_elementSizeFactor = 1.0;
 	
+	//! Property used to specify the smallest element size
 	double p_minElementSize = 0.0;
 	
+	//! Property used to specify the largest element size
 	double p_maxElementSize = 1.0 * pow(10, 22);
 	
+	//! Property used to specify the element order of the mesh
 	unsigned int p_elementOrder = 1;
 	
+	//! Property used to specify the number of times GMSH should remesh the geometry
 	unsigned int p_multiplePasses = 1;
 	
+	//! Property used to specify the number of smoothing steps for Blossom algorithm 
 	unsigned int p_llyodSmoothingSteps = 5;
 	
 //---- Section is for structured meshes	
