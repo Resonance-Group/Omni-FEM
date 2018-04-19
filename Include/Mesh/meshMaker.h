@@ -14,24 +14,25 @@
 #include <common/Vector.h>
 #include <common/enums.h>
 #include <common/BoundingBox.h>
-
 #include <common/MeshSettings.h>
-#include <common/ClosedPath.h>
+
 #include <common/ProblemDefinition.h>
 
 #include <common/GeometryProperties/BlockProperty.h>
 
-#include <Mesh/Gmsh.h>
-#include <Mesh/Context.h>
-#include <Mesh/GVertex.h>
-#include <Mesh/GEdge.h>
-#include <Mesh/GFace.h>
-#include <Mesh/GModel.h>
+#include <Mesh/ClosedPath.h>
 
-#include <Mesh/gmshFace.h>
-#include <Mesh/Geo.h>
+#include <Mesh/GMSH/Gmsh.h>
+#include <Mesh/GMSH/Context.h>
+#include <Mesh/GMSH/GVertex.h>
+#include <Mesh/GMSH/GEdge.h>
+#include <Mesh/GMSH/GFace.h>
+#include <Mesh/GMSH/GModel.h>
 
-#include <Mesh/SBoundingBox3d.h>
+#include <Mesh/GMSH/gmshFace.h>
+#include <Mesh/GMSH/Geo.h>
+
+#include <Mesh/GMSH/SBoundingBox3d.h>
 
 
 /**

@@ -4,18 +4,18 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 //#include "GmshConfig.h"
-#include "Mesh/GmshMessage.h"
+#include "Mesh/GMSH/GmshMessage.h"
 #include "Mesh/gmshIO/GModelIO_OCC.h"
-#include "Mesh/Context.h"
-#include "Mesh/OCCVertex.h"
-#include "Mesh/OCCEdge.h"
-#include "Mesh/OCCFace.h"
+#include "Mesh/GMSH/Context.h"
+#include "Mesh/GMSH/OCCVertex.h"
+#include "Mesh/GMSH/OCCEdge.h"
+#include "Mesh/GMSH/OCCFace.h"
 //#include "OCCRegion.h"
-#include "Mesh/MElement.h"
-#include "Mesh/MLine.h"
+#include "Mesh/GMSH/MElement.h"
+#include "Mesh/GMSH/MLine.h"
 //#include "OpenFile.h"
-#include "Mesh/StringUtils.h"
-#include "Mesh/ExtrudeParams.h"
+#include "Mesh/GMSH/StringUtils.h"
+#include "Mesh/GMSH/ExtrudeParams.h"
 
 #if defined(HAVE_OCC)
 

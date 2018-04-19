@@ -4,9 +4,9 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include <stdio.h>
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MElement.h"
+#include "Mesh/GMSH/MElement.h"
 
 int GModel::writePOS(const std::string &name, bool printElementary,
                      bool printElementNumber, bool printSICN, bool printSIGE,

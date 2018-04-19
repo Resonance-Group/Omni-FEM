@@ -1,5 +1,5 @@
 #include <UI/ModelDefinition/ModelDefinition.h>
-#include <Mesh/MVertex.h>
+#include <Mesh/GMSH/MVertex.h>
 
 
 

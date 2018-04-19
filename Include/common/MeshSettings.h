@@ -22,6 +22,7 @@ enum MeshParametrization
 };
 
 
+//! Enum that is used to speficy the arragement of a mesh when creating a Structured mesh
 enum StructuredArrangement
 {
 	ARRANGMENT_LEFT,

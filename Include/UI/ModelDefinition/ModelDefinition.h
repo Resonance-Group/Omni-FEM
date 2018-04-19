@@ -36,9 +36,9 @@
 #include <UI/GeometryEditor2D.h>
 #include <UI/common.h>
 
-#include <Mesh/GModel.h>
-#include <Mesh/GEntity.h>
-#include <Mesh/MVertex.h>
+#include <Mesh/GMSH/GModel.h>
+#include <Mesh/GMSH/GEntity.h>
+#include <Mesh/GMSH/MVertex.h>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>

@@ -6,12 +6,12 @@
 // bugs and problems to the public mailing list <gmsh@geuz.org>.
 
 #include "common/OS.h"
-#include "Mesh/MPoint.h"
-#include "Mesh/MLine.h"
-#include "Mesh/MTriangle.h"
-#include "Mesh/MQuadrangle.h"
-#include "Mesh/StringUtils.h"
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/MPoint.h"
+#include "Mesh/GMSH/MLine.h"
+#include "Mesh/GMSH/MTriangle.h"
+#include "Mesh/GMSH/MQuadrangle.h"
+#include "Mesh/GMSH/StringUtils.h"
+#include "Mesh/GMSH/GModel.h"
 
 int dimension;
 

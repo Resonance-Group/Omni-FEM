@@ -3,9 +3,9 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MElement.h"
+#include "Mesh/GMSH/MElement.h"
 
 int GModel::writeIR3(const std::string &name, int elementTagType,
                      bool saveAll, double scalingFactor)

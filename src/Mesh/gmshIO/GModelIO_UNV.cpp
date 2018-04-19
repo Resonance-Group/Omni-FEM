@@ -5,14 +5,14 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/GmshIO.h"
+#include "Mesh/GMSH/GmshIO.h"
 
-#include "Mesh/MLine.h"
-#include "Mesh/MTriangle.h"
-#include "Mesh/MQuadrangle.h"
-#include "Mesh/Context.h"
+#include "Mesh/GMSH/MLine.h"
+#include "Mesh/GMSH/MTriangle.h"
+#include "Mesh/GMSH/MQuadrangle.h"
+#include "Mesh/GMSH/Context.h"
 
 int GModel::readUNV(const std::string &name)
 {
