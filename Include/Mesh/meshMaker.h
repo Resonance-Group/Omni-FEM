@@ -13,7 +13,6 @@
 #include <common/plfcolony.h>
 #include <common/Vector.h>
 #include <common/enums.h>
-#include <common/BoundingBox.h>
 #include <common/MeshSettings.h>
 
 #include <common/ProblemDefinition.h>
@@ -21,6 +20,7 @@
 #include <common/GeometryProperties/BlockProperty.h>
 
 #include <Mesh/ClosedPath.h>
+#include <Mesh/BoundingBox.h>
 
 #include <Mesh/GMSH/Gmsh.h>
 #include <Mesh/GMSH/Context.h>

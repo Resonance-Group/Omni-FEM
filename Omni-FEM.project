@@ -434,7 +434,6 @@
       <File Name="Include/common/OmniFEMMessage.h"/>
       <File Name="Include/common/MeshSettings.h"/>
       <File Name="Include/common/OmniFEMDefines.h"/>
-      <File Name="Include/common/BoundingBox.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
       <File Name="Include/Mesh/meshMaker.h"/>
@@ -624,6 +623,7 @@
         <File Name="Include/Mesh/GMSH/avl.h"/>
       </VirtualDirectory>
       <File Name="Include/Mesh/ClosedPath.h"/>
+      <File Name="Include/Mesh/BoundingBox.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

@@ -1,12 +1,5 @@
 #include <Mesh/meshMaker.h>
 
-#include <common/OmniFEMMessage.h>
-
-
-
-#include <wx/dir.h>
-
-
 closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *point)
 {
 	closedPath foundPath;
@@ -1021,11 +1014,12 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 			for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
 			{
 				// Check to see if the "hole" is a hole to the path
-				if(holeIterator->isInside(*pathIterator) && holeIterator->getBoundingBox() != pathIterator->getBoundingBox())
+				if(holeIterator->isInside(*pathIterator) /*&& holeIterator->getBoundingBox() != pathIterator->getBoundingBox()*/)
 				{
 					pathIterator->addHole(*holeIterator);
-					/*
-					std::vector<edgeLineShape*> commonEdgeList;
+					
+					// There is a reason for this but I forget what it is
+			/*		std::vector<edgeLineShape*> commonEdgeList;
 					
 					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
 					{
@@ -1048,6 +1042,7 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 					else
 						pathIterator->addHole(*holeIterator);
 						 */ 
+						 
 				}
 			}
 			

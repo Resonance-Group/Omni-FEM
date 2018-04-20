@@ -1419,6 +1419,21 @@ public:
 		
 		calculateDistance();
 		
+		calculateMidPoint();
+		
+		
+		
+        return;
+    }
+	
+	void calculateMidPoint()
+	{
+		double xMid = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
+        
+        double yMid = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
+		
+		double slope = (_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate());
+		
 		double vx = xMid - xCenterCoordinate;
 		double vy = yMid - yCenterCoordinate;
 		
@@ -1426,7 +1441,7 @@ public:
 		
 		if(lev == 0)
 		{
-			if(abs(slope) >= 0 && abs(slope) <= 1e-2)
+			if(abs(slope) >= 0 && abs(slope) <= 0.1)
 			{
 				if(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate())
 				{
@@ -1459,8 +1474,7 @@ public:
 			p_yMid = yCenterCoordinate + _radius * vy / lev;
 		}
 		
-        return;
-    }
+	}
     
 	/**
 	 * @brief Retrieves the radius of the arc

@@ -7,9 +7,12 @@
 #include <iterator>
 
 #include <wx/wx.h>
+#include <wx/dir.h>
 
-#include <common/BoundingBox.h>
+#include <common/OmniFEMMessage.h>
 #include <common/GeometryProperties/BlockProperty.h>
+
+#include <Mesh/BoundingBox.h>
 
 #include <UI/geometryShapes.h>
 
@@ -117,8 +120,18 @@ public:
 		p_boundingBox = boundingBox(wxRealPoint(firstEdge.getFirstNode()->getCenterXCoordinate(), firstEdge.getFirstNode()->getCenterYCoordinate()));
 		p_boundingBox.addPoint(wxRealPoint(firstEdge.getSecondNode()->getCenterXCoordinate(), firstEdge.getSecondNode()->getCenterYCoordinate()));
 		
+		
 		if(firstEdge.isArc())
-			p_boundingBox.addPoint(firstEdge.getMidPoint());
+		{
+			if(firstEdge.getMidPoint() == wxRealPoint(0, 0))
+			{
+				arcShape *temp = static_cast<arcShape*>(&firstEdge);
+				temp->calculateMidPoint();
+				p_boundingBox.addPoint(temp->getMidPoint());
+			}
+			else
+				p_boundingBox.addPoint(firstEdge.getMidPoint());
+		}
 			
 		p_centerPoint = firstEdge.getMidPoint();
 
@@ -138,7 +151,16 @@ public:
 		p_boundingBox.addPoint(wxRealPoint(firstEdge->getSecondNode()->getCenterXCoordinate(), firstEdge->getSecondNode()->getCenterYCoordinate()));
 		
 		if(firstEdge->isArc())
-			p_boundingBox.addPoint(firstEdge->getMidPoint());
+		{
+			if(firstEdge->getMidPoint() == wxRealPoint(0, 0))
+			{
+				arcShape *temp = static_cast<arcShape*>(firstEdge);
+				temp->calculateMidPoint();
+				p_boundingBox.addPoint(temp->getMidPoint());
+			}
+			else
+				p_boundingBox.addPoint(firstEdge->getMidPoint());
+		}
 		
 		p_centerPoint = firstEdge->getMidPoint();
 		
@@ -208,7 +230,16 @@ public:
 		
 		if(addEdge.isArc())
 		{
-			p_boundingBox.addPoint(addEdge.getMidPoint());
+	//		p_boundingBox.addPoint(addEdge.getMidPoint());
+			
+			if(addEdge.getMidPoint() == wxRealPoint(0, 0))
+			{
+				arcShape *temp = static_cast<arcShape*>(&addEdge);
+				temp->calculateMidPoint();
+				p_boundingBox.addPoint(temp->getMidPoint());
+			}
+			else
+				p_boundingBox.addPoint(addEdge.getMidPoint());
 		}
 		
 		auto mapIterator = p_vertexList.find(addEdge.getFirstNode());
@@ -250,7 +281,16 @@ public:
 			
 		if(addEdge->isArc())
 		{
-			p_boundingBox.addPoint(addEdge->getMidPoint());
+		//	p_boundingBox.addPoint(addEdge->getMidPoint());
+			
+			if(addEdge->getMidPoint() == wxRealPoint(0, 0))
+			{
+				arcShape *temp = static_cast<arcShape*>(addEdge);
+				temp->calculateMidPoint();
+				p_boundingBox.addPoint(temp->getMidPoint());
+			}
+			else
+				p_boundingBox.addPoint(addEdge->getMidPoint());
 		}
 		
 		auto mapIterator = p_vertexList.find(addEdge->getFirstNode());
