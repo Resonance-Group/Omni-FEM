@@ -104,8 +104,29 @@ bool closedPath::pointInContour(wxRealPoint point)
 		 * the new polygon. 
 		 * Once done, the algorithm will then add in any arc-boxes depending on the direction of the polygon
 		 */
-		 if(p_closedPath.size() > 2)
+		 if(p_closedPath.size() == 2 && p_closedPath.at(0)->isArc() && p_closedPath.at(1)->isArc())
 		 {
+			 // This is the case where we have 2 semi circles
+			 std::vector<simplifiedEdge> returnEdges;
+			 
+			 arcShape *tempArc = static_cast<arcShape*>(p_closedPath.at(0));
+			 returnEdges = tempArc->getBoundingEdges();
+			 arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
+			 
+			 returnEdges.erase(returnEdges.begin());
+			 
+			 convertedPath = returnEdges;
+			 
+			 tempArc = static_cast<arcShape*>(p_closedPath.at(1));
+			 returnEdges = tempArc->getBoundingEdges();
+			 arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
+			 
+			 returnEdges.erase(returnEdges.begin());
+			 
+			 convertedPath.insert(convertedPath.end(), returnEdges.begin(), returnEdges.end());
+		 }
+		else
+		{
 			for(auto edgeIterator = p_closedPath.begin(); edgeIterator != p_closedPath.end(); edgeIterator++)
 			{
 				auto nextIterator = edgeIterator + 1;
@@ -240,30 +261,7 @@ bool closedPath::pointInContour(wxRealPoint point)
 				
 			if(subtractionTerms > additionTerms)
 				p_reverseWindingResult = true;
-		 }
-		 else if(p_closedPath.size() == 2 && p_closedPath.at(0)->isArc() && p_closedPath.at(1)->isArc())
-		 {
-			 // This is the case where we have 2 semi circles
-			 std::vector<simplifiedEdge> returnEdges;
-			 
-			 arcShape *tempArc = static_cast<arcShape*>(p_closedPath.at(0));
-			 returnEdges = tempArc->getBoundingEdges();
-			 arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
-			 
-			 returnEdges.erase(returnEdges.begin());
-			 
-			 convertedPath = returnEdges;
-			 
-			 tempArc = static_cast<arcShape*>(p_closedPath.at(1));
-			 returnEdges = tempArc->getBoundingEdges();
-			 arcShapes.push_back(arcPolygon(returnEdges, *tempArc));
-			 
-			 returnEdges.erase(returnEdges.begin());
-			 
-			 convertedPath.insert(convertedPath.end(), returnEdges.begin(), returnEdges.end());
-		 }
-		 else
-			 return false;// This is an invalid condition
+		}
 			 
 		if(!(p_closedPath.size() == 2 && p_closedPath.at(0)->isArc() && p_closedPath.at(1)->isArc()))
 		{

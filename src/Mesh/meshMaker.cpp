@@ -1017,32 +1017,6 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 				if(holeIterator->isInside(*pathIterator) /*&& holeIterator->getBoundingBox() != pathIterator->getBoundingBox()*/)
 				{
 					pathIterator->addHole(*holeIterator);
-					
-					// There is a reason for this but I forget what it is
-			/*		std::vector<edgeLineShape*> commonEdgeList;
-					
-					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
-					{
-						// IF the hole shares a common edge with the path, then we will need to perform an algorithm
-						// that will recombine the hole and the path
-						// The path will need to be remade to cut out the hole
-						unsigned int iteratorDistance = std::distance(pathToOperate->begin(), pathIterator) - 1;
-						closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
-						
-						pathIterator->transferHoles(aPath);
-						aPath.setBlockLabelList(*(pathIterator->getBlockLabelList()));
-						
-						pathToOperate->erase(pathIterator);
-						pathToOperate->push_back(aPath);
-						
-						
-						resetPath = true;
-						break;
-					}
-					else
-						pathIterator->addHole(*holeIterator);
-						 */ 
-						 
 				}
 			}
 			

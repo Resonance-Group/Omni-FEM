@@ -540,6 +540,29 @@ public:
 				pointFound = true;
 				break;
 			}
+			
+			if((*lineIterator)->isArc())
+			{
+				bool lineInCompare = false;
+				
+				for(auto secondLineIterator = compare.getClosedPath()->begin(); secondLineIterator != compare.getClosedPath()->end(); secondLineIterator++)
+				{
+					if(**secondLineIterator == **lineIterator)
+					{
+						lineInCompare = true;
+						break;
+					}
+						
+				}
+				
+				if(!lineInCompare)
+				{
+					comparePoint = (*lineIterator)->getMidPoint();
+					pointFound = true;
+					break;
+				}
+				
+			}
 		}
 		
 		if(compare.pointInBoundingBox(comparePoint))
