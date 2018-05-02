@@ -9,8 +9,8 @@
 #include <vector>
 #include <map>
 //#include "GmshConfig.h"
-#include "Mesh/GmshMessage.h"
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GmshMessage.h"
+#include "Mesh/GMSH/GModel.h"
 
 class ExtrudeParams;
 

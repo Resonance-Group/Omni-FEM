@@ -93,134 +93,9 @@
       <File Name="src/common/Vector.cpp"/>
       <File Name="src/common/OS.cpp" ExcludeProjConfig=""/>
       <File Name="src/common/mathex.cpp"/>
-      <File Name="src/common/ClosedPath.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
-      <File Name="src/Mesh/GModel.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GEdge.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GVertex.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/Generator.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BackgroundMesh.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GEntity.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/discreteFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/Field.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceExtruded.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceOptimize.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceOptimizeOld.cpp" ExcludeProjConfig="Debug"/>
-      <File Name="src/Mesh/meshGFaceTransfinite.cpp" ExcludeProjConfig=""/>
       <File Name="src/Mesh/meshMaker.cpp"/>
-      <File Name="src/Mesh/Gmsh.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/robustPredicates.cpp"/>
-      <File Name="src/Mesh/Options.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/Context.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MElement.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MVertex.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshPartition.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/fullMatrix.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/VertexArray.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/Numeric.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/SOrientedBoundingBox.cpp"/>
-      <File Name="src/Mesh/MTriangle.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MQuadrangle.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MLine.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/ElementType.cpp"/>
-      <File Name="src/Mesh/GaussIntegration.cpp"/>
-      <File Name="src/Mesh/GaussQuadratureQuad.cpp"/>
-      <File Name="src/Mesh/GaussQuadratureTri.cpp"/>
-      <File Name="src/Mesh/GaussLegendreSimplex.cpp"/>
-      <File Name="src/Mesh/GaussQuadratureLin.cpp"/>
-      <File Name="src/Mesh/BasisFactory.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/polynomialBasis.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/nodalBasis.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/pointsGenerators.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/FuncSpaceData.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MVertexBoundaryLayerData.cpp"/>
-      <File Name="src/Mesh/MFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GFaceCompound.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/discreteDiskFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MEdge.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/CondNumBasis.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/qualityMeasuresJacobian.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MSubElement.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/qualityMeasures.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/bezierBasis.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/miniBasis.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/JacobianBasis.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BDS.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MElementOctree.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BGMBase.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceLloyd.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BackgroundMeshTools.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BackgroundMeshManager.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BackgroundMesh2D.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/pointInsertion.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/pointInsertionRTreeTools.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/intersectCurveSurface.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceDelaunayInsertion.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/boundaryLayersData.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GEdgeLoop.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/DivideAndConquer.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/Octree.cpp"/>
-      <File Name="src/Mesh/OctreeInternals.cpp"/>
-      <File Name="src/Mesh/GEdgeCompound.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGRegionRelocateVertex.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/Curvature.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/discreteEdge.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GRbf.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/surfaceFiller.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/HilbertCurve.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/simple3D.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/directions3D.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/ThinLayer.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/yamakawa.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/BoundaryLayers.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceBDS.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/ExtrudeParams.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/SmoothData.cpp"/>
-      <File Name="src/Mesh/Geo.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGEdge.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/HighOrder.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/mathEvaluator.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshMetric.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceQuadrilateralize.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/MElementCut.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/multiscalePartition.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/linearSystem.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/linearSystemCSR.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/sparsityPattern.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/multiscaleLaplace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/linearSystemPETSc.cpp"/>
-      <File Name="src/Mesh/groupOfElements.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/dofManager.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/SElement.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/filterElements.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/gmshLevelset.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/OCCVertex.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/OCCEdge.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/OCCFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GeoInterpolation.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GeoStringInterface.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/ListUtils.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/TreeUtils.cpp"/>
-      <File Name="src/Mesh/MallocUtils.cpp"/>
-      <File Name="src/Mesh/avl.cpp"/>
-      <File Name="src/Mesh/findLinks.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/gmshEdge.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/decasteljau.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/gmshFace.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/gmshVertex.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GModelFactory.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/gmshSurface.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/GModelCreateTopologyFromMesh.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/meshGFaceBamg.cpp" ExcludeProjConfig=""/>
-      <File Name="src/Mesh/closestPoint.cpp"/>
-      <File Name="src/Mesh/QuadTriExtruded2D.cpp"/>
-      <File Name="src/Mesh/QuadTriUtils.cpp"/>
-      <File Name="src/Mesh/StringUtils.cpp"/>
-      <File Name="src/Mesh/meshRefine.cpp"/>
-      <File Name="src/Mesh/STensor3.cpp"/>
       <VirtualDirectory Name="Blossom">
         <VirtualDirectory Name="BigGuy">
           <File Name="src/Mesh/Blossom/BigGuy/bigguy.c"/>
@@ -343,6 +218,132 @@
         <File Name="src/Mesh/gmshIO/GModelIO_UNV.cpp"/>
         <File Name="src/Mesh/gmshIO/GModelIO_VRML.cpp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="GMSH">
+        <File Name="src/Mesh/GMSH/yamakawa.cpp"/>
+        <File Name="src/Mesh/GMSH/VertexArray.cpp"/>
+        <File Name="src/Mesh/GMSH/TreeUtils.cpp"/>
+        <File Name="src/Mesh/GMSH/ThinLayer.cpp"/>
+        <File Name="src/Mesh/GMSH/surfaceFiller.cpp"/>
+        <File Name="src/Mesh/GMSH/StringUtils.cpp"/>
+        <File Name="src/Mesh/GMSH/STensor3.cpp"/>
+        <File Name="src/Mesh/GMSH/sparsityPattern.cpp"/>
+        <File Name="src/Mesh/GMSH/SOrientedBoundingBox.cpp"/>
+        <File Name="src/Mesh/GMSH/SmoothData.cpp"/>
+        <File Name="src/Mesh/GMSH/simple3D.cpp"/>
+        <File Name="src/Mesh/GMSH/SElement.cpp"/>
+        <File Name="src/Mesh/GMSH/robustPredicates.cpp"/>
+        <File Name="src/Mesh/GMSH/qualityMeasuresJacobian.cpp"/>
+        <File Name="src/Mesh/GMSH/qualityMeasures.cpp"/>
+        <File Name="src/Mesh/GMSH/QuadTriUtils.cpp"/>
+        <File Name="src/Mesh/GMSH/QuadTriExtruded2D.cpp"/>
+        <File Name="src/Mesh/GMSH/polynomialBasis.cpp"/>
+        <File Name="src/Mesh/GMSH/pointsGenerators.cpp"/>
+        <File Name="src/Mesh/GMSH/pointInsertionRTreeTools.cpp"/>
+        <File Name="src/Mesh/GMSH/pointInsertion.cpp"/>
+        <File Name="src/Mesh/GMSH/Options.cpp"/>
+        <File Name="src/Mesh/GMSH/OctreeInternals.cpp"/>
+        <File Name="src/Mesh/GMSH/Octree.cpp"/>
+        <File Name="src/Mesh/GMSH/OCCVertex.cpp"/>
+        <File Name="src/Mesh/GMSH/OCCFace.cpp"/>
+        <File Name="src/Mesh/GMSH/OCCEdge.cpp"/>
+        <File Name="src/Mesh/GMSH/Numeric.cpp"/>
+        <File Name="src/Mesh/GMSH/nodalBasis.cpp"/>
+        <File Name="src/Mesh/GMSH/MVertexBoundaryLayerData.cpp"/>
+        <File Name="src/Mesh/GMSH/MVertex.cpp"/>
+        <File Name="src/Mesh/GMSH/multiscalePartition.cpp"/>
+        <File Name="src/Mesh/GMSH/multiscaleLaplace.cpp"/>
+        <File Name="src/Mesh/GMSH/MTriangle.cpp"/>
+        <File Name="src/Mesh/GMSH/MSubElement.cpp"/>
+        <File Name="src/Mesh/GMSH/MQuadrangle.cpp"/>
+        <File Name="src/Mesh/GMSH/MLine.cpp"/>
+        <File Name="src/Mesh/GMSH/miniBasis.cpp"/>
+        <File Name="src/Mesh/GMSH/MFace.cpp"/>
+        <File Name="src/Mesh/GMSH/meshRefine.cpp"/>
+        <File Name="src/Mesh/GMSH/meshPartition.cpp"/>
+        <File Name="src/Mesh/GMSH/meshMetric.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGRegionRelocateVertex.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceTransfinite.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceQuadrilateralize.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceOptimize.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceLloyd.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceExtruded.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceDelaunayInsertion.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceBDS.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFaceBamg.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGFace.cpp"/>
+        <File Name="src/Mesh/GMSH/meshGEdge.cpp"/>
+        <File Name="src/Mesh/GMSH/MElementOctree.cpp"/>
+        <File Name="src/Mesh/GMSH/MElementCut.cpp"/>
+        <File Name="src/Mesh/GMSH/MElement.cpp"/>
+        <File Name="src/Mesh/GMSH/MEdge.cpp"/>
+        <File Name="src/Mesh/GMSH/mathEvaluator.cpp"/>
+        <File Name="src/Mesh/GMSH/MallocUtils.cpp"/>
+        <File Name="src/Mesh/GMSH/ListUtils.cpp"/>
+        <File Name="src/Mesh/GMSH/linearSystemPETSc.cpp"/>
+        <File Name="src/Mesh/GMSH/linearSystemCSR.cpp"/>
+        <File Name="src/Mesh/GMSH/linearSystem.cpp"/>
+        <File Name="src/Mesh/GMSH/JacobianBasis.cpp"/>
+        <File Name="src/Mesh/GMSH/intersectCurveSurface.cpp"/>
+        <File Name="src/Mesh/GMSH/HilbertCurve.cpp"/>
+        <File Name="src/Mesh/GMSH/HighOrder.cpp"/>
+        <File Name="src/Mesh/GMSH/GVertex.cpp"/>
+        <File Name="src/Mesh/GMSH/groupOfElements.cpp"/>
+        <File Name="src/Mesh/GMSH/GRbf.cpp"/>
+        <File Name="src/Mesh/GMSH/gmshVertex.cpp"/>
+        <File Name="src/Mesh/GMSH/gmshSurface.cpp"/>
+        <File Name="src/Mesh/GMSH/gmshLevelset.cpp"/>
+        <File Name="src/Mesh/GMSH/gmshFace.cpp"/>
+        <File Name="src/Mesh/GMSH/gmshEdge.cpp"/>
+        <File Name="src/Mesh/GMSH/Gmsh.cpp"/>
+        <File Name="src/Mesh/GMSH/GModelFactory.cpp"/>
+        <File Name="src/Mesh/GMSH/GModelCreateTopologyFromMesh.cpp"/>
+        <File Name="src/Mesh/GMSH/GModel.cpp"/>
+        <File Name="src/Mesh/GMSH/GFaceCompound.cpp"/>
+        <File Name="src/Mesh/GMSH/GFace.cpp"/>
+        <File Name="src/Mesh/GMSH/GeoStringInterface.cpp"/>
+        <File Name="src/Mesh/GMSH/GeoInterpolation.cpp"/>
+        <File Name="src/Mesh/GMSH/Geo.cpp"/>
+        <File Name="src/Mesh/GMSH/GEntity.cpp"/>
+        <File Name="src/Mesh/GMSH/Generator.cpp"/>
+        <File Name="src/Mesh/GMSH/GEdgeLoop.cpp"/>
+        <File Name="src/Mesh/GMSH/GEdgeCompound.cpp"/>
+        <File Name="src/Mesh/GMSH/GEdge.cpp"/>
+        <File Name="src/Mesh/GMSH/GaussQuadratureTri.cpp"/>
+        <File Name="src/Mesh/GMSH/GaussQuadratureQuad.cpp"/>
+        <File Name="src/Mesh/GMSH/GaussQuadratureLin.cpp"/>
+        <File Name="src/Mesh/GMSH/GaussLegendreSimplex.cpp"/>
+        <File Name="src/Mesh/GMSH/GaussIntegration.cpp"/>
+        <File Name="src/Mesh/GMSH/FuncSpaceData.cpp"/>
+        <File Name="src/Mesh/GMSH/fullMatrix.cpp"/>
+        <File Name="src/Mesh/GMSH/findLinks.cpp"/>
+        <File Name="src/Mesh/GMSH/filterElements.cpp"/>
+        <File Name="src/Mesh/GMSH/Field.cpp"/>
+        <File Name="src/Mesh/GMSH/ExtrudeParams.cpp"/>
+        <File Name="src/Mesh/GMSH/ElementType.cpp"/>
+        <File Name="src/Mesh/GMSH/dofManager.cpp"/>
+        <File Name="src/Mesh/GMSH/DivideAndConquer.cpp"/>
+        <File Name="src/Mesh/GMSH/discreteFace.cpp"/>
+        <File Name="src/Mesh/GMSH/discreteEdge.cpp"/>
+        <File Name="src/Mesh/GMSH/discreteDiskFace.cpp"/>
+        <File Name="src/Mesh/GMSH/directions3D.cpp"/>
+        <File Name="src/Mesh/GMSH/decasteljau.cpp"/>
+        <File Name="src/Mesh/GMSH/Curvature.cpp"/>
+        <File Name="src/Mesh/GMSH/Context.cpp"/>
+        <File Name="src/Mesh/GMSH/CondNumBasis.cpp"/>
+        <File Name="src/Mesh/GMSH/closestPoint.cpp"/>
+        <File Name="src/Mesh/GMSH/boundaryLayersData.cpp"/>
+        <File Name="src/Mesh/GMSH/BoundaryLayers.cpp"/>
+        <File Name="src/Mesh/GMSH/BGMBase.cpp"/>
+        <File Name="src/Mesh/GMSH/bezierBasis.cpp"/>
+        <File Name="src/Mesh/GMSH/BDS.cpp"/>
+        <File Name="src/Mesh/GMSH/BasisFactory.cpp"/>
+        <File Name="src/Mesh/GMSH/BackgroundMeshTools.cpp"/>
+        <File Name="src/Mesh/GMSH/BackgroundMeshManager.cpp"/>
+        <File Name="src/Mesh/GMSH/BackgroundMesh2D.cpp"/>
+        <File Name="src/Mesh/GMSH/BackgroundMesh.cpp"/>
+        <File Name="src/Mesh/GMSH/avl.cpp"/>
+      </VirtualDirectory>
+      <File Name="src/Mesh/ClosedPath.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
@@ -433,159 +434,9 @@
       <File Name="Include/common/OmniFEMMessage.h"/>
       <File Name="Include/common/MeshSettings.h"/>
       <File Name="Include/common/OmniFEMDefines.h"/>
-      <File Name="Include/common/ClosedPath.h"/>
-      <File Name="Include/common/BoundingBox.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Mesh">
-      <File Name="Include/Mesh/GModel.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GEdge.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GFace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GVertex.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Generator.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/BackgroundMesh.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GEntity.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GmshDefines.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/discreteFace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Field.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFaceOptimize.h" ExcludeProjConfig=""/>
       <File Name="Include/Mesh/meshMaker.h"/>
-      <File Name="Include/Mesh/Gmsh.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/robustPredicates.h"/>
-      <File Name="Include/Mesh/Options.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Context.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/SPoint2.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MPoint.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GPoint.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MElement.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MVertex.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/CGNSOptions.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshPartition.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshPartitionOptions.h"/>
-      <File Name="Include/Mesh/fullMatrix.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/VertexArray.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Numeric.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Range.h"/>
-      <File Name="Include/Mesh/SOrientedBoundingBox.h"/>
-      <File Name="Include/Mesh/MTriangle.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MQuadrangle.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MLine.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/ElementType.h"/>
-      <File Name="Include/Mesh/GaussIntegration.h"/>
-      <File Name="Include/Mesh/GaussLegendre1D.h"/>
-      <File Name="Include/Mesh/BasisFactory.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/polynomialBasis.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/nodalBasis.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/pointsGenerators.h"/>
-      <File Name="Include/Mesh/FuncSpaceData.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/SPoint3.h"/>
-      <File Name="Include/Mesh/SVector3.h"/>
-      <File Name="Include/Mesh/MVertexBoundaryLayerData.h"/>
-      <File Name="Include/Mesh/MFace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GFaceCompound.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/discreteDiskFace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MEdge.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/CondNumBasis.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/qualityMeasuresJacobian.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MSubElement.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/qualityMeasures.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/bezierBasis.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/miniBasis.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/JacobianBasis.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/BDS.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/STensor3.h"/>
-      <File Name="Include/Mesh/MElementOctree.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/simpleFunction.h"/>
-      <File Name="Include/Mesh/BGMBase.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFaceLloyd.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/BackgroundMeshTools.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/SBoundingBox3d.h"/>
-      <File Name="Include/Mesh/Pair.h"/>
-      <File Name="Include/Mesh/BackgroundMeshManager.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/BackgroundMesh2D.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/pointInsertion.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/pointInsertionRTreeTools.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/rtree.h"/>
-      <File Name="Include/Mesh/intersectCurveSurface.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFaceDelaunayInsertion.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/boundaryLayersData.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GEdgeLoop.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/DivideAndConquer.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Octree.h"/>
-      <File Name="Include/Mesh/OctreeInternals.h"/>
-      <File Name="Include/Mesh/GEdgeCompound.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGRegionRelocateVertex.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Curvature.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/discreteEdge.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GRbf.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MVertexRTree.h"/>
-      <File Name="Include/Mesh/surfaceFiller.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/HilbertCurve.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/simple3D.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/directions3D.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/cross3D.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/ThinLayer.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/yamakawa.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/BoundaryLayers.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFaceBDS.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/ExtrudeParams.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/SmoothData.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/Geo.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGEdge.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/HighOrder.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/mathEvaluator.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshMetric.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFaceQuadrilateralize.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/MElementCut.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/multiscalePartition.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/linearSystemGMM.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/linearSystem.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/linearSystemCSR.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/linearSystemFull.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/sparsityPattern.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/multiscaleLaplace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/linearSystemPETSc.h"/>
-      <File Name="Include/Mesh/convexCombinationTerm.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/femTerm.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/groupOfElements.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/dofManager.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/SElement.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/laplaceTerm.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/helmholtzTerm.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/filterElements.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/gmshLevelset.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/cartesian.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/OCCVertex.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/OCCEdge.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/OCCFace.h"/>
-      <File Name="Include/Mesh/GeoInterpolation.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GeoStringInterface.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/ListUtils.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/TreeUtils.h"/>
-      <File Name="Include/Mesh/MallocUtils.h"/>
-      <File Name="Include/Mesh/avl.h"/>
-      <File Name="Include/Mesh/Parser.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GmshIO.h"/>
-      <File Name="Include/Mesh/GeoDefines.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/findLinks.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/gmshEdge.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/decasteljau.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/gmshFace.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/gmshVertex.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/GModelFactory.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/discreteVertex.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/gmshSurface.h"/>
-      <File Name="Include/Mesh/GModelCreateTopologyFromMesh.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/meshGFaceBamg.h" ExcludeProjConfig=""/>
-      <File Name="Include/Mesh/closestPoint.h"/>
-      <File Name="Include/Mesh/partitionEdge.h"/>
-      <File Name="Include/Mesh/QuadTriExtruded2D.h"/>
-      <File Name="Include/Mesh/QuadTriUtils.h"/>
-      <File Name="Include/Mesh/meshPartitionObjects.h"/>
-      <File Name="Include/Mesh/StringUtils.h"/>
-      <File Name="Include/Mesh/nanoflann.hpp"/>
-      <File Name="Include/Mesh/DefaultOptions.h"/>
-      <File Name="Include/Mesh/GmshMessage.h"/>
       <VirtualDirectory Name="Blossom">
         <File Name="Include/Mesh/Blossom/bigguy.h"/>
         <File Name="Include/Mesh/Blossom/concorde.h"/>
@@ -621,6 +472,158 @@
         <File Name="Include/Mesh/gmshIO/GModelIO_GEO.h"/>
         <File Name="Include/Mesh/gmshIO/GModelIO_OCC.h"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="GMSH">
+        <File Name="Include/Mesh/GMSH/yamakawa.h"/>
+        <File Name="Include/Mesh/GMSH/VertexArray.h"/>
+        <File Name="Include/Mesh/GMSH/TreeUtils.h"/>
+        <File Name="Include/Mesh/GMSH/ThinLayer.h"/>
+        <File Name="Include/Mesh/GMSH/SVector3.h"/>
+        <File Name="Include/Mesh/GMSH/surfaceFiller.h"/>
+        <File Name="Include/Mesh/GMSH/StringUtils.h"/>
+        <File Name="Include/Mesh/GMSH/STensor3.h"/>
+        <File Name="Include/Mesh/GMSH/SPoint3.h"/>
+        <File Name="Include/Mesh/GMSH/SPoint2.h"/>
+        <File Name="Include/Mesh/GMSH/sparsityPattern.h"/>
+        <File Name="Include/Mesh/GMSH/SOrientedBoundingBox.h"/>
+        <File Name="Include/Mesh/GMSH/SmoothData.h"/>
+        <File Name="Include/Mesh/GMSH/simpleFunction.h"/>
+        <File Name="Include/Mesh/GMSH/simple3D.h"/>
+        <File Name="Include/Mesh/GMSH/SElement.h"/>
+        <File Name="Include/Mesh/GMSH/SBoundingBox3d.h"/>
+        <File Name="Include/Mesh/GMSH/rtree.h"/>
+        <File Name="Include/Mesh/GMSH/robustPredicates.h"/>
+        <File Name="Include/Mesh/GMSH/Range.h"/>
+        <File Name="Include/Mesh/GMSH/qualityMeasuresJacobian.h"/>
+        <File Name="Include/Mesh/GMSH/qualityMeasures.h"/>
+        <File Name="Include/Mesh/GMSH/QuadTriUtils.h"/>
+        <File Name="Include/Mesh/GMSH/QuadTriExtruded2D.h"/>
+        <File Name="Include/Mesh/GMSH/polynomialBasis.h"/>
+        <File Name="Include/Mesh/GMSH/pointsGenerators.h"/>
+        <File Name="Include/Mesh/GMSH/pointInsertionRTreeTools.h"/>
+        <File Name="Include/Mesh/GMSH/pointInsertion.h"/>
+        <File Name="Include/Mesh/GMSH/partitionEdge.h"/>
+        <File Name="Include/Mesh/GMSH/Parser.h"/>
+        <File Name="Include/Mesh/GMSH/Pair.h"/>
+        <File Name="Include/Mesh/GMSH/Options.h"/>
+        <File Name="Include/Mesh/GMSH/OctreeInternals.h"/>
+        <File Name="Include/Mesh/GMSH/Octree.h"/>
+        <File Name="Include/Mesh/GMSH/OCCVertex.h"/>
+        <File Name="Include/Mesh/GMSH/OCCFace.h"/>
+        <File Name="Include/Mesh/GMSH/OCCEdge.h"/>
+        <File Name="Include/Mesh/GMSH/Numeric.h"/>
+        <File Name="Include/Mesh/GMSH/nodalBasis.h"/>
+        <File Name="Include/Mesh/GMSH/nanoflann.hpp"/>
+        <File Name="Include/Mesh/GMSH/MVertexRTree.h"/>
+        <File Name="Include/Mesh/GMSH/MVertexBoundaryLayerData.h"/>
+        <File Name="Include/Mesh/GMSH/MVertex.h"/>
+        <File Name="Include/Mesh/GMSH/multiscalePartition.h"/>
+        <File Name="Include/Mesh/GMSH/multiscaleLaplace.h"/>
+        <File Name="Include/Mesh/GMSH/MTriangle.h"/>
+        <File Name="Include/Mesh/GMSH/MSubElement.h"/>
+        <File Name="Include/Mesh/GMSH/MQuadrangle.h"/>
+        <File Name="Include/Mesh/GMSH/MPoint.h"/>
+        <File Name="Include/Mesh/GMSH/MLine.h"/>
+        <File Name="Include/Mesh/GMSH/miniBasis.h"/>
+        <File Name="Include/Mesh/GMSH/MFace.h"/>
+        <File Name="Include/Mesh/GMSH/meshPartitionOptions.h"/>
+        <File Name="Include/Mesh/GMSH/meshPartitionObjects.h"/>
+        <File Name="Include/Mesh/GMSH/meshPartition.h"/>
+        <File Name="Include/Mesh/GMSH/meshMetric.h"/>
+        <File Name="Include/Mesh/GMSH/meshGRegionRelocateVertex.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFaceQuadrilateralize.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFaceOptimize.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFaceLloyd.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFaceDelaunayInsertion.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFaceBDS.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFaceBamg.h"/>
+        <File Name="Include/Mesh/GMSH/meshGFace.h"/>
+        <File Name="Include/Mesh/GMSH/meshGEdge.h"/>
+        <File Name="Include/Mesh/GMSH/MElementOctree.h"/>
+        <File Name="Include/Mesh/GMSH/MElementCut.h"/>
+        <File Name="Include/Mesh/GMSH/MElement.h"/>
+        <File Name="Include/Mesh/GMSH/MEdge.h"/>
+        <File Name="Include/Mesh/GMSH/mathEvaluator.h"/>
+        <File Name="Include/Mesh/GMSH/MallocUtils.h"/>
+        <File Name="Include/Mesh/GMSH/ListUtils.h"/>
+        <File Name="Include/Mesh/GMSH/linearSystemPETSc.h"/>
+        <File Name="Include/Mesh/GMSH/linearSystemGMM.h"/>
+        <File Name="Include/Mesh/GMSH/linearSystemFull.h"/>
+        <File Name="Include/Mesh/GMSH/linearSystemCSR.h"/>
+        <File Name="Include/Mesh/GMSH/linearSystem.h"/>
+        <File Name="Include/Mesh/GMSH/laplaceTerm.h"/>
+        <File Name="Include/Mesh/GMSH/JacobianBasis.h"/>
+        <File Name="Include/Mesh/GMSH/intersectCurveSurface.h"/>
+        <File Name="Include/Mesh/GMSH/HilbertCurve.h"/>
+        <File Name="Include/Mesh/GMSH/HighOrder.h"/>
+        <File Name="Include/Mesh/GMSH/helmholtzTerm.h"/>
+        <File Name="Include/Mesh/GMSH/GVertex.h"/>
+        <File Name="Include/Mesh/GMSH/groupOfElements.h"/>
+        <File Name="Include/Mesh/GMSH/GRbf.h"/>
+        <File Name="Include/Mesh/GMSH/GPoint.h"/>
+        <File Name="Include/Mesh/GMSH/gmshVertex.h"/>
+        <File Name="Include/Mesh/GMSH/gmshSurface.h"/>
+        <File Name="Include/Mesh/GMSH/GmshMessage.h"/>
+        <File Name="Include/Mesh/GMSH/gmshLevelset.h"/>
+        <File Name="Include/Mesh/GMSH/GmshIO.h"/>
+        <File Name="Include/Mesh/GMSH/gmshFace.h"/>
+        <File Name="Include/Mesh/GMSH/gmshEdge.h"/>
+        <File Name="Include/Mesh/GMSH/GmshDefines.h"/>
+        <File Name="Include/Mesh/GMSH/Gmsh.h"/>
+        <File Name="Include/Mesh/GMSH/GModelFactory.h"/>
+        <File Name="Include/Mesh/GMSH/GModelCreateTopologyFromMesh.h"/>
+        <File Name="Include/Mesh/GMSH/GModel.h"/>
+        <File Name="Include/Mesh/GMSH/GFaceCompound.h"/>
+        <File Name="Include/Mesh/GMSH/GFace.h"/>
+        <File Name="Include/Mesh/GMSH/GeoStringInterface.h"/>
+        <File Name="Include/Mesh/GMSH/GeoInterpolation.h"/>
+        <File Name="Include/Mesh/GMSH/GeoDefines.h"/>
+        <File Name="Include/Mesh/GMSH/Geo.h"/>
+        <File Name="Include/Mesh/GMSH/GEntity.h"/>
+        <File Name="Include/Mesh/GMSH/Generator.h"/>
+        <File Name="Include/Mesh/GMSH/GEdgeLoop.h"/>
+        <File Name="Include/Mesh/GMSH/GEdgeCompound.h"/>
+        <File Name="Include/Mesh/GMSH/GEdge.h"/>
+        <File Name="Include/Mesh/GMSH/GaussLegendre1D.h"/>
+        <File Name="Include/Mesh/GMSH/GaussIntegration.h"/>
+        <File Name="Include/Mesh/GMSH/FuncSpaceData.h"/>
+        <File Name="Include/Mesh/GMSH/fullMatrix.h"/>
+        <File Name="Include/Mesh/GMSH/findLinks.h"/>
+        <File Name="Include/Mesh/GMSH/filterElements.h"/>
+        <File Name="Include/Mesh/GMSH/Field.h"/>
+        <File Name="Include/Mesh/GMSH/femTerm.h"/>
+        <File Name="Include/Mesh/GMSH/ExtrudeParams.h"/>
+        <File Name="Include/Mesh/GMSH/ElementType.h"/>
+        <File Name="Include/Mesh/GMSH/dofManager.h"/>
+        <File Name="Include/Mesh/GMSH/DivideAndConquer.h"/>
+        <File Name="Include/Mesh/GMSH/discreteVertex.h"/>
+        <File Name="Include/Mesh/GMSH/discreteFace.h"/>
+        <File Name="Include/Mesh/GMSH/discreteEdge.h"/>
+        <File Name="Include/Mesh/GMSH/discreteDiskFace.h"/>
+        <File Name="Include/Mesh/GMSH/directions3D.h"/>
+        <File Name="Include/Mesh/GMSH/DefaultOptions.h"/>
+        <File Name="Include/Mesh/GMSH/decasteljau.h"/>
+        <File Name="Include/Mesh/GMSH/Curvature.h"/>
+        <File Name="Include/Mesh/GMSH/cross3D.h"/>
+        <File Name="Include/Mesh/GMSH/convexCombinationTerm.h"/>
+        <File Name="Include/Mesh/GMSH/Context.h"/>
+        <File Name="Include/Mesh/GMSH/CondNumBasis.h"/>
+        <File Name="Include/Mesh/GMSH/closestPoint.h"/>
+        <File Name="Include/Mesh/GMSH/CGNSOptions.h"/>
+        <File Name="Include/Mesh/GMSH/cartesian.h"/>
+        <File Name="Include/Mesh/GMSH/boundaryLayersData.h"/>
+        <File Name="Include/Mesh/GMSH/BoundaryLayers.h"/>
+        <File Name="Include/Mesh/GMSH/BGMBase.h"/>
+        <File Name="Include/Mesh/GMSH/bezierBasis.h"/>
+        <File Name="Include/Mesh/GMSH/BDS.h"/>
+        <File Name="Include/Mesh/GMSH/BasisFactory.h"/>
+        <File Name="Include/Mesh/GMSH/BackgroundMeshTools.h"/>
+        <File Name="Include/Mesh/GMSH/BackgroundMeshManager.h"/>
+        <File Name="Include/Mesh/GMSH/BackgroundMesh2D.h"/>
+        <File Name="Include/Mesh/GMSH/BackgroundMesh.h"/>
+        <File Name="Include/Mesh/GMSH/avl.h"/>
+      </VirtualDirectory>
+      <File Name="Include/Mesh/ClosedPath.h"/>
+      <File Name="Include/Mesh/BoundingBox.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>

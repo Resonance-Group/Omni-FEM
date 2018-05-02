@@ -1,12 +1,5 @@
 #include <Mesh/meshMaker.h>
 
-#include <common/OmniFEMMessage.h>
-
-
-
-#include <wx/dir.h>
-
-
 closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *point)
 {
 	closedPath foundPath;
@@ -24,6 +17,11 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 				lineIsFound = true;
 				break;
 			}
+			else if(lineIterator->getSegmentProperty()->getHiddenState())
+			{
+				lineIterator->setVisitedStatus(true);
+				p_numberVisited++;
+			}
 		}
 		
 		if(!lineIsFound)
@@ -35,6 +33,11 @@ closedPath meshMaker::findContour(edgeLineShape *startingEdge, rectangleShape *p
 					pathsVector.push_back(closedPath(*arcIterator));
 					lineIsFound = true;
 					break;
+				}
+				else if(arcIterator->getSegmentProperty()->getHiddenState())
+				{
+					arcIterator->setVisitedStatus(true);
+					p_numberVisited++;
 				}
 			}
 		}
@@ -408,7 +411,7 @@ void meshMaker::mesh()
 		 * the path not being a closed path.
 		 * In this case, we skip the path and move on to the next one
 		 */ 
-		if(isClosedPath(*contourPath.getClosedPath()))
+		if(isClosedPath(*contourPath.getClosedPath()) && contourPath.getClosedPath()->size() != 0)
 		{
 			// If we have a closed path then we need to locate all of the block labels within that path
 			// Later, we will determine the top level block label belonging to that contour
@@ -1021,33 +1024,9 @@ void meshMaker::holeDetection(std::vector<closedPath> *pathContour)
 			for(auto holeIterator = p_closedContourPaths.begin(); holeIterator != p_closedContourPaths.end(); holeIterator++)
 			{
 				// Check to see if the "hole" is a hole to the path
-				if(holeIterator->isInside(*pathIterator) && holeIterator->getBoundingBox() != pathIterator->getBoundingBox())
+				if(holeIterator->isInside(*pathIterator) /*&& holeIterator->getBoundingBox() != pathIterator->getBoundingBox()*/)
 				{
 					pathIterator->addHole(*holeIterator);
-					/*
-					std::vector<edgeLineShape*> commonEdgeList;
-					
-					if(shareCommonEdge(pathIterator, holeIterator, commonEdgeList))
-					{
-						// IF the hole shares a common edge with the path, then we will need to perform an algorithm
-						// that will recombine the hole and the path
-						// The path will need to be remade to cut out the hole
-						unsigned int iteratorDistance = std::distance(pathToOperate->begin(), pathIterator) - 1;
-						closedPath aPath = recreatePath(*pathIterator, *holeIterator, commonEdgeList);
-						
-						pathIterator->transferHoles(aPath);
-						aPath.setBlockLabelList(*(pathIterator->getBlockLabelList()));
-						
-						pathToOperate->erase(pathIterator);
-						pathToOperate->push_back(aPath);
-						
-						
-						resetPath = true;
-						break;
-					}
-					else
-						pathIterator->addHole(*holeIterator);
-						 */ 
 				}
 			}
 			

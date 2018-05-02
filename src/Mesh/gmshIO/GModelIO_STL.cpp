@@ -4,14 +4,14 @@
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
 #include <stdio.h>
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MLine.h"
-#include "Mesh/MTriangle.h"
-#include "Mesh/MQuadrangle.h"
-#include "Mesh/MVertexRTree.h"
-#include "Mesh/discreteFace.h"
-#include "Mesh/StringUtils.h"
+#include "Mesh/GMSH/MLine.h"
+#include "Mesh/GMSH/MTriangle.h"
+#include "Mesh/GMSH/MQuadrangle.h"
+#include "Mesh/GMSH/MVertexRTree.h"
+#include "Mesh/GMSH/discreteFace.h"
+#include "Mesh/GMSH/StringUtils.h"
 
 int GModel::readSTL(const std::string &name, double tolerance)
 {

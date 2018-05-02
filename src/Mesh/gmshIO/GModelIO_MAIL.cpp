@@ -3,9 +3,9 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MTriangle.h"
+#include "Mesh/GMSH/MTriangle.h"
 
 int GModel::writeMAIL(const std::string &name, bool saveAll, double scalingFactor)
 {

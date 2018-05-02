@@ -3,10 +3,10 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MQuadrangle.h"
-#include "Mesh/discreteFace.h"
+#include "Mesh/GMSH/MQuadrangle.h"
+#include "Mesh/GMSH/discreteFace.h"
 
 int GModel::readP3D(const std::string &name)
 {

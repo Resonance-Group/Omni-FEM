@@ -96,6 +96,7 @@ bool geometryEditor2D::addNode(double xPoint, double yPoint, double distanceNode
 			arcSegment.setArcAngle(angle);
             arcSegment.setNumSegments(20);
 			arcSegment.calculate();
+			arcSegment.setArcID(++p_arcNumber);
             
             _lastArcAdded = _arcList.insert(arcSegment);
             break;

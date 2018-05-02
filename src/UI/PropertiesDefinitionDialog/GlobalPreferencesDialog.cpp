@@ -98,16 +98,29 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     gridSizeStream << _preferences->getGridStep();
     
     gridSettingLine1->Add(gridText, 0, wxCENTER | wxALL, 6);
-    gridSettingLine1->Add(12, 0, 0);
+    gridSettingLine1->Add(18, 0, 0);
     gridSettingLine1->Add(_gridStepTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxTOP, 6);
     
     wxStaticText *coordianteText = new wxStaticText(gridSettingPanel, wxID_ANY, "Coordinate:");
     coordianteText->SetFont(*font);
     _coordinateComboBox->Create(gridSettingPanel, wxID_ANY, wxEmptyString, wxPoint(79, 64), wxSize(121, 21), coordianteNameArray);
     _coordinateComboBox->SetFont(*font);
-    _coordinateComboBox->SetSelection((int)_preferences->getCoordinateSystem());
-    
+	
+	switch(_preferences->getCoordinateSystem())
+	{
+		case planarCoordinateEnum::CARTESIAN:
+			 _coordinateComboBox->SetSelection(0);
+			 break;
+		case planarCoordinateEnum::POLAR:
+			_coordinateComboBox->SetSelection(1);
+			 break;
+		default:
+			_coordinateComboBox->SetSelection(0);
+			 break;
+	}
+	
     gridSettingLine2->Add(coordianteText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	gridSettingLine2->Add(9, 0, 0);
     gridSettingLine2->Add(_coordinateComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showGridCheckBox->Create(gridSettingPanel, wxID_ANY, "Show Grid");
@@ -118,6 +131,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _showOriginCheckBox->SetValue(_preferences->getShowOriginState());
     
     gridSettingLine3->Add(_showGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+	gridSettingLine3->Add(20, 0, 0);
     gridSettingLine3->Add(_showOriginCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _snapGridCheckBox->Create(gridSettingPanel, wxID_ANY, "Snap Grid");
@@ -128,6 +142,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _showGridAxisCheckBox->SetValue(_preferences->getShowAxisState());
     
     gridSettingLine4->Add(_snapGridCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
+	gridSettingLine4->Add(20, 0, 0);
     gridSettingLine4->Add(_showGridAxisCheckBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     _showBlockNameCheckBox->Create(gridSettingPanel, wxID_ANY, "Show Block Names");
@@ -142,13 +157,25 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     
     gridSettingLine6->Add(_reverseMouseZoomCheckBox, 0, wxCENTER | wxRIGHT | wxLEFT | wxBOTTOM, 6);
     
-    gridSettingsSizer->Add(gridSettingLine1);
-    gridSettingsSizer->Add(gridSettingLine2);
-    gridSettingsSizer->Add(0, 10, 0);
-    gridSettingsSizer->Add(gridSettingLine3);
-    gridSettingsSizer->Add(gridSettingLine4);
-    gridSettingsSizer->Add(gridSettingLine5);
-    gridSettingsSizer->Add(gridSettingLine6);
+	wxBoxSizer *temp = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer *settingSizer = new wxBoxSizer(wxVERTICAL);
+	
+	gridSettingsSizer->Add(0, 30, 0);
+    gridSettingsSizer->Add(gridSettingLine1, 0, wxLEFT, 35);
+	gridSettingsSizer->Add(0, 10, 0);
+    gridSettingsSizer->Add(gridSettingLine2, 0, wxLEFT, 33);
+    gridSettingsSizer->Add(0, 30, 0);
+	
+	settingSizer->Add(gridSettingLine3);
+    settingSizer->Add(gridSettingLine4);
+    settingSizer->Add(gridSettingLine5);
+    settingSizer->Add(gridSettingLine6);
+	
+	temp->Add(30, 0, 0);
+	temp->Add(settingSizer);
+	
+	gridSettingsSizer->Add(temp);
+
     
     /* This next section is for the preferences related to the settings */
     wxStaticText *probTypeText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Problem Type:");
@@ -156,7 +183,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _problemTypeComboBox->Create(physicsProblemPreferencesPanel, generalFrameButton::ID_ComboBox1, wxEmptyString, wxPoint(98, 12), wxSize(121, 21), problemTypeNameArray);
     _problemTypeComboBox->SetFont(*font);
     documentSettingLine1->Add(probTypeText, 0, wxCENTER | wxTOP | wxBOTTOM | wxLEFT, 6);
-    documentSettingLine1->Add(20, 0, 0);
+    documentSettingLine1->Add(60, 0, 0);
     documentSettingLine1->Add(_problemTypeComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
    
     wxStaticText *lengthUnitsText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Length Units:");
@@ -164,31 +191,34 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     _lengthComboBox->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), lengthName);
     _lengthComboBox->SetFont(*font);
     documentSettingLine2->Add(lengthUnitsText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    documentSettingLine2->Add(23, 0, 0);
+    documentSettingLine2->Add(63, 0, 0);
     documentSettingLine2->Add(_lengthComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
-    if(_problem == physicProblems::PROB_MAGNETICS)
-    {
-        wxStaticText *acSolverText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "AC Solver:");
-        acSolverText->SetFont(*font);
-        _acSolverComboBox->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), acSovlerNameArray);
-        _acSolverComboBox->SetFont(*font);
-        _acSolverComboBox->SetSelection((int)_magneticPreference.getACSolver());
-        documentSettingLine3->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-        documentSettingLine3->Add(41, 0, 0);
-        documentSettingLine3->Add(_acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	wxStaticText *acSolverText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "AC Solver:");
+	acSolverText->SetFont(*font);
+	_acSolverComboBox->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 21), acSovlerNameArray);
+	_acSolverComboBox->SetFont(*font);
+	_acSolverComboBox->SetSelection((int)_magneticPreference.getACSolver());
+	documentSettingLine3->Add(acSolverText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
+	documentSettingLine3->Add(81, 0, 0);
+	documentSettingLine3->Add(_acSolverComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 
-        wxStaticText *freqText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Frequency (Hz):");
-        freqText->SetFont(*font);
-        _frequencyTextCtrl->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
-        std::ostream freqStream(_frequencyTextCtrl);
-        freqStream << std::setprecision(3);
-        freqStream << _magneticPreference.getFrequency();
-        _frequencyTextCtrl->SetFont(*font);
-        documentSettingLine4->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-        documentSettingLine4->Add(11, 0, 0);
-        documentSettingLine4->Add(_frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-    }
+	wxStaticText *freqText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Frequency (Hz):");
+	freqText->SetFont(*font);
+	_frequencyTextCtrl->Create(physicsProblemPreferencesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(121, 20), 0, greaterThenZero);
+	std::ostream freqStream(_frequencyTextCtrl);
+	freqStream << std::setprecision(3);
+	freqStream << _magneticPreference.getFrequency();
+	_frequencyTextCtrl->SetFont(*font);
+	documentSettingLine4->Add(freqText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
+	documentSettingLine4->Add(51, 0, 0);
+	documentSettingLine4->Add(_frequencyTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	
+	if(_problem != physicProblems::PROB_MAGNETICS)
+    {
+		_acSolverComboBox->Enable(false);
+		_frequencyTextCtrl->Enable(false);
+	}
    
     wxStaticText *depthText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Depth:");
     depthText->SetFont(*font);
@@ -197,7 +227,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     dStream << std::setprecision(4);
     _depthTextCtrl->SetFont(*font);
     documentSettingLine5->Add(depthText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    documentSettingLine5->Add(59, 0, 0);
+    documentSettingLine5->Add(99, 0, 0);
     documentSettingLine5->Add(_depthTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
    
     wxStaticText *solverPrecisionText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Solver Precision:");
@@ -207,7 +237,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     spStream << std::setprecision(4);
     _precisionTextCtrl->SetFont(*font);
     documentSettingLine6->Add(solverPrecisionText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    documentSettingLine6->Add(6, 0, 0);
+    documentSettingLine6->Add(46, 0, 0);
     documentSettingLine6->Add(_precisionTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
    
     wxStaticText *minAngleText = new wxStaticText(physicsProblemPreferencesPanel, wxID_ANY, "Min Angle (deg):");
@@ -217,29 +247,23 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
     minAngleStream << std::setprecision(4);
     _minAngleTextCtrl->SetFont(*font);
     documentSettingLine7->Add(minAngleText, 0, wxCENTER | wxBOTTOM | wxLEFT, 6);
-    documentSettingLine7->Add(7, 0, 0);
+    documentSettingLine7->Add(47, 0, 0);
     documentSettingLine7->Add(_minAngleTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
     
     wxStaticBoxSizer *commentSizer = new wxStaticBoxSizer(wxVERTICAL, physicsProblemPreferencesPanel, "Comments");
     commentSizer->GetStaticBox()->SetFont(*font);
-    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(192, 87), wxTE_MULTILINE);
+    _commentsTextCtrl->Create(commentSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(250, 87), wxTE_MULTILINE);
     _commentsTextCtrl->SetFont(*font);
     commentSizer->Add(_commentsTextCtrl, 0, wxALL, 6);
 
     documentSettingsSizer->Add(documentSettingLine1);
     documentSettingsSizer->Add(documentSettingLine2);
-    
-    if(_problem == physicProblems::PROB_MAGNETICS)
-    {
-        documentSettingsSizer->Add(documentSettingLine3);
-        documentSettingsSizer->Add(documentSettingLine4);
-    }
-    
+	documentSettingsSizer->Add(documentSettingLine3);
+	documentSettingsSizer->Add(documentSettingLine4);
     documentSettingsSizer->Add(documentSettingLine5);
     documentSettingsSizer->Add(documentSettingLine6);
     documentSettingsSizer->Add(documentSettingLine7);
     documentSettingsSizer->Add(commentSizer, 0, wxLEFT | wxRIGHT | wxCENTER, 6);
-  //  topSizer->Add(commentSizer, 0, wxLEFT | wxRIGHT | wxCENTER, 6);
     
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
@@ -272,6 +296,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxArrayString meshRecombinationArray;
 	wxArrayString remeshingAlgorithmArray;
 	wxArrayString remeshParameterizationArray;
+	wxArrayString elementOrderArray;
 	
 	structuredMeshArray.Add("Unstructured");
 	structuredMeshArray.Add("Structured");
@@ -295,8 +320,9 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	remeshParameterizationArray.Add("Conformal");
 	remeshParameterizationArray.Add("Rbf Harmonic");
 	
-	//wxBoxSizer *stucturedMeshSizer = new wxBoxSizer(wxHORIZONTAL);
-//	wxBoxSizer *meshArrangmentSizer = new wxBoxSizer(wxHORIZONTAL);
+	elementOrderArray.Add("1");
+	elementOrderArray.Add("2");
+	
 	wxBoxSizer *meshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *meshRecombinationSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *reMeshAlgoSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -305,60 +331,10 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxBoxSizer *elementOrderSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *buttonResetSizer = new wxBoxSizer(wxHORIZONTAL);
 	
-/*	wxStaticText *text1 = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Structure:");
-	text1->SetFont(*font);
-	
-	p_structuredComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox2, wxEmptyString, wxDefaultPosition, wxDefaultSize, structuredMeshArray);
-	p_structuredComboBox->SetFont(*font);
-	
-	if(!p_meshSetting.getStructuredState())
-	{
-		p_structuredComboBox->SetSelection(0);
-		OmniFEMMsg::instance()->MsgInfo("Mesh structure loaded as unstructured");
-	}
-	else
-	{
-		p_structuredComboBox->SetSelection(1);
-		OmniFEMMsg::instance()->MsgInfo("Mesh structure loaded as structured");
-	}
-	
-	stucturedMeshSizer->Add(text1, 0, wxCENTER | wxALL, 6);
-	stucturedMeshSizer->Add(p_structuredComboBox, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
-	
-	wxStaticText *meshArrangmentText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Face Mesh Arrangement: ");
-	meshArrangmentText->SetFont(*font);
-	
-	p_meshArrangementComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox3, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshArrangmentArray);
-	p_meshArrangementComboBox->SetFont(*font);
-	
-	switch(p_meshSetting.getMeshArrangment())
-	{
-		case StructuredArrangement::ARRANGMENT_LEFT:
-			p_meshArrangementComboBox->SetSelection(0);
-			OmniFEMMsg::instance()->MsgInfo("Face Mesh Arrangment loaded as Left");
-			break;
-		case StructuredArrangement::ARRANGMENT_RIGHT:
-			p_meshArrangementComboBox->SetSelection(1);
-			OmniFEMMsg::instance()->MsgInfo("Face Mesh Arrangment loaded as Right");
-			break;
-		case StructuredArrangement::ARRANGMENT_ALTERNATED:
-			p_meshArrangementComboBox->SetSelection(2);
-			OmniFEMMsg::instance()->MsgInfo("Face Mesh Arrangment loaded as Alternated");
-			break;
-	}
-	
-	if(!p_meshSetting.getStructuredState())
-		p_meshArrangementComboBox->Enable(false);
-	else
-		p_meshArrangementComboBox->Enable(true);
-		
-	meshArrangmentSizer->Add(meshArrangmentText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
-	meshArrangmentSizer->Add(p_meshArrangementComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
-	*/
 	wxStaticText *meshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Algorithm:");
 	meshAlgoText->SetFont(*font);
 	
-	p_meshAlgothimComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox4, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshAlgorthimArray);
+	p_meshAlgothimComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox4, wxEmptyString, wxDefaultPosition, wxSize(112, 27), meshAlgorthimArray);
 	p_meshAlgothimComboBox->SetFont(*font);
 	
 	switch(p_meshSetting.getMeshAlgorithm())
@@ -382,12 +358,13 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	meshAlgoSizer->Add(meshAlgoText, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
+	meshAlgoSizer->Add(89, 0, 0);
 	meshAlgoSizer->Add(p_meshAlgothimComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *meshRecombinationText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Mesh Recombination Algorithm:");
 	meshRecombinationText->SetFont(*font);
 	
-	p_meshRecombinationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox5, wxEmptyString, wxDefaultPosition, wxDefaultSize, meshRecombinationArray);
+	p_meshRecombinationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox5, wxEmptyString, wxDefaultPosition, wxSize(112, 27), meshRecombinationArray);
 	p_meshRecombinationComboBox->SetFont(*font);
 	
 	if(!p_meshSetting.getBlossomRecombinationState())
@@ -402,12 +379,13 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	meshRecombinationSizer->Add(meshRecombinationText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	meshRecombinationSizer->Add(4, 0, 0);
 	meshRecombinationSizer->Add(p_meshRecombinationComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *remeshAlgoText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remeshing Algorithm:");
 	remeshAlgoText->SetFont(*font);
 	
-	p_remeshAlgorithmComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox6, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshingAlgorithmArray);
+	p_remeshAlgorithmComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox6, wxEmptyString, wxDefaultPosition, wxSize(112, 27), remeshingAlgorithmArray);
 	p_remeshAlgorithmComboBox->SetFont(*font);
 	
 	if(!p_meshSetting.getAutoRemeshingState())
@@ -422,12 +400,13 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	reMeshAlgoSizer->Add(remeshAlgoText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	reMeshAlgoSizer->Add(57, 0, 0);
 	reMeshAlgoSizer->Add(p_remeshAlgorithmComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticText *remeshParamText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Remeshing Parameterization:");
 	remeshParamText->SetFont(*font);
 	
-	p_remeshParamterizationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox7, wxEmptyString, wxDefaultPosition, wxDefaultSize, remeshParameterizationArray);
+	p_remeshParamterizationComboBox->Create(meshSettingsPanel, generalFrameButton::ID_ComboBox7, wxEmptyString, wxDefaultPosition, wxSize(112, 27), remeshParameterizationArray);
 	p_remeshParamterizationComboBox->SetFont(*font);
 	
 	switch(p_meshSetting.getRemeshParameter())
@@ -447,6 +426,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	}
 	
 	reMeshParamSizer->Add(remeshParamText, 0, wxCENTER | wxLEFT | wxBOTTOM | wxRIGHT, 6);
+	reMeshParamSizer->Add(16, 0, 0);
 	reMeshParamSizer->Add(p_remeshParamterizationComboBox, 0, wxRIGHT | wxBOTTOM, 6);
 	
 	wxStaticText *smootherText = new wxStaticText(meshSettingsPanel, wxID_ANY, "Smoothing Steps:");
@@ -463,6 +443,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	OmniFEMMsg::instance()->MsgInfo("Set smoother steps to " + std::to_string(p_meshSetting.getSmoothingSteps()) + " steps");
 	
 	smootherSizer->Add(smootherText, 0, wxCENTER | wxBOTTOM | wxLEFT | wxRIGHT, 6);
+	smootherSizer->Add(79, 0, 0);
 	smootherSizer->Add(p_smoothingStepsTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	wxStaticBoxSizer *elementSizeSizer = new wxStaticBoxSizer(wxHORIZONTAL, meshSettingsPanel, "Element Size Settings");
@@ -473,7 +454,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxStaticText *maxText = new wxStaticText(elementSizeSizer->GetStaticBox(), wxID_ANY, "Max:");
 	maxText->SetFont(*font);
 	
-	wxSize aSize(60, 23);
+	wxSize aSize(80, 23);
 	
 	p_minElementSizeTextCtrl->Create(elementSizeSizer->GetStaticBox(), wxID_EDIT, wxEmptyString, wxDefaultPosition, aSize, wxTE_PROCESS_ENTER, greaterThenZero);
 	p_minElementSizeTextCtrl->SetFont(*font);
@@ -500,6 +481,7 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	
 	elementSizeSizer->Add(minText, 0, wxCENTER | wxALL, 6);
 	elementSizeSizer->Add(p_minElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
+	elementSizeSizer->Add(51, 0, 0);
 	elementSizeSizer->Add(maxText, 0, wxCENTER | wxBOTTOM | wxTOP | wxRIGHT, 6);
 	elementSizeSizer->Add(p_maxElementSizeTextCtrl, 0, wxCENTER | wxTOP | wxBOTTOM | wxRIGHT, 6);
 	
@@ -509,15 +491,14 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	wxIntegerValidator<unsigned int> elementValidator;
 	elementValidator.SetMin(0);
 	
-	p_ElementOrderTextCtrl->Create(meshSettingsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, elementValidator);
-	p_ElementOrderTextCtrl->SetFont(*font);
-	
-	std::ostream elementOrderStream(p_ElementOrderTextCtrl);
-	elementOrderStream << p_meshSetting.getElementOrder();
+	p_elementOrderComboBox->Create(meshSettingsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(112, 27), elementOrderArray);
+	p_elementOrderComboBox->SetFont(*font);
+	p_elementOrderComboBox->SetSelection(p_meshSetting.getElementOrder() - 1);
 	OmniFEMMsg::instance()->MsgInfo("Loading element order as " + std::to_string(p_meshSetting.getElementOrder()));
 	
 	elementOrderSizer->Add(elementOrder, 0, wxCENTER | wxBOTTOM | wxRIGHT | wxLEFT, 6);
-	elementOrderSizer->Add(p_ElementOrderTextCtrl, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
+	elementOrderSizer->Add(95, 0, 0);
+	elementOrderSizer->Add(p_elementOrderComboBox, 0, wxCENTER | wxBOTTOM | wxRIGHT, 6);
 	
 	p_meshResetDefaultsButton->Create(meshSettingsPanel, wxID_RESET, "Reset to Defaults");
 	p_meshResetDefaultsButton->SetFont(*font);
@@ -528,15 +509,15 @@ void globalPreferencesDialog::createDialog(wxWindow *par)
 	buttonResetSizer->Add(advancedMeshSettings, 0, wxCENTER | wxLEFT | wxRIGHT | wxBOTTOM, 6);
 	buttonResetSizer->Add(p_meshResetDefaultsButton, 0, wxCENTER | wxRIGHT | wxBOTTOM, 6);
 	
-//	meshSettingsSizer->Add(stucturedMeshSizer);
-//	meshSettingsSizer->Add(meshArrangmentSizer);
-	meshSettingsSizer->Add(meshAlgoSizer);
+	meshSettingsSizer->Add(meshAlgoSizer, 0, wxTOP, 6);
 	meshSettingsSizer->Add(meshRecombinationSizer);
 	meshSettingsSizer->Add(reMeshAlgoSizer);
 	meshSettingsSizer->Add(reMeshParamSizer);
+	meshSettingsSizer->Add(elementOrderSizer);
 	meshSettingsSizer->Add(smootherSizer);
 	meshSettingsSizer->Add(elementSizeSizer, 0, wxLEFT | wxRIGHT | wxBOTTOM, 6);
-	meshSettingsSizer->Add(elementOrderSizer);
+	
+	meshSettingsSizer->Add(0, 15, 0);
 	meshSettingsSizer->Add(buttonResetSizer, 0, wxALIGN_RIGHT);
     
     gridSettingPanel->SetSizerAndFit(gridSettingsSizer);
@@ -568,47 +549,6 @@ void globalPreferencesDialog::onProblemTypeComboBox(wxCommandEvent &event)
         default:// Everything else
             break;
     }
-}
-
-
-
-void globalPreferencesDialog::onMeshStructureComboBox(wxCommandEvent &event)
-{
-	switch(p_structuredComboBox->GetSelection())
-	{
-		case 0:
-			p_meshArrangementComboBox->Enable(false);
-			OmniFEMMsg::instance()->MsgStatus("Mesh structure set to unstructured");
-			break;
-		case 1:
-			p_meshArrangementComboBox->Enable(true);
-			OmniFEMMsg::instance()->MsgStatus("Mesh structure set to structured");
-			break;
-		default:
-			break;
-	}
-	
-	p_meshSetting.setStructuredState(p_structuredComboBox->GetSelection() & 1);
-}
-
-
-
-void globalPreferencesDialog::onMeshArrangemesntComboBox(wxCommandEvent &event)
-{
-	switch(p_meshArrangementComboBox->GetSelection())
-	{
-		case 0:
-			OmniFEMMsg::instance()->MsgStatus("Face mesh Arrangment set to Left");
-			break;
-		case 1:
-			OmniFEMMsg::instance()->MsgStatus("Face Mesh Arrangment set to Right");
-			break;
-		case 2:
-			OmniFEMMsg::instance()->MsgStatus("Face Mesh Arrangment set to Alternate");
-			break;
-	}
-	
-	p_meshSetting.setMeshArrangment((StructuredArrangement)p_meshArrangementComboBox->GetSelection());
 }
 
 
@@ -698,12 +638,6 @@ void globalPreferencesDialog::onMeshDefaultsReset(wxCommandEvent &event)
 	
 	p_meshSetting = defaultSetting;
 	
-	p_structuredComboBox->SetSelection(0);
-	
-	p_meshArrangementComboBox->SetSelection(0);
-	
-	p_meshArrangementComboBox->Enable(false);
-	
 	p_meshAlgothimComboBox->SetSelection(0);
 	
 	p_meshRecombinationComboBox->SetSelection(0);
@@ -726,15 +660,7 @@ void globalPreferencesDialog::onMeshDefaultsReset(wxCommandEvent &event)
 	maxStream << std::setprecision(4);
 	maxStream << p_meshSetting.getMaxElementSize();
 	
-/*	p_elementSizeFactorTextCtrl->SetValue(wxEmptyString);
-	std::ostream factorStream(p_elementSizeFactorTextCtrl);
-	factorStream << std::setprecision(4);
-	factorStream << p_meshSetting.getElementSizeFactor();
-	 */ 
-	
-	p_ElementOrderTextCtrl->SetValue(wxEmptyString);
-	std::ostream elementOrderStream(p_ElementOrderTextCtrl);
-	elementOrderStream << p_meshSetting.getElementOrder();
+	p_elementOrderComboBox->SetSelection(0);
 }
 
 
@@ -747,7 +673,7 @@ void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPr
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
     _preferences->setGridStep(value);
-    _preferences->setCoordinateSystem((planarCoordinateEnum)_coordinateComboBox->GetSelection());
+    _preferences->setCoordinateSystem((planarCoordinateEnum)(_coordinateComboBox->GetSelection() + 1));
     _preferences->setShowGridState(_showGridCheckBox->GetValue());
     _preferences->setShowOriginState(_showOriginCheckBox->GetValue());
     _preferences->setSnapGridState(_snapGridCheckBox->GetValue());
@@ -780,14 +706,8 @@ void globalPreferencesDialog::getPreferences(electroStaticPreference &electricPr
 	settings.setMaxElementSize(value);
 	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
 	
-/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
-	settings.setElementSizeFactor(value);
-	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
-	 */ 
-	
-	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
-	settings.setElementOrder((unsigned int)otherValue);
-	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(otherValue));
+	settings.setElementOrder(p_elementOrderComboBox->GetSelection() + 1);
+	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(p_elementOrderComboBox->GetSelection() + 1));
 }
 
 
@@ -800,7 +720,7 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, m
     /* This section will get the values for the grid preferences */
     _gridStepTextCtrl->GetValue().ToDouble(&value);
     _preferences->setGridStep(value);
-    _preferences->setCoordinateSystem((planarCoordinateEnum)_coordinateComboBox->GetSelection());
+    _preferences->setCoordinateSystem((planarCoordinateEnum)(_coordinateComboBox->GetSelection() + 1));
     _preferences->setShowGridState(_showGridCheckBox->GetValue());
     _preferences->setShowOriginState(_showOriginCheckBox->GetValue());
     _preferences->setSnapGridState(_snapGridCheckBox->GetValue());
@@ -836,14 +756,8 @@ void globalPreferencesDialog::getPreferences(magneticPreference &magneticPref, m
 	settings.setMaxElementSize(value);
 	OmniFEMMsg::instance()->MsgStatus("Set max element size as " + std::to_string(value));
 	
-/*	p_elementSizeFactorTextCtrl->GetValue().ToDouble(&value);
-	settings.setElementSizeFactor(value);
-	OmniFEMMsg::instance()->MsgStatus("Set element size factor as " + std::to_string(value));
-	 */ 
-	
-	p_ElementOrderTextCtrl->GetValue().ToLong(&otherValue);
-	settings.setElementOrder((unsigned int)otherValue);
-	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(otherValue));
+	settings.setElementOrder(p_elementOrderComboBox->GetSelection() + 1);
+	OmniFEMMsg::instance()->MsgStatus("Set element order as " + std::to_string(p_elementOrderComboBox->GetSelection() + 1));
 }      
 
 
@@ -884,8 +798,6 @@ void globalPreferencesDialog::onTextChange(wxCommandEvent &event)
 
 wxBEGIN_EVENT_TABLE(globalPreferencesDialog, wxPropertySheetDialog)
     EVT_COMBOBOX(generalFrameButton::ID_ComboBox1, globalPreferencesDialog::onProblemTypeComboBox)
-	EVT_COMBOBOX(generalFrameButton::ID_ComboBox2, globalPreferencesDialog::onMeshStructureComboBox)
-	EVT_COMBOBOX(generalFrameButton::ID_ComboBox3, globalPreferencesDialog::onMeshArrangemesntComboBox)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox4, globalPreferencesDialog::onMeshAlgoComboBox)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox5, globalPreferencesDialog::onMeshRecombinationComboBox)
 	EVT_COMBOBOX(generalFrameButton::ID_ComboBox6, globalPreferencesDialog::onRemeshAlgo)

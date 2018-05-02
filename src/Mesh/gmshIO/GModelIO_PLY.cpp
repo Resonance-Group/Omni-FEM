@@ -5,8 +5,8 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "Mesh/GModel.h"
-#include "Mesh/MTriangle.h"
+#include "Mesh/GMSH/GModel.h"
+#include "Mesh/GMSH/MTriangle.h"
 #include "common/OS.h"
 
 #if defined(HAVE_POST)

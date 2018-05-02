@@ -10,21 +10,21 @@
 #include <sstream>
 #include <cassert>
 #include <iomanip>
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/GmshDefines.h"
-#include "Mesh/MPoint.h"
-#include "Mesh/MLine.h"
-#include "Mesh/MTriangle.h"
-#include "Mesh/MQuadrangle.h"
+#include "Mesh/GMSH/GmshDefines.h"
+#include "Mesh/GMSH/MPoint.h"
+#include "Mesh/GMSH/MLine.h"
+#include "Mesh/GMSH/MTriangle.h"
+#include "Mesh/GMSH/MQuadrangle.h"
 //#include "MTetrahedron.h"
 //#include "MHexahedron.h"
 //#include "MPrism.h"
 //#include "MPyramid.h"
-#include "Mesh/MElementCut.h"
-#include "Mesh/StringUtils.h"
-#include "Mesh/GmshMessage.h"
-#include "Mesh/Context.h"
+#include "Mesh/GMSH/MElementCut.h"
+#include "Mesh/GMSH/StringUtils.h"
+#include "Mesh/GMSH/GmshMessage.h"
+#include "Mesh/GMSH/Context.h"
 
 
 #define FAST_ELEMENTS 1

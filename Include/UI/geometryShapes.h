@@ -579,20 +579,33 @@ public:
 class simplifiedEdge
 {
 private:
+	//! The starting point (or node) of the line
 	wxRealPoint p_firstPoint = wxRealPoint(0, 0);
 	
+	//! The ending point (or node) of the line
 	wxRealPoint p_secondPoint = wxRealPoint(0, 0);
 	
+	//! The mindpoint of the line
 	wxRealPoint p_midPoint = wxRealPoint(0, 0);
 	
+	//! The arc ID that is represented by the edge
 	unsigned long p_arcID = 0;
 	
+	//! Boolean to indicate if the start and end points were swapped
 	bool p_isSwapped = false;
 	
+	//! Boolean used to indicate if the edge needs to be deleted
 	bool p_willDelete = false;
 	
 public:
 
+	/**
+	 * @brief The constructor for the class
+	 * @param firstPoint The start point of the line
+	 * @param secondPoint The end point of the line
+	 * @param midPoint THe middle point of the line
+	 * @param arcID Optional parameter to indicate if the line is representing an arc. In this case, this is the arc ID for that line
+	 */
 	simplifiedEdge(wxRealPoint firstPoint, wxRealPoint secondPoint, wxRealPoint midPoint, unsigned long arcID = 0)
 	{
 		p_firstPoint = firstPoint;
@@ -601,44 +614,75 @@ public:
 		p_arcID = arcID;
 	}
 	
+	/**
+	 * @brief An empty constructor for two step creation
+	 */
 	simplifiedEdge()
 	{
 		
 	}
 	
+	/**
+	 * @brief 	Function used to swap the starting and ending points of the line
+	 * 			This function will also toggle the isSwapped boolean.
+	 */
 	void swap()
 	{
 		wxRealPoint temp = p_firstPoint;
 		p_firstPoint = p_secondPoint;
 		p_secondPoint = temp;
-		p_isSwapped = true;
+		p_isSwapped = !p_isSwapped;
 	}
 	
+	/**
+	 * @brief Sets the starting point of the line
+	 * @param firstPoint The start point of the line
+	 */
 	void setStartPoint(wxRealPoint firstPoint)
 	{
 		p_firstPoint = firstPoint;
 	}
 	
+	/**
+	 * @brief Returns the starting point of the line
+	 * @return Returns the start point
+	 */
 	wxRealPoint getStartPoint()
 	{
 		return p_firstPoint;
 	}
 	
+	/**
+	 * @brief Sets the ending point of the line
+	 * @param secondPoint The end point of the line
+	 */
 	void setEndPoint(wxRealPoint secondPoint)
 	{
 		p_secondPoint = secondPoint;
 	}
 	
+	/**
+	 * @brief Returns the ending point of the line
+	 * @return Returns the end point
+	 */
 	wxRealPoint getEndPoint()
 	{
 		return p_secondPoint;
 	}
 	
+	/**
+	 * @brief Sets the mid point of the line
+	 * @param midPoint The mid point of the line
+	 */
 	void setMidPoint(wxRealPoint midPoint)
 	{
 		p_midPoint = midPoint;
 	}
 	
+	/**
+	 * @brief Returns the mid point of the line
+	 * @return Returns the mid point
+	 */
 	wxRealPoint getMidPoint()
 	{
 		return p_midPoint;
@@ -657,21 +701,36 @@ public:
 					-(point.x - p_firstPoint.x) * (p_secondPoint.y - p_firstPoint.y));
 	}
 	
+	/**
+	 * @brief Returns the arc ID that the line represents
+	 * @return Returns the arc ID. If the line does not represent an arc, returns 0
+	 */
 	unsigned long getArcID()
 	{
 		return p_arcID;
 	}
 	
+	/**
+	 * @brief Returns the swapped state of the line
+	 * @return Returns true if swapped. Otherwise, returns false
+	 */
 	bool getSwappedState()
 	{
 		return p_isSwapped;
 	}
 	
+	/**
+	 * @brief Function used to set the delete status of the line to true
+	 */
 	void setDeleteStatus()
 	{
 		p_willDelete = true;
 	}
 	
+	/**
+	 * @brief Returns the boolean for the deletition status of the line
+	 * @return Returns true if the line is to be deleted. Otherwise, returns false.
+	 */
 	bool getDeleteState() const
 	{
 		return p_willDelete;
@@ -1070,11 +1129,19 @@ public:
 		p_isSwapped = !p_isSwapped;
 	}
 	
+	/**
+	 * @brief Returns the swapped state
+	 * @return Returns true if the start and end node were swapped from their original position. Otherwise, returns false
+	 */
 	bool getSwappedState()
 	{
 		return p_isSwapped;
 	}
 	
+	/**
+	 * @brief Returns a simplified edge representing the line
+	 * @return Returns a simplified edge
+	 */
 	std::vector<simplifiedEdge> getBoundingEdges()
 	{
 		std::vector<simplifiedEdge> returnVector;
@@ -1352,6 +1419,21 @@ public:
 		
 		calculateDistance();
 		
+		calculateMidPoint();
+		
+		
+		
+        return;
+    }
+	
+	void calculateMidPoint()
+	{
+		double xMid = (_firstNode->getCenterXCoordinate() + _secondNode->getCenterXCoordinate()) / 2.0;
+        
+        double yMid = (_firstNode->getCenterYCoordinate() + _secondNode->getCenterYCoordinate()) / 2.0;
+		
+		double slope = (_firstNode->getCenterYCoordinate() - _secondNode->getCenterYCoordinate()) / (_firstNode->getCenterXCoordinate() - _secondNode->getCenterXCoordinate());
+		
 		double vx = xMid - xCenterCoordinate;
 		double vy = yMid - yCenterCoordinate;
 		
@@ -1359,7 +1441,7 @@ public:
 		
 		if(lev == 0)
 		{
-			if(abs(slope) >= 0 && abs(slope) <= 1e-2)
+			if(abs(slope) >= 0 && abs(slope) <= 0.1)
 			{
 				if(_firstNode->getCenterXCoordinate() > _secondNode->getCenterXCoordinate())
 				{
@@ -1392,8 +1474,7 @@ public:
 			p_yMid = yCenterCoordinate + _radius * vy / lev;
 		}
 		
-        return;
-    }
+	}
     
 	/**
 	 * @brief Retrieves the radius of the arc
@@ -1439,6 +1520,12 @@ public:
 		p_arcID = id;
 	}
 	
+	/**
+	 * @brief Function that is used in order to return a list of edges representating the box around the arc.
+	 * 			The first simplified edge in the vector will always be the line between the starting and ending
+	 * 			node of the arc. Afer which, the edges will proceed in a CCW orientation.
+	 * @return Returns a vector of simplified edges that encase the arc
+	 */
 	std::vector<simplifiedEdge> getBoundingEdges()
 	{
 		std::vector<simplifiedEdge> returnVector;
@@ -1489,38 +1576,68 @@ public:
 };
 
 
-
+/**
+ * @class arcPolygon
+ * @author Phillip
+ * @date 13/04/18
+ * @file geometryShapes.h
+ * @brief Class that is used to describe the bo that encases an arc. This is used in the PIP algorithm. If a point
+ * 			lies within the polygon, then a test will need to be performed to see if the point lies within the box
+ * 			If so, then another test will need to be performed to determine which side of the arc that the points lies
+ * 			which will ulitmly determine if te point is inside/outside of the polygon. This class contains the function 
+ * 			that is used to determine if the point lies within the box. 
+ * 
+ */
 class arcPolygon
 {
 private:
+	//! THe vector of simplified edges that compose the box
 	std::vector<simplifiedEdge> p_polygonEdges;
 	
-	bool p_isSorted = false;
-	
-	bool p_isCCW = false;
-	
+	//! The arc which the arc polygon represents.
 	arcShape p_arc;
 	
+	//! Boolean that is used to indicate if the first edge of the list has swapped parameters
 	bool p_isSwapped = false;
 	
 public:
 
+	/**
+	 * @brief Constructor for the class
+	 * @param edgeList The list of edges comprising the arc-box
+	 * @param arc The arc that is associated with the box
+	 */
 	arcPolygon(std::vector<simplifiedEdge> edgeList, arcShape arc)
 	{
 		p_polygonEdges = edgeList;
 		p_arc = arc;
 	}
 	
+	/**
+	 * @brief Sets the swapped state to true. The swap is true if the start and end node of the first
+	 * 			simplified edge of the box needs to be swapped
+	 */
 	void setSwapped()
 	{
 		p_isSwapped = true;
 	}
 	
+	/**
+	 * @brief Returns the swapped state
+	 * @return Returns true if the first simplified edge is swapped. Otherwise, returns false.
+	 */
 	bool getSwappedState()
 	{
 		return p_isSwapped;
 	}
 	
+	/**
+	 * @brief A PIP algorithm that is ran to test if a point lies within the box encasing the arc
+	 * 			This algorithm is based on the winding number algorithm. The function will first
+	 * 			determing the orientation of the edges and adjust accordingly.
+	 * @param point The point that is to be tested to see if it lies within the box
+	 * @return Returns true if the point is inside the box, otherwise, returns false
+	 */
 	bool isInside(wxRealPoint point)
 	{
 		double subtractionTerms = 0;
@@ -1599,11 +1716,19 @@ public:
 			return false;
 	}
 	
+	/**
+	 * @brief Returns the vector of simplified edges comprising the box
+	 * @return Returns a vector of the simplified edges
+	 */
 	std::vector<simplifiedEdge> getEdges()
 	{
 		return p_polygonEdges;
 	}
 	
+	/**
+	 * @brief Returns the arc that is encased within the box
+	 * @return Returns an arcShape
+	 */
 	arcShape getArc()
 	{
 		return p_arc;

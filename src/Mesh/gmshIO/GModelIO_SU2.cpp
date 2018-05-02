@@ -5,9 +5,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MElement.h"
+#include "Mesh/GMSH/MElement.h"
 
 static std::string physicalName(GModel *m, int dim, int num)
 {

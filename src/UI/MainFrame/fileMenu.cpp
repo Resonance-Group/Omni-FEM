@@ -62,9 +62,9 @@ void OmniFEMMainFrame::onOpenFile(wxCommandEvent &event)
 		if(_UIState != systemState::MODEL_DEFINING)
 		{
 			createModelDefiningClient();
-			_model->deleteMesh();
 		}
-			
+		
+		_model->deleteMesh();	
 		_model->SetSize(this->GetClientSize() - wxSize(12, 12));
 		
 		wxString appendedTitle = "Omni-FEM - ";

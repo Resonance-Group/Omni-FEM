@@ -101,7 +101,7 @@ public:
     /*!
         \param coordinateSystem The coordinate system that is to be used 
                                 with the problem. Currently, this can be
-                                either plar or cartesian.
+                                either planar or cartesian.
     */ 
     void setCoordinateSystem(planarCoordinateEnum system)
     {

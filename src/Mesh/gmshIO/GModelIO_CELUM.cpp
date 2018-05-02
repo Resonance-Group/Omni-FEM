@@ -3,10 +3,10 @@
 // See the LICENSE.txt file for license information. Please report all
 // bugs and problems to the public mailing list <gmsh@onelab.info>.
 
-#include "Mesh/GModel.h"
+#include "Mesh/GMSH/GModel.h"
 #include "common/OS.h"
-#include "Mesh/MTriangle.h"
-#include "Mesh/MQuadrangle.h"
+#include "Mesh/GMSH/MTriangle.h"
+#include "Mesh/GMSH/MQuadrangle.h"
 
 class CelumInfo{
 public:
