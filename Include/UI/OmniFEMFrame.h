@@ -43,6 +43,8 @@
 #include "common/OmniFEMMessage.h"
 #include <common/ProblemDefinition.h>
 
+#include <Mesh/ClosedPath.h>
+
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 

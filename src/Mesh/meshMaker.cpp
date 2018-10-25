@@ -693,6 +693,8 @@ void meshMaker::mesh()
 
 	if(p_meshModel->getNumMeshVertices() > 0)
 		p_meshModel->indexMeshVertices(true);
+		
+	p_problemDefinition->setClosedPath(p_closedContourPaths);
 	
 	OmniFEMMsg::instance()->MsgStatus("Meshing Finished");
 }

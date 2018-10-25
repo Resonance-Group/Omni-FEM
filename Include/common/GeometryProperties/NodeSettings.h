@@ -42,6 +42,8 @@ private:
         apprioate parameters when the program is solving the simulation
     */ 
     std::string _nodalPropertyName = "None";
+	
+	nodalProperty *p_nodalProperty = nullptr;
     
     //! This will store the name of the conductor property that the node is assigned to.
     /*!
@@ -50,6 +52,8 @@ private:
         when the progam is solving the simulation
     */ 
     std::string _conductorPropertyName = "None";
+	
+	conductorProperty p_conductorProperty = nullptr;
     
     //! The group number that the node belongs to.
     /*!
@@ -142,6 +146,36 @@ public:
     {
         return _groupNumber;
     }
+	
+	void setNodalProperty(nodalProperty &property)
+	{
+		p_nodalProperty = &property;
+	}
+	
+	void setNodalProperty(nodalProperty *property)
+	{
+		p_nodalProperty = property;
+	}
+	
+	nodalProperty* getNodalProperty()
+	{
+		return p_nodalProperty;
+	}
+	
+	void setConductorProperty(conductorProperty *property)
+	{
+		p_conductorProperty = property;
+	}
+	
+	void setConductorProperty(conductorProperty &property)
+	{
+		p_conductorProperty = property;
+	}
+	
+	conductorProperty* getConductorProperty()
+	{
+		return p_conductorProperty;
+	}
 };
 
 

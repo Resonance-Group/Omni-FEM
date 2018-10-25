@@ -44,6 +44,10 @@ private:
         access to the master list. In later versions, this will be a pointer
     */ 
     std::string _boundaryName = "None";
+	
+	electricalBoundary *p_electricalBoundary = nullptr;
+	
+	magneticBoundary *p_magneticBoundary = nullptr;
     
     //! Boolean that specifies if the mesher should automatically choose the mesh size along the boundary
     /*!
@@ -67,6 +71,8 @@ private:
         In later versions, this will be a pointer
     */ 
     std::string _conductorName = "None";
+	
+	conductorProperty *p_conductoryProperty = nullptr;
     
     //! Boolean that states if the segment is hidden in the mesher
     /*!
@@ -256,5 +262,59 @@ public:
     {
         return _groupNumber;
     }
+	
+	void setElectricalBoundary(electricalBoundary &boundary)
+	{
+		p_electricalBoundary = &boundary;
+	}
+	
+	void setElectricalBoundary(electricalBoundary *boundary)
+	{
+		p_electricalBoundary = boundary;
+	}
+	
+	electricalBoundary* getElectricalBoundary()
+	{
+		if(p_electricalBoundary)
+			return p_electricalBoundary;
+		else
+			return nullptr;
+	}
+	
+	void setMagneticBoundary(magneticBoundary &boundary)
+	{
+		p_magneticBoundary = &magneticBoundary;
+	}
+	
+	void setMagneticBoundary(magneticBoundary *boundary)
+	{
+		p_magneticBoundary = boundary;
+	}
+	
+	magneticBoundary* getMagneticBoundary()
+	{
+		if(p_magneticBoundary)
+			return p_magneticBoundary;
+		else
+			return nullptr;
+	}
+	
+	void setConductorProperty(conductorProperty &property)
+	{
+		p_conductoryProperty = &property;
+	}
+	
+	void setConductorProperty(conductorProperty *property)
+	{
+		p_conductoryProperty = property;
+	}
+	
+	conductorProperty* getConductorProperty()
+	{
+		if(p_conductoryProperty)
+			return p_conductoryProperty
+		else
+			return nullptr;
+	}
 };
 #endif

@@ -75,6 +75,9 @@ private:
 	//! A pointer to the GMSH model
 	GModel *p_meshModel;
 	
+	//! Stores a local copy of the problem definition
+	problemDefinition *p_problemDefinition = nullptr;
+	
 	//! This is the total number of lines within the geometry. This is the number of lines and arcs
 	unsigned long p_numberofLines = 0;
 	

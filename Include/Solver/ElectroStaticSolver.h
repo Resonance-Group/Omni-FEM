@@ -32,6 +32,12 @@
 
 #include <UI/ModelDefinition/ModelDefinition.h>
 
+#include <common/ElectricalBoundary.h>
+#include <common/ElectroStaticMaterial.h>
+#include <common/ProblemDefinition.h>
+
+#include <Mesh/ClosedPath.h>
+
 using namespace dealii;
 
 class electricFieldPostProcessor : public DataPostprocessorVector<2>
@@ -59,6 +65,9 @@ class ElectroStaticSolver
 {
 private:
 	meshOptimizer triangulation;
+	
+	std::vector<closedPath> *p_closedPath = nullptr;
+	
 	FE_Q<2> p_fe;
 	DoFHandler<2> p_DOFHandler;
 	SparsityPattern p_sparsePattern;
@@ -74,7 +83,7 @@ private:
 	
 public:
 	
-	ElectroStaticSolver(modelDefinition *model)
+	ElectroStaticSolver(modelDefinition *model, problemDefinition problem)
 	{
 		triangulation.setupTriangulation(model);
 	}
