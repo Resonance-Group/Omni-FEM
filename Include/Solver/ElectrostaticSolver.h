@@ -77,15 +77,22 @@ private:
 	Vector<double>	p_systemRHS;
 	
 	void setupSystem();
+	
 	void assembleSystem();
+	
 	void solveSystem();
+	
 	void resultsProcessing();
+	
+	void setupGrid();
 	
 public:
 	
 	ElectroStaticSolver(modelDefinition *model, problemDefinition problem)
 	{
 		triangulation.setupTriangulation(model);
+		
+		p_closedPath = problem.getClosedPath();
 	}
 
 	void run();

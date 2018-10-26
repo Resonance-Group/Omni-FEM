@@ -47,6 +47,7 @@ class electricalBoundary : public boundaryCondition
 		ar & _fixedVoltageValue;
 		ar & _surfaceChargeDensity;
 		ar & _type;
+		ar & p_boundaryID;
 	}
 private:
     //! This variable stores the voltage value in a fixed voltage boundary condition
@@ -54,6 +55,9 @@ private:
     
     //! This variable stores the charge density value in a surface charge density boundary condition
     double _surfaceChargeDensity = 0;
+	
+	//! The boundary ID associated with the boundary. This is used in the solver primarly
+	unsigned int p_boundaryID = 0;
     
     //! This variable identifies what boundary condition this property is
     bcEnumElectroStatic _type;
@@ -115,6 +119,26 @@ public:
     {
         return _type;
     }
+	
+	/**
+	 * @brief Function that is used in order to set the boudary ID of the boundary
+	 * 			This is for internal purposes only and the user will not eb able to
+	 * 			edit this property
+	 * @param ID The ID of the boundary
+	 */
+	void setBoundaryID(unsigned int ID)
+	{
+		p_boundaryID = ID;
+	}
+	
+	/**
+	 * @brief Retrieves the boundary ID of the boundary
+	 * @return Returns the boundary ID
+	 */
+	unsigned int getBoundaryID()
+	{
+		return p_boundaryID;
+	}
 };
 
 #endif

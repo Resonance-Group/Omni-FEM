@@ -120,6 +120,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
+			newMat.setMaterialID(_magneticMaterialList->size() + 1);
             _magneticMaterialList->push_back(newMat);
             _selection->Append(newMat.getName());
             _selection->SetSelection(0);
@@ -141,6 +142,7 @@ void materialDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
+			newMaterial.setMaterialID(_electroStaticMaterialList->size() + 1);
             _electroStaticMaterialList->push_back(newMaterial);
             _selection->Append(newMaterial.getName());
             _selection->SetSelection(0); 
@@ -157,9 +159,17 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
         if(!_magneticMaterialList->empty())
         {
             int currentSelection = _selection->GetCurrentSelection();
+			unsigned int IDCounter = 1;
+			
             _magneticMaterialList->erase(_magneticMaterialList->begin() + currentSelection);
             _selection->Delete(currentSelection);
             _selection->SetSelection(0);
+			
+			for(auto materialIterator = _magneticMaterialList->begin(); materialIterator != _magneticMaterialList->end(); materialIterator++)
+			{
+				materialIterator->setMaterialID(IDCounter++);
+			}
+			
             if(_magneticMaterialList->empty())
                 _selection->SetValue(wxEmptyString);
         }
@@ -169,9 +179,17 @@ void materialDialog::onDeleteProperty(wxCommandEvent &event)
         if(!_electroStaticMaterialList->empty())
         {
             int currentSelection = _selection->GetCurrentSelection();
+			unsigned int IDCounter = 1;
+			
             _electroStaticMaterialList->erase(_electroStaticMaterialList->begin() + currentSelection);
             _selection->Delete(currentSelection);
             _selection->SetSelection(0);
+			
+			for(auto materialIterator = _electroStaticMaterialList->begin(); materialIterator != _electroStaticMaterialList->end(); materialIterator++)
+			{
+				materialIterator->setMaterialID(IDCounter++);
+			}
+			
             if(_electroStaticMaterialList->empty())
                 _selection->SetValue(wxEmptyString);
         }

@@ -113,6 +113,7 @@ void boundaryDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
+			magBC.setBoundaryID(_magneticBoundaryList->size() + 1);
             _magneticBoundaryList->push_back(magBC);
             _selection->Append(magBC.getBoundaryName());
             _selection->SetSelection(0);
@@ -134,6 +135,7 @@ void boundaryDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
+			estaticBC.setBoundaryID(_electricalBoundaryList->size() + 1);
             _electricalBoundaryList->push_back(estaticBC);
             _selection->Append(estaticBC.getBoundaryName());
             _selection->SetSelection(0);
@@ -150,9 +152,17 @@ void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
         if(!_magneticBoundaryList->empty())
         {
             int currentSelection = _selection->GetCurrentSelection();
+			unsigned int boundaryIDCounter = 1;
+			
             _magneticBoundaryList->erase(_magneticBoundaryList->begin() + currentSelection);
             _selection->Delete(currentSelection);
             _selection->SetSelection(0);
+			
+			for(auto boundaryIterator = _magneticBoundaryList->begin(); boundaryIterator != _magneticBoundaryList->end(); boundaryIterator++)
+			{
+				boundaryIterator->setBoundaryID(boundaryIDCounter++);
+			}
+			
             if(_magneticBoundaryList->empty())
                 _selection->SetValue(wxEmptyString);
         }
@@ -162,9 +172,17 @@ void boundaryDialog::onDeleteProperty(wxCommandEvent &event)
         if(!_electricalBoundaryList->empty())
         {
             int currentSelection = _selection->GetCurrentSelection();
+			unsigned int boundaryIDCounter = 1;
+			
             _electricalBoundaryList->erase(_electricalBoundaryList->begin() + currentSelection);
             _selection->Delete(currentSelection);
             _selection->SetSelection(0);
+			
+			for(auto boundaryIterator = _electricalBoundaryList->begin(); boundaryIterator != _electricalBoundaryList->end(); boundaryIterator++)
+			{
+				boundaryIterator->setBoundaryID(boundaryIDCounter++);
+			}
+			
             if(_electricalBoundaryList->empty())
                 _selection->SetValue(wxEmptyString);
         }

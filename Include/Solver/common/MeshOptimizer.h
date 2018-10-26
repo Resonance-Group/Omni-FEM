@@ -52,7 +52,9 @@ public:
 		// May need to add a manifold object here?
 	}
 	
-	
+	/**
+	 * @brief Returns the Deal.ii mesh
+	 */
 	Triangulation<2> getTriangulation()
 	{
 		return p_problemMesh;
