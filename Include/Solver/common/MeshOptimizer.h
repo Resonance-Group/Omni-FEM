@@ -55,9 +55,9 @@ public:
 	/**
 	 * @brief Returns the Deal.ii mesh
 	 */
-	Triangulation<2> getTriangulation()
+	Triangulation<2> *getTriangulation()
 	{
-		return p_problemMesh;
+		return &p_problemMesh;
 	}
 };
 

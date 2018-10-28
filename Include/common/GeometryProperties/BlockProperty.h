@@ -60,6 +60,15 @@ private:
         for all simulations
     */ 
     std::string _materialName = "None";
+	
+	//! This is a pointer to the material for the electrostatic simulation
+	electrostaticMaterial *p_eStaticMaterial = nullptr;
+	
+	//! This is a pointer to the material for the magnetic simulation
+	magneticMaterial *p_magneticMaterial = nullptr;
+	
+	//! This is a pointer to the circuit property associated with the block label
+	circuitProperty *p_circuitProperty = nullptr;
     
     //! The circuit name that is associated with the block label
     /*!
@@ -365,6 +374,87 @@ public:
     {
         return _isDefault;
     }
+	
+	/**
+	 * @brief Function that is used to set the electrostatic material for the label.
+	 * @param material Pointer pointing to the material that will be associated with the label
+	 */
+	void setElectricalMaterial(electrostaticMaterial *material)
+	{
+		p_eStaticMaterial = material;
+	}
+	
+	/**
+	 * @brief Function that is used to set the electrostatic material for the label.
+	 * @param material A reference to the material that will be associated with the label
+	 */
+	void setElectricalMaterial(electrostaticMaterial &material)
+	{
+		p_eStaticMaterial = &material;
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the electrostatic material
+	 * @return Returns a pointer of the electrostatic material associated with the label
+	 */
+	electrostaticMaterial *getElectricalMaterial()
+	{
+		return p_eStaticMaterial;
+	}
+	
+	/**
+	 * @brief Function that is used to set the magnetic material for the label.
+	 * @param material Pointer pointing to the material that will be associated with the label
+	 */
+	void setMagneticMaterial(magneticMaterial *material)
+	{
+		p_magneticMaterial = material;
+	}
+	
+	/**
+	 * @brief Function that is used to set the magnetic material for the label.
+	 * @param material A reference to the material that will be associated with the label
+	 */
+	void setMagneticMaterial(magneticMaterial &material)
+	{
+		p_magneticMaterial = &material;
+	}
+	
+	/**
+	 * @brief Function that is used to retrieve the magnetic material
+	 * @return Returns a pointer of the magnetic material associated with the label
+	 */
+	magneticMaterial *getMagneticMaterial()
+	{
+		return p_magneticMaterial;
+	}
+	
+	/**
+	 * @brief Function that is used to set the circuit property for the label.
+	 * @param circuit Pointer pointing to the circuit property that will be associated with the label
+	 */
+	void setCircuitProperty(circuitProperty *circuit)
+	{
+		p_circuitProperty = circuit;
+	}
+	
+	/**
+	 * @brief Function that is used to set the circuit property for the label.
+	 * @param circuit Pointer pointing to the circuit property that will be associated with the label
+	 */
+	void setCircuitProperty(circuitProperty &ciruit)
+	{
+		p_circuitProperty = &circuit;
+	}
+	
+	/**
+	 * @brief Retrieves the circuit property of the block label
+	 * @return Returns a pointer pointing to the circuit property associated with the block label
+	 */
+	circuitProperty *getCircuitProperty()
+	{
+		return p_circuitProperty;
+	}
 };
 
 #endif

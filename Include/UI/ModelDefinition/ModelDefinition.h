@@ -936,9 +936,6 @@ public:
     void copyRotateSelection(double angularShift, wxRealPoint aboutPoint, unsigned int numberOfCopies);
     
     //! The function that will select any dangling nodes.
-    /*!
-        
-    */
 	/**
 	 * @brief 	A node is considered dangling when the node does not form a closed boundary.
 				This occurs if there is just 1 line or arc connected to the node.

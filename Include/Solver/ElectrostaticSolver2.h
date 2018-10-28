@@ -29,6 +29,7 @@
 #include <deal.II/numerics/data_postprocessor.h>
 
 #include <Solver/common/MeshOptimizer.h>
+#include <Solver/common/CommonSolverFunctions.h>
 
 #include <UI/ModelDefinition/ModelDefinition.h>
 
@@ -40,6 +41,7 @@
 #include <common/ElectroStaticMaterial.h>
 
 #include <Mesh/ClosedPath.h>
+
 
 using namespace dealii;
 
@@ -70,6 +72,8 @@ private:
 	meshOptimizer triangulation;
 	
 	std::vector<closedPath> *p_closedPath = nullptr;
+	std::vector<electrostaticMaterial> *p_materialList = nullptr;
+	std::vector<electricalBoundary> *p_boundaryList = nullptr;
 	
 	FE_Q<2> p_fe;
 	DoFHandler<2> p_DOFHandler;
@@ -91,11 +95,13 @@ private:
 	
 public:
 	
-	ElectroStaticSolver(modelDefinition *model, problemDefinition problem)
+	ElectroStaticSolver(modelDefinition *model, problemDefinition &problem)
 	{
 		triangulation.setupTriangulation(model);
 		
 		p_closedPath = problem.getClosedPath();
+		p_materialList = problem.getElectricalMaterialList();
+		p_boundaryList = problem.getElectricalBoundaryList();
 	}
 
 	void run();

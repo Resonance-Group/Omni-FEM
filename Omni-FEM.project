@@ -354,6 +354,7 @@
     <VirtualDirectory Name="Solver">
       <File Name="Include/Solver/ElectrostaticSolver.h"/>
       <VirtualDirectory Name="common">
+        <File Name="Include/Solver/common/CommonSolverFunctions.h"/>
         <File Name="Include/Solver/common/MeshOptimizer.h"/>
       </VirtualDirectory>
     </VirtualDirectory>

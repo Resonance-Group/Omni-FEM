@@ -1,4 +1,4 @@
-#include <Solver/ElectrostaticSolver.h>
+#include <Solver/ElectrostaticSolver2.h>
 
 void ElectroStaticSolver::run()
 {
@@ -9,15 +9,13 @@ void ElectroStaticSolver::run()
 
 void ElectroStaticSolver::setupGrid()
 {
-	for(auto cellIterator = triangulation.getTriangulation().begin_active(); cellIterator != triangulation.getTriangulation().end(); celIterator++)
+	for(auto cellIterator = triangulation.getTriangulation()->begin_active(); cellIterator != triangulation.getTriangulation()->end(); celIterator++)
 	{
 		closedPath closedContour;
 		
 		for(auto contourIterator = p_closedPath->begin(); contourIterator != p_closedPath->end(); contourIterator++)
 		{
-			// Call function that will check if the mesh center is inside of the contour
 			wxRealPoint cellCenter = wxRealPoint(cellIterator->center()(0), cellIterator->center()(1));
-			
 			
 			if(contourIterator->pointInBoundingBox(cellCenter))
 			{
@@ -42,8 +40,18 @@ void ElectroStaticSolver::setupGrid()
 						
 						// Now, we need to check if a face of the triagulation cell is on a boundary of the contour
 						// If so, we need to set the boundary ID accordingly
+						for(unsigned int f = 0; f < GeometryInfo<2>::faces_per_cell; f++)
+						{
+							for(auto edgeIterator = contourIterator->getClosedPath()->begin(); edgeIterator != contourIterator->getClosedPath()->end(); edgeIterator++)
+							{
+								if(CommonSolverFunctions::faceLiesOnBoundary(cellIterator->face(f), *edgeIterator))
+								{
+									edgeLineShape *edge = *edgeIterator;
+									cellIterator->face(f)->set_boundary_id(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID());
+								}
+							}
+						}
 					}
-					
 				}
 			}
 		}

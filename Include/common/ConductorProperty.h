@@ -25,6 +25,7 @@ class conductorProperty
 		ar & _conductorName;
 		ar & _isTotalCharge;
 		ar & _value;
+		ar & p_conductorID;
 	}
 private:
     //! This is the name of the property
@@ -44,6 +45,9 @@ private:
         \sa _isTotalCharge
     */ 
     double _value = 0;
+	
+	//! The conductor ID of the property
+	unsigned int p_conductorID = 0
 public:
 
     //! Sets the name of the property
@@ -119,6 +123,24 @@ public:
     {
         return _value;
     }
+	
+	/**
+	 * @brief Sets the conductor ID of the property
+	 * @param ID The ID that will be assocated with the property 
+	 */
+	void setConductorID(unsigned int ID)
+	{
+		p_conductorID = ID;
+	}
+	
+	/**
+	 * @brief Retrieves the ID of the conductor
+	 * @return Returns the ID associacted with the conductor ID
+	 */
+	unsigned int getConductorID()
+	{
+		return p_conductorID;
+	}
 };
 
 #endif

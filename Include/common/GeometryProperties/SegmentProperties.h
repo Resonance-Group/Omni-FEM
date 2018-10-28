@@ -45,8 +45,10 @@ private:
     */ 
     std::string _boundaryName = "None";
 	
+	//! The boundary object for electrical boundary
 	electricalBoundary *p_electricalBoundary = nullptr;
 	
+	//! The boundary object for magnetics
 	magneticBoundary *p_magneticBoundary = nullptr;
     
     //! Boolean that specifies if the mesher should automatically choose the mesh size along the boundary
@@ -263,16 +265,28 @@ public:
         return _groupNumber;
     }
 	
+	/**
+	 * @brief Sets the electrical boundary of the property
+	 * @param boundary The boundary that is to be associated with the property
+	 */
 	void setElectricalBoundary(electricalBoundary &boundary)
 	{
 		p_electricalBoundary = &boundary;
 	}
 	
+	/**
+	 * @brief Sets the electrical boundary of the property
+	 * @param boundary A pointer pointing to the boundary that is to be associated with the property
+	 */
 	void setElectricalBoundary(electricalBoundary *boundary)
 	{
 		p_electricalBoundary = boundary;
 	}
 	
+	/**
+	 * @brief Retrieves the boundary porperty associated with the property
+	 * @return Returns the pointer of the electrical boundary
+	 */
 	electricalBoundary* getElectricalBoundary()
 	{
 		if(p_electricalBoundary)
@@ -281,16 +295,28 @@ public:
 			return nullptr;
 	}
 	
+	/**
+	 * @brief Sets the magnetic boundary of the property
+	 * @param boundary The boundary that is to be associated with the property
+	 */
 	void setMagneticBoundary(magneticBoundary &boundary)
 	{
 		p_magneticBoundary = &magneticBoundary;
 	}
 	
+	/**
+	 * @brief Sets the magnetic boundary of the property
+	 * @param boundary A pointer pointing to the boundary that is to be associated with the property
+	 */
 	void setMagneticBoundary(magneticBoundary *boundary)
 	{
 		p_magneticBoundary = boundary;
 	}
 	
+	/**
+	 * @brief Retrieves the boundary porperty associated with the property
+	 * @return Returns the pointer of the magnetic boundary
+	 */
 	magneticBoundary* getMagneticBoundary()
 	{
 		if(p_magneticBoundary)
@@ -299,16 +325,28 @@ public:
 			return nullptr;
 	}
 	
+	/**
+	 * @brief Sets the conductor property of the segment property
+	 * @param boundary The boundary that is to be associated with the segment property
+	 */
 	void setConductorProperty(conductorProperty &property)
 	{
 		p_conductoryProperty = &property;
 	}
 	
+	/**
+	 * @brief Sets the conductor property of the segment property
+	 * @param boundary A pointer pointing to the conductor property that is to be associated with the segment property
+	 */
 	void setConductorProperty(conductorProperty *property)
 	{
 		p_conductoryProperty = property;
 	}
 	
+	/**
+	 * @brief Retrieves the conductor property associated with the segment property
+	 * @return Returns the pointer of the conductor property
+	 */
 	conductorProperty* getConductorProperty()
 	{
 		if(p_conductoryProperty)

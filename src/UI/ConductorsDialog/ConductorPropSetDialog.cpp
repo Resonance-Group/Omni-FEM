@@ -119,6 +119,7 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
+			newCircuit.setCircuitID(_circuitList->size() + 1);
             _circuitList->push_back(newCircuit);
             _selection->Append(newCircuit.getName());
             _selection->SetSelection(0);
@@ -140,6 +141,7 @@ void conductorPropertySetDialog::onAddProperty(wxCommandEvent &event)
                     break;
                 }
             }
+			newConductor.setConductorID(_conductorList->size() + 1);
             _conductorList->push_back(newConductor);
             _selection->Append(newConductor.getName());
             _selection->SetSelection(0);
@@ -155,9 +157,16 @@ void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
     {
         if(!_circuitList->empty())
         {
+			unsigned int IDCounter = 1;
             int currentSelection = _selection->GetCurrentSelection();
             _circuitList->erase(_circuitList->begin() + currentSelection);
             _selection->Delete(currentSelection);
+			
+			for(auto circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); circuitIterator++)
+			{
+				circuitIterator->setCircuitID(IDCounter++);
+			}
+			
             _selection->SetSelection(0);
             if(_circuitList->empty())
                 _selection->SetValue(wxEmptyString);
@@ -167,9 +176,16 @@ void conductorPropertySetDialog::onDeleteProperty(wxCommandEvent &event)
     {
         if(!_conductorList->empty())
         {
+			unsigned int IDCounter = 1;
             int currentSelection = _selection->GetCurrentSelection();
             _conductorList->erase(_conductorList->begin() + currentSelection);
             _selection->Delete(currentSelection);
+			
+			for(auto conductorIterator = _conductorList->begin(); conductorIterator != _conductorList->end(); conductorIterator++)
+			{
+				conductorIterator->setConductorID(IDCounter++);
+			}
+			
             _selection->SetSelection(0);
             if(_conductorList->empty())
                 _selection->SetValue(wxEmptyString);
