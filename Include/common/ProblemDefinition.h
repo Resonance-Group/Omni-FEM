@@ -86,7 +86,7 @@ private:
     std::vector<nodalProperty> _localNodalList;
 	
 	//! The sorted list of the entire closed paths of the problem
-	std::vector<closedPath> p_closedContourPaths
+	std::vector<closedPath> p_closedContourPaths;
     
     //! Definition of the eletrostatic preference
     /*!

@@ -442,7 +442,7 @@ public:
 	 * @brief Function that is used to set the circuit property for the label.
 	 * @param circuit Pointer pointing to the circuit property that will be associated with the label
 	 */
-	void setCircuitProperty(circuitProperty &ciruit)
+	void setCircuitProperty(circuitProperty &circuit)
 	{
 		p_circuitProperty = &circuit;
 	}

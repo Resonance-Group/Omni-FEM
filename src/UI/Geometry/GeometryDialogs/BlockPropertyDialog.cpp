@@ -417,7 +417,7 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
 			
 			if(property.getCircuitName() != "None")
 			{
-				for(auto circuitIterator = _circuitList->begin(); materialIterator != _circuitList->end(); circuitIterator++)
+				for(auto circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); circuitIterator++)
 				{
 					if(circuitIterator->getName() == property.getCircuitName())
 					{
@@ -453,7 +453,7 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
 			}
 			
 			break;
-		case default:
+		default:
 			break;
 	}
 

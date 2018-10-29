@@ -301,7 +301,7 @@ public:
 	 */
 	void setMagneticBoundary(magneticBoundary &boundary)
 	{
-		p_magneticBoundary = &magneticBoundary;
+		p_magneticBoundary = &boundary;
 	}
 	
 	/**
@@ -350,7 +350,7 @@ public:
 	conductorProperty* getConductorProperty()
 	{
 		if(p_conductoryProperty)
-			return p_conductoryProperty
+			return p_conductoryProperty;
 		else
 			return nullptr;
 	}

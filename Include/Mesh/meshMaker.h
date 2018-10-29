@@ -230,7 +230,7 @@ public:
 	 * closed contour, detect all of the holes and perform hole recombination if needed, detect any "hidden"
 	 * block labels, and then recreate the user geometry in GMSH.
 	 */
-	void mesh();
+	std::vector<closedPath> mesh();
 	
 	~meshMaker()
 	{

@@ -47,7 +47,7 @@ private:
     double _value = 0;
 	
 	//! The conductor ID of the property
-	unsigned int p_conductorID = 0
+	unsigned int p_conductorID = 0;
 public:
 
     //! Sets the name of the property

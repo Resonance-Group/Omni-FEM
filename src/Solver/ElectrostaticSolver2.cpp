@@ -2,14 +2,14 @@
 
 void ElectroStaticSolver::run()
 {
-	
+	setupGrid();
 }
 
 
 
 void ElectroStaticSolver::setupGrid()
 {
-	for(auto cellIterator = triangulation.getTriangulation()->begin_active(); cellIterator != triangulation.getTriangulation()->end(); celIterator++)
+	for(auto cellIterator = triangulation.getTriangulation()->begin_active(); cellIterator != triangulation.getTriangulation()->end(); cellIterator++)
 	{
 		closedPath closedContour;
 		
@@ -29,14 +29,15 @@ void ElectroStaticSolver::setupGrid()
 					{
 						if(holeIterator->pointInContour(cellCenter))
 						{
-							cellLiesInHole = tue;
+							cellLiesInHole = true;
 							break;
 						}
 					}
 					
 					if(!cellLiesInHole)
 					{
-						cellIterator->set_material_ID(contourIterator->getProperty()->getElectricalMaterial()->getMaterialID());
+						unsigned int materialID = contourIterator->getProperty()->getElectricalMaterial()->getMaterialID();
+						cellIterator->set_material_id(contourIterator->getProperty()->getElectricalMaterial()->getMaterialID());
 						
 						// Now, we need to check if a face of the triagulation cell is on a boundary of the contour
 						// If so, we need to set the boundary ID accordingly
@@ -47,6 +48,7 @@ void ElectroStaticSolver::setupGrid()
 								if(CommonSolverFunctions::faceLiesOnBoundary(cellIterator->face(f), *edgeIterator))
 								{
 									edgeLineShape *edge = *edgeIterator;
+									unsigned int boundaryID = edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID();
 									cellIterator->face(f)->set_boundary_id(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID());
 								}
 							}

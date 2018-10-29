@@ -245,7 +245,7 @@ std::vector<edgeLineShape*> meshMaker::getConnectedPaths(std::vector<edgeLineSha
 
 
 
-void meshMaker::mesh()
+std::vector<closedPath> meshMaker::mesh()
 {
 	bool meshCreated = false;
 	unsigned int blockLabelsUsed = 0;
@@ -694,9 +694,11 @@ void meshMaker::mesh()
 	if(p_meshModel->getNumMeshVertices() > 0)
 		p_meshModel->indexMeshVertices(true);
 		
-	p_problemDefinition->setClosedPath(p_closedContourPaths);
+	//p_problemDefinition->setClosedPath();
 	
 	OmniFEMMsg::instance()->MsgStatus("Meshing Finished");
+	
+	return p_closedContourPaths;
 }
 
 

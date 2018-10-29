@@ -11,6 +11,7 @@
 #include <deal.II/grid/grid_tools.h>
 #include <deal.II/grid/manifold_lib.h>
 #include <deal.II/grid/grid_in.h>
+#include <deal.II/grid/grid_out.h>
 
 #include <Mesh/GMSH/GModel.h>
 
@@ -37,17 +38,18 @@ public:
 	void setupTriangulation(modelDefinition *problemModel)
 	{
 		GridIn<2> gridIn;
+		GridOut outputGrid;
 		wxStandardPaths paths = wxStandardPaths::Get();
-		std::string filePath = paths.GetDocumentsDir().ToStdString() + "/" + "mesh.vtk";
+		std::string filePath = paths.GetDocumentsDir().ToStdString() + "/" + "mesh.msh";
 		
-		
-		problemModel->getMeshModel()->writeVTK(filePath);
+		//problemModel->getMeshModel()->writeVTK(filePath);
+		problemModel->getMeshModel()->writeMSH(filePath, 2.0, false, false, false, 1.0, 0, 0, false);
 		
 		gridIn.attach_triangulation(p_problemMesh);
 		std::ifstream inputMeshFile(filePath);
-		gridIn.read_vtk(inputMeshFile);
+		gridIn.read_msh(inputMeshFile);
 		
-		remove(filePath);
+		remove(filePath.c_str());
 		
 		// May need to add a manifold object here?
 	}

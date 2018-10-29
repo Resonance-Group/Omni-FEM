@@ -283,7 +283,7 @@ bool segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
 			
 			if(property.getConductorName() != "None")
 			{
-				for(auto conductorIterator = _conductorList->begin(); boundaryIterator != _conductorList->end(); conductorIterator++)
+				for(auto conductorIterator = _conductorList->begin(); conductorIterator != _conductorList->end(); conductorIterator++)
 				{
 					if(conductorIterator->getName() == property.getConductorName())
 					{
@@ -308,7 +308,7 @@ bool segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
 			}
 			
 			break;
-		case default:
+		default:
 			break;
 	}
     if(_problem == physicProblems::PROB_ELECTROSTATIC)

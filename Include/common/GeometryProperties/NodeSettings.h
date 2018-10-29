@@ -53,7 +53,7 @@ private:
     */ 
     std::string _conductorPropertyName = "None";
 	
-	conductorProperty p_conductorProperty = nullptr;
+	conductorProperty *p_conductorProperty = nullptr;
     
     //! The group number that the node belongs to.
     /*!
@@ -169,7 +169,7 @@ public:
 	
 	void setConductorProperty(conductorProperty &property)
 	{
-		p_conductorProperty = property;
+		p_conductorProperty = &property;
 	}
 	
 	conductorProperty* getConductorProperty()

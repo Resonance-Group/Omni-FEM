@@ -4,11 +4,11 @@
 #include "stdio.h"
 #include "math.h"
 
-#define PI 3.141592653589793238462643383279502884197169399375105820974944592307816406286
+const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286;
 #define SmallNo 1.e-14
 #define DEG 0.01745329251994329576923690768
 
-#define J Vector(0, 1)
+#define JI Vector(0,1)
 
 /*! /class Vector
 	/brief	This is the class that will handle all Vector related functions
@@ -138,6 +138,8 @@ protected:
 		double yComponent;
 
 };
+
+//Vector JI = Vector(0, 1);
 
 
 /*! /class ComplexNumber

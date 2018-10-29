@@ -21,7 +21,7 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="Solver">
-      <File Name="src/Solver/ElectrostaticSolver.cpp"/>
+      <File Name="src/Solver/ElectrostaticSolver2.cpp"/>
       <File Name="src/Solver/MeshOptimizer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="UI">
@@ -352,7 +352,7 @@
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
     <VirtualDirectory Name="Solver">
-      <File Name="Include/Solver/ElectrostaticSolver.h"/>
+      <File Name="Include/Solver/ElectrostaticSolver2.h"/>
       <VirtualDirectory Name="common">
         <File Name="Include/Solver/common/CommonSolverFunctions.h"/>
         <File Name="Include/Solver/common/MeshOptimizer.h"/>

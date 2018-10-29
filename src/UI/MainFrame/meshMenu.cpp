@@ -18,7 +18,7 @@ void OmniFEMMainFrame::onCreateMesh(wxCommandEvent &event)
 					_model->deleteMesh();
 					meshMaker mesher(_problemDefinition, _model);
 					OmniFEMMsg::instance()->displayWindow(Status_Windows::MESH_STATUS_WINDOW);
-					mesher.mesh();
+					_problemDefinition.setClosedPath(mesher.mesh());
 					if(_model->checkModelIsValid())
 						_model->Refresh();
 				}

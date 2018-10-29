@@ -53,7 +53,7 @@ public:
 		
 	}
 	
-	virtual void evaluate_scalar_field(const DataPostprocessorInputs::Scalar<2> &input_data, std::vector<Vector<double> > &computed_quantities) const
+	virtual void evaluate_scalar_field(const DataPostprocessorInputs::Scalar<2> &input_data, std::vector<dealii::Vector<double> > &computed_quantities) const
 	{
 		for(unsigned int p = 0; p < input_data.solution_gradients.size(); ++p)
 		{
@@ -80,8 +80,8 @@ private:
 	SparsityPattern p_sparsePattern;
 	SparseMatrix<double> p_systemMatrix;
 	
-	Vector<double>	p_solution;
-	Vector<double>	p_systemRHS;
+	dealii::Vector<double>	p_solution;
+	dealii::Vector<double>	p_systemRHS;
 	
 	void setupSystem();
 	
@@ -89,13 +89,13 @@ private:
 	
 	void solveSystem();
 	
-	void resultsProcessing();
+	void resultsProcessing(); 
 	
 	void setupGrid();
 	
 public:
 	
-	ElectroStaticSolver(modelDefinition *model, problemDefinition &problem)
+	ElectroStaticSolver(modelDefinition *model, problemDefinition &problem) : p_fe(1)
 	{
 		triangulation.setupTriangulation(model);
 		

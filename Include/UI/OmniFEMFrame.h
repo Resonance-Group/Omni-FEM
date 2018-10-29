@@ -45,6 +45,8 @@
 
 #include <Mesh/ClosedPath.h>
 
+#include <Solver/ElectrostaticSolver2.h>
+
 
 // For documenting code, see: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 
@@ -609,12 +611,19 @@ private:
     */ 
     void onSolveProblem(wxCommandEvent &event)
     {
-		if(wxFileExists(_problemDefinition.getSaveFilePath() + "/" + _problemDefinition.getName() + ".msh"))
+		switch(_problemDefinition.getPhysicsProblem())
 		{
-			wxMessageBox("Running simulation", "Info");
+			case physicProblems::PROB_ELECTROSTATIC:
+			{
+				ElectroStaticSolver EStaticSolver(_model, _problemDefinition);
+				EStaticSolver.run();
+			}
+			break;
+		//	case physicProblems::PROB_MAGNETICS:
+			default:
+				wxMessageBox("Running simulation", "Info");
+				break;
 		}
-		else
-			wxMessageBox("No mesh file created. Mesh the geometry first before simulation", "Warning", wxICON_EXCLAMATION | wxOK);
     }
 	
     /* This section is for the Grid Menu */

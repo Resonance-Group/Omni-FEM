@@ -179,6 +179,11 @@ public:
     {
         
     }
+	
+	~rectangleShape()
+	{
+		
+	}
     
     //! The constructor for the clas
     /*!

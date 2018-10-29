@@ -46,7 +46,7 @@
 class CommonSolverFunctions
 {
 public:
-	bool faceLiesOnBoundary(TriaIterator<TriaAccessor<0, dim, spacedim>> &cellFace, edgeLineShape *contourEdge)
+	static bool faceLiesOnBoundary(TriaIterator<dealii::TriaAccessor<0, 2, 2>> cellFace, edgeLineShape *contourEdge)
 	{
 		if(contourEdge->getArcID() == 0)
 		{
@@ -57,9 +57,9 @@ public:
 			
 			const double calculation = 	slope * faceCenter.x + 
 										slope * contourEdge->getSecondNode()->getCenterYCoordinate() + 
-										contourEdge->getFirstNode()->getCenterYCoordinate()
+										contourEdge->getFirstNode()->getCenterYCoordinate();
 			
-			if( calculation < faceCenter.y + 0.01 || calculation > faceCenter.y - 0.01)
+			if((calculation < faceCenter.y + 0.01) || (calculation > faceCenter.y - 0.01))
 				return true;
 			
 			return false;
