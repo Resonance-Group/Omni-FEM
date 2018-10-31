@@ -1066,7 +1066,104 @@ public:
 		_zoomY = otherParam.at(1);
 		_cameraX = otherParam.at(2);
 		_cameraY = otherParam.at(3);
-	//	std::this_thread::sleep_for(std::chrono::seconds(1));
+		
+		for(auto blockIterator = _editor.getBlockLabelList()->begin(); blockIterator != _editor.getBlockLabelList()->end(); blockIterator++)
+		{
+			if(blockIterator->getProperty()->getMaterialName() != "None" && blockIterator->getProperty()->getMaterialName() != "No Mesh")
+			{
+				switch(_localDefinition->getPhysicsProblem())
+				{
+					case physicProblems::PROB_ELECTROSTATIC:
+					{
+						for(auto materialIterator = _localDefinition->getElectricalMaterialList()->begin(); materialIterator != _localDefinition->getElectricalMaterialList()->end(); materialIterator++)
+						{
+							if(materialIterator->getName() == blockIterator->getProperty()->getMaterialName())
+							{
+								blockIterator->getProperty()->setElectricalMaterial(*materialIterator);
+								break;
+							}
+						}
+						break;
+					}
+					default:
+						break;
+				}
+				
+			}
+		}
+		
+		for(auto lineIterator = _editor.getLineList()->begin(); lineIterator != _editor.getLineList()->end(); lineIterator++)
+		{
+			if(lineIterator->getSegmentProperty()->getBoundaryName() != "None")
+			{
+				switch(_localDefinition->getPhysicsProblem())
+				{
+					case physicProblems::PROB_ELECTROSTATIC:
+					{
+						for(auto boundaryIterator = _localDefinition->getElectricalBoundaryList()->begin(); boundaryIterator != _localDefinition->getElectricalBoundaryList()->end(); boundaryIterator++)
+						{
+							if(boundaryIterator->getBoundaryName() == lineIterator->getSegmentProperty()->getBoundaryName())
+							{
+								lineIterator->getSegmentProperty()->setElectricalBoundary(*boundaryIterator);
+								break;
+							}
+						}
+						break;
+					}
+					default:
+						break;
+				}
+			}
+		}
+		
+		for(auto arcIterator = _editor.getArcList()->begin(); arcIterator != _editor.getArcList()->end(); arcIterator++)
+		{
+			if(arcIterator->getSegmentProperty()->getBoundaryName() != "None")
+			{
+				switch(_localDefinition->getPhysicsProblem())
+				{
+					case physicProblems::PROB_ELECTROSTATIC:
+					{
+						for(auto boundaryIterator = _localDefinition->getElectricalBoundaryList()->begin(); boundaryIterator != _localDefinition->getElectricalBoundaryList()->end(); boundaryIterator++)
+						{
+							if(boundaryIterator->getBoundaryName() == arcIterator->getSegmentProperty()->getBoundaryName())
+							{
+								arcIterator->getSegmentProperty()->setElectricalBoundary(*boundaryIterator);
+								break;
+							}
+						}
+						break;
+					}
+					default:
+						break;
+				}
+			}
+		}
+		
+		for(auto nodeIterator = _editor.getNodeList()->begin(); nodeIterator != _editor.getNodeList()->end(); nodeIterator++)
+		{
+			if(nodeIterator->getNodeSetting()->getConductorPropertyName() != "None")
+			{
+				switch(_localDefinition->getPhysicsProblem())
+				{
+					case physicProblems::PROB_ELECTROSTATIC:
+					{
+						for(auto conductorIterator = _localDefinition->getConductorList()->begin(); conductorIterator != _localDefinition->getConductorList()->end(); conductorIterator++)
+						{
+							if(conductorIterator->getName() == nodeIterator->getNodeSetting()->getConductorPropertyName())
+							{
+								nodeIterator->getNodeSetting()->setConductorProperty(*conductorIterator);
+								break;
+							}
+						}
+						break;
+					}
+					default:
+						break;
+				}
+			}
+		}
+		
 		this->Refresh();
 		this->Update();
 	}

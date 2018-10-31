@@ -46,20 +46,23 @@
 class CommonSolverFunctions
 {
 public:
-	static bool faceLiesOnBoundary(TriaIterator<dealii::TriaAccessor<0, 2, 2>> cellFace, edgeLineShape *contourEdge)
+	static bool faceLiesOnBoundary(wxRealPoint faceCenter, edgeLineShape *contourEdge)
 	{
 		if(contourEdge->getArcID() == 0)
 		{
-			const double slope = (contourEdge->getFirstNode()->getCenterYCoordinate() - contourEdge->getSecondNode()->getCenterYCoordinate()) / 
+			const double edgeSlope = (contourEdge->getFirstNode()->getCenterYCoordinate() - contourEdge->getSecondNode()->getCenterYCoordinate()) / 
 									(contourEdge->getFirstNode()->getCenterXCoordinate() - contourEdge->getSecondNode()->getCenterXCoordinate());
 			
-			const wxRealPoint faceCenter = wxRealPoint(cellFace->center()(0), cellFace->center()(1));
+			//const wxRealPoint faceCenter = wxRealPoint(cellFace->center()(0), cellFace->center()(1));
 			
-			const double calculation = 	slope * faceCenter.x + 
-										slope * contourEdge->getSecondNode()->getCenterYCoordinate() + 
-										contourEdge->getFirstNode()->getCenterYCoordinate();
+			const double faceSlope = (contourEdge->getFirstNode()->getCenterYCoordinate() - contourEdge->getSecondNode()->getCenterYCoordinate()) / 
+									(contourEdge->getFirstNode()->getCenterXCoordinate() - contourEdge->getSecondNode()->getCenterXCoordinate());
 			
-			if((calculation < faceCenter.y + 0.01) || (calculation > faceCenter.y - 0.01))
+			const double calculation = 	edgeSlope * faceCenter.x - 
+										edgeSlope * contourEdge->getSecondNode()->getCenterXCoordinate() + 
+										contourEdge->getSecondNode()->getCenterYCoordinate();
+			
+			if((calculation < faceCenter.y + 1e-6) && (calculation > faceCenter.y - 1e-6))
 				return true;
 			
 			return false;

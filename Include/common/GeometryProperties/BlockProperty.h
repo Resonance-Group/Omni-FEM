@@ -399,6 +399,8 @@ public:
 	 */
 	electrostaticMaterial *getElectricalMaterial()
 	{
+		if(_materialName == "None")
+			return nullptr;
 		return p_eStaticMaterial;
 	}
 	

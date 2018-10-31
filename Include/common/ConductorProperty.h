@@ -10,11 +10,13 @@ using namespace std;
 
 //! Class the defines the conductor that is used in an electrostatic simulation
 /*!
-    The main prupose of this calss is to allow the user
+    The main prupose of this class is to allow the user
     to apply constraints on the total amount of charge carries
     on a conductor. Conductors can be defind as a fixed voltage.
     The program will then compute the total charge carries on the
     conductor during solving.
+	 * 
+	This class is primarly used in electrostatic simulations.
 */ 
 class conductorProperty
 {

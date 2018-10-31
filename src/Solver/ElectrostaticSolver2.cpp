@@ -43,9 +43,11 @@ void ElectroStaticSolver::setupGrid()
 						// If so, we need to set the boundary ID accordingly
 						for(unsigned int f = 0; f < GeometryInfo<2>::faces_per_cell; f++)
 						{
+							wxRealPoint cellFaceCenter = wxRealPoint(cellIterator->face(f)->center()(0), cellIterator->face(f)->center()(1));
+							
 							for(auto edgeIterator = contourIterator->getClosedPath()->begin(); edgeIterator != contourIterator->getClosedPath()->end(); edgeIterator++)
 							{
-								if(CommonSolverFunctions::faceLiesOnBoundary(cellIterator->face(f), *edgeIterator))
+								if(CommonSolverFunctions::faceLiesOnBoundary(cellFaceCenter, *edgeIterator))
 								{
 									edgeLineShape *edge = *edgeIterator;
 									unsigned int boundaryID = edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID();
