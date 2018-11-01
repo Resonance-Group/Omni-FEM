@@ -3,13 +3,17 @@
 void ElectroStaticSolver::run()
 {
 	setupGrid();
+	setupDOFS();
+	setupSolver();
+	solveSystem();
+	resultsProcessing();
 }
 
 
 
 void ElectroStaticSolver::setupGrid()
 {
-	for(auto cellIterator = triangulation.getTriangulation()->begin_active(); cellIterator != triangulation.getTriangulation()->end(); cellIterator++)
+	for(auto cellIterator = p_triangulation.getTriangulation()->begin_active(); cellIterator != p_triangulation.getTriangulation()->end(); cellIterator++)
 	{
 		closedPath closedContour;
 		
@@ -34,6 +38,10 @@ void ElectroStaticSolver::setupGrid()
 						}
 					}
 					
+					/* If the cell does not lie in a hole, then the cell belongs to the closed path
+					 * If this is the case, we need to add in the material id number and the boundary ID number
+					 * if the cell belongs to a boundary
+					 */ 
 					if(!cellLiesInHole)
 					{
 						unsigned int materialID = contourIterator->getProperty()->getElectricalMaterial()->getMaterialID();
@@ -64,15 +72,57 @@ void ElectroStaticSolver::setupGrid()
 
 
 
-void ElectroStaticSolver::setupSystem()
+void ElectroStaticSolver::setupSolver()
 {
+	QGauss<2> quadrature(3);
+	FEValues<2> finiteElementValues(p_fe, quadrature, update_values | update_gradients | update_JxW_values);
+	const unsigned int dofsPerCell = p_fe.dofs_per_cell;
+	const unsigned int numQuadPoints = quadrature.size();
 	
-}
-
-
-
-void ElectroStaticSolver::assembleSystem()
-{
+	FullMatrix<double> localCellMatrix(dofsPerCell, dofsPerCell);
+	Vector<double> localRHSCell(dofsPerCell);
+	Vector<types::global_dof_index> localDOFIndices(dofsPerCell);
+	
+	for(auto activeCellIterator = p_DOFHandler.begin_active(); activeCellIterator != p_DOFHandler.end(); activeCellIterator++)
+	{
+		finiteElementValues.reinit(activeCellIterator);
+		localCellMatrix = 0;
+		localRHSCell = 0;
+		
+		for(unsigned int qIndex = 0; qIndex < numQuadPoints; qIndex++)
+		{
+			for(unsigned int i = 0; i < dofsPerCell; i++)
+			{
+				for(unsigned int j = 0; j < dofsPerCell; j++)
+				{
+					// This is where the code for the solver will go in
+					// In the linear form AU=F, this is the code that will
+					// populate the local A. Later, the local A will be placed
+					// into the global A.
+				}
+				
+				// Add in the code that will populate the local RHS using RHSCell 
+			}
+		}
+		
+		activeCellIterator->get_dof_indices(localDOFIndices);
+		
+		for(unsigned int i = 0; i < dofsPerCell; i++)
+		{
+			for(unsigned int j = 0; j < dofsPerCell; j++)
+			{
+				p_systemMatrix.add(localDOFIndices[i], localDOFIndices[j], localCellMatrix(i, j));
+			}
+			
+			p_systemRHS(localDOFIndices[i]) += localRHSCell(i);
+		}
+	}
+	
+	map<types::global_dof_index, double> boundaryValues;
+	
+	// Add in code to interpolate boundary values
+	
+	MatrixTools::apply_boundary_values(boundaryValues, p_systemMatrix, p_solution, p_systemRHS);
 	
 }
 
@@ -80,12 +130,49 @@ void ElectroStaticSolver::assembleSystem()
 
 void ElectroStaticSolver::solveSystem()
 {
+	SolverControl controlSolver(100000, 1e-12);
 	
+	SolverCG<> solver(controlSolver);
+	
+	solver.solve(p_systemMatrix, p_solution, p_systemRHS, PreconditionIdentity());
 }
 
 
 
 void ElectroStaticSolver::resultsProcessing()
 {
+	electricFieldPostProcessor electric_field_Post_processor;
 	
+	DataOut<2> outputData;
+	
+	outputData.attach_dof_handler(p_DOFHandler);
+	outputData.add_data_vector(p_solution, "Voltage Solution");
+	outputData.add_data_vector(p_solution, electric_field_Post_processor);
+	outputData.build_patches();
+	
+	wxStandardPaths paths = wxStandardPaths::Get();
+	std::string filePath = paths.GetDocumentsDir().ToStdString() + "/" + "solution.vtk";
+	
+	ofstream outputSolution(filePath);
+	outputData.write_vtk(outputSolution);
+}
+
+
+
+void ElectroStaticSolver::setupDOFS()
+{
+	p_DOFHandler = DoFHandler<2>(*p_triangulation.getTriangulation());
+	
+	p_DOFHandler.distribute_dofs(p_fe);
+	
+	DynamicSparsityPattern dSparsePattern(p_DOFHandler.n_dofs(), p_DOFHandler.n_dofs());
+	DoFTools::make_sparsity_pattern(p_DOFHandler, dSparsePattern);
+	
+	p_sparsePattern.copy_from(dSparsePattern);
+	
+	// Add some other stuff regarding sparse pattern here
+	
+	p_systemMatrix.reinit(p_sparsePattern);
+	p_solution.reinit(p_sparsePattern);
+	p_systemRHS.reinit(p_sparsePattern);
 }

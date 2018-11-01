@@ -1,6 +1,8 @@
 #ifndef ELECTROSTATIC_SOLVER_H_
 #define ELECTROSTATIC_SOLVER_H_
 
+#include <stdio.h>
+
 #include <deal.II/grid/tria.h>
 #include <deal.II/grid/tria_accessor.h>
 #include <deal.II/grid/tria_iterator.h>
@@ -42,6 +44,8 @@
 
 #include <Mesh/ClosedPath.h>
 
+#include <wx/stdpaths.h>
+
 
 using namespace dealii;
 
@@ -69,7 +73,7 @@ public:
 class ElectroStaticSolver
 {
 private:
-	meshOptimizer triangulation;
+	meshOptimizer p_triangulation;
 	
 	std::vector<closedPath> *p_closedPath = nullptr;
 	std::vector<electrostaticMaterial> *p_materialList = nullptr;
@@ -83,9 +87,7 @@ private:
 	dealii::Vector<double>	p_solution;
 	dealii::Vector<double>	p_systemRHS;
 	
-	void setupSystem();
-	
-	void assembleSystem();
+	void setupSolver();
 	
 	void solveSystem();
 	
@@ -93,11 +95,13 @@ private:
 	
 	void setupGrid();
 	
+	void setupDOFS();
+	
 public:
 	
 	ElectroStaticSolver(modelDefinition *model, problemDefinition &problem) : p_fe(1)
 	{
-		triangulation.setupTriangulation(model);
+		p_triangulation.setupTriangulation(model);
 		
 		p_closedPath = problem.getClosedPath();
 		p_materialList = problem.getElectricalMaterialList();
