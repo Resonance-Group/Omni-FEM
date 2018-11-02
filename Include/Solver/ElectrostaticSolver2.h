@@ -2,6 +2,7 @@
 #define ELECTROSTATIC_SOLVER_H_
 
 #include <stdio.h>
+#include <vector>
 
 #include <deal.II/grid/tria.h>
 #include <deal.II/grid/tria_accessor.h>

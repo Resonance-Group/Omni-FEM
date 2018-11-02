@@ -80,13 +80,13 @@ void ElectroStaticSolver::setupSolver()
 	const unsigned int numQuadPoints = quadrature.size();
 	
 	FullMatrix<double> localCellMatrix(dofsPerCell, dofsPerCell);
-	Vector<double> localRHSCell(dofsPerCell);
-	Vector<types::global_dof_index> localDOFIndices(dofsPerCell);
+	dealii::Vector<double> localRHSCell(dofsPerCell);
+	std::vector<types::global_dof_index> localDOFIndices(dofsPerCell);
 	
 	for(auto activeCellIterator = p_DOFHandler.begin_active(); activeCellIterator != p_DOFHandler.end(); activeCellIterator++)
 	{
 		const double materialRelativeEpsilonValue 	= p_materialList->at(activeCellIterator->material_id() - 1).getEpsilonX();
-		const double materialChargeDensity 			= p_materialList->at(activeCellIterator->material_id() - 1).getChargeDensity()();
+		const double materialChargeDensity 			= p_materialList->at(activeCellIterator->material_id() - 1).getChargeDensity();
 		
 		finiteElementValues.reinit(activeCellIterator);
 		localCellMatrix = 0;
@@ -109,7 +109,7 @@ void ElectroStaticSolver::setupSolver()
 				}
 				
 				// Add in the code that will populate the local RHS using RHSCell
-				localRHSCell(i) += 	finiteElementValues.shape_grad(i, qIndex) * 
+				localRHSCell(i) += 	finiteElementValues.shape_value(i, qIndex) * 
 									(materialChargeDensity / (materialRelativeEpsilonValue * 8.854187814e-12)) *
 									finiteElementValues.JxW(qIndex);
 									
@@ -179,9 +179,10 @@ void ElectroStaticSolver::resultsProcessing()
 
 void ElectroStaticSolver::setupDOFS()
 {
-	p_DOFHandler = DoFHandler<2>(*p_triangulation.getTriangulation());
+
+	p_DOFHandler.initialize(*(p_triangulation.getTriangulation()), p_fe);
 	
-	p_DOFHandler.distribute_dofs(p_fe);
+	//p_DOFHandler.distribute_dofs();
 	
 	DynamicSparsityPattern dSparsePattern(p_DOFHandler.n_dofs(), p_DOFHandler.n_dofs());
 	DoFTools::make_sparsity_pattern(p_DOFHandler, dSparsePattern);
@@ -191,6 +192,6 @@ void ElectroStaticSolver::setupDOFS()
 	// Add some other stuff regarding sparse pattern here
 	
 	p_systemMatrix.reinit(p_sparsePattern);
-	p_solution.reinit(p_sparsePattern);
-	p_systemRHS.reinit(p_sparsePattern);
+	p_solution.reinit(p_DOFHandler.n_dofs());
+	p_systemRHS.reinit(p_DOFHandler.n_dofs());
 }

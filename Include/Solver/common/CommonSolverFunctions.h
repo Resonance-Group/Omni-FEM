@@ -53,11 +53,6 @@ public:
 			const double edgeSlope = (contourEdge->getFirstNode()->getCenterYCoordinate() - contourEdge->getSecondNode()->getCenterYCoordinate()) / 
 									(contourEdge->getFirstNode()->getCenterXCoordinate() - contourEdge->getSecondNode()->getCenterXCoordinate());
 			
-			//const wxRealPoint faceCenter = wxRealPoint(cellFace->center()(0), cellFace->center()(1));
-			
-			const double faceSlope = (contourEdge->getFirstNode()->getCenterYCoordinate() - contourEdge->getSecondNode()->getCenterYCoordinate()) / 
-									(contourEdge->getFirstNode()->getCenterXCoordinate() - contourEdge->getSecondNode()->getCenterXCoordinate());
-			
 			const double calculation = 	edgeSlope * faceCenter.x - 
 										edgeSlope * contourEdge->getSecondNode()->getCenterXCoordinate() + 
 										contourEdge->getSecondNode()->getCenterYCoordinate();
