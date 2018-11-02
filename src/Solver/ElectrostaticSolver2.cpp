@@ -85,6 +85,9 @@ void ElectroStaticSolver::setupSolver()
 	
 	for(auto activeCellIterator = p_DOFHandler.begin_active(); activeCellIterator != p_DOFHandler.end(); activeCellIterator++)
 	{
+		const double materialRelativeEpsilonValue 	= p_materialList->at(activeCellIterator->material_id() - 1).getEpsilonX();
+		const double materialChargeDensity 			= p_materialList->at(activeCellIterator->material_id() - 1).getChargeDensity()();
+		
 		finiteElementValues.reinit(activeCellIterator);
 		localCellMatrix = 0;
 		localRHSCell = 0;
@@ -93,15 +96,23 @@ void ElectroStaticSolver::setupSolver()
 		{
 			for(unsigned int i = 0; i < dofsPerCell; i++)
 			{
+				
 				for(unsigned int j = 0; j < dofsPerCell; j++)
 				{
 					// This is where the code for the solver will go in
 					// In the linear form AU=F, this is the code that will
 					// populate the local A. Later, the local A will be placed
 					// into the global A.
+					localCellMatrix(i, j) += 	finiteElementValues.shape_grad(i, qIndex) * 
+												finiteElementValues.shape_grad(j, qIndex) *
+												finiteElementValues.JxW(qIndex);
 				}
 				
-				// Add in the code that will populate the local RHS using RHSCell 
+				// Add in the code that will populate the local RHS using RHSCell
+				localRHSCell(i) += 	finiteElementValues.shape_grad(i, qIndex) * 
+									(materialChargeDensity / (materialRelativeEpsilonValue * 8.854187814e-12)) *
+									finiteElementValues.JxW(qIndex);
+									
 			}
 		}
 		
@@ -121,6 +132,13 @@ void ElectroStaticSolver::setupSolver()
 	map<types::global_dof_index, double> boundaryValues;
 	
 	// Add in code to interpolate boundary values
+	for(unsigned int i = 0; i < p_boundaryList->size(); i++)
+	{
+		if(p_boundaryList->at(i).getVoltage() > 0)
+			VectorTools::interpolate_boundary_values(p_DOFHandler, i + 1, ConstantFunction<2>(p_boundaryList->at(i).getVoltage()), boundaryValues);
+		else
+			VectorTools::interpolate_boundary_values(p_DOFHandler, i + 1, ZeroFunction<2>(), boundaryValues);
+	}
 	
 	MatrixTools::apply_boundary_values(boundaryValues, p_systemMatrix, p_solution, p_systemRHS);
 	
