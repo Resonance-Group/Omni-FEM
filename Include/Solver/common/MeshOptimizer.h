@@ -52,6 +52,7 @@ public:
 		remove(filePath.c_str());
 		
 		// May need to add a manifold object here?
+		p_problemMesh.set_all_manifold_ids(0);
 	}
 	
 	/**

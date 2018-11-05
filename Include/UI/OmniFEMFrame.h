@@ -615,6 +615,7 @@ private:
 		{
 			case physicProblems::PROB_ELECTROSTATIC:
 			{
+				OmniFEMMsg::instance()->displayWindow(Status_Windows::SOLVER_STATUS_WINDOW);
 				ElectroStaticSolver EStaticSolver(_model, _problemDefinition);
 				EStaticSolver.run();
 			}

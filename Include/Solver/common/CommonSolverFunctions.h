@@ -1,6 +1,8 @@
 #ifndef SOLVER_FUNCTIONS_H_
 #define SOLVER_FUNCTIONS_H
 
+#include <algorithm>
+
 #include <wx/wx.h>
 
 #include <deal.II/grid/tria.h>
@@ -52,13 +54,34 @@ public:
 		{
 			const double edgeSlope = (contourEdge->getFirstNode()->getCenterYCoordinate() - contourEdge->getSecondNode()->getCenterYCoordinate()) / 
 									(contourEdge->getFirstNode()->getCenterXCoordinate() - contourEdge->getSecondNode()->getCenterXCoordinate());
-			
-			const double calculation = 	edgeSlope * faceCenter.x - 
-										edgeSlope * contourEdge->getSecondNode()->getCenterXCoordinate() + 
-										contourEdge->getSecondNode()->getCenterYCoordinate();
-			
-			if((calculation < faceCenter.y + 1e-6) && (calculation > faceCenter.y - 1e-6))
-				return true;
+										
+			if(edgeSlope == -INFINITY || edgeSlope == INFINITY)
+			{
+				if(faceCenter.x < contourEdge->getFirstNode()->getCenterXCoordinate() + 1e-6 && faceCenter.x > contourEdge->getFirstNode()->getCenterXCoordinate() - 1e-6 && 
+					faceCenter.y < std::max(contourEdge->getFirstNode()->getCenterYCoordinate(), contourEdge->getSecondNode()->getCenterYCoordinate()) && 
+					faceCenter.y > std::min(contourEdge->getFirstNode()->getCenterYCoordinate(), contourEdge->getSecondNode()->getCenterYCoordinate()))
+						return true;
+				else
+					return false;
+			}
+			else if(edgeSlope == 0)
+			{
+				if(	faceCenter.y < contourEdge->getFirstNode()->getCenterYCoordinate() + 1e-6 && faceCenter.y > contourEdge->getFirstNode()->getCenterYCoordinate() - 1e-6 && 
+					faceCenter.x < std::max(contourEdge->getFirstNode()->getCenterXCoordinate(), contourEdge->getSecondNode()->getCenterXCoordinate()) && 
+					faceCenter.x > std::min(contourEdge->getFirstNode()->getCenterXCoordinate(), contourEdge->getSecondNode()->getCenterXCoordinate()))
+					return true;
+				else
+					return false;
+			}
+			else
+			{
+				const double calculation = 	edgeSlope * faceCenter.x - 
+											edgeSlope * contourEdge->getSecondNode()->getCenterXCoordinate() + 
+											contourEdge->getSecondNode()->getCenterYCoordinate();
+				
+				if((calculation < faceCenter.y + 1e-6) && (calculation > faceCenter.y - 1e-6))
+					return true;
+			}
 			
 			return false;
 		}

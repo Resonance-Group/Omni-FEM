@@ -31,6 +31,10 @@
 #include <deal.II/numerics/data_out.h>
 #include <deal.II/numerics/data_postprocessor.h>
 
+
+#include <deal.II/grid/grid_generator.h>
+#include <deal.II/base/function.h>
+
 #include <Solver/common/MeshOptimizer.h>
 #include <Solver/common/CommonSolverFunctions.h>
 
@@ -71,6 +75,33 @@ public:
 };
 
 
+class RightHandSide : public Function<2>
+{
+public:
+  RightHandSide () : Function<2>() {}
+  virtual double value (const Point<2>   &p,
+                        const unsigned int  component = 0) const
+						{
+							double return_value = 0.0;
+  for (unsigned int i=0; i<2; ++i)
+    return_value += 4.0 * std::pow(p(i), 4.0);
+  return return_value;
+						}
+};
+
+
+class BoundaryValues : public Function<2>
+{
+public:
+  BoundaryValues () : Function<2>() {}
+  virtual double value (const Point<2>   &p,
+                        const unsigned int  component = 0) const
+						{
+							return p.square();
+						}
+};
+
+
 class ElectroStaticSolver
 {
 private:
@@ -88,6 +119,7 @@ private:
 	dealii::Vector<double>	p_solution;
 	dealii::Vector<double>	p_systemRHS;
 	
+	
 	void setupSolver();
 	
 	void solveSystem();
@@ -100,7 +132,7 @@ private:
 	
 public:
 	
-	ElectroStaticSolver(modelDefinition *model, problemDefinition &problem) : p_fe(1)
+	ElectroStaticSolver(modelDefinition *model, problemDefinition &problem) : p_fe(1), p_DOFHandler(*(p_triangulation.getTriangulation()))
 	{
 		p_triangulation.setupTriangulation(model);
 		
@@ -111,6 +143,10 @@ public:
 
 	void run();
 };
+
+
+
+
 
 
 #endif

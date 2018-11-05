@@ -57,8 +57,16 @@ void ElectroStaticSolver::setupGrid()
 							{
 								if(CommonSolverFunctions::faceLiesOnBoundary(cellFaceCenter, *edgeIterator))
 								{
+									
 									edgeLineShape *edge = *edgeIterator;
 									unsigned int boundaryID = edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID();
+									
+									OmniFEMMsg::instance()->MsgInfo(	"Cell " + std::to_string(cellIterator->subdomain_id()) + " is at boundary: " + 
+																		std::to_string(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID()) + " " + 
+																		edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryName());
+																		
+									OmniFEMMsg::instance()->MsgInfo("Cell face set to: " + std::to_string(cellFaceCenter.x) + ", " + std::to_string(cellFaceCenter.y));
+									
 									cellIterator->face(f)->set_boundary_id(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID());
 								}
 							}
@@ -74,8 +82,12 @@ void ElectroStaticSolver::setupGrid()
 
 void ElectroStaticSolver::setupSolver()
 {
-	QGauss<2> quadrature(3);
-	FEValues<2> finiteElementValues(p_fe, quadrature, update_values | update_gradients | update_JxW_values);
+	
+	QGauss<2> quadrature(2);
+	FEValues<2> finiteElementValues(p_fe, quadrature, update_values | update_gradients | update_quadrature_points | update_JxW_values);
+	
+	const RightHandSide right_hand_side;
+	
 	const unsigned int dofsPerCell = p_fe.dofs_per_cell;
 	const unsigned int numQuadPoints = quadrature.size();
 	
@@ -83,7 +95,9 @@ void ElectroStaticSolver::setupSolver()
 	dealii::Vector<double> localRHSCell(dofsPerCell);
 	std::vector<types::global_dof_index> localDOFIndices(dofsPerCell);
 	
-	for(auto activeCellIterator = p_DOFHandler.begin_active(); activeCellIterator != p_DOFHandler.end(); activeCellIterator++)
+	OmniFEMMsg::instance()->MsgInfo("Setting up " + std::to_string(p_DOFHandler.n_dofs()) + " DOFs");
+	
+	for(auto activeCellIterator : p_DOFHandler.active_cell_iterators())
 	{
 		const double materialRelativeEpsilonValue 	= p_materialList->at(activeCellIterator->material_id() - 1).getEpsilonX();
 		const double materialChargeDensity 			= p_materialList->at(activeCellIterator->material_id() - 1).getChargeDensity();
@@ -91,6 +105,8 @@ void ElectroStaticSolver::setupSolver()
 		finiteElementValues.reinit(activeCellIterator);
 		localCellMatrix = 0;
 		localRHSCell = 0;
+		
+		cout << "working on cell: " << activeCellIterator << endl;
 		
 		for(unsigned int qIndex = 0; qIndex < numQuadPoints; qIndex++)
 		{
@@ -111,8 +127,9 @@ void ElectroStaticSolver::setupSolver()
 				// Add in the code that will populate the local RHS using RHSCell
 				localRHSCell(i) += 	finiteElementValues.shape_value(i, qIndex) * 
 									(materialChargeDensity / (materialRelativeEpsilonValue * 8.854187814e-12)) *
+								//	right_hand_side.value (finiteElementValues.quadrature_point (qIndex)) *
+								//	0.0 *
 									finiteElementValues.JxW(qIndex);
-									
 			}
 		}
 		
@@ -131,16 +148,51 @@ void ElectroStaticSolver::setupSolver()
 	
 	map<types::global_dof_index, double> boundaryValues;
 	
+	/*VectorTools::interpolate_boundary_values(p_DOFHandler, 0, ConstantFunction<2>(100.0), boundaryValues);
+	VectorTools::interpolate_boundary_values(p_DOFHandler, 1, ZeroFunction<2>(), boundaryValues);
+	VectorTools::interpolate_boundary_values(p_DOFHandler, 2, ZeroFunction<2>(), boundaryValues);
+	
+	 */ 
+	
+	/*VectorTools::interpolate_boundary_values(p_DOFHandler, 2, ConstantFunction<2>(100.0), boundaryValues);
+	VectorTools::interpolate_boundary_values(p_DOFHandler, 1, ZeroFunction<2>(), boundaryValues);
+	VectorTools::interpolate_boundary_values(p_DOFHandler, 3, ZeroFunction<2>(), boundaryValues);
+	 */ 
+	
+	
+	
 	// Add in code to interpolate boundary values
 	for(unsigned int i = 0; i < p_boundaryList->size(); i++)
 	{
+		OmniFEMMsg::instance()->MsgInfo("Working on boundary " + std::to_string(i + 1) + " " + p_boundaryList->at(i).getBoundaryName());
 		if(p_boundaryList->at(i).getVoltage() > 0)
+		{
+			OmniFEMMsg::instance()->MsgInfo("Boundary " + std::to_string(i + 1) + " " + p_boundaryList->at(i).getBoundaryName() + " value " + std::to_string(p_boundaryList->at(i).getVoltage()));
 			VectorTools::interpolate_boundary_values(p_DOFHandler, i + 1, ConstantFunction<2>(p_boundaryList->at(i).getVoltage()), boundaryValues);
+		}
 		else
+		{
 			VectorTools::interpolate_boundary_values(p_DOFHandler, i + 1, ZeroFunction<2>(), boundaryValues);
+			OmniFEMMsg::instance()->MsgInfo("Boundary " + std::to_string(i + 1) + " " + p_boundaryList->at(i).getBoundaryName() + " value 0");
+		}
 	}
+	 
+	  
+	 
+	//VectorTools::interpolate_boundary_values(p_DOFHandler, 0, ZeroFunction<2>(), boundaryValues);
 	
 	MatrixTools::apply_boundary_values(boundaryValues, p_systemMatrix, p_solution, p_systemRHS);
+	
+  /*std::map<types::global_dof_index,double> boundary_values;
+  VectorTools::interpolate_boundary_values (p_DOFHandler,
+                                            0,
+                                            BoundaryValues(),
+                                            boundary_values);
+  MatrixTools::apply_boundary_values (boundary_values,
+                                      p_systemMatrix,
+                                      p_solution,
+                                      p_systemRHS);
+									   */ 
 	
 }
 
@@ -148,7 +200,8 @@ void ElectroStaticSolver::setupSolver()
 
 void ElectroStaticSolver::solveSystem()
 {
-	SolverControl controlSolver(100000, 1e-12);
+	
+	SolverControl controlSolver(1000, 1e-12);
 	
 	SolverCG<> solver(controlSolver);
 	
@@ -159,7 +212,11 @@ void ElectroStaticSolver::solveSystem()
 
 void ElectroStaticSolver::resultsProcessing()
 {
+	wxStandardPaths paths = wxStandardPaths::Get();
+	std::string filePath = paths.GetDocumentsDir().ToStdString() + "/" + "solution.vtk";
 	electricFieldPostProcessor electric_field_Post_processor;
+	/*
+	
 	
 	DataOut<2> outputData;
 	
@@ -173,18 +230,27 @@ void ElectroStaticSolver::resultsProcessing()
 	
 	ofstream outputSolution(filePath);
 	outputData.write_vtk(outputSolution);
+	 */
+
+	DataOut<2> data_out;
+	data_out.attach_dof_handler (p_DOFHandler);
+	data_out.add_data_vector (p_solution, "solution");
+	data_out.add_data_vector(p_solution, electric_field_Post_processor);
+	data_out.build_patches ();
+	std::ofstream output (filePath);
+	data_out.write_vtk (output); 
 }
 
 
 
 void ElectroStaticSolver::setupDOFS()
 {
-
-	p_DOFHandler.initialize(*(p_triangulation.getTriangulation()), p_fe);
+	//p_DOFHandler.initialize(*(p_triangulation.getTriangulation()), p_fe);
 	
-	//p_DOFHandler.distribute_dofs();
+	p_DOFHandler.distribute_dofs(p_fe);
+	DoFRenumbering::Cuthill_McKee(p_DOFHandler);
 	
-	DynamicSparsityPattern dSparsePattern(p_DOFHandler.n_dofs(), p_DOFHandler.n_dofs());
+	DynamicSparsityPattern dSparsePattern(p_DOFHandler.n_dofs());
 	DoFTools::make_sparsity_pattern(p_DOFHandler, dSparsePattern);
 	
 	p_sparsePattern.copy_from(dSparsePattern);
@@ -194,4 +260,5 @@ void ElectroStaticSolver::setupDOFS()
 	p_systemMatrix.reinit(p_sparsePattern);
 	p_solution.reinit(p_DOFHandler.n_dofs());
 	p_systemRHS.reinit(p_DOFHandler.n_dofs());
+	  
 }
