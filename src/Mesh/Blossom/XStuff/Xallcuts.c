@@ -5,8 +5,7 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include "Mesh/Blossom/machdefs.h"
-#include "Mesh/Blossom/util.h"
+
 #include "Mesh/Blossom/Xsubtour.h"
 
 #ifdef CC_PROTOTYPE_ANSI
@@ -282,7 +281,7 @@ Xnodeptr *S;
 Xedge *st;
 #endif
 {
-    Xnodeptr *np;
+/*    Xnodeptr *np;
     Xnode *n;
     Xedgeptr *ep;
     Xedge *e;
@@ -299,6 +298,7 @@ Xedge *st;
             }
         }
     }
+   */
 }
 
 #ifdef CC_PROTOTYPE_ANSI
