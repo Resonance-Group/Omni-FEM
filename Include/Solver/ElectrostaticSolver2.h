@@ -75,33 +75,6 @@ public:
 };
 
 
-class RightHandSide : public Function<2>
-{
-public:
-  RightHandSide () : Function<2>() {}
-  virtual double value (const Point<2>   &p,
-                        const unsigned int  component = 0) const
-						{
-							double return_value = 0.0;
-  for (unsigned int i=0; i<2; ++i)
-    return_value += 4.0 * std::pow(p(i), 4.0);
-  return return_value;
-						}
-};
-
-
-class BoundaryValues : public Function<2>
-{
-public:
-  BoundaryValues () : Function<2>() {}
-  virtual double value (const Point<2>   &p,
-                        const unsigned int  component = 0) const
-						{
-							return p.square();
-						}
-};
-
-
 class ElectroStaticSolver
 {
 private:
