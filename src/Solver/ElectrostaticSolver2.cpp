@@ -86,7 +86,7 @@ void ElectroStaticSolver::setupSolver()
 	QGauss<2> quadrature(2);
 	FEValues<2> finiteElementValues(p_fe, quadrature, update_values | update_gradients | update_quadrature_points | update_JxW_values);
 	
-	const RightHandSide right_hand_side;
+//	const RightHandSide right_hand_side;
 	
 	const unsigned int dofsPerCell = p_fe.dofs_per_cell;
 	const unsigned int numQuadPoints = quadrature.size();
