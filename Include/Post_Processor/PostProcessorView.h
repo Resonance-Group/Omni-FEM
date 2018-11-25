@@ -8,6 +8,8 @@
 #ifndef INCLUDE_POST_PROCESSOR_POSTPROCESSORVIEW_H_
 #define INCLUDE_POST_PROCESSOR_POSTPROCESSORVIEW_H_
 
+#include "PostProcessorWindow.h"
+
 #include "QMainWindow"
 #include "QObject"
 #include "QString"
@@ -34,6 +36,10 @@
 #include "pqRepresentationToolbar.h"
 #include "pqSetName.h"
 
+
+/*
+ * This class handles the functionality of the window
+ */
 class postProcessorView : public QMainWindow
 {
 	Q_OBJECT
@@ -41,7 +47,8 @@ class postProcessorView : public QMainWindow
 
 private:
 	Q_DISABLE_COPY(postProcessorView)
-	pqInternals *p_Internals;
+	class p_pqInternal;
+	p_pqInternal *p_Internals;
 
 public:
 	postProcessorView();

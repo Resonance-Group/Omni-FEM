@@ -10,12 +10,17 @@
 #include "Post_Processor/PostProcessorView.h"
 
 
+class postProcessorView::p_pqInternal : public Ui::MainWindow
+{
+};
 
 
 postProcessorView::postProcessorView()
 {
-	this->p_Internals = new pqInternals();
+	this->p_Internals = new p_pqInternal();
 	this->p_Internals->setupUi(this);
+
+	/* Now we setup additional window options */
 }
 
 postProcessorView::~postProcessorView()

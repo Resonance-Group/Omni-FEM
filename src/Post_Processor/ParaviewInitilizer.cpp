@@ -34,7 +34,7 @@ void paraviewInitilizer::initilizeParaviewWindow()
 
 	p_paraviewViewApp = new pqPVApplicationCore(argc, argv);
 	// Create Main Window here
-
+	p_mainWindow = new postProcessorView();
 	/* This section is used in order to load
 	 * any application specific plugins
 	 */

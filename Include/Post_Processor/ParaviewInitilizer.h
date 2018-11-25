@@ -17,9 +17,11 @@
 #include "QLocale"
 #include "QStyleFactory"
 
+#include "PostProcessorView.h"
+
 #include "pqPVApplicationCore.h"
 
-#include "ServerManager/SMApplication/vtkInitializationHelper.h"
+#include "vtkInitializationHelper.h"
 #include "vtkPVPluginTracker.h"
 
 
