@@ -25,7 +25,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
-#include "pqViewManager.h"
+#include <pqViewManager.h>
 
 QT_BEGIN_NAMESPACE
 

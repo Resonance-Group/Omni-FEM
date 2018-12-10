@@ -9,15 +9,14 @@
 paraviewInitilizer::paraviewInitilizer()
 {
 	int argc = 0;
-	char* argv[];
-
+	char* argv[] = {0};
 	QApplication::setApplicationName("Omni-FEM Post Processor");
 	QApplication::setApplicationVersion("0.0.1");
 	QApplication::setOrganizationName("Resonance Group");
 
 	QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-	QApplication qApp(argc, argv);
+	QApplication qtApp(argc, argv);
 
 	setlocale(LC_NUMERIC, "C");
 
@@ -30,7 +29,7 @@ paraviewInitilizer::paraviewInitilizer()
 void paraviewInitilizer::initilizeParaviewWindow()
 {
 	int argc = 0;
-	char* argv[];
+	char* argv[] = {0};
 
 	p_paraviewViewApp = new pqPVApplicationCore(argc, argv);
 	// Create Main Window here
@@ -49,8 +48,18 @@ void paraviewInitilizer::initilizeParaviewWindow()
 	}
 	pluginXML.append("</Plugins>\n");
 
-	vtkPVPluginTracker::GetInstance()->LoadPluginConfigurationXMLFromString(
+	/*vtkPVPluginTracker::GetInstance()->LoadPluginConfigurationXMLFromString(
 	    pluginXML.toLatin1().data());
+*/
+	p_mainWindow->show();
+
+
+}
+
+
+void paraviewInitilizer::loadData()
+{
+
 }
 
 

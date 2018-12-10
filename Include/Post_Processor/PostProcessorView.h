@@ -16,6 +16,11 @@
 #include "QAction"
 #include "QList"
 #include "QToolBar"
+#include "QStringList"
+#include "QList"
+
+#include <wx/stdpaths.h>
+#include <wx/string.h>
 
 #include "pqSGExportStateWizard.h"
 
@@ -36,13 +41,16 @@
 #include "pqRepresentationToolbar.h"
 #include "pqSetName.h"
 
+#include "pqParaViewBehaviors.h"
+#include "pqLoadDataReaction.h"
+
 
 /*
  * This class handles the functionality of the window
  */
 class postProcessorView : public QMainWindow
 {
-	Q_OBJECT
+//	Q_OBJECT
 	typedef QMainWindow Superclass;
 
 private:
@@ -52,7 +60,10 @@ private:
 
 public:
 	postProcessorView();
-	~postProcessorView();
+
+	void loadData();
+
+	virtual ~postProcessorView() {};
 
 protected slots:
 	void showHelpProxy(const QString &groupName, const QString &proxyName);

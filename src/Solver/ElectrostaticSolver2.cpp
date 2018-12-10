@@ -59,15 +59,18 @@ void ElectroStaticSolver::setupGrid()
 								{
 									
 									edgeLineShape *edge = *edgeIterator;
-									unsigned int boundaryID = edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID();
-									
-									OmniFEMMsg::instance()->MsgInfo(	"Cell " + std::to_string(cellIterator->subdomain_id()) + " is at boundary: " + 
-																		std::to_string(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID()) + " " + 
-																		edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryName());
-																		
-									OmniFEMMsg::instance()->MsgInfo("Cell face set to: " + std::to_string(cellFaceCenter.x) + ", " + std::to_string(cellFaceCenter.y));
-									
-									cellIterator->face(f)->set_boundary_id(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID());
+									if(edge->getSegmentProperty()->getElectricalBoundary())
+									{
+										unsigned int boundaryID = edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID();
+
+										OmniFEMMsg::instance()->MsgInfo(	"Cell " + std::to_string(cellIterator->subdomain_id()) + " is at boundary: " +
+																			std::to_string(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID()) + " " +
+																			edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryName());
+
+										OmniFEMMsg::instance()->MsgInfo("Cell face set to: " + std::to_string(cellFaceCenter.x) + ", " + std::to_string(cellFaceCenter.y));
+
+										cellIterator->face(f)->set_boundary_id(edge->getSegmentProperty()->getElectricalBoundary()->getBoundaryID());
+									}
 								}
 							}
 						}

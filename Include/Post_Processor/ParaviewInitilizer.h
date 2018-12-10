@@ -19,7 +19,7 @@
 
 #include "PostProcessorView.h"
 
-#include "pqPVApplicationCore.h"
+#include <pqPVApplicationCore.h>
 
 #include "vtkInitializationHelper.h"
 #include "vtkPVPluginTracker.h"
@@ -36,6 +36,13 @@ public:
 	paraviewInitilizer();
 
 	void initilizeParaviewWindow();
+
+	void loadData(std::string fileName)
+	{
+		return;
+	}
+
+	void loadData();
 
 	~paraviewInitilizer();
 

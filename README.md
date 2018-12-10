@@ -45,3 +45,7 @@ sudo apt-get install ubuntu-restricted-extras
 
 An easy way to install boost on ubuntu is to run the following command:
 sudo apt-get install libboost-all-dev
+
+In order for dealii to run, you must copy the library files from the deal ii install location to /usr/lib. Must be root.
+
+Same thing goes for paraview libraries.

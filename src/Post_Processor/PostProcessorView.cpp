@@ -21,12 +21,51 @@ postProcessorView::postProcessorView()
 	this->p_Internals->setupUi(this);
 
 	/* Now we setup additional window options */
+	pqParaViewBehaviors::setEnableStandardPropertyWidgets(false);
+	pqParaViewBehaviors::setEnableStandardRecentlyUsedResourceLoader(false);
+	pqParaViewBehaviors::setEnableDataTimeStepBehavior(false);
+	pqParaViewBehaviors::setEnableSpreadSheetVisibilityBehavior(false);
+	pqParaViewBehaviors::setEnablePipelineContextMenuBehavior(false);
+	pqParaViewBehaviors::setEnableObjectPickingBehavior(false);
+	pqParaViewBehaviors::setEnableUndoRedoBehavior(false);
+	pqParaViewBehaviors::setEnableCrashRecoveryBehavior(false);
+	pqParaViewBehaviors::setEnablePluginDockWidgetsBehavior(false);
+	pqParaViewBehaviors::setEnableVerifyRequiredPluginBehavior(false);
+	pqParaViewBehaviors::setEnablePluginActionGroupBehavior(false);
+	pqParaViewBehaviors::setEnableCommandLineOptionsBehavior(false);
+	pqParaViewBehaviors::setEnablePersistentMainWindowStateBehavior(false);
+	pqParaViewBehaviors::setEnableCollaborationBehavior(false);
+	pqParaViewBehaviors::setEnableViewStreamingBehavior(false);
+	pqParaViewBehaviors::setEnablePluginSettingsBehavior(false);
+ 	pqParaViewBehaviors::setEnableQuickLaunchShortcuts(false);
+ 	pqParaViewBehaviors::setEnableLockPanelsBehavior(false);
+
+  // This is actually useless, as they are activated by default
+ 	pqParaViewBehaviors::setEnableStandardViewFrameActions(true);
+ 	pqParaViewBehaviors::setEnableDefaultViewBehavior(true);
+ 	pqParaViewBehaviors::setEnableAlwaysConnectedBehavior(true);
+ 	pqParaViewBehaviors::setEnableAutoLoadPluginXMLBehavior(true);
+ 	pqParaViewBehaviors::setEnableApplyBehavior(true);
+ 	new pqParaViewBehaviors(this, this);
 }
 
-postProcessorView::~postProcessorView()
+
+void postProcessorView::loadData()
 {
+	QString stringConversion;
+	QStringList solutionFileList;
+	QList<QStringList> finalList;
+	wxStandardPaths paths = wxStandardPaths::Get();
+	std::string filePath = paths.GetDocumentsDir().ToStdString() + "/" + "solution.vtk";
 
+	stringConversion = QString::fromStdString(filePath);
+	solutionFileList << stringConversion;
+
+	finalList.append(solutionFileList);
+
+	pqLoadDataReaction::loadData(finalList);
 }
+
 
 
 
