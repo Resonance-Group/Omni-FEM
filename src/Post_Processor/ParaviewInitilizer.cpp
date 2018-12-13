@@ -40,7 +40,7 @@ void paraviewInitilizer::initilizeParaviewWindow()
 	QString pluginString = "";
 
 	QStringList pluginList = pluginString.split(';', QString::SkipEmptyParts);
-	QString pluginXML = "<PLugins>";
+	QString pluginXML = "<Plugins>";
 
 	for(auto pluginName : pluginList)
 	{
@@ -59,7 +59,7 @@ void paraviewInitilizer::initilizeParaviewWindow()
 
 void paraviewInitilizer::loadData()
 {
-
+	p_mainWindow->loadData();
 }
 
 

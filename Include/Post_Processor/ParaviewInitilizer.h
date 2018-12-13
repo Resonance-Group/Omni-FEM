@@ -8,8 +8,6 @@
 #ifndef INCLUDE_POST_PROCESSOR_PARAVIEWINITILIZER_H_
 #define INCLUDE_POST_PROCESSOR_PARAVIEWINITILIZER_H_
 
-#include <clocale>
-
 #include "QMainWindow"
 #include "QString"
 #include "QStringList"
@@ -17,9 +15,10 @@
 #include "QLocale"
 #include "QStyleFactory"
 
-#include "PostProcessorView.h"
+#include "Post_Processor/PostProcessorView.h"
 
 #include <pqPVApplicationCore.h>
+#include <clocale>
 
 #include "vtkInitializationHelper.h"
 #include "vtkPVPluginTracker.h"
@@ -30,7 +29,7 @@ class paraviewInitilizer
 private:
 	pqPVApplicationCore *p_paraviewViewApp = nullptr;
 
-	QMainWindow *p_mainWindow = nullptr;
+	postProcessorView *p_mainWindow = nullptr;
 
 public:
 	paraviewInitilizer();
