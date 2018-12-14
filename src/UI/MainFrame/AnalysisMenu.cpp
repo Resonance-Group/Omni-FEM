@@ -1,13 +1,14 @@
-#include "Post_Processor/ParaviewInitilizer.h"
+
 #include "UI/OmniFEMFrame.h"
 
 
 
 void OmniFEMMainFrame::onViewResults(wxCommandEvent &event)
 {
-	wxMessageBox("You are viewing results!", "Results", wxOK | wxCANCEL | wxICON_INFORMATION);
+//	wxMessageBox("You are viewing results!", "Results", wxOK | wxCANCEL | wxICON_INFORMATION);
 
-	paraviewInitilizer test;
+	p_test = new paraviewInitilizer();
+	p_test->loadData();
 }
 
 

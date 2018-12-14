@@ -47,6 +47,16 @@ postProcessorView::postProcessorView()
  	pqParaViewBehaviors::setEnableAutoLoadPluginXMLBehavior(true);
  	pqParaViewBehaviors::setEnableApplyBehavior(true);
  	new pqParaViewBehaviors(this, this);
+
+ 	new pqDefaultViewBehavior(this);
+ 	new pqAlwaysConnectedBehavior(this);
+ 	new pqAutoLoadPluginXMLBehavior(this);
+ 	pqApplyBehavior* applyBehavior = new pqApplyBehavior(this);
+
+/* 	foreach (pqPropertiesPanel* ppanel, this->findChildren<pqPropertiesPanel*>())
+ 	{
+ 		applyBehavior->registerPanel(ppanel);
+ 	}*/
 }
 
 

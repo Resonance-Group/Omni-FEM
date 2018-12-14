@@ -8,8 +8,9 @@
 
 paraviewInitilizer::paraviewInitilizer()
 {
-	int argc = 0;
-	char* argv[] = {0};
+	char *argv[] = {"program name", "arg1", "arg2", NULL};
+	int argc = sizeof(argv) / sizeof(char*) - 1;
+
 	QApplication::setApplicationName("Omni-FEM Post Processor");
 	QApplication::setApplicationVersion("0.0.1");
 	QApplication::setOrganizationName("Resonance Group");
@@ -23,13 +24,15 @@ paraviewInitilizer::paraviewInitilizer()
 	QLocale::setDefault(QLocale::c());
 
 	initilizeParaviewWindow();
+
+	unsigned int returnValue = qtApp.exec();
 }
 
 
 void paraviewInitilizer::initilizeParaviewWindow()
 {
-	int argc = 0;
-	char* argv[] = {0};
+	char *argv[] = {"program name", "arg1", "arg2", NULL};
+	int argc = sizeof(argv) / sizeof(char*) - 1;
 
 	p_paraviewViewApp = new pqPVApplicationCore(argc, argv);
 	// Create Main Window here
@@ -44,7 +47,7 @@ void paraviewInitilizer::initilizeParaviewWindow()
 
 	for(auto pluginName : pluginList)
 	{
-		pluginXML.append(QString("<Plugin name=\"%1\" auto_load=\"1\" />\n")).arg(pluginName);
+	//	pluginXML.append(QString("<Plugin name=\"%1\" auto_load=\"1\" />\n")).arg(pluginName);
 	}
 	pluginXML.append("</Plugins>\n");
 

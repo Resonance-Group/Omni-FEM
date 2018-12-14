@@ -1,6 +1,8 @@
 #ifndef OMNIFEMFrame_H_
 #define OMNIFEMFrame_H_
 
+#include "Post_Processor/ParaviewInitilizer.h"
+
 #include <string.h>
 #include <algorithm>
 
@@ -103,6 +105,8 @@ private:
 	* Variables *
 	*************/
 	
+	paraviewInitilizer *p_test = nullptr;
+
 	//! A local copy of the path file for the saved file
 	/*!
 		This is primarly used during a saved event. For a saved as event,
