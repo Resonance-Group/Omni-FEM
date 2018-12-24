@@ -73,7 +73,25 @@ void postProcessorView::loadData()
 
 	finalList.append(solutionFileList);
 
-	pqLoadDataReaction::loadData(finalList);
+	pqPipelineSource *source = pqLoadDataReaction::loadData(finalList);
+
+	pqOutputPort* port = source->getOutputPort(0);
+
+	if(port)
+	{
+		pqPipelineBrowserWidget::setVisibility(true, port);
+	}
+
+	if (pqView* view = pqActiveObjects::instance().activeView())
+	{
+		if (view->getNumberOfVisibleDataRepresentations() == 1 && visible &&
+			vtkPVGeneralSettings::GetInstance()->GetResetDisplayEmptyViews())
+	    {
+			view->resetDisplay();
+	    }
+		pqActiveObjects::instance().activeView()->render();
+	}
+
 }
 
 

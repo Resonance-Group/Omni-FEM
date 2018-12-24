@@ -22,6 +22,8 @@
 #include <wx/stdpaths.h>
 #include <wx/string.h>
 
+#include "vtkPVGeneralSettings.h"
+
 #include "pqSGExportStateWizard.h"
 
 #include "pqAlwaysConnectedBehavior.h"
@@ -43,6 +45,12 @@
 
 #include "pqParaViewBehaviors.h"
 #include "pqLoadDataReaction.h"
+#include "pqPipelineBrowserWidget.h"
+#include "pqPipelineSource.h"
+
+#include "pqOutputPort.h"
+#include "pqView.h"
+#include "pqActiveObjects.h"
 
 
 /*
