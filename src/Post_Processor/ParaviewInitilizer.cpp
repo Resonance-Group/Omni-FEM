@@ -25,7 +25,23 @@ paraviewInitilizer::paraviewInitilizer()
 
 	initilizeParaviewWindow();
 
+	QString plugin_string = "";
+	  QStringList plugin_list = plugin_string.split(';',QString::SkipEmptyParts);
+	  QString plugin_xml = "<Plugins>";
+	  foreach (const QString plugin_name, plugin_list)
+	    {
+	    plugin_xml.append(
+	      QString("<Plugin name=\"%1\" auto_load=\"1\" />\n").arg(plugin_name));
+	    }
+	  plugin_xml.append("</Plugins>\n");
+	  vtkPVPluginTracker::GetInstance()->LoadPluginConfigurationXMLFromString(
+	    plugin_xml.toLatin1().data());
+
+	p_mainWindow->loadData();
+
 	unsigned int returnValue = qtApp.exec();
+
+
 }
 
 

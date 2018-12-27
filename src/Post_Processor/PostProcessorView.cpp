@@ -73,7 +73,17 @@ void postProcessorView::loadData()
 
 	finalList.append(solutionFileList);
 
-	pqPipelineSource *source = pqLoadDataReaction::loadData(finalList);
+	QPair<QString, QString> readerInfo;
+
+	readerInfo.first = QString("LegacyVTKFileReader");
+	readerInfo.second = QString("sources");
+
+	vtkSMReaderFactory* readerFactory = vtkSMProxyManager::GetProxyManager()->GetReaderFactory();
+
+	readerFactory->Initialize();
+	readerFactory->RegisterPrototype("sources", "LegacyVTKFileReader");
+	//pqServer *
+	pqPipelineSource *source = pqLoadDataReaction::loadData(finalList, QString("LegacyVTKFileReader"), NULL);
 
 	pqOutputPort* port = source->getOutputPort(0);
 
@@ -84,7 +94,7 @@ void postProcessorView::loadData()
 
 	if (pqView* view = pqActiveObjects::instance().activeView())
 	{
-		if (view->getNumberOfVisibleDataRepresentations() == 1 && visible &&
+		if (view->getNumberOfVisibleDataRepresentations() == 1 && true &&
 			vtkPVGeneralSettings::GetInstance()->GetResetDisplayEmptyViews())
 	    {
 			view->resetDisplay();

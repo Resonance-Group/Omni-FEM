@@ -52,6 +52,9 @@
 #include "pqView.h"
 #include "pqActiveObjects.h"
 
+#include "vtkSMProxyManager.h"
+#include "vtkSMReaderFactory.h"
+
 
 /*
  * This class handles the functionality of the window
