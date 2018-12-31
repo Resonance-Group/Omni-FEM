@@ -20,6 +20,8 @@ postProcessorView::postProcessorView()
 	this->p_Internals = new p_pqInternal();
 	this->p_Internals->setupUi(this);
 
+	this->p_Internals->MultiViewManager->setTabVisibility(false);
+
 	/* Now we setup additional window options */
 	pqParaViewBehaviors::setEnableStandardPropertyWidgets(false);
 	pqParaViewBehaviors::setEnableStandardRecentlyUsedResourceLoader(false);
@@ -46,6 +48,7 @@ postProcessorView::postProcessorView()
  	pqParaViewBehaviors::setEnableAlwaysConnectedBehavior(true);
  	pqParaViewBehaviors::setEnableAutoLoadPluginXMLBehavior(true);
  	pqParaViewBehaviors::setEnableApplyBehavior(true);
+
  	new pqParaViewBehaviors(this, this);
 
  	new pqDefaultViewBehavior(this);
