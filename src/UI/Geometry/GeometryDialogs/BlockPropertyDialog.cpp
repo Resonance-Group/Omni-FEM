@@ -76,7 +76,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<magneticMate
     {
         for(unsigned int i = 0; i < _magneticMaterialList->size(); i++)
         {
-            if(_magneticMaterialList->at(i).getName() == property.getMaterialName())
+            if(_magneticMaterialList->at(i).getName() == property.getMagneticMaterial()->getName())
             {
                 _materialComboBox->SetSelection(i + 2);
                 break;
@@ -281,7 +281,7 @@ blockPropertyDialog::blockPropertyDialog(wxWindow *par, std::vector<electrostati
     {
         for(unsigned int i = 0; i < _electricalMaterialList->size(); i++)
         {
-            if(_electricalMaterialList->at(i).getName() == property.getMaterialName())
+            if(_electricalMaterialList->at(i).getName() == property.getElectricalMaterial()->getName())
             {
                 _materialComboBox->SetSelection(i + 2);
                 break;
@@ -387,6 +387,7 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
     property.setMaterialName(_materialComboBox->GetString(_materialComboBox->GetSelection()).ToStdString());
     
     property.setAutoMeshState(_autoMeshCheckBox->GetValue());
+	
 	if(_autoMeshCheckBox->GetValue() != p_property.getAutoMeshState())
 		resetMesh = true;
     
@@ -402,17 +403,61 @@ bool blockPropertyDialog::getBlockProperty(blockProperty &property)
 	
 	if(property.getMaterialName() == "No Mesh")
 		property.setMeshSizeType(meshSize::MESH_NONE_);
-    
-    if(_problem == physicProblems::PROB_MAGNETICS)
-    {
-        property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()).ToStdString());
-        
-        _numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
-        property.setNumberOfTurns(value2);
-        
-        property.setMagnetization(_magnetizationTextCtrl->GetValue());
-    }
-    
+
+	switch(_problem)
+	{
+		case physicProblems::PROB_MAGNETICS:
+		
+			property.setCircuitName(_circuitComboBox->GetString(_circuitComboBox->GetSelection()).ToStdString());
+	
+			_numberOfTurnsTextCtrl->GetValue().ToLong(&value2);
+			property.setNumberOfTurns(value2);
+			
+			property.setMagnetization(_magnetizationTextCtrl->GetValue());
+			
+			if(property.getCircuitName() != "None")
+			{
+				for(auto circuitIterator = _circuitList->begin(); circuitIterator != _circuitList->end(); circuitIterator++)
+				{
+					if(circuitIterator->getName() == property.getCircuitName())
+					{
+						property.setCircuitProperty(*circuitIterator);
+					}
+				}
+			}
+			
+			if(property.getMaterialName() != "None")
+			{
+				for(auto materialIterator = _magneticMaterialList->begin(); materialIterator != _magneticMaterialList->end(); materialIterator++)
+				{
+					if(materialIterator->getName() == property.getMaterialName())
+					{
+						property.setMagneticMaterial(*materialIterator);
+						break;
+					}
+				}
+			}
+			break;
+		case physicProblems::PROB_ELECTROSTATIC:
+		
+			if(property.getMaterialName() != "None")
+			{
+				for(auto materialIterator = _electricalMaterialList->begin(); materialIterator != _electricalMaterialList->end(); materialIterator++)
+				{
+					if(materialIterator->getName() == property.getMaterialName())
+					{
+						property.setElectricalMaterial(*materialIterator);
+						break;
+					}
+				}
+			}
+			
+			break;
+		default:
+			break;
+	}
+
+	
     _groupTextCtrl->GetValue().ToLong(&value2);
     property.setGroupNumber((unsigned int)value2);
     

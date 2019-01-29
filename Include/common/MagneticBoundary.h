@@ -85,6 +85,9 @@ private:
     //! This is the type of boundary condition that belongs to the class
     bcEnumMagnetic _type;
 	
+	//! The boundary ID associated with the boundary. This is used in the solver primarly
+	unsigned int p_boundaryID = 0;
+	
 	template<class Archive>
 	void serialize(Archive &ar, const unsigned int version)
 	{
@@ -96,6 +99,7 @@ private:
 		ar & _sigma;
 		ar & _mur;
 		ar & _type;
+		ar & p_boundaryID;
 	}
 public:
     
@@ -241,6 +245,26 @@ public:
     {
         return _type;
     }
+	
+	/**
+	 * @brief Function that is used in order to set the boudary ID of the boundary
+	 * 			This is for internal purposes only and the user will not eb able to
+	 * 			edit this property
+	 * @param ID The ID of the boundary
+	 */
+	void setBoundaryID(unsigned int ID)
+	{
+		p_boundaryID = ID;
+	}
+	
+	/**
+	 * @brief Retrieves the boundary ID of the boundary
+	 * @return Returns the boundary ID
+	 */
+	unsigned int getBoundaryID()
+	{
+		return p_boundaryID;
+	}
 };
 
 

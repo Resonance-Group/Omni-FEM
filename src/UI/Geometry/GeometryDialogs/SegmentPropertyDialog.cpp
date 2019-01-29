@@ -262,10 +262,58 @@ bool segmentPropertyDialog::getSegmentProperty(segmentProperty &property)
 	property.setElementSizeAlongLine(value);
 	if(p_property.getElementSizeAlongLine() != value)
 		resetMesh = true;
-        
+		
+	switch(_problem)
+	{
+		case physicProblems::PROB_ELECTROSTATIC:
+		
+			property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()).ToStdString());
+			
+			if(property.getBoundaryName() != "None")
+			{
+				for(auto boundaryIterator = _electricalBoundaryList->begin(); boundaryIterator != _electricalBoundaryList->end(); boundaryIterator++)
+				{
+					if(boundaryIterator->getBoundaryName() == property.getBoundaryName())
+					{
+						property.setElectricalBoundary(*boundaryIterator);
+						break;
+					}
+				}
+			}
+			
+			if(property.getConductorName() != "None")
+			{
+				for(auto conductorIterator = _conductorList->begin(); conductorIterator != _conductorList->end(); conductorIterator++)
+				{
+					if(conductorIterator->getName() == property.getConductorName())
+					{
+						property.setConductorProperty(*conductorIterator);
+						break;
+					}
+				}
+			}
+			
+			break;
+		case physicProblems::PROB_MAGNETICS:
+			if(property.getBoundaryName() != "None")
+			{
+				for(auto boundaryIterator = _magneticBoundayList->begin(); boundaryIterator != _magneticBoundayList->end(); boundaryIterator++)
+				{
+					if(boundaryIterator->getBoundaryName() == property.getBoundaryName())
+					{
+						property.setMagneticBoundary(*boundaryIterator);
+						break;
+					}
+				} 
+			}
+			
+			break;
+		default:
+			break;
+	}
     if(_problem == physicProblems::PROB_ELECTROSTATIC)
     {
-        property.setConductorName(_conductorListCombobox->GetString(_conductorListCombobox->GetSelection()).ToStdString());
+        
     }
         
     property.setHiddenState(_hideSegmentCheckbox->GetValue());

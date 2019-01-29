@@ -48,12 +48,16 @@ private:
     //! Variable that stores how much current is flowing through the circuit
     double p_current = 0;
 	
+	//! The ID of the circuit property
+	unsigned int p_circuitID = 0;
+	
 	template<class Archive>
 	void serialize(Archive &ar, const unsigned int version)
 	{
 		ar & p_circuitName;
 		ar & p_isSeries;
 		ar & p_current;
+		ar & p_circuitID; 
 	}
 public:
 
@@ -118,6 +122,24 @@ public:
     {
         return p_current;
     }
+	
+	/**
+	 * @brief Sets the ID of the cirucit property
+	 * @param ID The ID associated with the property
+	 */
+	void setCircuitID(unsigned int ID)
+	{
+		p_circuitID = ID;
+	}
+	
+	/**
+	 * @brief Retrieves the circuit ID of the property
+	 * @return Returns the ID
+	 */
+	unsigned int getCircuitID()
+	{
+		return p_circuitID;
+	}
 };
 
 #endif

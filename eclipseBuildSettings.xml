@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C++ Source File">
+<includepath>/home/phillip/GitHub/Omni-FEM/Include</includepath>
+<includepath workspace_path="true">/${ProjName}/Include</includepath>
+<includepath>/usr/local/lib/wx/include/gtk2-unicode-3.1</includepath>
+<includepath>/usr/local/include/wx-3.1</includepath>
+<includepath>/home/phillip/dealii900/include</includepath>
+<includepath>/usr/include/GL</includepath>
+<includepath>/usr/include/freetype2</includepath>
+<includepath>/usr/include/boost</includepath>
+<includepath>/home/phillip/dealii900/include/deal.II/bundled</includepath>
+
+</language>
+<language name="C Source File">
+<includepath>/home/phillip/GitHub/Omni-FEM/Include</includepath>
+<includepath>/usr/local/include/wx-3.1</includepath>
+<includepath>/usr/include/freetype2</includepath>
+<includepath>/usr/include/boost</includepath>
+<includepath>/${ProjName}/Include</includepath>
+<includepath>/usr/include/GL</includepath>
+<includepath>/home/phillip/dealii900/include</includepath>
+<includepath>/home/phillip/dealii900/include/deal.II/bundled</includepath>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="C++ Source File">
+<macro>
+<name>__WXGTK__</name><value/>
+</macro>
+<macro>
+<name>CC_PROTOTYPE_ANSI</name><value/>
+</macro>
+<macro>
+<name>HAVE_MESH</name><value/>
+</macro>
+<macro>
+<name>HAVE_BLOSSOM</name><value/>
+</macro>
+<macro>
+<name>HAVE_BFGS</name><value/>
+</macro>
+<macro>
+<name>HAVE_LAPACK</name><value/>
+</macro>
+<macro>
+<name>WXUSINGDLL</name><value/>
+</macro>
+<macro>
+<name>_FILE_OFFSET_BITS</name><value>64</value>
+</macro>
+
+</language>
+<language name="C Source File">
+<macro>
+<name>CC_PROTOTYPE_ANSI</name><value/>
+</macro>
+<macro>
+<name>HAVE_MESH</name><value/>
+</macro>
+<macro>
+<name>HAVE_BLOSSOM</name><value/>
+</macro>
+<macro>
+<name>HAVE_BFGS</name><value/>
+</macro>
+<macro>
+<name>HAVE_LAPACK</name><value/>
+</macro>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+</cdtprojectproperties>

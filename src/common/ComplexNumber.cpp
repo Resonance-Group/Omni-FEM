@@ -35,40 +35,40 @@ double ComplexNumber::getImaginaryComponent()
 Vector ComplexNumber::Sqrt()
 {
 	double w, z;
-	ComplexNumber *y = new ComplexNumber(0.0d, 0.0d);
+	ComplexNumber *y = new ComplexNumber(0.0, 0.0);
 
 	if ((xComponent == 0) && (yComponent == 0))
 		w = 0;
 	else if (fabs(xComponent) > fabs(yComponent))
 	{
 		z = yComponent / xComponent;
-		w = sqrt(fabs(xComponent)) * sqrt((1. + sqrt(1. + z * z)) / 2.0d);
+		w = sqrt(fabs(xComponent)) * sqrt((1. + sqrt(1. + z * z)) / 2.0);
 	}
 	else
 	{
 		z = xComponent / yComponent;
-		w = sqrt(fabs(yComponent)) * sqrt((fabs(z) + sqrt(1. + z * z)) / 2.0d);
+		w = sqrt(fabs(yComponent)) * sqrt((fabs(z) + sqrt(1. + z * z)) / 2.0);
 	}
 
 	if (w == 0)
 	{
-		y->setComplexNumber(0.0d, 0.0d);
+		y->setComplexNumber(0.0, 0.0);
 		return *y;
 	}
 
 	if (xComponent >= 0)
 	{
-		y->setComplexNumber(w, yComponent / (2.0d * w));
+		y->setComplexNumber(w, yComponent / (2.0 * w));
 		return *y;
 	}
 
 	if (yComponent >= 0)
 	{
-		y->setComplexNumber(fabs(yComponent) / (2.0d * w), w);
+		y->setComplexNumber(fabs(yComponent) / (2.0 * w), w);
 		return *y;
 	}
 	
-	y->setComplexNumber(fabs(yComponent) / (2.0d * w), -w);
+	y->setComplexNumber(fabs(yComponent) / (2.0 * w), -w);
 	return *y;
 }
 
@@ -103,12 +103,12 @@ ComplexNumber ComplexNumber::getInverse()
 	if (fabs(xComponent) > fabs(yComponent))
 	{
 		c = yComponent / xComponent;
-		z.Set(1.0d / (xComponent * (1.0d + c * c)), (-c) * z.getXComponent());
+		z.Set(1.0 / (xComponent * (1.0 + c * c)), (-c) * z.getXComponent());
 	}
 	else 
 	{
 		c = getXComponent() / yComponent;
-		z.Set((-1.0d) / (yComponent*(1.0d + c * c)), (-c) * z.yComponent);
+		z.Set((-1.0) / (yComponent*(1.0 + c * c)), (-c) * z.yComponent);
 	}
 
 	return z;

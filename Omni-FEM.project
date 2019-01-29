@@ -20,6 +20,10 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <VirtualDirectory Name="Solver">
+      <File Name="src/Solver/ElectrostaticSolver2.cpp"/>
+      <File Name="src/Solver/MeshOptimizer.cpp"/>
+    </VirtualDirectory>
     <VirtualDirectory Name="UI">
       <VirtualDirectory Name="MainFrame">
         <File Name="src/UI/MainFrame/AnalysisMenu.cpp"/>
@@ -347,6 +351,13 @@
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="Include">
+    <VirtualDirectory Name="Solver">
+      <File Name="Include/Solver/ElectrostaticSolver2.h"/>
+      <VirtualDirectory Name="common">
+        <File Name="Include/Solver/common/CommonSolverFunctions.h"/>
+        <File Name="Include/Solver/common/MeshOptimizer.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
     <VirtualDirectory Name="UI">
       <File Name="Include/UI/OmniFEMFrame.h"/>
       <File Name="Include/UI/common.h"/>
@@ -639,7 +650,7 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-O0;-fopenmp;-std=c++11;-Wall;-lglut;-lGL;-lGLU;$(shell wx-config --cxxflags --unicode=yes --debug=yes)" C_Options="-g;-std=c++11;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=yes);" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="/usr/local/include/wx-3.1"/>
         <IncludePath Value="/usr/include/wx-3.0-unofficial"/>
@@ -648,21 +659,27 @@
         <IncludePath Value="/usr/include/wx-3.0"/>
         <IncludePath Value="/usr/include/freetype2"/>
         <IncludePath Value="/usr/include/boost"/>
+        <IncludePath Value="/home/phillip/dealii900/include"/>
+        <IncludePath Value="/home/phillip/dealii900/include/deal.II/bundled"/>
         <Preprocessor Value="CC_PROTOTYPE_ANSI"/>
         <Preprocessor Value="HAVE_MESH"/>
         <Preprocessor Value="HAVE_BLOSSOM"/>
         <Preprocessor Value="HAVE_BFGS"/>
         <Preprocessor Value="HAVE_LAPACK"/>
       </Compiler>
-      <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all)" Required="yes">
+      <Linker Options="-lglut;-lGL;-lGLU;$(shell wx-config --debug=yes --libs --unicode=yes --libs all);/usr/local/lib/libboost_serialization.a" Required="yes">
         <LibraryPath Value="/usr/lib/x86_64-linux-gnu"/>
         <LibraryPath Value="/usr/lib/"/>
+        <LibraryPath Value="/usr/local/lib"/>
         <LibraryPath Value="/usr/lib/lapack"/>
+        <LibraryPath Value="/home/phillip/dealii900/lib"/>
         <Library Value="libfreetype"/>
         <Library Value="libGLEW"/>
+        <Library Value="libdrm"/>
         <Library Value="boost_serialization"/>
         <Library Value="boost_wserialization"/>
         <Library Value="liblapack"/>
+        <Library Value="libdeal_II"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="yes" IsEnabled="yes"/>

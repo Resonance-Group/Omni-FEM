@@ -10,11 +10,13 @@ using namespace std;
 
 //! Class the defines the conductor that is used in an electrostatic simulation
 /*!
-    The main prupose of this calss is to allow the user
+    The main prupose of this class is to allow the user
     to apply constraints on the total amount of charge carries
     on a conductor. Conductors can be defind as a fixed voltage.
     The program will then compute the total charge carries on the
     conductor during solving.
+	 * 
+	This class is primarly used in electrostatic simulations.
 */ 
 class conductorProperty
 {
@@ -25,6 +27,7 @@ class conductorProperty
 		ar & _conductorName;
 		ar & _isTotalCharge;
 		ar & _value;
+		ar & p_conductorID;
 	}
 private:
     //! This is the name of the property
@@ -44,6 +47,9 @@ private:
         \sa _isTotalCharge
     */ 
     double _value = 0;
+	
+	//! The conductor ID of the property
+	unsigned int p_conductorID = 0;
 public:
 
     //! Sets the name of the property
@@ -119,6 +125,24 @@ public:
     {
         return _value;
     }
+	
+	/**
+	 * @brief Sets the conductor ID of the property
+	 * @param ID The ID that will be assocated with the property 
+	 */
+	void setConductorID(unsigned int ID)
+	{
+		p_conductorID = ID;
+	}
+	
+	/**
+	 * @brief Retrieves the ID of the conductor
+	 * @return Returns the ID associacted with the conductor ID
+	 */
+	unsigned int getConductorID()
+	{
+		return p_conductorID;
+	}
 };
 
 #endif

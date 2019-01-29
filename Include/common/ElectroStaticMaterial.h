@@ -23,6 +23,7 @@ class electrostaticMaterial : public materialProperty
 		ar & _relativePermittivityX;
 		ar & _relativePermittivityY;
 		ar & _volumetricChargeDensity;
+		ar & p_materialID;
 	}
 private:
     //! This variable contains the relative permittivity in the X plane 
@@ -33,6 +34,8 @@ private:
     
     //! This variable allows the specfication of a volume charge density in C/m^3
     double _volumetricChargeDensity = 0;
+	
+	unsigned int p_materialID = 0;
     
 public:
     
@@ -91,6 +94,25 @@ public:
     {
         return _volumetricChargeDensity;
     }
+	
+	/**
+	 * @brief Function that is used to set the material ID. This is not something that the user
+	 * 			is allowed to edit. This is for internal purposes only.
+	 * @param ID The ID of the material
+	 */
+	void setMaterialID(unsigned int ID)
+	{
+		p_materialID = ID;
+	}
+	
+	/**
+	 * @brief Retrieves the material's ID.
+	 * @return Returns an unsigned int that is the material ID
+	 */
+	unsigned int getMaterialID()
+	{
+		return p_materialID;
+	}
 };
 
 #endif

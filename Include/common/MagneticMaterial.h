@@ -104,6 +104,9 @@ private:
     //! The strand Diameter
     double _strandDia = 0;
 	
+	//! The Identification Number for the material
+	unsigned int p_materialID = 0;
+	
 	template<class Archive>
 	void serialize(Archive &ar, const unsigned int version)
 	{
@@ -122,6 +125,7 @@ private:
 		ar & _relativePermeabilityX;
 		ar & _relativePermeabilityY;
 		ar & _strandDia;
+		ar & p_materialID;
 	}
 public:
 
@@ -411,6 +415,21 @@ public:
     {
         _nonLinearParameters.clear();
     }
+	
+	/**
+	 * @brief Function that is used to set the material ID. This is not something that the user
+	 * 			is allowed to edit. This is for internal purposes only.
+	 * @param ID The ID of the material
+	 */
+	void setMaterialID(unsigned int ID)
+	{
+		p_materialID = ID;
+	}
+	
+	unsigned int getMaterialID()
+	{
+		return p_materialID;
+	}
 };
 
 

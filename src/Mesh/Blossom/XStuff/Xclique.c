@@ -10,7 +10,7 @@
 /**************************************************************************/
 
 
-#include "Mesh/Blossom/machdefs.h"
+
 #include "Mesh/Blossom/Xsubtour.h"
 
 

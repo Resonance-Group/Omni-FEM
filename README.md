@@ -46,6 +46,11 @@ sudo apt-get install ubuntu-restricted-extras
 An easy way to install boost on ubuntu is to run the following command:
 sudo apt-get install libboost-all-dev
 
+
+In order for dealii to run, you must copy the library files from the deal ii install location to /usr/lib. Must be root.
+
+Same thing goes for paraview libraries.
+=======
 There are a few things that need to happen in order to compile dealii directly from an IDE without the need for cmake file
 
 1) In the compiler settings, you need to make sure that the include paths are to your installation for dealII.Both for the sources and what is bundled.
@@ -60,4 +65,3 @@ Path -> /home/phillip/dealii851/lib
 Library -> libdeal_II
 
 3) In order to actually run a program (steps 1 and 2 will allow you to compile the application), you need to copy the library libdeal_II.so.8.5.1 from the lib folder in the installation directory of DealII to the /usr/lib folder
-

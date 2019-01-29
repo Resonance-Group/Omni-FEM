@@ -16,10 +16,10 @@
 #include <common/MagneticPreference.h>
 
 #include <common/NodalProperty.h>
-
 #include <common/ExteriorRegion.h>
-
 #include <common/MeshSettings.h>
+
+#include <Mesh/ClosedPath.h>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -84,6 +84,9 @@ private:
     
     //! Global list for the nodal properties
     std::vector<nodalProperty> _localNodalList;
+	
+	//! The sorted list of the entire closed paths of the problem
+	std::vector<closedPath> p_closedContourPaths;
     
     //! Definition of the eletrostatic preference
     /*!
@@ -471,6 +474,16 @@ public:
 	meshSettings *getMeshSettingsPointer()
 	{
 		return &p_problemMeshSettings;
+	}
+	
+	void setClosedPath(std::vector<closedPath> path)
+	{
+		p_closedContourPaths = path;
+	}
+	
+	std::vector<closedPath>* getClosedPath()
+	{
+		return &p_closedContourPaths;
 	}
 };
 

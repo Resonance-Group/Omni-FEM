@@ -873,7 +873,7 @@ bool geometryEditor2D::createFillet(double radius)
                     
                     q = lineEndpointOne + unitVectorAlongLine * ((centerPoint - lineEndpointOne) / unitVectorAlongLine).getXComponent();// q is the closest point on the line to the center of the circle
                     
-                    unitVectorAlongLine = J * unitVectorAlongLine;
+                    unitVectorAlongLine = JI* unitVectorAlongLine;
                     
                     p[0] = q + radius * unitVectorAlongLine;
                     p[1] = q - radius * unitVectorAlongLine;
@@ -891,8 +891,8 @@ bool geometryEditor2D::createFillet(double radius)
                         if(b >= 0)
                         {
                             b = sqrt(b);
-                            v[j++] = p[k] + J * b * (p[k] - centerPoint) / Vabs(p[k] - centerPoint);
-                            v[j++] = p[k] - J * b * (p[k] - centerPoint) / Vabs(p[k] - centerPoint);
+                            v[j++] = p[k] + JI* b * (p[k] - centerPoint) / Vabs(p[k] - centerPoint);
+                            v[j++] = p[k] - JI* b * (p[k] - centerPoint) / Vabs(p[k] - centerPoint);
                         }
                     }
                     
@@ -1200,8 +1200,8 @@ bool geometryEditor2D::createFillet(double radius)
                     for(int k = 0; k < 8; k += 2)
                     {
                         // solve for the center point of the radius for each solution.
-                        p[k] = ((1 - x[k]) * centerDistance + J * d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
-                        p[k + 1] = ((1 - x[k]) * centerDistance - J * d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
+                        p[k] = ((1 - x[k]) * centerDistance + JI* d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
+                        p[k + 1] = ((1 - x[k]) * centerDistance - JI* d[k]) * (arcCenter2 - arcCenter1) / Vabs(arcCenter2 - arcCenter1) + arcCenter1;
                     }
                     
                     
@@ -1503,7 +1503,7 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
     arc1Length = arcSegment1.getArcAngle() * PI / 180.0;
     arc2Length = arcSegment2.getArcAngle() * PI / 180.0;
     
-    point[counter] = arcCenter1 + (center * distance / 2.0 + J * length) * tempVec;
+    point[counter] = arcCenter1 + (center * distance / 2.0 + JI* length) * tempVec;
     
     z0 = Varg((point[counter] - arcCenter1) / (arc1StartNode - arcCenter1));
     z1 = Varg((point[counter] - arcCenter2) / (arc2StartNode - arcCenter2));
@@ -1518,7 +1518,7 @@ int geometryEditor2D::getArcToArcIntersection(arcShape& arcSegment1, arcShape &a
         return counter;
     }
     
-    point[counter] = arcCenter1 + (center * distance / 2.0 - J * length) * tempVec;
+    point[counter] = arcCenter1 + (center * distance / 2.0 - JI * length) * tempVec;
     z0 = Varg((point[counter] - arcCenter1) / (arc1StartNode - arcCenter1));
     z1 = Varg((point[counter] - arcCenter2) / (arc2StartNode - arcCenter2));
     

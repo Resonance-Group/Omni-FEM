@@ -2,6 +2,8 @@
 #define __XSUBTOUR_H
 
 #include "Mesh/Blossom/Xcutpool.h"
+#include "Mesh/Blossom/util.h"
+#include "machdefs.h"
 
 #define XFALSE 0
 #define XEPSILON .0001

@@ -496,7 +496,7 @@ Vector Vexp(const Vector &x)
 
 Vector Vsin(const Vector &z)
 {
-	return (J * z);
+	return (JI * z);
 //	return (Vexp(z * (J)) - Vexp(z * (*J * -1.0)));
 }
 
