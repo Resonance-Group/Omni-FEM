@@ -8,6 +8,8 @@
  *      include list
  */
 #include "Post_Processor/PostProcessorView.h"
+#include "vtkSMProxy.h"
+#include "vtkSMViewLayoutProxy.h"
 
 
 class postProcessorView::p_pqInternal : public Ui::MainWindow
@@ -21,6 +23,8 @@ postProcessorView::postProcessorView()
 	this->p_Internals->setupUi(this);
 
 	this->p_Internals->MultiViewManager->setTabVisibility(false);
+
+//	std::vector<vtkSMViewProxy*> theViews = this->p_Internals->MultiViewManager->layoutProxy()->GetViews();
 
 	/* Now we setup additional window options */
 	pqParaViewBehaviors::setEnableStandardPropertyWidgets(false);
